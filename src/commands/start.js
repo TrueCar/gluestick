@@ -10,21 +10,17 @@ var OUTPUT_FILE = "main-bundle.js";
 var PORT = 8080;
 var THUMBS_UP_EMOJI = "\uD83D\uDC4D";
 
-const paths = [
-    process.cwd(),
-    path.join(__dirname, "../../"),
-    path.join(__dirname, "../../node_modules/")
-];
+process.env.NODE_PATH = path.join(__dirname, "../..");
+
 var compiler = webpack({
     resolve: {
-        extensions: ["", ".js", ".css"],
-        root: paths
+        extensions: ["", ".js", ".css"]
     },
     entry: {
         "main": [
             "webpack-dev-server/client?http://localhost:" + PORT,
             "webpack/hot/dev-server",
-            path.join(__dirname, "../entrypoints/main.js")
+            path.join(process.cwd(), "main.js")
         ]
     },
     output: {

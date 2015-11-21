@@ -1,10 +1,9 @@
 #! /usr/bin/env node
-const process = require("process");
 
-const newApp = require("./scripts/new");
-const start = require("./scripts/start");
-const help = require("./scripts/help");
-const test = require("./scripts/test");
+const process = require("process");
+const newApp = require("./commands/new");
+const start = require("./commands/start");
+const help = require("./commands/help");
 
 console.log(`Capsela Web`);
 
@@ -13,8 +12,7 @@ const command = process.argv[2];
 const scripts = {
     new: newApp,
     start: start,
-    help: help,
-    test: test
+    help: help
 };
 
 const script = scripts[command];
