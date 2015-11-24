@@ -16,6 +16,13 @@ export default class Root extends Component {
         routerHistory: createBrowserHistory()
     };
 
+    constructor (props) {
+        super(props);
+        this.state = {
+            store: createStore(props.reducers)
+        };
+    }
+
     render () {
         const {
             routes,
@@ -25,7 +32,7 @@ export default class Root extends Component {
 
         return (
             <div>
-                <Provider store={createStore(reducers)}>
+                <Provider store={this.state.store}>
                     <Router history={routerHistory}>
                         {routes}
                     </Router>

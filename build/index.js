@@ -107,10 +107,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Root = (function (_Component) {
 	    _inherits(Root, _Component);
 	
-	    function Root() {
+	    _createClass(Root, null, [{
+	        key: "propTypes",
+	        value: {
+	            routes: _react.PropTypes.object,
+	            reducers: _react.PropTypes.object,
+	            routerHistory: _react.PropTypes.any
+	        },
+	        enumerable: true
+	    }, {
+	        key: "defaultProps",
+	        value: {
+	            routerHistory: (0, _historyLibCreateBrowserHistory2["default"])()
+	        },
+	        enumerable: true
+	    }]);
+	
+	    function Root(props) {
 	        _classCallCheck(this, Root);
 	
-	        _get(Object.getPrototypeOf(Root.prototype), "constructor", this).apply(this, arguments);
+	        _get(Object.getPrototypeOf(Root.prototype), "constructor", this).call(this, props);
+	        this.state = {
+	            store: (0, _libCreateStore2["default"])(props.reducers)
+	        };
 	    }
 	
 	    _createClass(Root, [{
@@ -126,7 +145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                null,
 	                _react2["default"].createElement(
 	                    _reactRedux.Provider,
-	                    { store: (0, _libCreateStore2["default"])(reducers) },
+	                    { store: this.state.store },
 	                    _react2["default"].createElement(
 	                        _reactRouter.Router,
 	                        { history: routerHistory },
@@ -135,20 +154,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                )
 	            );
 	        }
-	    }], [{
-	        key: "propTypes",
-	        value: {
-	            routes: _react.PropTypes.object,
-	            reducers: _react.PropTypes.object,
-	            routerHistory: _react.PropTypes.any
-	        },
-	        enumerable: true
-	    }, {
-	        key: "defaultProps",
-	        value: {
-	            routerHistory: (0, _historyLibCreateBrowserHistory2["default"])()
-	        },
-	        enumerable: true
 	    }]);
 	
 	    return Root;
