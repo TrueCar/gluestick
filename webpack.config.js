@@ -14,7 +14,7 @@ module.exports = {
 
     module: {
         loaders: [
-            { test: /\.js/, loader: "babel", exclude: /node_modules/ }
+            { test: /\.js/, loader: "babel?stage=0", exclude: /node_modules/ }
         ]
     },
 
@@ -37,6 +37,18 @@ module.exports = {
                 commonjs2: "react-router",
                 commonjs: "react-router",
                 amd: "react-router"
+            },
+            redux: {
+                root: "redux",
+                commonjs2: "redux",
+                commonjs: "redux",
+                amd: "redux"
+            },
+            "react-redux": {
+                root: "ReactRedux",
+                commonjs2: "react-redux",
+                commonjs: "react-redux",
+                amd: "react-redux"
             }
         }
     ]

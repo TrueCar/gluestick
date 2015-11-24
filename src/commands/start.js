@@ -13,6 +13,7 @@ var THUMBS_UP_EMOJI = "\uD83D\uDC4D";
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
 var compiler = webpack({
+    devtool: "eval",
     resolve: {
         extensions: ["", ".js", ".css"]
     },
@@ -29,6 +30,9 @@ var compiler = webpack({
         publicPath: "http://localhost:" + PORT + "/"
     },
     plugins: [
+        new webpack.DefinePlugin({
+            CWD: JSON.stringify(process.cwd())
+        }),
         new webpack.NoErrorsPlugin(),
         new webpack.HotModuleReplacementPlugin()
     ],
@@ -36,7 +40,7 @@ var compiler = webpack({
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ["react-hot", "babel-loader"],
+                loaders: ["react-hot", "babel-loader?stage=0"],
                 exclude: /node_modules/
             }
         ]
