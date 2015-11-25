@@ -1,4 +1,21 @@
 {
-    "stage": 0
+  "stage": 0,
+  "env": {
+    "devserver": {
+      "plugins": ["react-transform"],
+      "extra": {
+        "react-transform": {
+          "transforms": [{
+            "transform": "react-transform-hmr",
+            "imports": ["react"],
+            "locals": ["module"]
+          }, {
+            "transform": "react-transform-catch-errors",
+            "imports": ["react", "redbox-react"]
+          }]
+        }
+      }
+    }
+  }
 }
 

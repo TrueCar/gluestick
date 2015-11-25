@@ -3,11 +3,12 @@ var webpack = require("webpack");
 var process = require("process");
 var nodemon = require("nodemon");
 var chalk = require("chalk");
-var webpackDevServer = require("webpack-dev-server");
+var express = require("express");
 
+var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
-var PORT = 8080;
+var PUBLIC_PATH = "http://localhost:" + PORT + "/";
 var THUMBS_UP_EMOJI = "\uD83D\uDC4D";
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
@@ -19,60 +20,50 @@ var compiler = webpack({
     },
     entry: {
         "main": [
-            "webpack-dev-server/client?http://localhost:" + PORT,
-            "webpack/hot/dev-server",
-            path.join(process.cwd(), "main.js")
+            "webpack-hot-middleware/client",
+            path.join(process.cwd(), "src/index.js")
         ]
     },
     output: {
         path: OUTPUT_PATH,
         filename: OUTPUT_FILE,
-        publicPath: "http://localhost:" + PORT + "/"
+        publicPath: PUBLIC_PATH
     },
     plugins: [
-        new webpack.DefinePlugin({
-            CWD: JSON.stringify(process.cwd())
-        }),
-        new webpack.NoErrorsPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin()
     ],
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ["react-hot", "babel-loader?stage=0"],
-                exclude: /node_modules/
+                loaders: ["babel-loader?stage=0"],
+                include: [
+                    path.join(process.cwd(), "src"),
+                    path.join(__dirname, "../shared")
+                ]
             }
         ]
     }
 });
 
 module.exports = function () {
-    var watching = false;
-    var fullOutputFilePath = path.join(OUTPUT_PATH, OUTPUT_FILE);
-    compiler.watch({}, function (error, stats) {
-        var jsonStats = stats.toJson();
-        if (jsonStats.errors.length > 0 || error) {
-            console.log("ERROR COMPILING", error, jsonStats.errors);
-            process.exit();
+    var app = express();
+    app.use(require("webpack-dev-middleware")(compiler, {
+        noInfo: true,
+        publicPath: PUBLIC_PATH
+    }));
+    app.use(require("webpack-hot-middleware")(compiler));
+    app.get("*", function (req, res) {
+        res.sendFile(path.join(process.cwd(), "index.html"));
+    });
+    app.listen(PORT, "localhost", function (error) {
+        if (error) {
+            console.log(error);
             return;
         }
 
-        if (!watching) {
-            // @TODO render the server stuff here
-            //watching = true;
-            //console.log("nodemon now watching '" + fullOutputFilePath + "'");
-            //nodemon(fullOutputFilePath);
-        }
-
-        console.log(chalk.green("New Build Ready " + THUMBS_UP_EMOJI));
+        console.log("Server listening on port " + PORT);
     });
-
-    var server = new webpackDevServer(compiler, {
-        noInfo: true,
-        hot: true
-    });
-    server.listen(PORT);
-    console.log("Static server listening on " + chalk.cyan("http://localhost:" + PORT));
 };
 

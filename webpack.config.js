@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {
     devtool: "source-map",
 
@@ -11,6 +13,14 @@ module.exports = {
         library: "cweb",
         libraryTarget: "umd"
     },
+
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
+            }
+        })
+    ],
 
     module: {
         loaders: [
