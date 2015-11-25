@@ -17,13 +17,16 @@ export default class Root extends Component {
     render () {
         const {
             routes,
-            routerHistory
+            routerHistory,
+            store
         } = this.props;
 
         return (
-            <Router history={routerHistory}>
-                {routes}
-            </Router>
+            <Provider store={store}>
+                <Router history={routerHistory}>
+                    {routes}
+                </Router>
+            </Provider>
         );
     }
 }

@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"), require("react-router"), require("react-redux"));
+		module.exports = factory(require("react"), require("react-router"), require("react-redux"), require("redux"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react", "react-router", "react-redux"], factory);
+		define(["react", "react-router", "react-redux", "redux"], factory);
 	else if(typeof exports === 'object')
-		exports["cweb"] = factory(require(undefined), require("react-router"), require("react-redux"));
+		exports["cweb"] = factory(require(undefined), require("react-router"), require("react-redux"), require("redux"));
 	else
-		root["cweb"] = factory(root["React"], root["ReactRouter"], root["ReactRedux"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
+		root["cweb"] = factory(root["React"], root["ReactRouter"], root["ReactRedux"], root["redux"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_24__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -67,6 +67,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _sharedContainersRoot2 = _interopRequireDefault(_sharedContainersRoot);
 	
 	exports.Root = _sharedContainersRoot2["default"];
+	
+	var _sharedLibCreateStore = __webpack_require__(23);
+	
+	var _sharedLibCreateStore2 = _interopRequireDefault(_sharedLibCreateStore);
+	
+	exports.createStore = _sharedLibCreateStore2["default"];
 
 /***/ },
 /* 1 */
@@ -115,11 +121,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _props = this.props;
 	            var routes = _props.routes;
 	            var routerHistory = _props.routerHistory;
+	            var store = _props.store;
 	
 	            return _react2["default"].createElement(
-	                _reactRouter.Router,
-	                { history: routerHistory },
-	                routes
+	                _reactRedux.Provider,
+	                { store: store },
+	                _react2["default"].createElement(
+	                    _reactRouter.Router,
+	                    { history: routerHistory },
+	                    routes
+	                )
 	            );
 	        }
 	    }], [{
@@ -1313,6 +1324,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports['default'] = deprecate;
 	module.exports = exports['default'];
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _redux = __webpack_require__(24);
+	
+	exports["default"] = function (customRequire, hotCallback) {
+	    var reducer = (0, _redux.combineReducers)(customRequire());
+	    var store = (0, _redux.createStore)(reducer);
+	
+	    hotCallback(function () {
+	        var nextReducer = (0, _redux.combineReducers)(customRequire());
+	        store.replaceReducer(nextReducer);
+	    });
+	
+	    return store;
+	};
+	
+	module.exports = exports["default"];
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_24__;
 
 /***/ }
 /******/ ])

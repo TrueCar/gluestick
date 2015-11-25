@@ -31,7 +31,10 @@ var compiler = webpack({
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.DefinePlugin({
+            REDUCERS_PATH: JSON.stringify(path.join(process.cwd(), "src/reducers"))
+        })
     ],
     module: {
         loaders: [

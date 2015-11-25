@@ -1,13 +1,14 @@
 import { combineReducers, createStore } from "redux";
 
-let store;
+export default function (customRequire, hotCallback) {
+    const reducer = combineReducers(customRequire());
+    const store = createStore(reducer);
 
-export default (reducers) => {
-    store = store || createStore(combineReducers(reducers));
-
-    const nextRootReducer = combineReducers(reducers);
-    store.replaceReducer(nextRootReducer);
+    hotCallback(() => {
+        const nextReducer = combineReducers(customRequire());
+        store.replaceReducer(nextReducer);
+    });
 
     return store;
-};
+}
 
