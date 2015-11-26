@@ -11,7 +11,7 @@ export default class Root extends Component {
     };
 
     static defaultProps = {
-        routerHistory: createBrowserHistory()
+        routerHistory: typeof window !== "undefined" ? createBrowserHistory() : null
     };
 
     render () {

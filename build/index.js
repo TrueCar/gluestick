@@ -144,7 +144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "defaultProps",
 	        value: {
-	            routerHistory: (0, _historyLibCreateBrowserHistory2["default"])()
+	            routerHistory: typeof window !== "undefined" ? (0, _historyLibCreateBrowserHistory2["default"])() : null
 	        },
 	        enumerable: true
 	    }]);
