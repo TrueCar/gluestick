@@ -21,7 +21,7 @@ var compiler = webpack({
     entry: {
         "main": [
             "webpack-hot-middleware/client",
-            path.join(process.cwd(), "src/index.js")
+            path.join(process.cwd(), "src/entrypoints/client.js")
         ]
     },
     output: {
