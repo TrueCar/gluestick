@@ -10,6 +10,8 @@ try {
     console.log("Error parsing .babelrc");
 }
 
+require("babel-core/register")(config);
+
 module.exports = function () {
     console.log(config);
 };
