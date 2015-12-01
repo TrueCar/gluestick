@@ -3,6 +3,8 @@ import { Router } from "react-router";
 import { Provider } from "react-redux";
 import createBrowserHistory from "history/lib/createBrowserHistory";
 
+import RadiumConfig from "./RadiumConfig";
+
 export default class Root extends Component {
     static propTypes = {
         routes: PropTypes.object,
@@ -20,17 +22,20 @@ export default class Root extends Component {
             routes,
             routerHistory,
             routingContext,
+            radiumConfig,
             store
         } = this.props;
 
         const router = this._renderRouter();
 
         return (
-            <Provider store={store}>
-                <div>
-                    {router}
-                </div>
-            </Provider>
+            <RadiumConfig radiumConfig={radiumConfig}>
+                <Provider store={store}>
+                    <div>
+                        {router}
+                    </div>
+                </Provider>
+            </RadiumConfig>
         );
     }
 

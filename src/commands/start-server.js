@@ -42,7 +42,8 @@ module.exports = function () {
 
                 // grab the main component which is capable of loading routes
                 // and hot loading them if in development mode
-                var main = createElement(Main, {routingContext: routingContext});
+                var radiumConfig = { userAgent: req.headers["user-agent"] };
+                var main = createElement(Main, {routingContext: routingContext, radiumConfig: radiumConfig});
 
                 // grab the react generated body stuff. This includes the
                 // script tag that hooks up the client side react code.
