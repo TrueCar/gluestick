@@ -3,7 +3,7 @@ import { Router } from "react-router";
 import { Provider } from "react-redux";
 import createBrowserHistory from "history/lib/createBrowserHistory";
 
-import RadiumConfig from "./RadiumConfig";
+import RadiumConfig from "../components/RadiumConfig";
 
 export default class Root extends Component {
     static propTypes = {
