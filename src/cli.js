@@ -48,6 +48,9 @@ function startBoth () {
     var client = spawnProcess("client");
     var server = spawnProcess("server");
 
+    // We do not want to watch for changes in production
+    if (isProduction) return;
+
     console.log("watching", process.cwd());
     var changedTimer;
     fs.watch(process.cwd(), {recursive: true}, function (event, filename) {
