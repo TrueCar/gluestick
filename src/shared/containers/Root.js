@@ -7,7 +7,8 @@ export default class Root extends Component {
     static propTypes = {
         routes: PropTypes.object,
         reducers: PropTypes.object,
-        routerHistory: PropTypes.any
+        routerHistory: PropTypes.any,
+        routingContext: PropTypes.object
     };
 
     static defaultProps = {
@@ -18,15 +19,35 @@ export default class Root extends Component {
         const {
             routes,
             routerHistory,
+            routingContext,
             store
         } = this.props;
 
+        const router = this._renderRouter();
+
         return (
             <Provider store={store}>
-                <Router history={routerHistory}>
-                    {routes}
-                </Router>
+                <div>
+                    {router}
+                </div>
             </Provider>
+        );
+    }
+
+    _renderRouter () {
+        const {
+            routes,
+            routingContext,
+            routerHistory
+        } = this.props;
+
+        // server rendering
+        if (routingContext) return routingContext;
+
+        return (
+            <Router history={routerHistory}>
+                {routes}
+            </Router>
         );
     }
 }

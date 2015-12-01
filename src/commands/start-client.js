@@ -60,7 +60,7 @@ module.exports = function () {
         publicPath: PUBLIC_PATH
     }));
     app.use(require("webpack-hot-middleware")(compiler));
-    app.use("*", proxy("localhost:8880", {
+    app.use(proxy("localhost:8880", {
         forwardPath: function (req, res) {
             return require("url").parse(req.url).path;
         }

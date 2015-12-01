@@ -121,16 +121,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _props = this.props;
 	            var routes = _props.routes;
 	            var routerHistory = _props.routerHistory;
+	            var routingContext = _props.routingContext;
 	            var store = _props.store;
+	
+	            var router = this._renderRouter();
 	
 	            return _react2["default"].createElement(
 	                _reactRedux.Provider,
 	                { store: store },
 	                _react2["default"].createElement(
-	                    _reactRouter.Router,
-	                    { history: routerHistory },
-	                    routes
+	                    "div",
+	                    null,
+	                    router
 	                )
+	            );
+	        }
+	    }, {
+	        key: "_renderRouter",
+	        value: function _renderRouter() {
+	            var _props2 = this.props;
+	            var routes = _props2.routes;
+	            var routingContext = _props2.routingContext;
+	            var routerHistory = _props2.routerHistory;
+	
+	            // server rendering
+	            if (routingContext) return routingContext;
+	
+	            return _react2["default"].createElement(
+	                _reactRouter.Router,
+	                { history: routerHistory },
+	                routes
 	            );
 	        }
 	    }], [{
@@ -138,7 +158,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: {
 	            routes: _react.PropTypes.object,
 	            reducers: _react.PropTypes.object,
-	            routerHistory: _react.PropTypes.any
+	            routerHistory: _react.PropTypes.any,
+	            routingContext: _react.PropTypes.object
 	        },
 	        enumerable: true
 	    }, {
@@ -1341,10 +1362,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var reducer = (0, _redux.combineReducers)(customRequire());
 	    var store = (0, _redux.createStore)(reducer);
 	
-	    hotCallback(function () {
-	        var nextReducer = (0, _redux.combineReducers)(customRequire());
-	        store.replaceReducer(nextReducer);
-	    });
+	    if (hotCallback) {
+	        hotCallback(function () {
+	            var nextReducer = (0, _redux.combineReducers)(customRequire());
+	            store.replaceReducer(nextReducer);
+	        });
+	    }
 	
 	    return store;
 	};
