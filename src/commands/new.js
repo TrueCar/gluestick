@@ -1,4 +1,4 @@
 module.exports = function () {
-    console.log("You are running Capsela New");
+    console.log("You are running Gluestick New");
 };
 
