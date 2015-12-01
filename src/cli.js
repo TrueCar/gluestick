@@ -34,10 +34,10 @@ function spawnProcess (type) {
     var childProcess;
     switch (type) {
         case "client":
-            childProcess = spawn("cweb", ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
+            childProcess = spawn("gluestick", ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
             break;
         case "server":
-            childProcess = spawn("cweb", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
+            childProcess = spawn("gluestick", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
     }
 
     childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });

@@ -4,13 +4,13 @@ module.exports = {
     devtool: "source-map",
 
     entry: {
-        "cweb": "./src/index.js"
+        "gluestick": "./src/index.js"
     },
 
     output: {
         path: "./build",
         filename: "index.js",
-        library: "cweb",
+        library: "gluestick",
         libraryTarget: "umd"
     },
 

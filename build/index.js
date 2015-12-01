@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["react", "react-router", "react-redux", "redux"], factory);
 	else if(typeof exports === 'object')
-		exports["cweb"] = factory(require(undefined), require("react-router"), require("react-redux"), require("redux"));
+		exports["gluestick"] = factory(require(undefined), require("react-router"), require("react-redux"), require("redux"));
 	else
-		root["cweb"] = factory(root["React"], root["ReactRouter"], root["ReactRedux"], root["redux"]);
+		root["gluestick"] = factory(root["React"], root["ReactRouter"], root["ReactRedux"], root["redux"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_24__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -106,6 +106,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _historyLibCreateBrowserHistory2 = _interopRequireDefault(_historyLibCreateBrowserHistory);
 	
+	var _RadiumConfig = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./RadiumConfig\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _RadiumConfig2 = _interopRequireDefault(_RadiumConfig);
+	
 	var Root = (function (_Component) {
 	    _inherits(Root, _Component);
 	
@@ -122,17 +126,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var routes = _props.routes;
 	            var routerHistory = _props.routerHistory;
 	            var routingContext = _props.routingContext;
+	            var radiumConfig = _props.radiumConfig;
 	            var store = _props.store;
 	
 	            var router = this._renderRouter();
 	
 	            return _react2["default"].createElement(
-	                _reactRedux.Provider,
-	                { store: store },
+	                _RadiumConfig2["default"],
+	                { radiumConfig: radiumConfig },
 	                _react2["default"].createElement(
-	                    "div",
-	                    null,
-	                    router
+	                    _reactRedux.Provider,
+	                    { store: store },
+	                    _react2["default"].createElement(
+	                        "div",
+	                        null,
+	                        router
+	                    )
 	                )
 	            );
 	        }
