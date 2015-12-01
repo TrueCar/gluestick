@@ -1,7 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
 var process = require("process");
-var nodemon = require("nodemon");
 var chalk = require("chalk");
 var express = require("express");
 var proxy = require("express-http-proxy");

@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+const fs = require("fs");
 const process = require("process");
 const spawn = require("child_process").spawn;
 const newApp = require("./commands/new");
@@ -29,25 +30,33 @@ if (!script) {
     process.exit();
 }
 
-function logIt (prefix, type, data) {
-    var output = prefix + ": " + data.toString("utf8").replace(/\n$/, "");
+function spawnProcess (type) {
+    var childProcess;
     switch (type) {
-        case "error":
-            output = chalk.red(output);
+        case "client":
+            childProcess = spawn("cweb", ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
             break;
-        case "close":
-            output = chalk.yellow("Closed with code: " + data);
+        case "server":
+            childProcess = spawn("cweb", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
     }
-    console.log(output);
+
+    childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });
+    return childProcess;
 }
 
 function startBoth () {
-    const client = spawn("cweb", ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
-    const server = spawn("cweb", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production" : "development-server"})});
-    [client, server].forEach((item, i) => {
-        const prefix = i === 0 ? "CLIENT" : "SERVER";
-        item.on("close", logIt.bind(null, prefix, "close"))
-        item.on("error", function (data) { console.log(arguments) });
+    var client = spawnProcess("client");
+    var server = spawnProcess("server");
+
+    console.log("watching", process.cwd());
+    var changedTimer;
+    fs.watch(process.cwd(), {recursive: true}, function (event, filename) {
+        clearTimeout(changedTimer);
+        changedTimer = setTimeout(function () {
+            console.log(chalk.yellow("[change detected] restarting server…", filename));
+            server.kill();
+            server = spawnProcess("server");
+        }, 500);
     });
 }
 
