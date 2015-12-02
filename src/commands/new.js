@@ -24,7 +24,7 @@ module.exports = function () {
         };
         inquirer.prompt([question], function (answers) {
             if (!answers.confirm) return;
-            build(process.cwd());
+            copyTo(process.cwd());
             return;
         });
 
