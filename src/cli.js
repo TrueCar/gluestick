@@ -12,8 +12,6 @@ const chalk = require("chalk");
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
 
-console.log(`Gluestick Web: ${command}`);
-
 const scripts = {
     new: newApp,
     start: startBoth,
