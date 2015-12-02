@@ -19,7 +19,7 @@ var OUTPUT_FILE = "server-bundle.js";
 
 module.exports = function () {
     var Index = require(path.join(process.cwd(), "Index"));
-    var Main = require(path.join(process.cwd(), "src/Main"));
+    var Entry = require(path.join(process.cwd(), "src/config/._entry"));
     var routes = require(path.join(process.cwd(), "src/config/routes"));
 
     // We always use the same request handler and we let React handle
@@ -43,7 +43,7 @@ module.exports = function () {
                 // grab the main component which is capable of loading routes
                 // and hot loading them if in development mode
                 var radiumConfig = { userAgent: req.headers["user-agent"] };
-                var main = createElement(Main, {routingContext: routingContext, radiumConfig: radiumConfig});
+                var main = createElement(Entry, {routingContext: routingContext, radiumConfig: radiumConfig});
 
                 // grab the react generated body stuff. This includes the
                 // script tag that hooks up the client side react code.

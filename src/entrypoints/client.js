@@ -1,7 +1,7 @@
 var createElement = require("react").createElement;
 var render = require("react-dom").render;
 
-var Main = require(__PATH_TO_MAIN__);
+var Entry = require(__PATH_TO_ENTRY__);
 
-render(createElement(Main, {radiumConfig: {userAgent: window.navigator.userAgent}}), document.getElementById("main"));
+render(createElement(Entry, {radiumConfig: {userAgent: window.navigator.userAgent}}), document.getElementById("main"));
 

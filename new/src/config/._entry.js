@@ -1,10 +1,11 @@
+/** DO NOT MODIFY **/
 import React, { Component } from "react";
 
 import { Root } from "gluestick";
-import routes from "./config/routes";
-import store from "./lib/store";
+import routes from "./routes";
+import store from "./._store";
 
-export default class Main extends Component {
+export default class Entry extends Component {
     render () {
         const {
             routingContext,
