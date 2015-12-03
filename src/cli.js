@@ -39,8 +39,10 @@ function spawnProcess (type) {
             break;
         case "server":
             childProcess = spawn("gluestick", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
+            break;
         case "test":
             childProcess = spawn("gluestick", ["start-test"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
+            break;
     }
 
     childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });
