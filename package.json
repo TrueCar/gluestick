@@ -22,7 +22,7 @@
     "inquirer": "0.11.0",
     "karma": "0.13.15",
     "karma-chai": "0.1.0",
-    "karma-chrome-launcher": "0.2.2",
+    "karma-chrome-launcher": "0.2.1",
     "karma-mocha": "0.2.1",
     "karma-notify-reporter": "0.1.1",
     "karma-sinon": "1.0.4",

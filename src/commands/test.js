@@ -67,7 +67,7 @@ const config = {
 module.exports = function () {
     var server = new Server(config);
     server.start();
-    server.on("browser_register", function () {
+    server.on("browsers_ready", function () {
         runner.run(config, () => {});
     });
 };
