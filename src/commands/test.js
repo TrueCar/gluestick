@@ -27,12 +27,6 @@ const config = {
             loaders: [
                 {
                     test: /\.js$/,
-                    loader: "isparta",
-                    exclude: /tests/,
-                    include: path.resolve(CWD, "src")
-                },
-                {
-                    test: /\.js$/,
                     loader: "babel?stage=0&optional[]=runtime",
                     exclude: /node_modules/
                 }

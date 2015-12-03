@@ -6,7 +6,7 @@ const spawn = require("child_process").spawn;
 const newApp = require("./commands/new");
 const startClient = require("./commands/start-client");
 const startServer = require("./commands/start-server");
-const test = require("./commands/test");
+const startTest = require("./commands/test");
 const help = require("./commands/help");
 const chalk = require("chalk");
 
@@ -15,8 +15,9 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const scripts = {
     new: newApp,
-    start: startBoth,
-    test: test,
+    start: startAll,
+    test: spawnProcess.bind(null, "test"),
+    "start-test": startTest,
     "start-client": startClient,
     "start-server": startServer,
     help: help
@@ -38,15 +39,18 @@ function spawnProcess (type) {
             break;
         case "server":
             childProcess = spawn("gluestick", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
+        case "test":
+            childProcess = spawn("gluestick", ["start-test"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
     }
 
     childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });
     return childProcess;
 }
 
-function startBoth () {
+function startAll() {
     var client = spawnProcess("client");
     var server = spawnProcess("server");
+    var testProcess = spawnProcess("test");
 
     // We do not want to watch for changes in production
     if (isProduction) return;
