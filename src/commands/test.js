@@ -8,10 +8,6 @@ var runner = karma.runner;
 var PORT = 9876;
 var CWD = process.cwd();
 
-function onExit (exitCode) {
-    process.exit(exitCode);
-}
-
 const preprocessors = {};
 const helperPath = path.resolve(__dirname, "../lib/test-helper.js");
 preprocessors[helperPath] = ["webpack", "sourcemap"];
@@ -69,10 +65,10 @@ const config = {
 };
 
 module.exports = function () {
-    var server = new Server(config, onExit);
+    var server = new Server(config);
     server.start();
     server.on("browser_register", function () {
-        runner.run({port: PORT}, onExit);
+        runner.run(config, () => {});
     });
 };
 
