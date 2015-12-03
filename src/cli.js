@@ -6,6 +6,7 @@ const spawn = require("child_process").spawn;
 const newApp = require("./commands/new");
 const startClient = require("./commands/start-client");
 const startServer = require("./commands/start-server");
+const test = require("./commands/test");
 const help = require("./commands/help");
 const chalk = require("chalk");
 
@@ -15,6 +16,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const scripts = {
     new: newApp,
     start: startBoth,
+    test: test,
     "start-client": startClient,
     "start-server": startServer,
     help: help
