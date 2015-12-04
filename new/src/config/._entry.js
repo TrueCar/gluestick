@@ -6,10 +6,15 @@ import routes from "./routes";
 import store from "./._store";
 
 export default class Entry extends Component {
+    static defaultProps = {
+        store: store
+    };
+
     render () {
         const {
             routingContext,
-            radiumConfig
+            radiumConfig,
+            store
         } = this.props;
 
         return (

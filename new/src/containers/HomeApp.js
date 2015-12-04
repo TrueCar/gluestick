@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { addTodo } from "../actions/todos";
+import { addTodo, getTodos } from "../actions/todos";
 
 import Todos from "../components/Todos";
 
@@ -10,6 +10,10 @@ import Todos from "../components/Todos";
     (dispatch) => bindActionCreators({addTodo}, dispatch)
 )
 export default class HomeApp extends Component {
+    static fetchData (store) {
+        return getTodos(store.dispatch);
+    }
+
     render () {
         const {
             todos,
