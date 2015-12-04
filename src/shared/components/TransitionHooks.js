@@ -10,12 +10,11 @@ export default class TransitionHooks extends Component {
     componentWillMount() {
         const { history } = this.props;
         const { store } = this.context;
-        this.transitionHook = history.registerTransitionHook(createTransitionHook(store, history));
+        this.unListenBefore = history.listenBefore(createTransitionHook(store, history));
     }
 
     componentWillUnmount() {
-        const { history } = this.props;
-        history.unregisterTransitionHook(this.transitionHook);
+        this.unListenBefore();
     }
 
     render () {

@@ -1432,14 +1432,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var history = this.props.history;
 	            var store = this.context.store;
 	
-	            this.transitionHook = history.registerTransitionHook((0, _libRouteHelper.createTransitionHook)(store, history));
+	            this.unListenBefore = history.listenBefore((0, _libRouteHelper.createTransitionHook)(store, history));
 	        }
 	    }, {
 	        key: "componentWillUnmount",
 	        value: function componentWillUnmount() {
-	            var history = this.props.history;
-	
-	            history.unregisterTransitionHook(this.transitionHook);
+	            this.unListenBefore();
 	        }
 	    }, {
 	        key: "render",
