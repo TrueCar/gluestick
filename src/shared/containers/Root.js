@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
-import { Router } from "react-router";
+import { Router, Route } from "react-router";
 import { Provider } from "react-redux";
 import createBrowserHistory from "history/lib/createBrowserHistory";
 
+import prepareRoutesWithTransitionHooks from "../../lib/prepareRoutesWithTransitionHooks";
 import RadiumConfig from "../components/RadiumConfig";
 
 export default class Root extends Component {
@@ -51,7 +52,7 @@ export default class Root extends Component {
 
         return (
             <Router history={routerHistory}>
-                {routes}
+                {prepareRoutesWithTransitionHooks(routes)}
             </Router>
         );
     }

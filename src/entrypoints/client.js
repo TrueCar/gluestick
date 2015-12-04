@@ -1,3 +1,4 @@
+require("babel-core/polyfill");
 var createElement = require("react").createElement;
 var render = require("react-dom").render;
 

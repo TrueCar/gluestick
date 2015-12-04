@@ -4,20 +4,21 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { fetchAllData } from "./route-helper";
 import PrettyError from "pretty-error";
-import { match, RoutingContext } from "react-router";
+import { match, RoutingContext, Route } from "react-router";
 
+import prepareRoutesWithTransitionHooks from "./prepareRoutesWithTransitionHooks";
 import Body from "../shared/components/Body";
 import head from "../shared/components/head";
 
 const pretty = new PrettyError();
 
 module.exports = async function (req, res) {
-    const Index = require(path.join(process.cwd(), "Index"));
-    const Entry = require(path.join(process.cwd(), "src/config/._entry"));
-    const store = require(path.join(process.cwd(), "src/config/._store"));
-    const routes = require(path.join(process.cwd(), "src/config/routes"));
-
     try {
+        const Index = require(path.join(process.cwd(), "Index"));
+        const Entry = require(path.join(process.cwd(), "src/config/._entry"));
+        const store = require(path.join(process.cwd(), "src/config/._store"));
+        const originalRoutes = require(path.join(process.cwd(), "src/config/routes"));
+        const routes = prepareRoutesWithTransitionHooks(originalRoutes);
         match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
             if (error) {
                 // @TODO custom 500 handling
