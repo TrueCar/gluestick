@@ -2,7 +2,7 @@ import { combineReducers, createStore } from "redux";
 
 export default function (customRequire, hotCallback) {
     const reducer = combineReducers(customRequire());
-    const store = createStore(reducer);
+    const store = createStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
     if (hotCallback) {
         hotCallback(() => {

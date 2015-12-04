@@ -4136,7 +4136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports["default"] = function (customRequire, hotCallback) {
 	    var reducer = (0, _redux.combineReducers)(customRequire());
-	    var store = (0, _redux.createStore)(reducer);
+	    var store = (0, _redux.createStore)(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 	
 	    if (hotCallback) {
 	        hotCallback(function () {
