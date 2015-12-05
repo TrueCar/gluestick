@@ -7,6 +7,7 @@ const newApp = require("./commands/new");
 const startClient = require("./commands/start-client");
 const startServer = require("./commands/start-server");
 const startTest = require("./commands/test");
+const generate = require("./commands/generate");
 const help = require("./commands/help");
 const chalk = require("chalk");
 
@@ -17,6 +18,7 @@ const scripts = {
     new: newApp,
     start: startAll,
     test: spawnProcess.bind(null, "test"),
+    generate: generate,
     "start-test": startTest,
     "start-client": startClient,
     "start-server": startServer,
