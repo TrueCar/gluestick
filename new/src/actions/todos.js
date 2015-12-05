@@ -1,5 +1,5 @@
 export const ADD_TODO = "ADD_TODO";
-export const SET_TODOS = "SET_TODOS";
+export const GET_TODOS = "GET_TODOS";
 
 export function addTodo (text) {
     return {
@@ -8,19 +8,15 @@ export function addTodo (text) {
     };
 }
 
-export function getTodos (dispatch) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            dispatch(setTodos(["Item One", "Item Two"]));
-            resolve();
-        }, 1000);
-    });
-}
-
-export function setTodos (todos) {
+export function getTodos () {
     return {
-        type: SET_TODOS,
-        todos
+        type: GET_TODOS,
+        promise: new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(["First item on the list", "Second item on the list"]);
+            }, 500);
+        })
     };
 }
+
 

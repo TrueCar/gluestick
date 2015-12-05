@@ -1,8 +1,12 @@
-import { combineReducers, createStore } from "redux";
+import { combineReducers, createStore, applyMiddleware, compose } from "redux";
+import promiseMiddleware from "../../lib/promiseMiddleware";
 
 export default function (customRequire, hotCallback) {
     const reducer = combineReducers(customRequire());
-    const store = createStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
+    const finalCreateStore = compose(
+        applyMiddleware(promiseMiddleware)
+    )(createStore);
+    const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
     if (hotCallback) {
         hotCallback(() => {
