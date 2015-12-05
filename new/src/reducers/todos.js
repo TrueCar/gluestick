@@ -3,7 +3,6 @@ import { ADD_TODO, GET_TODOS } from "../actions/todos";
 const INITIAL_STATE = [];
 
 export default (state=INITIAL_STATE, action) => {
-    console.log(action);
     switch (action.type) {
         case ADD_TODO:
             return [...state, action.text];

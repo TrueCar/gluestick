@@ -10,8 +10,8 @@ import Todos from "../components/Todos";
     (dispatch) => bindActionCreators({addTodo}, dispatch)
 )
 export default class HomeApp extends Component {
-    static fetchData (store) {
-        return getTodos(store.dispatch);
+    static fetchData ({dispatch}) {
+        return dispatch(getTodos());
     }
 
     render () {
