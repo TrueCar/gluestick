@@ -3,10 +3,14 @@ var path = require("path");
 var chalk = require("chalk");
 
 const availableCommands = {
-    "container": "src/containers/",
-    "component": "src/components/",
-    "reducer": "src/reducers/"
+    "container": "containers",
+    "component": "components",
+    "reducer": "reducers"
 };
+
+function replaceName (input, name) {
+    return input.replace(/__\$NAME__/g, name);
+}
 
 module.exports = function () {
     const command = process.argv[3];
@@ -44,6 +48,9 @@ module.exports = function () {
     if (["container", "component"].indexOf(command) !== -1) {
         name = name.substr(0, 1).toUpperCase() + name.substr(1);
     }
+    if (["reducer", "action-creator"].indexOf(command) !== -1) {
+        name = name.substr(0, 1).toLowerCase() + name.substr(1);
+    }
 
     // Step 5: Get the output string and destination filename
     let template;
@@ -51,14 +58,14 @@ module.exports = function () {
         template = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.js`), {encoding: "utf8"})
     }
     catch(e) {
-        console.log(e, chalk.red("ERROR: Couldn't read file"));
+        console.log(e, chalk.red("ERROR: Couldn't read generator file"));
         return;
     }
 
-    template = template.replace(/__\$NAME__/g, name);
+    template = replaceName(template, name);
 
     // Step 6: Check if the file already exists before we write to it
-    const destinationPath = path.resolve(process.cwd(), availableCommands[command], name + ".js");
+    const destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
     let fileExists = true;
     try {
         fs.statSync(destinationPath);
@@ -75,5 +82,65 @@ module.exports = function () {
     // Step 6: Write output to file
     fs.writeFileSync(destinationPath, template);
     console.log(chalk.green(`New file created: ${destinationPath}`));
+
+    // Step 7: If we just generated a reducer, add it to the reducers index
+    if (command === "reducer") {
+        const reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
+        try {
+            const indexLines = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).split("\n");
+            const lastLineIndex = indexLines.length - 1;
+            const newLine = `export { default as ${name} } from "./${name}"`;
+            if (indexLines[lastLineIndex] === "") {
+                indexLines.splice(lastLineIndex - 1, 1, newLine);
+                indexLines.push("");
+            }
+            else {
+                indexLines.push(newLine);
+                indexLines.push("");
+            }
+            fs.writeFileSync(reducerIndexPath, indexLines.join("\n"));
+            console.log(chalk.yellow(`${name} added to reducer index ${reducerIndexPath}`));
+        }
+        catch (e) {
+            console.log(chalk.red(`ERROR: Unable to modify reducers index. Reducer not added to index`));
+            return;
+        }
+    }
+
+    // Step 8: Write test file for component
+    if(["component"].indexOf(command) !== -1) {
+        const testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+        let testTemplate;
+        let testFileExists = true;
+        try {
+            fs.statSync(testPath);
+        }
+        catch (e) {
+            testFileExists = false;
+        }
+
+        if (testFileExists) {
+            console.log(chalk.yellow(`WARNING: Unable to create test file for ${name} because it already exists`));
+            return;
+        }
+
+        try {
+            testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
+        }
+        catch (e) {
+            console.log(e, chalk.red("ERROR: Couldn't read generator file"));
+            return;
+        }
+
+        try {
+            fs.writeFileSync(testPath, replaceName(testTemplate, name));
+        }
+        catch (e) {
+            console.log(e, chalk.red("ERROR: Couldn't create test file"));
+            return;
+        }
+
+        console.log(chalk.green(`New file created: ${testPath}`));
+    }
 };
 
