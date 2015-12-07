@@ -6,8 +6,6 @@ export default class MasterLayout extends Component {
         return (
             <div>
                 {this.props.children}
-                <Link to="/test">Test</Link> - 
-                <Link to="/">Home</Link>
             </div>
         );
     }
