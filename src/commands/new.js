@@ -14,8 +14,16 @@ function copyTo (destination) {
 module.exports = function () {
     const projectName = process.argv[3];
 
-    // No project name, install in current directory if approved
-    if (!projectName) {
+    var currentlyInProjectFolder = true;
+    try {
+        fs.statSync(path.join(process.cwd(), ".gluestick"));
+    }
+    catch (e) {
+        currentlyInProjectFolder = false;
+    }
+
+    // No project name, or ran from inside an existing project install in current directory if approved
+    if (!projectName || currentlyInProjectFolder) {
         console.log(chalk.yellow("You are about to initialize a new gluestick project at ") + chalk.cyan(process.cwd()));
         const question = {
             type: "confirm",
