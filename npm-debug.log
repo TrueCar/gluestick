@@ -1,0 +1,137 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   '--force' ]
+2 info using npm@3.3.6
+3 info using node@v5.0.0
+4 warn using --force I sure hope you know what you are doing.
+5 verbose publish [ '.' ]
+6 silly cache add args [ '.', null ]
+7 verbose cache add spec .
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: '.',
+8 silly cache add   scope: null,
+8 silly cache add   name: null,
+8 silly cache add   rawSpec: '.',
+8 silly cache add   spec: '/Users/twilliams/dev/gluestick',
+8 silly cache add   type: 'directory' }
+9 verbose addLocalDirectory /Users/twilliams/.npm/gluestick/0.0.1/package.tgz not in flight; packing
+10 info lifecycle gluestick@0.0.1~prepublish: gluestick@0.0.1
+11 silly lifecycle gluestick@0.0.1~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/twilliams/.npm/gluestick/0.0.1/package.tgz',
+12 verbose tar pack   '/Users/twilliams/dev/gluestick' ]
+13 verbose tarball /Users/twilliams/.npm/gluestick/0.0.1/package.tgz
+14 verbose folder /Users/twilliams/dev/gluestick
+15 verbose addLocalTarball adding from inside cache /Users/twilliams/.npm/gluestick/0.0.1/package.tgz
+16 silly cache afterAdd gluestick@0.0.1
+17 verbose afterAdd /Users/twilliams/.npm/gluestick/0.0.1/package/package.json not in flight; writing
+18 verbose afterAdd /Users/twilliams/.npm/gluestick/0.0.1/package/package.json written
+19 silly publish { name: 'gluestick',
+19 silly publish   version: '0.0.1',
+19 silly publish   description: 'GlueStick is a command line interface for quickly developing universal web applications using React. Currently it is still very experimental and is likely to change frequently.',
+19 silly publish   main: 'build/index.js',
+19 silly publish   bin: { gluestick: 'src/cli.js' },
+19 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+19 silly publish   author: '',
+19 silly publish   dependencies:
+19 silly publish    { history: '1.13.1',
+19 silly publish      radium: '0.15.3',
+19 silly publish      babel: '5.8.34',
+19 silly publish      'babel-core': '5.8.34',
+19 silly publish      'babel-loader': '5.3.2',
+19 silly publish      'babel-plugin-react-transform': '1.1.1',
+19 silly publish      'babel-runtime': '5.8.25',
+19 silly publish      chai: '3.4.1',
+19 silly publish      chalk: '1.1.1',
+19 silly publish      express: '4.13.3',
+19 silly publish      'express-http-proxy': '0.6.0',
+19 silly publish      'fs-extra': '0.26.2',
+19 silly publish      inquirer: '0.11.0',
+19 silly publish      karma: '0.13.15',
+19 silly publish      'karma-chai': '0.1.0',
+19 silly publish      'karma-chrome-launcher': '0.2.1',
+19 silly publish      'karma-mocha': '0.2.1',
+19 silly publish      'karma-notify-reporter': '0.1.1',
+19 silly publish      'karma-sinon': '1.0.4',
+19 silly publish      'karma-sourcemap-loader': '0.3.6',
+19 silly publish      'karma-spec-reporter': '0.0.23',
+19 silly publish      'karma-webpack': '1.7.0',
+19 silly publish      mocha: '2.3.4',
+19 silly publish      'pretty-error': '1.2.0',
+19 silly publish      react: '0.14.3',
+19 silly publish      'react-addons-test-utils': '0.14.3',
+19 silly publish      'react-dom': '0.14.3',
+19 silly publish      'react-hot-loader': '1.3.0',
+19 silly publish      'react-loader': '2.0.0',
+19 silly publish      'react-router': '1.0.0',
+19 silly publish      'react-transform-catch-errors': '1.0.0',
+19 silly publish      'react-transform-hmr': '1.0.1',
+19 silly publish      'redbox-react': '1.2.0',
+19 silly publish      'serialize-javascript': '1.1.2',
+19 silly publish      sinon: '1.17.2',
+19 silly publish      webpack: '1.12.8',
+19 silly publish      'webpack-dev-middleware': '1.3.0',
+19 silly publish      'webpack-hot-middleware': '2.5.0' },
+19 silly publish   peerDependencies:
+19 silly publish    { react: '>=0.14.0',
+19 silly publish      'react-dom': '>=0.14.0',
+19 silly publish      'react-router': '>=1.0.0',
+19 silly publish      redux: '>=3.0.3',
+19 silly publish      'react-redux': '>=4.0.0' },
+19 silly publish   readme: '# GlueStick\nGlueStick is a command line interface for quickly developing universal web\napplications using React. Currently it is still very experimental and is likely\nto change frequently.\n\n## Install\n```\nsudo npm install gluestick -g\n```\n\n## Getting Started\nGlueStick comes with several generators to help you get started. To create a\nnew GlueStick project, run the following command:\n```\ngluestick new newapp\n```\n\nThis will create the boilerplate code needed for a GlueStick application as\nwell as install all of the initial npm dependencies.\n\n## Generators\nTo help speed up development, GlueStick includes generators for common types of\nfiles.\n\n#### Container Generator\nThe container generator will create a basic React component in the containers folder that is\nalready hooked up to redux using the `@connect` middlware.\n\nExample:\n```\ngluestick generate container MyContainer\n```\n\n#### Component Generator\nThe component generator will create a basic React component and a starting test\nfile for that component.\n\nExample:\n```\ngluestick generate component MyComponent\n```\n\n#### Reducer Generator\nThe reducer generator will create a new base redux reducer for you and\nautomatically export it from the `reducers/index.js` file.\n\nExample:\n```\ngluestick generate reducer todos\n```\n\n## Tests\nGlueStick sets up a testing environment using Karma, Mocha, Chai and Sinon.\nReact\'s TestUtils are also available globally in your test files. You simply\nneed to create files in the `test` folder with the extension .test.js and they\nwill be executed through the test runner.\n\n## Hot Loading\nGlueStick\'s development environment utilizing hotloading so your changes will\nshow up in the browser as you go. This is sort of experimental but it works\ngreat most of the time. However, sometimes you will still need to refresh the\nbrowser for certain changes.\n\n## Deployment & Production\nThis is not finished yet but we have some cool things in the works. Stay tuned\nfor more.\n\n',
+19 silly publish   readmeFilename: 'README.md',
+19 silly publish   gitHead: '852f969e3d33cc4be23818fb1122f8ba87550c15',
+19 silly publish   _id: 'gluestick@0.0.1',
+19 silly publish   _shasum: '53f6661cb73f634693afbabd164adf0b4f56fdc8',
+19 silly publish   _from: '.' }
+20 verbose getPublishConfig undefined
+21 silly mapToRegistry name gluestick
+22 silly mapToRegistry using default registry
+23 silly mapToRegistry registry https://registry.npmjs.org/
+24 silly mapToRegistry uri https://registry.npmjs.org/gluestick
+25 verbose publish registryBase https://registry.npmjs.org/
+26 silly publish uploading /Users/twilliams/.npm/gluestick/0.0.1/package.tgz
+27 verbose request uri https://registry.npmjs.org/gluestick
+28 verbose request sending authorization for write operation
+29 info attempt registry request try #1 at 3:56:33 PM
+30 verbose request using bearer token for auth
+31 verbose request id 4be149e43b2ef411
+32 http request PUT https://registry.npmjs.org/gluestick
+33 http 403 https://registry.npmjs.org/gluestick
+34 verbose headers { 'content-type': 'application/json',
+34 verbose headers   'cache-control': 'max-age=60',
+34 verbose headers   'content-length': '95',
+34 verbose headers   'accept-ranges': 'bytes',
+34 verbose headers   date: 'Mon, 07 Dec 2015 23:56:34 GMT',
+34 verbose headers   via: '1.1 varnish',
+34 verbose headers   connection: 'keep-alive',
+34 verbose headers   'x-served-by': 'cache-sjc3126-SJC',
+34 verbose headers   'x-cache': 'MISS',
+34 verbose headers   'x-cache-hits': '0',
+34 verbose headers   'x-timer': 'S1449532593.927363,VS0,VE264' }
+35 verbose request invalidating /Users/twilliams/.npm/registry.npmjs.org/gluestick on PUT
+36 error publish Failed PUT 403
+37 verbose stack Error: "You cannot publish over the previously published version 0.0.1." : gluestick
+37 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+37 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+37 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+37 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:198:22)
+37 verbose stack     at emitTwo (events.js:87:13)
+37 verbose stack     at Request.emit (events.js:172:7)
+37 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1063:14)
+37 verbose stack     at emitOne (events.js:82:20)
+37 verbose stack     at Request.emit (events.js:169:7)
+37 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1009:12)
+38 verbose statusCode 403
+39 verbose pkgid gluestick
+40 verbose cwd /Users/twilliams/dev/gluestick
+41 error Darwin 15.0.0
+42 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "publish" "--force"
+43 error node v5.0.0
+44 error npm  v3.3.6
+45 error code E403
+46 error "You cannot publish over the previously published version 0.0.1." : gluestick
+47 error If you need help, you may report this error at:
+47 error     <https://github.com/npm/npm/issues>
+48 verbose exit [ 1, true ]
