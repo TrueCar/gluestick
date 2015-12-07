@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "build/index.js",
   "bin": "src/cli.js",
@@ -8,7 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "devDependencies": {
+  "dependencies": {
+    "history": "1.13.1",
+    "radium": "0.15.3",
     "babel": "5.8.34",
     "babel-core": "5.8.34",
     "babel-loader": "5.3.2",
@@ -52,9 +54,5 @@
     "react-router": ">=1.0.0",
     "redux": ">=3.0.3",
     "react-redux": ">=4.0.0"
-  },
-  "dependencies": {
-    "history": "1.13.1",
-    "radium": "0.15.3"
   }
 }
