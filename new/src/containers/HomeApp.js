@@ -1,27 +1,17 @@
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { addTodo, getTodos } from "../actions/todos";
-
-import Todos from "../components/Todos";
 
 @connect(
-    (state) => ({todos: state.todos}),
-    (dispatch) => bindActionCreators({addTodo}, dispatch)
+    (state) => ({/** _INSERT_STATE_  **/}),
+    (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
 )
 export default class HomeApp extends Component {
-    static fetchData ({dispatch}) {
-        return dispatch(getTodos());
-    }
+    static fetchData ({dispatch}) {}
 
     render () {
-        const {
-            todos,
-            addTodo
-        } = this.props;
-
         return (
-            <Todos todos={todos} addTodo={addTodo} />
+            <div>Home</div>
         );
     }
 }
