@@ -4,7 +4,7 @@
 require("babel-core/register")({
     stage: 0,
     ignore: function(filename) {
-        return !/\/node_modules\/gluestick\//.test(filename);
+        return !/\/node_modules\/gluestick\/src\//.test(filename);
     }
 });
 

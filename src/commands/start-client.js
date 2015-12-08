@@ -33,7 +33,7 @@ var compiler = webpack({
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/._entry")),
+            "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/_entry")),
             "process.env": {
                 "NODE_ENV": JSON.stringify("development")
             }
