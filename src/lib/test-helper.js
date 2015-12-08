@@ -1,9 +1,9 @@
 /* global global */
-import "babel-core/polyfill";
-import path from "path";
-import React from "react";
-import ReactDOM from "react-dom";
-import ReactTestUtils from "react-addons-test-utils";
+require("babel-core/polyfill");
+var path = require("path");
+var React = require("react");
+var ReactDOM = require("react-dom");
+var ReactTestUtils = require("react-addons-test-utils");
 global.React = React;
 global.ReactDOM = ReactDOM;
 global.TestUtils = ReactTestUtils;
