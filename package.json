@@ -1,9 +1,9 @@
 {
   "name": "gluestick",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "build/index.js",
-  "bin": "build/cli.js",
+  "bin": "src/cli-harmony.js",
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",

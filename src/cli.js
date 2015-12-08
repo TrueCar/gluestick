@@ -1,7 +1,3 @@
-#!/usr/bin/env node
-
-require("babel-core/register")({stage: 0});
-
 const fs = require("fs");
 const process = require("process");
 const spawn = require("child_process").spawn;
