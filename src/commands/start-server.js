@@ -1,4 +1,3 @@
-require("babel-core/register")({stage: 0});
 var express = require("express");
 
 var serverRequestHandler = require("../lib/server-request-handler");
