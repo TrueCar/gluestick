@@ -56,7 +56,7 @@ var compiler = webpack({
             },
             {
                 test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-                loader: "url-loader?limit=0",
+                loader: "file-loader",
                 include: [
                     path.join(process.cwd(), "assets"),
                     path.join(__dirname, "../shared/assets")
