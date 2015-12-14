@@ -2,7 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var chalk = require("chalk");
 
-const availableCommands = {
+var availableCommands = {
     "container": "containers",
     "component": "components",
     "reducer": "reducers"
@@ -13,8 +13,8 @@ function replaceName (input, name) {
 }
 
 module.exports = function () {
-    const command = process.argv[3];
-    let name = process.argv[4];
+    var command = process.argv[3];
+    var name = process.argv[4];
 
     // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
     try {
@@ -53,7 +53,7 @@ module.exports = function () {
     }
 
     // Step 5: Get the output string and destination filename
-    let template;
+    var template;
     try {
         template = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.js`), {encoding: "utf8"})
     }
@@ -65,8 +65,8 @@ module.exports = function () {
     template = replaceName(template, name);
 
     // Step 6: Check if the file already exists before we write to it
-    const destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
-    let fileExists = true;
+    var destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
+    var fileExists = true;
     try {
         fs.statSync(destinationPath);
     }
@@ -85,11 +85,11 @@ module.exports = function () {
 
     // Step 7: If we just generated a reducer, add it to the reducers index
     if (command === "reducer") {
-        const reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
+        var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
         try {
-            const indexLines = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).split("\n");
-            const lastLineIndex = indexLines.length - 1;
-            const newLine = `export { default as ${name} } from "./${name}"`;
+            var indexLines = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).split("\n");
+            var lastLineIndex = indexLines.length - 1;
+            var newLine = `export { default as ${name} } from "./${name}"`;
             if (indexLines[lastLineIndex] === "") {
                 indexLines.splice(lastLineIndex - 1, 1, newLine);
                 indexLines.push("");
@@ -109,9 +109,9 @@ module.exports = function () {
 
     // Step 8: Write test file for component
     if(["component"].indexOf(command) !== -1) {
-        const testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
-        let testTemplate;
-        let testFileExists = true;
+        var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+        var testTemplate;
+        var testFileExists = true;
         try {
             fs.statSync(testPath);
         }

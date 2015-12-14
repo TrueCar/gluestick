@@ -10,7 +10,7 @@ require("babel-core/register")({
         }
 
         // don't ignore node_modules in gluestick
-        return !/\/node_modules\/gluestick\/src\//.test(filename);
+        return !/\/dev\/gluestick\/src\//.test(filename);
     }
 });
 

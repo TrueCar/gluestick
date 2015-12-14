@@ -4,12 +4,15 @@ var process = require("process");
 var chalk = require("chalk");
 var express = require("express");
 var proxy = require("express-http-proxy");
+var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
 var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
 var PUBLIC_PATH = "http://localhost:" + PORT + "/";
-var THUMBS_UP_EMOJI = "\uD83D\uDC4D";
+
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration'))
+                                        .development(process.env.NODE_ENV !== "production");
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
@@ -18,6 +21,7 @@ var compiler = webpack({
     resolve: {
         extensions: ["", ".js", ".css"]
     },
+    context: process.cwd(),
     entry: {
         "main": [
             "webpack-hot-middleware/client",
@@ -30,6 +34,7 @@ var compiler = webpack({
         publicPath: PUBLIC_PATH
     },
     plugins: [
+        webpackIsomorphicToolsPlugin,
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
@@ -47,6 +52,14 @@ var compiler = webpack({
                 include: [
                     path.join(process.cwd(), "src"),
                     path.join(__dirname, "../shared")
+                ]
+            },
+            {
+                test: webpackIsomorphicToolsPlugin.regular_expression("images"),
+                loader: "url-loader?limit=0",
+                include: [
+                    path.join(process.cwd(), "assets"),
+                    path.join(__dirname, "../shared/assets")
                 ]
             }
         ]
