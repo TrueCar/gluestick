@@ -4342,20 +4342,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * This reducer always returns the original state, this prevents an error when
 	 * no other reducers have been added.
 	 */
-	function emptyReducer(state, action) {
-	    if (state === undefined) state = null;
+	function _gluestick(state, action) {
+	    if (state === undefined) state = true;
 	
 	    return state;
 	}
 	
 	exports["default"] = function (customRequire, hotCallback) {
-	    var reducer = (0, _redux.combineReducers)(Object.assign({}, { emptyReducer: emptyReducer }, customRequire()));
+	    var reducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
 	    var finalCreateStore = (0, _redux.compose)((0, _redux.applyMiddleware)(_libPromiseMiddleware2["default"]))(_redux.createStore);
 	    var store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 	
 	    if (hotCallback) {
 	        hotCallback(function () {
-	            var nextReducer = (0, _redux.combineReducers)(Object.assign({}, { emptyReducer: emptyReducer }, customRequire()));
+	            var nextReducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
 	            store.replaceReducer(nextReducer);
 	        });
 	    }

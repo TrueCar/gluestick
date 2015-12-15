@@ -5,12 +5,12 @@ import promiseMiddleware from "../../lib/promiseMiddleware";
  * This reducer always returns the original state, this prevents an error when
  * no other reducers have been added.
  */
-function emptyReducer (state=null, action) {
+function _gluestick(state=true, action) {
     return state;
 }
 
 export default function (customRequire, hotCallback) {
-    const reducer = combineReducers(Object.assign({}, {emptyReducer}, customRequire()));
+    const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
     const finalCreateStore = compose(
         applyMiddleware(promiseMiddleware)
     )(createStore);
@@ -18,7 +18,7 @@ export default function (customRequire, hotCallback) {
 
     if (hotCallback) {
         hotCallback(() => {
-            const nextReducer = combineReducers(Object.assign({}, {emptyReducer}, customRequire()));
+            const nextReducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
             store.replaceReducer(nextReducer);
         });
     }
