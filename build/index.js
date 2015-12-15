@@ -4338,14 +4338,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _libPromiseMiddleware2 = _interopRequireDefault(_libPromiseMiddleware);
 	
+	/**
+	 * This reducer always returns the original state, this prevents an error when
+	 * no other reducers have been added.
+	 */
+	function emptyReducer(state, action) {
+	    if (state === undefined) state = null;
+	
+	    return state;
+	}
+	
 	exports["default"] = function (customRequire, hotCallback) {
-	    var reducer = (0, _redux.combineReducers)(customRequire());
+	    var reducer = (0, _redux.combineReducers)(Object.assign({}, { emptyReducer: emptyReducer }, customRequire()));
 	    var finalCreateStore = (0, _redux.compose)((0, _redux.applyMiddleware)(_libPromiseMiddleware2["default"]))(_redux.createStore);
 	    var store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 	
 	    if (hotCallback) {
 	        hotCallback(function () {
-	            var nextReducer = (0, _redux.combineReducers)(customRequire());
+	            var nextReducer = (0, _redux.combineReducers)(Object.assign({}, { emptyReducer: emptyReducer }, customRequire()));
 	            store.replaceReducer(nextReducer);
 	        });
 	    }

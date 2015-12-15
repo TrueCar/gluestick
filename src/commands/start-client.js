@@ -19,7 +19,10 @@ process.env.NODE_PATH = path.join(__dirname, "../..");
 var compiler = webpack({
     devtool: "eval",
     resolve: {
-        extensions: ["", ".js", ".css"]
+        extensions: ["", ".js", ".css"],
+        alias: {
+            "assets": path.join(process.cwd(), "assets")
+        }
     },
     context: process.cwd(),
     entry: {
@@ -38,7 +41,7 @@ var compiler = webpack({
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/_entry")),
+            "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
             "process.env": {
                 "NODE_ENV": JSON.stringify("development")
             }

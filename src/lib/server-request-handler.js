@@ -15,8 +15,8 @@ const pretty = new PrettyError();
 module.exports = async function (req, res) {
     try {
         const Index = require(path.join(process.cwd(), "Index"));
-        const Entry = require(path.join(process.cwd(), "src/config/_entry"));
-        const store = require(path.join(process.cwd(), "src/config/_store"));
+        const Entry = require(path.join(process.cwd(), "src/config/.entry"));
+        const store = require(path.join(process.cwd(), "src/config/.store"));
         const originalRoutes = require(path.join(process.cwd(), "src/config/routes"));
         const routes = prepareRoutesWithTransitionHooks(originalRoutes);
         match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {

@@ -1,3 +1,4 @@
+var path = require("path");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
 module.exports = {
@@ -5,6 +6,9 @@ module.exports = {
         images: {
             extensions: ["png", "jpg", "gif", "ico", "svg"]
         }
+    },
+    alias: {
+        "assets": path.join(process.cwd(), "assets")
     }
 };
 
