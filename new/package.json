@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "gluestick": "0.0.x",
+    "gluestick": "0.1.x",
     "radium": "0.15.3",
     "react": "0.14.3",
     "react-dom": "0.14.3",
