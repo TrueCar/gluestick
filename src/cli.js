@@ -52,7 +52,12 @@ function spawnProcess (type) {
 function startAll() {
     var client = spawnProcess("client");
     var server = spawnProcess("server");
-    //var testProcess = spawnProcess("test");
+
+    // Start tests unless they asked us not to
+    // @TODO: would be better to use something like `commander` for these things
+    if (process.argv[3] !== "--no-tests") {
+        var testProcess = spawnProcess("test");
+    }
 
     // We do not want to watch for changes in production
     if (isProduction) return;
