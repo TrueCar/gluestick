@@ -5,6 +5,10 @@ import { Root } from "gluestick";
 import routes from "./routes";
 import store from "./.store";
 
+// Make sure that webpack considers new dependencies introduced in the Index
+// file
+import "../../Index.js";
+
 export default class Entry extends Component {
     static defaultProps = {
         store: store

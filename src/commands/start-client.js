@@ -5,6 +5,7 @@ var chalk = require("chalk");
 var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
@@ -40,6 +41,7 @@ var compiler = webpack({
         webpackIsomorphicToolsPlugin,
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin("[name].css"),
         new webpack.DefinePlugin({
             "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
             "process.env": {
@@ -53,6 +55,7 @@ var compiler = webpack({
                 test: /\.js$/,
                 loaders: ["babel-loader?stage=0"],
                 include: [
+                    path.join(process.cwd(), "Index.js"),
                     path.join(process.cwd(), "src"),
                     path.join(__dirname, "../shared")
                 ]
@@ -60,6 +63,22 @@ var compiler = webpack({
             {
                 test: webpackIsomorphicToolsPlugin.regular_expression("images"),
                 loader: "file-loader",
+                include: [
+                    path.join(process.cwd(), "assets"),
+                    path.join(__dirname, "../shared/assets")
+                ]
+            },
+            {
+                test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
+                loader: "file-loader",
+                include: [
+                    path.join(process.cwd(), "assets"),
+                    path.join(__dirname, "../shared/assets")
+                ]
+            },
+            {
+                test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
+                loader: ExtractTextPlugin.extract("style", "css!sass"),
                 include: [
                     path.join(process.cwd(), "assets"),
                     path.join(__dirname, "../shared/assets")
