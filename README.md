@@ -1,4 +1,6 @@
 # GlueStick
+[![npm package][npm-badge]][npm]
+
 GlueStick is a command line interface for quickly developing universal web
 applications using React. Currently it is still very experimental and is likely
 to change frequently.
@@ -102,3 +104,5 @@ browser for certain changes.
 This is not finished yet but we have some cool things in the works. Stay tuned
 for more.
 
+[npm-badge]: https://img.shields.io/npm/v/gluestick.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/gluestick
