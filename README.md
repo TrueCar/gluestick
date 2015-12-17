@@ -62,14 +62,17 @@ The preferred way to style components in the GlueStick environment is to use
 To prepare a component for using Radium, simply use the @Radium decorator above
 your component class. When styling with Radium, your style updates will be hot
 loaded in development mode so you do not need to refresh the browser to see
-your changes.
+your changes. Please read the Radium docs for more information on how to use
+Radium.
 
 Example:
 ```
 @Radium
 export default class MyComponent extends Component {
+…
 ```
 
+#### CSS and SASS
 If you want to include a base stylesheet (like bootstrap css), you can import
 you stylesheet at the top of any file and it will be included when the page
 loads. We do not currently support hot loading for these styles but they should
@@ -79,10 +82,7 @@ Example:
 Edit /Index.js
 ```
 import React, { Component } from "react";
-
 import "assets/css/my-custom-css.css";
-
-…
 …
 ```
 
