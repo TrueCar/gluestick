@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const process = require("process");
 const spawn = require("child_process").spawn;
 const newApp = require("./commands/new");
@@ -21,6 +22,7 @@ const scripts = {
     "start-test": startTest,
     "start-client": startClient,
     "start-server": startServer,
+    "--version": showVersion,
     help: help
 };
 
@@ -30,6 +32,12 @@ if (!script) {
     console.log(chalk.red(`Invalid command: "${command}"`));
     help();
     process.exit();
+}
+
+function showVersion () {
+    var packageFileContents = fs.readFileSync(path.join(__dirname, "..", "package.json"));
+    var packageObject = JSON.parse(packageFileContents);
+    console.log(packageObject.version);
 }
 
 function spawnProcess (type) {
