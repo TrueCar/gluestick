@@ -1,6 +1,6 @@
 module.exports = function () {
     console.log(`
-Available commands:
+Available Commands:
   gluestick new APP_NAME                        # Generate a new application
   gluestick generate container CONTAINER_NAME   # Generate a new container
   gluestick generate component COMPONENT_NAME   # Generate a new component and test file

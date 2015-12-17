@@ -65,6 +65,7 @@
     "react-transform-hmr": "1.0.1",
     "redbox-react": "1.2.0",
     "serialize-javascript": "1.1.2",
+    "sha1": "1.1.1",
     "sinon": "1.17.2",
     "url-loader": "0.5.7",
     "webpack": "1.12.8",

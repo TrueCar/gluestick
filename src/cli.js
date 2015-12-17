@@ -8,6 +8,7 @@ const startTest = require("./commands/test");
 const generate = require("./commands/generate");
 const help = require("./commands/help");
 const chalk = require("chalk");
+const autoUpgrade = require("./auto-upgrade");
 
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
@@ -26,7 +27,7 @@ const scripts = {
 const script = scripts[command];
 
 if (!script) {
-    console.log(`invalid command "${command}"`);
+    console.log(chalk.red(`Invalid command: "${command}"`));
     help();
     process.exit();
 }
@@ -50,6 +51,8 @@ function spawnProcess (type) {
 }
 
 function startAll() {
+    autoUpgrade();
+
     var client = spawnProcess("client");
     var server = spawnProcess("server");
 
