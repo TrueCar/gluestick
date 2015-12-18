@@ -521,7 +521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports["default"] = (0, _reduxDevtools.createDevTools)(_react2["default"].createElement(
 	    _reduxDevtoolsDockMonitor2["default"],
-	    { defaultIsVisible: true, toggleVisibilityKey: "ctrl-h", changePositionKey: "ctrl-q" },
+	    { defaultIsVisible: false, toggleVisibilityKey: "ctrl-h", changePositionKey: "ctrl-q" },
 	    _react2["default"].createElement(_reduxDevtoolsLogMonitor2["default"], { theme: "solarized" })
 	));
 	module.exports = exports["default"];
