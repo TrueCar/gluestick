@@ -14,7 +14,7 @@ export default function (customRequire, hotCallback) {
     const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
     const finalCreateStore = compose(
         applyMiddleware(promiseMiddleware),
-        //DevTools.instrument() // @TODO: only include dev tools in development mode
+        DevTools.instrument() // @TODO: only include dev tools in development mode
     )(createStore);
     const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
