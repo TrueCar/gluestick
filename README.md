@@ -5,6 +5,10 @@ GlueStick is a command line interface for quickly developing universal web
 applications using React. Currently it is still very experimental and is likely
 to change frequently.
 
+## Requirements
+GlueStick works best with v5+ of node but some people have had success running
+it under v4. Versions prior to 4 are not currently supported.
+
 ## Install
 ```
 sudo npm install gluestick -g
