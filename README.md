@@ -23,7 +23,7 @@ well as install all of the initial npm dependencies.
 Change directories into your projects folder and start your app and tests with:
 ```
 gluestick start
-``
+```
 
 ## Generators
 To help speed up development, GlueStick includes generators for common types of
