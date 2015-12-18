@@ -18,7 +18,7 @@ var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
 var compiler = webpack({
-    //devtool: "eval",
+    devtool: "eval",
     resolve: {
         extensions: ["", ".js", ".css"],
         alias: {
