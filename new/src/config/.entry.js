@@ -1,5 +1,6 @@
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
+import { render } from "react-dom";
 
 import { Root } from "gluestick";
 import routes from "./routes";
@@ -26,4 +27,8 @@ export default class Entry extends Component {
         );
     }
 }
+
+Entry.start = function () {
+    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} />, document.getElementById("main"));
+};
 

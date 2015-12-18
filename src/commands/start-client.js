@@ -18,7 +18,7 @@ var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
 var compiler = webpack({
-    devtool: "eval",
+    //devtool: "eval",
     resolve: {
         extensions: ["", ".js", ".css"],
         alias: {
@@ -39,6 +39,14 @@ var compiler = webpack({
     },
     plugins: [
         webpackIsomorphicToolsPlugin,
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        // @TODO: add uglifyjs to production mode
+        //new webpack.optimize.UglifyJsPlugin({
+            //compress: {
+                //warnings: false
+            //}
+        //}),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin("[name].css"),
