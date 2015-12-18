@@ -1,9 +1,14 @@
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
+import { render } from "react-dom";
 
 import { Root } from "gluestick";
 import routes from "./routes";
 import store from "./.store";
+
+// Make sure that webpack considers new dependencies introduced in the Index
+// file
+import "../../Index.js";
 
 export default class Entry extends Component {
     static defaultProps = {
@@ -22,4 +27,8 @@ export default class Entry extends Component {
         );
     }
 }
+
+Entry.start = function () {
+    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} />, document.getElementById("main"));
+};
 

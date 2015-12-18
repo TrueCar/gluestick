@@ -11,6 +11,11 @@ module.exports = function () {
         .server(process.cwd(), function () {
             var app = express();
             var serverRequestHandler = require("../lib/server-request-handler");
+
+            // @TODO do better job of settings this up for production environment, we probably
+            // only want to serve assets in dev mode and lean on a CDN in production
+            app.use("/assets", express.static("assets"));
+
             app.use(serverRequestHandler);
             app.listen(PORT);
             console.log("Backend proxy running on " + PORT);

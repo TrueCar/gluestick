@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const process = require("process");
 const spawn = require("child_process").spawn;
 const newApp = require("./commands/new");
@@ -8,6 +9,7 @@ const startTest = require("./commands/test");
 const generate = require("./commands/generate");
 const help = require("./commands/help");
 const chalk = require("chalk");
+const autoUpgrade = require("./auto-upgrade");
 
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
@@ -20,15 +22,22 @@ const scripts = {
     "start-test": startTest,
     "start-client": startClient,
     "start-server": startServer,
+    "--version": showVersion,
     help: help
 };
 
 const script = scripts[command];
 
 if (!script) {
-    console.log(`invalid command "${command}"`);
+    console.log(chalk.red(`Invalid command: "${command}"`));
     help();
     process.exit();
+}
+
+function showVersion () {
+    var packageFileContents = fs.readFileSync(path.join(__dirname, "..", "package.json"));
+    var packageObject = JSON.parse(packageFileContents);
+    console.log(packageObject.version);
 }
 
 function spawnProcess (type) {
@@ -50,9 +59,16 @@ function spawnProcess (type) {
 }
 
 function startAll() {
+    autoUpgrade();
+
     var client = spawnProcess("client");
     var server = spawnProcess("server");
-    //var testProcess = spawnProcess("test");
+
+    // Start tests unless they asked us not to
+    // @TODO: would be better to use something like `commander` for these things
+    if (process.argv[3] !== "--no-tests") {
+        var testProcess = spawnProcess("test");
+    }
 
     // We do not want to watch for changes in production
     if (isProduction) return;

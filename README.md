@@ -1,4 +1,6 @@
 # GlueStick
+[![npm package][npm-badge]][npm]
+
 GlueStick is a command line interface for quickly developing universal web
 applications using React. Currently it is still very experimental and is likely
 to change frequently.
@@ -55,6 +57,43 @@ React's TestUtils are also available globally in your test files. You simply
 need to create files in the `test` folder with the extension .test.js and they
 will be executed through the test runner.
 
+## Styles
+The preferred way to style components in the GlueStick environment is to use
+[Radium](https://github.com/FormidableLabs/radium).
+
+To prepare a component for using Radium, simply use the @Radium decorator above
+your component class. When styling with Radium, your style updates will be hot
+loaded in development mode so you do not need to refresh the browser to see
+your changes. Please read the Radium docs for more information on how to use
+Radium.
+
+Example:
+```
+@Radium
+export default class MyComponent extends Component {
+…
+```
+
+#### CSS and SASS
+If you want to include a base stylesheet (like bootstrap css), you can import
+you stylesheet at the top of any file and it will be included when the page
+loads. We do not currently support hot loading for these styles but they should
+show up on a page refresh. You can use plain css or sass.
+
+Example:
+Edit /Index.js
+```
+import React, { Component } from "react";
+import "assets/css/my-custom-css.css";
+…
+```
+
+The code above will automatically extract the css from the referenced file and
+include it in a base css file that is included on new page loads. References to
+images and font files will automatically be handled as well.
+
+_If you would like to see better css support, please submit a pull request :)_
+
 ## Hot Loading
 GlueStick's development environment utilizing hotloading so your changes will
 show up in the browser as you go. This is sort of experimental but it works
@@ -65,3 +104,5 @@ browser for certain changes.
 This is not finished yet but we have some cool things in the works. Stay tuned
 for more.
 
+[npm-badge]: https://img.shields.io/npm/v/gluestick.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/gluestick

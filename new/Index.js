@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "assets/css/normalize.css";
 
 /**
  * The index html will be generated from this file. You can customize things as

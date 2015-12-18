@@ -3,15 +3,15 @@
 
 require("babel-core/register")({
     stage: 0,
-    //ignore: function(filename) {
-        //// ignore node modules in the current directory
-        //if (filename.indexOf(process.cwd()) === 0) {
-            //return /node_modules/.test(filename);
-        //}
+    ignore: function(filename) {
+        // ignore node modules in the current directory
+        if (!/node_modules/.test(__dirname) || filename.indexOf(process.cwd()) === 0) {
+            return /node_modules/.test(filename);
+        }
 
-        //// don't ignore node_modules in gluestick
-        //return !/\/node_modules\/gluestick\/src\//.test(filename);
-    //}
+        // don't ignore node_modules in gluestick
+        return !/\/node_modules\/gluestick\/src\//.test(filename);
+    }
 });
 
 require("./cli");

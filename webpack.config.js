@@ -36,6 +36,12 @@ module.exports = {
                 comonjs: "react",
                 amd: "react"
             },
+            radium: {
+                root: "Radium",
+                commonjs2: "radium",
+                comonjs: "radium",
+                amd: "radium"
+            },
             "react-dom": {
                 root: "ReactDOM",
                 commonjs2: "react-dom",
@@ -59,6 +65,12 @@ module.exports = {
                 commonjs2: "react-redux",
                 commonjs: "react-redux",
                 amd: "react-redux"
+            },
+            "history/lib/createBrowserHistory": {
+                root: "createBrowserHistory",
+                commonjs2: "history/lib/createBrowserHistory",
+                commonjs: "history/lib/createBrowserHistory",
+                amd: "history/lib/createBrowserHistory"
             }
         }
     ]
