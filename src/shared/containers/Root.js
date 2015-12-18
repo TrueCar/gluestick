@@ -6,6 +6,9 @@ import createBrowserHistory from "history/lib/createBrowserHistory";
 import prepareRoutesWithTransitionHooks from "../../lib/prepareRoutesWithTransitionHooks";
 import RadiumConfig from "../components/RadiumConfig";
 
+// @TODO only do this if dev mode
+import DevTools from "./DevTools";
+
 export default class Root extends Component {
     static propTypes = {
         routes: PropTypes.object,
@@ -18,6 +21,17 @@ export default class Root extends Component {
         routerHistory: typeof window !== "undefined" ? createBrowserHistory() : null
     };
 
+    constructor (props) {
+        super(props);
+        this.state = {
+            mounted: false
+        };
+    }
+
+    componentDidMount () {
+        this.setState({mounted: true});
+    }
+
     render () {
         const {
             routes,
@@ -28,12 +42,14 @@ export default class Root extends Component {
         } = this.props;
 
         const router = this._renderRouter();
+        const devTools = this._renderDevTools();
 
         return (
             <RadiumConfig radiumConfig={radiumConfig}>
                 <Provider store={store}>
                     <div>
                         {router}
+                        {devTools}
                     </div>
                 </Provider>
             </RadiumConfig>
@@ -56,5 +72,13 @@ export default class Root extends Component {
             </Router>
         );
     }
+
+    _renderDevTools () {
+        if (!this.state.mounted) return;
+        return (
+            <DevTools />
+        );
+    }
+
 }
 

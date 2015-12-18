@@ -1,5 +1,6 @@
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import promiseMiddleware from "../../lib/promiseMiddleware";
+import DevTools from "../containers/DevTools";
 
 /**
  * This reducer always returns the original state, this prevents an error when
@@ -12,7 +13,8 @@ function _gluestick(state=true, action) {
 export default function (customRequire, hotCallback) {
     const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
     const finalCreateStore = compose(
-        applyMiddleware(promiseMiddleware)
+        applyMiddleware(promiseMiddleware),
+        DevTools.instrument() // @TODO: only include dev tools in development mode
     )(createStore);
     const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
