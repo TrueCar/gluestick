@@ -50,6 +50,15 @@ module.exports = function () {
         }
     });
 
+    // If there is no src/config/application.js file make one now (This is to upgrade apps created prior to 0.1.6)
+    try {
+        fs.statSync(path.join(process.cwd(), "src/config/application.js"))
+    }
+    catch (e) {
+        const newApplicationConfigFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", "application.js"), "utf8");
+        replaceFile("application.js", newApplicationConfigFile);
+    }
+
     // @TODO we should load the package.json file and match up the gluestick module version to the CLI version
 };
 
