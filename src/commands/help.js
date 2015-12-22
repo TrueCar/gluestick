@@ -6,6 +6,7 @@ Available Commands:
   gluestick generate component COMPONENT_NAME   # Generate a new component and test file
   gluestick generate reducer REDUCER_NAME       # Generator used for creating things
   gluestick help                                # What you are seeing now
+  gluestick build                               # Create production asset build
   gluestick start [options]                     # Start everything
 
 Start Options:
