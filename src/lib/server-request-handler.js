@@ -12,7 +12,12 @@ import head from "../shared/components/head";
 
 const pretty = new PrettyError();
 
+process.on("unhandledRejection", (reason, promise) => {
+    console.log(chalk.red(reason), promise);
+});
+
 module.exports = async function (req, res) {
+    try {
         const Index = require(path.join(process.cwd(), "Index"));
         const Entry = require(path.join(process.cwd(), "src/config/.entry"));
         const store = require(path.join(process.cwd(), "src/config/.store"));
@@ -57,11 +62,16 @@ module.exports = async function (req, res) {
                     // @TODO custom 404 handling
                     res.status(404).send("Not Found");
                 }
-        }
-        catch (error) {
-            console.error('SERVER ERROR:', pretty.render(error));
-            res.status(500).send({error: error.stack});
-        }
-    });
+            }
+            catch (error) {
+                console.error('SERVER ERROR:', pretty.render(error));
+                res.status(500).send({error: error.stack});
+            }
+        });
+    }
+    catch (error) {
+        console.error('A SERVER ERROR:', pretty.render(error));
+        res.status(500).send({error: error.stack});
+    }
 };
 
