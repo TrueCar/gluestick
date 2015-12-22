@@ -16,9 +16,37 @@ var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../
                                         .development(process.env.NODE_ENV !== "production");
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
+const isProduction = process.env.NODE_ENV === "production";
+
+var entry = [
+    path.join(__dirname, "../entrypoints/client.js")
+];
+
+var environmentPlugins = [];
+
+if (isProduction) {
+    environmentPlugins = environmentPlugins.concat([
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
+    ]);
+}
+else {
+    environmentPlugins = environmentPlugins.concat([
+        webpackIsomorphicToolsPlugin,
+        new webpack.HotModuleReplacementPlugin(),
+    ]);
+}
+
+// Include hot middleware in development mode only
+if (!isProduction) {
+    entry.unshift("webpack-hot-middleware/client");
+}
 
 var compiler = webpack({
-    devtool: "eval",
+    devtool: isProduction ? undefined : "eval",
     resolve: {
         extensions: ["", ".js", ".css"],
         alias: {
@@ -27,36 +55,25 @@ var compiler = webpack({
     },
     context: process.cwd(),
     entry: {
-        "main": [
-            "webpack-hot-middleware/client",
-            path.join(__dirname, "../entrypoints/client.js")
-        ]
+        "main": entry
     },
     output: {
         path: OUTPUT_PATH,
         filename: OUTPUT_FILE,
-        publicPath: PUBLIC_PATH
+        publicPath: isProduction ? null : PUBLIC_PATH
     },
     plugins: [
-        webpackIsomorphicToolsPlugin,
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
-        // @TODO: add uglifyjs to production mode
-        //new webpack.optimize.UglifyJsPlugin({
-            //compress: {
-                //warnings: false
-            //}
-        //}),
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin("[name].css"),
         new webpack.DefinePlugin({
             "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
             "process.env": {
-                "NODE_ENV": JSON.stringify("development")
+                "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
             }
         })
-    ],
+    ].concat(environmentPlugins),
     module: {
         loaders: [
             {
@@ -97,24 +114,31 @@ var compiler = webpack({
 });
 
 module.exports = function () {
-    var app = express();
-    app.use(require("webpack-dev-middleware")(compiler, {
-        noInfo: true,
-        publicPath: PUBLIC_PATH
-    }));
-    app.use(require("webpack-hot-middleware")(compiler));
-    app.use(proxy("localhost:8880", {
-        forwardPath: function (req, res) {
-            return require("url").parse(req.url).path;
-        }
-    }));
-    app.listen(PORT, "localhost", function (error) {
-        if (error) {
-            console.log(error);
-            return;
-        }
+    if (!isProduction) {
+        var app = express();
+        app.use(require("webpack-dev-middleware")(compiler, {
+            noInfo: true,
+            publicPath: PUBLIC_PATH
+        }));
+        app.use(require("webpack-hot-middleware")(compiler));
+        app.use(proxy("localhost:8880", {
+            forwardPath: function (req, res) {
+                return require("url").parse(req.url).path;
+            }
+        }));
+        app.listen(PORT, "localhost", function (error) {
+            if (error) {
+                console.log(error);
+                return;
+            }
 
-        console.log(chalk.green("Server running on http://localhost:" + PORT));
-    });
+            console.log(chalk.green("Server running on http://localhost:" + PORT));
+        });
+    }
+    else {
+        compiler.run(() => {
+            console.log(chalk.green("Production assets compiled"));
+        });
+    }
 };
 

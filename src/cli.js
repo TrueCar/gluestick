@@ -64,9 +64,9 @@ function startAll() {
     var client = spawnProcess("client");
     var server = spawnProcess("server");
 
-    // Start tests unless they asked us not to
+    // Start tests unless they asked us not to or we are in production mode
     // @TODO: would be better to use something like `commander` for these things
-    if (process.argv[3] !== "--no-tests") {
+    if (!isProduction && process.argv[3] !== "--no-tests") {
         var testProcess = spawnProcess("test");
     }
 
