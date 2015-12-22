@@ -110,8 +110,17 @@ great most of the time. However, sometimes you will still need to refresh the
 browser for certain changes.
 
 ## Deployment & Production
-This is not finished yet but we have some cool things in the works. Stay tuned
-for more.
+To run a gluestick application in production mode, simple set `NODE_ENV`
+envrionment variable to `production`.
+For example: `NODE_ENV=production gluestick start`
+
+GlueStick will serve assets for you in production mode but it is recommended
+you serve assets from a Content Delivery Network. To do that, simply run
+`gluestick build` and it will generate a folder named `build` in your project
+root. This folder will contain all of the assets needed to run your app.
+
+Finally, you need to update your application config file
+(src/config/application.js) to define the asset path for production.
 
 [npm-badge]: https://img.shields.io/npm/v/gluestick.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gluestick
