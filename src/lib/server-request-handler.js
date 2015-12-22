@@ -8,7 +8,7 @@ import { match, RoutingContext, Route } from "react-router";
 
 import prepareRoutesWithTransitionHooks from "./prepareRoutesWithTransitionHooks";
 import Body from "../shared/components/Body";
-import head from "../shared/components/head";
+import getHead from "../shared/components/getHead";
 
 const pretty = new PrettyError();
 
@@ -22,6 +22,8 @@ module.exports = async function (req, res) {
         const Entry = require(path.join(process.cwd(), "src/config/.entry"));
         const store = require(path.join(process.cwd(), "src/config/.store"));
         const originalRoutes = require(path.join(process.cwd(), "src/config/routes"));
+        const rawConfig = require(path.join(process.cwd(), "src/config/application"));
+        const config = rawConfig[process.env.NODE_ENV] || rawConfig.development;
         const routes = prepareRoutesWithTransitionHooks(originalRoutes);
         match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
             try {
@@ -44,11 +46,12 @@ module.exports = async function (req, res) {
                     // grab the main component which is capable of loading routes
                     // and hot loading them if in development mode
                     const radiumConfig = { userAgent: req.headers["user-agent"] };
-                    const main = createElement(Entry, {store: store, routingContext: routingContext, radiumConfig: radiumConfig});
+                    const main = createElement(Entry, {store: store, routingContext: routingContext, config: config, radiumConfig: radiumConfig});
 
                     // grab the react generated body stuff. This includes the
                     // script tag that hooks up the client side react code.
-                    const body = createElement(Body, {html: renderToString(main), initialState: store.getState()});
+                    const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
+                    const head = getHead(config);
 
                     // Grab the html from the project which is stored in the root
                     // folder named Index.js. Pass the body and the head to that

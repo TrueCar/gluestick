@@ -21,6 +21,7 @@ const scripts = {
     generate: generate,
     "start-test": startTest,
     "start-client": startClient,
+    "build": startClient.bind(null, true),
     "start-server": startServer,
     "--version": showVersion,
     help: help

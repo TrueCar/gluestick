@@ -10,7 +10,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
-var PUBLIC_PATH = "http://localhost:" + PORT + "/";
+var PUBLIC_PATH = "http://localhost:" + PORT + "/assets/";
 
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration'))
                                         .development(process.env.NODE_ENV !== "production");
@@ -113,8 +113,8 @@ var compiler = webpack({
     }
 });
 
-module.exports = function () {
-    if (!isProduction) {
+module.exports = function (buildOnly) {
+    if (!buildOnly && !isProduction) {
         var app = express();
         app.use(require("webpack-dev-middleware")(compiler, {
             noInfo: true,
@@ -136,8 +136,10 @@ module.exports = function () {
         });
     }
     else {
+        console.log(chalk.yellow("Bundling assets…"));
         compiler.run(() => {
-            console.log(chalk.green("Production assets compiled"));
+            console.log(chalk.green("Assets have been prepared for production."));
+            console.log(chalk.green(`Assets can be served from the /assets route but it is recommended that you serve the generated \`build\` folder from a Content Delivery Network`));
         });
     }
 };
