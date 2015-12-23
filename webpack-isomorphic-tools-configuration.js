@@ -12,6 +12,10 @@ module.exports = {
         fonts: {
             extensions: ["woff", "woff2", "ttf", "eot"],
             parser: WebpackIsomorphicToolsPlugin.url_loader_parser
+        },
+        json: {
+            extensions: ["json"],
+            include: [process.cwd()]
         }
     },
     alias: {
