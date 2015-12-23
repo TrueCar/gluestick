@@ -108,6 +108,10 @@ var compiler = webpack({
                     path.join(process.cwd(), "assets"),
                     path.join(__dirname, "../shared/assets")
                 ]
+            },
+            {
+                test: webpackIsomorphicToolsPlugin.regular_expression("json"),
+                loader: "json-loader"
             }
         ]
     }
