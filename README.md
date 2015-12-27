@@ -15,6 +15,9 @@ sudo npm install gluestick -g
 ```
 
 ## Getting Started
+You can view a complete getting started guide on our blog https://www.drivenbycode.com/getting-started-with-gluestick/
+
+## Overview
 GlueStick comes with several generators to help you get started. To create a
 new GlueStick project, run the following command:
 ```
