@@ -10,6 +10,7 @@ const generate = require("./commands/generate");
 const help = require("./commands/help");
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
+const chokidar = require('chokidar');
 
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
@@ -74,15 +75,18 @@ function startAll() {
     // We do not want to watch for changes in production
     if (isProduction) return;
 
-    console.log("watching", process.cwd());
     var changedTimer;
-    fs.watch(process.cwd(), {recursive: true}, function (event, filename) {
+    console.log("watching", process.cwd());
+    chokidar.watch(['src/**/*', 'assets/**/*', 'Index.js'], {
+        ignored: /[\/\\]\./,
+        persistent: true
+    }).on('all', function(event, path) {
         clearTimeout(changedTimer);
-        changedTimer = setTimeout(function () {
-            console.log(chalk.yellow("[change detected] restarting server…", filename));
+        changedTimer = setTimeout(function() {
+            console.log(chalk.yellow("[change detected] restarting server…", path));
             server.kill();
             server = spawnProcess("server");
-        }, 500);
+        }, 250);
     });
 }
 
