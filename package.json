@@ -52,6 +52,7 @@
     "karma-sourcemap-loader": "0.3.6",
     "karma-spec-reporter": "0.0.23",
     "karma-webpack": "1.7.0",
+    "match-media": "0.2.0",
     "mocha": "2.3.4",
     "node-sass": "3.4.2",
     "pretty-error": "1.2.0",
