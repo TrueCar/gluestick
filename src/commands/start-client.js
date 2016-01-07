@@ -103,11 +103,7 @@ var compiler = webpack({
             },
             {
                 test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-                loader: ExtractTextPlugin.extract("style", "css!sass"),
-                include: [
-                    path.join(process.cwd(), "assets"),
-                    path.join(__dirname, "../shared/assets")
-                ]
+                loader: ExtractTextPlugin.extract("style", "css!sass")
             },
             {
                 test: webpackIsomorphicToolsPlugin.regular_expression("json"),
