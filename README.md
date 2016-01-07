@@ -2,7 +2,21 @@
 [![npm package][npm-badge]][npm]
 
 GlueStick is a command line interface for quickly developing universal web
-applications using React. Currently it is still very experimental and is likely
+applications using React.
+
+GlueStick allows users to quickly create new applications with its bootstrap
+generator, along with generators for components, containers, and reducers. In
+addition, GlueStick contains a fully functional test environment, server-side
+rendering, and an asset bundler. However, GlueStick sidesteps the hassle of any
+configuration files.
+
+The goal is not to be another boilerplate for building universal web
+applications. Instead, the goal is to abstract all of the boilerplate code into
+one location that the developer doesn't have to worry about. Not only does this
+make your application code cleaner but it makes it easier to update the
+boilerplate code as new improvements are discovered.
+
+Currently it is still very experimental and is likely
 to change frequently.
 
 ## Requirements

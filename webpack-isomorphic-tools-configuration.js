@@ -7,7 +7,7 @@ module.exports = {
             extensions: ["png", "jpg", "gif", "ico", "svg"]
         },
         styles: {
-            extensions: ["css", "scss"]
+            extensions: ["css", "scss", "sass"]
         },
         fonts: {
             extensions: ["woff", "woff2", "ttf", "eot"],
