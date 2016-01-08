@@ -168,17 +168,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var devTools = this._renderDevTools();
 	
 	            return _react2["default"].createElement(
-	                _componentsRadiumConfig2["default"],
-	                { radiumConfig: radiumConfig },
+	                _reactRedux.Provider,
+	                { store: store },
 	                _react2["default"].createElement(
-	                    _reactRedux.Provider,
-	                    { store: store },
+	                    "div",
+	                    null,
 	                    _react2["default"].createElement(
-	                        "div",
-	                        null,
-	                        router,
-	                        devTools
-	                    )
+	                        _componentsRadiumConfig2["default"],
+	                        { radiumConfig: radiumConfig },
+	                        router
+	                    ),
+	                    devTools
 	                )
 	            );
 	        }
@@ -534,21 +534,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.__esModule = true;
 	
-	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
-	
 	var _instrument = __webpack_require__(13);
 	
-	exports.instrument = _interopRequire(_instrument);
-	exports.ActionCreators = _instrument.ActionCreators;
-	exports.ActionTypes = _instrument.ActionTypes;
+	Object.defineProperty(exports, 'instrument', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.default;
+	  }
+	});
+	Object.defineProperty(exports, 'ActionCreators', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.ActionCreators;
+	  }
+	});
+	Object.defineProperty(exports, 'ActionTypes', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.ActionTypes;
+	  }
+	});
 	
 	var _persistState = __webpack_require__(36);
 	
-	exports.persistState = _interopRequire(_persistState);
+	Object.defineProperty(exports, 'persistState', {
+	  enumerable: true,
+	  get: function get() {
+	    return _persistState.default;
+	  }
+	});
 	
 	var _createDevTools = __webpack_require__(71);
 	
-	exports.createDevTools = _interopRequire(_createDevTools);
+	Object.defineProperty(exports, 'createDevTools', {
+	  enumerable: true,
+	  get: function get() {
+	    return _createDevTools.default;
+	  }
+	});
 
 /***/ },
 /* 13 */
@@ -556,19 +579,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports['default'] = instrument;
+	exports.__esModule = true;
+	exports.ActionCreators = exports.ActionTypes = undefined;
+	exports.default = instrument;
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _difference = __webpack_require__(14);
 	
-	var _lodashArrayDifference = __webpack_require__(14);
+	var _difference2 = _interopRequireDefault(_difference);
 	
-	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var ActionTypes = {
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var ActionTypes = exports.ActionTypes = {
 	  PERFORM_ACTION: 'PERFORM_ACTION',
 	  RESET: 'RESET',
 	  ROLLBACK: 'ROLLBACK',
@@ -579,45 +604,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	  IMPORT_STATE: 'IMPORT_STATE'
 	};
 	
-	exports.ActionTypes = ActionTypes;
 	/**
 	 * Action creators to change the History state.
 	 */
-	var ActionCreators = {
+	var ActionCreators = exports.ActionCreators = {
 	  performAction: function performAction(action) {
 	    return { type: ActionTypes.PERFORM_ACTION, action: action, timestamp: Date.now() };
 	  },
-	
 	  reset: function reset() {
 	    return { type: ActionTypes.RESET, timestamp: Date.now() };
 	  },
-	
 	  rollback: function rollback() {
 	    return { type: ActionTypes.ROLLBACK, timestamp: Date.now() };
 	  },
-	
 	  commit: function commit() {
 	    return { type: ActionTypes.COMMIT, timestamp: Date.now() };
 	  },
-	
 	  sweep: function sweep() {
 	    return { type: ActionTypes.SWEEP };
 	  },
-	
 	  toggleAction: function toggleAction(id) {
 	    return { type: ActionTypes.TOGGLE_ACTION, id: id };
 	  },
-	
 	  jumpToState: function jumpToState(index) {
 	    return { type: ActionTypes.JUMP_TO_STATE, index: index };
 	  },
-	
 	  importState: function importState(nextLiftedState) {
 	    return { type: ActionTypes.IMPORT_STATE, nextLiftedState: nextLiftedState };
 	  }
 	};
 	
-	exports.ActionCreators = ActionCreators;
 	var INIT_ACTION = { type: '@@INIT' };
 	
 	/**
@@ -637,7 +653,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    nextState = reducer(state, action);
 	  } catch (err) {
 	    nextError = err.toString();
-	    console.error(err.stack || err);
+	    if ((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && typeof window.chrome !== 'undefined') {
+	      // In Chrome, rethrowing provides better source map support
+	      setTimeout(function () {
+	        throw err;
+	      });
+	    } else {
+	      console.error(err.stack || err);
+	    }
 	  }
 	
 	  return {
@@ -699,8 +722,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   * Manages how the history actions modify the history state.
 	   */
-	  return function (liftedState, liftedAction) {
-	    if (liftedState === undefined) liftedState = initialLiftedState;
+	  return function () {
+	    var liftedState = arguments.length <= 0 || arguments[0] === undefined ? initialLiftedState : arguments[0];
+	    var liftedAction = arguments[1];
 	    var monitorState = liftedState.monitorState;
 	    var actionsById = liftedState.actionsById;
 	    var nextActionId = liftedState.nextActionId;
@@ -713,6 +737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // By default, agressively recompute every state whatever happens.
 	    // This has O(n) performance, so we'll override this to a sensible
 	    // value whenever we feel like we don't have to recompute the states.
+	
 	    var minInvalidatedStateIndex = 0;
 	
 	    switch (liftedAction.type) {
@@ -787,7 +812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      case ActionTypes.SWEEP:
 	        {
 	          // Forget any actions that are currently being skipped.
-	          stagedActionIds = _lodashArrayDifference2['default'](stagedActionIds, skippedActionIds);
+	          stagedActionIds = (0, _difference2.default)(stagedActionIds, skippedActionIds);
 	          skippedActionIds = [];
 	          currentStateIndex = Math.min(currentStateIndex, stagedActionIds.length - 1);
 	          break;
@@ -808,17 +833,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      case ActionTypes.IMPORT_STATE:
 	        {
-	          var _liftedAction$nextLiftedState = liftedAction.nextLiftedState;
-	
+	          var _liftedAction$nextLif = liftedAction.nextLiftedState;
 	          // Completely replace everything.
-	          monitorState = _liftedAction$nextLiftedState.monitorState;
-	          actionsById = _liftedAction$nextLiftedState.actionsById;
-	          nextActionId = _liftedAction$nextLiftedState.nextActionId;
-	          stagedActionIds = _liftedAction$nextLiftedState.stagedActionIds;
-	          skippedActionIds = _liftedAction$nextLiftedState.skippedActionIds;
-	          committedState = _liftedAction$nextLiftedState.committedState;
-	          currentStateIndex = _liftedAction$nextLiftedState.currentStateIndex;
-	          computedStates = _liftedAction$nextLiftedState.computedStates;
+	
+	          monitorState = _liftedAction$nextLif.monitorState;
+	          actionsById = _liftedAction$nextLif.actionsById;
+	          nextActionId = _liftedAction$nextLif.nextActionId;
+	          stagedActionIds = _liftedAction$nextLif.stagedActionIds;
+	          skippedActionIds = _liftedAction$nextLif.skippedActionIds;
+	          committedState = _liftedAction$nextLif.committedState;
+	          currentStateIndex = _liftedAction$nextLif.currentStateIndex;
+	          computedStates = _liftedAction$nextLif.computedStates;
 	
 	          break;
 	        }
@@ -877,7 +902,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      liftedStore.dispatch(liftAction(action));
 	      return action;
 	    },
-	
 	    getState: function getState() {
 	      var state = unliftState(liftedStore.getState());
 	      if (state !== undefined) {
@@ -885,7 +909,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return lastDefinedState;
 	    },
-	
 	    replaceReducer: function replaceReducer(nextReducer) {
 	      liftedStore.replaceReducer(liftReducer(nextReducer));
 	    }
@@ -895,7 +918,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Redux instrumentation store enhancer.
 	 */
-	
 	function instrument() {
 	  var monitorReducer = arguments.length <= 0 || arguments[0] === undefined ? function () {
 	    return null;
@@ -1675,25 +1697,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports['default'] = persistState;
+	exports.__esModule = true;
+	exports.default = persistState;
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _mapValues = __webpack_require__(37);
 	
-	var _lodashObjectMapValues = __webpack_require__(37);
+	var _mapValues2 = _interopRequireDefault(_mapValues);
 	
-	var _lodashObjectMapValues2 = _interopRequireDefault(_lodashObjectMapValues);
+	var _identity = __webpack_require__(65);
 	
-	var _lodashUtilityIdentity = __webpack_require__(65);
+	var _identity2 = _interopRequireDefault(_identity);
 	
-	var _lodashUtilityIdentity2 = _interopRequireDefault(_lodashUtilityIdentity);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function persistState(sessionId) {
-	  var deserializeState = arguments.length <= 1 || arguments[1] === undefined ? _lodashUtilityIdentity2['default'] : arguments[1];
-	  var deserializeAction = arguments.length <= 2 || arguments[2] === undefined ? _lodashUtilityIdentity2['default'] : arguments[2];
+	  var deserializeState = arguments.length <= 1 || arguments[1] === undefined ? _identity2.default : arguments[1];
+	  var deserializeAction = arguments.length <= 2 || arguments[2] === undefined ? _identity2.default : arguments[2];
 	
 	  if (!sessionId) {
 	    return function (next) {
@@ -1705,7 +1726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function deserialize(state) {
 	    return _extends({}, state, {
-	      actionsById: _lodashObjectMapValues2['default'](state.actionsById, function (liftedAction) {
+	      actionsById: (0, _mapValues2.default)(state.actionsById, function (liftedAction) {
 	        return _extends({}, liftedAction, {
 	          action: deserializeAction(liftedAction.action)
 	        });
@@ -1757,8 +1778,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  };
 	}
-	
-	module.exports = exports['default'];
 
 /***/ },
 /* 37 */
@@ -3173,19 +3192,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	exports['default'] = createDevTools;
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	exports.__esModule = true;
+	exports.default = createDevTools;
 	
 	var _react = __webpack_require__(2);
 	
@@ -3197,61 +3207,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _instrument2 = _interopRequireDefault(_instrument);
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
 	function createDevTools(children) {
+	  var _class, _temp;
+	
 	  var monitorElement = _react.Children.only(children);
 	  var monitorProps = monitorElement.props;
 	  var Monitor = monitorElement.type;
-	  var ConnectedMonitor = _reactRedux.connect(function (state) {
+	  var ConnectedMonitor = (0, _reactRedux.connect)(function (state) {
 	    return state;
 	  })(Monitor);
-	  var enhancer = _instrument2['default'](function (state, action) {
+	  var enhancer = (0, _instrument2.default)(function (state, action) {
 	    return Monitor.update(monitorProps, state, action);
 	  });
 	
-	  return (function (_Component) {
+	  return _temp = _class = (function (_Component) {
 	    _inherits(DevTools, _Component);
-	
-	    _createClass(DevTools, null, [{
-	      key: 'contextTypes',
-	      value: {
-	        store: _react.PropTypes.object
-	      },
-	      enumerable: true
-	    }, {
-	      key: 'propTypes',
-	      value: {
-	        store: _react.PropTypes.object
-	      },
-	      enumerable: true
-	    }, {
-	      key: 'instrument',
-	      value: function value() {
-	        return enhancer;
-	      },
-	      enumerable: true
-	    }]);
 	
 	    function DevTools(props, context) {
 	      _classCallCheck(this, DevTools);
 	
-	      _Component.call(this, props, context);
-	      if (context.store) {
-	        this.liftedStore = context.store.liftedStore;
-	      } else {
-	        this.liftedStore = props.store.liftedStore;
+	      var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	      if (!props.store && !context.store) {
+	        console.error('Redux DevTools could not render. You must pass the Redux store ' + 'to <DevTools> either as a "store" prop or by wrapping it in a ' + '<Provider store={store}>.');
+	        return _possibleConstructorReturn(_this);
 	      }
+	
+	      if (context.store) {
+	        _this.liftedStore = context.store.liftedStore;
+	      } else {
+	        _this.liftedStore = props.store.liftedStore;
+	      }
+	
+	      if (!_this.liftedStore) {
+	        console.error('Redux DevTools could not render. Did you forget to include ' + 'DevTools.instrument() in your store enhancer chain before ' + 'using createStore()?');
+	      }
+	      return _this;
 	    }
 	
 	    DevTools.prototype.render = function render() {
-	      return _react2['default'].createElement(ConnectedMonitor, _extends({}, monitorProps, {
+	      if (!this.liftedStore) {
+	        return null;
+	      }
+	
+	      return _react2.default.createElement(ConnectedMonitor, _extends({}, monitorProps, {
 	        store: this.liftedStore }));
 	    };
 	
 	    return DevTools;
-	  })(_react.Component);
+	  })(_react.Component), _class.contextTypes = {
+	    store: _react.PropTypes.object
+	  }, _class.propTypes = {
+	    store: _react.PropTypes.object
+	  }, _class.instrument = function () {
+	    return enhancer;
+	  }, _temp;
 	}
-	
-	module.exports = exports['default'];
 
 /***/ },
 /* 72 */
