@@ -9,6 +9,17 @@ function copyTo (destination) {
     fs.copySync(path.join(__dirname, "../../new"), destination);
     process.chdir(destination);
     spawn("npm", ["install"], {stdio: "inherit"});
+
+    // Unfortunately, the npm developers felt like it was a good idea to rename
+    // .gitignore files to .npmignore, this was probably not a terrible idea
+    // for most projects but it broke tons of generators. For that reason, we
+    // instead renamed .gitignore to _gitignore and when you generate a new
+    // project we need to manually rename that file.
+    //
+    // Relevant Issues:
+    // https://github.com/npm/npm/issues/1862
+    // https://github.com/npm/npm/issues/7252
+    fs.renameSync(path.join(destination, "_gitignore"), path.join(destination, ".gitignore"));
 }
 
 module.exports = function () {
