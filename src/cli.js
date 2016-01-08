@@ -87,7 +87,9 @@ function spawnProcess (type) {
     return childProcess;
 }
 
-function startAll(withoutTests=false) {
+function startAll(withoutTests) {
+    var withoutTests = withoutTests || false;
+    
     autoUpgrade();
 
     var client = spawnProcess("client");
