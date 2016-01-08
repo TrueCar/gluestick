@@ -45,14 +45,14 @@ export default class Root extends Component {
         const devTools = this._renderDevTools();
 
         return (
-            <RadiumConfig radiumConfig={radiumConfig}>
-                <Provider store={store}>
-                    <div>
+            <Provider store={store}>
+                <div>
+                    <RadiumConfig radiumConfig={radiumConfig}>
                         {router}
-                        {devTools}
-                    </div>
-                </Provider>
-            </RadiumConfig>
+                    </RadiumConfig>
+                    {devTools}
+                </div>
+            </Provider>
         );
     }
 
