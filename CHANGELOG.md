@@ -2,6 +2,7 @@
 
 ## 0.1.9
 [Fix tests that load non javascript files] (https://github.com/TrueCar/gluestick/pull/17)
+
 [Fix npm start](https://github.com/TrueCar/gluestick/pull/16)
 
 ## 0.1.8
