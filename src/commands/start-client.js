@@ -126,6 +126,15 @@ module.exports = function (buildOnly) {
                 return require("url").parse(req.url).path;
             }
         }));
+        app.use(function(err, req, res, next) {
+            if (err && err.code == "ECONNREFUSED") {
+                // render a friendly loading page during server restarts
+                res.status(200).sendFile("poll.html", {root: path.join(__dirname, "../lib")});
+            }
+            else {
+                next(err);
+            }
+        });
         app.listen(PORT, "localhost", function (error) {
             if (error) {
                 console.log(error);

@@ -21,6 +21,12 @@ module.exports = function () {
 
             }
             else {
+                app.get("/gluestick-proxy-poll", function(req, res) { 
+                    // allow requests from our client side loading page
+                    res.header("Access-Control-Allow-Origin", "*"); 
+                    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+                    res.status(200).json({up: true}); 
+                });
                 console.log("Server side rendering proxy running at http://localhost:" + PORT);
             }
 
