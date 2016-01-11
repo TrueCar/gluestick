@@ -4,6 +4,7 @@ var process = require("process");
 var path = require("path");
 var Server = karma.Server;
 var runner = karma.runner;
+var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
 var PORT = 9876;
 var CWD = process.cwd();
@@ -12,6 +13,11 @@ const preprocessors = {};
 const helperPath = path.resolve(__dirname, "../lib/test-helper.js");
 preprocessors[helperPath] = ["webpack", "sourcemap"];
 
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration')).development(true);
+
+// @TODO: start-client and this file share a lot of copy/paste code. We need to
+// clean this up in the meantime tests were completely broken so this is being
+// rushed in
 const config = {
     port: PORT,
     browsers: ["Chrome"],
@@ -29,6 +35,30 @@ const config = {
                     test: /\.js$/,
                     loader: "babel?stage=0&optional[]=runtime",
                     exclude: /node_modules/
+                },
+                {
+                    test: webpackIsomorphicToolsPlugin.regular_expression("images"),
+                    loader: "file-loader",
+                    include: [
+                        path.join(process.cwd(), "assets"),
+                        path.join(__dirname, "../shared/assets")
+                    ]
+                },
+                {
+                    test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
+                    loader: "file-loader",
+                    include: [
+                        path.join(process.cwd(), "assets"),
+                        path.join(__dirname, "../shared/assets")
+                    ]
+                },
+                {
+                    test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
+                    loader: "file-loader"
+                },
+                {
+                    test: webpackIsomorphicToolsPlugin.regular_expression("json"),
+                    loader: "json-loader"
                 }
             ]
         },
