@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.18
+## 0.1.9
+[Fix tests that load non javascript files] (https://github.com/TrueCar/gluestick/pull/17)
+[Fix npm start](https://github.com/TrueCar/gluestick/pull/16)
+
+## 0.1.8
 [Refine watch to avoid unnecessary server restarts.](https://github.com/TrueCar/gluestick/commit/1d02b2d913ca39c15c770207684e90a5ab8abdb0)
 
 [Use commander for cli](https://github.com/TrueCar/gluestick/commit/faf3c1e8c4f2b94097fea92412766c2047e6b754)
