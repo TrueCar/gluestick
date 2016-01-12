@@ -13,7 +13,7 @@ export default ({dispatch, getState}) => {
         return promise
             .then(value => {
                 next({...rest, value, type: SUCCESS});
-                return value;
+                return value || true;
             })
             .catch(error => {
                 next({...rest, error, type: FAILURE});
