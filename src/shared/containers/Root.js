@@ -74,7 +74,7 @@ export default class Root extends Component {
     }
 
     _renderDevTools () {
-        if (!this.state.mounted) return;
+        if (!module.hot || !this.state.mounted) return;
         return (
             <DevTools />
         );
