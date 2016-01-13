@@ -11,12 +11,18 @@ function _gluestick(state=true, action) {
     return state;
 }
 
-export default function (customRequire, hotCallback) {
+export default function (customRequire, hotCallback, devMode) {
     const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-    const finalCreateStore = compose(
-        applyMiddleware(promiseMiddleware, thunk),
-        DevTools.instrument() // @TODO: only include dev tools in development mode
-    )(createStore);
+    const composeArgs = [
+        applyMiddleware(promiseMiddleware, thunk)
+    ];
+
+    // Include dev tools only if we are in development mode
+    if (devMode) {
+        composeArgs.push(DevTools.instrument());
+    }
+
+    const finalCreateStore = compose.apply(null, composeArgs)(createStore);
     const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
     if (hotCallback) {
