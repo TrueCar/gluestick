@@ -12,7 +12,7 @@ import "../../Index.js";
 
 export default class Entry extends Component {
     static defaultProps = {
-        store: store
+        store: store()
     };
 
     render () {
