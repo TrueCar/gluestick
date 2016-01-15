@@ -60,6 +60,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	
+	function _interopExportWildcard(obj, defaults) { var newObj = defaults({}, obj); delete newObj["default"]; return newObj; }
+	
+	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	var _sharedContainersRoot = __webpack_require__(1);
@@ -73,6 +77,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _sharedLibCreateStore2 = _interopRequireDefault(_sharedLibCreateStore);
 	
 	exports.createStore = _sharedLibCreateStore2["default"];
+	
+	var _sharedConstants = __webpack_require__(309);
+	
+	_defaults(exports, _interopExportWildcard(_sharedConstants, _defaults));
 
 /***/ },
 /* 1 */
@@ -11103,6 +11111,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}
 	module.exports = exports['default'];
+
+/***/ },
+/* 309 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ROUTE_NAME_404_NOT_FOUND = "ROUTE_NAME_404_NOT_FOUND";
+	exports.ROUTE_NAME_404_NOT_FOUND = ROUTE_NAME_404_NOT_FOUND;
 
 /***/ }
 /******/ ])

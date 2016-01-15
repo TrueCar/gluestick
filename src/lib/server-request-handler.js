@@ -4,6 +4,8 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { fetchAllData } from "./route-helper";
 import { match, RoutingContext, Route } from "react-router";
+import { ROUTE_NAME_404_NOT_FOUND } from "../shared/constants";
+import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
 
 import prepareRoutesWithTransitionHooks from "./prepareRoutesWithTransitionHooks";
 import serverErrorHandler from "./server-error-handler";
@@ -50,16 +52,25 @@ module.exports = async function (req, res) {
           const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
           const head = getHead(config);
 
+          if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
+            res.status(404);
+          }
+          else {
+            res.status(200);
+          }
+
           // Grab the html from the project which is stored in the root
           // folder named Index.js. Pass the body and the head to that
           // component. `head` includes stuff that we want the server to
           // always add inside the <head> tag.
           //
           // Bundle it all up into a string, add the doctype and deliver
-          res.status(200).send("<!DOCTYPE html>\n" + renderToString(createElement(Index, {body: body, head: head})));
+          res.send("<!DOCTYPE html>\n" + renderToString(createElement(Index, {body: body, head: head})));
         }
         else {
-          // @TODO custom 404 handling
+          // This is only hit if there is no 404 handler in the react routes. A
+          // not found handler is included by default in new projects.
+          showHelpText(MISSING_404_TEXT);
           res.status(404).send("Not Found");
         }
       }
