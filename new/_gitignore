@@ -1,3 +1,6 @@
+# Output from webpack asset bunlding
+webpack-assets.json
+
 # Logs
 logs
 *.log
