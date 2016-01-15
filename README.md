@@ -137,7 +137,7 @@ you serve assets from a Content Delivery Network. To do that, simply run
 root. This folder will contain all of the assets needed to run your app.
 
 Finally, you need to update your application config file
-(src/config/application.js) to define the asset path for production.
+(src/config/application.js) to define the asset path for production.  You can hardcode the value or you can just use the `ASSET_URL` environment variable to specify the base uri of your production assets.
 
 [npm-badge]: https://img.shields.io/npm/v/gluestick.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/gluestick
