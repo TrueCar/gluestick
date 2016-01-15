@@ -11,24 +11,24 @@ import store from "./.store";
 import "../../Index.js";
 
 export default class Entry extends Component {
-    static defaultProps = {
-        store: store()
-    };
+  static defaultProps = {
+    store: store()
+  };
 
-    render () {
-        const {
-            routingContext,
-            radiumConfig,
-            store
-        } = this.props;
+  render () {
+    const {
+      routingContext,
+      radiumConfig,
+      store
+    } = this.props;
 
-        return (
-            <Root routingContext={routingContext} radiumConfig={radiumConfig} routes={routes} store={store} />
-        );
-    }
+    return (
+      <Root routingContext={routingContext} radiumConfig={radiumConfig} routes={routes} store={store} />
+    );
+  }
 }
 
 Entry.start = function () {
-    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} />, document.getElementById("main"));
+  render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} />, document.getElementById("main"));
 };
 

@@ -8,30 +8,30 @@ import thunk from "redux-thunk";
  * no other reducers have been added.
  */
 function _gluestick(state=true, action) {
-    return state;
+  return state;
 }
 
 export default function (customRequire, hotCallback, devMode) {
-    const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-    const composeArgs = [
-        applyMiddleware(promiseMiddleware, thunk)
-    ];
+  const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
+  const composeArgs = [
+    applyMiddleware(promiseMiddleware, thunk)
+  ];
 
-    // Include dev tools only if we are in development mode
-    if (devMode) {
-        composeArgs.push(DevTools.instrument());
-    }
+  // Include dev tools only if we are in development mode
+  if (devMode) {
+    composeArgs.push(DevTools.instrument());
+  }
 
-    const finalCreateStore = compose.apply(null, composeArgs)(createStore);
-    const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
+  const finalCreateStore = compose.apply(null, composeArgs)(createStore);
+  const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 
-    if (hotCallback) {
-        hotCallback(() => {
-            const nextReducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-            store.replaceReducer(nextReducer);
-        });
-    }
+  if (hotCallback) {
+    hotCallback(() => {
+      const nextReducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
+      store.replaceReducer(nextReducer);
+    });
+  }
 
-    return store;
+  return store;
 }
 

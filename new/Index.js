@@ -7,22 +7,22 @@ import "assets/css/normalize.css";
  * should not remove those or the application will likely stop working.
  */
 export default class Index extends Component {
-    render () {
-        const {
-            head,
-            body
-        } = this.props;
-        return (
-            <html lang="en-us">
-                <head>
-                    <title>Welcome</title>
-                    {head /* DO NOT REMOVE */}
-                </head>
-                <body>
-                    {body /* DO NOT REMOVE */}
-                </body>
-            </html>
-        );
-    }
+  render () {
+    const {
+      head,
+      body
+    } = this.props;
+    return (
+      <html lang="en-us">
+        <head>
+          <title>Welcome</title>
+          {head /* DO NOT REMOVE */}
+        </head>
+        <body>
+          {body /* DO NOT REMOVE */}
+        </body>
+      </html>
+    );
+  }
 }
 

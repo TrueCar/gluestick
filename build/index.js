@@ -81,7 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -114,100 +114,98 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _componentsRadiumConfig2 = _interopRequireDefault(_componentsRadiumConfig);
 	
-	// @TODO only do this if dev mode
-	
 	var _DevTools = __webpack_require__(11);
 	
 	var _DevTools2 = _interopRequireDefault(_DevTools);
 	
 	var Root = (function (_Component) {
-	    _inherits(Root, _Component);
+	  _inherits(Root, _Component);
 	
-	    _createClass(Root, null, [{
-	        key: "propTypes",
-	        value: {
-	            routes: _react.PropTypes.object,
-	            reducers: _react.PropTypes.object,
-	            routerHistory: _react.PropTypes.any,
-	            routingContext: _react.PropTypes.object
-	        },
-	        enumerable: true
-	    }, {
-	        key: "defaultProps",
-	        value: {
-	            routerHistory: typeof window !== "undefined" ? (0, _historyLibCreateBrowserHistory2["default"])() : null
-	        },
-	        enumerable: true
-	    }]);
+	  _createClass(Root, null, [{
+	    key: "propTypes",
+	    value: {
+	      routes: _react.PropTypes.object,
+	      reducers: _react.PropTypes.object,
+	      routerHistory: _react.PropTypes.any,
+	      routingContext: _react.PropTypes.object
+	    },
+	    enumerable: true
+	  }, {
+	    key: "defaultProps",
+	    value: {
+	      routerHistory: typeof window !== "undefined" ? (0, _historyLibCreateBrowserHistory2["default"])() : null
+	    },
+	    enumerable: true
+	  }]);
 	
-	    function Root(props) {
-	        _classCallCheck(this, Root);
+	  function Root(props) {
+	    _classCallCheck(this, Root);
 	
-	        _get(Object.getPrototypeOf(Root.prototype), "constructor", this).call(this, props);
-	        this.state = {
-	            mounted: false
-	        };
+	    _get(Object.getPrototypeOf(Root.prototype), "constructor", this).call(this, props);
+	    this.state = {
+	      mounted: false
+	    };
+	  }
+	
+	  _createClass(Root, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this.setState({ mounted: true });
 	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _props = this.props;
+	      var routes = _props.routes;
+	      var routerHistory = _props.routerHistory;
+	      var routingContext = _props.routingContext;
+	      var radiumConfig = _props.radiumConfig;
+	      var store = _props.store;
 	
-	    _createClass(Root, [{
-	        key: "componentDidMount",
-	        value: function componentDidMount() {
-	            this.setState({ mounted: true });
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            var _props = this.props;
-	            var routes = _props.routes;
-	            var routerHistory = _props.routerHistory;
-	            var routingContext = _props.routingContext;
-	            var radiumConfig = _props.radiumConfig;
-	            var store = _props.store;
+	      var router = this._renderRouter();
+	      var devTools = this._renderDevTools();
 	
-	            var router = this._renderRouter();
-	            var devTools = this._renderDevTools();
+	      return _react2["default"].createElement(
+	        _reactRedux.Provider,
+	        { store: store },
+	        _react2["default"].createElement(
+	          "div",
+	          null,
+	          _react2["default"].createElement(
+	            _componentsRadiumConfig2["default"],
+	            { radiumConfig: radiumConfig },
+	            router
+	          ),
+	          devTools
+	        )
+	      );
+	    }
+	  }, {
+	    key: "_renderRouter",
+	    value: function _renderRouter() {
+	      var _props2 = this.props;
+	      var routes = _props2.routes;
+	      var routingContext = _props2.routingContext;
+	      var routerHistory = _props2.routerHistory;
 	
-	            return _react2["default"].createElement(
-	                _reactRedux.Provider,
-	                { store: store },
-	                _react2["default"].createElement(
-	                    "div",
-	                    null,
-	                    _react2["default"].createElement(
-	                        _componentsRadiumConfig2["default"],
-	                        { radiumConfig: radiumConfig },
-	                        router
-	                    ),
-	                    devTools
-	                )
-	            );
-	        }
-	    }, {
-	        key: "_renderRouter",
-	        value: function _renderRouter() {
-	            var _props2 = this.props;
-	            var routes = _props2.routes;
-	            var routingContext = _props2.routingContext;
-	            var routerHistory = _props2.routerHistory;
+	      // server rendering
+	      if (routingContext) return routingContext;
 	
-	            // server rendering
-	            if (routingContext) return routingContext;
+	      return _react2["default"].createElement(
+	        _reactRouter.Router,
+	        { history: routerHistory },
+	        (0, _libPrepareRoutesWithTransitionHooks2["default"])(routes)
+	      );
+	    }
+	  }, {
+	    key: "_renderDevTools",
+	    value: function _renderDevTools() {
+	      if (true) return;
+	      return _react2["default"].createElement(_DevTools2["default"], null);
+	    }
+	  }]);
 	
-	            return _react2["default"].createElement(
-	                _reactRouter.Router,
-	                { history: routerHistory },
-	                (0, _libPrepareRoutesWithTransitionHooks2["default"])(routes)
-	            );
-	        }
-	    }, {
-	        key: "_renderDevTools",
-	        value: function _renderDevTools() {
-	            if (true) return;
-	            return _react2["default"].createElement(_DevTools2["default"], null);
-	        }
-	    }]);
-	
-	    return Root;
+	  return Root;
 	})(_react.Component);
 	
 	exports["default"] = Root;
@@ -244,7 +242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -260,11 +258,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _sharedComponentsTransitionHooks2 = _interopRequireDefault(_sharedComponentsTransitionHooks);
 	
 	exports["default"] = function (routes) {
-	    return _react2["default"].createElement(
-	        _reactRouter.Route,
-	        { name: "TransitionHooks", component: _sharedComponentsTransitionHooks2["default"] },
-	        routes
-	    );
+	  return _react2["default"].createElement(
+	    _reactRouter.Route,
+	    { name: "TransitionHooks", component: _sharedComponentsTransitionHooks2["default"] },
+	    routes
+	  );
 	};
 	
 	module.exports = exports["default"];
@@ -276,7 +274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -296,46 +294,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _libRouteHelper = __webpack_require__(8);
 	
 	var TransitionHooks = (function (_Component) {
-	    _inherits(TransitionHooks, _Component);
+	  _inherits(TransitionHooks, _Component);
 	
-	    function TransitionHooks() {
-	        _classCallCheck(this, TransitionHooks);
+	  function TransitionHooks() {
+	    _classCallCheck(this, TransitionHooks);
 	
-	        _get(Object.getPrototypeOf(TransitionHooks.prototype), "constructor", this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(TransitionHooks.prototype), "constructor", this).apply(this, arguments);
+	  }
+	
+	  _createClass(TransitionHooks, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      var history = this.props.history;
+	      var store = this.context.store;
+	
+	      this.unListenBefore = history.listenBefore((0, _libRouteHelper.createTransitionHook)(store, history));
 	    }
+	  }, {
+	    key: "componentWillUnmount",
+	    value: function componentWillUnmount() {
+	      this.unListenBefore();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "div",
+	        null,
+	        this.props.children
+	      );
+	    }
+	  }], [{
+	    key: "contextTypes",
+	    value: {
+	      history: _react.PropTypes.object.isRequired,
+	      store: _react.PropTypes.object.isRequired
+	    },
+	    enumerable: true
+	  }]);
 	
-	    _createClass(TransitionHooks, [{
-	        key: "componentWillMount",
-	        value: function componentWillMount() {
-	            var history = this.props.history;
-	            var store = this.context.store;
-	
-	            this.unListenBefore = history.listenBefore((0, _libRouteHelper.createTransitionHook)(store, history));
-	        }
-	    }, {
-	        key: "componentWillUnmount",
-	        value: function componentWillUnmount() {
-	            this.unListenBefore();
-	        }
-	    }, {
-	        key: "render",
-	        value: function render() {
-	            return _react2["default"].createElement(
-	                "div",
-	                null,
-	                this.props.children
-	            );
-	        }
-	    }], [{
-	        key: "contextTypes",
-	        value: {
-	            history: _react.PropTypes.object.isRequired,
-	            store: _react.PropTypes.object.isRequired
-	        },
-	        enumerable: true
-	    }]);
-	
-	    return TransitionHooks;
+	  return TransitionHooks;
 	})(_react.Component);
 	
 	exports["default"] = TransitionHooks;
@@ -348,87 +346,87 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.fetchAllData = fetchAllData;
 	exports.createTransitionHook = createTransitionHook;
 	var getFetchData = function getFetchData() {
-	    var _arguments = arguments;
-	    var _again = true;
+	  var _arguments = arguments;
+	  var _again = true;
 	
-	    _function: while (_again) {
-	        _again = false;
-	        var component = _arguments.length <= 0 || _arguments[0] === undefined ? {} : _arguments[0];
-	        if (component.WrappedComponent) {
-	            _arguments = [component.WrappedComponent];
-	            _again = true;
-	            component = undefined;
-	            continue _function;
-	        } else {
-	            return component.fetchData;
-	        }
+	  _function: while (_again) {
+	    _again = false;
+	    var component = _arguments.length <= 0 || _arguments[0] === undefined ? {} : _arguments[0];
+	    if (component.WrappedComponent) {
+	      _arguments = [component.WrappedComponent];
+	      _again = true;
+	      component = undefined;
+	      continue _function;
+	    } else {
+	      return component.fetchData;
 	    }
+	  }
 	};
 	
 	function getRouteComponents(routes) {
-	    var components = [];
+	  var components = [];
 	
-	    routes.forEach(function (route) {
-	        if (route.components) Object.values(route.components).forEach(function (c) {
-	            return components.push(c);
-	        });else if (route.component) components.push(route.component);
-	    });
+	  routes.forEach(function (route) {
+	    if (route.components) Object.values(route.components).forEach(function (c) {
+	      return components.push(c);
+	    });else if (route.component) components.push(route.component);
+	  });
 	
-	    return components;
+	  return components;
 	}
 	
 	function fetchAllData(store, renderProps) {
-	    var params = renderProps.params;
-	    var query = renderProps.location;
+	  var params = renderProps.params;
+	  var query = renderProps.location;
 	
-	    var promises = getRouteComponents(renderProps.routes).map(getFetchData).filter(function (f) {
-	        return f;
-	    }) // only look at ones with a static fetchData()
-	    .map(function (fetchData) {
-	        return fetchData(store, params, query || {});
-	    }); // call fetch data methods and save promises
+	  var promises = getRouteComponents(renderProps.routes).map(getFetchData).filter(function (f) {
+	    return f;
+	  }) // only look at ones with a static fetchData()
+	  .map(function (fetchData) {
+	    return fetchData(store, params, query || {});
+	  }); // call fetch data methods and save promises
 	
-	    return Promise.all(promises);
+	  return Promise.all(promises);
 	}
 	
 	function createTransitionHook(store, history) {
-	    return function (location, cb) {
-	        history.match(location, function callee$2$0(error, redirectLocation, renderProps) {
-	            return regeneratorRuntime.async(function callee$2$0$(context$3$0) {
-	                while (1) switch (context$3$0.prev = context$3$0.next) {
-	                    case 0:
-	                        context$3$0.prev = 0;
-	                        context$3$0.next = 3;
-	                        return regeneratorRuntime.awrap(fetchAllData(store, renderProps));
+	  return function (location, cb) {
+	    history.match(location, function callee$2$0(error, redirectLocation, renderProps) {
+	      return regeneratorRuntime.async(function callee$2$0$(context$3$0) {
+	        while (1) switch (context$3$0.prev = context$3$0.next) {
+	          case 0:
+	            context$3$0.prev = 0;
+	            context$3$0.next = 3;
+	            return regeneratorRuntime.awrap(fetchAllData(store, renderProps));
 	
-	                    case 3:
-	                        context$3$0.next = 8;
-	                        break;
+	          case 3:
+	            context$3$0.next = 8;
+	            break;
 	
-	                    case 5:
-	                        context$3$0.prev = 5;
-	                        context$3$0.t0 = context$3$0["catch"](0);
+	          case 5:
+	            context$3$0.prev = 5;
+	            context$3$0.t0 = context$3$0["catch"](0);
 	
-	                        console.error(context$3$0.t0);
+	            console.error(context$3$0.t0);
 	
-	                    case 8:
-	                        context$3$0.prev = 8;
+	          case 8:
+	            context$3$0.prev = 8;
 	
-	                        cb();
-	                        return context$3$0.finish(8);
+	            cb();
+	            return context$3$0.finish(8);
 	
-	                    case 11:
-	                    case "end":
-	                        return context$3$0.stop();
-	                }
-	            }, null, this, [[0, 5, 8, 11]]);
-	        });
-	    };
+	          case 11:
+	          case "end":
+	            return context$3$0.stop();
+	        }
+	      }, null, this, [[0, 5, 8, 11]]);
+	    });
+	  };
 	}
 
 /***/ },
@@ -438,7 +436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -460,28 +458,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _radium2 = _interopRequireDefault(_radium);
 	
 	var RadiumConfig = (function (_Component) {
-	    _inherits(RadiumConfig, _Component);
+	  _inherits(RadiumConfig, _Component);
 	
-	    function RadiumConfig() {
-	        _classCallCheck(this, _RadiumConfig);
+	  function RadiumConfig() {
+	    _classCallCheck(this, _RadiumConfig);
 	
-	        _get(Object.getPrototypeOf(_RadiumConfig.prototype), "constructor", this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(_RadiumConfig.prototype), "constructor", this).apply(this, arguments);
+	  }
+	
+	  _createClass(RadiumConfig, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "div",
+	        null,
+	        this.props.children
+	      );
 	    }
+	  }]);
 	
-	    _createClass(RadiumConfig, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2["default"].createElement(
-	                "div",
-	                null,
-	                this.props.children
-	            );
-	        }
-	    }]);
-	
-	    var _RadiumConfig = RadiumConfig;
-	    RadiumConfig = (0, _radium2["default"])(RadiumConfig) || RadiumConfig;
-	    return RadiumConfig;
+	  var _RadiumConfig = RadiumConfig;
+	  RadiumConfig = (0, _radium2["default"])(RadiumConfig) || RadiumConfig;
+	  return RadiumConfig;
 	})(_react.Component);
 	
 	exports["default"] = RadiumConfig;
@@ -500,7 +498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -520,9 +518,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _reduxDevtoolsDockMonitor2 = _interopRequireDefault(_reduxDevtoolsDockMonitor);
 	
 	exports["default"] = (0, _reduxDevtools.createDevTools)(_react2["default"].createElement(
-	    _reduxDevtoolsDockMonitor2["default"],
-	    { defaultIsVisible: false, toggleVisibilityKey: "ctrl-h", changePositionKey: "ctrl-q" },
-	    _react2["default"].createElement(_reduxDevtoolsLogMonitor2["default"], { theme: "solarized" })
+	  _reduxDevtoolsDockMonitor2["default"],
+	  { defaultIsVisible: false, toggleVisibilityKey: "ctrl-h", changePositionKey: "ctrl-q" },
+	  _react2["default"].createElement(_reduxDevtoolsLogMonitor2["default"], { theme: "solarized" })
 	));
 	module.exports = exports["default"];
 
@@ -534,21 +532,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.__esModule = true;
 	
-	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
-	
 	var _instrument = __webpack_require__(13);
 	
-	exports.instrument = _interopRequire(_instrument);
-	exports.ActionCreators = _instrument.ActionCreators;
-	exports.ActionTypes = _instrument.ActionTypes;
+	Object.defineProperty(exports, 'instrument', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.default;
+	  }
+	});
+	Object.defineProperty(exports, 'ActionCreators', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.ActionCreators;
+	  }
+	});
+	Object.defineProperty(exports, 'ActionTypes', {
+	  enumerable: true,
+	  get: function get() {
+	    return _instrument.ActionTypes;
+	  }
+	});
 	
 	var _persistState = __webpack_require__(36);
 	
-	exports.persistState = _interopRequire(_persistState);
+	Object.defineProperty(exports, 'persistState', {
+	  enumerable: true,
+	  get: function get() {
+	    return _persistState.default;
+	  }
+	});
 	
 	var _createDevTools = __webpack_require__(71);
 	
-	exports.createDevTools = _interopRequire(_createDevTools);
+	Object.defineProperty(exports, 'createDevTools', {
+	  enumerable: true,
+	  get: function get() {
+	    return _createDevTools.default;
+	  }
+	});
 
 /***/ },
 /* 13 */
@@ -556,19 +577,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports['default'] = instrument;
+	exports.__esModule = true;
+	exports.ActionCreators = exports.ActionTypes = undefined;
+	exports.default = instrument;
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _difference = __webpack_require__(14);
 	
-	var _lodashArrayDifference = __webpack_require__(14);
+	var _difference2 = _interopRequireDefault(_difference);
 	
-	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var ActionTypes = {
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var ActionTypes = exports.ActionTypes = {
 	  PERFORM_ACTION: 'PERFORM_ACTION',
 	  RESET: 'RESET',
 	  ROLLBACK: 'ROLLBACK',
@@ -579,45 +602,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	  IMPORT_STATE: 'IMPORT_STATE'
 	};
 	
-	exports.ActionTypes = ActionTypes;
 	/**
 	 * Action creators to change the History state.
 	 */
-	var ActionCreators = {
+	var ActionCreators = exports.ActionCreators = {
 	  performAction: function performAction(action) {
 	    return { type: ActionTypes.PERFORM_ACTION, action: action, timestamp: Date.now() };
 	  },
-	
 	  reset: function reset() {
 	    return { type: ActionTypes.RESET, timestamp: Date.now() };
 	  },
-	
 	  rollback: function rollback() {
 	    return { type: ActionTypes.ROLLBACK, timestamp: Date.now() };
 	  },
-	
 	  commit: function commit() {
 	    return { type: ActionTypes.COMMIT, timestamp: Date.now() };
 	  },
-	
 	  sweep: function sweep() {
 	    return { type: ActionTypes.SWEEP };
 	  },
-	
 	  toggleAction: function toggleAction(id) {
 	    return { type: ActionTypes.TOGGLE_ACTION, id: id };
 	  },
-	
 	  jumpToState: function jumpToState(index) {
 	    return { type: ActionTypes.JUMP_TO_STATE, index: index };
 	  },
-	
 	  importState: function importState(nextLiftedState) {
 	    return { type: ActionTypes.IMPORT_STATE, nextLiftedState: nextLiftedState };
 	  }
 	};
 	
-	exports.ActionCreators = ActionCreators;
 	var INIT_ACTION = { type: '@@INIT' };
 	
 	/**
@@ -637,7 +651,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    nextState = reducer(state, action);
 	  } catch (err) {
 	    nextError = err.toString();
-	    console.error(err.stack || err);
+	    if ((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && typeof window.chrome !== 'undefined') {
+	      // In Chrome, rethrowing provides better source map support
+	      setTimeout(function () {
+	        throw err;
+	      });
+	    } else {
+	      console.error(err.stack || err);
+	    }
 	  }
 	
 	  return {
@@ -699,8 +720,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   * Manages how the history actions modify the history state.
 	   */
-	  return function (liftedState, liftedAction) {
-	    if (liftedState === undefined) liftedState = initialLiftedState;
+	  return function () {
+	    var liftedState = arguments.length <= 0 || arguments[0] === undefined ? initialLiftedState : arguments[0];
+	    var liftedAction = arguments[1];
 	    var monitorState = liftedState.monitorState;
 	    var actionsById = liftedState.actionsById;
 	    var nextActionId = liftedState.nextActionId;
@@ -713,6 +735,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // By default, agressively recompute every state whatever happens.
 	    // This has O(n) performance, so we'll override this to a sensible
 	    // value whenever we feel like we don't have to recompute the states.
+	
 	    var minInvalidatedStateIndex = 0;
 	
 	    switch (liftedAction.type) {
@@ -787,7 +810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      case ActionTypes.SWEEP:
 	        {
 	          // Forget any actions that are currently being skipped.
-	          stagedActionIds = _lodashArrayDifference2['default'](stagedActionIds, skippedActionIds);
+	          stagedActionIds = (0, _difference2.default)(stagedActionIds, skippedActionIds);
 	          skippedActionIds = [];
 	          currentStateIndex = Math.min(currentStateIndex, stagedActionIds.length - 1);
 	          break;
@@ -808,17 +831,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      case ActionTypes.IMPORT_STATE:
 	        {
-	          var _liftedAction$nextLiftedState = liftedAction.nextLiftedState;
-	
+	          var _liftedAction$nextLif = liftedAction.nextLiftedState;
 	          // Completely replace everything.
-	          monitorState = _liftedAction$nextLiftedState.monitorState;
-	          actionsById = _liftedAction$nextLiftedState.actionsById;
-	          nextActionId = _liftedAction$nextLiftedState.nextActionId;
-	          stagedActionIds = _liftedAction$nextLiftedState.stagedActionIds;
-	          skippedActionIds = _liftedAction$nextLiftedState.skippedActionIds;
-	          committedState = _liftedAction$nextLiftedState.committedState;
-	          currentStateIndex = _liftedAction$nextLiftedState.currentStateIndex;
-	          computedStates = _liftedAction$nextLiftedState.computedStates;
+	
+	          monitorState = _liftedAction$nextLif.monitorState;
+	          actionsById = _liftedAction$nextLif.actionsById;
+	          nextActionId = _liftedAction$nextLif.nextActionId;
+	          stagedActionIds = _liftedAction$nextLif.stagedActionIds;
+	          skippedActionIds = _liftedAction$nextLif.skippedActionIds;
+	          committedState = _liftedAction$nextLif.committedState;
+	          currentStateIndex = _liftedAction$nextLif.currentStateIndex;
+	          computedStates = _liftedAction$nextLif.computedStates;
 	
 	          break;
 	        }
@@ -877,7 +900,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      liftedStore.dispatch(liftAction(action));
 	      return action;
 	    },
-	
 	    getState: function getState() {
 	      var state = unliftState(liftedStore.getState());
 	      if (state !== undefined) {
@@ -885,7 +907,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return lastDefinedState;
 	    },
-	
 	    replaceReducer: function replaceReducer(nextReducer) {
 	      liftedStore.replaceReducer(liftReducer(nextReducer));
 	    }
@@ -895,7 +916,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Redux instrumentation store enhancer.
 	 */
-	
 	function instrument() {
 	  var monitorReducer = arguments.length <= 0 || arguments[0] === undefined ? function () {
 	    return null;
@@ -1675,25 +1695,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports['default'] = persistState;
+	exports.__esModule = true;
+	exports.default = persistState;
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _mapValues = __webpack_require__(37);
 	
-	var _lodashObjectMapValues = __webpack_require__(37);
+	var _mapValues2 = _interopRequireDefault(_mapValues);
 	
-	var _lodashObjectMapValues2 = _interopRequireDefault(_lodashObjectMapValues);
+	var _identity = __webpack_require__(65);
 	
-	var _lodashUtilityIdentity = __webpack_require__(65);
+	var _identity2 = _interopRequireDefault(_identity);
 	
-	var _lodashUtilityIdentity2 = _interopRequireDefault(_lodashUtilityIdentity);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function persistState(sessionId) {
-	  var deserializeState = arguments.length <= 1 || arguments[1] === undefined ? _lodashUtilityIdentity2['default'] : arguments[1];
-	  var deserializeAction = arguments.length <= 2 || arguments[2] === undefined ? _lodashUtilityIdentity2['default'] : arguments[2];
+	  var deserializeState = arguments.length <= 1 || arguments[1] === undefined ? _identity2.default : arguments[1];
+	  var deserializeAction = arguments.length <= 2 || arguments[2] === undefined ? _identity2.default : arguments[2];
 	
 	  if (!sessionId) {
 	    return function (next) {
@@ -1705,7 +1724,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  function deserialize(state) {
 	    return _extends({}, state, {
-	      actionsById: _lodashObjectMapValues2['default'](state.actionsById, function (liftedAction) {
+	      actionsById: (0, _mapValues2.default)(state.actionsById, function (liftedAction) {
 	        return _extends({}, liftedAction, {
 	          action: deserializeAction(liftedAction.action)
 	        });
@@ -1757,8 +1776,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  };
 	}
-	
-	module.exports = exports['default'];
 
 /***/ },
 /* 37 */
@@ -3173,19 +3190,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	exports.__esModule = true;
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	exports['default'] = createDevTools;
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	exports.__esModule = true;
+	exports.default = createDevTools;
 	
 	var _react = __webpack_require__(2);
 	
@@ -3197,61 +3205,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _instrument2 = _interopRequireDefault(_instrument);
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
 	function createDevTools(children) {
+	  var _class, _temp;
+	
 	  var monitorElement = _react.Children.only(children);
 	  var monitorProps = monitorElement.props;
 	  var Monitor = monitorElement.type;
-	  var ConnectedMonitor = _reactRedux.connect(function (state) {
+	  var ConnectedMonitor = (0, _reactRedux.connect)(function (state) {
 	    return state;
 	  })(Monitor);
-	  var enhancer = _instrument2['default'](function (state, action) {
+	  var enhancer = (0, _instrument2.default)(function (state, action) {
 	    return Monitor.update(monitorProps, state, action);
 	  });
 	
-	  return (function (_Component) {
+	  return _temp = _class = (function (_Component) {
 	    _inherits(DevTools, _Component);
-	
-	    _createClass(DevTools, null, [{
-	      key: 'contextTypes',
-	      value: {
-	        store: _react.PropTypes.object
-	      },
-	      enumerable: true
-	    }, {
-	      key: 'propTypes',
-	      value: {
-	        store: _react.PropTypes.object
-	      },
-	      enumerable: true
-	    }, {
-	      key: 'instrument',
-	      value: function value() {
-	        return enhancer;
-	      },
-	      enumerable: true
-	    }]);
 	
 	    function DevTools(props, context) {
 	      _classCallCheck(this, DevTools);
 	
-	      _Component.call(this, props, context);
-	      if (context.store) {
-	        this.liftedStore = context.store.liftedStore;
-	      } else {
-	        this.liftedStore = props.store.liftedStore;
+	      var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	      if (!props.store && !context.store) {
+	        console.error('Redux DevTools could not render. You must pass the Redux store ' + 'to <DevTools> either as a "store" prop or by wrapping it in a ' + '<Provider store={store}>.');
+	        return _possibleConstructorReturn(_this);
 	      }
+	
+	      if (context.store) {
+	        _this.liftedStore = context.store.liftedStore;
+	      } else {
+	        _this.liftedStore = props.store.liftedStore;
+	      }
+	
+	      if (!_this.liftedStore) {
+	        console.error('Redux DevTools could not render. Did you forget to include ' + 'DevTools.instrument() in your store enhancer chain before ' + 'using createStore()?');
+	      }
+	      return _this;
 	    }
 	
 	    DevTools.prototype.render = function render() {
-	      return _react2['default'].createElement(ConnectedMonitor, _extends({}, monitorProps, {
+	      if (!this.liftedStore) {
+	        return null;
+	      }
+	
+	      return _react2.default.createElement(ConnectedMonitor, _extends({}, monitorProps, {
 	        store: this.liftedStore }));
 	    };
 	
 	    return DevTools;
-	  })(_react.Component);
+	  })(_react.Component), _class.contextTypes = {
+	    store: _react.PropTypes.object
+	  }, _class.propTypes = {
+	    store: _react.PropTypes.object
+	  }, _class.instrument = function () {
+	    return enhancer;
+	  }, _temp;
 	}
-	
-	module.exports = exports['default'];
 
 /***/ },
 /* 72 */
@@ -10960,7 +10977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -10984,31 +11001,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * no other reducers have been added.
 	 */
 	function _gluestick(state, action) {
-	    if (state === undefined) state = true;
+	  if (state === undefined) state = true;
 	
-	    return state;
+	  return state;
 	}
 	
 	exports["default"] = function (customRequire, hotCallback, devMode) {
-	    var reducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
-	    var composeArgs = [(0, _redux.applyMiddleware)(_libPromiseMiddleware2["default"], _reduxThunk2["default"])];
+	  var reducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
+	  var composeArgs = [(0, _redux.applyMiddleware)(_libPromiseMiddleware2["default"], _reduxThunk2["default"])];
 	
-	    // Include dev tools only if we are in development mode
-	    if (devMode) {
-	        composeArgs.push(_containersDevTools2["default"].instrument());
-	    }
+	  // Include dev tools only if we are in development mode
+	  if (devMode) {
+	    composeArgs.push(_containersDevTools2["default"].instrument());
+	  }
 	
-	    var finalCreateStore = _redux.compose.apply(null, composeArgs)(_redux.createStore);
-	    var store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
+	  var finalCreateStore = _redux.compose.apply(null, composeArgs)(_redux.createStore);
+	  var store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
 	
-	    if (hotCallback) {
-	        hotCallback(function () {
-	            var nextReducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
-	            store.replaceReducer(nextReducer);
-	        });
-	    }
+	  if (hotCallback) {
+	    hotCallback(function () {
+	      var nextReducer = (0, _redux.combineReducers)(Object.assign({}, { _gluestick: _gluestick }, customRequire()));
+	      store.replaceReducer(nextReducer);
+	    });
+	  }
 	
-	    return store;
+	  return store;
 	};
 	
 	module.exports = exports["default"];
@@ -11026,7 +11043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
+	  value: true
 	});
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -11034,33 +11051,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	exports['default'] = function (_ref) {
-	    var dispatch = _ref.dispatch;
-	    var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  var getState = _ref.getState;
 	
-	    return function (next) {
-	        return function (action) {
-	            var promise = action.promise;
-	            var type = action.type;
+	  return function (next) {
+	    return function (action) {
+	      var promise = action.promise;
+	      var type = action.type;
 	
-	            var rest = _objectWithoutProperties(action, ['promise', 'type']);
+	      var rest = _objectWithoutProperties(action, ['promise', 'type']);
 	
-	            if (!promise) return next(action);
+	      if (!promise) return next(action);
 	
-	            var SUCCESS = type;
-	            var INIT = type + '_INIT';
-	            var FAILURE = type + '_FAILURE';
+	      var SUCCESS = type;
+	      var INIT = type + '_INIT';
+	      var FAILURE = type + '_FAILURE';
 	
-	            next(_extends({}, rest, { type: INIT }));
+	      next(_extends({}, rest, { type: INIT }));
 	
-	            return promise.then(function (value) {
-	                next(_extends({}, rest, { value: value, type: SUCCESS }));
-	                return value || true;
-	            })['catch'](function (error) {
-	                next(_extends({}, rest, { error: error, type: FAILURE }));
-	                return false;
-	            });
-	        };
+	      return promise.then(function (value) {
+	        next(_extends({}, rest, { value: value, type: SUCCESS }));
+	        return value || true;
+	      })['catch'](function (error) {
+	        next(_extends({}, rest, { error: error, type: FAILURE }));
+	        return false;
+	      });
 	    };
+	  };
 	};
 	
 	module.exports = exports['default'];

@@ -13,7 +13,7 @@ const pretty = new PrettyError();
  *  {{#notForProduction}}<pre>{{error.stack}}</pre>{{/notForProduction}}
  */
 secureHandlebars.registerHelper("notForProduction", function (options) {
-    return process.env.NODE_ENV === "production" ? "" : options.fn(this);
+  return process.env.NODE_ENV === "production" ? "" : options.fn(this);
 });
 
 /**
@@ -27,29 +27,29 @@ secureHandlebars.registerHelper("notForProduction", function (options) {
  * @param Error error the error object that triggered this handler
  */
 export default function serverErrorHandler(req, res, error) {
-    res.status(500);
-    const custom505FilePath = path.join(process.cwd(), "505.hbs");
-    console.error('SERVER ERROR:', pretty.render(error));
+  res.status(500);
+  const custom505FilePath = path.join(process.cwd(), "505.hbs");
+  console.error('SERVER ERROR:', pretty.render(error));
 
-    // Check if we have a custom 505 error page
-    fs.stat(custom505FilePath, (statError, stats) => {
+  // Check if we have a custom 505 error page
+  fs.stat(custom505FilePath, (statError, stats) => {
 
-        // If we don't have a custom 505 error page then just throw the stack trace
-        if(statError || !stats.isFile()) {
-            console.log(chalk.yellow(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`));
-            return res.send({error: error});
-        }
+    // If we don't have a custom 505 error page then just throw the stack trace
+    if(statError || !stats.isFile()) {
+      console.log(chalk.yellow(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`));
+      return res.send({error: error});
+    }
 
-        // If we do have a custom 505 page, render it
-        fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
-            if (readFileError) return res.send({error: readFileError});
+    // If we do have a custom 505 page, render it
+    fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
+      if (readFileError) return res.send({error: readFileError});
 
-            // We use secure-handlebars to deliver the 505 page. This lets you
-            // use a handlebars template so you can display the stack trace or
-            // any request, response information you would like.
-            const output = secureHandlebars.compile(data)({req, res, error});
-            res.send(output);
-        });
+      // We use secure-handlebars to deliver the 505 page. This lets you
+      // use a handlebars template so you can display the stack trace or
+      // any request, response information you would like.
+      const output = secureHandlebars.compile(data)({req, res, error});
+      res.send(output);
     });
+  });
 }
 
