@@ -3,14 +3,12 @@ import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { fetchAllData } from "./route-helper";
-import PrettyError from "pretty-error";
 import { match, RoutingContext, Route } from "react-router";
 
 import prepareRoutesWithTransitionHooks from "./prepareRoutesWithTransitionHooks";
+import serverErrorHandler from "./server-error-handler";
 import Body from "../shared/components/Body";
 import getHead from "../shared/components/getHead";
-
-const pretty = new PrettyError();
 
 process.on("unhandledRejection", (reason, promise) => {
     console.log(chalk.red(reason), promise);
@@ -28,8 +26,7 @@ module.exports = async function (req, res) {
         match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
             try {
                 if (error) {
-                    // @TODO custom 500 handling
-                    res.status(500).send(error.message);
+                    serverErrorHandler(req, res, error);
                 }
                 else if (redirectLocation) {
                     res.redirect(302, redirectLocation.pathname + redirectLocation.search);
@@ -67,14 +64,12 @@ module.exports = async function (req, res) {
                 }
             }
             catch (error) {
-                console.error('SERVER ERROR:', pretty.render(error));
-                res.status(500).send({error: error.stack});
+                serverErrorHandler(req, res, error);
             }
         });
     }
     catch (error) {
-        console.error('A SERVER ERROR:', pretty.render(error));
-        res.status(500).send({error: error.stack});
+        serverErrorHandler(req, res, error);
     }
 };
 

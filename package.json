@@ -71,6 +71,7 @@
     "redux-devtools-dock-monitor": "1.0.1",
     "redux-devtools-log-monitor": "1.0.1",
     "redux-thunk": "1.0.2",
+    "secure-handlebars": "1.2.0",
     "serialize-javascript": "1.1.2",
     "sha1": "1.1.1",
     "sinon": "1.17.2",
