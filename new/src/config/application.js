@@ -4,7 +4,7 @@ export default {
   },
   production: {
     // This should be a CDN in development
-    assetPath: `${process.env.ASSET_URL || "http://localhost:8888"}/assets`
+    assetPath: `${process.env.ASSET_URL || "http://localhost:8888/assets"}`
   }
 }
 
