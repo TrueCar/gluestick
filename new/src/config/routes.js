@@ -5,8 +5,8 @@ import MasterLayout from "../components/MasterLayout";
 import HomeApp from "../containers/HomeApp";
 
 export default (
-    <Route name="app" component={MasterLayout} path="/">
-        <IndexRoute name="home" component={HomeApp} />
-    </Route>
+  <Route name="app" component={MasterLayout} path="/">
+    <IndexRoute name="home" component={HomeApp} />
+  </Route>
 );
 

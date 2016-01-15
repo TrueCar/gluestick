@@ -19,80 +19,80 @@ var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../
 // clean this up in the meantime tests were completely broken so this is being
 // rushed in
 const config = {
-    port: PORT,
-    browsers: ["Chrome"],
-    reporters: ["spec", "notify"],
-    frameworks: ["mocha", "chai", "sinon"],
-    files: [
-        helperPath
-    ],
-    preprocessors: preprocessors,
-    webpack: {
-        devtool: "inline-source-map",
-        module: {
-            loaders: [
-                {
-                    test: /\.js$/,
-                    loader: "babel?stage=0&optional[]=runtime",
-                    exclude: /node_modules/
-                },
-                {
-                    test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-                    loader: "file-loader",
-                    include: [
-                        path.join(process.cwd(), "assets"),
-                        path.join(__dirname, "../shared/assets")
-                    ]
-                },
-                {
-                    test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-                    loader: "file-loader",
-                    include: [
-                        path.join(process.cwd(), "assets"),
-                        path.join(__dirname, "../shared/assets")
-                    ]
-                },
-                {
-                    test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-                    loader: "file-loader"
-                },
-                {
-                    test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-                    loader: "json-loader"
-                }
-            ]
+  port: PORT,
+  browsers: ["Chrome"],
+  reporters: ["spec", "notify"],
+  frameworks: ["mocha", "chai", "sinon"],
+  files: [
+    helperPath
+  ],
+  preprocessors: preprocessors,
+  webpack: {
+    devtool: "inline-source-map",
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          loader: "babel?stage=0&optional[]=runtime",
+          exclude: /node_modules/
         },
-        plugins: [
-            new webpack.DefinePlugin({
-                "TEST_PATH": JSON.stringify(path.join(process.cwd(), "test"))
-            })
-        ],
-        resolve: {
-            extensions: ["", ".js", ".css"],
-            alias: {
-                assets: path.resolve(CWD, "assets"),
-                colors: path.resolve(CWD, "src/config/colors")
-            },
-            root: [
-                path.resolve(CWD, "node_modules"),
-                path.resolve(CWD, "src"),
-                path.resolve(CWD, "test")
-            ]
+        {
+          test: webpackIsomorphicToolsPlugin.regular_expression("images"),
+          loader: "file-loader",
+          include: [
+            path.join(process.cwd(), "assets"),
+            path.join(__dirname, "../shared/assets")
+          ]
         },
-        node: {
-            fs: "empty"
+        {
+          test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
+          loader: "file-loader",
+          include: [
+            path.join(process.cwd(), "assets"),
+            path.join(__dirname, "../shared/assets")
+          ]
+        },
+        {
+          test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
+          loader: "file-loader"
+        },
+        {
+          test: webpackIsomorphicToolsPlugin.regular_expression("json"),
+          loader: "json-loader"
         }
+      ]
     },
-    webpackServer: {
-        noInfo: true
+    plugins: [
+      new webpack.DefinePlugin({
+        "TEST_PATH": JSON.stringify(path.join(process.cwd(), "test"))
+      })
+    ],
+    resolve: {
+      extensions: ["", ".js", ".css"],
+      alias: {
+        assets: path.resolve(CWD, "assets"),
+        colors: path.resolve(CWD, "src/config/colors")
+      },
+      root: [
+        path.resolve(CWD, "node_modules"),
+        path.resolve(CWD, "src"),
+        path.resolve(CWD, "test")
+      ]
+    },
+    node: {
+      fs: "empty"
     }
+  },
+  webpackServer: {
+    noInfo: true
+  }
 };
 
 module.exports = function () {
-    var server = new Server(config);
-    server.start();
-    server.on("browsers_ready", function () {
-        runner.run(config, () => {});
-    });
+  var server = new Server(config);
+  server.start();
+  server.on("browsers_ready", function () {
+    runner.run(config, () => {});
+  });
 };
 
