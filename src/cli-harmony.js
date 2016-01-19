@@ -4,17 +4,14 @@
 require("babel-core/register")({
   stage: 0,
   ignore: function(filename) {
-    // ignore node modules in the current directory
-    if (!/node_modules/.test(__dirname) || filename.indexOf(process.cwd()) === 0) {
-      // don't ignore node_modules in gluestick
-      if (/node_modules\/gluestick\/src\//.test(filename)) return false;
+    var node_modules = "node_modules";
+    var slash = process.environment === "win32" ? "\\" : "/";
+    var gluestick_folder = [node_modules, "gluestick", "src"].join(slash);
 
-          // do skip the rest of the files in node_modules
-          return /node_modules/.test(filename);
-    }
+    // Make sure babel does not ignore 
+    if (filename.includes(gluestick_folder)) return false;
 
-    // don't ignore node_modules in gluestick
-    return !/\/node_modules\/gluestick\/src\//.test(filename);
+    return filename.includes(node_modules);
   }
 });
 
