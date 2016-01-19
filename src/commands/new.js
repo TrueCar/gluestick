@@ -5,10 +5,13 @@ const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const path = require("path");
 
+const IS_WINDOWS = process.platform === "win32";
+
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../new"), destination);
   process.chdir(destination);
-  spawn("npm", ["install"], {stdio: "inherit"});
+  var postFix = IS_WINDOWS ? ".cmd" : "";
+  spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   // Unfortunately, the npm developers felt like it was a good idea to rename
   // .gitignore files to .npmignore, this was probably not a terrible idea

@@ -15,6 +15,8 @@ const chokidar = require('chokidar');
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
 
+const IS_WINDOWS = process.platform === "win32";
+
 commander
   .version(getVersion());
 
@@ -71,15 +73,16 @@ function getVersion () {
 
 function spawnProcess (type) {
   var childProcess;
+  var postFix = IS_WINDOWS ? ".cmd" : "";
   switch (type) {
     case "client":
-      childProcess = spawn("gluestick", ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
+      childProcess = spawn("gluestick" + postFix, ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
       break;
     case "server":
-      childProcess = spawn("gluestick", ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
+      childProcess = spawn("gluestick" + postFix, ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
       break;
     case "test":
-      childProcess = spawn("gluestick", ["start-test"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
+      childProcess = spawn("gluestick" + postFix, ["start-test"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
       break;
   }
 
@@ -110,8 +113,22 @@ function startAll(withoutTests=false) {
     clearTimeout(changedTimer);
     changedTimer = setTimeout(function() {
       console.log(chalk.yellow("[change detected] restarting server…", path));
-      server.kill();
-      server = spawnProcess("server");
+      if (IS_WINDOWS) {
+        // child_process.kill proved to not work on Windows. The only way we
+        // could get the child process to die was to use `taskkill`. We need to
+        // kill the entire process tree so we use /T. This is also an
+        // asynchronous task so we spawn the new server once we know it has
+        // completed.
+        exec(`taskkill /PID ${server.pid} /T /F`, () => {
+          server = spawnProcess("server");
+        });
+      }
+      else {
+        // Unix systems are easier than windows, kill the process, spawn a new
+        // one
+        server.kill();
+        server = spawnProcess("server");
+      }
     }, 250);
   });
 }
