@@ -5,7 +5,7 @@ require("babel-core/register")({
   stage: 0,
   ignore: function(filename) {
     var node_modules = "node_modules";
-    var slash = process.environment === "win32" ? "\\" : "/";
+    var slash = process.platform === "win32" ? "\\" : "/";
     var gluestick_folder = [node_modules, "gluestick", "src"].join(slash);
 
     // Make sure babel does not ignore 
