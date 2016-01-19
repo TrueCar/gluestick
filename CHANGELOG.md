@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.1.10
+[Adding the ability to use and ENV variable to override port](https://github.com/TrueCar/gluestick/pull/29)
+
+[add eslint dev dependencies](https://github.com/TrueCar/gluestick/pull/28)
+
+[Adding ASSET_URL endpoint into the generated application.js](https://github.com/TrueCar/gluestick/pull/27)
+
+[add webpack asset bundle data file to gitignore](https://github.com/TrueCar/gluestick/pull/26)
+
+[Add support for custom 404 handler](https://github.com/TrueCar/gluestick/pull/25)
+
+[convert from 4 tabs to 2 tabs](https://github.com/TrueCar/gluestick/pull/24)
+
+[Add .eslintrc to new projects](https://github.com/TrueCar/gluestick/pull/23)
+
+[Add support for custom 505 error pages](https://github.com/TrueCar/gluestick/pull/22)
+
+[Only include DevTools in dev mode](https://github.com/TrueCar/gluestick/pull/21)
+
+[Fix shared `store` instance bug](https://github.com/TrueCar/gluestick/pull/20)
+
+[Render simple loading page during server restarts](https://github.com/TrueCar/gluestick/pull/19)
+
+[Return value from the Promise Middleware](https://github.com/TrueCar/gluestick/pull/18)
+
 ## 0.1.9
 [Fix tests that load non javascript files] (https://github.com/TrueCar/gluestick/pull/17)
 
