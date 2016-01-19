@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import PrettyError from "pretty-error";
 import * as secureHandlebars from "secure-handlebars";
+import chalk from "chalk";
 
 const pretty = new PrettyError();
 
