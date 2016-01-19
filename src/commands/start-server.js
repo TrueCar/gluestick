@@ -6,7 +6,7 @@ var projectBasePath = process.cwd();
 
 var isProduction = process.env.NODE_ENV === "production";
 
-var PORT = isProduction ? 8888 : 8880;
+var PORT = process.env.PORT || (isProduction ? 8888 : 8880);
 
 module.exports = function () {
   global.webpackIsomorphicTools = new WebpackIsomorphicTools(require("../../webpack-isomorphic-tools-configuration"))
@@ -21,11 +21,11 @@ module.exports = function () {
 
     }
     else {
-      app.get("/gluestick-proxy-poll", function(req, res) { 
+      app.get("/gluestick-proxy-poll", function(req, res) {
         // allow requests from our client side loading page
-        res.header("Access-Control-Allow-Origin", "*"); 
+        res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.status(200).json({up: true}); 
+        res.status(200).json({up: true});
       });
       console.log("Server side rendering proxy running at http://localhost:" + PORT);
     }
