@@ -7,7 +7,7 @@ var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-var PORT = process.env.PORT || 8888;
+var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
 var PUBLIC_PATH = "http://localhost:" + PORT + "/assets/";
