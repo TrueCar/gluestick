@@ -4,17 +4,17 @@
 require("babel-core/register")({
   stage: 0,
   ignore: function(filename) {
-    // ignore node modules in the current directory
-    if (!/node_modules/.test(__dirname) || filename.indexOf(process.cwd()) === 0) {
-      // don't ignore node_modules in gluestick
-      if (/node_modules\/gluestick\/src\//.test(filename)) return false;
+    var node_modules = "node_modules";
+    // We don't use path.join because the filename slashes use the Unix style
+    // forward slashes on unix and on windows but path.join will give us the
+    // filenames based on the system. This way we force forward slashes and it
+    // works on Windows and Unix
+    var gluestick_folder = [node_modules, "gluestick", "src"].join("/");
 
-          // do skip the rest of the files in node_modules
-          return /node_modules/.test(filename);
-    }
+    // Make sure babel does not ignore 
+    if (filename.includes(gluestick_folder)) return false;
 
-    // don't ignore node_modules in gluestick
-    return !/\/node_modules\/gluestick\/src\//.test(filename);
+    return filename.includes(node_modules);
   }
 });
 
