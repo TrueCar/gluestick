@@ -7,7 +7,7 @@ require("babel-core/register")({
     var node_modules = "node_modules";
     // We don't use path.join because the filename slashes use the Unix style
     // forward slashes on unix and on windows but path.join will give us the
-    // filenames based on the system. This way we force forward slashs and it
+    // filenames based on the system. This way we force forward slashes and it
     // works on Windows and Unix
     var gluestick_folder = [node_modules, "gluestick", "src"].join("/");
 
