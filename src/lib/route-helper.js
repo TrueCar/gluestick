@@ -32,7 +32,7 @@ function getRouteComponents(routes) {
  * @param {Express.Request} [serverProps.request] if we are on the server, the
  * server request that triggered the method
  */
-export function runBeforeRoutes (store, renderProps, serverParams) {
+export function runBeforeRoutes (store, renderProps, serverProps) {
   const { params, location: query } = renderProps;
   serverParams = serverParams || {isServer: false};
 
