@@ -34,11 +34,11 @@ function getRouteComponents(routes) {
  */
 export function runBeforeRoutes (store, renderProps, serverProps) {
   const { params, location: query } = renderProps;
-  serverParams = serverParams || {isServer: false};
+  serverProps = serverProps || {isServer: false};
 
   const promises = getRouteComponents(renderProps.routes)
   .map(getBeforeRoute).filter(f => f) // only look at ones with a static gsBeforeRoute()
-  .map(beforeRoute => beforeRoute(store, params, query || {}, serverParams));  // call fetch data methods and save promises
+  .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps));  // call fetch data methods and save promises
 
   return Promise.all(promises)
 }
