@@ -5,7 +5,6 @@ const getBeforeRoute = (component = {}) => {
   // check for deprecated fetchData method
   if (c.fetchData) {
     console.warn("`fetchData` is deprecated. Please use `gsBeforeRoute` instead.");
-    return c.fetchData;
   }
 
   return c.gsBeforeRoute || c.fetchData;
