@@ -1,6 +1,6 @@
 {
   "name": "gluestick-shared",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "src/index.js",
   "scripts": {
@@ -9,6 +9,9 @@
     "build": "webpack ./src/index.js",
     "prepublish": "npm run clean && npm run build"
   },
+  "files": [
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TrueCar/gluestick-shared.git"

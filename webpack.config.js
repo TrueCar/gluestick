@@ -4,13 +4,13 @@ module.exports = {
   devtool: "source-map",
 
   entry: {
-    "gluestick": "./src/index.js"
+    "gluestick-shared": "./src/index.js"
   },
 
   output: {
     path: "./build",
     filename: "index.js",
-    library: "gluestick",
+    library: "gluestick-shared",
     libraryTarget: "umd"
   },
 
