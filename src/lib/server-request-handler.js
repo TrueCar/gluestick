@@ -2,7 +2,7 @@ import chalk from "chalk";
 import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { fetchAllData } from "./route-helper";
+import { runBeforeRoutes } from "./route-helper";
 import { match, RoutingContext, Route } from "react-router";
 import { ROUTE_NAME_404_NOT_FOUND } from "../shared/constants";
 import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
@@ -39,7 +39,7 @@ module.exports = async function (req, res) {
           // embed the router itself, on the server you embed a routing
           // context.
           // [https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md]
-          await fetchAllData(store, renderProps || {});
+          await runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
           const routingContext = createElement(RoutingContext, renderProps);
 
           // grab the main component which is capable of loading routes
