@@ -1,0 +1,42 @@
+{
+  "name": "gluestick-shared",
+  "version": "0.0.1",
+  "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf build",
+    "build": "webpack ./src/index.js",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TrueCar/gluestick-shared.git"
+  },
+  "author": "Todd Williams",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TrueCar/gluestick-shared/issues"
+  },
+  "homepage": "https://github.com/TrueCar/gluestick-shared#readme",
+  "dependencies": {
+    "redux-devtools": "3.0.1",
+    "redux-devtools-dock-monitor": "1.0.1",
+    "redux-devtools-log-monitor": "1.0.1",
+    "redux-thunk": "1.0.2"
+  },
+  "peerDependencies": {
+    "radium": ">=0.15.3",
+    "react-router": ">=1.0.0",
+    "react-redux": ">=4.0.1",
+    "history": ">=1.16.0",
+    "redux": ">=3.0.5",
+    "react": ">=0.14.3",
+    "react-dom": ">=0.14.3"
+  },
+  "devDependencies": {
+    "babel-loader": "5.3.2",
+    "rimraf": "^2.5.0",
+    "webpack": "1.12.11"
+  }
+}
