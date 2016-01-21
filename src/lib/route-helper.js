@@ -1,7 +1,7 @@
 const getBeforeRoute = (component = {}) => {
   const c = component.WrappedComponent || component;
 
-  // @deprecated since 0.2
+  // @deprecated since 1.12
   // check for deprecated fetchData method
   if (c.fetchData) {
     console.warn("`fetchData` is deprecated. Please use `gsBeforeRoute` instead.");
