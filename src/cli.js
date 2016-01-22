@@ -90,8 +90,8 @@ function spawnProcess (type) {
   return childProcess;
 }
 
-function startAll(withoutTests=false) {
-  autoUpgrade();
+async function startAll(withoutTests=false) {
+  await autoUpgrade();
 
   var client = spawnProcess("client");
   var server = spawnProcess("server");

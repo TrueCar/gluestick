@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 
-import { Root } from "gluestick";
+import { Root } from "gluestick-shared";
 import routes from "./routes";
 import store from "./.store";
 
