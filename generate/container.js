@@ -21,7 +21,7 @@ export default class __$NAME__ extends Component {
    * @return {(Promise|undefined)} If this method returns a promise, the router
    * will wait for the promise to resolve before the container is loaded.
    */
-  static gsBeforeRoute ({dispatch}, renderProps, query, serverProps)
+  static gsBeforeRoute ({dispatch}, renderProps, query, serverProps) {}
 
   render () {
     return (

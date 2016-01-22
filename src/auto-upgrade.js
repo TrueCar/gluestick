@@ -1,7 +1,8 @@
-var fs = require("fs");
-var path = require("path");
-var chalk = require("chalk");
-var sha1 = require("sha1");
+import fs from "fs";
+import path from "path";
+import chalk from "chalk";
+import sha1 from "sha1";
+import updatePackage from "./update-package";
 
 /**
  * Let the user know that we are updating the file and copy the contents over.
@@ -26,7 +27,9 @@ function getCurrentFilePath (name) {
   return path.join(process.cwd(), "src", "config", name);
 }
 
-module.exports = function () {
+module.exports = async function () {
+  await updatePackage();
+
   // Make sure we are in a gluestick project
   try {
     fs.statSync(path.join(process.cwd(), ".gluestick"))
@@ -58,7 +61,5 @@ module.exports = function () {
     const newApplicationConfigFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", "application.js"), "utf8");
     replaceFile("application.js", newApplicationConfigFile);
   }
-
-  // @TODO we should load the package.json file and match up the gluestick module version to the CLI version
 };
 

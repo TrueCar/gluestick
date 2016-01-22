@@ -8,19 +8,19 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "eslint-plugin-react": "3.15.0",
-    "gluestick": "0.1.x",
-    "radium": "0.15.3",
-    "react": "0.14.3",
-    "react-dom": "0.14.3",
-    "react-redux": "4.0.1",
+    "gluestick-shared": "0.0.4",
+    "radium": "0.16.2",
+    "react": "0.14.6",
+    "history": "1.16.0",
+    "react-dom": "0.14.6",
+    "react-redux": "4.0.6",
     "react-router": "1.0.0",
+    "react-redux": "4.0.0",
     "redux": "3.0.5"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel": "5.8.34",
     "babel-eslint": "^4.1.6",
     "babel-loader": "5.3.2",
     "babel-plugin-react-transform": "1.1.1",
@@ -38,7 +38,7 @@
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "webpack": "1.12.8",
-    "webpack-dev-server": "1.12.1",
     "webpack-hot-middleware": "2.5.0"
   }
 }
+

@@ -2,12 +2,10 @@ import chalk from "chalk";
 import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { runBeforeRoutes } from "./route-helper";
+import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks  } from "gluestick-shared";
 import { match, RoutingContext, Route } from "react-router";
-import { ROUTE_NAME_404_NOT_FOUND } from "../shared/constants";
 import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
 
-import prepareRoutesWithTransitionHooks from "./prepareRoutesWithTransitionHooks";
 import serverErrorHandler from "./server-error-handler";
 import Body from "../shared/components/Body";
 import getHead from "../shared/components/getHead";
