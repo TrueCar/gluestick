@@ -10,7 +10,7 @@ const startTest = require("./commands/test");
 const generate = require("./commands/generate");
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
-const chokidar = require('chokidar');
+const chokidar = require("chokidar");
 
 const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
@@ -100,36 +100,5 @@ async function startAll(withoutTests=false) {
   if (!isProduction && !withoutTests) {
     var testProcess = spawnProcess("test");
   }
-
-  // We do not want to watch for changes in production
-  if (isProduction) return;
-
-  var changedTimer;
-  console.log("watching", process.cwd());
-  chokidar.watch(['src/**/*', 'assets/**/*', 'Index.js'], {
-    ignored: /[\/\\]\./,
-    persistent: true
-  }).on('all', function(event, path) {
-    clearTimeout(changedTimer);
-    changedTimer = setTimeout(function() {
-      console.log(chalk.yellow("[change detected] restarting server…", path));
-      if (IS_WINDOWS) {
-        // child_process.kill proved to not work on Windows. The only way we
-        // could get the child process to die was to use `taskkill`. We need to
-        // kill the entire process tree so we use /T. This is also an
-        // asynchronous task so we spawn the new server once we know it has
-        // completed.
-        exec(`taskkill /PID ${server.pid} /T /F`, () => {
-          server = spawnProcess("server");
-        });
-      }
-      else {
-        // Unix systems are easier than windows, kill the process, spawn a new
-        // one
-        server.kill();
-        server = spawnProcess("server");
-      }
-    }, 250);
-  });
 }
 
