@@ -72,7 +72,7 @@ export default class Root extends Component {
   }
 
   _renderDevTools () {
-    if (typeof window === "undefined" || window.__GS_ENVIRONMENT__ !== "development") return;
+    if (typeof window === "undefined" || window.__GS_ENVIRONMENT__ === "production") return;
     return (
       <DevTools />
     );
