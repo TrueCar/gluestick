@@ -42,7 +42,7 @@
     "extract-text-webpack-plugin": "0.9.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.26.2",
-    "gluestick-shared": "0.0.4",
+    "gluestick-shared": "0.0.6",
     "history": "1.16.0",
     "inquirer": "0.11.0",
     "karma": "0.13.15",
