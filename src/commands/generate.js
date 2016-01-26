@@ -91,7 +91,7 @@ module.exports = function () {
       var lastLineIndex = indexLines.length - 1;
       var newLine = `export { default as ${name} } from "./${name}"`;
       if (indexLines[lastLineIndex] === "") {
-        indexLines.splice(lastLineIndex - 1, 1, newLine);
+        indexLines.splice(lastLineIndex, 1, newLine);
         indexLines.push("");
       }
       else {
