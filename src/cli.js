@@ -39,11 +39,6 @@ commander
   .action((options) => startAll(options.no_tests));
 
 commander
-.command("test")
-.description("start tests")
-.action(() => spawnProcess("test"));
-
-commander
   .command("build")
   .description("create production asset build")
   .action(() => startClient(true));
@@ -56,12 +51,24 @@ commander
 commander
   .command("start-server", null, {noHelp: true})
   .description("start server")
-  .action(startServer);
+  .action(() => startServer());
+
+const firefoxOption = {
+  command: "-F, --firefox",
+  description: "Use Firefox with test runner"
+};
 
 commander
   .command("start-test", null, {noHelp: true})
+  .option(firefoxOption.command, firefoxOption.description)
   .description("start test")
-  .action(startTest);
+  .action((options) => startTest(options));
+
+commander
+  .command("test")
+  .option(firefoxOption.command, firefoxOption.description)
+  .description("start tests")
+  .action(() => spawnProcess("test", process.argv.slice(3)));
 
 commander.parse(process.argv);
 
@@ -71,18 +78,18 @@ function getVersion () {
   return packageObject.version;
 }
 
-function spawnProcess (type) {
+function spawnProcess (type, args=[]) {
   var childProcess;
   var postFix = IS_WINDOWS ? ".cmd" : "";
   switch (type) {
     case "client":
-      childProcess = spawn("gluestick" + postFix, ["start-client"], {stdio: "inherit", env: Object.assign({}, process.env)});
+      childProcess = spawn("gluestick" + postFix, ["start-client", ...args], {stdio: "inherit", env: Object.assign({}, process.env)});
       break;
     case "server":
-      childProcess = spawn("gluestick" + postFix, ["start-server"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
+      childProcess = spawn("gluestick" + postFix, ["start-server", ...args], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-server"})});
       break;
     case "test":
-      childProcess = spawn("gluestick" + postFix, ["start-test"], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
+      childProcess = spawn("gluestick" + postFix, ["start-test", ...args], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
       break;
   }
 
