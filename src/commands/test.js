@@ -88,8 +88,14 @@ const config = {
   }
 };
 
-module.exports = function () {
-  var server = new Server(config);
+module.exports = function (options) {
+  // override browser setting to use firefox instead of Chrome if specified
+  if (options.firefox) {
+    config.browsers = ["Firefox"];
+  }
+
+  const server = new Server(config);
+
   server.start();
   server.on("browsers_ready", function () {
     runner.run(config, () => {});
