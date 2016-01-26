@@ -72,7 +72,7 @@ commander
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
-  .command('*')
+  .command('*', null, {noHelp: true})
   .action(function(cmd){
     console.log(`Error: Command '${cmd}' not recognized`);
     commander.help();
