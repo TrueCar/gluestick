@@ -108,7 +108,7 @@ module.exports = function () {
   }
 
   // Step 8: Write test file for component
-  if(["component"].indexOf(command) !== -1) {
+  if(command === "component") {
     var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
     var testTemplate;
     var testFileExists = true;
