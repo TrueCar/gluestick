@@ -70,6 +70,14 @@ commander
   .description("start tests")
   .action(() => spawnProcess("test", process.argv.slice(3)));
 
+// This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
+commander
+  .command('*')
+  .action(function(cmd){
+    console.log(`Error: Command '${cmd}' not recognized`);
+    commander.help();
+});
+
 commander.parse(process.argv);
 
 function getVersion () {
@@ -108,4 +116,3 @@ async function startAll(withoutTests=false) {
     var testProcess = spawnProcess("test");
   }
 }
-
