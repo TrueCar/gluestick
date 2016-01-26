@@ -8,6 +8,7 @@ const startClient = require("./commands/start-client");
 const startServer = require("./commands/start-server");
 const startTest = require("./commands/test");
 const generate = require("./commands/generate");
+const destroy = require("./commands/destroy");
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
@@ -31,6 +32,12 @@ commander
   .description("generate a new container")
   .arguments("<name>")
   .action(generate);
+
+commander
+  .command("destroy <container|component|reducer>")
+  .description("destroy a generated container")
+  .arguments("<name>")
+  .action(destroy);
 
 commander
   .command("start")

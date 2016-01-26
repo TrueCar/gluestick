@@ -87,18 +87,13 @@ module.exports = function () {
   if (command === "reducer") {
     var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
     try {
-      var indexLines = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).split("\n");
-      var lastLineIndex = indexLines.length - 1;
-      var newLine = `export { default as ${name} } from "./${name}"`;
-      if (indexLines[lastLineIndex] === "") {
-        indexLines.splice(lastLineIndex - 1, 1, newLine);
-        indexLines.push("");
-      }
-      else {
-        indexLines.push(newLine);
-        indexLines.push("");
-      }
-      fs.writeFileSync(reducerIndexPath, indexLines.join("\n"));
+      // Get the file contents, but strip off any trailing whitespace. This sets us up
+      // to place the new export on the last line, followed by a blank whitespace line at the end
+      var indexFileContents = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).replace(/\s*$/, "");
+      var newLine = `export { default as ${name} } from "./${name}";`;
+
+      // Write back to the index file with the previous contents in addition to our new line and a blank line for git
+      fs.writeFileSync(reducerIndexPath, `${indexFileContents}\n${newLine}\n\n`);
       console.log(chalk.yellow(`${name} added to reducer index ${reducerIndexPath}`));
     }
     catch (e) {
@@ -108,7 +103,7 @@ module.exports = function () {
   }
 
   // Step 8: Write test file for component
-  if(["component"].indexOf(command) !== -1) {
+  if(command === "component") {
     var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
     var testTemplate;
     var testFileExists = true;
@@ -143,4 +138,3 @@ module.exports = function () {
     console.log(chalk.green(`New file created: ${testPath}`));
   }
 };
-
