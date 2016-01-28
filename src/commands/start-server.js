@@ -15,7 +15,6 @@ module.exports = function startServer () {
       process.exit(2);
     }
 
-    let apps;
     pm2.start({
       script: path.join(__dirname, "../lib/", "server-side-rendering.js"),
       exec_mode: "cluster",
@@ -25,10 +24,6 @@ module.exports = function startServer () {
       no_autorestart: false,
       watch: process.env.NODE_ENV !== "production"
     }, (error, a) => {
-      // Each app instance is stored in an array that can be accessed later
-      // when we kill the process so we can kill all the child processes
-      apps = a;
-
       if (error) {
         console.error(error);
         pm2.disconnect();
@@ -40,18 +35,25 @@ module.exports = function startServer () {
      * started up because of PM2 and we terminate them.
      */
     process.on("SIGINT", () => {
-      // Kill parent process
-      pm2.stop(0);
+      const app_cwd = process.cwd();
+      pm2.list((err, apps) => {
 
-      // Kill child processes
-      apps.forEach((app) => {
-        pm2.stop(app.id);
+        // Stop each process belonging to the current app
+        apps.forEach((app) => {
+          if (app.pm2_env.pm_cwd == app_cwd) {
+            // Suppress pm2 list output by passing a noop callback to stop
+            pm2.stop(app.pm2_env.pm_id, () => {});
+          }
+        });
+
+        // Make sure enough time is given for all processes to stop
+        setTimeout(function() {
+          pm2.disconnect();
+          process.exit();
+        }, 1500);
+
       });
-
-      pm2.disconnect();
-      process.exit();
     });
-
   });
 }
 
