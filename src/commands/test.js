@@ -5,6 +5,9 @@ var path = require("path");
 var Server = karma.Server;
 var runner = karma.runner;
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+var shared = require("./shared");
+var getWebpackAdditions = require("../lib/get-webpack-additions");
+var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 
 var PORT = 9876;
 var CWD = process.cwd();
@@ -15,62 +18,41 @@ preprocessors[helperPath] = ["webpack", "sourcemap"];
 
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration')).development(true);
 
-// @TODO: start-client and this file share a lot of copy/paste code. We need to
-// clean this up in the meantime tests were completely broken so this is being
-// rushed in
 const config = {
-  port: PORT,
   browsers: ["Chrome"],
-  reporters: ["spec", "notify"],
-  frameworks: ["mocha", "chai", "sinon"],
   files: [
     helperPath
   ],
+  frameworks: ["mocha", "chai", "sinon"],
+  reporters: ["spec", "notify"],
+  port: PORT,
   preprocessors: preprocessors,
   webpack: {
     devtool: "inline-source-map",
     module: {
       loaders: [
-        {
-          test: /\.js$/,
-          loader: "babel?stage=0&optional[]=runtime",
-          exclude: /node_modules/
-        },
-        {
-          test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-          loader: "file-loader",
-          include: [
-            path.join(process.cwd(), "assets"),
-            path.join(__dirname, "../shared/assets")
-          ]
-        },
-        {
-          test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-          loader: "file-loader",
-          include: [
-            path.join(process.cwd(), "assets"),
-            path.join(__dirname, "../shared/assets")
-          ]
-        },
+        // only place test specific loaders here
         {
           test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
           loader: "file-loader"
-        },
-        {
-          test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-          loader: "json-loader"
         }
-      ]
+      ].concat(shared.loaders, additionalLoaders),
+      preLoaders: [
+        // only place test specific preLoaders here
+      ].concat(shared.preLoaders, additionalPreLoaders),
+    },
+    node: {
+      fs: "empty"
     },
     plugins: [
       new webpack.DefinePlugin({
         "TEST_PATH": JSON.stringify(path.join(process.cwd(), "test"))
       })
-    ],
+    ].concat(shared.plugins),
     resolve: {
-      extensions: ["", ".js", ".css"],
+      ...shared.resolve,
       alias: {
-        assets: path.resolve(CWD, "assets"),
+        ...shared.resolve.alias,
         colors: path.resolve(CWD, "src/config/colors")
       },
       root: [
@@ -78,9 +60,6 @@ const config = {
         path.resolve(CWD, "src"),
         path.resolve(CWD, "test")
       ]
-    },
-    node: {
-      fs: "empty"
     }
   },
   webpackServer: {
@@ -101,4 +80,3 @@ module.exports = function (options) {
     runner.run(config, () => {});
   });
 };
-
