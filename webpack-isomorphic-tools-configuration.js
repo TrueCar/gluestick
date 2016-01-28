@@ -1,5 +1,12 @@
 var path = require("path");
+var process = require("process");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const { additionalLoaders, additionalPreLoaders } = require(path.join(process.cwd(), "src/config/webpack-additions.js"));
+
+let userExtensions = [];
+[...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {
+  userExtensions.splice(userExtensions.length, 0, ...loader.extensions);
+});
 
 module.exports = {
   assets: {
@@ -16,10 +23,12 @@ module.exports = {
     json: {
       extensions: ["json"],
       include: [process.cwd()]
+    },
+    other: {
+      extensions: userExtensions
     }
   },
   alias: {
     "assets": path.join(process.cwd(), "assets")
   }
 };
-

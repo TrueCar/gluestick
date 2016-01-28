@@ -6,6 +6,9 @@ var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var shared = require("./shared");
+var getWebpackAdditions = require("../lib/get-webpack-additions");
+var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 
 var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
@@ -46,16 +49,22 @@ if (!isProduction) {
 }
 
 var compiler = webpack({
-  devtool: isProduction ? undefined : "eval",
-  resolve: {
-    extensions: ["", ".js", ".css"],
-    alias: {
-      "assets": path.join(process.cwd(), "assets")
-    }
-  },
   context: process.cwd(),
+  devtool: isProduction ? undefined : "eval",
   entry: {
     "main": entry
+  },
+  module: {
+    loaders: [
+      // only place client specific loaders here
+      {
+        test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
+        loader: ExtractTextPlugin.extract("style", "css!sass")
+      }
+    ].concat(shared.loaders, additionalLoaders),
+    preLoaders: [
+    // only place client specific preLoaders here
+  ].concat(shared.preLoaders, additionalPreLoaders),
   },
   output: {
     path: OUTPUT_PATH,
@@ -73,43 +82,9 @@ var compiler = webpack({
         "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
       }
     })
-  ].concat(environmentPlugins),
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loaders: ["babel-loader?stage=0"],
-        include: [
-          path.join(process.cwd(), "Index.js"),
-          path.join(process.cwd(), "src"),
-          path.join(__dirname, "../shared")
-        ]
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-        loader: "file-loader",
-        include: [
-          path.join(process.cwd(), "assets"),
-          path.join(__dirname, "../shared/assets")
-        ]
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-        loader: "file-loader",
-        include: [
-          path.join(process.cwd(), "assets"),
-          path.join(__dirname, "../shared/assets")
-        ]
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-        loader: ExtractTextPlugin.extract("style", "css!sass")
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-        loader: "json-loader"
-      }
-    ]
+  ].concat(environmentPlugins, shared.plugins),
+  resolve: {
+    ...shared.resolve
   }
 });
 
@@ -152,4 +127,3 @@ module.exports = function (buildOnly) {
     });
   }
 };
-

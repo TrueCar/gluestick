@@ -53,13 +53,20 @@ module.exports = async function () {
     }
   });
 
-  // If there is no src/config/application.js file make one now (This is to upgrade apps created prior to 0.1.6)
-  try {
-    fs.statSync(path.join(process.cwd(), "src/config/application.js"))
-  }
-  catch (e) {
-    const newApplicationConfigFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", "application.js"), "utf8");
-    replaceFile("application.js", newApplicationConfigFile);
-  }
+  // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them
+  // for the user.
+  const newFiles = [
+    "src/config/application.js",      //-> prior to 0.1.6
+    "src/config/webpack-additions.js"  //-> prior to 0.1.12
+  ];
+  newFiles.forEach((filePath) => {
+    try {
+      fs.statSync(path.join(process.cwd(), filePath));
+    }
+    catch (e) {
+      const fileName = path.parse(filePath).base;
+      const newFile = fs.readFileSync(path.join(__dirname, "..", "new", filePath), "utf8");
+      replaceFile(fileName, newFile);
+    }
+  });
 };
-
