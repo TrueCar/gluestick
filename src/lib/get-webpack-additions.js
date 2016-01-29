@@ -27,7 +27,7 @@ function prepareUserAdditionsForWebpack (additions) {
   });
 }
 
-export default function () {
+export default function (isomorphic=false) {
   let userAdditions = {
     additionalLoaders: [],
     additionalPreLoaders: []
@@ -41,8 +41,8 @@ export default function () {
     fs.statSync(webpackAdditionsPath);
     const { additionalLoaders, additionalPreLoaders } = require(webpackAdditionsPath);
     userAdditions = {
-      additionalLoaders: prepareUserAdditionsForWebpack(additionalLoaders),
-      additionalPreLoaders: prepareUserAdditionsForWebpack(additionalPreLoaders)
+      additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
+      additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders)
     };
   }
   catch (e) {}
