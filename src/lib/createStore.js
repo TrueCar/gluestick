@@ -12,10 +12,10 @@ function _gluestick(state=true, action) {
   return state;
 }
 
-export default function (customRequire, hotCallback, devMode) {
+export default function (customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
   const composeArgs = [
-    applyMiddleware(promiseMiddleware, thunk)
+    applyMiddleware.apply(this, [promiseMiddleware, thunk, ...customMiddleware])
   ];
 
   // Include dev tools only if we are in development mode
@@ -35,4 +35,3 @@ export default function (customRequire, hotCallback, devMode) {
 
   return store;
 }
-
