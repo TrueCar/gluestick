@@ -1,6 +1,7 @@
 import path from "path";
 import process from "process";
 import pm2 from "pm2";
+import sha1 from "sha1";
 import tail from "tail";
 
 // The number of server side rendering instances to run. This can be set with
@@ -10,6 +11,10 @@ import tail from "tail";
 const MAX_INSTANCES = process.env.MAX_INSTANCES || process.env.NODE_ENV === "production" ? 0 : 1;
 
 module.exports = function startServer () {
+  // Generate a unique name based on the cwd, this way pm2 wont be an issue running
+  // multiple instances of GlueStick on the same machine
+  const name = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
+
   console.log("Server rendering server started with PM2");
   pm2.connect((error) => {
     if (error) {
@@ -19,7 +24,7 @@ module.exports = function startServer () {
 
     pm2.start({
       script: path.join(__dirname, "../lib/", "server-side-rendering.js"),
-      name: "gluestick-server",
+      name: name,
       cwd: process.cwd(),
       exec_mode: "cluster",
       instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
@@ -47,8 +52,8 @@ module.exports = function startServer () {
      */
     process.on("SIGINT", () => {
       const app_cwd = process.cwd();
-      pm2.stop("gluestick-server");
-      console.log("Stopping pm2 instance…");
+      pm2.stop(name);
+      console.log(`Stopping pm2 instance: ${name}…`);
       // Make sure enough time is given for all processes to stop
       setTimeout(function() {
         pm2.disconnect();
