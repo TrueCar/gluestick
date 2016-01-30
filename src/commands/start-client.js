@@ -59,7 +59,7 @@ var compiler = webpack({
       // only place client specific loaders here
       {
         test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-        loader: ExtractTextPlugin.extract("style", "css!sass")
+        loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
       }
     ].concat(shared.loaders, additionalLoaders),
     preLoaders: [
