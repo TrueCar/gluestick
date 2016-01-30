@@ -1,5 +1,7 @@
 import path from "path";
+import process from "process";
 import pm2 from "pm2";
+import tail from "tail";
 
 // The number of server side rendering instances to run. This can be set with
 // an environment variable or it will default to 0 for production and 1 for
@@ -17,17 +19,26 @@ module.exports = function startServer () {
 
     pm2.start({
       script: path.join(__dirname, "../lib/", "server-side-rendering.js"),
+      name: "gluestick-server",
+      cwd: process.cwd(),
       exec_mode: "cluster",
       instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
       max_memory_restart: process.env.MAX_MEMORY_RESTART || "200M",
       environment_name: process.env.NODE_ENV,
       no_autorestart: false,
+      merge_logs: true,
+      error_file: "output.log",
+      out_file: "output.log",
       watch: process.env.NODE_ENV !== "production"
     }, (error, a) => {
       if (error) {
         console.error(error);
         pm2.disconnect();
       }
+      const logTail = new tail.Tail("output.log");
+      logTail.on("line", function (data) {
+        console.log(data);
+      });
     });
 
     /**
@@ -36,23 +47,13 @@ module.exports = function startServer () {
      */
     process.on("SIGINT", () => {
       const app_cwd = process.cwd();
-      pm2.list((err, apps) => {
-
-        // Stop each process belonging to the current app
-        apps.forEach((app) => {
-          if (app.pm2_env.pm_cwd == app_cwd) {
-            // Suppress pm2 list output by passing a noop callback to stop
-            pm2.stop(app.pm2_env.pm_id, () => {});
-          }
-        });
-
-        // Make sure enough time is given for all processes to stop
-        setTimeout(function() {
-          pm2.disconnect();
-          process.exit();
-        }, 1500);
-
-      });
+      pm2.stop("gluestick-server");
+      console.log("Stopping pm2 instance…");
+      // Make sure enough time is given for all processes to stop
+      setTimeout(function() {
+        pm2.disconnect();
+        process.exit();
+      }, 1500);
     });
   });
 }
