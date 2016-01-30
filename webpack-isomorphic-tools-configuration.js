@@ -25,7 +25,14 @@ module.exports = {
       extensions: ["png", "jpg", "gif", "ico", "svg"]
     },
     styles: {
-      extensions: ["css", "scss", "sass"]
+      extensions: ["css", "scss", "sass"],
+      filter: function(module, regular_expression, options, log) {
+        if (options.development) {
+          return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regular_expression, options, log)
+        }
+      },
+      path: WebpackIsomorphicToolsPlugin.style_loader_path_extractor,
+      parser: WebpackIsomorphicToolsPlugin.css_loader_parser
     },
     fonts: {
       extensions: ["woff", "woff2", "ttf", "eot"],
