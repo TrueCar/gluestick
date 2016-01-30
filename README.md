@@ -102,9 +102,9 @@ export default class MyComponent extends Component {
 
 #### CSS and SASS
 If you want to include a base stylesheet (like bootstrap css), you can import
-you stylesheet at the top of any file and it will be included when the page
-loads. We do not currently support hot loading for these styles but they should
-show up on a page refresh. You can use plain css or sass.
+your stylesheet at the top of any file and it will be included when the page
+loads. Any updates to your styles will also be hot loaded. You can use plain 
+css or sass.
 
 Example:
 Edit /Index.js
