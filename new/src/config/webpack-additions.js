@@ -15,6 +15,8 @@
  * For the previous example to work, you would need to install `xml-loader` via npm. Then
  * you can use this loader by simply using the `import` syntax like:
  * import myData from "assets/xml/my-file.xml";
+ *
+ * Loaders also support `include`, `exclude` and `query`.
  */
 module.exports = {
   additionalLoaders: [],
