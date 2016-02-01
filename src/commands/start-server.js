@@ -3,6 +3,7 @@ import process from "process";
 import pm2 from "pm2";
 import sha1 from "sha1";
 import tail from "tail";
+import fs from "fs";
 
 // The number of server side rendering instances to run. This can be set with
 // an environment variable or it will default to 0 for production and 1 for
@@ -40,7 +41,12 @@ module.exports = function startServer () {
         console.error(error);
         pm2.disconnect();
       }
-      const logTail = new tail.Tail("output.log");
+
+      // Create the log file if it doesn't exist
+      const logPath = "output.log";
+      fs.closeSync(fs.openSync(logPath, "a"));
+
+      const logTail = new tail.Tail(logPath);
       logTail.on("line", function (data) {
         console.log(data);
       });
