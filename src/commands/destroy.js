@@ -109,24 +109,22 @@ module.exports = async function () {
     }
   }
 
-  // Step 7: Remove the test file for a component
-  if (command === "component") {
-    var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
-    var testFileExists = true;
-    try {
-      fs.statSync(testPath);
-    }
-    catch (e) {
-      testFileExists = false;
-    }
+  // Step 7: Remove the test file
+  var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+  var testFileExists = true;
+  try {
+    fs.statSync(testPath);
+  }
+  catch (e) {
+    testFileExists = false;
+  }
 
-    if (testFileExists) {
-      fs.unlinkSync(testPath);
-      console.log(chalk.red(`Removed file: ${testPath}`));
-    }
-    else {
-      console.log(chalk.red(`ERROR: ${chalk.yellow(testPath)} does not exist`));
-      return;
-    }
+  if (testFileExists) {
+    fs.unlinkSync(testPath);
+    console.log(chalk.red(`Removed file: ${testPath}`));
+  }
+  else {
+    console.log(chalk.red(`ERROR: ${chalk.yellow(testPath)} does not exist`));
+    return;
   }
 };
