@@ -30,9 +30,9 @@ module.exports = {
     },
     styles: {
       extensions: ["css", "scss", "sass"],
-      filter: function(module, regular_expression, options, log) {
+      filter: function(module, regex, options, log) {
         if (options.development) {
-          return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regular_expression, options, log)
+          return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regex, options, log)
         }
       },
       path: WebpackIsomorphicToolsPlugin.style_loader_path_extractor,
