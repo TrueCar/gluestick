@@ -20,10 +20,17 @@ import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
  */
 function prepareUserAdditionsForWebpack (additions) {
   return additions.map((addition) => {
-    return {
+    let webpackAddition = {
       loader: addition.loader,
       test: WebpackIsomorphicToolsPlugin.regular_expression(addition.extensions)
-    }
+    };
+
+    ['include', 'exclude', 'query'].forEach((optionalAddition) => {
+      if (addition[optionalAddition]) {
+        webpackAddition[optionalAddition] = addition[optionalAddition];
+      }
+    });
+    return webpackAddition
   });
 }
 
