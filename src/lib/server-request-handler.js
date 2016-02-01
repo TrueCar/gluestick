@@ -48,7 +48,8 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
-          const head = getHead(config);
+          const head = getHead(config, webpackIsomorphicTools.assets());
+
 
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
             res.status(404);
