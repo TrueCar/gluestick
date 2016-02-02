@@ -11,7 +11,7 @@ var isProduction = process.env.NODE_ENV === "production";
 var PORT = process.env.PORT || (isProduction ? 8888 : 8880);
 
 (function () {
-  global.webpackIsomorphicTools = new WebpackIsomorphicTools(require("../../webpack-isomorphic-tools-configuration"))
+  global.webpackIsomorphicTools = new WebpackIsomorphicTools(require("./webpack-isomorphic-tools-configuration"))
   .development(process.NODE_ENV !== "production")
   .server(process.cwd(), function () {
     var app = express();
@@ -36,4 +36,3 @@ var PORT = process.env.PORT || (isProduction ? 8888 : 8880);
     app.listen(PORT);
   });
 })();
-

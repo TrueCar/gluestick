@@ -16,7 +16,7 @@ const preprocessors = {};
 const helperPath = path.resolve(__dirname, "../lib/test-helper.js");
 preprocessors[helperPath] = ["webpack", "sourcemap"];
 
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration')).development(true);
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration')).development(true);
 
 const config = {
   browsers: ["Chrome"],

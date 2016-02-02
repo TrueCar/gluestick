@@ -3,7 +3,7 @@ var process = require("process");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration'))
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration'))
 .development(process.env.NODE_ENV !== "production");
 
 module.exports = {
