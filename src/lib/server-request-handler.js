@@ -50,7 +50,6 @@ module.exports = async function (req, res) {
           const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
           const head = getHead(config, webpackIsomorphicTools.assets());
 
-
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
             res.status(404);
           }
