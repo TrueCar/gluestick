@@ -8,7 +8,7 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel/register --recursive"
   },
   "keywords": [
     "react",
@@ -81,5 +81,9 @@
     "webpack-hot-middleware": "2.5.0",
     "webpack-isomorphic-tools": "2.2.21"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "devDependencies": {
+    "rimraf": "2.5.1",
+    "temp": "0.8.3"
+  }
 }

@@ -25,9 +25,7 @@ function copyTo (destination) {
   fs.renameSync(path.join(destination, "_gitignore"), path.join(destination, ".gitignore"));
 }
 
-module.exports = function () {
-  const projectName = process.argv[3];
-
+module.exports = function (projectName) {
   var currentlyInProjectFolder = true;
   try {
     fs.statSync(path.join(process.cwd(), ".gluestick"));
