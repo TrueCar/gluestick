@@ -8,8 +8,7 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "test": "mocha --compilers js:babel/register --recursive",
-    "test:coverage": "babel-node node_modules/isparta/bin/isparta cover --report html --report lcov node_modules/mocha/bin/_mocha"
+    "test": "mocha --compilers js:babel/register --recursive"
   },
   "keywords": [
     "react",
@@ -84,7 +83,6 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "isparta": "4.0.0",
     "rimraf": "2.5.1",
     "temp": "0.8.3"
   }
