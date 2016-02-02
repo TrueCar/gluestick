@@ -102,39 +102,38 @@ module.exports = function () {
     }
   }
 
-  // Step 8: Write test file for component
-  if(command === "component") {
-    var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
-    var testTemplate;
-    var testFileExists = true;
-    try {
-      fs.statSync(testPath);
-    }
-    catch (e) {
-      testFileExists = false;
-    }
+  // Step 8: Write test file
+  var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+  var testTemplate;
+  var testFileExists = true;
 
-    if (testFileExists) {
-      console.log(chalk.yellow(`WARNING: Unable to create test file for ${name} because it already exists`));
-      return;
-    }
-
-    try {
-      testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
-    }
-    catch (e) {
-      console.log(e, chalk.red("ERROR: Couldn't read generator file"));
-      return;
-    }
-
-    try {
-      fs.writeFileSync(testPath, replaceName(testTemplate, name));
-    }
-    catch (e) {
-      console.log(e, chalk.red("ERROR: Couldn't create test file"));
-      return;
-    }
-
-    console.log(chalk.green(`New file created: ${testPath}`));
+  try {
+    fs.statSync(testPath);
   }
+  catch (e) {
+    testFileExists = false;
+  }
+
+  if (testFileExists) {
+    console.log(chalk.yellow(`WARNING: Unable to create test file for ${name} because it already exists`));
+    return;
+  }
+
+  try {
+    testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
+  }
+  catch (e) {
+    console.log(e, chalk.red("ERROR: Couldn't read generator file"));
+    return;
+  }
+
+  try {
+    fs.writeFileSync(testPath, replaceName(testTemplate, name));
+  }
+  catch (e) {
+    console.log(e, chalk.red("ERROR: Couldn't create test file"));
+    return;
+  }
+
+  console.log(chalk.green(`New file created: ${testPath}`));
 };
