@@ -15,7 +15,7 @@ var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
 var PUBLIC_PATH = "http://localhost:" + PORT + "/assets/";
 
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../../webpack-isomorphic-tools-configuration'))
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration'))
 .development(process.env.NODE_ENV !== "production");
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
