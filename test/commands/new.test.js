@@ -3,7 +3,6 @@ import { expect } from "chai";
 import newApp from "../../src/commands/new";
 import temp from "temp";
 import rimraf from "rimraf";
-import chalk from "chalk";
 
 describe("cli: gluestick new", function () {
 
