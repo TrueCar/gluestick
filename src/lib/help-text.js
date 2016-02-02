@@ -20,7 +20,7 @@ function showMissing404Text () {
   console.log(`  ${chalk.cyan('gluestick generate container RouteNotFound')}`);
   console.log("2. Import this new container in the routes file along with the \`ROUTE_NAME_404_NOT_FOUND\` constant.");
   console.log(`  ${chalk.cyan('import RouteNotFound from "../containers/RouteNotFound";')}`);
-  console.log(`  ${chalk.cyan('import { ROUTE_NAME_404_NOT_FOUND } from "gluestick";')}`);
+  console.log(`  ${chalk.cyan('import { ROUTE_NAME_404_NOT_FOUND } from "gluestick-shared";')}`);
   console.log("3. Add a new route that uses this constant and container as your very last route.");
   console.log("  " + chalk.cyan(`<Route name={${chalk.yellow('ROUTE_NAME_404_NOT_FOUND')} path="${chalk.yellow('*')}" component={${chalk.yellow('RouteNotFound')}} />`));
 }
