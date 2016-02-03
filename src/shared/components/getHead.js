@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import serialize from "serialize-javascript";
 import path from "path";
+import process from "process";
+
+var rawConfig = require(path.join(process.cwd(), "src", "config", "application"));
+var {assetPath} = rawConfig[process.env.NODE_ENV] || rawConfig["development"];
+
+// Make sure path ends in forward slash
+if (assetPath.substr(-1) !== "/") {
+  assetPath = assetPath + "/";
+}
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -20,7 +29,7 @@ export default (config, assets) => {
   }
 
   tags.push(
-    <script key={key++} type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__GS_ENVIRONMENT__ = ${serialize(process.env.NODE_ENV)}`}}></script>
+    <script key={key++} type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__GS_PUBLIC_PATH__ = ${serialize(assetPath)}; window.__GS_ENVIRONMENT__ = ${serialize(process.env.NODE_ENV)}`}}></script>
   );
 
   return tags;
