@@ -1,0 +1,20 @@
+FROM node:5.5.0
+
+RUN apt-get update && \
+    apt-get -y install libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++
+
+RUN npm install -g gluestick
+
+RUN mkdir /app
+ADD ./ /app
+
+WORKDIR /app
+
+RUN npm install
+
+ENV NODE_ENV="production"
+ENV ASSET_URL="assets"
+EXPOSE 8888
+
+CMD ["gluestick", "start", "-T"]
+
