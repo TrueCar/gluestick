@@ -50,7 +50,8 @@ describe("cli: gluestick new", function () {
 
       // account for the fact that the gitignore file that gets renamed
       const generatedFiles = new Set(glob.sync("**", { dot: true }));
-      generatedFiles.delete(".gitignore");
+      const renamedGitFileExists = generatedFiles.delete(".gitignore");
+      expect(renamedGitFileExists).to.be.true;
       generatedFiles.add("_gitignore");
 
       expect(newFilesTemplate.filter(f => !generatedFiles.has(f))).to.be.empty;
