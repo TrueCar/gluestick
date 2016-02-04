@@ -6,7 +6,7 @@ import rimraf from "rimraf";
 import glob from "glob";
 import path from "path";
 import newApp from "../../src/commands/new";
-import npmDependencies from "../../src/commands/npm-dependencies";
+import npmDependencies from "../../src/lib/npm-dependencies";
 
 const newFilesTemplate = glob.sync("**", {
   cwd: path.resolve("./new"),

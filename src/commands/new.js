@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const path = require("path");
-const npmDependencies = require("./npm-dependencies");
+const npmDependencies = require("../lib/npm-dependencies");
 
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../new"), destination);
