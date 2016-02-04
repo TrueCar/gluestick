@@ -37,6 +37,7 @@
     "chalk": "1.1.1",
     "chokidar": "1.4.1",
     "commander": "2.9.0",
+    "cross-spawn": "2.1.5",
     "express": "4.13.3",
     "express-http-proxy": "0.6.0",
     "extract-text-webpack-plugin": "0.9.1",

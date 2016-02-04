@@ -1,5 +1,5 @@
 const process = require("process");
-const spawn = require("child_process").spawn;
+const spawn = require("cross-spawn").spawn;
 const chalk = require("chalk");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
