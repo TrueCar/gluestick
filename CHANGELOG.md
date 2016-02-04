@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.2.0
+[Fix 404 generator and instructions](https://github.com/TrueCar/gluestick/pull/54)
+
+[Setup test script](https://github.com/TrueCar/gluestick/pull/53)
+
+[Move webpack-isomorphic-tools-configuration inside src/](https://github.com/TrueCar/gluestick/pull/52)
+
+[Generate Reducer and Container tests](https://github.com/TrueCar/gluestick/pull/51)
+
+[Create log file if it doesn't exist](https://github.com/TrueCar/gluestick/pull/50)
+
+[Fix style flicker issue in dev mode](https://github.com/TrueCar/gluestick/pull/49)
+
+[Webpack additions to allow `include`, `exclude`, and `query`](https://github.com/TrueCar/gluestick/pull/48)
+
+[Enable css hotloading in development mode](https://github.com/TrueCar/gluestick/pull/46)
+
+[Show pm2 output log and improve pm2 stop](https://github.com/TrueCar/gluestick/pull/45)
+
+[Fix bug with `webpack-additions` missing file](https://github.com/TrueCar/gluestick/pull/44)
+
+[Extendable Webpack](https://github.com/TrueCar/gluestick/pull/42)
+
+[Upgrade karma version](https://github.com/TrueCar/gluestick/pull/41)
+
+[Custom redux middleware](https://github.com/TrueCar/gluestick/pull/40)
+
+[Only stop processes belonging to gluestick](https://github.com/TrueCar/gluestick/pull/39)
+
+[Added a catch all command to the CLI](https://github.com/TrueCar/gluestick/pull/38)
+
+[Add destroy to the CLI](https://github.com/TrueCar/gluestick/pull/37)
+
+[Add option to run terts in Firefox instead of Chrome](https://github.com/TrueCar/gluestick/pull/36)
+
+[fix redux dev tools](https://github.com/TrueCar/gluestick/pull/35)
+
+[Use PM2 for server side rendering](https://github.com/TrueCar/gluestick/pull/34)
+
+[Improve shared package management](https://github.com/TrueCar/gluestick/pull/33)
+
+[Add `gsBeforeRoute` and deprecate `fetchData`](https://github.com/TrueCar/gluestick/pull/32)
+
+[Windows support](https://github.com/TrueCar/gluestick/pull/31)
+
+
 ## 0.1.10
 [Adding the ability to use and ENV variable to override port](https://github.com/TrueCar/gluestick/pull/29)
 
