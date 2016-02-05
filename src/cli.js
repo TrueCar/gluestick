@@ -9,6 +9,7 @@ const startServer = require("./commands/start-server");
 const startTest = require("./commands/test");
 const generate = require("./commands/generate");
 const destroy = require("./commands/destroy");
+const dockerize = require("./commands/dockerize");
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
@@ -49,6 +50,12 @@ commander
   .command("build")
   .description("create production asset build")
   .action(() => startClient(true));
+
+commander
+  .command("dockerize")
+  .description("create docker image")
+  .arguments("<name>")
+  .action(upgradeAndDockerize);
 
 commander
   .command("start-client", null, {noHelp: true})
@@ -122,4 +129,9 @@ async function startAll(withoutTests=false) {
   if (!isProduction && !withoutTests) {
     var testProcess = spawnProcess("test");
   }
+}
+
+async function upgradeAndDockerize (name) {
+  await autoUpgrade();
+  dockerize(name);
 }
