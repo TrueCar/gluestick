@@ -41,7 +41,7 @@ module.exports = async function () {
 
   // Compare contents of our hidden files, if they do not match up then auto
   // update
-  [".entry.js", ".store.js"].forEach((fileName) => {
+  [".entry.js", ".store.js", ".Dockerfile"].forEach((fileName) => {
     const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
     const currentSha = sha1(currentFile);
 

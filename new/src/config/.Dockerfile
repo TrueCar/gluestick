@@ -7,7 +7,8 @@ FROM node:5.5.0
 RUN apt-get update && \
     apt-get -y install libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++
 
-RUN npm install -g gluestick
+# RUN npm install -g gluestick
+RUN npm install TrueCar/gluestick#toddw/deployment-updates -g
 
 RUN mkdir /app
 ADD . /app
