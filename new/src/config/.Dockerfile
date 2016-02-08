@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get -y install libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++
 
 # RUN npm install -g gluestick
-RUN npm install TrueCar/gluestick#b4c7eae1f08df058435b9021d4eed502f85bd1a7 -g
+RUN npm install TrueCar/gluestick#toddw/deployment-updates -g
 
 RUN mkdir /app
 ADD . /app
