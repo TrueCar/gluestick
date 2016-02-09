@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1
+[Add `dockerize` command](https://github.com/TrueCar/gluestick/pull/56)
+
+[Add more tests for `gluestick new` cli](https://github.com/TrueCar/gluestick/pull/55)
+
+[Fix 404 generator and instructions](https://github.com/TrueCar/gluestick/pull/54)
+
+[Setup test script](https://github.com/TrueCar/gluestick/pull/53)
+
 ## 0.2.0
 [Fix 404 generator and instructions](https://github.com/TrueCar/gluestick/pull/54)
 

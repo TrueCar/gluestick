@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
