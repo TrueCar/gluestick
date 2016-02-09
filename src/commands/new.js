@@ -1,17 +1,14 @@
 const process = require("process");
-const spawn = require("child_process").spawn;
 const chalk = require("chalk");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const path = require("path");
-
-const IS_WINDOWS = process.platform === "win32";
+const npmDependencies = require("../lib/npm-dependencies");
 
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../new"), destination);
   process.chdir(destination);
-  var postFix = IS_WINDOWS ? ".cmd" : "";
-  spawn("npm" + postFix, ["install"], {stdio: "inherit"});
+  npmDependencies.install();
 
   // Unfortunately, the npm developers felt like it was a good idea to rename
   // .gitignore files to .npmignore, this was probably not a terrible idea
@@ -51,12 +48,13 @@ module.exports = function (projectName) {
     return;
   }
 
-  // project name set, install in current working directly / project name
+  // Anything other than alphanumeric and dashes is invalid
   if (!/^(\w|-)*$/.test(projectName)) {
     console.log(chalk.red("Invalid name: " + projectName));
     return;
   }
 
+  // Project name set, install in current working directory
   copyTo(path.join(process.cwd(), projectName));
 };
 
