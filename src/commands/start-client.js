@@ -9,14 +9,20 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var shared = require("./shared");
 var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
+var rawConfig = require(path.join(process.cwd(), "src", "config", "application"));
+var { assetPath } = rawConfig[process.env.NODE_ENV] || rawConfig["development"];
+
+if (assetPath.substr(-1) !== "/") {
+  assetPath = assetPath + "/";
+}
 
 var PORT = 8888;
 var OUTPUT_PATH = path.join(process.cwd(), "build");
 var OUTPUT_FILE = "main-bundle.js";
-var PUBLIC_PATH = "http://localhost:" + PORT + "/assets/";
+var PUBLIC_PATH = assetPath;
 
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration'))
-.development(process.env.NODE_ENV !== "production");
+  .development(process.env.NODE_ENV !== "production");
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
 const isProduction = process.env.NODE_ENV === "production";
@@ -29,6 +35,7 @@ var environmentPlugins = [];
 
 if (isProduction) {
   environmentPlugins = environmentPlugins.concat([
+    webpackIsomorphicToolsPlugin,
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -69,7 +76,7 @@ var compiler = webpack({
   output: {
     path: OUTPUT_PATH,
     filename: OUTPUT_FILE,
-    publicPath: isProduction ? null : PUBLIC_PATH
+    publicPath: PUBLIC_PATH
   },
   plugins: [
     new webpack.optimize.DedupePlugin(),

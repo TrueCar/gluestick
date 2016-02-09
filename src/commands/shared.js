@@ -26,7 +26,7 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-      loader: "file-loader",
+      loader: "file-loader?name=[name]-[hash].[ext]",
       include: [
         path.join(process.cwd(), "assets"),
         path.join(__dirname, "../shared/assets")
@@ -34,7 +34,7 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-      loader: "file-loader",
+      loader: "file-loader?name=[name]-[hash].[ext]",
       include: [
         path.join(process.cwd(), "assets"),
         path.join(__dirname, "../shared/assets")

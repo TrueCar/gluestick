@@ -3,12 +3,16 @@ const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("child_process");
-const newApp = require("./commands/new");
-const startClient = require("./commands/start-client");
-const startServer = require("./commands/start-server");
-const startTest = require("./commands/test");
-const generate = require("./commands/generate");
-const destroy = require("./commands/destroy");
+const lazyMethodRequire = require("./lib/LazyMethodRequire")(__dirname);
+
+const newApp = lazyMethodRequire("./commands/new");
+const startClient = lazyMethodRequire("./commands/start-client");
+const startServer = lazyMethodRequire("./commands/start-server");
+const startTest = lazyMethodRequire("./commands/test");
+const generate = lazyMethodRequire("./commands/generate");
+const destroy = lazyMethodRequire("./commands/destroy");
+const dockerize = lazyMethodRequire("./commands/dockerize");
+
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
@@ -49,6 +53,12 @@ commander
   .command("build")
   .description("create production asset build")
   .action(() => startClient(true));
+
+commander
+  .command("dockerize")
+  .description("create docker image")
+  .arguments("<name>")
+  .action(upgradeAndDockerize);
 
 commander
   .command("start-client", null, {noHelp: true})
@@ -122,4 +132,9 @@ async function startAll(withoutTests=false) {
   if (!isProduction && !withoutTests) {
     var testProcess = spawnProcess("test");
   }
+}
+
+async function upgradeAndDockerize (name) {
+  await autoUpgrade();
+  dockerize(name);
 }
