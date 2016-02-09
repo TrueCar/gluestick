@@ -3,13 +3,16 @@ const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("child_process");
-const newApp = require("./commands/new");
-const startClient = require("./commands/start-client");
-const startServer = require("./commands/start-server");
-const startTest = require("./commands/test");
-const generate = require("./commands/generate");
-const destroy = require("./commands/destroy");
-const dockerize = require("./commands/dockerize");
+const lazyMethodRequire = require("./lib/LazyMethodRequire")(__dirname);
+
+const newApp = lazyMethodRequire("./commands/new");
+const startClient = lazyMethodRequire("./commands/start-client");
+const startServer = lazyMethodRequire("./commands/start-server");
+const startTest = lazyMethodRequire("./commands/test");
+const generate = lazyMethodRequire("./commands/generate");
+const destroy = lazyMethodRequire("./commands/destroy");
+const dockerize = lazyMethodRequire("./commands/dockerize");
+
 const chalk = require("chalk");
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
