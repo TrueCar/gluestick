@@ -15,10 +15,15 @@ ADD . /app
 
 WORKDIR /app
 
+# This could potentially be done with a dockerignore file but we would need
+# code that keeps the docker ignore up to date in all of the projects. For now
+# this is easier.
+RUN rm -rf node_modules && npm cache clean
+
 RUN npm install
 
 ENV NODE_ENV="production"
-ENV ASSET_URL="assets"
+ENV ASSET_URL="/assets/"
 EXPOSE 8888
 
 CMD ["gluestick", "start", "-T"]

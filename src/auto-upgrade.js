@@ -39,20 +39,6 @@ module.exports = async function () {
     process.exit();
   }
 
-  // Compare contents of our hidden files, if they do not match up then auto
-  // update
-  [".entry.js", ".store.js", ".Dockerfile"].forEach((fileName) => {
-    const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
-    const currentSha = sha1(currentFile);
-
-    const newFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", fileName), "utf8");
-    const newSha = sha1(newFile);
-
-    if (currentSha !== newSha) {
-      replaceFile(fileName, newFile);
-    }
-  });
-
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them
   // for the user.
   const newFiles = [
@@ -68,6 +54,24 @@ module.exports = async function () {
     catch (e) {
       const fileName = path.parse(filePath).base;
       const newFile = fs.readFileSync(path.join(__dirname, "..", "new", filePath), "utf8");
+      replaceFile(fileName, newFile);
+    }
+  });
+
+  // Compare contents of our hidden files, if they do not match up then auto
+  // update
+  [
+    ".entry.js",
+    ".store.js",
+    ".Dockerfile",   //-> last updated in 0.2.0
+  ].forEach((fileName) => {
+    const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
+    const currentSha = sha1(currentFile);
+
+    const newFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", fileName), "utf8");
+    const newSha = sha1(newFile);
+
+    if (currentSha !== newSha) {
       replaceFile(fileName, newFile);
     }
   });
