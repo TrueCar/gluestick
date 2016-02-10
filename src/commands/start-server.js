@@ -42,7 +42,7 @@ module.exports = function startServer () {
       }
 
       // start showing the logs
-      spawn("pm2", ["logs", name, "--lines", 0], {stdio: "inherit"});
+      spawn("pm2", ["logs", name, "--raw", "--lines", 0], {stdio: "inherit"});
     });
 
     /**
