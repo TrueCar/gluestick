@@ -9,7 +9,7 @@ import fs from "fs";
 // an environment variable or it will default to 0 for production and 1 for
 // non-production. 0 means it will automatically detect the instance number
 // based on the CPUs
-const MAX_INSTANCES = process.env.MAX_INSTANCES || process.env.NODE_ENV === "production" ? 0 : 1;
+const MAX_INSTANCES = process.env.MAX_INSTANCES || (process.env.NODE_ENV === "production" ? 0 : 1);
 
 module.exports = function startServer () {
   // Generate a unique name based on the cwd, this way pm2 wont be an issue running
