@@ -20,6 +20,7 @@ module.exports = function startServer () {
   pm2.connect((error) => {
     if (error) {
       console.error(error);
+      pm2.disconnect();
       process.exit(2);
     }
 
@@ -58,13 +59,13 @@ module.exports = function startServer () {
      */
     process.on("SIGINT", () => {
       const app_cwd = process.cwd();
-      pm2.stop(name);
+
       console.log(`Stopping pm2 instance: ${name}…`);
-      // Make sure enough time is given for all processes to stop
-      setTimeout(function() {
-        pm2.disconnect();
-        process.exit();
-      }, 1500);
+      pm2.delete(name, () => {
+        pm2.disconnect(() => {
+          process.exit();
+        });
+      });
     });
   });
 }
