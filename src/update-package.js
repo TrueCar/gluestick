@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "child_process";
@@ -171,9 +172,13 @@ function performModulesUpdate (mismatchedModules, done) {
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
 
   const postFix = process.platform === "win32" ? ".cmd" : "";
+
+  // wipe the existing node_modules folder so we can have a clean start
+  rimraf.sync(path.join(process.cwd(), "node_modules"));
   const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   npmInstall.on("close", () => {
+    console.log(chalk.green("node_modules have been updated."));
     done();
   });
 }
