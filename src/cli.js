@@ -43,11 +43,17 @@ commander
   .arguments("<name>")
   .action(destroy);
 
+const debugOption = {
+  command: "-D, --debug",
+  description: "debug server side rendering with node-inspector"
+};
+
 commander
   .command("start")
   .description("start everything")
   .option("-T, --no_tests", "ignore test hook")
-  .action((options) => startAll(options.no_tests));
+  .option(debugOption.command, debugOption.description)
+  .action((options) => startAll(options.no_tests, options.debug));
 
 commander
   .command("build")
@@ -68,7 +74,8 @@ commander
 commander
   .command("start-server", null, {noHelp: true})
   .description("start server")
-  .action(() => startServer());
+  .option(debugOption.command, debugOption.description)
+  .action((options) => startServer(options.debug));
 
 const firefoxOption = {
   command: "-F, --firefox",
@@ -122,11 +129,11 @@ function spawnProcess (type, args=[]) {
   return childProcess;
 }
 
-async function startAll(withoutTests=false) {
+async function startAll(withoutTests=false, debug=false) {
   await autoUpgrade();
 
   var client = spawnProcess("client");
-  var server = spawnProcess("server");
+  var server = spawnProcess("server", (debug ? ["--debug"] : []));
 
   // Start tests unless they asked us not to or we are in production mode
   if (!isProduction && !withoutTests) {
