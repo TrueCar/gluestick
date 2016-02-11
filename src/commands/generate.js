@@ -1,6 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var chalk = require("chalk");
+var mkdirp = require("mkdirp");
 
 var availableCommands = {
   "container": "containers",
@@ -103,7 +104,12 @@ module.exports = function () {
   }
 
   // Step 8: Write test file
-  var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+  var testFolder = path.join(process.cwd(), "/test/", availableCommands[command]);
+
+  // Older generated projects don't have test/reducers or test/containers
+  mkdirp.sync(testFolder);
+
+  var testPath = path.join(testFolder, `/${name}.test.js`);
   var testTemplate;
   var testFileExists = true;
 
