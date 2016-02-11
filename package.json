@@ -70,6 +70,7 @@
     "react-transform-catch-errors": "1.0.0",
     "react-transform-hmr": "1.0.1",
     "redbox-react": "1.2.0",
+    "rimraf": "2.5.1",
     "secure-handlebars": "1.2.0",
     "serialize-javascript": "1.1.2",
     "sha1": "1.1.1",
@@ -82,7 +83,6 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "rimraf": "2.5.1",
     "temp": "0.8.3"
   }
 }
