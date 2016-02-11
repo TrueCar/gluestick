@@ -5,7 +5,6 @@ var chalk = require("chalk");
 var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var shared = require("./shared");
 var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
@@ -63,11 +62,6 @@ var compiler = webpack({
   },
   module: {
     loaders: [
-      // only place client specific loaders here
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-        loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
-      }
     ].concat(shared.loaders, additionalLoaders),
     preLoaders: [
     // only place client specific preLoaders here
@@ -82,7 +76,6 @@ var compiler = webpack({
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin("[name].css"),
     new webpack.DefinePlugin({
       "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
       "process.env": {
