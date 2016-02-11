@@ -24,6 +24,12 @@ export default (config, assets) => {
     // Resolve style flicker on page load in dev mode
     Object.keys(assets.assets).forEach(assetPath => {
       if (!assetPath.endsWith(".css")) return;
+
+      // webpack isomorphic tools converts `node_modules` to `~` in these
+      // paths. This means any css files imported directly out of a node_module
+      // will not be found. Unless we swap `~` back to `node_modules`.
+      assetPath = assetPath.replace("~", "node_modules");
+
       tags.push(<style key={key++} dangerouslySetInnerHTML={{__html: require(path.join(process.cwd(), assetPath))}} />);
     });
   }
