@@ -1,8 +1,10 @@
 import { spawn } from "child_process";
 import path from "path";
 import process from "process";
+import fs from "fs";
 
 export default function (name) {
-  spawn("docker", ["build", "-t", name, "-f", path.join(process.cwd(), "src", "config", ".Dockerfile"), process.cwd()], {stdio: "inherit"});
+  const { version: gluestickVersion } = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"), "utf-8"));
+  spawn("docker", ["build", "-t", name, "--build-arg", `GLUESTICK_VERSION=${gluestickVersion}`, "-f", path.join(process.cwd(), "src", "config", ".Dockerfile"), process.cwd()], {stdio: "inherit"});
 }
 
