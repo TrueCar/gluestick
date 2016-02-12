@@ -10,11 +10,29 @@ import fs from "fs";
 // non-production. 0 means it will automatically detect the instance number
 // based on the CPUs
 const MAX_INSTANCES = process.env.MAX_INSTANCES || (process.env.NODE_ENV === "production" ? 0 : 1);
+const CWD = process.cwd();
 
-module.exports = function startServer () {
+/**
+ * Spin up the server side rendering. If debug is false, this will use PM2 for
+ * managing multiple instances.
+ *
+ * @param {Boolean} debug whether or not to use node-inspector for debugging
+ */
+module.exports = function startServer (debug=false) {
+  const scriptPath = path.join(__dirname, "../lib/", "server-side-rendering.js");
+
+  // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
+  if (debug) {
+    const debugSpawn = spawn(path.join(CWD, "node_modules", ".bin", "node-debug"), [scriptPath], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: "development-server"})});
+    debugSpawn.on("error", (e) => {
+      console.log("Error: ", e);
+    });
+    return;
+  }
+
   // Generate a unique name based on the cwd, this way pm2 wont be an issue running
   // multiple instances of GlueStick on the same machine
-  const name = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
+  const name = `gluestick-server-${sha1(CWD).substr(0, 7)}`;
 
   console.log("Server rendering server started with PM2");
   pm2.connect((error) => {
@@ -25,9 +43,9 @@ module.exports = function startServer () {
     }
 
     pm2.start({
-      script: path.join(__dirname, "../lib/", "server-side-rendering.js"),
+      script: scriptPath,
       name: name,
-      cwd: process.cwd(),
+      cwd: CWD,
       exec_mode: "cluster",
       instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
       max_memory_restart: process.env.MAX_MEMORY_RESTART || "200M",
@@ -50,7 +68,7 @@ module.exports = function startServer () {
      * started up because of PM2 and we terminate them.
      */
     process.on("SIGINT", () => {
-      const app_cwd = process.cwd();
+      const app_cwd = CWD;
 
       console.log(`Stopping pm2 instance: ${name}…`);
       pm2.delete(name, () => {
