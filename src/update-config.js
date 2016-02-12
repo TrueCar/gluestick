@@ -29,7 +29,7 @@ export default function updateConfig () {
       name: "confirm",
       message: `${chalk.red("The format of src/config/application.js is out of date. You should export the correct config object based on the environment.")}
 ${chalk.yellow("Example:")}\n${chalk.cyan(exampleContents)}
-Would you like to try to automaticaly update it?`
+Would you like to try to automatically update it?`
     };
     inquirer.prompt([question], function (answers) {
       if (!answers.confirm) return resolve();
