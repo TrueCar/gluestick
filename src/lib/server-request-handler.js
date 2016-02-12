@@ -20,8 +20,7 @@ module.exports = async function (req, res) {
     const Entry = require(path.join(process.cwd(), "src/config/.entry"));
     const store = require(path.join(process.cwd(), "src/config/.store"))();
     const originalRoutes = require(path.join(process.cwd(), "src/config/routes"));
-    const rawConfig = require(path.join(process.cwd(), "src/config/application"));
-    const config = rawConfig[process.env.NODE_ENV] || rawConfig.development;
+    const config = require(path.join(process.cwd(), "src/config/application"));
     const routes = prepareRoutesWithTransitionHooks(originalRoutes);
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {

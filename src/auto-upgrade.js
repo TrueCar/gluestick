@@ -3,6 +3,9 @@ import path from "path";
 import chalk from "chalk";
 import sha1 from "sha1";
 import updatePackage from "./update-package";
+import updateConfig from "./update-config";
+
+const CWD = process.cwd();
 
 /**
  * Let the user know that we are updating the file and copy the contents over.
@@ -24,7 +27,7 @@ function replaceFile (name, data) {
  * @param {String} name the file name we are looking for
  */
 function getCurrentFilePath (name) {
-  return path.join(process.cwd(), "src", "config", name);
+  return path.join(CWD, "src", "config", name);
 }
 
 module.exports = async function () {
@@ -32,7 +35,7 @@ module.exports = async function () {
 
   // Make sure we are in a gluestick project
   try {
-    fs.statSync(path.join(process.cwd(), ".gluestick"))
+    fs.statSync(path.join(CWD, ".gluestick"))
   }
   catch (e) {
     console.log(chalk.red("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project"));
@@ -49,7 +52,7 @@ module.exports = async function () {
   ];
   newFiles.forEach((filePath) => {
     try {
-      fs.statSync(path.join(process.cwd(), filePath));
+      fs.statSync(path.join(CWD, filePath));
     }
     catch (e) {
       const fileName = path.parse(filePath).base;
@@ -75,4 +78,8 @@ module.exports = async function () {
       replaceFile(fileName, newFile);
     }
   });
+
+
+  // -> prior to 0.2.2
+  await updateConfig();
 };
