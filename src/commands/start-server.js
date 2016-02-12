@@ -60,7 +60,7 @@ module.exports = function startServer (debug=false) {
       }
 
       // start showing the logs
-      spawn("pm2", ["logs", name, "--raw", "--lines", 0], {stdio: "inherit"});
+      spawn(path.join(__dirname, "..", "..", "node_modules", ".bin", "pm2"), ["logs", name, "--raw", "--lines", 0], {stdio: "inherit"});
     });
 
     /**
