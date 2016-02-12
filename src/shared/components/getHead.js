@@ -3,8 +3,7 @@ import serialize from "serialize-javascript";
 import path from "path";
 import process from "process";
 
-var rawConfig = require(path.join(process.cwd(), "src", "config", "application"));
-var {assetPath} = rawConfig[process.env.NODE_ENV] || rawConfig["development"];
+var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
 
 // Make sure path ends in forward slash
 if (assetPath.substr(-1) !== "/") {

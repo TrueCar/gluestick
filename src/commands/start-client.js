@@ -6,10 +6,10 @@ var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 var shared = require("./shared");
+var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
-var rawConfig = require(path.join(process.cwd(), "src", "config", "application"));
-var { assetPath } = rawConfig[process.env.NODE_ENV] || rawConfig["development"];
+var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
 
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
@@ -54,6 +54,20 @@ if (!isProduction) {
   entry.unshift("webpack-hot-middleware/client");
 }
 
+
+// The config/application.js file is consumed on both the server side and the
+// client side. However, we want developers to have access to environment
+// variables in there so they can override defaults with an environment
+// variable. For that reason we are going to perform static analysis on that
+// file to determine all of the environment variables that are used in that
+// file and make sure that webpack makes those available in the application.
+var configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
+configEnvVariables.push("NODE_ENV");
+var exposedEnvironmentVariables = {};
+configEnvVariables.forEach((v) => {
+  exposedEnvironmentVariables[v] = JSON.stringify(process.env[v]);
+});
+
 var compiler = webpack({
   context: process.cwd(),
   devtool: isProduction ? undefined : "eval",
@@ -78,9 +92,7 @@ var compiler = webpack({
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
-      "process.env": {
-        "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
-      }
+      "process.env": exposedEnvironmentVariables
     })
   ].concat(environmentPlugins, shared.plugins),
   resolve: {

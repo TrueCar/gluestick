@@ -130,7 +130,13 @@ function spawnProcess (type, args=[]) {
 }
 
 async function startAll(withoutTests=false, debug=false) {
-  await autoUpgrade();
+  try {
+    await autoUpgrade();
+  }
+  catch (e) {
+    console.log(chalk.red("ERROR during auto upgrade"), e);
+    process.exit();
+  }
 
   var client = spawnProcess("client");
   var server = spawnProcess("server", (debug ? ["--debug"] : []));
