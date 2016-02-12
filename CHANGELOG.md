@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3
+[use node_modules/.bin/pm2](https://github.com/TrueCar/gluestick/pull/67)
+
 ## 0.2.2
 [Expose specified environment variables to client](https://github.com/TrueCar/gluestick/pull/65)
 
