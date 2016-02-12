@@ -13,36 +13,31 @@ function replaceName (input, name) {
   return input.replace(/__\$NAME__/g, name);
 }
 
-module.exports = function () {
-  var command = process.argv[3];
-  var name = process.argv[4];
+module.exports = function (command, name, cb) {
+  var CWD = process.cwd();
 
   // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
   try {
-    fs.statSync(path.join(process.cwd(), ".gluestick"));
+    fs.statSync(path.join(CWD, ".gluestick"));
   }
   catch (e) {
     console.log(chalk.yellow(".gluestick file not found"));
-    console.log(chalk.red("ERROR: `generate` commands must be run from the root of a gluestick project."));
-    return;
+    return cb("`generate` commands must be run from the root of a gluestick project.");
   }
 
   // Step 2: Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(command)} is not a valid generator.`));
     console.log(chalk.yellow(`Available generators: ${JSON.stringify(availableCommands)}`));
-    return;
+    return cb(`${chalk.yellow(command)} is not a valid generator.`);
   }
 
   // Step 3: Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
-    console.log(chalk.red(`ERROR: invalid arguments. You must specify a name.`));
-    return;
+    return cb(`invalid arguments. You must specify a name.`);
   }
 
   if (/\W/.test(name)) {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(name)} is not a valid name.`));
-    return;
+    return cb(`${chalk.yellow(name)} is not a valid name.`);
   }
 
   // Step 4: Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
@@ -59,14 +54,13 @@ module.exports = function () {
     template = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.js`), {encoding: "utf8"})
   }
   catch(e) {
-    console.log(e, chalk.red("ERROR: Couldn't read generator file"));
-    return;
+    return cb("Couldn't read generator file");
   }
 
   template = replaceName(template, name);
 
   // Step 6: Check if the file already exists before we write to it
-  var destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
+  var destinationPath = path.join(CWD, "/src/", availableCommands[command] + "/" + name + ".js");
   var fileExists = true;
   try {
     fs.statSync(destinationPath);
@@ -76,8 +70,7 @@ module.exports = function () {
   }
 
   if (fileExists) {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(destinationPath)} already exists`));
-    return;
+    return cb(`${chalk.yellow(destinationPath)} already exists`);
   }
 
   // Step 6: Write output to file
@@ -86,7 +79,7 @@ module.exports = function () {
 
   // Step 7: If we just generated a reducer, add it to the reducers index
   if (command === "reducer") {
-    var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
+    var reducerIndexPath = path.resolve(CWD, "src/reducers/index.js");
     try {
       // Get the file contents, but strip off any trailing whitespace. This sets us up
       // to place the new export on the last line, followed by a blank whitespace line at the end
@@ -98,13 +91,12 @@ module.exports = function () {
       console.log(chalk.yellow(`${name} added to reducer index ${reducerIndexPath}`));
     }
     catch (e) {
-      console.log(chalk.red(`ERROR: Unable to modify reducers index. Reducer not added to index`));
-      return;
+      return cb(`Unable to modify reducers index. Reducer not added to index`);
     }
   }
 
   // Step 8: Write test file
-  var testFolder = path.join(process.cwd(), "/test/", availableCommands[command]);
+  var testFolder = path.join(CWD, "/test/", availableCommands[command]);
 
   // Older generated projects don't have test/reducers or test/containers
   mkdirp.sync(testFolder);
@@ -121,25 +113,23 @@ module.exports = function () {
   }
 
   if (testFileExists) {
-    console.log(chalk.yellow(`WARNING: Unable to create test file for ${name} because it already exists`));
-    return;
+    return cb(`Unable to create test file for ${name} because it already exists`);
   }
 
   try {
     testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
   }
   catch (e) {
-    console.log(e, chalk.red("ERROR: Couldn't read generator file"));
-    return;
+    return cb("Couldn't read generator file");
   }
 
   try {
     fs.writeFileSync(testPath, replaceName(testTemplate, name));
   }
   catch (e) {
-    console.log(e, chalk.red("ERROR: Couldn't create test file"));
-    return;
+    return cb("Couldn't create test file");
   }
 
   console.log(chalk.green(`New file created: ${testPath}`));
+  return cb();
 };
