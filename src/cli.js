@@ -35,7 +35,9 @@ commander
   .command("generate <container|component|reducer>")
   .description("generate a new container")
   .arguments("<name>")
-  .action((type, name) => generate(type, name));
+  .action((type, name) => generate(type, name, (err) => {
+    if (err) console.log(chalk.red(`ERROR: ${err}`)); 
+  }));
 
 commander
   .command("destroy <container|component|reducer>")
