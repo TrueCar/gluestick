@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.2
+[Expose specified environment variables to client](https://github.com/TrueCar/gluestick/pull/65)
+
+[Add --debug, -D mode for server side debugging](https://github.com/TrueCar/gluestick/pull/64)
+
+[Fix generator bug, create folders if missing](https://github.com/TrueCar/gluestick/pull/63)
+
+[Add a check for the extensions property](https://github.com/TrueCar/gluestick/pull/62)
+
+[Add support to load css files from npm modules](https://github.com/TrueCar/gluestick/pull/61)
+
+[Specify GlueStick version in Dockerfile](https://github.com/TrueCar/gluestick/pull/60)
+
+[Fix update-package](https://github.com/TrueCar/gluestick/pull/59)
+
+[Stop tailing log file, use pm2 logs method](https://github.com/TrueCar/gluestick/pull/58)
+
+[PM2: move to using `delete` instead of `stop`](https://github.com/TrueCar/gluestick/pull/57)
+
+
 ## 0.2.1
 [Add `dockerize` command](https://github.com/TrueCar/gluestick/pull/56)
 
