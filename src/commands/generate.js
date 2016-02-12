@@ -13,13 +13,12 @@ function replaceName (input, name) {
   return input.replace(/__\$NAME__/g, name);
 }
 
-module.exports = function () {
-  var command = process.argv[3];
-  var name = process.argv[4];
+module.exports = function (command, name) {
+  var CWD = process.cwd();
 
   // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
   try {
-    fs.statSync(path.join(process.cwd(), ".gluestick"));
+    fs.statSync(path.join(CWD, ".gluestick"));
   }
   catch (e) {
     console.log(chalk.yellow(".gluestick file not found"));
@@ -66,7 +65,7 @@ module.exports = function () {
   template = replaceName(template, name);
 
   // Step 6: Check if the file already exists before we write to it
-  var destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
+  var destinationPath = path.join(CWD, "/src/", availableCommands[command] + "/" + name + ".js");
   var fileExists = true;
   try {
     fs.statSync(destinationPath);
@@ -86,7 +85,7 @@ module.exports = function () {
 
   // Step 7: If we just generated a reducer, add it to the reducers index
   if (command === "reducer") {
-    var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
+    var reducerIndexPath = path.resolve(CWD, "src/reducers/index.js");
     try {
       // Get the file contents, but strip off any trailing whitespace. This sets us up
       // to place the new export on the last line, followed by a blank whitespace line at the end
@@ -104,7 +103,7 @@ module.exports = function () {
   }
 
   // Step 8: Write test file
-  var testFolder = path.join(process.cwd(), "/test/", availableCommands[command]);
+  var testFolder = path.join(CWD, "/test/", availableCommands[command]);
 
   // Older generated projects don't have test/reducers or test/containers
   mkdirp.sync(testFolder);

@@ -35,7 +35,7 @@ commander
   .command("generate <container|component|reducer>")
   .description("generate a new container")
   .arguments("<name>")
-  .action(generate);
+  .action((type, name) => generate(type, name));
 
 commander
   .command("destroy <container|component|reducer>")
