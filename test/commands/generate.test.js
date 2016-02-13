@@ -9,10 +9,10 @@ import generate from "../../src/commands/generate";
 
 function stubProject(type) {
     // Generate files that are already expected to exist
+    const srcDir = path.join(process.cwd(), `src/${type}s`);
     fs.closeSync(fs.openSync(".gluestick", "w"));
-    const srcDir = path.join(process.cwd(), "src", `${type}s`);
     mkdirp.sync(srcDir);
-    if (type == "reducer") {
+    if (type === "reducer") {
       fs.closeSync(fs.openSync(path.join(srcDir, "index.js"), "w"));
     }
 }
@@ -101,6 +101,17 @@ describe("cli: gluestick generate", function () {
     generate(type, "Myreducer", (err) => {
       expect(err).to.be.undefined;
       makeGeneratedFilesAssertion(process.cwd(), type, "myreducer", done);
+    });
+  });
+
+  it("should not generate a container if it already exists", done => {
+    const type = "container";
+    stubProject(type);
+    fs.closeSync(fs.openSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "w"));
+    generate(type, "mycontainer", (err) => {
+      expect(err).to.not.be.undefined;
+      expect(err).to.contain("already exists");
+      done();
     });
   });
 
