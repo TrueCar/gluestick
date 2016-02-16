@@ -4,6 +4,7 @@ import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "child_process";
+import logger from "./lib/logger";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 
@@ -178,7 +179,7 @@ function performModulesUpdate (mismatchedModules, done) {
   const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   npmInstall.on("close", () => {
-    console.log(chalk.green("node_modules have been updated."));
+    logger.success(`node_modules have been updated.`);
     done();
   });
 }

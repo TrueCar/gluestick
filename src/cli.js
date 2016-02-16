@@ -13,7 +13,9 @@ const generate = lazyMethodRequire("./commands/generate");
 const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
 
-const chalk = require("chalk");
+const logger = require("./lib/logger");
+const { _highlight, _filename } = logger;
+
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
 
@@ -36,7 +38,7 @@ commander
   .description("generate a new container")
   .arguments("<name>")
   .action((type, name) => generate(type, name, (err) => {
-    if (err) console.log(chalk.red(`ERROR: ${err}`)); 
+    if (err) logger.error(err);
   }));
 
 commander
@@ -100,7 +102,7 @@ commander
 commander
   .command('*', null, {noHelp: true})
   .action(function(cmd){
-    console.log(`Error: Command '${cmd}' not recognized`);
+    logger.error(`Command '${_highlight(cmd)}' not recognized`);
     commander.help();
 });
 
@@ -127,7 +129,7 @@ function spawnProcess (type, args=[]) {
       break;
   }
 
-  childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });
+  childProcess.on("error", function (data) { logger.error(JSON.stringify(arguments)) });
   return childProcess;
 }
 
@@ -136,7 +138,7 @@ async function startAll(withoutTests=false, debug=false) {
     await autoUpgrade();
   }
   catch (e) {
-    console.log(chalk.red("ERROR during auto upgrade"), e);
+    logger.error(`During auto upgrade: ${e}`);
     process.exit();
   }
 

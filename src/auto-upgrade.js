@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import chalk from "chalk";
 import sha1 from "sha1";
 import updatePackage from "./update-package";
 import updateConfig from "./update-config";
+import logger, { _highlight, _filename } from "./lib/logger";
 
 const CWD = process.cwd();
 
@@ -15,8 +15,8 @@ const CWD = process.cwd();
  */
 function replaceFile (name, data) {
   const filePath = getCurrentFilePath(name);
-  console.log(chalk.yellow(`${name} file out of date.`));
-  console.log(chalk.green(`Updating ${filePath}`));
+  logger.info(`${_highlight(name)} file out of date.`);
+  logger.success(`Updating ${_filename(filePath)}`);
 
   fs.writeFileSync(filePath, data);
 }
@@ -38,7 +38,7 @@ module.exports = async function () {
     fs.statSync(path.join(CWD, ".gluestick"))
   }
   catch (e) {
-    console.log(chalk.red("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project"));
+    logger.warn("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project");
     process.exit();
   }
 
