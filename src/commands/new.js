@@ -4,7 +4,8 @@ const fs = require("fs-extra");
 const path = require("path");
 const npmDependencies = require("../lib/npm-dependencies");
 const logger = require("../lib/logger");
-const { _highlight, _filename } = logger;
+const logsColorScheme = require("../lib/logsColorScheme");
+const { highlight, filename } = logsColorScheme;
 
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../new"), destination);
@@ -34,7 +35,7 @@ module.exports = function (projectName) {
 
   // No project name, or ran from inside an existing project install in current directory if approved
   if (!projectName || currentlyInProjectFolder) {
-    logger.info(`You are about to initialize a new gluestick project at ${_filename(process.cwd())}`);
+    logger.info(`You are about to initialize a new gluestick project at ${filename(process.cwd())}`);
     const question = {
       type: "confirm",
       name: "confirm",
@@ -51,7 +52,7 @@ module.exports = function (projectName) {
 
   // Anything other than alphanumeric and dashes is invalid
   if (!/^(\w|-)*$/.test(projectName)) {
-    logger.warn(`Invalid name: ${_highlight(projectName)}`);
+    logger.warn(`Invalid name: ${highlight(projectName)}`);
     return;
   }
 

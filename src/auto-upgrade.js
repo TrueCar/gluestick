@@ -3,7 +3,8 @@ import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./update-package";
 import updateConfig from "./update-config";
-import logger, { _highlight, _filename } from "./lib/logger";
+import logger from "./lib/logger";
+import { highlight, filename } from "./lib/logsColorScheme";
 
 const CWD = process.cwd();
 
@@ -15,8 +16,8 @@ const CWD = process.cwd();
  */
 function replaceFile (name, data) {
   const filePath = getCurrentFilePath(name);
-  logger.info(`${_highlight(name)} file out of date.`);
-  logger.success(`Updating ${_filename(filePath)}`);
+  logger.info(`${highlight(name)} file out of date.`);
+  logger.success(`Updating ${filename(filePath)}`);
 
   fs.writeFileSync(filePath, data);
 }

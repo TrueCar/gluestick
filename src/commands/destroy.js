@@ -2,7 +2,8 @@ var fs = require("fs");
 var path = require("path");
 var inquirer = require("inquirer");
 const logger = require("../lib/logger");
-const { _highlight, _filename } = logger;
+const logsColorScheme = require("../lib/logsColorScheme");
+const { highlight, filename } = logsColorScheme;
 
 var availableCommands = {
   "container": "containers",
@@ -21,14 +22,14 @@ module.exports = async function () {
   }
   catch (e) {
     logger.info(`.gluestick file not found`);
-    logger.error(`${_highlight(destroy)} commands must be run from the root of a gluestick project.`);
+    logger.error(`${highlight(destroy)} commands must be run from the root of a gluestick project.`);
     return;
   }
 
   // Step 2: Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
-    logger.error(`${_highlight(command)} is not a valid destroy command.`);
-    logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => _highlight(c)).join(", ")}`);
+    logger.error(`${highlight(command)} is not a valid destroy command.`);
+    logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
     return;
   }
 
@@ -39,7 +40,7 @@ module.exports = async function () {
   }
 
   if (/\W/.test(name)) {
-    logger.error(`${_highlight(name)} is not a valid name.`);
+    logger.error(`${highlight(name)} is not a valid name.`);
     return;
   }
 
@@ -70,7 +71,7 @@ module.exports = async function () {
         const question = {
           type: "confirm",
           name: "confirm",
-          message: `You wanted to destroy ${_filename(originalName)} but the generated name is ${_filename(name)}.\nWould you like to continue with destroying ${_filename(name)}?`
+          message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(name)}.\nWould you like to continue with destroying ${filename(name)}?`
         };
         inquirer.prompt([question], function (answers) {
           if (!answers.confirm) resolve(false);
@@ -83,10 +84,10 @@ module.exports = async function () {
     }
 
     fs.unlinkSync(destinationPath);
-    logger.success(`Removed file: ${_filename(destinationPath)}`);
+    logger.success(`Removed file: ${filename(destinationPath)}`);
   }
   else {
-    logger.error(`${_filename(destinationPath)} does not exist`);
+    logger.error(`${filename(destinationPath)} does not exist`);
     return;
   }
 
@@ -102,7 +103,7 @@ module.exports = async function () {
         return indexLine !== reducerLine && indexLine !== `${reducerLine};`;
       });
       fs.writeFileSync(reducerIndexPath, newIndexLines.join("\n"));
-      logger.success(`${_highlight(name)} removed from reducer index ${_filename(reducerIndexPath)}`);
+      logger.success(`${highlight(name)} removed from reducer index ${filename(reducerIndexPath)}`);
     }
     catch (e) {
       logger.error(`Unable to modify reducers index. Reducer not removed from index`);
@@ -122,10 +123,10 @@ module.exports = async function () {
 
   if (testFileExists) {
     fs.unlinkSync(testPath);
-    logger.success(`Removed file: ${_filename(testPath)}`);
+    logger.success(`Removed file: ${filename(testPath)}`);
   }
   else {
-    logger.error(`${_filename(testPath)} does not exist`);
+    logger.error(`${filename(testPath)} does not exist`);
     return;
   }
 };

@@ -4,7 +4,8 @@ import { spawn } from "child_process";
 import pm2 from "pm2";
 import sha1 from "sha1";
 import fs from "fs";
-import logger, { _highlight } from "../lib/logger";
+import logger from "../lib/logger";
+import { highlight } from "../lib/logsColorScheme";
 
 
 // The number of server side rendering instances to run. This can be set with
@@ -72,7 +73,7 @@ module.exports = function startServer (debug=false) {
     process.on("SIGINT", () => {
       const app_cwd = CWD;
 
-      logger.info(`Stopping pm2 instance: ${_highlight(name)}…`);
+      logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
       pm2.delete(name, () => {
         pm2.disconnect(() => {
           process.exit();

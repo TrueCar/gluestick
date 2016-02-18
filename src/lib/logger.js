@@ -1,22 +1,15 @@
-var chalk = require("chalk");
-
-const _success = chalk.green;
-const _info = chalk.yellow;
-const _warn = chalk.red;
-const _highlight = chalk.bold;
-const _filename = chalk.cyan;
-
+var logsColorScheme = require("./logsColorScheme");
 
 function success(text){
-  console.log(_success(text));
+  console.log(logsColorScheme.success(text));
 }
 
 function info(text){
-  console.log(_info(text));
+  console.log(logsColorScheme.info(text));
 }
 
 function warn(text){
-  console.log(_warn(text));
+  console.log(logsColorScheme.warn(text));
 }
 
 function error(text){
@@ -24,11 +17,6 @@ function error(text){
 }
 
 module.exports = {
-  _highlight,
-  _filename,
-  _success,
-  _info,
-  _warn,
   success,
   info,
   warn,

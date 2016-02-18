@@ -10,6 +10,7 @@ var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
 const logger = require("../lib/logger");
+const logsColorScheme = require("../lib/logsColorScheme");
 
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
@@ -135,7 +136,7 @@ module.exports = function (buildOnly) {
     logger.info("Bundling assets…");
     compiler.run(() => {
       logger.success(`Assets have been prepared for production.`);
-      logger.success(`Assets can be served from the ${logger._filename("/assets")} route but it is recommended that you serve the generated ${logger._filename("build")} folder from a Content Delivery Network`);
+      logger.success(`Assets can be served from the ${logsColorScheme.filename("/assets")} route but it is recommended that you serve the generated ${logsColorScheme.filename("build")} folder from a Content Delivery Network`);
     });
   }
 };

@@ -14,7 +14,8 @@ const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
 
 const logger = require("./lib/logger");
-const { _highlight, _filename } = logger;
+const logsColorScheme = require("./lib/logsColorScheme");
+const { highlight } = logsColorScheme;
 
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
@@ -102,7 +103,7 @@ commander
 commander
   .command('*', null, {noHelp: true})
   .action(function(cmd){
-    logger.error(`Command '${_highlight(cmd)}' not recognized`);
+    logger.error(`Command '${highlight(cmd)}' not recognized`);
     commander.help();
 });
 
