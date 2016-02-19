@@ -84,6 +84,7 @@ var compiler = webpack({
   output: {
     path: OUTPUT_PATH,
     filename: OUTPUT_FILE,
+    chunkFilename: `[name]-${OUTPUT_FILE}`,
     publicPath: PUBLIC_PATH
   },
   plugins: [
@@ -112,7 +113,8 @@ module.exports = function (buildOnly) {
     app.use(proxy("localhost:8880", {
       forwardPath: function (req, res) {
         return require("url").parse(req.url).path;
-      }
+      },
+      preserveHostHdr: true
     }));
     app.use(function(err, req, res, next) {
       if (err && err.code == "ECONNREFUSED") {
