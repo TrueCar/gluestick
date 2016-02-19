@@ -93,7 +93,8 @@ var compiler = webpack({
     new webpack.DefinePlugin({
       "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
       "process.env": exposedEnvironmentVariables
-    })
+    }),
+    new webpack.IgnorePlugin(/\.server(\.js)?$/)
   ].concat(environmentPlugins, shared.plugins),
   resolve: {
     ...shared.resolve
