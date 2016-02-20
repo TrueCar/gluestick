@@ -15,15 +15,12 @@ describe("cli: gluestick destroy", function () {
   let componentPath, componentTestPath, containerPath, containerTestPath, reducerPath, reducerTestPath;
 
   let createFiles = function(...filePaths) {
-      console.log(filePaths);
       for(let path of filePaths) {
           fs.closeSync(fs.openSync(path, "w"));
       }
   };
   
   let createDirectories = function(...directories) {
-      console.log(directories);
-      
       for(let directory of directories) {
         mkdirp.sync(tmpDir + `/src/${directory}`);
         mkdirp.sync(tmpDir + `/test/${directory}`);      
