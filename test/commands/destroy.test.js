@@ -70,7 +70,7 @@ describe("cli: gluestick destroy", function () {
     expect(console.log.calledWithMatch("ERROR: invalid arguments. You must specify a name.")).to.be.true;
   });
 
-  it("should throw ab error when the specified name does not exist", () => { 
+  it("should throw an error when the specified name does not exist", () => { 
     destroy("component","somethingthatdoesnotexist"); 
     expect(console.log.calledWithMatch("does not exist")).to.be.true;
   });
