@@ -27,6 +27,10 @@ describe("cli: gluestick destroy", function () {
       }
   };
   
+  let fileExists = function(path) {
+      return fs.existsSync(tmpDir + path);
+  };
+  
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-destroy");
@@ -73,27 +77,27 @@ describe("cli: gluestick destroy", function () {
   });
 
   it("should destroy the specified component and its associated test", () => { 
-    expect(fs.existsSync(tmpDir + "/src/components/TestComponent.js")).to.be.true
-    expect(fs.existsSync(tmpDir + "/test/components/TestComponent.test.js")).to.be.true
+    expect(fileExists("/src/components/TestComponent.js")).to.be.true
+    expect(fileExists("/test/components/TestComponent.test.js")).to.be.true
     destroy("component","TestComponent"); 
-    expect(fs.existsSync(tmpDir + "/src/components/TestComponent.js")).to.be.false
-    expect(fs.existsSync(tmpDir + "/test/components/TestComponent.test.js")).to.be.false
+    expect(fileExists("/src/components/TestComponent.js")).to.be.false
+    expect(fileExists("/test/components/TestComponent.test.js")).to.be.false
   });
 
   it("should destroy the specified reducer and its associated test", () => { 
-    expect(fs.existsSync(tmpDir + "/src/reducers/testReducer.js")).to.be.true
-    expect(fs.existsSync(tmpDir + "/test/reducers/testReducer.test.js")).to.be.true
+    expect(fileExists("/src/reducers/testReducer.js")).to.be.true
+    expect(fileExists("/test/reducers/testReducer.test.js")).to.be.true
     destroy("reducer","testReducer"); 
-    expect(fs.existsSync(tmpDir + "/src/reducers/testReducer.js")).to.be.false
-    expect(fs.existsSync(tmpDir + "/test/reducers/testReducer.test.js")).to.be.false
+    expect(fileExists("/src/reducers/testReducer.js")).to.be.false
+    expect(fileExists("/test/reducers/testReducer.test.js")).to.be.false
   });
 
   it("should destroy the specified container and its associated test", () => { 
-    expect(fs.existsSync(tmpDir + "/src/containers/TestContainer.js")).to.be.true
-    expect(fs.existsSync(tmpDir + "/test/containers/TestContainer.test.js")).to.be.true
+    expect(fileExists("/src/containers/TestContainer.js")).to.be.true
+    expect(fileExists("/test/containers/TestContainer.test.js")).to.be.true
     destroy("container","TestContainer"); 
-    expect(fs.existsSync(tmpDir + "/src/containers/TestContainer.js")).to.be.false
-    expect(fs.existsSync(tmpDir + "/test/containers/TestContainer.test.js")).to.be.false
+    expect(fileExists("/src/containers/TestContainer.js")).to.be.false
+    expect(fileExists("/test/containers/TestContainer.test.js")).to.be.false
   });
 
 });
