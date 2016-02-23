@@ -10,10 +10,7 @@ var availableCommands = {
 };
 
 // @NOTE, we use async here because we use await later in the function
-module.exports = async function () {
-  var command = process.argv[3];
-  var name = process.argv[4];
-
+module.exports = async function (command, name) {
   // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
   try {
     fs.statSync(path.join(process.cwd(), ".gluestick"));
@@ -105,7 +102,6 @@ module.exports = async function () {
     }
     catch (e) {
       console.log(chalk.red(`ERROR: Unable to modify reducers index. Reducer not removed from index`));
-      return;
     }
   }
 
