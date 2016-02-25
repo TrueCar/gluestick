@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import Radium from "radium";
+import Radium, { StyleRoot } from "radium";
 
 @Radium
 export default class RadiumConfig extends Component {
   render () {
     return (
-      <div>
+      <StyleRoot>
         {this.props.children}
-      </div>
+      </StyleRoot>
     );
   }
 }
