@@ -18,13 +18,13 @@ export default class Entry extends Component {
 
   render () {
     const {
-      routingContext,
+      routerContext,
       radiumConfig,
       store
     } = this.props;
 
     return (
-      <Root routingContext={routingContext} radiumConfig={radiumConfig} routes={routes} store={store} />
+      <Root routerContext={routerContext} radiumConfig={radiumConfig} routes={routes} store={store} />
     );
   }
 }
