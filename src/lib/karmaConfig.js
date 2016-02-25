@@ -49,7 +49,8 @@ export default {
     },
     plugins: [
       new webpack.DefinePlugin({
-        "TEST_PATH": JSON.stringify(path.join(CWD, "test"))
+        "TEST_PATH": JSON.stringify(path.join(CWD, "test")),
+        "SRC_PATH": JSON.stringify(path.join(CWD, "src"))
       })
     ].concat(shared.plugins),
     resolve: {
