@@ -1,3 +1,4 @@
+/* @flow */
 import React from "react";
 import { Route, IndexRoute } from "react-router";
 import { ROUTE_NAME_404_NOT_FOUND } from "gluestick-shared";
