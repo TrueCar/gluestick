@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import { Router, Route } from "react-router";
+import { Router, Route, browserHistory } from "react-router"
 import { Provider } from "react-redux";
-import createBrowserHistory from "history/lib/createBrowserHistory";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
 import RadiumConfig from "../components/RadiumConfig";
@@ -12,11 +11,11 @@ export default class Root extends Component {
     routes: PropTypes.object,
     reducers: PropTypes.object,
     routerHistory: PropTypes.any,
-    routingContext: PropTypes.object
+    routerContext: PropTypes.object
   };
 
   static defaultProps = {
-    routerHistory: typeof window !== "undefined" ? createBrowserHistory() : null
+    routerHistory: typeof window !== "undefined" ? browserHistory : null
   };
 
   constructor (props) {
@@ -34,14 +33,14 @@ export default class Root extends Component {
     const {
       routes,
       routerHistory,
-      routingContext,
+      routerContext,
       radiumConfig,
       store
     } = this.props;
 
     const router = this._renderRouter();
     const devTools = this._renderDevTools();
-
+    
     return (
       <Provider store={store}>
         <div>
@@ -57,12 +56,12 @@ export default class Root extends Component {
   _renderRouter () {
     const {
       routes,
-      routingContext,
+      routerContext,
       routerHistory
     } = this.props;
 
     // server rendering
-    if (routingContext) return routingContext;
+    if (routerContext) return routerContext;
 
     return (
       <Router history={routerHistory}>
