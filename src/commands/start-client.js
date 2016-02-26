@@ -7,10 +7,11 @@ var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 var shared = require("../lib/shared");
 var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
-var getWebpackAdditions = require("../lib/get-webpack-additions");
+var getWebpackAdditions = require("../lib/get-webpack-additions").default;
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
-var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
+var appConfig = require(path.join(process.cwd(), "src", "config", "application")).default;
 
+var assetPath = appConfig.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }
@@ -61,7 +62,8 @@ if (!isProduction) {
 // variable. For that reason we are going to perform static analysis on that
 // file to determine all of the environment variables that are used in that
 // file and make sure that webpack makes those available in the application.
-var configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
+var appConfigPath = path.join(process.cwd(), "src", "config", "application.js");
+var configEnvVariables = detectEnvironmentVariables(appConfigPath);
 configEnvVariables.push("NODE_ENV");
 var exposedEnvironmentVariables = {};
 configEnvVariables.forEach((v) => {

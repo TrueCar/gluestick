@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("child_process");
-const lazyMethodRequire = require("./lib/LazyMethodRequire")(__dirname);
+const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");

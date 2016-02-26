@@ -13,7 +13,7 @@ var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 // call this method with `true` as the first and only argument because that is
 // how we tell the method we are requiring for the purpose of the isomorphic
 // tools, not the webpack config file.
-const { additionalLoaders, additionalPreLoaders } = require("./get-webpack-additions")(true);
+const { additionalLoaders, additionalPreLoaders } = require("./get-webpack-additions").default(true);
 
 let userExtensions = [];
 [...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {

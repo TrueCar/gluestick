@@ -2,7 +2,7 @@ import chalk from "chalk";
 import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks  } from "gluestick-shared";
+import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks } from "gluestick-shared";
 import { match, RoutingContext, Route } from "react-router";
 import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
 
@@ -16,11 +16,12 @@ process.on("unhandledRejection", (reason, promise) => {
 
 module.exports = async function (req, res) {
   try {
-    const Index = require(path.join(process.cwd(), "Index"));
-    const Entry = require(path.join(process.cwd(), "src/config/.entry"));
-    const store = require(path.join(process.cwd(), "src/config/.store"))();
-    const originalRoutes = require(path.join(process.cwd(), "src/config/routes"));
-    const config = require(path.join(process.cwd(), "src/config/application"));
+    const Index = require(path.join(process.cwd(), "Index")).default;
+    const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+    const createStore = require(path.join(process.cwd(), "src/config/.store")).default;
+    const store = createStore();
+    const originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
+    const config = require(path.join(process.cwd(), "src/config/application")).default;
     const routes = prepareRoutesWithTransitionHooks(originalRoutes);
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {

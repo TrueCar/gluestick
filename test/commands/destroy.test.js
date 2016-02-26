@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";

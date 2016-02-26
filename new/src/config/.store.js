@@ -3,5 +3,5 @@
 import { createStore } from "gluestick-shared";
 import middleware from "./redux-middleware";
 export default function () {
-  return createStore(() => require("../reducers"), middleware, (cb) => module.hot && module.hot.accept("../reducers", cb), !!module.hot);
+  return createStore(() => require("../reducers").default, middleware, (cb) => module.hot && module.hot.accept("../reducers", cb), !!module.hot);
 }
