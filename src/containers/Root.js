@@ -59,7 +59,7 @@ export default class Root extends Component {
 
     return (
       <Router history={routerHistory}>
-          {prepareRoutesWithTransitionHooks(routes)}
+        {prepareRoutesWithTransitionHooks(routes)}
       </Router>
     );
   }
