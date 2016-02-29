@@ -1,7 +1,9 @@
 require("../run-through-babel");
 
 var express = require("express");
-var chalk = require("chalk");
+var logger = require("./logger");
+var logsColorScheme = require("./logsColorScheme");
+var filename = logsColorScheme.filename;
 
 var WebpackIsomorphicTools = require("webpack-isomorphic-tools");
 var projectBasePath = process.cwd();
@@ -19,8 +21,7 @@ var PORT = process.env.PORT || (isProduction ? 8888 : 8880);
 
     if (isProduction) {
       app.use("/assets", express.static("build"));
-      console.log(chalk.green("Server side rendering server running at http://localhost:" + PORT));
-
+      logger.success(`Server side rendering server running at ${filename("http://localhost:" + PORT)}`);
     }
     else {
       app.get("/gluestick-proxy-poll", function(req, res) {
@@ -29,7 +30,7 @@ var PORT = process.env.PORT || (isProduction ? 8888 : 8880);
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.status(200).json({up: true});
       });
-      console.log("Server side rendering proxy running at http://localhost:" + PORT);
+      logger.success(`Server side rendering proxy running at ${filename("http://localhost:" + PORT)}`);
     }
 
     app.use(serverRequestHandler);
