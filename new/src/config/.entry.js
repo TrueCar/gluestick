@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 
 import { Root } from "gluestick-shared";
+import { match } from "react-router";
 import routes from "./routes";
 import store from "./.store";
 
@@ -29,6 +30,8 @@ export default class Entry extends Component {
 }
 
 Entry.start = function () {
-  render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} />, document.getElementById("main"));
+  match({routes, location: window.location.pathname}, (error, redirectLocation, renderProps) => {
+    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} {...renderProps} />, document.getElementById("main"));
+  });
 };
 

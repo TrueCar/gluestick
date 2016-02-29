@@ -1,12 +1,9 @@
+/* @flow */
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-@connect(
-  (state) => ({/** _INSERT_STATE_  **/}),
-    (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
-)
-export default class NotMatchApp extends Component {
+export class NotMatchApp extends Component {
   /**
    * Called by ReactRouter before loading the container. Called prior to the
    * React life cycle so doesn't have access to component's props or state.
@@ -29,4 +26,9 @@ export default class NotMatchApp extends Component {
     );
   }
 }
+
+export default connect(
+  (state) => ({/** _INSERT_STATE_  **/}),
+  (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
+)(NoMatchApp);
 

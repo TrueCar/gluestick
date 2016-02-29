@@ -4,7 +4,7 @@ var process = require("process");
 var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var shared = require("./shared");
+var shared = require("../lib/shared");
 var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
@@ -85,6 +85,7 @@ var compiler = webpack({
   output: {
     path: OUTPUT_PATH,
     filename: OUTPUT_FILE,
+    chunkFilename: `[name]-${OUTPUT_FILE}`,
     publicPath: PUBLIC_PATH
   },
   plugins: [
@@ -94,7 +95,8 @@ var compiler = webpack({
     new webpack.DefinePlugin({
       "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
       "process.env": exposedEnvironmentVariables
-    })
+    }),
+    new webpack.IgnorePlugin(/\.server(\.js)?$/)
   ].concat(environmentPlugins, shared.plugins),
   resolve: {
     ...shared.resolve
@@ -112,7 +114,8 @@ module.exports = function (buildOnly) {
     app.use(proxy("localhost:8880", {
       forwardPath: function (req, res) {
         return require("url").parse(req.url).path;
-      }
+      },
+      preserveHostHdr: true
     }));
     app.use(function(err, req, res, next) {
       if (err && err.code == "ECONNREFUSED") {
