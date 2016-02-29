@@ -1,3 +1,5 @@
+import { match } from 'react-router';
+
 const getBeforeRoute = (component = {}) => {
   const c = component.WrappedComponent || component;
 
@@ -43,9 +45,9 @@ export function runBeforeRoutes (store, renderProps, serverProps) {
   return Promise.all(promises)
 }
 
-export function createTransitionHook (store, history) {
+export function createTransitionHook (store, routes) {
   return function(location, cb) {
-    history.match(location, async function (error, redirectLocation, renderProps) {
+    match({routes: routes, location}, async function (error, redirectLocation, renderProps) {
       try {
         await runBeforeRoutes(store, renderProps)
       } catch(err) {

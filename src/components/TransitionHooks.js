@@ -1,16 +1,18 @@
 import React, { Component, PropTypes } from "react";
+import Radium, { StyleRoot } from "radium";
 import { createTransitionHook } from "../lib/route-helper";
 
+@Radium
 export default class TransitionHooks extends Component {
   static contextTypes = {
-    history: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
   };
 
   componentWillMount() {
-    const { history } = this.props;
-    const { store } = this.context;
-    this.unListenBefore = history.listenBefore(createTransitionHook(store, history));
+    const { routes } = this.props;
+    const { store, router } = this.context;
+    this.unListenBefore = router.listenBefore(createTransitionHook(store, routes));
   }
 
   componentWillUnmount() {
@@ -18,7 +20,11 @@ export default class TransitionHooks extends Component {
   }
 
   render () {
-    return this.props.children;
+    return (
+      <StyleRoot>
+        {this.props.children}
+      </StyleRoot>
+    );
   }
 }
 
