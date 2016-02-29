@@ -3,7 +3,6 @@ import { Router, Route, browserHistory } from "react-router"
 import { Provider } from "react-redux";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
-import RadiumConfig from "../components/RadiumConfig";
 import DevTools from "./DevTools";
 
 export default class Root extends Component {
@@ -23,6 +22,8 @@ export default class Root extends Component {
     this.state = {
       mounted: false
     };
+
+    this.router = this._renderRouter(props);
   }
 
   componentDidMount () {
@@ -31,41 +32,34 @@ export default class Root extends Component {
 
   render () {
     const {
-      routes,
-      routerHistory,
-      routerContext,
-      radiumConfig,
       store
     } = this.props;
 
-    const router = this._renderRouter();
     const devTools = this._renderDevTools();
     
     return (
       <Provider store={store}>
         <div>
-          <RadiumConfig radiumConfig={radiumConfig}>
-            {router}
-          </RadiumConfig>
-          {devTools}
+            {this.router}
+            {devTools}
         </div>
       </Provider>
     );
   }
 
-  _renderRouter () {
+  _renderRouter (props) {
     const {
       routes,
       routerContext,
       routerHistory
-    } = this.props;
+    } = props;
 
     // server rendering
     if (routerContext) return routerContext;
 
     return (
       <Router history={routerHistory}>
-        {prepareRoutesWithTransitionHooks(routes)}
+          {prepareRoutesWithTransitionHooks(routes)}
       </Router>
     );
   }
