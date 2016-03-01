@@ -3,7 +3,7 @@ import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks } from "gluestick-shared";
-import { match, RoutingContext, Route } from "react-router";
+import { match, RouterContext, Route } from "react-router";
 import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
 
 import serverErrorHandler from "./server-error-handler";
@@ -38,12 +38,12 @@ module.exports = async function (req, res) {
           // context.
           // [https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md]
           await runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
-          const routingContext = createElement(RoutingContext, renderProps);
+          const routerContext = createElement(RouterContext, renderProps);
 
           // grab the main component which is capable of loading routes
           // and hot loading them if in development mode
           const radiumConfig = { userAgent: req.headers["user-agent"] };
-          const main = createElement(Entry, {store: store, routingContext: routingContext, config: config, radiumConfig: radiumConfig});
+          const main = createElement(Entry, {store: store, routerContext: routerContext, config: config, radiumConfig: radiumConfig});
 
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import PrettyError from "pretty-error";
 import * as secureHandlebars from "secure-handlebars";
-import chalk from "chalk";
+import logger from "./logger";
 
 const pretty = new PrettyError();
 
@@ -37,7 +37,7 @@ export default function serverErrorHandler(req, res, error) {
 
     // If we don't have a custom 505 error page then just throw the stack trace
     if(statError || !stats.isFile()) {
-      console.log(chalk.yellow(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`));
+      logger.info(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`);
       return res.send({error: error});
     }
 

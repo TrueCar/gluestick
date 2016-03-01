@@ -4,6 +4,9 @@ import { spawn } from "child_process";
 import pm2 from "pm2";
 import sha1 from "sha1";
 import fs from "fs";
+import logger from "../lib/logger";
+import { highlight } from "../lib/logsColorScheme";
+
 
 // The number of server side rendering instances to run. This can be set with
 // an environment variable or it will default to 0 for production and 1 for
@@ -34,7 +37,7 @@ module.exports = function startServer (debug=false) {
   // multiple instances of GlueStick on the same machine
   const name = `gluestick-server-${sha1(CWD).substr(0, 7)}`;
 
-  console.log("Server rendering server started with PM2");
+  logger.info("Server rendering server started with PM2");
   pm2.connect((error) => {
     if (error) {
       console.error(error);
@@ -70,7 +73,7 @@ module.exports = function startServer (debug=false) {
     process.on("SIGINT", () => {
       const app_cwd = CWD;
 
-      console.log(`Stopping pm2 instance: ${name}…`);
+      logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
       pm2.delete(name, () => {
         pm2.disconnect(() => {
           process.exit();
