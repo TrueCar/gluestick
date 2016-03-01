@@ -6,6 +6,7 @@ import { Root } from "gluestick-shared";
 import { match } from "react-router";
 import routes from "./routes";
 import store from "./.store";
+import { StyleRoot } from "radium";
 
 // Make sure that webpack considers new dependencies introduced in the Index
 // file
@@ -24,7 +25,9 @@ export default class Entry extends Component {
     } = this.props;
 
     return (
-      <Root routerContext={routerContext} radiumConfig={radiumConfig} routes={routes} store={store} />
+      <StyleRoot radiumConfig={radiumConfig}>
+        <Root routerContext={routerContext} radiumConfig={radiumConfig} routes={routes} store={store} />
+      </StyleRoot>
     );
   }
 }
