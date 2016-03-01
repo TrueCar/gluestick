@@ -1,7 +1,9 @@
 var fs = require("fs");
 var path = require("path");
-var chalk = require("chalk");
 var inquirer = require("inquirer");
+const logger = require("../lib/logger");
+const logsColorScheme = require("../lib/logsColorScheme");
+const { highlight, filename } = logsColorScheme;
 
 var availableCommands = {
   "container": "containers",
@@ -16,26 +18,26 @@ module.exports = async function (command, name) {
     fs.statSync(path.join(process.cwd(), ".gluestick"));
   }
   catch (e) {
-    console.log(chalk.yellow(".gluestick file not found"));
-    console.log(chalk.red("ERROR: `destroy` commands must be run from the root of a gluestick project."));
+    logger.info(`.gluestick file not found`);
+    logger.error(`${highlight(destroy)} commands must be run from the root of a gluestick project.`);
     return;
   }
 
   // Step 2: Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(command)} is not a valid destroy command.`));
-    console.log(chalk.yellow(`Available destroy commands: ${JSON.stringify(availableCommands)}`));
+    logger.error(`${highlight(command)} is not a valid destroy command.`);
+    logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
     return;
   }
 
   // Step 3: Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
-    console.log(chalk.red(`ERROR: invalid arguments. You must specify a name.`));
+    logger.error(`invalid arguments. You must specify a name.`);
     return;
   }
 
   if (/\W/.test(name)) {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(name)} is not a valid name.`));
+    logger.error(`${highlight(name)} is not a valid name.`);
     return;
   }
 
@@ -66,7 +68,7 @@ module.exports = async function (command, name) {
         const question = {
           type: "confirm",
           name: "confirm",
-          message: `You wanted to destroy ${chalk.yellow(originalName)} but the generated name is ${chalk.green(name)}. Would you like to continue with destroying ${chalk.green(name)}?`
+          message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(name)}.\nWould you like to continue with destroying ${filename(name)}?`
         };
         inquirer.prompt([question], function (answers) {
           if (!answers.confirm) resolve(false);
@@ -79,10 +81,10 @@ module.exports = async function (command, name) {
     }
 
     fs.unlinkSync(destinationPath);
-    console.log(`${chalk.red("Removed file:")} ${destinationPath}`);
+    logger.success(`Removed file: ${filename(destinationPath)}`);
   }
   else {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(destinationPath)} does not exist`));
+    logger.error(`${filename(destinationPath)} does not exist`);
     return;
   }
 
@@ -98,10 +100,10 @@ module.exports = async function (command, name) {
         return indexLine !== reducerLine && indexLine !== `${reducerLine};`;
       });
       fs.writeFileSync(reducerIndexPath, newIndexLines.join("\n"));
-      console.log(chalk.red(`${name} removed`) + ` from reducer index ${reducerIndexPath}`);
+      logger.success(`${highlight(name)} removed from reducer index ${filename(reducerIndexPath)}`);
     }
     catch (e) {
-      console.log(chalk.red(`ERROR: Unable to modify reducers index. Reducer not removed from index`));
+      logger.error(`Unable to modify reducers index. Reducer not removed from index`);
     }
   }
 
@@ -117,10 +119,10 @@ module.exports = async function (command, name) {
 
   if (testFileExists) {
     fs.unlinkSync(testPath);
-    console.log(chalk.red(`Removed file: ${testPath}`));
+    logger.success(`Removed file: ${filename(testPath)}`);
   }
   else {
-    console.log(chalk.red(`ERROR: ${chalk.yellow(testPath)} does not exist`));
+    logger.error(`${filename(testPath)} does not exist`);
     return;
   }
 };

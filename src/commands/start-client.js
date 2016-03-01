@@ -1,7 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
 var process = require("process");
-var chalk = require("chalk");
 var express = require("express");
 var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
@@ -10,6 +9,8 @@ var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 var getWebpackAdditions = require("../lib/get-webpack-additions");
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
+const logger = require("../lib/logger");
+const logsColorScheme = require("../lib/logsColorScheme");
 
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
@@ -131,14 +132,14 @@ module.exports = function (buildOnly) {
         return;
       }
 
-      console.log(chalk.green("Server running on http://localhost:" + PORT));
+      logger.success("Server running on http://localhost:" + PORT);
     });
   }
   else {
-    console.log(chalk.yellow("Bundling assets…"));
+    logger.info("Bundling assets…");
     compiler.run(() => {
-      console.log(chalk.green("Assets have been prepared for production."));
-      console.log(chalk.green(`Assets can be served from the /assets route but it is recommended that you serve the generated \`build\` folder from a Content Delivery Network`));
+      logger.success(`Assets have been prepared for production.`);
+      logger.success(`Assets can be served from the ${logsColorScheme.filename("/assets")} route but it is recommended that you serve the generated ${logsColorScheme.filename("build")} folder from a Content Delivery Network`);
     });
   }
 };

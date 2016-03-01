@@ -7,6 +7,7 @@ import glob from "glob";
 import path from "path";
 import newApp from "../../src/commands/new";
 import npmDependencies from "../../src/lib/npm-dependencies";
+import logger from "../../src/lib/logger";
 
 const newFilesTemplate = glob.sync("**", {
   cwd: path.resolve("./new"),
@@ -22,8 +23,8 @@ describe("cli: gluestick new", function () {
     tmpDir = temp.mkdirSync("gluestick-new");
     process.chdir(tmpDir);
     sandbox = sinon.sandbox.create();
-    sandbox.spy(console, "log");
-    sandbox.spy(console, "error");
+    sandbox.spy(logger, "info");
+    sandbox.spy(logger, "warn");
   });
 
   afterEach(done => {
@@ -34,13 +35,13 @@ describe("cli: gluestick new", function () {
 
   it("should report an error if the project name has symbols", () => { 
     newApp("foo#$"); 
-    expect(console.log.calledWithMatch("Invalid name: foo#$")).to.be.true;
+    expect(logger.warn.calledWithMatch("Invalid name")).to.be.true;
   });
 
   it("should prompt the user if a .gluestick file already exists", () => {
     fs.closeSync(fs.openSync(".gluestick", "w"));
     newApp("gs-new-test"); 
-    expect(console.log.calledWithMatch("You are about to initialize a new gluestick project")).to.be.true;
+    expect(logger.info.calledWithMatch("You are about to initialize a new gluestick project")).to.be.true;
   });
 
   it("should copy the contents of `new` upon install", () => {
