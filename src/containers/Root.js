@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from "react";
-import { Router, Route } from "react-router";
+import { Router, Route, browserHistory } from "react-router"
 import { Provider } from "react-redux";
-import createBrowserHistory from "history/lib/createBrowserHistory";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
-import RadiumConfig from "../components/RadiumConfig";
 import DevTools from "./DevTools";
 
 export default class Root extends Component {
@@ -12,11 +10,11 @@ export default class Root extends Component {
     routes: PropTypes.object,
     reducers: PropTypes.object,
     routerHistory: PropTypes.any,
-    routingContext: PropTypes.object
+    routerContext: PropTypes.object
   };
 
   static defaultProps = {
-    routerHistory: typeof window !== "undefined" ? createBrowserHistory() : null
+    routerHistory: typeof window !== "undefined" ? browserHistory : null
   };
 
   constructor (props) {
@@ -24,6 +22,8 @@ export default class Root extends Component {
     this.state = {
       mounted: false
     };
+
+    this.router = this._renderRouter(props);
   }
 
   componentDidMount () {
@@ -32,37 +32,30 @@ export default class Root extends Component {
 
   render () {
     const {
-      routes,
-      routerHistory,
-      routingContext,
-      radiumConfig,
       store
     } = this.props;
 
-    const router = this._renderRouter();
     const devTools = this._renderDevTools();
-
+    
     return (
       <Provider store={store}>
         <div>
-          <RadiumConfig radiumConfig={radiumConfig}>
-            {router}
-          </RadiumConfig>
-          {devTools}
+            {this.router}
+            {devTools}
         </div>
       </Provider>
     );
   }
 
-  _renderRouter () {
+  _renderRouter (props) {
     const {
       routes,
-      routingContext,
+      routerContext,
       routerHistory
-    } = this.props;
+    } = props;
 
     // server rendering
-    if (routingContext) return routingContext;
+    if (routerContext) return routerContext;
 
     return (
       <Router history={routerHistory}>

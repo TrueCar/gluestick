@@ -11,13 +11,13 @@ export default ({dispatch, getState}) => {
     next({...rest, type: INIT});
 
     return promise
-    .then(value => {
-      next({...rest, value, type: SUCCESS});
-      return value || true;
-    })
-    .catch(error => {
-      next({...rest, error, type: FAILURE});
-      return false;
-    });
+      .then(value => {
+        next({...rest, value, type: SUCCESS});
+        return value || true;
+      })
+      .catch(error => {
+        next({...rest, error, type: FAILURE});
+        return false;
+      });
   };
 }

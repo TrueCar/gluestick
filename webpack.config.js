@@ -76,12 +76,6 @@ module.exports = {
         commonjs2: "react-redux",
         commonjs: "react-redux",
         amd: "react-redux"
-      },
-      "history/lib/createBrowserHistory": {
-        root: "history/lib/createBrowserHistory",
-        commonjs2: "history/lib/createBrowserHistory",
-        commonjs: "history/lib/createBrowserHistory",
-        amd: "history/lib/createBrowserHistory"
       }
     }
   ]
