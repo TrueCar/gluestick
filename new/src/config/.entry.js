@@ -26,7 +26,7 @@ export default class Entry extends Component {
 
     return (
       <StyleRoot radiumConfig={radiumConfig}>
-        <Root routerContext={routerContext} radiumConfig={radiumConfig} routes={routes} store={store} />
+        <Root routerContext={routerContext} routes={routes} store={store} />
       </StyleRoot>
     );
   }
