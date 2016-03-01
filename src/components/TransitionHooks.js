@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import Radium, { StyleRoot } from "radium";
 import { createTransitionHook } from "../lib/route-helper";
 
-@Radium
 export default class TransitionHooks extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired,
@@ -21,9 +19,9 @@ export default class TransitionHooks extends Component {
 
   render () {
     return (
-      <StyleRoot>
+      <div>
         {this.props.children}
-      </StyleRoot>
+      </div>
     );
   }
 }
