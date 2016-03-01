@@ -23,13 +23,20 @@ const isProduction = process.env.NODE_ENV === "production";
 const IS_WINDOWS = process.platform === "win32";
 
 commander
+  .action((options) => console.log("FOOOOOO");
   .version(getVersion());
+
+commander
+  .command("touch")
+  .description("update project version")
+  .action((options)=> updateLastVersionUsed());
 
 commander
   .command("new")
   .description("generate a new application")
   .arguments("<app_name>")
-  .action(newApp);
+  .action(newApp)
+  .action((options)=> updateLastVersionUsed());
 
 commander
   .command("generate <container|component|reducer>")
@@ -153,3 +160,39 @@ async function upgradeAndDockerize (name) {
   await autoUpgrade();
   dockerize(name);
 }
+
+function updateLastVersionUsed() {
+  // Check for .gluestick file
+  const gluestickDotFile = path.join(CWD, ".gluestick"));
+  const fileContents;
+  fs.readFile(gluestickDotFile, function read(err, data) {
+    if (err) {
+      throw err;
+    }
+    fileContents = data;
+  });
+  console.log(fileContents);
+    
+  //JSON.parse
+  
+
+  //if (/* version check */) {
+  //  console.log(chalk.yellow( “This project is configured to work with versions >= 0.x.x. Please upgrade your global `gluestick` module with `sudo npm install gluestick -g`”);
+  //}
+
+
+
+
+  //try {
+  //  fs.statSync(destinationPath);
+  //}
+  //catch (e) {
+  //  fileExists = false;
+  //}
+
+
+} 
+
+
+
+
