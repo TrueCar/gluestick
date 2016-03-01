@@ -23,7 +23,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const IS_WINDOWS = process.platform === "win32";
 
 commander
-  .action((options) => console.log("FOOOOOO");
   .version(getVersion());
 
 commander
@@ -163,15 +162,18 @@ async function upgradeAndDockerize (name) {
 
 function updateLastVersionUsed() {
   // Check for .gluestick file
-  const gluestickDotFile = path.join(CWD, ".gluestick"));
-  const fileContents;
-  fs.readFile(gluestickDotFile, function read(err, data) {
-    if (err) {
-      throw err;
-    }
-    fileContents = data;
-  });
-  console.log(fileContents);
+  const gluestickDotFile = path.join(process.cwd(), ".gluestick");
+  var fileContents = fs.readFileSync(gluestickDotFile, {encoding: "utf8"}).replace("DO NOT MODIFY", "");
+  var json = JSON.parse(fileContents);
+  console.log(json.version);
+  //fs.readFile(gluestickDotFile, function read(err, data) {
+  //  if (err) {
+  //    console.log("No .gluestick file");
+  //  }
+
+  //  fileContents = data;
+  //});
+  //console.log(fileContents);
     
   //JSON.parse
   
