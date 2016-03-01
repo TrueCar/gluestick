@@ -1,4 +1,3 @@
-var fs = require("fs");
 var babel = require("babel-core");
 var traverse = require("babel-traverse").default;
 

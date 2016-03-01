@@ -8,11 +8,10 @@ var shared = require("../lib/shared");
 var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 var getWebpackAdditions = require("../lib/get-webpack-additions").default;
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
-var appConfig = require(path.join(process.cwd(), "src", "config", "application")).default;
+var assetPath = require(path.join(process.cwd(), "src", "config", "application")).default.assetPath;
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 
-var assetPath = appConfig.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }
@@ -63,8 +62,7 @@ if (!isProduction) {
 // variable. For that reason we are going to perform static analysis on that
 // file to determine all of the environment variables that are used in that
 // file and make sure that webpack makes those available in the application.
-var appConfigPath = path.join(process.cwd(), "src", "config", "application.js");
-var configEnvVariables = detectEnvironmentVariables(appConfigPath);
+var configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
 configEnvVariables.push("NODE_ENV");
 var exposedEnvironmentVariables = {};
 configEnvVariables.forEach((v) => {

@@ -18,8 +18,7 @@ module.exports = async function (req, res) {
   try {
     const Index = require(path.join(process.cwd(), "Index")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-    const createStore = require(path.join(process.cwd(), "src/config/.store")).default;
-    const store = createStore();
+    const store = require(path.join(process.cwd(), "src/config/.store")).default();
     const originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
     const config = require(path.join(process.cwd(), "src/config/application")).default;
     const routes = prepareRoutesWithTransitionHooks(originalRoutes);

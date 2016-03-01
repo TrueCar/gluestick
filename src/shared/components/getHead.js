@@ -4,8 +4,7 @@ import path from "path";
 import process from "process";
 
 // Make sure path ends in forward slash
-var appConfig = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default;
-var assetPath = appConfig.assetPath;
+var assetPath = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }
