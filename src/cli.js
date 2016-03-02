@@ -28,7 +28,7 @@ commander
 commander
   .command("touch")
   .description("update project version")
-  .action((options)=> updateLastVersionUsed());
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("new")
@@ -44,12 +44,14 @@ commander
   .action((type, name) => generate(type, name, (err) => {
     if (err) console.log(chalk.red(`ERROR: ${err}`)); 
   }));
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("destroy <container|component|reducer>")
   .description("destroy a generated container")
   .arguments("<name>")
-  .action(destroy);
+  .action(destroy); 
+  .action((options)=> updateLastVersionUsed())
 
 const debugOption = {
   command: "-D, --debug",
@@ -62,28 +64,34 @@ commander
   .option("-T, --no_tests", "ignore test hook")
   .option(debugOption.command, debugOption.description)
   .action((options) => startAll(options.no_tests, options.debug));
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("build")
   .description("create production asset build")
   .action(() => startClient(true));
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("dockerize")
   .description("create docker image")
   .arguments("<name>")
   .action(upgradeAndDockerize);
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
   .action(() => startClient(false));
+  .action((options)=> updateLastVersionUsed())
+
 
 commander
   .command("start-server", null, {noHelp: true})
   .description("start server")
   .option(debugOption.command, debugOption.description)
   .action((options) => startServer(options.debug));
+  .action((options)=> updateLastVersionUsed())
 
 const firefoxOption = {
   command: "-F, --firefox",
@@ -95,12 +103,14 @@ commander
   .option(firefoxOption.command, firefoxOption.description)
   .description("start test")
   .action((options) => startTest(options));
+  .action((options)=> updateLastVersionUsed())
 
 commander
   .command("test")
   .option(firefoxOption.command, firefoxOption.description)
   .description("start tests")
   .action(() => spawnProcess("test", process.argv.slice(3)));
+  .action((options)=> updateLastVersionUsed())
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
@@ -161,40 +171,34 @@ async function upgradeAndDockerize (name) {
 }
 
 function updateLastVersionUsed() {
-  // Check for .gluestick file
+  const fileHeader = "DO NOT MODIFY";
+
+  // Check version in .gluestick file
   const gluestickDotFile = path.join(process.cwd(), ".gluestick");
-  var fileContents = fs.readFileSync(gluestickDotFile, {encoding: "utf8"}).replace("DO NOT MODIFY", "");
+  var fileContents = fs.readFileSync(gluestickDotFile, {encoding: "utf8"}).replace(fileHeader, "");
   var json = JSON.parse(fileContents);
-  console.log(json.version);
-  //fs.readFile(gluestickDotFile, function read(err, data) {
-  //  if (err) {
-  //    console.log("No .gluestick file");
-  //  }
+  if (shouldUpdateForProjectGluestickVersion(json.version)) {
+    console.log(chalk.yellow("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g"));
+  }
 
-  //  fileContents = data;
-  //});
-  //console.log(fileContents);
-    
-  //JSON.parse
-  
-
-  //if (/* version check */) {
-  //  console.log(chalk.yellow( “This project is configured to work with versions >= 0.x.x. Please upgrade your global `gluestick` module with `sudo npm install gluestick -g`”);
-  //}
-
-
-
-
-  //try {
-  //  fs.statSync(destinationPath);
-  //}
-  //catch (e) {
-  //  fileExists = false;
-  //}
-
-
+  // update version in dot file
+  var newContents = fileHeader + "\n";
+  newContents += JSON.stringify({version: getVersion()});
+  fs.writeFileSync(gluestickDotFile, newContents);
 } 
 
 
 
+function shouldUpdateForProjectGluestickVersion(projectGluestickVersion) {
+  var mine = getVersion().split('.');
+  var project = projectGluestickVersion.split('.');
 
+  if (mine[0] !== project[0] 
+      || mine[1] !== project[1]
+      || mine[2] !== project[2]) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
