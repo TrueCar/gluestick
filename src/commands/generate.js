@@ -116,8 +116,6 @@ module.exports = function (command, name, cb) {
     return cb(`Unable to create test file for ${name} because it already exists`);
   }
 
-  try {
-    testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
   }
   catch (e) {
     return cb("Couldn't read generator file");
