@@ -3,8 +3,9 @@ import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./update-package";
 import updateConfig from "./update-config";
-import logger from "./lib/logger";
-import { highlight, filename } from "./lib/logsColorScheme";
+import updateBabelConfig from "./updateBabelConfig";
+import logger from "../lib/logger";
+import { highlight, filename } from "../lib/logsColorScheme";
 
 const CWD = process.cwd();
 
@@ -72,7 +73,7 @@ module.exports = async function () {
     const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
     const currentSha = sha1(currentFile);
 
-    const newFile = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", fileName), "utf8");
+    const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", fileName), "utf8");
     const newSha = sha1(newFile);
 
     if (currentSha !== newSha) {
@@ -83,4 +84,7 @@ module.exports = async function () {
 
   // -> prior to 0.2.2
   await updateConfig();
+
+  // -> prior to 0.2.9
+  await updateBabelConfig();
 };
