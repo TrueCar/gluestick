@@ -14,9 +14,10 @@ module.exports = function detectEnvironmentVariables (pathToFile) {
   traverse(ast.program, {
     enter: function (path) {
       if (path.type === "MemberExpression") {
+        const node = path.node;
         try {
-          if (path.node.object.name === "process" && path.node.property.name === "env") {
-            environmentVariables.push(path.node.property.name);
+          if (node.object.object.name === "process" && node.object.property.name === "env") {
+            environmentVariables.push(node.property.name);
           }
         }
         catch (e) {}
