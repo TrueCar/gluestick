@@ -1,8 +1,12 @@
 require("babel-polyfill");
 require("babel-core/register")({
   presets: [
+    "react",
     "es2015",
     "stage-0" 
+  ],
+  plugins: [
+    "transform-decorators-legacy"
   ],
   ignore: function(filename) {
     var node_modules = "node_modules";

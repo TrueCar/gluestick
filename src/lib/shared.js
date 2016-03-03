@@ -19,6 +19,9 @@ module.exports = {
       test: /\.js$/,
       loader: "babel-loader",
       query: {
+        plugins: [
+          "transform-decorators-legacy"
+        ],
         presets: [
           "react",
           "es2015", 
