@@ -7,6 +7,11 @@ import "assets/css/normalize.css";
  * should not remove those or the application will likely stop working.
  */
 export default class Index extends Component {
+  static propTypes = {
+    head: React.PropTypes.string,
+    body: React.PropTypes.string
+  }
+
   render () {
     const {
       head,
