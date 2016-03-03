@@ -24,7 +24,7 @@ export default function updateConfig () {
       return;
     }
 
-    const exampleContents = fs.readFileSync(path.join(__dirname, "..", "new", "src", "config", "application.js"), "utf8");
+    const exampleContents = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", "application.js"), "utf8");
     const question = {
       type: "confirm",
       name: "confirm",
