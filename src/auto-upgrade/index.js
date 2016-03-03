@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 import sha1 from "sha1";
-import updatePackage from "./update-package";
-import updateConfig from "./update-config";
+import updatePackage from "./updatePackage";
+import updateConfig from "./updateConfig";
 import updateBabelConfig from "./updateBabelConfig";
 import logger from "../lib/logger";
 import { highlight, filename } from "../lib/logsColorScheme";
