@@ -22,9 +22,13 @@ export default function updateBabelConfig() {
     const latestSha = sha1(readFileSyncStrip(latestConfigPath));
 
     if (projectSha === latestSha) {
-      return resolve();
+      resolve();
     } 
-    else if (projectSha !== previousSha) {
+    else if (projectSha === previousSha) {
+      doUpdate(latestConfigPath, projectConfigPath);
+      resolve();
+    }
+    else {
       const question = {
         type: "confirm",
         name: "confirm",
@@ -39,10 +43,8 @@ export default function updateBabelConfig() {
         }
 
         doUpdate(latestConfigPath, projectConfigPath);
-        return resolve();
+        resolve();
       });
     }
-    doUpdate(latestConfigPath, projectConfigPath);
-    return resolve();
   });
 }
