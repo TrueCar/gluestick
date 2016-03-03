@@ -1,6 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 import inquirer from "inquirer";
+import sha1 from "sha1";
+import readFileSyncStrip from "../lib/readFileSyncStrip";
 import logger from "../lib/logger";
 import { warn } from "../lib/logsColorScheme";
 
@@ -14,14 +16,11 @@ export default function updateBabelConfig() {
   return new Promise(resolve => {
 
     const projectConfigPath = path.join(process.cwd(), ".babelrc");
-    const projectConfig = fs.readJsonSync(projectConfigPath);
-
-    const previousConfigPath = path.join(__dirname, "previous", ".babelrc");
-    const previousConfig = fs.readJsonSync(previousConfigPath);
-
     const latestConfigPath = path.join(__dirname, "../..", "new", ".babelrc");
+    const projectSha = sha1(readFileSyncStrip(projectConfigPath));
+    const previousSha = sha1(readFileSyncStrip(path.join(__dirname, "previous", ".babelrc")));
 
-    if (JSON.stringify(projectConfig) != JSON.stringify(previousConfig)) {
+    if (projectSha !== previousSha) {
 
       const question = {
         type: "confirm",

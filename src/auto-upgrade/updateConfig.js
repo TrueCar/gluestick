@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import inquirer from "inquirer";
 import chalk from "chalk";
+import readFileSyncStrip from "../lib/readFileSyncStrip";
 
 const CWD = process.cwd();
 
@@ -15,7 +16,7 @@ const CWD = process.cwd();
 export default function updateConfig () {
   return new Promise((resolve) => {
     const appConfigPath = path.join(CWD, "src", "config", "application.js");
-    const appConfig = fs.readFileSync(appConfigPath, "utf8").replace(/\s*$/, "");
+    const appConfig = readFileSyncStrip(appConfigPath);
     const lastAppConfigLine = appConfig.split("\n").pop();
     const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"])';
     if (lastAppConfigLine === expectedLastLine) {
