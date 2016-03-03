@@ -39,8 +39,10 @@ export default function updateBabelConfig() {
         }
 
         doUpdate(latestConfigPath, projectConfigPath);
-        resolve();
+        return resolve();
       });
     }
+    doUpdate(latestConfigPath, projectConfigPath);
+    return resolve();
   });
 }
