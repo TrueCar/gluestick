@@ -58,7 +58,7 @@ module.exports = async function () {
     }
     catch (e) {
       const fileName = path.parse(filePath).base;
-      const newFile = fs.readFileSync(path.join(__dirname, "..", "new", filePath), "utf8");
+      const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "new", filePath), "utf8");
       replaceFile(fileName, newFile);
     }
   });
