@@ -19,9 +19,12 @@ export default function updateBabelConfig() {
     const latestConfigPath = path.join(__dirname, "../..", "new", ".babelrc");
     const projectSha = sha1(readFileSyncStrip(projectConfigPath));
     const previousSha = sha1(readFileSyncStrip(path.join(__dirname, "previous", ".babelrc")));
+    const latestSha = sha1(readFileSyncStrip(latestConfigPath));
 
-    if (projectSha !== previousSha) {
-
+    if (projectSha === latestSha) {
+      return resolve();
+    } 
+    else if (projectSha !== previousSha) {
       const question = {
         type: "confirm",
         name: "confirm",
@@ -36,12 +39,8 @@ export default function updateBabelConfig() {
         }
 
         doUpdate(latestConfigPath, projectConfigPath);
-        return resolve();
+        resolve();
       });
-
-    } else {
-      doUpdate(latestConfigPath, projectConfigPath);
-      resolve();
     }
   });
 }
