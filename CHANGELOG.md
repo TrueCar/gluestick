@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0
+[improved eslintrc defaults](https://github.com/TrueCar/gluestick/pull/78)
+
+[Upgrade to Babel 6](https://github.com/TrueCar/gluestick/pull/77)
+
+[Updating packages and logic to handle react-router 2.0.0. Note: This …](https://github.com/TrueCar/gluestick/pull/76)
+
+[Add coverage reporting](https://github.com/TrueCar/gluestick/pull/75)
+
+[Add flow header to generated files and update containers](https://github.com/TrueCar/gluestick/pull/74)
+
+[Add support for async routes](https://github.com/TrueCar/gluestick/pull/73)
+
+[Adding tests for CLI destroy command](https://github.com/TrueCar/gluestick/pull/72)
+
+[improve chunk names, improve proxy headers](https://github.com/TrueCar/gluestick/pull/71)
+
+[Have webpack ignore server files](https://github.com/TrueCar/gluestick/pull/70)
+
+[Clean up and standardize console.log calls](https://github.com/TrueCar/gluestick/pull/69)
+
+[CLI tests for the `generate` command: Part 2](https://github.com/TrueCar/gluestick/pull/68)
+
 ## 0.2.3
 [use node_modules/.bin/pm2](https://github.com/TrueCar/gluestick/pull/67)
 
