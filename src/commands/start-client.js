@@ -6,9 +6,9 @@ var proxy = require("express-http-proxy");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 var shared = require("../lib/shared");
 var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
-var getWebpackAdditions = require("../lib/get-webpack-additions");
+var getWebpackAdditions = require("../lib/get-webpack-additions").default;
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
-var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
+var assetPath = require(path.join(process.cwd(), "src", "config", "application")).default.assetPath;
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 
