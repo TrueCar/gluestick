@@ -3,7 +3,7 @@ import path from "path";
 import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { spawn } from "child_process";
+import { spawn } from "cross-spawn";
 import logger from "../lib/logger";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");

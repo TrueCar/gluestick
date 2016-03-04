@@ -1,6 +1,6 @@
 import path from "path";
 import process from "process";
-import { spawn } from "child_process";
+import { spawn } from "cross-spawn";
 import pm2 from "pm2";
 import sha1 from "sha1";
 import fs from "fs";
