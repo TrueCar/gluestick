@@ -1,7 +1,7 @@
 const commander = require("commander");
 const path = require("path");
 const process = require("process");
-const {exec, spawn} = require("child_process");
+const {exec, spawn} = require("cross-spawn");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
 const newApp = lazyMethodRequire("./commands/new");

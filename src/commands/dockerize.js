@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { spawn } from "cross-spawn";
 import path from "path";
 import process from "process";
 import fs from "fs";
