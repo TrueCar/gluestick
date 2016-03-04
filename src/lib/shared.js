@@ -17,7 +17,17 @@ module.exports = {
   loaders: [
     {
       test: /\.js$/,
-      loaders: ["babel-loader?stage=0&optional[]=runtime"],
+      loader: "babel-loader",
+      query: {
+        plugins: [
+          "transform-decorators-legacy"
+        ],
+        presets: [
+          "react",
+          "es2015", 
+          "stage-0"
+        ]
+      },
       include: [
         path.join(process.cwd(), "Index.js"),
         path.join(process.cwd(), "src"),

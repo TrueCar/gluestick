@@ -1,9 +1,8 @@
 const commander = require("commander");
-const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("child_process");
-const lazyMethodRequire = require("./lib/LazyMethodRequire")(__dirname);
+const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");
@@ -13,7 +12,11 @@ const generate = lazyMethodRequire("./commands/generate");
 const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
 
-const chalk = require("chalk");
+const getVersion = require("./lib/getVersion");
+const logger = require("./lib/logger");
+const logsColorScheme = require("./lib/logsColorScheme");
+const { highlight } = logsColorScheme;
+
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
 
@@ -121,12 +124,6 @@ commander
 });
 
 commander.parse(process.argv);
-
-function getVersion () {
-  var packageFileContents = fs.readFileSync(path.join(__dirname, "..", "package.json"));
-  var packageObject = JSON.parse(packageFileContents);
-  return packageObject.version;
-}
 
 function spawnProcess (type, args=[]) {
   var childProcess;

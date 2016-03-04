@@ -3,9 +3,8 @@ import serialize from "serialize-javascript";
 import path from "path";
 import process from "process";
 
-var { assetPath } = require(path.join(process.cwd(), "src", "config", "application"));
-
 // Make sure path ends in forward slash
+var assetPath = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }

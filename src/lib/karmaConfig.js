@@ -3,7 +3,7 @@ var process = require("process");
 var shared = require("./shared");
 var webpack = require("webpack");
 var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var getWebpackAdditions = require("../lib/get-webpack-additions");
+var getWebpackAdditions = require("../lib/get-webpack-additions").default;
 var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 
 var PORT = 9876;
