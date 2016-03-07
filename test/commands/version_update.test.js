@@ -1,20 +1,13 @@
-// setup for all non "generate" tests
-//  create a blank project
-// setup for "generate" tests
-
-
-
 import "babel-polyfill";
 import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";
 import temp from "temp";
 import rimraf from "rimraf";
-import glob from "glob";
 import mkdirp from "mkdirp";
 import path from "path";
-import destroy from "../../src/commands/destroy";
-import npmDependencies from "../../src/lib/npm-dependencies";
+import updateLastVersionUsed from "./lib/updateVersion.js";
+
 
 describe("cli: gluestick touch", function () {
 
@@ -47,8 +40,25 @@ describe("cli: gluestick touch", function () {
     rimraf(tmpDir, done);
   });
   
-  it("should throw an error when (container|component|reducer) is not specified", () => { 
-    destroy('blah',''); 
-    expect(console.log.calledWithMatch("is not a valid destroy command.")).to.be.true;
+  it("should not error if the old \"DO NOT MODIFY\" header is in the .gluestick file", () => {
+    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    updateLastVersionUsed();
+    expect(console.error.notCalled()).to.be.true;
   });
 
+  it("should remove the \"DO NOT MODIFY\" header from the .gluestick file", () => {
+    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    updateLastVersionUsed();
+    var fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
+    expect(fileContents.indexOf("DO NOT MODIFY")).to.equal(-1); 
+  });
+
+  
+  it("should update project version to devs version", () => {
+    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    updateLastVersionUsed();
+    var fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
+    var json = JSON.parse(fileContents);
+    expect(json.version).to.equal(getVersion()); 
+  });
+}

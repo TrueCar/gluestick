@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
-
+const getVersion = require("./lib/getVersion");
 
 module.exports = function updateLastVersionUsed() {
   // Check version in .gluestick file
   const gluestickDotFile = path.join(process.cwd(), ".gluestick");
-  var fileContents = fs.readFileSync("DO NOT MODIFY", {encoding: "utf8"})
+  var fileContents = fs.readFileSync(gluestickDotFile, {encoding: "utf8"})
   // We won't know how old this version is, it might have still have the 'DO NOT MODIFY' header
   fileContents = fileContents.replace(fileHeader, "");
 
