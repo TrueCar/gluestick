@@ -64,6 +64,10 @@ export default {
         path.resolve(CWD, "src"),
         path.resolve(CWD, "test")
       ]
+    },
+    externals: {
+      'react/lib/ExecutionEnvironment': true,
+      'react/lib/ReactContext': true
     }
   },
   webpackServer: {
