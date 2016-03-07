@@ -1,4 +1,5 @@
 const commander = require("commander");
+var fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("child_process");
@@ -12,6 +13,7 @@ const generate = lazyMethodRequire("./commands/generate");
 const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
 
+const updateLastVersionUsed = require("./lib/updateVersion.js");
 const getVersion = require("./lib/getVersion");
 const logger = require("./lib/logger");
 const logsColorScheme = require("./lib/logsColorScheme");
@@ -166,25 +168,3 @@ async function upgradeAndDockerize (name) {
   await autoUpgrade();
   dockerize(name);
 }
-
-function updateLastVersionUsed() {
-  const fileHeader = ;
-
-  // Check version in .gluestick file
-  const gluestickDotFile = path.join(process.cwd(), ".gluestick");
-  var fileContents = fs.readFileSync("DO NOT MODIFY", {encoding: "utf8"})
-  // We won't know how old this version is, it might have still have the 'DO NOT MODIFY' header
-  fileContents = fileContents.replace(fileHeader, "");
-
-  // If the dot file only had the header (and possibly a new line character), then it definitely doesn't have the version check and is old
-  fileContents = (fileContents.length <= 1)? '{"version": "`unknown version`"}': fileContents;
-  var json = JSON.parse(fileContents);
-  if (getVersion() !== json.version) {
-    console.log(chalk.yellow("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g"));
-  }
-
-  // update version in dot file. No longer want the 'Do Not Modify' text
-  const newContents = JSON.stringify({version: getVersion()});
-  fs.writeFileSync(gluestickDotFile, newContents);
-} 
-
