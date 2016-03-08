@@ -1,7 +1,9 @@
 var fs = require("fs");
 var path = require("path");
-var chalk = require("chalk");
 var mkdirp = require("mkdirp");
+const logger = require("../lib/logger");
+const logsColorScheme = require("../lib/logsColorScheme");
+const { highlight, filename } = logsColorScheme;
 
 var availableCommands = {
   "container": "containers",
@@ -21,14 +23,14 @@ module.exports = function (command, name, cb) {
     fs.statSync(path.join(CWD, ".gluestick"));
   }
   catch (e) {
-    console.log(chalk.yellow(".gluestick file not found"));
-    return cb("`generate` commands must be run from the root of a gluestick project.");
+    logger.info(`.gluestick file not found`);
+    return cb(`${highlight("generate")} commands must be run from the root of a gluestick project.`);
   }
 
   // Step 2: Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
-    console.log(chalk.yellow(`Available generators: ${JSON.stringify(availableCommands)}`));
-    return cb(`${chalk.yellow(command)} is not a valid generator.`);
+    logger.info(`Available generators: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
+    return cb(`${highlight(command)} is not a valid generator.`);
   }
 
   // Step 3: Validate the name by stripping out unwanted characters
@@ -37,7 +39,7 @@ module.exports = function (command, name, cb) {
   }
 
   if (/\W/.test(name)) {
-    return cb(`${chalk.yellow(name)} is not a valid name.`);
+    return cb(`${highlight(name)} is not a valid name.`);
   }
 
   // Step 4: Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
@@ -70,12 +72,12 @@ module.exports = function (command, name, cb) {
   }
 
   if (fileExists) {
-    return cb(`${chalk.yellow(destinationPath)} already exists`);
+    return cb(`${filename(destinationPath)} already exists`);
   }
 
   // Step 6: Write output to file
   fs.writeFileSync(destinationPath, template);
-  console.log(chalk.green(`New file created: ${destinationPath}`));
+  logger.success(`New file created: ${filename(destinationPath)}`);
 
   // Step 7: If we just generated a reducer, add it to the reducers index
   if (command === "reducer") {
@@ -88,7 +90,7 @@ module.exports = function (command, name, cb) {
 
       // Write back to the index file with the previous contents in addition to our new line and a blank line for git
       fs.writeFileSync(reducerIndexPath, `${indexFileContents}\n${newLine}\n\n`);
-      console.log(chalk.yellow(`${name} added to reducer index ${reducerIndexPath}`));
+      logger.success(`${highlight(name)} added to reducer index ${filename(reducerIndexPath)}`);
     }
     catch (e) {
       return cb(`Unable to modify reducers index. Reducer not added to index`);
@@ -113,21 +115,23 @@ module.exports = function (command, name, cb) {
   }
 
   if (testFileExists) {
-    return cb(`Unable to create test file for ${name} because it already exists`);
+    return cb(`Unable to create test file for ${highlight(name)} because it already exists`);
   }
 
+  try {
+    testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
   }
   catch (e) {
-    return cb("Couldn't read generator file");
+    return cb(`Couldn't read generator file`);
   }
 
   try {
     fs.writeFileSync(testPath, replaceName(testTemplate, name));
   }
   catch (e) {
-    return cb("Couldn't create test file");
+    return cb(`Couldn't create test file`);
   }
 
-  console.log(chalk.green(`New file created: ${testPath}`));
+  logger.success(`New file created: ${filename(testPath)}`);
   return cb();
 };
