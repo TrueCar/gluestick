@@ -1,4 +1,4 @@
-const spawn = require("child_process").spawn;
+const spawn = require("cross-spawn").spawn;
 
 const IS_WINDOWS = process.platform === "win32";
 
