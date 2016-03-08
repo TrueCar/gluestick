@@ -12,7 +12,7 @@ module.exports = function updateLastVersionUsed() {
 
   // If the dot file only had the header (and possibly a new line character), then it definitely doesn't have the version check and is old
   fileContents = (fileContents.length <= 1)? '{"version": "`unknown version`"}': fileContents;
-  var json = JSON.parse(fileContents);
+  var json = JSON.parse(JSON.stringify(fileContents));
   if (getVersion() !== json.version) {
     console.log(chalk.yellow("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g"));
   }

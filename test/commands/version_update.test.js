@@ -6,7 +6,8 @@ import temp from "temp";
 import rimraf from "rimraf";
 import mkdirp from "mkdirp";
 import path from "path";
-import updateLastVersionUsed from "./lib/updateVersion.js";
+import updateLastVersionUsed from "./../../src/lib/updateVersion";
+import getVersion from "./../../src/lib/getVersion";
 
 
 describe("cli: gluestick touch", function () {
@@ -25,9 +26,8 @@ describe("cli: gluestick touch", function () {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-touch");
     process.chdir(tmpDir);
-    dotFile = tmpDir + ".gluestick";
-    
-    fs.closeSync(fs.openSync(dotFile, "w"));
+    fs.closeSync(fs.openSync(".gluestick", "w"));
+    dotFile = tmpDir + "/.gluestick";
 
     sandbox = sinon.sandbox.create();
     sandbox.spy(console, "log");
@@ -43,7 +43,7 @@ describe("cli: gluestick touch", function () {
   it("should not error if the old \"DO NOT MODIFY\" header is in the .gluestick file", () => {
     newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
     updateLastVersionUsed();
-    expect(console.error.notCalled()).to.be.true;
+    sinon.assert.notCalled(console.error)
   });
 
   it("should remove the \"DO NOT MODIFY\" header from the .gluestick file", () => {
@@ -61,4 +61,4 @@ describe("cli: gluestick touch", function () {
     var json = JSON.parse(fileContents);
     expect(json.version).to.equal(getVersion()); 
   });
-}
+});
