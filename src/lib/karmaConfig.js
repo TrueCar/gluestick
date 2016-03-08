@@ -25,7 +25,7 @@ export default {
   port: PORT,
   preprocessors: preprocessors,
   webpack: {
-    devtool: "inline-source-map",
+    devtool: "eval",
     module: {
       loaders: [
         // only place test specific loaders here
