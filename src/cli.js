@@ -33,14 +33,14 @@ commander
 commander
   .command("touch")
   .description("update project version")
-  .action((options)=> updateLastVersionUsed())
+  .action(()=> updateLastVersionUsed())
 
 commander
   .command("new")
   .description("generate a new application")
   .arguments("<app_name>")
   .action(newApp)
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 commander
   .command("generate <container|component|reducer>")
@@ -49,14 +49,14 @@ commander
   .action((type, name) => generate(type, name, (err) => {
     if (err) logger.error(err);
   }))
-  .action((options)=> updateLastVersionUsed())
+  .action(()=> updateLastVersionUsed())
 
 commander
   .command("destroy <container|component|reducer>")
   .description("destroy a generated container")
   .arguments("<name>")
   .action(destroy) 
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 const debugOption = {
   command: "-D, --debug",
@@ -69,7 +69,7 @@ commander
   .option("-T, --no_tests", "ignore test hook")
   .option(debugOption.command, debugOption.description)
   .action((options) => startAll(options.no_tests, options.debug))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 commander
   .command("build")
@@ -82,13 +82,13 @@ commander
   .description("create docker image")
   .arguments("<name>")
   .action(upgradeAndDockerize)
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
   .action(() => startClient(false))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 
 commander
@@ -96,7 +96,7 @@ commander
   .description("start server")
   .option(debugOption.command, debugOption.description)
   .action((options) => startServer(options.debug))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 const firefoxOption = {
   command: "-F, --firefox",
@@ -108,14 +108,14 @@ commander
   .option(firefoxOption.command, firefoxOption.description)
   .description("start test")
   .action((options) => startTest(options))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 commander
   .command("test")
   .option(firefoxOption.command, firefoxOption.description)
   .description("start tests")
   .action(() => spawnProcess("test", process.argv.slice(3)))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander

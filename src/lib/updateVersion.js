@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const getVersion = require("./getVersion.js");
-const chalk = require("chalk");
+const logger = require("./../../lib/logger");
 
 module.exports = function updateLastVersionUsed() {
   // Check version in .gluestick file
@@ -12,9 +12,9 @@ module.exports = function updateLastVersionUsed() {
 
   // If the dot file only had the header (and possibly a new line character), then it definitely doesn't have the version check and is old
   fileContents = (fileContents.length <= 1)? '{"version": "`unknown version`"}': fileContents;
-  var json = JSON.parse(JSON.stringify(fileContents));
+  var json = JSON.parse(fileContents);
   if (getVersion() !== json.version) {
-    console.log(chalk.yellow("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g"));
+    logger.warn("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g");
   }
 
   // update version in dot file. No longer want the 'Do Not Modify' text

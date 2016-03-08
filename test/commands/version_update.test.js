@@ -41,13 +41,13 @@ describe("cli: gluestick touch", function () {
   });
   
   it("should not error if the old \"DO NOT MODIFY\" header is in the .gluestick file", () => {
-    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: getVersion()})); 
     updateLastVersionUsed();
     sinon.assert.notCalled(console.error)
   });
 
   it("should remove the \"DO NOT MODIFY\" header from the .gluestick file", () => {
-    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: getVersion()})); 
     updateLastVersionUsed();
     var fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
     expect(fileContents.indexOf("DO NOT MODIFY")).to.equal(-1); 
@@ -55,7 +55,7 @@ describe("cli: gluestick touch", function () {
 
   
   it("should update project version to devs version", () => {
-    newDotFileContents("DO NOT MODIFY\n{'version':'"+getVersion()+"'}"); 
+    newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: getVersion()}));
     updateLastVersionUsed();
     var fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
     var json = JSON.parse(fileContents);
