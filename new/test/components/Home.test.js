@@ -1,5 +1,5 @@
 import Home from "components/Home";
-import { shallow, mount, render } from 'enzyme';
+import { shallow } from 'enzyme';
 
 describe("components/Home", () => {
     it("should render without an issue", () => {
