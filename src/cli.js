@@ -40,7 +40,7 @@ commander
   .description("generate a new application")
   .arguments("<app_name>")
   .action(newApp)
-  .action(()=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed(false));
 
 commander
   .command("generate <container|component|reducer>")
