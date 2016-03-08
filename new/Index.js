@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import "assets/css/normalize.css";
 
 /**
@@ -8,8 +8,8 @@ import "assets/css/normalize.css";
  */
 export default class Index extends Component {
   static propTypes = {
-    head: React.PropTypes.string,
-    body: React.PropTypes.string
+    head: PropTypes.any,
+    body: PropTypes.any
   }
 
   render () {
