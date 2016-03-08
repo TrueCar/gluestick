@@ -3,8 +3,8 @@ import path from "path";
 import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { spawn } from "child_process";
-import logger from "./lib/logger";
+import { spawn } from "cross-spawn";
+import logger from "../lib/logger";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 
@@ -89,7 +89,7 @@ function loadProjectPackage () {
   if (!_projectPackageData) {
     _projectPackageData = loadPackage(PROJECT_PACKAGE_LOCATION);
   }
-  
+
   return _projectPackageData;
 }
 
@@ -100,7 +100,7 @@ function loadProjectPackage () {
  * @return {Object}
  */
 function loadCLIPackage () {
-  return loadPackage(path.join(__dirname, "../package.json"));
+  return loadPackage(path.join(__dirname, "../../package.json"));
 }
 
 /**
@@ -110,7 +110,7 @@ function loadCLIPackage () {
  * @return {Object}
  */
 function loadNewProjectPackage () {
-  return loadPackage(path.join(__dirname, "../new/package.json"));
+  return loadPackage(path.join(__dirname, "../../new/package.json"));
 }
 
 /**
@@ -183,4 +183,3 @@ function performModulesUpdate (mismatchedModules, done) {
     done();
   });
 }
-

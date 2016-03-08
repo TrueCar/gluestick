@@ -1,5 +1,5 @@
 /* global global */
-require("babel-core/polyfill");
+require("babel-polyfill");
 var path = require("path");
 var React = require("react");
 var ReactDOM = require("react-dom");

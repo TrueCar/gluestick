@@ -1,5 +1,13 @@
+require("babel-polyfill");
 require("babel-core/register")({
-  stage: 0,
+  presets: [
+    "react",
+    "es2015",
+    "stage-0" 
+  ],
+  plugins: [
+    "transform-decorators-legacy"
+  ],
   ignore: function(filename) {
     var node_modules = "node_modules";
     // We don't use path.join because the filename slashes use the Unix style

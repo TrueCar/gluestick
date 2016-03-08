@@ -1,6 +1,5 @@
-var fs = require("fs");
 var babel = require("babel-core");
-var traverse = require("estraverse").traverse;
+var traverse = require("babel-traverse").default;
 
 /**
  * Read the contents of a file, convert it to an abstract syntax tree and
@@ -10,18 +9,15 @@ var traverse = require("estraverse").traverse;
  * @param {String} pathToFile absolute path to the file to analyze
  */
 module.exports = function detectEnvironmentVariables (pathToFile) {
-  var contents = fs.readFileSync(pathToFile, "utf8");
-
-  if (!contents) return [];
-
-  var ast = babel.transform(contents).ast;
+  var ast = babel.transformFileSync(pathToFile).ast;
   var environmentVariables = [];
   traverse(ast.program, {
     enter: function (path) {
       if (path.type === "MemberExpression") {
+        const node = path.node;
         try {
-          if (path.object.object.name === "process" && path.object.property.name === "env") {
-            environmentVariables.push(path.property.name);
+          if (node.object.object.name === "process" && node.object.property.name === "env") {
+            environmentVariables.push(node.property.name);
           }
         }
         catch (e) {}
