@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const getVersion = require("./getVersion.js");
-const logger = require("./../../lib/logger");
+const getVersion = require("./getVersion");
+const logger = require("./logger");
 
 module.exports = function updateLastVersionUsed() {
   // Check version in .gluestick file
