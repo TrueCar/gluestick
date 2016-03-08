@@ -1,5 +1,5 @@
 const commander = require("commander");
-var fs = require("fs");
+const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const {exec, spawn} = require("cross-spawn");
@@ -47,7 +47,7 @@ commander
   .description("generate a new container")
   .arguments("<name>")
   .action((type, name) => generate(type, name, (err) => {
-    if (err) console.log(chalk.red(`ERROR: ${err}`)); 
+    if (err) logger.error(err);
   }))
   .action((options)=> updateLastVersionUsed())
 
@@ -121,7 +121,7 @@ commander
 commander
   .command('*', null, {noHelp: true})
   .action(function(cmd){
-    console.log(`Error: Command '${cmd}' not recognized`);
+    logger.error(`Command '${highlight(cmd)}' not recognized`);
     commander.help();
 });
 
@@ -141,8 +141,7 @@ function spawnProcess (type, args=[]) {
       childProcess = spawn("gluestick" + postFix, ["start-test", ...args], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
       break;
   }
-
-  childProcess.on("error", function (data) { console.log(chalk.red(JSON.stringify(arguments))) });
+  childProcess.on("error", function (data) { logger.error(JSON.stringify(arguments)) });
   return childProcess;
 }
 
@@ -151,7 +150,7 @@ async function startAll(withoutTests=false, debug=false) {
     await autoUpgrade();
   }
   catch (e) {
-    console.log(chalk.red("ERROR during auto upgrade"), e);
+    logger.error(`During auto upgrade: ${e}`);
     process.exit();
   }
 
