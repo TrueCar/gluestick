@@ -75,7 +75,7 @@ commander
   .command("build")
   .description("create production asset build")
   .action(() => startClient(true))
-  .action((options)=> updateLastVersionUsed());
+  .action(()=> updateLastVersionUsed());
 
 commander
   .command("dockerize")
