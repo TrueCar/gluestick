@@ -21,7 +21,7 @@ export default (config, assets) => {
   else {
     // Resolve style flicker on page load in dev mode
     Object.keys(assets.assets).forEach(assetPath => {
-      if (!assetPath.endsWith(".css")) return;
+      if (!/\.(css|scss|sass|less)$/.test(assetPath)) return;
 
       // webpack isomorphic tools converts `node_modules` to `~` in these
       // paths. This means any css files imported directly out of a node_module

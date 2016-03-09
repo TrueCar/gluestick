@@ -137,7 +137,15 @@ module.exports = function (buildOnly) {
   }
   else {
     logger.info("Bundling assets…");
-    compiler.run(() => {
+    compiler.run((error, stats) => {
+      const errors = stats.toJson().errors;
+      if (errors.length) {
+        errors.forEach((e) => {
+          logger.error(e);
+        });
+        return;
+      }
+
       logger.success(`Assets have been prepared for production.`);
       logger.success(`Assets can be served from the ${logsColorScheme.filename("/assets")} route but it is recommended that you serve the generated ${logsColorScheme.filename("build")} folder from a Content Delivery Network`);
     });
