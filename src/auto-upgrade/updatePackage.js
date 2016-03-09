@@ -12,6 +12,23 @@ const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 // don't have to do file I/O more than once
 let _projectPackageData;
 
+
+/**
+ * This function is used to put the dependencies in alphabetical order.
+ * It takes a hash and returns the same hash ordered by its keys.
+ *
+ * @param {Object} Unordered hash which one would like to be sorted by keys
+ *
+ * @return {Object}
+ */
+function orderHashByKeys (unordered) {
+  const ordered = {};
+  Object.keys(unordered).sort().forEach(function(key) {
+    ordered[key] = unordered[key];
+  });
+  return ordered;
+}
+
 /**
  * Open the package.json file in both the project as well as the one used by
  * this command line interface, then compare the versions for shared modules.
@@ -167,8 +184,11 @@ function performModulesUpdate (mismatchedModules, done) {
   let module;
   for (let moduleName in mismatchedModules) {
     module = mismatchedModules[moduleName];
-    projectPackageData[module.type][moduleName] = module.required
+    projectPackageData[module.type][moduleName] = module.required;
   }
+
+  projectPackageData.dependencies = orderHashByKeys(projectPackageData.dependencies);
+  projectPackageData.devDependencies = orderHashByKeys(projectPackageData.devDependencies);
 
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
 
