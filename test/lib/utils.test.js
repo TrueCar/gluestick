@@ -36,7 +36,7 @@ describe("utils", function () {
 
   });
 
-  describe("isGluestickProject", function () {
+  describe("quitUnlessGluestickProject", function () {
 
     let sandbox;
 
