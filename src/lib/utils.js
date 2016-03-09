@@ -9,7 +9,7 @@ export function quitUnlessGluestickProject(command) {
     process.exit();
   }
 }
-export function isGluestickProject(dir=process.cwd()) { 
+export function isGluestickProject(dir=process.cwd()) {
   try {
     fs.statSync(path.join(dir, ".gluestick"));
   } catch (err) {

@@ -1,9 +1,6 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import fs from "fs";
-import path from "path";
-import mkdirp from "mkdirp";
-import glob from "glob";
 import temp from "temp";
 import rimraf from "rimraf";
 import logger from "../../src/lib/logger";
