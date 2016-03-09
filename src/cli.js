@@ -20,7 +20,7 @@ const logsColorScheme = require("./lib/logsColorScheme");
 const { highlight } = logsColorScheme;
 
 const utils = require("./lib/utils");
-const { isGluestickProject } = utils;
+const { quitUnlessGluestickProject } = utils;
 
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
@@ -36,7 +36,7 @@ commander
 commander
   .command("touch")
   .description("update project version")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(updateLastVersionUsed)
 
 commander
@@ -50,7 +50,7 @@ commander
   .command("generate <container|component|reducer>")
   .description("generate a new container")
   .arguments("<name>")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action((type, name) => generate(type, name, (err) => {
     if (err) logger.error(err);
   }))
@@ -60,7 +60,7 @@ commander
   .command("destroy <container|component|reducer>")
   .description("destroy a generated container")
   .arguments("<name>")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(destroy)
   .action(updateLastVersionUsed);
 
@@ -74,14 +74,14 @@ commander
   .description("start everything")
   .option("-T, --no_tests", "ignore test hook")
   .option(debugOption.command, debugOption.description)
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action((options) => startAll(options.no_tests, options.debug))
   .action(()=> updateLastVersionUsed());
 
 commander
   .command("build")
   .description("create production asset build")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(() => startClient(true))
   .action(()=> updateLastVersionUsed());
 
@@ -89,14 +89,14 @@ commander
   .command("dockerize")
   .description("create docker image")
   .arguments("<name>")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(upgradeAndDockerize)
   .action(()=> updateLastVersionUsed());
 
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(() => startClient(false))
   .action(()=> updateLastVersionUsed());
 
@@ -105,7 +105,7 @@ commander
   .command("start-server", null, {noHelp: true})
   .description("start server")
   .option(debugOption.command, debugOption.description)
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action((options) => startServer(options.debug))
   .action(()=> updateLastVersionUsed());
 
@@ -118,7 +118,7 @@ commander
   .command("start-test", null, {noHelp: true})
   .option(firefoxOption.command, firefoxOption.description)
   .description("start test")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action((options) => startTest(options))
   .action(()=> updateLastVersionUsed());
 
@@ -126,7 +126,7 @@ commander
   .command("test")
   .option(firefoxOption.command, firefoxOption.description)
   .description("start tests")
-  .action(quitUnlessGluestickProject)
+  .action(checkGluestickProject)
   .action(() => spawnProcess("test", process.argv.slice(3)))
   .action(()=> updateLastVersionUsed());
 
@@ -140,12 +140,8 @@ commander
 
 commander.parse(process.argv);
 
-function quitUnlessGluestickProject() {
-  const command = commander.rawArgs[2];
-  if (!isGluestickProject()) {
-    logger.error(`${highlight(command)} commands must be run from the root of a gluestick project.`);
-    process.exit();
-  }
+function checkGluestickProject () {
+  quitUnlessGluestickProject(commander.rawArgs[2]);
 }
 
 function spawnProcess (type, args=[]) {

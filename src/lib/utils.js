@@ -1,7 +1,14 @@
 import fs from "fs";
 import path from "path";
 import logger from "./logger";
+import { highlight } from "./logsColorScheme";
 
+export function quitUnlessGluestickProject(command) {
+  if (!isGluestickProject()) {
+    logger.error(`${highlight(command)} commands must be run from the root of a gluestick project.`);
+    process.exit();
+  }
+}
 export function isGluestickProject(dir=process.cwd()) { 
   try {
     fs.statSync(path.join(dir, ".gluestick"));
