@@ -6,7 +6,6 @@ import updateConfig from "./updateConfig";
 import updateBabelConfig from "./updateBabelConfig";
 import logger from "../lib/logger";
 import { highlight, filename } from "../lib/logsColorScheme";
-import { isGluestickProject } from "../lib/utils";
 
 const CWD = process.cwd();
 
@@ -34,10 +33,6 @@ function getCurrentFilePath (name) {
 }
 
 module.exports = async function () {
-  if (!isGluestickProject()) {
-    return new Error("commands must be run from the root of a gluestick project");
-  }
-
   await updatePackage();
 
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them

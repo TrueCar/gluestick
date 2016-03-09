@@ -148,13 +148,6 @@ function quitUnlessGluestickProject() {
   }
 }
 
-function handleError(error) {
-  if (error && error.message) {
-    logger.error(error.message);
-    process.exit();
-  }
-}
-
 function spawnProcess (type, args=[]) {
   var childProcess;
   var postFix = IS_WINDOWS ? ".cmd" : "";
@@ -175,7 +168,7 @@ function spawnProcess (type, args=[]) {
 
 async function startAll(withoutTests=false, debug=false) {
   try {
-    handleError(await autoUpgrade());
+    await autoUpgrade();
   }
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);
@@ -192,7 +185,7 @@ async function startAll(withoutTests=false, debug=false) {
 }
 
 async function upgradeAndDockerize (name) {
-  handleError(await autoUpgrade());
+  await autoUpgrade();
   dockerize(name);
 }
 
