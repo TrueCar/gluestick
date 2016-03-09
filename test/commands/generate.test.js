@@ -50,12 +50,6 @@ describe("cli: gluestick generate", function () {
     rimraf(tmpDir, done);
   });
 
-  it("should report an error if a .gluestick file is not found in the current directory", () => { 
-    generate("container", "MyContainer", (err) => {
-      expect(err).to.contain("commands must be run from the root of a gluestick project");
-    });
-  });
-
   it("should report an error if an invalid command type was provided", () => {
     fs.closeSync(fs.openSync(".gluestick", "w"));
     generate("invalidtype", "myname", (err) => {

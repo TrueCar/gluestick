@@ -35,15 +35,6 @@ function getCurrentFilePath (name) {
 module.exports = async function () {
   await updatePackage();
 
-  // Make sure we are in a gluestick project
-  try {
-    fs.statSync(path.join(CWD, ".gluestick"))
-  }
-  catch (e) {
-    logger.warn("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project");
-    process.exit();
-  }
-
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them
   // for the user.
   const newFiles = [

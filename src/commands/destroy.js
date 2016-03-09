@@ -13,24 +13,14 @@ var availableCommands = {
 
 // @NOTE, we use async here because we use await later in the function
 module.exports = async function (command, name) {
-  // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
-  try {
-    fs.statSync(path.join(process.cwd(), ".gluestick"));
-  }
-  catch (e) {
-    logger.info(`.gluestick file not found`);
-    logger.error(`${highlight(destroy)} commands must be run from the root of a gluestick project.`);
-    return;
-  }
-
-  // Step 2: Validate the command type by verifying that it exists in `availableCommands`
+  // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.error(`${highlight(command)} is not a valid destroy command.`);
     logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
     return;
   }
 
-  // Step 3: Validate the name by stripping out unwanted characters
+  // Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
     logger.error(`invalid arguments. You must specify a name.`);
     return;
@@ -41,7 +31,7 @@ module.exports = async function (command, name) {
     return;
   }
 
-  // Step 4: Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
+  // Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
   var originalName = name; // store original name for later
   if (["container", "component"].indexOf(command) !== -1) {
     name = name.substr(0, 1).toUpperCase() + name.substr(1);
@@ -50,7 +40,7 @@ module.exports = async function (command, name) {
     name = name.substr(0, 1).toLowerCase() + name.substr(1);
   }
 
-  // Step 5: Remove the file
+  // Remove the file
   var destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
   var fileExists = true;
   try {
@@ -88,7 +78,7 @@ module.exports = async function (command, name) {
     return;
   }
 
-  // Step 6: If we destroyed a reducer, remove it from the reducers index
+  // If we destroyed a reducer, remove it from the reducers index
   if (command === "reducer") {
     var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
     try {
@@ -107,7 +97,7 @@ module.exports = async function (command, name) {
     }
   }
 
-  // Step 7: Remove the test file
+  // Remove the test file
   var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
   var testFileExists = true;
   try {
