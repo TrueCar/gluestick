@@ -1,6 +1,8 @@
 var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
+const utils = require("../lib/utils");
+const { isGluestickProject } = utils;
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
@@ -18,12 +20,8 @@ function replaceName (input, name) {
 module.exports = function (command, name, cb) {
   var CWD = process.cwd();
 
-  // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
-  try {
-    fs.statSync(path.join(CWD, ".gluestick"));
-  }
-  catch (e) {
-    logger.info(`.gluestick file not found`);
+  // Step 1: Check if we are in the root of a gluestick project
+  if (!isGluestickProject()) {
     return cb(`${highlight("generate")} commands must be run from the root of a gluestick project.`);
   }
 

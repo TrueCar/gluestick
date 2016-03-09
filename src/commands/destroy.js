@@ -1,6 +1,8 @@
 var fs = require("fs");
 var path = require("path");
 var inquirer = require("inquirer");
+const utils = require("../lib/utils");
+const { isGluestickProject } = utils;
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
@@ -13,13 +15,9 @@ var availableCommands = {
 
 // @NOTE, we use async here because we use await later in the function
 module.exports = async function (command, name) {
-  // Step 1: Check if we are in the root of a gluestick project by looking for the `.gluestick` file
-  try {
-    fs.statSync(path.join(process.cwd(), ".gluestick"));
-  }
-  catch (e) {
-    logger.info(`.gluestick file not found`);
-    logger.error(`${highlight(destroy)} commands must be run from the root of a gluestick project.`);
+  // Step 1: Check if we are in the root of a gluestick project
+  if (!isGluestickProject()) {
+    logger.error(`${highlight("destroy")} commands must be run from the root of a gluestick project.`);
     return;
   }
 

@@ -6,6 +6,7 @@ import updateConfig from "./updateConfig";
 import updateBabelConfig from "./updateBabelConfig";
 import logger from "../lib/logger";
 import { highlight, filename } from "../lib/logsColorScheme";
+import { isGluestickProject } from "../lib/utils";
 
 const CWD = process.cwd();
 
@@ -33,16 +34,11 @@ function getCurrentFilePath (name) {
 }
 
 module.exports = async function () {
-  await updatePackage();
+  if (!isGluestickProject()) {
+    return new Error("commands must be run from the root of a gluestick project");
+  }
 
-  // Make sure we are in a gluestick project
-  try {
-    fs.statSync(path.join(CWD, ".gluestick"))
-  }
-  catch (e) {
-    logger.warn("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project");
-    process.exit();
-  }
+  await updatePackage();
 
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them
   // for the user.

@@ -17,6 +17,9 @@ const logger = require("./lib/logger");
 const logsColorScheme = require("./lib/logsColorScheme");
 const { highlight } = logsColorScheme;
 
+const utils = require("./lib/utils");
+const { isGluestickProject } = utils;
+
 const autoUpgrade = require("./auto-upgrade");
 const chokidar = require("chokidar");
 
@@ -63,7 +66,13 @@ commander
 commander
   .command("build")
   .description("create production asset build")
-  .action(() => startClient(true));
+  .action(() => {
+    if (!isGluestickProject()) {
+      handleError(new Error(`${highlight("build")} commands must be run from the root of a gluestick project.`));
+    }
+    startClient(true)
+  });
+
 
 commander
   .command("dockerize")
@@ -109,6 +118,13 @@ commander
 
 commander.parse(process.argv);
 
+function handleError(error) {
+  if (error && error.message) {
+    logger.error(error.message);
+    process.exit();
+  }
+}
+
 function spawnProcess (type, args=[]) {
   var childProcess;
   var postFix = IS_WINDOWS ? ".cmd" : "";
@@ -130,7 +146,7 @@ function spawnProcess (type, args=[]) {
 
 async function startAll(withoutTests=false, debug=false) {
   try {
-    await autoUpgrade();
+    handleError(await autoUpgrade());
   }
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);
@@ -147,6 +163,7 @@ async function startAll(withoutTests=false, debug=false) {
 }
 
 async function upgradeAndDockerize (name) {
-  await autoUpgrade();
+  handleError(await autoUpgrade());
   dockerize(name);
 }
+
