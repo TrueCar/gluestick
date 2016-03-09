@@ -1,8 +1,6 @@
 var fs = require("fs");
 var path = require("path");
 var mkdirp = require("mkdirp");
-const utils = require("../lib/utils");
-const { isGluestickProject } = utils;
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
@@ -20,18 +18,13 @@ function replaceName (input, name) {
 module.exports = function (command, name, cb) {
   var CWD = process.cwd();
 
-  // Step 1: Check if we are in the root of a gluestick project
-  if (!isGluestickProject()) {
-    return cb(`${highlight("generate")} commands must be run from the root of a gluestick project.`);
-  }
-
-  // Step 2: Validate the command type by verifying that it exists in `availableCommands`
+  // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.info(`Available generators: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
     return cb(`${highlight(command)} is not a valid generator.`);
   }
 
-  // Step 3: Validate the name by stripping out unwanted characters
+  // Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
     return cb(`invalid arguments. You must specify a name.`);
   }
@@ -40,7 +33,7 @@ module.exports = function (command, name, cb) {
     return cb(`${highlight(name)} is not a valid name.`);
   }
 
-  // Step 4: Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
+  // Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
   if (["container", "component"].indexOf(command) !== -1) {
     name = name.substr(0, 1).toUpperCase() + name.substr(1);
   }
@@ -48,7 +41,7 @@ module.exports = function (command, name, cb) {
     name = name.substr(0, 1).toLowerCase() + name.substr(1);
   }
 
-  // Step 5: Get the output string and destination filename
+  // Get the output string and destination filename
   var template;
   try {
     template = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.js`), {encoding: "utf8"})
@@ -59,7 +52,7 @@ module.exports = function (command, name, cb) {
 
   template = replaceName(template, name);
 
-  // Step 6: Check if the file already exists before we write to it
+  // Check if the file already exists before we write to it
   var destinationPath = path.join(CWD, "/src/", availableCommands[command] + "/" + name + ".js");
   var fileExists = true;
   try {
@@ -73,11 +66,11 @@ module.exports = function (command, name, cb) {
     return cb(`${filename(destinationPath)} already exists`);
   }
 
-  // Step 6: Write output to file
+  // Write output to file
   fs.writeFileSync(destinationPath, template);
   logger.success(`New file created: ${filename(destinationPath)}`);
 
-  // Step 7: If we just generated a reducer, add it to the reducers index
+  // If we just generated a reducer, add it to the reducers index
   if (command === "reducer") {
     var reducerIndexPath = path.resolve(CWD, "src/reducers/index.js");
     try {
@@ -95,7 +88,7 @@ module.exports = function (command, name, cb) {
     }
   }
 
-  // Step 8: Write test file
+  // Write test file
   var testFolder = path.join(CWD, "/test/", availableCommands[command]);
 
   // Older generated projects don't have test/reducers or test/containers
