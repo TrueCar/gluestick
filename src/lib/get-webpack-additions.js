@@ -20,9 +20,11 @@ import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
  */
 function prepareUserAdditionsForWebpack (additions) {
   return additions.map((addition) => {
+    let test = addition.test && toString.call(addition.test) === "[object RegExp]" ?
+      addition.test : WebpackIsomorphicToolsPlugin.regular_expression(addition.extensions);
     let webpackAddition = {
       loader: addition.loader,
-      test: WebpackIsomorphicToolsPlugin.regular_expression(addition.extensions)
+      test: test
     };
 
     ['include', 'exclude', 'query'].forEach((optionalAddition) => {

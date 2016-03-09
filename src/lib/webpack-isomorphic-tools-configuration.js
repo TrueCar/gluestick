@@ -18,13 +18,17 @@ const { additionalLoaders, additionalPreLoaders } = require("./get-webpack-addit
 
 let userExtensions = [];
 [...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {
+  // Bail out when a test regexp has been supplied.
+  if (loader.test && toString.call(loader.test) === "[object RegExp]") return;
+
   // If someone wants to include a custom .js loader, we do not want the isomorphic tools to treat it as an asset
   // because .js imports are a native part of how node works. We do want webpack to receive the loader though.
+  if (loader.extensions.includes("js")) return;
+
   if (!loader.extensions || loader.extensions.length === 0) {
     logger.info(`An additional loader is missing the ${highlight("extensions")} property and is being ignored!`);
     return;
   }
-  if (loader.extensions.includes("js")) return;
 
   userExtensions.splice(userExtensions.length, 0, ...loader.extensions);
 });
