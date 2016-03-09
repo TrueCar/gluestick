@@ -3,7 +3,7 @@ const path = require("path");
 const getVersion = require("./getVersion");
 const logger = require("./logger");
 
-module.exports = function updateLastVersionUsed() {
+module.exports = function updateLastVersionUsed(withWarnings = true) {
   // Check version in .gluestick file
   const gluestickDotFile = path.join(process.cwd(), ".gluestick");
   var fileContents = fs.readFileSync(gluestickDotFile, {encoding: "utf8"})
@@ -13,7 +13,7 @@ module.exports = function updateLastVersionUsed() {
   // If the dot file only had the header (and possibly a new line character), then it definitely doesn't have the version check and is old
   fileContents = (fileContents.length <= 1)? '{"version": "`unknown version`"}': fileContents;
   var json = JSON.parse(fileContents);
-  if (getVersion() !== json.version) {
+  if (withWarnings && getVersion() !== json.version) {
     logger.warn("This project is configured to work with versions >= " + json.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g");
   }
 

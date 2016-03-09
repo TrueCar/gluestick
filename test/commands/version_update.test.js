@@ -43,7 +43,19 @@ describe("cli: gluestick touch", function () {
   it("should not error if the old \"DO NOT MODIFY\" header is in the .gluestick file", () => {
     newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: getVersion()})); 
     updateLastVersionUsed();
-    sinon.assert.notCalled(console.error)
+    sinon.assert.notCalled(console.log)
+  });
+
+  it("should display a warning when version is different by default", () => {
+    newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: "0.0.0"})); 
+    updateLastVersionUsed();
+    expect(console.log.calledOnce).to.be.true;
+  });
+
+  it("should not display a warning when version is different, but flag is set to false", () => {
+    newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: "0.0.0"})); 
+    updateLastVersionUsed(false);
+    sinon.assert.notCalled(console.log)
   });
 
   it("should remove the \"DO NOT MODIFY\" header from the .gluestick file", () => {
