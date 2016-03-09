@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
@@ -47,7 +47,7 @@
     "extract-text-webpack-plugin": "0.9.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.26.2",
-    "gluestick-shared": "0.3.0",
+    "gluestick-shared": "0.3.1",
     "history": "2.0.0",
     "inquirer": "0.11.0",
     "json-loader": "0.5.4",
