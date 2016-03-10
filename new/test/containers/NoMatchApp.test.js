@@ -1,11 +1,10 @@
-import Home from "components/Home";
+import { NoMatchApp } from "containers/NoMatchApp";
 import { shallow } from "enzyme";
 
-describe("components/Home", () => {
+describe("containers/NoMatchApp", () => {
   it("renders without an issue", () => {
-    const subject = <Home />;
+    const subject = <NoMatchApp />;
     const wrapper = shallow(subject);
     expect(wrapper).to.exist;
   });
 });
-

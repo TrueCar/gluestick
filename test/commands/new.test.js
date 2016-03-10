@@ -62,4 +62,33 @@ describe("cli: gluestick new", function () {
     }
   });
 
+  it("should generate a test for all of the initial components and containers", () => {
+    const fakeNpm = sinon.stub(npmDependencies, "install");
+    try {
+      newApp("gs-new-test"); 
+
+      // account for the fact that the gitignore file that gets renamed
+      const generatedFiles = new Set(glob.sync("**", { dot: true }));
+      
+      // create index from array so we can quickly lookup files by name
+      const index = {};
+      generatedFiles.forEach((file) => {
+        index[file] = true;
+      });
+
+      // loop through and make sure components and containers all have tests
+      // written for them. This will help us catch if we add a component or
+      // container but we do not add a test.
+      generatedFiles.forEach((file) => {
+        if (file.startsWith("src/components/") || file.startsWith("src/containers/")) {
+          let testFilename = file.replace(/^src/, "test").replace(/\.js$/, ".test.js");
+          expect(index[testFilename]).to.be.true;
+        }
+      });
+    }
+    finally {
+      fakeNpm.restore();
+    }
+  });
+
 });
