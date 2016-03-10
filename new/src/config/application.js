@@ -10,5 +10,5 @@ const config = {
   }
 };
 
-export default (config[process.env.NODE_ENV] || config["development"])
+export default (config[process.env.NODE_ENV] || config["development"]);
 
