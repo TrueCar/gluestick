@@ -12,7 +12,7 @@ describe("utils", function () {
 
   beforeEach(() => {
     originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync("gluestick-generate");
+    tmpDir = temp.mkdirSync("gluestick-utils");
     process.chdir(tmpDir);
   });
 
