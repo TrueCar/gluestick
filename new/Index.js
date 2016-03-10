@@ -10,7 +10,7 @@ export default class Index extends Component {
   static propTypes = {
     head: PropTypes.any,
     body: PropTypes.any
-  }
+  };
 
   render () {
     const {
