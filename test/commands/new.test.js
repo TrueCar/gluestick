@@ -80,7 +80,7 @@ describe("cli: gluestick new", function () {
       // written for them. This will help us catch if we add a component or
       // container but we do not add a test.
       generatedFiles.forEach((file) => {
-        if (file.startsWith("src/components/") || file.startsWith("src/containers/")) {
+        if (/^src\/(components|containers)/.test(file)) {
           let testFilename = file.replace(/^src/, "test").replace(/\.js$/, ".test.js");
           expect(index[testFilename]).to.be.true;
         }
