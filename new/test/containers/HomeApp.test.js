@@ -1,9 +1,9 @@
-import Home from "components/Home";
+import { HomeApp } from "containers/HomeApp";
 import { shallow } from "enzyme";
 
-describe("components/Home", () => {
+describe("containers/HomeApp", () => {
   it("renders without an issue", () => {
-    const subject = <Home />;
+    const subject = <HomeApp />;
     const wrapper = shallow(subject);
     expect(wrapper).to.exist;
   });
