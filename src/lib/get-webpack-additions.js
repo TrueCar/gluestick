@@ -15,6 +15,7 @@ import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
  * @param {Array<Object>} additions array of loaders or preloaders formatted for webpack-isomorphic-tools
  * @param {Array<String>} additions[n].extensions array of strings representing file extensions
  * @param {String} additions[n].loader name of the loader to use
+ * @param {RegExp} additions[n].test - test regex for webpack
  *
  * @return {Object}
  */
