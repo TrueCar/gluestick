@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import "assets/css/normalize.css";
 
 /**
@@ -7,6 +7,11 @@ import "assets/css/normalize.css";
  * should not remove those or the application will likely stop working.
  */
 export default class Index extends Component {
+  static propTypes = {
+    head: PropTypes.any,
+    body: PropTypes.any
+  };
+
   render () {
     const {
       head,
