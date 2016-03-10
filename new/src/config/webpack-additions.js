@@ -17,6 +17,8 @@
  * import myData from "assets/xml/my-file.xml";
  *
  * Loaders also support `include`, `exclude` and `query`.
+ * Additionally, you can provide a `test` regex instead of `extensions`
+ * in order to bypass webpack-isomorphic-tools when needed.
  */
 module.exports = {
   additionalLoaders: [],
