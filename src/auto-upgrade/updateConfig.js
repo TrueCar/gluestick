@@ -18,7 +18,7 @@ export default function updateConfig () {
     const appConfigPath = path.join(CWD, "src", "config", "application.js");
     const appConfig = readFileSyncStrip(appConfigPath);
     const lastAppConfigLine = appConfig.split("\n").pop();
-    const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"])';
+    const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"]);';
     if (lastAppConfigLine === expectedLastLine) {
       resolve();
       return;
