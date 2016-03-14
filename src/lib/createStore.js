@@ -15,7 +15,12 @@ function _gluestick(state=true, action) {
 export default function (customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
   const composeArgs = [
-    applyMiddleware.apply(this, [promiseMiddleware, thunk, ...customMiddleware])
+    applyMiddleware(
+      promiseMiddleware,
+      thunk,
+      ...customMiddleware,
+      require("redux-immutable-state-invariant")()
+    )
   ];
 
   // Include dev tools only if we are in development mode
