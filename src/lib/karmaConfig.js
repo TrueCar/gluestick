@@ -33,13 +33,15 @@ export default {
           test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
           loader: "file-loader"
         },
+      ].concat(shared.loaders).concat(
+        // babel-istanbul must be defined after the babel loader
         {
           test: /\.js$/,
-          loader: "isparta",
+          loader: "babel-istanbul",
           exclude: /test/,
           include: path.resolve(CWD, "src")
         }
-      ].concat(shared.loaders, additionalLoaders),
+      ).concat(additionalLoaders),
       preLoaders: [
         // only place test specific preLoaders here
       ].concat(shared.preLoaders, additionalPreLoaders),
