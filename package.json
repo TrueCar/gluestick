@@ -1,6 +1,6 @@
 {
   "name": "gluestick-shared",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
@@ -26,13 +26,14 @@
     "redux-devtools": "3.0.1",
     "redux-devtools-dock-monitor": "1.0.1",
     "redux-devtools-log-monitor": "1.0.1",
+    "redux-immutable-state-invariant": "^1.2.0",
     "redux-thunk": "1.0.2"
   },
   "peerDependencies": {
     "radium": ">=0.16.6",
     "react-router": ">=2.0.0",
     "react-redux": ">=4.0.1",
-    "redux": ">=3.0.5",
+    "redux": ">=3.3.1",
     "react": ">=0.14.3",
     "react-dom": ">=0.14.3"
   },
