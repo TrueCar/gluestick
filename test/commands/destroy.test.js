@@ -17,8 +17,8 @@ function createFiles(...filePaths) {
 
 function createDirectories(rootDir, ...directories) {
   directories.map(directory => {
-    mkdirp.sync(path.join(rootDir, `/src/${directory}`));
-    mkdirp.sync(path.join(rootDir, `/test/${directory}`));
+    mkdirp.sync(path.join(rootDir, "src", directory));
+    mkdirp.sync(path.join(rootDir, "test", directory));
   });
 }
 
@@ -38,14 +38,14 @@ describe("cli: gluestick destroy", function () {
     fs.closeSync(fs.openSync(".gluestick", "w"));
     createDirectories(tmpDir, "components", "reducers", "containers");
 
-    const componentPath = path.join(tmpDir, "/src/components/TestComponent.js");
-    const componentTestPath = path.join(tmpDir, "/test/components/TestComponent.test.js");
+    const componentPath = path.join(tmpDir, "src/components/TestComponent.js");
+    const componentTestPath = path.join(tmpDir, "test/components/TestComponent.test.js");
 
-    const containerPath = path.join(tmpDir, "/src/containers/TestContainer.js");
-    const containerTestPath = path.join(tmpDir, "/test/containers/TestContainer.test.js");
+    const containerPath = path.join(tmpDir, "src/containers/TestContainer.js");
+    const containerTestPath = path.join(tmpDir, "test/containers/TestContainer.test.js");
 
-    const reducerPath = path.join(tmpDir, "/src/reducers/testReducer.js");
-    const reducerTestPath = path.join(tmpDir, "/test/reducers/testReducer.test.js");
+    const reducerPath = path.join(tmpDir, "src/reducers/testReducer.js");
+    const reducerTestPath = path.join(tmpDir, "test/reducers/testReducer.test.js");
 
     createFiles(componentPath, componentTestPath, containerPath, containerTestPath, reducerPath, reducerTestPath);
 
