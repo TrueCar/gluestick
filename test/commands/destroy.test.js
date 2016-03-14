@@ -1,6 +1,7 @@
 import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";
+import inquirer from "inquirer";
 import path from "path";
 import temp from "temp";
 import rimraf from "rimraf";
@@ -69,9 +70,25 @@ describe("cli: gluestick destroy", function () {
     expect(console.log.calledWithMatch("ERROR: invalid arguments. You must specify a name.")).to.be.true;
   });
 
+  it("should throw an error when a name only consists of whitespace", () => {
+    destroy("component"," ");
+    expect(console.log.calledWithMatch("is not a valid name.")).to.be.true;
+  });
+
   it("should throw an error when the specified name does not exist", () => {
     destroy("component","somethingthatdoesnotexist");
     expect(console.log.calledWithMatch("does not exist")).to.be.true;
+  });
+
+  it("should ask whether to continue if the name does not match (case sensitive)", done => {
+    sandbox.stub(inquirer, "prompt", (questions, cb) => {
+      setTimeout(() => {
+        cb({confirm: true});
+      }, 0);
+    });
+    destroy("component","testComponent");
+    expect(inquirer.prompt.called).to.be.true;
+    done();
   });
 
   it("should destroy the specified component and its associated test", () => {
