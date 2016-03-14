@@ -1,15 +1,15 @@
-var path = require("path");
-var process = require("process");
-var shared = require("./shared");
-var webpack = require("webpack");
-var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var getWebpackAdditions = require("../lib/get-webpack-additions").default;
-var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
+const path = require("path");
+const process = require("process");
+const shared = require("./shared");
+const webpack = require("webpack");
+const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const getWebpackAdditions = require("../lib/get-webpack-additions").default;
+const { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 
-var PORT = 9876;
-var CWD = process.cwd();
+const PORT = 9876;
+const CWD = process.cwd();
 
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration')).development(true);
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../lib/webpack-isomorphic-tools-configuration")).development(true);
 
 const preprocessors = {};
 const helperPath = path.resolve(__dirname, "./test-helper.js");
@@ -34,9 +34,9 @@ export default {
           loader: "file-loader"
         },
         {
-          test: /\.js$/, 
+          test: /\.js$/,
           loader: "isparta",
-          exclude: /test/, 
+          exclude: /test/,
           include: path.resolve(CWD, "src")
         }
       ].concat(shared.loaders, additionalLoaders),
@@ -66,8 +66,8 @@ export default {
       ]
     },
     externals: {
-      'react/lib/ExecutionEnvironment': true,
-      'react/lib/ReactContext': true
+      "react/lib/ExecutionEnvironment": true,
+      "react/lib/ReactContext": true
     }
   },
   webpackServer: {
@@ -75,9 +75,9 @@ export default {
   },
   coverageReporter: {
     reporters: [
-      { 
-        type: "html", 
-        subdir: "html" 
+      {
+        type: "html",
+        subdir: "html"
       }
     ]
   }
