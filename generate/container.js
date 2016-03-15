@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -18,7 +18,7 @@ export class __$NAME__ extends Component {
    * @return {(Promise|undefined)} If this method returns a promise, the router
    * will wait for the promise to resolve before the container is loaded.
    */
-  static gsBeforeRoute ({dispatch}, renderProps, query, serverProps) {}
+  static gsBeforeRoute (/* {dispatch}, renderProps, query, serverProps */) {}
 
   render () {
     return (
@@ -28,6 +28,6 @@ export class __$NAME__ extends Component {
 }
 
 export default connect(
-  (state) => ({/** _INSERT_STATE_  **/}),
+  (/* state */) => ({/** _INSERT_STATE_  **/}),
   (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
 )(__$NAME__);

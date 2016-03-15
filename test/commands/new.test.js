@@ -16,12 +16,13 @@ const newFilesTemplate = glob.sync("**", {
 
 describe("cli: gluestick new", function () {
 
-  let originalCwd, tmpDir, sandbox;
+  let originalCwd, tmpDir, sandbox, fakeNpm;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
     process.chdir(tmpDir);
+    fakeNpm = sinon.stub(npmDependencies, "install");
     sandbox = sinon.sandbox.create();
     sandbox.spy(logger, "info");
     sandbox.spy(logger, "warn");
@@ -31,6 +32,7 @@ describe("cli: gluestick new", function () {
     sandbox.restore();
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
+    fakeNpm.restore();
   });
 
   it("should report an error if the project name has symbols", () => { 
@@ -45,21 +47,37 @@ describe("cli: gluestick new", function () {
   });
 
   it("should copy the contents of `new` upon install", () => {
-    const fakeNpm = sinon.stub(npmDependencies, "install");
-    try {
-      newApp("gs-new-test"); 
+    newApp("gs-new-test"); 
 
-      // account for the fact that the gitignore file that gets renamed
-      const generatedFiles = new Set(glob.sync("**", { dot: true }));
-      const renamedGitFileExists = generatedFiles.delete(".gitignore");
-      expect(renamedGitFileExists).to.be.true;
-      generatedFiles.add("_gitignore");
+    // account for the fact that the gitignore file that gets renamed
+    const generatedFiles = new Set(glob.sync("**", { dot: true }));
+    const renamedGitFileExists = generatedFiles.delete(".gitignore");
+    expect(renamedGitFileExists).to.be.true;
+    generatedFiles.add("_gitignore");
 
-      expect(newFilesTemplate.filter(f => !generatedFiles.has(f))).to.be.empty;
-    }
-    finally {
-      fakeNpm.restore();
-    }
+    expect(newFilesTemplate.filter(f => !generatedFiles.has(f))).to.be.empty;
+  });
+
+  it("should generate a test for all of the initial components and containers", () => {
+    newApp("gs-new-test"); 
+
+    const generatedFiles = new Set(glob.sync("**", { dot: true }));
+    
+    // create index from array so we can quickly lookup files by name
+    const index = {};
+    generatedFiles.forEach((file) => {
+      index[file] = true;
+    });
+
+    // loop through and make sure components and containers all have tests
+    // written for them. This will help us catch if we add a component or
+    // container but we do not add a test.
+    generatedFiles.forEach((file) => {
+      if (/^src\/(components|containers).*\.js$/.test(file)) {
+        let testFilename = file.replace(/^src\/(.*)\.js$/, "test/$1\.test\.js");
+        expect(index[testFilename]).to.be.true;
+      }
+    });
   });
 
 });

@@ -1,9 +1,9 @@
-import Home from "components/Home";
+import MasterLayout from "components/MasterLayout";
 import { shallow } from "enzyme";
 
-describe("components/Home", () => {
+describe("components/MasterLayout", () => {
   it("renders without an issue", () => {
-    const subject = <Home />;
+    const subject = <MasterLayout />;
     const wrapper = shallow(subject);
     expect(wrapper).to.exist;
   });
