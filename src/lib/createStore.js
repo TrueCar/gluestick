@@ -14,13 +14,20 @@ function _gluestick(state=true, action) {
 
 export default function (customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-  const composeArgs = [
-    applyMiddleware(
+  const middleware = [
       promiseMiddleware,
       thunk,
-      ...customMiddleware,
-      require("redux-immutable-state-invariant")()
-    )
+      ...customMiddleware
+  ];
+
+  // Include middleware that will warn when you mutate the state object
+  // but only include it in dev mode
+  if (devMode) {
+    middleware.push(require("redux-immutable-state-invariant")());
+  }
+
+  const composeArgs = [
+    applyMiddleware.apply(this, middleware)
   ];
 
   // Include dev tools only if we are in development mode
