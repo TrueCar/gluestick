@@ -37,7 +37,7 @@ module.exports = async function () {
 
   // Make sure we are in a gluestick project
   try {
-    fs.statSync(path.join(CWD, ".gluestick"))
+    fs.statSync(path.join(CWD, ".gluestick"));
   }
   catch (e) {
     logger.warn("This does not appear to be a valid GlueStick project. Please run this command inside of a gluestick project");
@@ -68,7 +68,7 @@ module.exports = async function () {
   [
     ".entry.js",
     ".store.js",
-    ".Dockerfile",   //-> last updated in 0.2.0
+    ".Dockerfile"   //-> last updated in 0.2.0
   ].forEach((fileName) => {
     const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
     const currentSha = sha1(currentFile);

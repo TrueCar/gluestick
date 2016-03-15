@@ -5,29 +5,13 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "cross-spawn";
 import logger from "../lib/logger";
+import sO from "sorted-object";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 
 // When we load the project package file, we will cache the result so that we
 // don't have to do file I/O more than once
 let _projectPackageData;
-
-
-/**
- * This function is used to put the dependencies in alphabetical order.
- * It takes a hash and returns the same hash ordered by its keys.
- *
- * @param {Object} Unordered hash which one would like to be sorted by keys
- *
- * @return {Object}
- */
-function orderHashByKeys (unordered) {
-  const ordered = {};
-  Object.keys(unordered).sort().forEach(function(key) {
-    ordered[key] = unordered[key];
-  });
-  return ordered;
-}
 
 /**
  * Open the package.json file in both the project as well as the one used by
@@ -187,8 +171,8 @@ function performModulesUpdate (mismatchedModules, done) {
     projectPackageData[module.type][moduleName] = module.required;
   }
 
-  projectPackageData.dependencies = orderHashByKeys(projectPackageData.dependencies);
-  projectPackageData.devDependencies = orderHashByKeys(projectPackageData.devDependencies);
+  projectPackageData.dependencies = sO(projectPackageData.dependencies);
+  projectPackageData.devDependencies = sO(projectPackageData.devDependencies);
 
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
 
