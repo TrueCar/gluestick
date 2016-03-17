@@ -40,19 +40,20 @@ module.exports = function (projectName) {
     inquirer.prompt([question], function (answers) {
       if (!answers.confirm) return;
       copyTo(process.cwd());
-      return;
+      return false;
     });
 
-    return;
+    return false;
   }
 
   // Anything other than alphanumeric and dashes is invalid
   if (!/^(\w|-)*$/.test(projectName)) {
     logger.warn(`Invalid name: ${highlight(projectName)}`);
-    return;
+    return false;
   }
 
   // Project name set, install in current working directory
   copyTo(path.join(process.cwd(), projectName));
+  return true;
 };
 

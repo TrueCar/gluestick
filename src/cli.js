@@ -43,8 +43,11 @@ commander
   .command("new")
   .description("generate a new application")
   .arguments("<app_name>")
-  .action(newApp)
-  .action(() => updateLastVersionUsed(false));
+  .action((app_name) => {
+    if(newApp(app_name)) {
+      updateLastVersionUsed(false);
+    }
+  });
 
 commander
   .command("generate <container|component|reducer>")
