@@ -5,6 +5,7 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "cross-spawn";
 import logger from "../lib/logger";
+import sO from "sorted-object";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 
@@ -167,8 +168,11 @@ function performModulesUpdate (mismatchedModules, done) {
   let module;
   for (let moduleName in mismatchedModules) {
     module = mismatchedModules[moduleName];
-    projectPackageData[module.type][moduleName] = module.required
+    projectPackageData[module.type][moduleName] = module.required;
   }
+
+  projectPackageData.dependencies = sO(projectPackageData.dependencies);
+  projectPackageData.devDependencies = sO(projectPackageData.devDependencies);
 
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
 
