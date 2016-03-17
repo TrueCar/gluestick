@@ -11,7 +11,7 @@ const generate = lazyMethodRequire("./commands/generate");
 const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
 
-const updateLastVersionUsed = require("./lib/updateVersion.js");
+const updateLastVersionUsed = require("./lib/updateVersion");
 const getVersion = require("./lib/getVersion");
 const logger = require("./lib/logger");
 const logsColorScheme = require("./lib/logsColorScheme");
@@ -26,14 +26,16 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const IS_WINDOWS = process.platform === "win32";
 
+const currentGluestickVersion = getVersion();
+
 commander
-  .version(getVersion());
+  .version(currentGluestickVersion);
 
 commander
   .command("touch")
   .description("update project version")
   .action(checkGluestickProject)
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("new")
@@ -41,7 +43,7 @@ commander
   .arguments("<app_name>")
   .action((app_name) => {
     if(newApp(app_name)) {
-      updateLastVersionUsed(false);
+      updateLastVersionUsed(currentGluestickVersion, false);
     }
   });
 
@@ -53,7 +55,7 @@ commander
   .action((type, name) => generate(type, name, (err) => {
     if (err) { logger.error(err); }
   }))
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("destroy <container|component|reducer>")
@@ -61,7 +63,7 @@ commander
   .arguments("<name>")
   .action(checkGluestickProject)
   .action(destroy)
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 const debugOption = {
   command: "-D, --debug",
@@ -75,14 +77,14 @@ commander
   .option(debugOption.command, debugOption.description)
   .action(checkGluestickProject)
   .action((options) => startAll(options.no_tests, options.debug))
-  .action(()=> updateLastVersionUsed());
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("build")
   .description("create production asset build")
   .action(checkGluestickProject)
   .action(() => startClient(true))
-  .action(()=> updateLastVersionUsed());
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("dockerize")
@@ -90,15 +92,14 @@ commander
   .arguments("<name>")
   .action(checkGluestickProject)
   .action(upgradeAndDockerize)
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
   .action(checkGluestickProject)
   .action(() => startClient(false))
-  .action(updateLastVersionUsed);
-
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("start-server", null, {noHelp: true})
@@ -106,7 +107,7 @@ commander
   .option(debugOption.command, debugOption.description)
   .action(checkGluestickProject)
   .action((options) => startServer(options.debug))
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 const firefoxOption = {
   command: "-F, --firefox",
@@ -119,7 +120,7 @@ commander
   .description("start test")
   .action(checkGluestickProject)
   .action((options) => startTest(options))
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("test")
@@ -127,7 +128,7 @@ commander
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => spawnProcess("test", process.argv.slice(3)))
-  .action(updateLastVersionUsed);
+  .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
