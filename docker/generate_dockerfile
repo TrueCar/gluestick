@@ -3,7 +3,7 @@
 var fs = require('fs');
 
 var version = JSON.parse(fs.readFileSync("./package.json")).version;
-var tag = "truecar/gluestick:" + version;
+var tag = "gluestick:" + version;
 
 var dockerfile = [
                      "# DO NOT MODIFY",
