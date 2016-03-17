@@ -1,8 +1,6 @@
 const commander = require("commander");
-const fs = require("fs");
-const path = require("path");
 const process = require("process");
-const {exec, spawn} = require("cross-spawn");
+const { spawn } = require("cross-spawn");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
 const newApp = lazyMethodRequire("./commands/new");
@@ -23,9 +21,7 @@ const utils = require("./lib/utils");
 const { quitUnlessGluestickProject } = utils;
 
 const autoUpgrade = require("./auto-upgrade");
-const chokidar = require("chokidar");
 
-const command = process.argv[2];
 const isProduction = process.env.NODE_ENV === "production";
 
 const IS_WINDOWS = process.platform === "win32";
@@ -37,7 +33,7 @@ commander
   .command("touch")
   .description("update project version")
   .action(checkGluestickProject)
-  .action(updateLastVersionUsed)
+  .action(updateLastVersionUsed);
 
 commander
   .command("new")
@@ -55,9 +51,9 @@ commander
   .arguments("<name>")
   .action(checkGluestickProject)
   .action((type, name) => generate(type, name, (err) => {
-    if (err) logger.error(err);
+    if (err) { logger.error(err); }
   }))
-  .action(updateLastVersionUsed)
+  .action(updateLastVersionUsed);
 
 commander
   .command("destroy <container|component|reducer>")
@@ -94,14 +90,14 @@ commander
   .arguments("<name>")
   .action(checkGluestickProject)
   .action(upgradeAndDockerize)
-  .action(()=> updateLastVersionUsed());
+  .action(updateLastVersionUsed);
 
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
   .action(checkGluestickProject)
   .action(() => startClient(false))
-  .action(()=> updateLastVersionUsed());
+  .action(updateLastVersionUsed);
 
 
 commander
@@ -110,7 +106,7 @@ commander
   .option(debugOption.command, debugOption.description)
   .action(checkGluestickProject)
   .action((options) => startServer(options.debug))
-  .action(()=> updateLastVersionUsed());
+  .action(updateLastVersionUsed);
 
 const firefoxOption = {
   command: "-F, --firefox",
@@ -123,7 +119,7 @@ commander
   .description("start test")
   .action(checkGluestickProject)
   .action((options) => startTest(options))
-  .action(()=> updateLastVersionUsed());
+  .action(updateLastVersionUsed);
 
 commander
   .command("test")
@@ -131,15 +127,15 @@ commander
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => spawnProcess("test", process.argv.slice(3)))
-  .action(()=> updateLastVersionUsed());
+  .action(updateLastVersionUsed);
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
-  .command('*', null, {noHelp: true})
+  .command("*", null, {noHelp: true})
   .action(function(cmd){
     logger.error(`Command '${highlight(cmd)}' not recognized`);
     commander.help();
-});
+  });
 
 commander.parse(process.argv);
 
@@ -148,8 +144,8 @@ function checkGluestickProject () {
 }
 
 function spawnProcess (type, args=[]) {
-  var childProcess;
-  var postFix = IS_WINDOWS ? ".cmd" : "";
+  let childProcess;
+  const postFix = IS_WINDOWS ? ".cmd" : "";
   switch (type) {
     case "client":
       childProcess = spawn("gluestick" + postFix, ["start-client", ...args], {stdio: "inherit", env: Object.assign({}, process.env)});
@@ -161,7 +157,7 @@ function spawnProcess (type, args=[]) {
       childProcess = spawn("gluestick" + postFix, ["start-test", ...args], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
       break;
   }
-  childProcess.on("error", function (data) { logger.error(JSON.stringify(arguments)) });
+  childProcess.on("error", function (data) { logger.error(JSON.stringify(arguments)); });
   return childProcess;
 }
 
@@ -174,12 +170,12 @@ async function startAll(withoutTests=false, debug=false) {
     process.exit();
   }
 
-  var client = spawnProcess("client");
-  var server = spawnProcess("server", (debug ? ["--debug"] : []));
+  const client = spawnProcess("client");
+  const server = spawnProcess("server", (debug ? ["--debug"] : []));
 
   // Start tests unless they asked us not to or we are in production mode
   if (!isProduction && !withoutTests) {
-    var testProcess = spawnProcess("test");
+    const testProcess = spawnProcess("test");
   }
 }
 
