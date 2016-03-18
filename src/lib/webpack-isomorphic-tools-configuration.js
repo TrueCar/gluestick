@@ -36,7 +36,8 @@ let userExtensions = [];
 module.exports = {
   assets: {
     images: {
-      extensions: ["png", "jpg", "gif", "ico", "svg"]
+      extensions: ["png", "jpg", "gif", "ico", "svg"],
+      regular_expression: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/
     },
     styles: {
       extensions: ["css", "scss", "sass"],
