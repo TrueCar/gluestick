@@ -1,9 +1,9 @@
 import logger from "./logger";
 import { highlight } from "./logsColorScheme";
 
-var path = require("path");
-var process = require("process");
-var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const path = require("path");
+const process = require("process");
+const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
 // We use `get-webpack-additions` to get the data back because it will first
 // check if the file exists before trying to include it, falling back to empty
@@ -16,14 +16,14 @@ var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 // tools, not the webpack config file.
 const { additionalLoaders, additionalPreLoaders } = require("./get-webpack-additions").default(true);
 
-let userExtensions = [];
+const userExtensions = [];
 [...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {
   // Bail out when a test regexp has been supplied.
-  if (loader.test && toString.call(loader.test) === "[object RegExp]") return;
+  if (loader.test && toString.call(loader.test) === "[object RegExp]") { return; }
 
   // If someone wants to include a custom .js loader, we do not want the isomorphic tools to treat it as an asset
   // because .js imports are a native part of how node works. We do want webpack to receive the loader though.
-  if (loader.extensions.includes("js")) return;
+  if (loader.extensions.includes("js")) { return; }
 
   if (!loader.extensions || loader.extensions.length === 0) {
     logger.info(`An additional loader is missing the ${highlight("extensions")} property and is being ignored!`);
@@ -36,13 +36,14 @@ let userExtensions = [];
 module.exports = {
   assets: {
     images: {
-      extensions: ["png", "jpg", "gif", "ico", "svg"]
+      extensions: ["png", "jpg", "gif", "ico", "svg"],
+      regular_expression: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/
     },
     styles: {
       extensions: ["css", "scss", "sass"],
       filter: function(module, regex, options, log) {
         if (options.development) {
-          return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regex, options, log)
+          return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regex, options, log);
         }
       },
       path: WebpackIsomorphicToolsPlugin.style_loader_path_extractor,
@@ -50,6 +51,7 @@ module.exports = {
     },
     fonts: {
       extensions: ["woff", "woff2", "ttf", "eot"],
+      regular_expression: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
       parser: WebpackIsomorphicToolsPlugin.url_loader_parser
     },
     json: {
