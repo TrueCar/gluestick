@@ -14,7 +14,8 @@ var dockerfile = [
                      "",
                      "ADD . /app",
                      "",
-                     "RUN npm install"
+                     "RUN npm install",
+                     ""
                  ];
 
 fs.writeFile("./new/src/config/.Dockerfile", dockerfile.join("\n"));
