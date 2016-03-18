@@ -50,6 +50,7 @@ module.exports = {
     },
     fonts: {
       extensions: ["woff", "woff2", "ttf", "eot"],
+      regular_expression: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
       parser: WebpackIsomorphicToolsPlugin.url_loader_parser
     },
     json: {
