@@ -1,5 +1,6 @@
 # GlueStick
 [![npm package][npm-badge]][npm]
+[![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
 
 GlueStick is a command line interface for quickly developing universal web
 applications using React.
