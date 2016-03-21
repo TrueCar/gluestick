@@ -16,7 +16,7 @@ script:
 
 branches:
   only:
-    - "develop"
+    - develop
 
 deploy:
   provider: npm
