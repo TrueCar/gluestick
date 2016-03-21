@@ -14,10 +14,6 @@ before_install:
 script:
 - npm run test-coverage
 
-branches:
-  only:
-    - develop
-
 deploy:
   provider: npm
   email: toddsurfs@icloud.com
