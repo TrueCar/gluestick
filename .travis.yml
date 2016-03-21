@@ -1,0 +1,18 @@
+sudo: required
+language: node_js
+node_js:
+- '5'
+services:
+- docker
+before_install:
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+script:
+- npm run test-coverage
+deploy:
+  provider: npm
+  api_key: "$NPM_PUBLISH_API_KEY"
+  on:
+    tags: true
+notifications:
+  slack:
+    secure: ovO9bfPdbpdD4BEjRFixhVz6cuCoyo2GcDf2dvHKGbCO6tj3vD4Jl0a4fDGO3cz9wMO9RABvbIWbzwJyGPXYMbBW5haSN2WRkkfqyoOfKU1ljpZBIt/HH8MdXqct0LD2wkvbUuqGj8hYOH+zxMVOKJ3dapyJDMJbCLNsvChOPcR8f9l9EGenEozAVFjfQIOWFRnk+LOkGavimWQY2WQM2HuO1KuS0Xu+yniZ+NSC8Pxj+32LUgJAoiiSHBbwlLwABCVQ9Uvu1zoZxHGeie6mscZ4vezVo+YXY3f0ByWLlntoHkLzLfwj/hLPkaiLiO0L3gpQLOZh8xSY3r8e23mtII5IeH3VLY4MEU3fwQpmw2dkv5deH2UY4ueIeQpMBdG1DoXUUl02ScmkwiSeqGgqlJNL3UUJsaPBmmd6PezC3wTrz9dgL4Gj36uPVLJ9eQo998y5vaEZuFgXp8dxA8A260nKmwrBP9Yq3TObUNORh8TXQzMam6KVL+OmAtKiJNaDJePNB8vBpDvak+niTZjKNXNzwUiTU8cuIWEKl+F4ISWJ+b/9odGr5nyNZAh7V08UDlHkbM6IF0JYD4X+bzzt/Mc0zBAjI2GLpYxRV83xvWOhg6o/ZLN0vmrlosugqji53lUAcsB7dwqTZRRr0dpAgO23QoUDTnf/pn1RgK4y6ak=
