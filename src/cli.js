@@ -114,9 +114,15 @@ const firefoxOption = {
   description: "Use Firefox with test runner"
 };
 
+const singleRunOption = {
+  command: "-S, --single",
+  description: "Run test suite only once"
+};
+
 commander
   .command("start-test", null, {noHelp: true})
   .option(firefoxOption.command, firefoxOption.description)
+  .option(singleRunOption.command, singleRunOption.description)
   .description("start test")
   .action(checkGluestickProject)
   .action((options) => startTest(options))
@@ -125,6 +131,7 @@ commander
 commander
   .command("test")
   .option(firefoxOption.command, firefoxOption.description)
+  .option(singleRunOption.command, singleRunOption.description)
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => spawnProcess("test", process.argv.slice(3)))
