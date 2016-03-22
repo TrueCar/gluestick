@@ -71,7 +71,7 @@ configEnvVariables.forEach((v) => {
 
 var compiler = webpack({
   context: process.cwd(),
-  devtool: isProduction ? undefined : "eval",
+  devtool: isProduction ? undefined : "cheap-module-eval-source-map",
   entry: {
     "main": entry
   },
