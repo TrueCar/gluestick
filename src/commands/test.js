@@ -11,6 +11,10 @@ module.exports = function (options) {
     config.browsers = ["Firefox"];
   }
 
+  if (options.single) {
+    config.singleRun = options.single;
+  }
+
   const server = new Server(config);
 
   server.start();
