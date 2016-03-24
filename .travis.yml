@@ -5,14 +5,18 @@ language: node_js
 node_js:
 - '5'
 
+branches:
+  only: develop #limit push building to develop branch to avoid double building on PRs
+
 services:
 - docker
 
 before_install:
+- apt-get upgrade docker-engine #upgrade Docker for --build-arg support
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-- npm run test-coverage
+- npm run test-coverage #run full tests and coverage
 
 deploy:
   provider: npm
@@ -20,9 +24,10 @@ deploy:
   api_key:
     secure: d6NkFa4UDdMkJpIN+xkUazJsqERu4RrODQ7/AVzal/KJAWvy0ihXIx1HWOIPCqwYwril+62WwGjqbUAnRAo1FHpip+gUt222A08mOLsEnOW+rbpKZl7A6HErXD1tYxW9tHzPfZ2daSWSo1EDL5c0N0iB3gmnFreBhBE7RDN63nMkvikCGj7UmQUAeDpRKyXuO2AXEUZacPPC68rmXX41WXuXNBSPCdBUF3AxAWRlwBlTnQ8yVntFfD2DL8emqUvdflAbhpZOUmD7003t/klVGhbrfWU49O6kGKOIXMy7Of8+bh+OQKKTXvWqMHX8BhKPMhfXPujfyAhHBNGl1e3ZiNP8zuWA1hEiGwkSK41I6yHA7Hc0ZXDN2nn/kPSp9BcDHvIpwQiooEfi46EW99RRp2Fw766AItDiI8CNu8nX1Hv4J9L+EDpSu/8ISu+fVH6CxHcCDJcRXfJYu0Rzru+GlKjDaPot3NqUer68yIVmsrm0IOBfzcFuJBYuzf3G84/bDTYAkZhZBs1nBJDJtgSxVJxFo49HcWlsWn9yfOJtE4MRno1uY/Gk5Q5HMFcrLqANRZ/xxO/O6hmQzYQEl22dQv/0SnE6eo+di1y3hwk+uzqFVOnJJnILD6tE/JF398AtGnF346vTRxIUpMObzVG7JyEk6RP/6+ZBmKDaJfUACFo=
   on:
-    tags: true
-    repo: TrueCar/gluestick
-    branch: develop
+    tags: true #only deploy tagged commits
+    repo: TrueCar/gluestick #only deploy from official repo
+    branch: develop #only deploy develop branch
+    condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]$ #limit tags to be v0.0.0 format
 
 notifications:
   slack:
