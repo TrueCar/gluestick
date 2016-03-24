@@ -2,15 +2,15 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 
+// Make sure that webpack considers new dependencies introduced in the Index
+// file
+import "../../Index.js";
+
 import { Root } from "gluestick-shared";
 import { match } from "react-router";
 import routes from "./routes";
 import store from "./.store";
 import { StyleRoot } from "radium";
-
-// Make sure that webpack considers new dependencies introduced in the Index
-// file
-import "../../Index.js";
 
 export default class Entry extends Component {
   static defaultProps = {
