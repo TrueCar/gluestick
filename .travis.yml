@@ -13,7 +13,8 @@ services:
 
 before_install:
 - sudo apt-get update
-- sudo apt-get -y -q -o Dpkg:Options::="--force-confnew" install docker-engine #upgrade Docker for --build-arg support
+#upgrade Docker for --build-arg support
+- /usr/bin/expect 'spawn sudo apt-get install -y docker-engine \n expect "*** local.ini (Y/I/N/O/D/Z) [default=N] ?" \n send "Y\r"
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
