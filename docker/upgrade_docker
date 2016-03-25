@@ -1,7 +1,6 @@
 #!/usr/bin/expect
 
-sudo apt-get update
-sudo apt-get -y install docker-engine
+spawn sudo apt-get -y install docker-engine
 
 expect "*** docker (Y/I/N/O/D/Z) [default=N] ?" 
 send "Y\r"
