@@ -17,7 +17,7 @@ before_install:
 - /usr/bin/expect -c "spawn sudo apt-get install -y docker-engine \n expect \"*** docker (Y/I/N/O/D/Z) \[default=N\] ?\" \n send \"Y\r\"" #upgrade Docker for --build-arg support
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
-after_install:
+before_script:
 - npm run postpublish
 
 script:
