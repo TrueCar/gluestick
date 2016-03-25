@@ -1,5 +1,5 @@
 # GlueStick
-[![npm package][npm-badge]][npm]
+[![npm](https://img.shields.io/npm/v/gluestick.svg)](https://www.npmjs.com/package/gluestick)
 [![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
 
 GlueStick is a command line interface for quickly developing universal web
