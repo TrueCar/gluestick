@@ -13,8 +13,10 @@ services:
 
 before_install:
 - sudo apt-get update
-- sudo rm /etc/default/docker
+- sudo cat /etc/default/docker
+- sudo apt-get -y remove docker-engine
 - sudo apt-get -y install docker-engine #upgrade Docker for --build-arg support
+- sudo service docker start
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 before_script:
