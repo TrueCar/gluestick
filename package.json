@@ -73,7 +73,7 @@
     "node-sass": "3.4.2",
     "pm2": "1.0.0",
     "pretty-error": "1.2.0",
-    "radium": "0.16.6",
+    "radium": "0.17.0",
     "react": "0.14.6",
     "react-addons-test-utils": "0.14.3",
     "react-dom": "0.14.6",
