@@ -13,8 +13,7 @@ services:
 
 before_install:
 - sudo apt-get update
-#upgrade Docker for --build-arg support
-- /usr/bin/expect 'spawn sudo apt-get install -y docker-engine \n expect "*** local.ini (Y/I/N/O/D/Z) [default=N] ?" \n send "Y\r"
+- /usr/bin/expect -c "spawn sudo apt-get install -y docker-engine \n expect \"*** docker (Y/I/N/O/D/Z) \[default=N\] ?\" \n send \"Y\r\"" #upgrade Docker for --build-arg support
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
