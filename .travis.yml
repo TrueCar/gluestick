@@ -30,9 +30,9 @@ deploy:
     branch: develop #only deploy develop branch
     condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]$ #limit tags to be v0.0.0 format
 
-notifications:
-  slack:
-    on_success: change
-    on_failure: change
-    rooms:
-      secure: Cr01Gw/zlUGA7KuPpE2YZwm2SIuWJ8F5qhqsT7UofuSgMPTbyQtIlpAuoo1/7fNYt5OnkmorlKWa3qpMFndxGD9bd9rzWBq2sta8HuToYCxMSDTGHFG1DFMybDUBCZ3rjxxSgi6j39JmYoH/aqgZJmD/NkkNuzzmB+7qGRMuS/zMI4dNSF8gfoop0Uj5/mEZqgcDJRrXFQntmK2z9rVvS7dkM9Dd2vA0EYMy6vaxnW72dy2t6e/qR/DlNoKZ0V6j0LAwNYd8cPlSUH/W+fpOfR9T5lo+Bzd+VBNoO/srkTxu6vRzzazjUnJOzertl2e/oRmBJnr7X/F4z5Qy1U80qT4eqkGythuN0wZHB6BCxg2RC7pvkyOFFSDxSDT/lqqdzlmuFCArB4Nsz7LDpu88cSpwF2lNu8f9t8lSIpelwH0kedvVIuKxx5i6z1y3nZL8bexze3JnkCQVMPsJ7R1aHeJ+eQS5MNNgaPAsNU24w1KoeeCHrXI1Q/Bnte3A0w1C6SY8OiX92IO9X9kaqd9wwTeZSmXH3iQc8TBIpM++d4wgDaximput+3pdWjNk/vGlZvntIzlexpoAtXWUVH0ArjOxIoXuDG2oJG0sZeHiJbKLllCWrhOtQrgmZsQjOozEVgl0SrECtUZ78nZD5B7jFkar/yG1aO28+jxoiDdoqgU=
+#notifications:
+#  slack:
+#    on_success: change
+#    on_failure: change
+#    rooms:
+#      secure: Cr01Gw/zlUGA7KuPpE2YZwm2SIuWJ8F5qhqsT7UofuSgMPTbyQtIlpAuoo1/7fNYt5OnkmorlKWa3qpMFndxGD9bd9rzWBq2sta8HuToYCxMSDTGHFG1DFMybDUBCZ3rjxxSgi6j39JmYoH/aqgZJmD/NkkNuzzmB+7qGRMuS/zMI4dNSF8gfoop0Uj5/mEZqgcDJRrXFQntmK2z9rVvS7dkM9Dd2vA0EYMy6vaxnW72dy2t6e/qR/DlNoKZ0V6j0LAwNYd8cPlSUH/W+fpOfR9T5lo+Bzd+VBNoO/srkTxu6vRzzazjUnJOzertl2e/oRmBJnr7X/F4z5Qy1U80qT4eqkGythuN0wZHB6BCxg2RC7pvkyOFFSDxSDT/lqqdzlmuFCArB4Nsz7LDpu88cSpwF2lNu8f9t8lSIpelwH0kedvVIuKxx5i6z1y3nZL8bexze3JnkCQVMPsJ7R1aHeJ+eQS5MNNgaPAsNU24w1KoeeCHrXI1Q/Bnte3A0w1C6SY8OiX92IO9X9kaqd9wwTeZSmXH3iQc8TBIpM++d4wgDaximput+3pdWjNk/vGlZvntIzlexpoAtXWUVH0ArjOxIoXuDG2oJG0sZeHiJbKLllCWrhOtQrgmZsQjOozEVgl0SrECtUZ78nZD5B7jFkar/yG1aO28+jxoiDdoqgU=
