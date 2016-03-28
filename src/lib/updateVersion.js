@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import logger from "./logger";
 import readFileSyncStrip from "./readFileSyncStrip";
+import { compareVersions } from "./utils";
 
 module.exports = function updateLastVersionUsed(gluestickVersion, withWarnings=true) {
 
@@ -13,7 +14,9 @@ module.exports = function updateLastVersionUsed(gluestickVersion, withWarnings=t
   if (!fileContents.length) { fileContents = "{}"; }
 
   const project = JSON.parse(fileContents);
-  if (withWarnings && gluestickVersion < project.version) {
+  const needsUpdate = compareVersions(gluestickVersion, project.version || "") === -1;
+
+  if (withWarnings && needsUpdate) {
     logger.warn("This project is configured to work with versions >= " + project.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g");
   }
 
