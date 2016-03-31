@@ -33,7 +33,7 @@ function replaceFile (path, name, data) {
  *
  */
 function getTemplateFileFromFile(filePath) {
-  return fs.readFileSync(path.join(__dirname, "..", "..", "new", filePath), "utf8");
+  return fs.readFileSync(path.join(CWD, "..", "..", "new", filePath), "utf8");
 }
 
 
@@ -42,7 +42,8 @@ function getTemplateFileFromFile(filePath) {
  * @return {Bool} has the file changed
  */
 function hasFileChanged(filePath) {
-  const currentFile = fs.readFileSync(path.join(__dirname, "..", "..", filePath));
+  console.log("---", CWD, "---");
+  const currentFile = fs.readFileSync(path.join(CWD, "..", "..", filePath));
   const newFile = path.join(CWD, filePath);
   return (sha1(currentFile) !== sha1(newFile));
 }
@@ -65,12 +66,7 @@ function testAndReplace(fileTest) {
 }
 
 
-
-
-module.exports = async function () {
-  await updatePackage();
-
-
+export function addMissingFiles () {
   // Check if new files haven't been created yet
   [
     "src/config/application.js",        //-> prior to 0.1.6
@@ -79,15 +75,23 @@ module.exports = async function () {
     "src/config/.Dockerfile",           //-> prior to 0.2.0
     ".dockerignore"                     //-> prior to 0.3.6
   ].forEach(testAndReplace(fs.existsSync));
+}
 
-
+export function restoreModifiedFiles () {
   // Check hidden files for changes, and overwrite if needed
   [
     "src/config/.entry.js",
     "src/config/.store.js",
     "src/config/.Dockerfile"   //-> last updated in 0.2.0
   ].forEach(testAndReplace(hasFileChanged));
+}
 
+
+export default async function () {
+  await updatePackage();
+
+  addMissingFiles();
+  restoreModifiedFiles();
 
   // -> prior to 0.2.2
   await updateConfig();
