@@ -80,6 +80,10 @@ export default {
       {
         type: "html",
         subdir: "html"
+      },
+      {
+        type: "cobertura",
+        subdir: "xml"
       }
     ]
   }
