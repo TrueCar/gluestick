@@ -7,10 +7,17 @@ import { render } from "react-dom";
 import "../../Index.js";
 
 import { Root } from "gluestick-shared";
-import { match } from "react-router";
+import { match, browserHistory as history } from "react-router";
 import routes from "./routes";
 import store from "./.store";
 import { StyleRoot } from "radium";
+
+// @deprecated 0.3.9
+// Returning routes directly, not through method is deprecated as of 0.3.9
+// Soon this safety check will be removed. Deprecation notice currently served
+// from server side rendering
+let getRoutes = routes;
+if (typeof routes !== "function") { getRoutes = () => routes; }
 
 export default class Entry extends Component {
   static defaultProps = {
@@ -26,15 +33,16 @@ export default class Entry extends Component {
 
     return (
       <StyleRoot radiumConfig={radiumConfig}>
-        <Root routerContext={routerContext} routes={routes} store={store} />
+        <Root routerContext={routerContext} routes={getRoutes(store)} store={store} />
       </StyleRoot>
     );
   }
 }
 
 Entry.start = function () {
-  match({routes, location: window.location.pathname}, (error, redirectLocation, renderProps) => {
-    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} {...renderProps} />, document.getElementById("main"));
+  const newStore = store();
+  match({ history, routes: getRoutes(newStore) }, (error, redirectLocation, renderProps) => {
+    render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} store={newStore} {...renderProps} />, document.getElementById("main"));
   });
 };
 

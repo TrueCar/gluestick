@@ -5,6 +5,7 @@ import { renderToString } from "react-dom/server";
 import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks } from "gluestick-shared";
 import { match, RouterContext, Route } from "react-router";
 import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
+import logger from "./logger";
 
 import serverErrorHandler from "./server-error-handler";
 import Body from "../shared/components/Body";
@@ -19,7 +20,24 @@ module.exports = async function (req, res) {
     const Index = require(path.join(process.cwd(), "Index")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
     const store = require(path.join(process.cwd(), "src/config/.store")).default();
-    const originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
+    let originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
+
+    // @TODO: Remove this in the future when people have had enough time to
+    // upgrade.  When this deprecation notice and backward compatibility check
+    // are removed, remove from new/src/config/.entry as well
+    if (typeof originalRoutes !== "function") {
+      logger.warn(`
+##########################################################################
+Deprecation Notice: src/config/routes.js is expected to export a
+function that returns the routes object, not the routes object
+itself. This gives you access to the redux store so you can use it
+in async react-router methods. For a simple example see:
+https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
+##########################################################################
+`);
+      originalRoutes = () => originalRoutes;
+    }
+
     const config = require(path.join(process.cwd(), "src/config/application")).default;
     const routes = prepareRoutesWithTransitionHooks(originalRoutes);
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
