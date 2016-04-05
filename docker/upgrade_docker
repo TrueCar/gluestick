@@ -1,8 +1,0 @@
-#!/usr/bin/expect
-
-spawn sudo apt-get -y install docker-engine
-
-expect "*** docker (Y/I/N/O/D/Z) \[default=N\] ?" 
-send "Y\r"
-
-expect eof

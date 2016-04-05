@@ -134,8 +134,11 @@ commander
   .option(singleRunOption.command, singleRunOption.description)
   .description("start tests")
   .action(checkGluestickProject)
-  .action(() => spawnProcess("test", process.argv.slice(3)))
-  .action(() => updateLastVersionUsed(currentGluestickVersion));
+  .action(() => updateLastVersionUsed(currentGluestickVersion))
+  .action(() => {
+    const proc = spawnProcess("test", commander.rawArgs.slice(3));
+    proc.on("close", code => { process.exit(code); });
+  });
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander

@@ -4,7 +4,7 @@ import fs from "fs";
 import temp from "temp";
 import rimraf from "rimraf";
 import logger from "../../src/lib/logger";
-import { isGluestickProject, quitUnlessGluestickProject } from "../../src/lib/utils";
+import { isGluestickProject, quitUnlessGluestickProject, compareVersions } from "../../src/lib/utils";
 
 describe("utils", function () {
 
@@ -79,5 +79,50 @@ describe("utils", function () {
 
   });
 
-});
+  describe("compareVersions", function () {
 
+    it("returns 1 if the major number of the first arg is greater than the major number of the second arg", () => {
+      const versionA = "1.0.0";
+      const versionB = "0.0.0";
+      expect(compareVersions(versionA, versionB)).to.equal(1);
+    });
+
+    it("returns -1 if the major number of the first arg is less than the major number of the second arg", () => {
+      const versionA = "0.0.0";
+      const versionB = "1.0.0";
+      expect(compareVersions(versionA, versionB)).to.equal(-1);
+    });
+
+    it("returns 0 if the major number of the first arg equals the major number of the second arg", () => {
+      const versionA = "1.0.0";
+      const versionB = "1.0.0";
+      expect(compareVersions(versionA, versionB)).to.equal(0);
+    });
+
+    it("returns -1 if the minor number of the first arg is numerically less than the minor number of the second arg", () => {
+      const versionA = "1.8.0";
+      const versionB = "1.10.0";
+      expect(compareVersions(versionA, versionB)).to.equal(-1);
+    });
+
+    it("returns 1 if the minor number of the first arg is numerically greater than the minor number of the second arg", () => {
+      const versionA = "1.10.0";
+      const versionB = "1.8.0";
+      expect(compareVersions(versionA, versionB)).to.equal(1);
+    });
+
+    it("returns 1 if the first arg consists of numbers but the second arg doesn't", () => {
+      const versionA = "1.0.0";
+      const versionB = "abc";
+      expect(compareVersions(versionA, versionB)).to.equal(1);
+    });
+
+    it("returns -1 if the first arg doesn't consist of numbers but the second arg does", () => {
+      const versionA = "abc";
+      const versionB = "1.0.0";
+      expect(compareVersions(versionA, versionB)).to.equal(-1);
+    });
+
+  });
+
+});

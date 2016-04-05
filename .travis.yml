@@ -6,19 +6,20 @@ node_js:
 - '5'
 
 branches:
-  only: develop #limit push building to develop branch to avoid double building on PRs
+  only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
+    - develop 
+    - /^v[\d]+\.[\d]+\.[\d]+$/
 
 services:
 - docker
 
-before_deploy:
-- sudo apt-get update
-- sudo apt-get install expect
-- ./docker/upgrade_docker #upgrade Docker for --build-arg support
-- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+before_install:
+- for var in ${!TRAVIS_@}; do echo ${var}=${!var}; done #show travis env vars
 
-before_script:
-- npm run postpublish
+before_deploy:
+- sudo apt-get update -qq
+- sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
 - npm run test-coverage #run full tests and coverage
@@ -31,8 +32,6 @@ deploy:
   on:
     tags: true #only deploy tagged commits
     repo: TrueCar/gluestick #only deploy from official repo
-    branch: develop #only deploy develop branch
-    condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]$ #limit tags to be v0.0.0 format
 
 notifications:
   slack:
