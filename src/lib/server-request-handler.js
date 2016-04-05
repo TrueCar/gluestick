@@ -39,7 +39,7 @@ https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
     }
 
     const config = require(path.join(process.cwd(), "src/config/application")).default;
-    const routes = prepareRoutesWithTransitionHooks(originalRoutes);
+    const routes = prepareRoutesWithTransitionHooks(originalRoutes(store));
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
