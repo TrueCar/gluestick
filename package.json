@@ -4,7 +4,7 @@
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "clean": "rimraf build",
     "build": "webpack ./src/index.js",
     "prepublish": "npm run clean && npm run build"
