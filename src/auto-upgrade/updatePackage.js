@@ -147,7 +147,7 @@ function promptModulesUpdate (mismatchedModules, done) {
 ${chalk.yellow(mismatchedModuleOutput)}
 Would you like to automatically update your project's dependencies to match the CLI?`
   };
-  inquirer.prompt([question], function (answers) {
+  inquirer.prompt([question]).then(function (answers) {
     if (!answers.confirm) return done();
     performModulesUpdate(mismatchedModules, done);
   });
@@ -180,6 +180,7 @@ function performModulesUpdate (mismatchedModules, done) {
 
   // wipe the existing node_modules folder so we can have a clean start
   rimraf.sync(path.join(process.cwd(), "node_modules"));
+  spawn.sync("npm", ["cache", "clean"], {stdio: "inherit"});
   const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   npmInstall.on("close", () => {

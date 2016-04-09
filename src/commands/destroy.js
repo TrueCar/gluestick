@@ -60,7 +60,7 @@ module.exports = async function (command, name) {
           name: "confirm",
           message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(name)}.\nWould you like to continue with destroying ${filename(name)}?`
         };
-        inquirer.prompt([question], function (answers) {
+        inquirer.prompt([question]).then(function (answers) {
           resolve(!!answers.confirm);
         });
       });

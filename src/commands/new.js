@@ -37,7 +37,7 @@ module.exports = function (projectName) {
       name: "confirm",
       message: "Do you wish to continue?"
     };
-    inquirer.prompt([question], function (answers) {
+    inquirer.prompt([question]).then(function (answers) {
       if (!answers.confirm) return;
       copyTo(process.cwd());
       return false;
