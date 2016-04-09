@@ -8,7 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "babel-core": "6.7.6",
     "babel-loader": "6.2.4",
     "babel-runtime": "6.6.1",
     "babel-preset-stage-0": "6.5.0",
