@@ -35,7 +35,7 @@ export default function updateBabelConfig() {
         message: `${warn("The format of .babelrc is out of date. Would you like to automatically update it?")}`
       };
 
-      inquirer.prompt([question], function (answers) {
+      inquirer.prompt([question]).then(function (answers) {
         if (!answers.confirm) {
           const latestConfig = fs.readFileSync(latestConfigPath);
           logger.info(`It is recommended that you update your .babelrc file. Here is an example file:\n${latestConfig}`);

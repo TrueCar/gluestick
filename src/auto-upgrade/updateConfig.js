@@ -32,7 +32,7 @@ export default function updateConfig () {
 ${chalk.yellow("Example:")}\n${chalk.cyan(exampleContents)}
 Would you like to try to automatically update it?`
     };
-    inquirer.prompt([question], function (answers) {
+    inquirer.prompt([question]).then(function (answers) {
       if (!answers.confirm) return resolve();
       doUpgrade(appConfig, expectedLastLine, appConfigPath);
       resolve();
