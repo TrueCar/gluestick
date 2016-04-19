@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import Helmet from "react-helmet";
 import "assets/css/normalize.css";
 
 /**
@@ -17,10 +18,17 @@ export default class Index extends Component {
       head,
       body
     } = this.props;
+
+    const helmet = Helmet.rewind();
+
     return (
       <html lang="en-us">
         <head>
-          <title>Welcome</title>
+          {helmet.base.toComponent()}
+          {helmet.title.toComponent()}
+          {helmet.meta.toComponent()}
+          {helmet.link.toComponent()}
+          {helmet.script.toComponent()}
           {head /* DO NOT REMOVE */}
         </head>
         <body>

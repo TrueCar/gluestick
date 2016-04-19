@@ -1,5 +1,6 @@
 /* @flow */
 import React, { Component } from "react";
+import Helmet from "react-helmet";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -22,7 +23,10 @@ export class NoMatchApp extends Component {
 
   render () {
     return (
-      <div><h2>404 - Not Found</h2></div>
+      <div>
+        <Helmet title="Not Found"/>
+        <h2>404 - Not Found</h2>
+      </div>
     );
   }
 }
