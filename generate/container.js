@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import Helmet from "react-helmet";
 
 export class __$NAME__ extends Component {
   /**
@@ -22,7 +23,10 @@ export class __$NAME__ extends Component {
 
   render () {
     return (
-      <div>__$NAME__</div>
+      <div>
+        <Helmet title="__$NAME__"/>
+        __$NAME__
+      </div>
     );
   }
 }
