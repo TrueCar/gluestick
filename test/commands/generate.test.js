@@ -9,12 +9,12 @@ import generate from "../../src/commands/generate";
 
 function stubProject(type) {
     // Generate files that are already expected to exist
-    const srcDir = path.join(process.cwd(), `src/${type}s`);
-    fs.closeSync(fs.openSync(".gluestick", "w"));
-    mkdirp.sync(srcDir);
-    if (type === "reducer") {
-      fs.closeSync(fs.openSync(path.join(srcDir, "index.js"), "w"));
-    }
+  const srcDir = path.join(process.cwd(), `src/${type}s`);
+  fs.closeSync(fs.openSync(".gluestick", "w"));
+  mkdirp.sync(srcDir);
+  if (type === "reducer") {
+    fs.closeSync(fs.openSync(path.join(srcDir, "index.js"), "w"));
+  }
 }
 
 function makeGeneratedFilesAssertion(dir, type, name, done) {
@@ -27,9 +27,9 @@ function makeGeneratedFilesAssertion(dir, type, name, done) {
     `test/${type}s`,
     `test/${type}s/${name}.test.js`
   ];
-  const generatedFiles = new Set(glob.sync('**', {
-      dot: true,
-      cwd: path.resolve(dir)
+  const generatedFiles = new Set(glob.sync("**", {
+    dot: true,
+    cwd: path.resolve(dir)
   }));
   expect(expectedFiles.filter(f => !generatedFiles.has(f))).to.be.empty;
   done();
@@ -37,7 +37,7 @@ function makeGeneratedFilesAssertion(dir, type, name, done) {
 
 describe("cli: gluestick generate", function () {
 
-  let originalCwd, tmpDir, sandbox;
+  let originalCwd, tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();
