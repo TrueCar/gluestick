@@ -22,20 +22,19 @@ export default function updateConfig () {
     const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"]);';
 
     const hasExportUpgrade = lastAppConfigLine === expectedLastLine;
-    const hasHeadUpgrade = appConfig.indexOf('const headContent = {') != -1;
+    const hasHeadUpgrade = appConfig.indexOf("const headContent = {") !== -1;
     if (hasExportUpgrade && hasHeadUpgrade) {
       resolve();
       return;
     }
 
     const exampleContents = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", "application.js"), "utf8");
-    let message = "The format of src/config/application.js is out of date.";
+    logger.warn("The format of src/config/application.js is out of date.");
     if (hasExportUpgrade) {
-      message += " You should manually update it to get new config values for document head changes.";
+      logger.warn("You should *manually* update it to include the new document head content as seen in the example below.");
     } else {
-      message += " You should export the correct config object based on the environment.";
+      logger.warn("You should export the correct config object based on the environment.");
     }
-    logger.warn(message);
     logger.info(`Example:\n${chalk.cyan(exampleContents)}`);
 
     if (hasExportUpgrade) {
