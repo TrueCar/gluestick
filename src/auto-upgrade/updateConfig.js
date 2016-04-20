@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import inquirer from "inquirer";
 import chalk from "chalk";
+import logger from "../lib/logger";
 import readFileSyncStrip from "../lib/readFileSyncStrip";
 
 const CWD = process.cwd();
@@ -19,30 +20,44 @@ export default function updateConfig () {
     const appConfig = readFileSyncStrip(appConfigPath);
     const lastAppConfigLine = appConfig.split("\n").pop();
     const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"]);';
-    if (lastAppConfigLine === expectedLastLine && appConfig.hasOwnProperty("head")) {
+
+    const hasExportUpgrade = lastAppConfigLine === expectedLastLine;
+    const hasHeadUpgrade = appConfig.indexOf('const headContent = {') != -1;
+    if (hasExportUpgrade && hasHeadUpgrade) {
       resolve();
       return;
     }
 
     const exampleContents = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", "application.js"), "utf8");
+    let message = "The format of src/config/application.js is out of date.";
+    if (hasExportUpgrade) {
+      message += " You should manually update it to get new config values for document head changes.";
+    } else {
+      message += " You should export the correct config object based on the environment.";
+    }
+    logger.warn(message);
+    logger.info(`Example:\n${chalk.cyan(exampleContents)}`);
+
+    if (hasExportUpgrade) {
+      return resolve();
+    }
+
     const question = {
       type: "confirm",
       name: "confirm",
-      message: `${chalk.red("The format of src/config/application.js is out of date. Please consider updating it to get important changes.")}
-${chalk.yellow("Example:")}\n${chalk.cyan(exampleContents)}
-Would you like to try to automatically update it?`
+      message: "Would you like to try to automatically update it?"
     };
     inquirer.prompt([question]).then(function (answers) {
       if (!answers.confirm) {
         return resolve();
       }
-      doUpgrade(appConfig, expectedLastLine, appConfigPath);
+      doExportUpgrade(appConfig, expectedLastLine, appConfigPath);
       resolve();
     });
   });
 }
 
-function doUpgrade (appConfig, expectedLastLine, appConfigPath) {
+function doExportUpgrade (appConfig, expectedLastLine, appConfigPath) {
   const newAppConfig = appConfig.split("\n").map((line) => {
     if (line === "export default {") {
       return "const config = {";
