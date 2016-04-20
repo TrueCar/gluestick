@@ -163,11 +163,11 @@ function notifyUpdates () {
   if (data.indexOf("Helmet.rewind()") === -1) {
     logger.info(`
 ##########################################################################
-Upgrade Notice: Newer versions of src/Index.js now include react-helmet
+Upgrade Notice: Newer versions of Index.js now include react-helmet
 for allowing dynamic changes to document header data. You will need to 
-manually update your src/Index.js file to receive this change.
+manually update your Index.js file to receive this change.
 For a simple example see:
-https://github.com/TrueCar/gluestick/blob/develop/new/src/Index.js
+https://github.com/TrueCar/gluestick/blob/develop/new/Index.js
 ##########################################################################
     `);
   }
