@@ -19,7 +19,7 @@ export default function updateConfig () {
     const appConfig = readFileSyncStrip(appConfigPath);
     const lastAppConfigLine = appConfig.split("\n").pop();
     const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"]);';
-    if (lastAppConfigLine === expectedLastLine) {
+    if (lastAppConfigLine === expectedLastLine && appConfig.hasOwnProperty("head")) {
       resolve();
       return;
     }
@@ -28,12 +28,14 @@ export default function updateConfig () {
     const question = {
       type: "confirm",
       name: "confirm",
-      message: `${chalk.red("The format of src/config/application.js is out of date. You should export the correct config object based on the environment.")}
+      message: `${chalk.red("The format of src/config/application.js is out of date. Please consider updating it to get important changes.")}
 ${chalk.yellow("Example:")}\n${chalk.cyan(exampleContents)}
 Would you like to try to automatically update it?`
     };
     inquirer.prompt([question]).then(function (answers) {
-      if (!answers.confirm) return resolve();
+      if (!answers.confirm) {
+        return resolve();
+      }
       doUpgrade(appConfig, expectedLastLine, appConfigPath);
       resolve();
     });
