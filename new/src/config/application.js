@@ -1,12 +1,23 @@
 // WARNING: The contents of this file _including process.env variables_ will be
 // exposed in the client code.
+
+const headContent = {
+  title: "My Gluestick App",
+  titleTemplate: "%s | Gluestick Application",
+  meta: [
+    {name: "description", content: "Gluestick application"}
+  ]
+};
+
 const config = {
   development: {
-    assetPath: "http://localhost:8888/assets"
+    assetPath: "http://localhost:8888/assets",
+    head: headContent
   },
   production: {
     // This should be a CDN in development
-    assetPath: process.env.ASSET_URL || "http://localhost:8888/assets"
+    assetPath: process.env.ASSET_URL || "http://localhost:8888/assets",
+    head: headContent
   }
 };
 

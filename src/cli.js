@@ -1,6 +1,8 @@
 const commander = require("commander");
 const process = require("process");
 const { spawn } = require("cross-spawn");
+const fs = require("fs-extra");
+const path = require("path");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
 const newApp = lazyMethodRequire("./commands/new");
@@ -76,6 +78,7 @@ commander
   .option("-T, --no_tests", "ignore test hook")
   .option(debugOption.command, debugOption.description)
   .action(checkGluestickProject)
+  .action(() => notifyUpdates())
   .action((options) => startAll(options.no_tests, options.debug))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
@@ -152,6 +155,22 @@ commander.parse(process.argv);
 
 function checkGluestickProject () {
   quitUnlessGluestickProject(commander.rawArgs[2]);
+}
+
+function notifyUpdates () {
+  const indexFilePath = path.join(process.cwd(), "Index.js");
+  const data = fs.readFileSync(indexFilePath);
+  if (data.indexOf("Helmet.rewind()") === -1) {
+    logger.info(`
+##########################################################################
+Upgrade Notice: Newer versions of Index.js now include react-helmet
+for allowing dynamic changes to document header data. You will need to 
+manually update your Index.js file to receive this change.
+For a simple example see:
+https://github.com/TrueCar/gluestick/blob/develop/new/Index.js
+##########################################################################
+    `);
+  }
 }
 
 function spawnProcess (type, args=[]) {

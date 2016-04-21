@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import Helmet from "react-helmet";
 
 import Home from "../components/Home";
 
@@ -24,7 +25,10 @@ export class HomeApp extends Component {
 
   render () {
     return (
-      <Home />
+      <div>
+        <Helmet title="Home"/>
+        <Home />
+      </div>
     );
   }
 }
