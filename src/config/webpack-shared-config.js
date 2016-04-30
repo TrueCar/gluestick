@@ -1,10 +1,12 @@
-var path = require("path");
-var process = require("process");
-var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+// Webpack configuration that is shared between the client and tests
+import path from "path";
+import process from "process";
+
+const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration'))
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
 .development(process.env.NODE_ENV !== "production");
 
 module.exports = {
@@ -24,15 +26,14 @@ module.exports = {
         ],
         presets: [
           "react",
-          "es2015", 
+          "es2015",
           "stage-0"
         ]
       },
       include: [
         path.join(process.cwd(), "Index.js"),
         path.join(process.cwd(), "src"),
-        path.join(process.cwd(), "test"),
-        path.join(__dirname, "../shared")
+        path.join(process.cwd(), "test")
       ]
     },
     {

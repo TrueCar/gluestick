@@ -1,3 +1,5 @@
+/*global describe it*/
+/*global expect*/
 import reducer from "reducers/__$NAME__";
 
 describe("reducers/__$NAME__", () => {

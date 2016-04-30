@@ -1,3 +1,4 @@
+/*global afterEach beforeEach describe it*/
 import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";
@@ -6,6 +7,7 @@ import path from "path";
 import temp from "temp";
 import rimraf from "rimraf";
 import mkdirp from "mkdirp";
+import logger from "../../src/lib/logger";
 import destroy from "../../src/commands/destroy";
 
 
@@ -50,8 +52,7 @@ describe("cli: gluestick destroy", function () {
     createFiles(componentPath, componentTestPath, containerPath, containerTestPath, reducerPath, reducerTestPath);
 
     sandbox = sinon.sandbox.create();
-    sandbox.spy(console, "log");
-    sandbox.spy(console, "error");
+    sandbox.spy(logger, "error");
   });
 
   afterEach(done => {
@@ -62,22 +63,22 @@ describe("cli: gluestick destroy", function () {
 
   it("should throw an error when (container|component|reducer) is not specified", () => {
     destroy("blah","");
-    expect(console.log.calledWithMatch("is not a valid destroy command.")).to.be.true;
+    expect(logger.error.calledWithMatch("is not a valid destroy command.")).to.be.true;
   });
 
   it("should throw an error when a name not specified", () => {
     destroy("component","");
-    expect(console.log.calledWithMatch("ERROR: invalid arguments. You must specify a name.")).to.be.true;
+    expect(logger.error.calledWithMatch("invalid arguments. You must specify a name.")).to.be.true;
   });
 
   it("should throw an error when a name only consists of whitespace", () => {
     destroy("component"," ");
-    expect(console.log.calledWithMatch("is not a valid name.")).to.be.true;
+    expect(logger.error.calledWithMatch("is not a valid name.")).to.be.true;
   });
 
   it("should throw an error when the specified name does not exist", () => {
     destroy("component","somethingthatdoesnotexist");
-    expect(console.log.calledWithMatch("does not exist")).to.be.true;
+    expect(logger.error.calledWithMatch("does not exist")).to.be.true;
   });
 
   it("should ask whether to continue if the name does not match (case sensitive)", done => {

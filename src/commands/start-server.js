@@ -3,7 +3,6 @@ import process from "process";
 import { spawn } from "cross-spawn";
 import pm2 from "pm2";
 import sha1 from "sha1";
-import fs from "fs";
 import logger from "../lib/logger";
 import { highlight } from "../lib/logsColorScheme";
 
@@ -22,13 +21,13 @@ const CWD = process.cwd();
  * @param {Boolean} debug whether or not to use node-inspector for debugging
  */
 module.exports = function startServer (debug=false) {
-  const scriptPath = path.join(__dirname, "../lib/", "server-side-rendering.js");
+  const scriptPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
   if (debug) {
     const debugSpawn = spawn(path.join(CWD, "node_modules", ".bin", "node-debug"), [scriptPath], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: "development-server"})});
     debugSpawn.on("error", (e) => {
-      console.log("Error: ", e);
+      logger.error(e);
     });
     return;
   }
@@ -40,7 +39,7 @@ module.exports = function startServer (debug=false) {
   logger.info("Server rendering server started with PM2");
   pm2.connect((error) => {
     if (error) {
-      console.error(error);
+      logger.error(error);
       pm2.disconnect();
       process.exit(2);
     }
@@ -56,9 +55,9 @@ module.exports = function startServer (debug=false) {
       no_autorestart: false,
       merge_logs: true,
       watch: process.env.NODE_ENV !== "production"
-    }, (error, a) => {
+    }, (error) => {
       if (error) {
-        console.error(error);
+        logger.error(error);
         pm2.disconnect();
       }
 
@@ -71,8 +70,6 @@ module.exports = function startServer (debug=false) {
      * started up because of PM2 and we terminate them.
      */
     process.on("SIGINT", () => {
-      const app_cwd = CWD;
-
       logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
       pm2.delete(name, () => {
         pm2.disconnect(() => {
@@ -81,5 +78,5 @@ module.exports = function startServer (debug=false) {
       });
     });
   });
-}
+};
 

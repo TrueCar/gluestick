@@ -10,7 +10,7 @@ RUN npm install -g gluestick@$GLUESTICK_VERSION
 RUN mkdir /app
 WORKDIR /app
 
-ADD ./new/package.json /app
+ADD ./templates/new/package.json /app
 
 RUN npm install
 

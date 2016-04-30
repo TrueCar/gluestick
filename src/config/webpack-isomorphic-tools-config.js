@@ -1,20 +1,20 @@
-import logger from "./logger";
-import { highlight } from "./logsColorScheme";
+import logger from "../lib/logger";
+import { highlight } from "../lib/logsColorScheme";
 
 const path = require("path");
 const process = require("process");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 
-// We use `get-webpack-additions` to get the data back because it will first
+// We use `getWebpackAdditions` to get the data back because it will first
 // check if the file exists before trying to include it, falling back to empty
-// arrays for defaults. Requiring get-webpack-additions will return a function
+// arrays for defaults. Requiring getWebpackAdditions will return a function
 // instead of the result so we can execute the check asynchronously vs making
 // it part of the initial build. If it were a simple require it would throw an
 // error when babel or webpack try to resolve missing dependencies. We then
 // call this method with `true` as the first and only argument because that is
 // how we tell the method we are requiring for the purpose of the isomorphic
 // tools, not the webpack config file.
-const { additionalLoaders, additionalPreLoaders } = require("./get-webpack-additions").default(true);
+const { additionalLoaders, additionalPreLoaders } = require("../lib/getWebpackAdditions").default(true);
 
 const userExtensions = [];
 [...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {

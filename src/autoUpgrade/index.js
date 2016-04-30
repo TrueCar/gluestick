@@ -50,7 +50,7 @@ module.exports = async function () {
     }
     catch (e) {
       const fileName = path.parse(filePath).base;
-      const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "new", filePath), "utf8");
+      const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "templates", "new", filePath), "utf8");
       replaceFile(fileName, newFile);
     }
   });
@@ -65,7 +65,7 @@ module.exports = async function () {
     const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
     const currentSha = sha1(currentFile);
 
-    const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", fileName), "utf8");
+    const newFile = fs.readFileSync(path.join(__dirname, "..", "..", "templates", "new", "src", "config", fileName), "utf8");
     const newSha = sha1(newFile);
 
     if (currentSha !== newSha) {

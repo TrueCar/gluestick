@@ -16,14 +16,14 @@ export default function updateBabelConfig() {
   return new Promise(resolve => {
 
     const projectConfigPath = path.join(process.cwd(), ".babelrc");
-    const latestConfigPath = path.join(__dirname, "../..", "new", ".babelrc");
+    const latestConfigPath = path.join(__dirname, "../..", "templates", "new", ".babelrc");
     const projectSha = sha1(readFileSyncStrip(projectConfigPath));
     const previousSha = sha1(readFileSyncStrip(path.join(__dirname, "previous", ".babelrc")));
     const latestSha = sha1(readFileSyncStrip(latestConfigPath));
 
     if (projectSha === latestSha) {
       resolve();
-    } 
+    }
     else if (projectSha === previousSha) {
       doUpdate(latestConfigPath, projectConfigPath);
       resolve();

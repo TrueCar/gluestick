@@ -1,7 +1,10 @@
-import __$NAME__ from "components/__$NAME__";
+/*global React*/
+/*global describe it*/
+/*global expect*/
+import { __$NAME__ } from "containers/__$NAME__";
 import { shallow } from "enzyme";
 
-describe("components/__$NAME__", () => {
+describe("containers/__$NAME__", () => {
   it("renders without an issue", () => {
     const subject = <__$NAME__ />;
     const wrapper = shallow(subject);

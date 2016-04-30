@@ -1,10 +1,9 @@
 import { spawn } from "cross-spawn";
 import path from "path";
 import process from "process";
-import fs from "fs";
 
 module.exports = function (name) {
-  const { version: gluestickVersion } = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"), "utf-8"));
+  // @TODO: check if docker is installed first (https://github.com/TrueCar/gluestick/issues/128)
   spawn("docker", ["build", "-t", name, "-f", path.join(process.cwd(), "src", "config", ".Dockerfile"), process.cwd()], {stdio: "inherit"});
 };
 

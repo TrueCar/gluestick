@@ -2,6 +2,7 @@ import fs from "fs";
 import process from "process";
 import path from "path";
 import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
+import logger from "./logger";
 
 /**
  * GlueStick uses webpack-isomorphic-tools to support server side rendering.
@@ -21,19 +22,19 @@ import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
  */
 function prepareUserAdditionsForWebpack (additions) {
   return additions.map((addition) => {
-    let test = addition.test && toString.call(addition.test) === "[object RegExp]" ?
+    const test = addition.test && toString.call(addition.test) === "[object RegExp]" ?
       addition.test : WebpackIsomorphicToolsPlugin.regular_expression(addition.extensions);
-    let webpackAddition = {
+    const webpackAddition = {
       loader: addition.loader,
       test: test
     };
 
-    ['include', 'exclude', 'query'].forEach((optionalAddition) => {
+    ["include", "exclude", "query"].forEach((optionalAddition) => {
       if (addition[optionalAddition]) {
         webpackAddition[optionalAddition] = addition[optionalAddition];
       }
     });
-    return webpackAddition
+    return webpackAddition;
   });
 }
 
@@ -55,7 +56,9 @@ export default function (isomorphic=false) {
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders)
     };
   }
-  catch (e) {}
+  catch (e) {
+    logger.warn("Error getting webpack additions:", e);
+  }
 
   return userAdditions;
 }

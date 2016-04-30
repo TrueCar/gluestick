@@ -46,7 +46,7 @@ export default function fixVersionMismatch () {
 
     // Compare the new project dependencies, mark any module that is missing in
     // the generated project's dependencies
-    for(let key in newProjectDependencies) {
+    for(const key in newProjectDependencies) {
       if (newProjectDependencies[key] !== projectDependencies[key]) {
         mismatchedModules[key] = { required: newProjectDependencies[key], project: projectDependencies[key] || "missing", type: "dependencies" };
       }
@@ -54,7 +54,7 @@ export default function fixVersionMismatch () {
 
     // Compare the new project development dependencies, mark any module that
     // is missing in the generated project's development dependencies
-    for(let key in newProjectDevDependencies) {
+    for(const key in newProjectDevDependencies) {
       if (newProjectDevDependencies[key] !== projectDevDependencies[key]) {
         mismatchedModules[key] = { required: newProjectDevDependencies[key], project: projectDevDependencies[key] || "missing", type: "devDependencies" };
       }
@@ -62,7 +62,7 @@ export default function fixVersionMismatch () {
 
     // Compare the CLI dependencies, only mark a module as mismatched if it is
     // included in both and the version do not match
-    for(let key in cliDependencies) {
+    for(const key in cliDependencies) {
       if (projectDependencies[key] && cliDependencies[key] !== projectDependencies[key]) {
         mismatchedModules[key] = { required: cliDependencies[key], project: projectDependencies[key], type: "dependencies" };
       }
@@ -111,7 +111,7 @@ function loadCLIPackage () {
  * @return {Object}
  */
 function loadNewProjectPackage () {
-  return loadPackage(path.join(__dirname, "../../new/package.json"));
+  return loadPackage(path.join(__dirname, "../../templates/new/package.json"));
 }
 
 /**
@@ -148,7 +148,7 @@ ${chalk.yellow(mismatchedModuleOutput)}
 Would you like to automatically update your project's dependencies to match the CLI?`
   };
   inquirer.prompt([question]).then(function (answers) {
-    if (!answers.confirm) return done();
+    if (!answers.confirm) { return done(); }
     performModulesUpdate(mismatchedModules, done);
   });
 }
@@ -164,9 +164,9 @@ Would you like to automatically update your project's dependencies to match the 
  * update completes
  */
 function performModulesUpdate (mismatchedModules, done) {
-  let projectPackageData = loadProjectPackage();
+  const projectPackageData = loadProjectPackage();
   let module;
-  for (let moduleName in mismatchedModules) {
+  for (const moduleName in mismatchedModules) {
     module = mismatchedModules[moduleName];
     projectPackageData[module.type][moduleName] = module.required;
   }
@@ -184,7 +184,7 @@ function performModulesUpdate (mismatchedModules, done) {
   const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   npmInstall.on("close", () => {
-    logger.success(`node_modules have been updated.`);
+    logger.success("node_modules have been updated.");
     done();
   });
 }

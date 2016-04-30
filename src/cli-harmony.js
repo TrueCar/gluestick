@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-require("./run-through-babel");
-
+require("./lib/runThroughBabel");
 require("./cli");
 

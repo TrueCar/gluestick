@@ -1,11 +1,11 @@
-var fs = require("fs");
-var path = require("path");
-var mkdirp = require("mkdirp");
+const fs = require("fs");
+const path = require("path");
+const mkdirp = require("mkdirp");
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
 
-var availableCommands = {
+const availableCommands = {
   "container": "containers",
   "component": "components",
   "reducer": "reducers"
@@ -16,7 +16,7 @@ function replaceName (input, name) {
 }
 
 module.exports = function (command, name, cb) {
-  var CWD = process.cwd();
+  const CWD = process.cwd();
 
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
@@ -26,7 +26,7 @@ module.exports = function (command, name, cb) {
 
   // Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
-    return cb(`invalid arguments. You must specify a name.`);
+    return cb("invalid arguments. You must specify a name.");
   }
 
   if (/\W/.test(name)) {
@@ -42,9 +42,9 @@ module.exports = function (command, name, cb) {
   }
 
   // Get the output string and destination filename
-  var template;
+  let template;
   try {
-    template = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.js`), {encoding: "utf8"})
+    template = fs.readFileSync(path.resolve(__dirname, `../../templates/generate/${command}.js`), {encoding: "utf8"});
   }
   catch(e) {
     return cb("Couldn't read generator file");
@@ -53,8 +53,8 @@ module.exports = function (command, name, cb) {
   template = replaceName(template, name);
 
   // Check if the file already exists before we write to it
-  var destinationPath = path.join(CWD, "/src/", availableCommands[command] + "/" + name + ".js");
-  var fileExists = true;
+  const destinationPath = path.join(CWD, "/src/", availableCommands[command] + "/" + name + ".js");
+  let fileExists = true;
   try {
     fs.statSync(destinationPath);
   }
@@ -72,31 +72,31 @@ module.exports = function (command, name, cb) {
 
   // If we just generated a reducer, add it to the reducers index
   if (command === "reducer") {
-    var reducerIndexPath = path.resolve(CWD, "src/reducers/index.js");
+    const reducerIndexPath = path.resolve(CWD, "src/reducers/index.js");
     try {
       // Get the file contents, but strip off any trailing whitespace. This sets us up
       // to place the new export on the last line, followed by a blank whitespace line at the end
-      var indexFileContents = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).replace(/\s*$/, "");
-      var newLine = `export { default as ${name} } from "./${name}";`;
+      const indexFileContents = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).replace(/\s*$/, "");
+      const newLine = `export { default as ${name} } from "./${name}";`;
 
       // Write back to the index file with the previous contents in addition to our new line and a blank line for git
       fs.writeFileSync(reducerIndexPath, `${indexFileContents}\n${newLine}\n\n`);
       logger.success(`${highlight(name)} added to reducer index ${filename(reducerIndexPath)}`);
     }
     catch (e) {
-      return cb(`Unable to modify reducers index. Reducer not added to index`);
+      return cb("Unable to modify reducers index. Reducer not added to index");
     }
   }
 
   // Write test file
-  var testFolder = path.join(CWD, "/test/", availableCommands[command]);
+  const testFolder = path.join(CWD, "/test/", availableCommands[command]);
 
   // Older generated projects don't have test/reducers or test/containers
   mkdirp.sync(testFolder);
 
-  var testPath = path.join(testFolder, `/${name}.test.js`);
-  var testTemplate;
-  var testFileExists = true;
+  const testPath = path.join(testFolder, `/${name}.test.js`);
+  let testTemplate;
+  let testFileExists = true;
 
   try {
     fs.statSync(testPath);
@@ -110,17 +110,17 @@ module.exports = function (command, name, cb) {
   }
 
   try {
-    testTemplate = fs.readFileSync(path.resolve(__dirname, `../../generate/${command}.test.js`), {encoding: "utf8"})
+    testTemplate = fs.readFileSync(path.resolve(__dirname, `../../templates/generate/${command}.test.js`), {encoding: "utf8"});
   }
   catch (e) {
-    return cb(`Couldn't read generator file`);
+    return cb("Couldn't read generator file");
   }
 
   try {
     fs.writeFileSync(testPath, replaceName(testTemplate, name));
   }
   catch (e) {
-    return cb(`Couldn't create test file`);
+    return cb("Couldn't create test file");
   }
 
   logger.success(`New file created: ${filename(testPath)}`);

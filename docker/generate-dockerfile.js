@@ -18,4 +18,4 @@ var dockerfile = [
                      ""
                  ];
 
-fs.writeFile("./new/src/config/.Dockerfile", dockerfile.join("\n"));
+fs.writeFile("./templates/new/src/config/.Dockerfile", dockerfile.join("\n"));

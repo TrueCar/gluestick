@@ -1,5 +1,6 @@
-var babel = require("babel-core");
-var traverse = require("babel-traverse").default;
+const babel = require("babel-core");
+const traverse = require("babel-traverse").default;
+const logger = require("./logger");
 
 /**
  * Read the contents of a file, convert it to an abstract syntax tree and
@@ -9,18 +10,21 @@ var traverse = require("babel-traverse").default;
  * @param {String} pathToFile absolute path to the file to analyze
  */
 module.exports = function detectEnvironmentVariables (pathToFile) {
-  var ast = babel.transformFileSync(pathToFile).ast;
-  var environmentVariables = [];
+  const ast = babel.transformFileSync(pathToFile).ast;
+  const environmentVariables = [];
   traverse(ast.program, {
     enter: function (path) {
       if (path.type === "MemberExpression") {
         const node = path.node;
         try {
-          if (node.object.object.name === "process" && node.object.property.name === "env") {
+          const target = node.object;
+          if (!!target.object && target.object.name === "process" && target.property.name === "env") {
             environmentVariables.push(node.property.name);
           }
         }
-        catch (e) {}
+        catch (e) {
+          logger.warn("Error detecting environment variables:", e);
+        }
       }
     }
   });

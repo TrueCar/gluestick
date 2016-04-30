@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import PrettyError from "pretty-error";
 import * as secureHandlebars from "secure-handlebars";
-import logger from "./logger";
+import logger from "../logger";
 
 const pretty = new PrettyError();
 
@@ -30,7 +30,7 @@ secureHandlebars.registerHelper("notForProduction", function (options) {
 export default function serverErrorHandler(req, res, error) {
   res.status(500);
   const custom505FilePath = path.join(process.cwd(), "505.hbs");
-  console.error('SERVER ERROR:', pretty.render(error));
+  logger.error(pretty.render(error));
 
   // Check if we have a custom 505 error page
   fs.stat(custom505FilePath, (statError, stats) => {
@@ -43,7 +43,7 @@ export default function serverErrorHandler(req, res, error) {
 
     // If we do have a custom 505 page, render it
     fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
-      if (readFileError) return res.send({error: readFileError});
+      if (readFileError) { return res.send({error: readFileError}); }
 
       // We use secure-handlebars to deliver the 505 page. This lets you
       // use a handlebars template so you can display the stack trace or

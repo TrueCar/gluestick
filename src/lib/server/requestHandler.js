@@ -1,18 +1,18 @@
-import chalk from "chalk";
+/*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks } from "gluestick-shared";
-import { match, RouterContext, Route } from "react-router";
-import showHelpText, { MISSING_404_TEXT } from "../lib/help-text";
-import logger from "./logger";
+import { match, RouterContext } from "react-router";
+import errorHandler from "./errorHandler";
+import Body from "./Body";
+import getHead from "./getHead";
 
-import serverErrorHandler from "./server-error-handler";
-import Body from "../shared/components/Body";
-import getHead from "../shared/components/getHead";
+import logger from "../logger";
+import showHelpText, { MISSING_404_TEXT } from "../../lib/helpText";
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.log(chalk.red(reason), promise);
+  logger.error(reason, promise);
 });
 
 module.exports = async function (req, res) {
@@ -24,7 +24,7 @@ module.exports = async function (req, res) {
 
     // @TODO: Remove this in the future when people have had enough time to
     // upgrade.  When this deprecation notice and backward compatibility check
-    // are removed, remove from new/src/config/.entry as well
+    // are removed, remove from templates/new/src/config/.entry as well
     if (typeof originalRoutes !== "function") {
       logger.warn(`
 ##########################################################################
@@ -32,7 +32,7 @@ Deprecation Notice: src/config/routes.js is expected to export a
 function that returns the routes object, not the routes object
 itself. This gives you access to the redux store so you can use it
 in async react-router methods. For a simple example see:
-https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
+https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/routes.js
 ##########################################################################
 `);
       originalRoutes = () => originalRoutes;
@@ -43,7 +43,7 @@ https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
-          serverErrorHandler(req, res, error);
+          errorHandler(req, res, error);
         }
         else if (redirectLocation) {
           res.redirect(302, redirectLocation.pathname + redirectLocation.search);
@@ -65,7 +65,7 @@ https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
-          const head = getHead(config, webpackIsomorphicTools.assets());
+          const head = getHead(config, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
             res.status(404);
@@ -90,12 +90,12 @@ https://github.com/TrueCar/gluestick/blob/develop/new/src/config/routes.js
         }
       }
       catch (error) {
-        serverErrorHandler(req, res, error);
+        errorHandler(req, res, error);
       }
     });
   }
   catch (error) {
-    serverErrorHandler(req, res, error);
+    errorHandler(req, res, error);
   }
 };
 

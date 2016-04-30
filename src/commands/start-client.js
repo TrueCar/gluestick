@@ -1,37 +1,37 @@
-var path = require("path");
-var webpack = require("webpack");
-var process = require("process");
-var express = require("express");
-var proxy = require("express-http-proxy");
-var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var shared = require("../lib/shared");
-var detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
-var getWebpackAdditions = require("../lib/get-webpack-additions").default;
-var { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
-var assetPath = require(path.join(process.cwd(), "src", "config", "application")).default.assetPath;
+const path = require("path");
+const webpack = require("webpack");
+const process = require("process");
+const express = require("express");
+const proxy = require("express-http-proxy");
+const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const webpackSharedConfig = require("../config/webpack-shared-config");
+const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
+const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
+const { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 
+let assetPath = require(path.join(process.cwd(), "src", "config", "application")).default.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }
 
-var PORT = 8888;
-var OUTPUT_PATH = path.join(process.cwd(), "build");
-var OUTPUT_FILE = "main-bundle.js";
-var PUBLIC_PATH = assetPath;
+const PORT = 8888;
+const OUTPUT_PATH = path.join(process.cwd(), "build");
+const OUTPUT_FILE = "main-bundle.js";
+const PUBLIC_PATH = assetPath;
 
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../lib/webpack-isomorphic-tools-configuration'))
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
   .development(process.env.NODE_ENV !== "production");
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
 const isProduction = process.env.NODE_ENV === "production";
 
-var entry = [
+const entry = [
   path.join(__dirname, "../entrypoints/client.js")
 ];
 
-var environmentPlugins = [];
+let environmentPlugins = [];
 
 if (isProduction) {
   environmentPlugins = environmentPlugins.concat([
@@ -58,29 +58,29 @@ if (!isProduction) {
 
 // The config/application.js file is consumed on both the server side and the
 // client side. However, we want developers to have access to environment
-// variables in there so they can override defaults with an environment
-// variable. For that reason we are going to perform static analysis on that
-// file to determine all of the environment variables that are used in that
+// constiables in there so they can override defaults with an environment
+// constiable. For that reason we are going to perform static analysis on that
+// file to determine all of the environment constiables that are used in that
 // file and make sure that webpack makes those available in the application.
-var configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
+const configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
 configEnvVariables.push("NODE_ENV");
-var exposedEnvironmentVariables = {};
+const exposedEnvironmentVariables = {};
 configEnvVariables.forEach((v) => {
   exposedEnvironmentVariables[v] = JSON.stringify(process.env[v]);
 });
 
-var compiler = webpack({
+const compiler = webpack({
   context: process.cwd(),
-  devtool: isProduction ? undefined : "cheap-module-eval-source-map",
+  devtool: isProduction ? null : "cheap-module-eval-source-map",
   entry: {
     "main": entry
   },
   module: {
     loaders: [
-    ].concat(shared.loaders, additionalLoaders),
+    ].concat(webpackSharedConfig.loaders, additionalLoaders),
     preLoaders: [
     // only place client specific preLoaders here
-  ].concat(shared.preLoaders, additionalPreLoaders),
+    ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
   },
   output: {
     path: OUTPUT_PATH,
@@ -97,28 +97,28 @@ var compiler = webpack({
       "process.env": exposedEnvironmentVariables
     }),
     new webpack.IgnorePlugin(/\.server(\.js)?$/)
-  ].concat(environmentPlugins, shared.plugins),
+  ].concat(environmentPlugins, webpackSharedConfig.plugins),
   resolve: {
-    ...shared.resolve
+    ...webpackSharedConfig.resolve
   }
 });
 
 module.exports = function (buildOnly) {
   if (!buildOnly && !isProduction) {
-    var app = express();
+    const app = express();
     app.use(require("webpack-dev-middleware")(compiler, {
       noInfo: true,
       publicPath: PUBLIC_PATH
     }));
     app.use(require("webpack-hot-middleware")(compiler));
     app.use(proxy("localhost:8880", {
-      forwardPath: function (req, res) {
+      forwardPath: function (req) {
         return require("url").parse(req.url).path;
       },
       preserveHostHdr: true
     }));
     app.use(function(err, req, res, next) {
-      if (err && err.code == "ECONNREFUSED") {
+      if (err && err.code === "ECONNREFUSED") {
         // render a friendly loading page during server restarts
         res.status(200).sendFile("poll.html", {root: path.join(__dirname, "../lib")});
       }
@@ -128,7 +128,7 @@ module.exports = function (buildOnly) {
     });
     app.listen(PORT, "localhost", function (error) {
       if (error) {
-        console.log(error);
+        logger.error(error);
         return;
       }
 
@@ -146,7 +146,7 @@ module.exports = function (buildOnly) {
         return;
       }
 
-      logger.success(`Assets have been prepared for production.`);
+      logger.success("Assets have been prepared for production.");
       logger.success(`Assets can be served from the ${logsColorScheme.filename("/assets")} route but it is recommended that you serve the generated ${logsColorScheme.filename("build")} folder from a Content Delivery Network`);
     });
   }
