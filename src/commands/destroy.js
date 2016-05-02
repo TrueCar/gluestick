@@ -1,11 +1,11 @@
-var fs = require("fs");
-var path = require("path");
-var inquirer = require("inquirer");
+const fs = require("fs");
+const path = require("path");
+const inquirer = require("inquirer");
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
 
-var availableCommands = {
+const availableCommands = {
   "container": "containers",
   "component": "components",
   "reducer": "reducers"
@@ -22,7 +22,7 @@ module.exports = async function (command, name) {
 
   // Validate the name by stripping out unwanted characters
   if (!name || name.length === 0) {
-    logger.error(`invalid arguments. You must specify a name.`);
+    logger.error("invalid arguments. You must specify a name.");
     return;
   }
 
@@ -32,7 +32,7 @@ module.exports = async function (command, name) {
   }
 
   // Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
-  var originalName = name; // store original name for later
+  const originalName = name; // store original name for later
   if (["container", "component"].indexOf(command) !== -1) {
     name = name.substr(0, 1).toUpperCase() + name.substr(1);
   }
@@ -41,8 +41,8 @@ module.exports = async function (command, name) {
   }
 
   // Remove the file
-  var destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
-  var fileExists = true;
+  const destinationPath = path.join(process.cwd(), "/src/", availableCommands[command] + "/" + name + ".js");
+  let fileExists = true;
   try {
     fs.statSync(destinationPath);
   }
@@ -54,7 +54,7 @@ module.exports = async function (command, name) {
     // If they typed a name that would normally be mutated, check with the user first before deleting the files
     if (originalName !== name) {
       // @NOTE: We are using await so that we can wait for the result of the promise before moving on
-      const continueDestroying = await new Promise((resolve, reject) => {
+      const continueDestroying = await new Promise((resolve) => {
         const question = {
           type: "confirm",
           name: "confirm",
@@ -66,7 +66,7 @@ module.exports = async function (command, name) {
       });
 
       // Since we used await, this code will not be executed until the promise above resolves
-      if (!continueDestroying) process.exit();
+      if (!continueDestroying) { process.exit(); }
     }
 
     fs.unlinkSync(destinationPath);
@@ -79,7 +79,7 @@ module.exports = async function (command, name) {
 
   // If we destroyed a reducer, remove it from the reducers index
   if (command === "reducer") {
-    var reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
+    const reducerIndexPath = path.resolve(process.cwd(), "src/reducers/index.js");
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, {encoding: "utf8"}).split("\n");
       const reducerLine = `export { default as ${name} } from "./${name}"`;
@@ -92,13 +92,13 @@ module.exports = async function (command, name) {
       logger.success(`${highlight(name)} removed from reducer index ${filename(reducerIndexPath)}`);
     }
     catch (e) {
-      logger.error(`Unable to modify reducers index. Reducer not removed from index`);
+      logger.error("Unable to modify reducers index. Reducer not removed from index");
     }
   }
 
   // Remove the test file
-  var testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
-  var testFileExists = true;
+  const testPath = path.join(process.cwd(), "/test/", availableCommands[command], `/${name}.test.js`);
+  let testFileExists = true;
   try {
     fs.statSync(testPath);
   }

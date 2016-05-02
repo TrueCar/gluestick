@@ -1,3 +1,4 @@
+/*global afterEach beforeEach describe it*/
 import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";
@@ -6,11 +7,11 @@ import rimraf from "rimraf";
 import glob from "glob";
 import path from "path";
 import newApp from "../../src/commands/new";
-import npmDependencies from "../../src/lib/npm-dependencies";
+import npmDependencies from "../../src/lib/npmDependencies";
 import logger from "../../src/lib/logger";
 
 const newFilesTemplate = glob.sync("**", {
-  cwd: path.resolve("./new"),
+  cwd: path.resolve("./templates/new"),
   dot: true
 });
 
@@ -35,19 +36,19 @@ describe("cli: gluestick new", function () {
     fakeNpm.restore();
   });
 
-  it("should report an error if the project name has symbols", () => { 
-    newApp("foo#$"); 
+  it("should report an error if the project name has symbols", () => {
+    newApp("foo#$");
     expect(logger.warn.calledWithMatch("Invalid name")).to.be.true;
   });
 
   it("should prompt the user if a .gluestick file already exists", () => {
     fs.closeSync(fs.openSync(".gluestick", "w"));
-    newApp("gs-new-test"); 
+    newApp("gs-new-test");
     expect(logger.info.calledWithMatch("You are about to initialize a new gluestick project")).to.be.true;
   });
 
   it("should copy the contents of `new` upon install", () => {
-    newApp("gs-new-test"); 
+    newApp("gs-new-test");
 
     // account for the fact that the gitignore file that gets renamed
     const generatedFiles = new Set(glob.sync("**", { dot: true }));
@@ -59,10 +60,10 @@ describe("cli: gluestick new", function () {
   });
 
   it("should generate a test for all of the initial components and containers", () => {
-    newApp("gs-new-test"); 
+    newApp("gs-new-test");
 
     const generatedFiles = new Set(glob.sync("**", { dot: true }));
-    
+
     // create index from array so we can quickly lookup files by name
     const index = {};
     generatedFiles.forEach((file) => {
@@ -74,7 +75,7 @@ describe("cli: gluestick new", function () {
     // container but we do not add a test.
     generatedFiles.forEach((file) => {
       if (/^src\/(components|containers).*\.js$/.test(file)) {
-        let testFilename = file.replace(/^src\/(.*)\.js$/, "test/$1\.test\.js");
+        const testFilename = file.replace(/^src\/(.*)\.js$/, "test/$1\.test\.js");
         expect(index[testFilename]).to.be.true;
       }
     });

@@ -1,7 +1,7 @@
-var karma = require("karma");
-var Server = karma.Server;
-var runner = karma.runner;
-var karmaConfig = require("../lib/karmaConfig").default;
+const karma = require("karma");
+const Server = karma.Server;
+const runner = karma.runner;
+const karmaConfig = require("../config/karma-config").default;
 
 const config = karmaConfig;
 

@@ -1,3 +1,4 @@
+/*global afterEach beforeEach describe it*/
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -112,7 +113,7 @@ describe("cli: gluestick generate", function () {
   it("should generate a container that sets the document title", done => {
     const type = "container";
     stubProject(type);
-    generate(type, "mycontainer", (err) => {
+    generate(type, "mycontainer", () => {
       const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "utf8");
       expect(contents).to.contain("<Helmet title=\"Mycontainer\"/>");
       done();

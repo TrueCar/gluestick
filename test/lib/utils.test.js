@@ -1,3 +1,4 @@
+/*global afterEach beforeEach describe it*/
 import { expect } from "chai";
 import sinon from "sinon";
 import fs from "fs";

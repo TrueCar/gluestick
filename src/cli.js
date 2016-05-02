@@ -22,7 +22,7 @@ const { highlight } = logsColorScheme;
 const utils = require("./lib/utils");
 const { quitUnlessGluestickProject } = utils;
 
-const autoUpgrade = require("./auto-upgrade");
+const autoUpgrade = require("./autoUpgrade");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -167,7 +167,7 @@ Upgrade Notice: Newer versions of Index.js now include react-helmet
 for allowing dynamic changes to document header data. You will need to 
 manually update your Index.js file to receive this change.
 For a simple example see:
-https://github.com/TrueCar/gluestick/blob/develop/new/Index.js
+https://github.com/TrueCar/gluestick/blob/develop/templates/new/Index.js
 ##########################################################################
     `);
   }
@@ -186,8 +186,10 @@ function spawnProcess (type, args=[]) {
     case "test":
       childProcess = spawn("gluestick" + postFix, ["start-test", ...args], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: isProduction ? "production": "development-test"})});
       break;
+    default:
+      break;
   }
-  childProcess.on("error", function (data) { logger.error(JSON.stringify(arguments)); });
+  childProcess.on("error", function () { logger.error(JSON.stringify(arguments)); });
   return childProcess;
 }
 
@@ -200,12 +202,12 @@ async function startAll(withoutTests=false, debug=false) {
     process.exit();
   }
 
-  const client = spawnProcess("client");
-  const server = spawnProcess("server", (debug ? ["--debug"] : []));
+  spawnProcess("client");
+  spawnProcess("server", (debug ? ["--debug"] : []));
 
   // Start tests unless they asked us not to or we are in production mode
   if (!isProduction && !withoutTests) {
-    const testProcess = spawnProcess("test");
+    spawnProcess("test");
   }
 }
 

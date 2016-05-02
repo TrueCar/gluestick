@@ -19,7 +19,7 @@ export default function updateConfig () {
     const appConfigPath = path.join(CWD, "src", "config", "application.js");
     const appConfig = readFileSyncStrip(appConfigPath);
     const lastAppConfigLine = appConfig.split("\n").pop();
-    const expectedLastLine = 'export default (config[process.env.NODE_ENV] || config["development"]);';
+    const expectedLastLine = "export default (config[process.env.NODE_ENV] || config[\"development\"]);";
 
     const hasExportUpgrade = lastAppConfigLine === expectedLastLine;
     const hasHeadUpgrade = appConfig.indexOf("const headContent = {") !== -1;
@@ -28,7 +28,7 @@ export default function updateConfig () {
       return;
     }
 
-    const exampleContents = fs.readFileSync(path.join(__dirname, "..", "..", "new", "src", "config", "application.js"), "utf8");
+    const exampleContents = fs.readFileSync(path.join(__dirname, "..", "..", "templates", "new", "src", "config", "application.js"), "utf8");
     logger.warn("The format of src/config/application.js is out of date.");
     if (hasExportUpgrade) {
       logger.warn("You should *manually* update it to include the new document head content as seen in the example below.");

@@ -2,7 +2,7 @@ const process = require("process");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const path = require("path");
-const npmDependencies = require("../lib/npm-dependencies");
+const npmDependencies = require("../lib/npmDependencies");
 const utils = require("../lib/utils");
 const { isGluestickProject } = utils;
 const logger = require("../lib/logger");
@@ -10,7 +10,7 @@ const logsColorScheme = require("../lib/logsColorScheme");
 const { highlight, filename } = logsColorScheme;
 
 function copyTo (destination) {
-  fs.copySync(path.join(__dirname, "../../new"), destination);
+  fs.copySync(path.join(__dirname, "../../templates/new"), destination);
   process.chdir(destination);
   npmDependencies.install();
 
@@ -38,7 +38,7 @@ module.exports = function (projectName) {
       message: "Do you wish to continue?"
     };
     inquirer.prompt([question]).then(function (answers) {
-      if (!answers.confirm) return;
+      if (!answers.confirm) { return; }
       copyTo(process.cwd());
       return false;
     });

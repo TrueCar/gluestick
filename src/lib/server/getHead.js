@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+/*eslint-disable react/no-danger*/
+import React from "react";
 import serialize from "serialize-javascript";
 import path from "path";
 import process from "process";
 
 // Make sure path ends in forward slash
-var assetPath = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default.assetPath;
+let assetPath = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default.assetPath;
 if (assetPath.substr(-1) !== "/") {
   assetPath = assetPath + "/";
 }
@@ -12,7 +13,7 @@ if (assetPath.substr(-1) !== "/") {
 const isProduction = process.env.NODE_ENV === "production";
 
 export default (config, assets) => {
-  let tags = [];
+  const tags = [];
   let key = 0;
 
   if (isProduction) {
@@ -21,7 +22,7 @@ export default (config, assets) => {
   else {
     // Resolve style flicker on page load in dev mode
     Object.keys(assets.assets).forEach(assetPath => {
-      if (!/\.(css|scss|sass|less)$/.test(assetPath)) return;
+      if (!/\.(css|scss|sass|less)$/.test(assetPath)) { return; }
 
       // webpack isomorphic tools converts `node_modules` to `~` in these
       // paths. This means any css files imported directly out of a node_module

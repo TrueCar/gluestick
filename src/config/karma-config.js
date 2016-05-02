@@ -1,18 +1,18 @@
 const path = require("path");
 const process = require("process");
-const shared = require("./shared");
 const webpack = require("webpack");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-const getWebpackAdditions = require("../lib/get-webpack-additions").default;
+const webpackSharedConfig = require("./webpack-shared-config");
+const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
 
 const PORT = 9876;
 const CWD = process.cwd();
 
-const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../lib/webpack-isomorphic-tools-configuration")).development(true);
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("./webpack-isomorphic-tools-config")).development(true);
 
 const preprocessors = {};
-const helperPath = path.resolve(__dirname, "./test-helper.js");
+const helperPath = path.resolve(__dirname, "../lib/testHelper.js");
 preprocessors[helperPath] = ["webpack", "sourcemap"];
 
 export default {
@@ -33,7 +33,7 @@ export default {
           test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
           loader: "file-loader"
         },
-      ].concat(shared.loaders).concat(
+      ].concat(webpackSharedConfig.loaders).concat(
         // babel-istanbul must be defined after the babel loader
         {
           test: /\.js$/,
@@ -44,7 +44,7 @@ export default {
       ).concat(additionalLoaders),
       preLoaders: [
         // only place test specific preLoaders here
-      ].concat(shared.preLoaders, additionalPreLoaders),
+      ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
     },
     node: {
       fs: "empty"
@@ -54,11 +54,11 @@ export default {
         "TEST_PATH": JSON.stringify(path.join(CWD, "test")),
         "SRC_PATH": JSON.stringify(path.join(CWD, "src"))
       })
-    ].concat(shared.plugins),
+    ].concat(webpackSharedConfig.plugins),
     resolve: {
-      ...shared.resolve,
+      ...webpackSharedConfig.resolve,
       alias: {
-        ...shared.resolve.alias,
+        ...webpackSharedConfig.resolve.alias,
         colors: path.resolve(CWD, "src/config/colors")
       },
       root: [

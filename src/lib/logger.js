@@ -1,19 +1,20 @@
-var logsColorScheme = require("./logsColorScheme");
+/*eslint-disable no-console*/
+const logsColorScheme = require("./logsColorScheme");
 
-function success(text){
-  console.log(logsColorScheme.success(text));
+function success(...args){
+  console.log(...args.map(arg => logsColorScheme.success(arg)));
 }
 
-function info(text){
-  console.log(logsColorScheme.info(text));
+function info(...args){
+  console.log(...args.map(arg => logsColorScheme.info(arg)));
 }
 
-function warn(text){
-  console.log(logsColorScheme.warn(text));
+function warn(...args) {
+  console.log(...args.map(arg => logsColorScheme.warn(arg)));
 }
 
-function error(text){
-  warn("ERROR: " + text);
+function error(...args){
+  warn("ERROR:", ...args);
 }
 
 module.exports = {

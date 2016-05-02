@@ -1,4 +1,4 @@
-var chalk = require("chalk");
+import chalk from "chalk";
 
 const success   = chalk.green;
 const info      = chalk.yellow;
