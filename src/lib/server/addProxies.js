@@ -20,7 +20,7 @@ import logger from "../../lib/logger";
  * @param {ExpressApp} app the express app that proxies will be applied to
  * @param {Array<ProxyConfig>} proxyConfigs array of proxy objects that will be applied
  * @param {ExpressHttpProxy} [proxy] optional proxy object (mostly for testing)
- * 
+ *
  */
 export default function addProxies (app, proxyConfigs=[], proxy=expressHttpProxy) {
   proxyConfigs.forEach((proxyConfig) => {

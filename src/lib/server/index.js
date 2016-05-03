@@ -3,6 +3,7 @@ import logger from "../logger";
 import { filename } from "../logsColorScheme";
 import requestHandler from "./requestHandler";
 import addProxies from "./addProxies";
+import path from "path";
 
 // Imported using `require` so that we can use `process.cwd()`
 const config = require(path.join(process.cwd(), "src", "config", "application")).default;
