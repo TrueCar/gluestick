@@ -1,6 +1,6 @@
 /* global TEST_PATH */
 /* global SRC_PATH */
-require('./testHelperShared');
+require("./testHelperShared");
 
 const context = require.context(TEST_PATH, true, /\.test\.js$/);
 context.keys().forEach(context);
