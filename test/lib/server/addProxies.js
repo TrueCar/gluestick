@@ -1,9 +1,7 @@
+/*global beforeEach describe it*/
 import { expect } from "chai";
 import sinon from "sinon";
-import { parse } from "url";
-import proxy from "express-http-proxy";
 import addProxies from "../../../src/lib/server/addProxies";
-import express from "express";
 
 describe("lib/server/addProxies", function () {
   let mockApp;
@@ -75,7 +73,7 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.equal(forwardPath2);
+    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.equal(forwardPath);
   });
 });
 
