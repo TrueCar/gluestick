@@ -101,6 +101,7 @@
     "babel-eslint": "6.0.4",
     "eslint": "2.9.0",
     "eslint-plugin-react": "5.0.1",
+    "jsdom": "8.5.0",
     "temp": "0.8.3"
   }
 }

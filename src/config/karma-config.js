@@ -12,7 +12,7 @@ const CWD = process.cwd();
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("./webpack-isomorphic-tools-config")).development(true);
 
 const preprocessors = {};
-const helperPath = path.resolve(__dirname, "../lib/testHelper.js");
+const helperPath = path.resolve(__dirname, "../lib/testHelperKarma.js");
 preprocessors[helperPath] = ["webpack", "sourcemap"];
 
 export default {

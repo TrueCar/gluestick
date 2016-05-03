@@ -72,14 +72,20 @@ const debugOption = {
   description: "debug server side rendering with node-inspector"
 };
 
+const nodeTestOption = {
+  command: "-n, --mocha-only",
+  description: "run tests in Node.js"
+};
+
 commander
   .command("start")
   .description("start everything")
   .option("-T, --no_tests", "ignore test hook")
   .option(debugOption.command, debugOption.description)
+  .option(nodeTestOption.command, nodeTestOption.description)
   .action(checkGluestickProject)
   .action(() => notifyUpdates())
-  .action((options) => startAll(options.no_tests, options.debug))
+  .action((options) => startAll(options.no_tests, options.debug, options.mochaOnly))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -126,6 +132,7 @@ commander
   .command("start-test", null, {noHelp: true})
   .option(firefoxOption.command, firefoxOption.description)
   .option(singleRunOption.command, singleRunOption.description)
+  .option(nodeTestOption.command, nodeTestOption.description)
   .description("start test")
   .action(checkGluestickProject)
   .action((options) => startTest(options))
@@ -135,6 +142,7 @@ commander
   .command("test")
   .option(firefoxOption.command, firefoxOption.description)
   .option(singleRunOption.command, singleRunOption.description)
+  .option(nodeTestOption.command, nodeTestOption.description)
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
@@ -193,7 +201,7 @@ function spawnProcess (type, args=[]) {
   return childProcess;
 }
 
-async function startAll(withoutTests=false, debug=false) {
+async function startAll(withoutTests=false, debug=false, mochaOnly=false) {
   try {
     await autoUpgrade();
   }
@@ -207,7 +215,7 @@ async function startAll(withoutTests=false, debug=false) {
 
   // Start tests unless they asked us not to or we are in production mode
   if (!isProduction && !withoutTests) {
-    spawnProcess("test");
+    spawnProcess("test", (mochaOnly ? ["--mocha-only"] : []));
   }
 }
 
