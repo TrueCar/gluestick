@@ -50,6 +50,8 @@ describe("lib/server/addProxies", function () {
 
   it("should use the default forwardPath option for you when creating the proxy", () => {
     const mockExpressHttpProxy = sinon.spy();
+    const mockRequest = sinon.stub();
+    mockRequest.url = "/todos";
     const proxyConfig = {
       path: "/api",
       destination: "http://www.test.com/api",
@@ -58,7 +60,8 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.exist;
+    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.be.a("function");
+    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath(mockRequest)).to.equal("/api/todos");
   });
 
   it("should allow you to override forwardPath", () => {
