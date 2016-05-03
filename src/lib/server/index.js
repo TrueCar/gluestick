@@ -3,6 +3,10 @@ import path from "path";
 import logger from "../logger";
 import { filename } from "../logsColorScheme";
 import requestHandler from "./requestHandler";
+import addProxies from "./addProxies";
+
+// Imported using `require` so that we can use `process.cwd()`
+const config = require(path.join(process.cwd(), "src", "config", "application")).default;
 
 const isProduction = process.env.NODE_ENV === "production";
 // @TODO: allow host and port to be set elsewhere (https://github.com/TrueCar/gluestick/issues/129)
@@ -11,6 +15,9 @@ const port = process.env.PORT || (isProduction? 8888 : 8880);
 const address = `http://${host}:${port}`;
 
 const app = express();
+
+// Hook up all of the API proxies
+addProxies(app, config.proxies);
 
 if (isProduction) {
   app.use("/assets", express.static("build"));
@@ -28,3 +35,4 @@ else {
 
 app.use(requestHandler);
 app.listen(port);
+
