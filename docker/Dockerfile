@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:6
 
 RUN apt-get update && \
     apt-get -y install libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++
