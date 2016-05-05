@@ -6,7 +6,7 @@ import temp from "temp";
 import mkdirp from "mkdirp";
 import rimraf from "rimraf";
 import logger from "../../src/lib/logger";
-import autoUpgrade, { addMissingFiles, restoreModifiedFiles } from "../../src/auto-upgrade/index.js";
+import autoUpgrade, { restoreModifiedFiles } from "../../src/autoUpgrade/index.js";
 
 
 describe("auto upgrade of legacy files", function () {
@@ -47,15 +47,10 @@ describe("auto upgrade of legacy files", function () {
       fs.writeFileSync(path.parse(filePath).base, file);
     });
 
-      console.log("~~~~~0");
-    console.log(path.join(__dirname, "..", "..","waffles"));
     // INTRODUCE CHANGE
     let modifiedFile = fs.readFileSync(files[0], "utf8");
-      console.log("~~~~~1");
     modifiedFile += "\nadded textual changes!!!";
-      console.log("~~~~~2");
     fs.writeFileSync(files[0], modifiedFile);
-      console.log("~~~~~3");
 
     restoreModifiedFiles();
 
@@ -78,11 +73,11 @@ describe("auto upgrade of legacy files", function () {
   //it("should detect a change in the file by checking it against the template", () => {
     //// create file from template
     //// modify new file and save
-    //// run `hasFileChanged` 
-    //// assert the result  
+    //// run `hasFileChanged`
+    //// assert the result
   //});
 
-  
+
   //it("should create new files that haven't been created yet", () => {
     //// run test and replace for fs.existsSync over a specific file
     //// check for the specific template file to make sure it was created at the new location
