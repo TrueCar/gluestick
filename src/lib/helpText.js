@@ -23,6 +23,6 @@ function showMissing404Text () {
   logger.info(`  ${filename("import RouteNotFound from \"../containers/RouteNotFound\";")}`);
   logger.info(`  ${filename("import { ROUTE_NAME_404_NOT_FOUND } from \"gluestick-shared\";")}`);
   logger.info("3. Add a new route that uses this constant and container as your very last route.");
-  logger.info("  " + filename(`<Route name={${info("ROUTE_NAME_404_NOT_FOUND")} path="${info("*")}" component={${info("RouteNotFound")}} />`));
+  logger.info("  " + filename(`<Route name={${info("ROUTE_NAME_404_NOT_FOUND")}} path="${info("*")}" component={${info("RouteNotFound")}} />`));
 }
 
