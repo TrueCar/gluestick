@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.5.1",
+  "version": "0.5.0",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
