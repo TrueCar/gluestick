@@ -11,6 +11,7 @@ import { highlight, filename } from "../lib/logsColorScheme";
 export class AutoUpgrade {
   constructor(options) {
     this._cwd = options.cwd || process.cwd();
+    this._templatesDir = options.templatesDir || path.join(this._cwd, "..", "..", "templates", "new");
   }
 
 
@@ -39,7 +40,7 @@ export class AutoUpgrade {
     const filePath = path.join(path, name);
     logger.info(`${highlight(name)} file out of date.`);
     logger.success(`Updating ${filename(filePath)}`);
-
+console.log("!@#!@#!@#!@#");
     fs.writeFileSync(filePath, data);
   }
 
@@ -51,7 +52,8 @@ export class AutoUpgrade {
    *
    */
   getTemplateFileFromFile(filePath) {
-    return fs.readFileSync(path.join(this._cwd, "..", "..", "templates", "new", filePath), "utf8");
+    const fullPath = path.join(this._templatesDir, filePath);
+    return fs.readFileSync(fullPath, "utf8");
   }
 
 
@@ -61,7 +63,8 @@ export class AutoUpgrade {
    */
   hasFileChanged(filePath) {
     const currentFile = fs.readFileSync(path.join(this._cwd, "..", "..", filePath));
-    const newFile = path.join(this._cwd, filePath);
+    const newFile = this.getTemplateFileFromFile(filePath);
+    console.log("%$%$%$", currentFile, newFile, "$#$#$#$");
     return (sha1(currentFile) !== sha1(newFile));
   }
 
@@ -75,9 +78,9 @@ export class AutoUpgrade {
     return (filePath) => {
       if (!fileTest(filePath)){
         const newFile = this.getTemplateFileFromFile(filePath);
-        const path = path.join(this._cwd, path.parse(filePath).dir);
+        const newPath = path.join(this._cwd, path.parse(filePath).dir);
         const file = path.parse(filePath).base;
-        this.replaceFile(path, file, newFile);
+        this.replaceFile(newPath, file, newFile);
       }
     };
   }

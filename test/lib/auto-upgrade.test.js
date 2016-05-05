@@ -16,6 +16,8 @@ describe("auto upgrade of legacy files", function () {
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("auto-upgrade");
+    tmpDir = path.join(tmpDir, "src", "config");
+    mkdirp.sync(tmpDir);
     process.chdir(tmpDir);
 
     sandbox = sinon.sandbox.create();
@@ -32,6 +34,7 @@ describe("auto upgrade of legacy files", function () {
 
   it("should replace modified files with values from templates", () => {
     // SETUP
+    let lastFile;
     const files = [
       "src/config/.entry.js",
       "src/config/.store.js",
@@ -41,19 +44,23 @@ describe("auto upgrade of legacy files", function () {
     files.forEach((filePath) => {
       const templatePath = path.join(originalCwd, "templates", "new", filePath);
       const file = fs.readFileSync(templatePath, "utf8");
-      const dirForFile = path.join(tmpDir, path.parse(filePath).dir);
-      mkdirp.sync(dirForFile);
-      fs.closeSync(fs.openSync(path.join(dirForFile, path.parse(filePath).base), "w"));
+      const createdFilePath = path.join(tmpDir, path.parse(filePath).base);
+      fs.closeSync(fs.openSync(createdFilePath, "w"));
       fs.writeFileSync(path.parse(filePath).base, file);
+      lastFile = createdFilePath;
     });
 
     // INTRODUCE CHANGE
-    let modifiedFile = fs.readFileSync(files[0], "utf8");
+    let modifiedFile = fs.readFileSync(lastFile, "utf8");
     modifiedFile += "\nadded textual changes!!!";
-    fs.writeFileSync(files[0], modifiedFile);
-    const upgrader = new AutoUpgrade({cwd: tmpDir});
-    upgrader.restoreModifiedFiles();
+    fs.writeFileSync(lastFile, modifiedFile);
 
+    // Fix it
+    const upgrader = new AutoUpgrade({cwd: tmpDir, templatesDir: path.join(originalCwd, "templates", "new")});
+    upgrader.restoreModifiedFiles();
+    console.log("~~~~~~~~~~~~~~~~~");
+    console.log(logger.success.calledWith("Updating"));
+    console.log("!~!~!~!~!~!~!~!");
     // tests
     expect(logger.success.calledWith("Updating")).to.be.true;
   });
