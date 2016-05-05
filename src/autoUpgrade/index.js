@@ -52,7 +52,7 @@ class AutoUpgrade {
    *
    */
   getTemplateFileFromFile(filePath) {
-    return fs.readFileSync(path.join(this._cwd, "..", "..", "new", filePath), "utf8");
+    return fs.readFileSync(path.join(this._cwd, "..", "..", "templates", "new", filePath), "utf8");
   }
 
 
