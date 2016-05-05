@@ -3,7 +3,7 @@ sudo: required
 language: node_js
 
 node_js:
-- '5'
+- '6'
 
 branches:
   only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
