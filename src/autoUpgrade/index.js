@@ -8,10 +8,9 @@ import logger from "../lib/logger";
 import { highlight, filename } from "../lib/logsColorScheme";
 
 
-class AutoUpgrade {
+export class AutoUpgrade {
   constructor(options) {
     this._cwd = options.cwd || process.cwd();
-    this.upgrade();
   }
 
 
@@ -101,12 +100,13 @@ class AutoUpgrade {
       "src/config/.entry.js",
       "src/config/.store.js",
       "src/config/.Dockerfile"   //-> last updated in 0.2.0
-    ].forEach(this.testAndReplace(this.hasFileChanged));
+    ].forEach(this.testAndReplace(this.hasFileChanged.bind(this)), this);
   }
 }
 
 
 export default async function (options) {
-  new AutoUpgrade(options);
+  const upgrader = new AutoUpgrade(options);
+  upgrader.upgrade();
 };
 

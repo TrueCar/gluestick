@@ -6,7 +6,7 @@ import temp from "temp";
 import mkdirp from "mkdirp";
 import rimraf from "rimraf";
 import logger from "../../src/lib/logger";
-import autoUpgrade, { restoreModifiedFiles } from "../../src/autoUpgrade/index.js";
+import { AutoUpgrade as AutoUpgrade } from "../../src/autoUpgrade/index.js";
 
 
 describe("auto upgrade of legacy files", function () {
@@ -39,7 +39,7 @@ describe("auto upgrade of legacy files", function () {
     ];
 
     files.forEach((filePath) => {
-      const templatePath = path.join(originalCwd, "new", filePath);
+      const templatePath = path.join(originalCwd, "templates", "new", filePath);
       const file = fs.readFileSync(templatePath, "utf8");
       const dirForFile = path.join(tmpDir, path.parse(filePath).dir);
       mkdirp.sync(dirForFile);
@@ -51,8 +51,8 @@ describe("auto upgrade of legacy files", function () {
     let modifiedFile = fs.readFileSync(files[0], "utf8");
     modifiedFile += "\nadded textual changes!!!";
     fs.writeFileSync(files[0], modifiedFile);
-
-    restoreModifiedFiles();
+    const upgrader = new AutoUpgrade({cwd: tmpDir});
+    upgrader.restoreModifiedFiles();
 
     // tests
     expect(logger.success.calledWith("Updating")).to.be.true;
@@ -76,7 +76,6 @@ describe("auto upgrade of legacy files", function () {
     //// run `hasFileChanged`
     //// assert the result
   //});
-
 
   //it("should create new files that haven't been created yet", () => {
     //// run test and replace for fs.existsSync over a specific file
