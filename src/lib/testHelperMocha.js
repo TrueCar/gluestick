@@ -11,8 +11,9 @@ const IS_WINDOWS = process.platform === "win32";
 // **ACHTUNG** THIS SHOULD ALWAYS BE RUN BEFORE ANY OTHER REQUIRE()s.
 //
 // Cannot use path.join here since it would take a require()!
-require("app-module-path").addPath(CWD + (IS_WINDOWS ? "'" : "/") + "assets");
-require("app-module-path").addPath(CWD + (IS_WINDOWS ? "'" : "/") + "src");
+const addPath = require("app-module-path").addPath;
+addPath(CWD + (IS_WINDOWS ? "'" : "/") + "assets");
+addPath(CWD + (IS_WINDOWS ? "'" : "/") + "src");
 
 require("babel-register");
 
