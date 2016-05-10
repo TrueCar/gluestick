@@ -12,10 +12,10 @@ function _gluestick(state=true, action) {
   return state;
 }
 
-export default function (customRequire, customMiddleware, hotCallback, devMode) {
+export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
   const middleware = [
-      promiseMiddleware,
+      promiseMiddleware(client),
       thunk,
       ...customMiddleware
   ];
