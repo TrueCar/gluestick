@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "axios": "0.11.0",
     "babel-core": "6.8.0",
     "babel-loader": "6.2.4",
     "babel-runtime": "6.6.1",
@@ -16,7 +17,7 @@
     "babel-preset-react": "6.5.0",
     "css-loader": "0.23.1",
     "file-loader": "0.8.5",
-    "gluestick-shared": "0.3.4",
+    "gluestick-shared": "0.3.5",
     "history": "2.1.1",
     "json-loader": "0.5.4",
     "node-sass": "3.7.0",
