@@ -77,7 +77,7 @@ commander
 commander
   .command("start")
   .description("start everything")
-  .option("-T, --no-tests", "ignore test hook")
+  .option("-T, --skip-tests", "ignore test hook")
   .option(...debugServerOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
@@ -214,7 +214,7 @@ async function startAll(options) {
   spawnProcess("server", (options.debugServer ? ["--debug-server"] : []));
 
   // Start tests unless they asked us not to or we are in production mode
-  if (!isProduction && !options.noTests) {
+  if (!isProduction && !options.skipTests) {
     spawnProcess("test", commander.rawArgs.slice(3));
   }
 }
