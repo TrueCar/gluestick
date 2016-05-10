@@ -6,11 +6,12 @@ import { render } from "react-dom";
 // file
 import "../../Index.js";
 
-import { Root } from "gluestick-shared";
+import { Root, getHTTPClient } from "gluestick-shared";
 import { match, browserHistory as history } from "react-router";
 import routes from "./routes";
 import store from "./.store";
 import { StyleRoot } from "radium";
+import axios from "axios";
 
 // @deprecated 0.3.9
 // Returning routes directly, not through method is deprecated as of 0.3.9
@@ -21,7 +22,7 @@ if (typeof routes !== "function") { getRoutes = () => routes; }
 
 export default class Entry extends Component {
   static defaultProps = {
-    store: store()
+    store: store(axios)
   };
 
   render () {
@@ -40,7 +41,7 @@ export default class Entry extends Component {
 }
 
 Entry.start = function () {
-  const newStore = store();
+  const newStore = store(axios);
   match({ history, routes: getRoutes(newStore) }, (error, redirectLocation, renderProps) => {
     render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} store={newStore} {...renderProps} />, document.getElementById("main"));
   });

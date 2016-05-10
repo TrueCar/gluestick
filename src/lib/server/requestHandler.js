@@ -1,8 +1,10 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
+import axios from "axios";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND, prepareRoutesWithTransitionHooks } from "gluestick-shared";
+import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND,
+  prepareRoutesWithTransitionHooks } from "gluestick-shared";
 import { match, RouterContext } from "react-router";
 import errorHandler from "./errorHandler";
 import Body from "./Body";
@@ -17,9 +19,16 @@ process.on("unhandledRejection", (reason, promise) => {
 
 module.exports = async function (req, res) {
   try {
+
+    // Forward all request headers from the browser into http requests made by
+    // node
+    const httpClient = axios.create({
+      headers: req.headers
+    });
+
     const Index = require(path.join(process.cwd(), "Index")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-    const store = require(path.join(process.cwd(), "src/config/.store")).default();
+    const store = require(path.join(process.cwd(), "src/config/.store")).default(httpClient);
     let originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
 
     // @TODO: Remove this in the future when people have had enough time to

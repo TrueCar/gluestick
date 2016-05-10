@@ -33,6 +33,7 @@
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "dependencies": {
     "app-module-path": "1.0.6",
+    "axios": "0.11.0",
     "babel-cli": "6.8.0",
     "babel-core": "6.8.0",
     "babel-istanbul": "0.8.0",
@@ -54,7 +55,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.30.0",
-    "gluestick-shared": "0.3.4",
+    "gluestick-shared": "0.3.5",
     "history": "2.1.1",
     "inquirer": "1.0.2",
     "jsdom": "9.0.0",
