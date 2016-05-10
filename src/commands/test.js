@@ -8,25 +8,25 @@ const CWD = process.cwd();
 const chokidar = require("chokidar");
 const logger = require("../lib/logger");
 
-const MOCHA_PATH = path.join(__dirname, "..", "..", "node_modules", ".bin", "mocha");
-const MOCHA_PATH_COVERAGE = path.join(__dirname, "..", "..", "node_modules", ".bin", "_mocha");
-const MOCHA_ENV = { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }};
+const NODE_MODULES_PATH = path.join(__dirname, "..", "..", "node_modules");
+const MOCHA_PATH = path.join(NODE_MODULES_PATH, ".bin", "mocha");
+const MOCHA_COVERAGE_PATH = path.join(NODE_MODULES_PATH, ".bin", "_mocha");
 const MOCHA_TEST_PATH = `${CWD}/test/**/*.test.js`;
 const MOCHA_HELPER_PATH = path.join(__dirname, "..", "lib", "testHelperMocha.js");
-const BABEL_NODE_PATH = path.join(__dirname, "..", "..", "node_modules", ".bin", "babel-node");
-const BABEL_ISTANBUL_PATH = path.join(__dirname, "..", "..", "node_modules", "babel-istanbul", "lib", "cli.js");
-const INSPECTOR_PATH = path.join(__dirname, "..", "..", "node_modules", ".bin", "node-inspector");
-
-// Debounce file watches
-let watchTimeout;
+const BABEL_NODE_PATH = path.join(NODE_MODULES_PATH, ".bin", "babel-node");
+const BABEL_ISTANBUL_PATH = path.join(NODE_MODULES_PATH, "babel-istanbul", "lib", "cli.js");
+const INSPECTOR_PATH = path.join(NODE_MODULES_PATH, ".bin", "node-inspector");
+const MOCHA_ENV = { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }};
 
 function watchSources(callback) {
+  // Debounce file watches
+  let timeout;
   chokidar.watch([path.join(CWD, "src/**/*.js"), path.join(CWD, "test/**/*.js")], {
     ignored: /[\/\\]\./,
     persistent: true
   }).on("all", function() {
-    clearTimeout(watchTimeout);
-    watchTimeout = setTimeout(() => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
       callback();
     }, 250);
   });
@@ -73,15 +73,39 @@ function useMocha(options) {
       [
         BABEL_ISTANBUL_PATH,
         "cover",
+        "--include-all-sources",
+        "--root",
+        "src",
         "--report",
         "html",
         "--dir",
         "coverage/html",
-        MOCHA_PATH_COVERAGE,
+        MOCHA_COVERAGE_PATH,
         ...createMochaArgs(options, true)
       ],
       {
-        stdio: "ignore",
+        // ignore stdin and stdout, but show errors!
+        stdio: ["ignore", "ignore", "inherit"],
+        env: MOCHA_ENV
+      }
+    ],
+    single: [
+      BABEL_NODE_PATH,
+      [
+        BABEL_ISTANBUL_PATH,
+        "cover",
+        "--include-all-sources",
+        "--root",
+        "src",
+        "--report",
+        "cobertura",
+        "--dir",
+        "coverage/xml",
+        MOCHA_COVERAGE_PATH,
+        ...createMochaArgs(options, true)
+      ],
+      {
+        stdio: "inherit",
         env: MOCHA_ENV
       }
     ]
@@ -90,7 +114,9 @@ function useMocha(options) {
   if (options.debugTest) {
     debug();
   } else if (options.single) {
-    singleRun();
+    spawn(...spawnOpts.single).on("exit", function(exitCode) {
+      process.exit(exitCode);
+    });
   } else {
     watch();
   }
@@ -103,22 +129,18 @@ function useMocha(options) {
     // Node segfaults when using debug with Mocha's built-in watch. Booooo!
     // Instead, we'll use Chokidar to watch - it's slower since it rebuilds each time, but it works, and isn't too
     // bad since debugging tests is expected to be a slower process than "save/see results".
-    let running;
+    let running = false;
     watchSources(function() {
       if (running) {
         return;
       }
       running = true;
-      const mocha = spawn(...spawnOpts.mocha);
+      const child = spawn(...spawnOpts.mocha);
 
-      mocha.on("exit", function() {
+      child.on("exit", function() {
         running = false;
       });
     });
-  }
-
-  function singleRun() {
-    spawn(...spawnOpts.coverage);
   }
 
   function watch() {
@@ -127,13 +149,13 @@ function useMocha(options) {
 
     // Set up a watcher to create coverage reports in the background, only messaging on success/failure.
     // To ensure only the latest version is available, kill/restart the process on each change.
-    let mocha;
+    let child;
     watchSources(function() {
-      if (mocha) {
-        mocha.kill();
+      if (child) {
+        child.kill();
       }
-      mocha = spawn(...spawnOpts.coverage);
-      mocha.on("exit", function(exitCode) {
+      child = spawn(...spawnOpts.coverage);
+      child.on("exit", function(exitCode) {
         if (exitCode === 0) {
           logger.success("Coverage report generated.");
         } else if (exitCode === 1) {
