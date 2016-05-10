@@ -1,6 +1,6 @@
 {
   "name": "gluestick-shared",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
