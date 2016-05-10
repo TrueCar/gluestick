@@ -6,7 +6,7 @@ import { render } from "react-dom";
 // file
 import "../../Index.js";
 
-import { Root, getHTTPClient } from "gluestick-shared";
+import { Root } from "gluestick-shared";
 import { match, browserHistory as history } from "react-router";
 import routes from "./routes";
 import store from "./.store";
