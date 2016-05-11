@@ -47,7 +47,7 @@
     "react-transform-hmr": "1.0.4",
     "redbox-react": "1.2.4",
     "webpack-hot-middleware": "2.10.0",
-    "enzyme": "2.2.0",
+    "enzyme": "2.3.0",
     "react-addons-test-utils": "15.0.2"
   }
 }
