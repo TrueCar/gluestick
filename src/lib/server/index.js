@@ -21,7 +21,7 @@ addProxies(app, config.proxies);
 
 if (isProduction) {
   app.use("/assets", express.static("build"));
-  logger.success(`Server side rendering server running at ${filename(address)}`);
+  logger.success(`Server side rendering server running`);
 }
 else {
   app.get("/gluestick-proxy-poll", function(req, res) {
@@ -30,7 +30,7 @@ else {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.status(200).json({up: true});
   });
-  logger.success(`Server side rendering proxy running at ${filename(address)}`);
+  logger.success(`Server side rendering proxy running`);
 }
 
 app.use(requestHandler);

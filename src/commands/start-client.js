@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const process = require("process");
 const express = require("express");
-const proxy = require("express-http-proxy");
+const proxy = require("http-proxy-middleware");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const webpackSharedConfig = require("../config/webpack-shared-config");
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
@@ -111,21 +111,17 @@ module.exports = function (buildOnly) {
       publicPath: PUBLIC_PATH
     }));
     app.use(require("webpack-hot-middleware")(compiler));
-    app.use(proxy("localhost:8880", {
-      forwardPath: function (req) {
-        return require("url").parse(req.url).path;
-      },
-      preserveHostHdr: true
-    }));
-    app.use(function(err, req, res, next) {
-      if (err && err.code === "ECONNREFUSED") {
-        // render a friendly loading page during server restarts
+
+    // Proxy http requests from server to client in development mode
+    app.use(proxy({
+      changeOrigin: true,
+      target: "http://localhost:8880",
+      onError: (err, req, res) => {
+        // When the client is restarting, show our polling message
         res.status(200).sendFile("poll.html", {root: path.join(__dirname, "../lib")});
       }
-      else {
-        next(err);
-      }
-    });
+    }));
+
     app.listen(PORT, "localhost", function (error) {
       if (error) {
         logger.error(error);
