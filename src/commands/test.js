@@ -186,9 +186,9 @@ function useKarma(options) {
 
 module.exports = function(options) {
   // override to run tests in Node without Karma/Webpack
-  if (options.mochaOnly) {
-    useMocha(options);
-  } else {
+  if (options.karma) {
     useKarma(options);
+  } else {
+    useMocha(options);
   }
 };
