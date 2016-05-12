@@ -45,7 +45,6 @@ describe("lib/server/addProxies", function () {
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
     expect(mockExpressHttpProxy.called).to.equal(true);
-    console.log("### # ## ###", mockExpressHttpProxy.lastCall.args);
     expect(mockExpressHttpProxy.lastCall.args[0].test).to.equal(proxyConfig.options.test);
   });
 
