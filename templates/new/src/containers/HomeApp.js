@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Helmet from "react-helmet";
 
-import Home from "../components/Home";
+import Home from "components/Home";
 
 export class HomeApp extends Component {
   /**
