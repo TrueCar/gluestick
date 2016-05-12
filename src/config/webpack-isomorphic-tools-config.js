@@ -63,6 +63,8 @@ module.exports = {
     }
   },
   alias: {
-    "assets": path.join(process.cwd(), "assets")
+    "assets": path.join(process.cwd(), "assets"),
+    "components": path.join(process.cwd(), "src", "components"),
+    "containers": path.join(process.cwd(), "src", "containers")
   }
 };
