@@ -3,7 +3,6 @@ import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./updatePackage";
 import updateConfig from "./updateConfig";
-import updateBabelConfig from "./updateBabelConfig";
 import logger from "../lib/logger";
 import { highlight, filename } from "../lib/logsColorScheme";
 
@@ -76,7 +75,4 @@ module.exports = async function () {
 
   // -> prior to 0.2.2
   await updateConfig();
-
-  // -> prior to 0.2.9
-  await updateBabelConfig();
 };
