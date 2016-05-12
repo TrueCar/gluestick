@@ -45,7 +45,8 @@ describe("lib/server/addProxies", function () {
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
     expect(mockExpressHttpProxy.called).to.equal(true);
-    expect(mockExpressHttpProxy.lastCall.args[1].test).to.equal(proxyConfig.options.test);
+    console.log("### # ## ###", mockExpressHttpProxy.lastCall.args);
+    expect(mockExpressHttpProxy.lastCall.args[0].test).to.equal(proxyConfig.options.test);
   });
 
   it("should use the default forwardPath option for you when creating the proxy", () => {
@@ -60,23 +61,22 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.be.a("function");
-    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath(mockRequest)).to.equal("/api/todos");
+    expect(mockExpressHttpProxy.lastCall.args[0].pathRewrite).to.deep.equal({[`^${proxyConfig.path}`]: ""});
   });
 
-  it("should allow you to override forwardPath", () => {
+  it("should allow you to override pathRewrite", () => {
     const mockExpressHttpProxy = sinon.spy();
-    const forwardPath = () => "hi";
+    const pathRewrite = {"^/api": "/API"};
     const proxyConfig = {
       path: "/api",
       destination: "http://www.test.com/api",
       options: {
         test: "yes",
-        forwardPath
+        pathRewrite
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[1].forwardPath).to.equal(forwardPath);
+    expect(mockExpressHttpProxy.lastCall.args[0].pathRewrite).to.equal(pathRewrite);
   });
 });
 
