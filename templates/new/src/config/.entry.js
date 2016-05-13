@@ -20,7 +20,7 @@ import config from "./application";
 let getRoutes = routes;
 if (typeof routes !== "function") { getRoutes = () => routes; }
 
-const httpClient = getHttpClient(config.httpConfig);
+const httpClient = getHttpClient(config.httpClient);
 
 export default class Entry extends Component {
   static defaultProps = {
