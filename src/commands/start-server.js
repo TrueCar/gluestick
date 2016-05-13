@@ -54,7 +54,7 @@ module.exports = function startServer (debug=false) {
       environment_name: process.env.NODE_ENV,
       no_autorestart: false,
       merge_logs: true,
-      watch: process.env.NODE_ENV !== "production"
+      watch: process.env.NODE_ENV !== "production" ? ["assets", "src", "Index.js"] : false
     }, (error) => {
       if (error) {
         logger.error(error);

@@ -32,7 +32,7 @@ const currentGluestickVersion = getVersion();
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with node-inspector"];
 const debugTestOption = ["-B, --debug-test", "debug tests with node-inspector"];
-const nodeTestOption = ["-m, --mocha-only", "run tests in Node.js"];
+const karmaTestOption = ["-k, --karma", "run tests in Karma"];
 const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
@@ -81,7 +81,7 @@ commander
   .option(...debugServerOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
-  .option(...nodeTestOption)
+  .option(...karmaTestOption)
   .action(checkGluestickProject)
   .action(() => notifyUpdates())
   .action(startAll)
@@ -123,7 +123,7 @@ commander
   .command("start-test", null, {noHelp: true})
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...nodeTestOption)
+  .option(...karmaTestOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .description("start test")
@@ -135,7 +135,7 @@ commander
   .command("test")
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...nodeTestOption)
+  .option(...karmaTestOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .description("start tests")

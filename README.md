@@ -79,7 +79,7 @@ gluestick generate reducer todos
 ```
 
 ## Tests
-GlueStick sets up a testing environment using Karma, Mocha, Chai and Sinon.
+GlueStick sets up a testing environment using Karma, Mocha, Chai and Sinon and enzyme.
 React's TestUtils are also available globally in your test files. You simply
 need to create files in the `test` folder with the extension .test.js and they
 will be executed through the test runner.
