@@ -41,16 +41,22 @@ module.exports = {
 
   externals: [
     {
+      axios: {
+        root: "axios",
+        commonjs2: "axios",
+        commonjs: "axios",
+        amd: "axios"
+      },
       react: {
         root: "React",
         commonjs2: "react",
-        comonjs: "react",
+        commonjs: "react",
         amd: "react"
       },
       radium: {
         root: "Radium",
         commonjs2: "radium",
-        comonjs: "radium",
+        commonjs: "radium",
         amd: "radium"
       },
       "react-dom": {
