@@ -5,17 +5,17 @@ import axios from "axios";
  * @param {Express.Request} [request] optional request object. If provided,
  * headers will be merged
  * https://github.com/mzabriskie/axios#request-config
- * @param {axios} [axios] optionally override axios (used for tests/mocking)
+ * @param {axios} [httpClient] optionally override axios (used for tests/mocking)
  */
-export default function getHttpClient (options, req, axios) {
+export default function getHttpClient (options={}, req, httpClient=axios) {
   if (!req) {
-    return axios.create(options);
+    return httpClient.create(options);
   }
 
   const { headers, ...httpConfig } = options;
 
   // If a request object is provided, 
-  return axios.create({
+  return httpClient.create({
     headers: {
       ...req.headers,
       ...headers
