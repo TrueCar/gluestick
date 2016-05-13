@@ -1,10 +1,9 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
-import axios from "axios";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND,
-  prepareRoutesWithTransitionHooks } from "gluestick-shared";
+  prepareRoutesWithTransitionHooks, getHttpClient } from "gluestick-shared";
 import { match, RouterContext } from "react-router";
 import errorHandler from "./errorHandler";
 import Body from "./Body";
@@ -22,9 +21,8 @@ module.exports = async function (req, res) {
 
     // Forward all request headers from the browser into http requests made by
     // node
-    const httpClient = axios.create({
-      headers: req.headers
-    });
+    const config = require(path.join(process.cwd(), "src", "config", "application")).default;
+    const httpClient = getHttpClient(config.httpClient, req);
 
     const Index = require(path.join(process.cwd(), "Index")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -47,7 +45,6 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
       originalRoutes = () => originalRoutes;
     }
 
-    const config = require(path.join(process.cwd(), "src/config/application")).default;
     const routes = prepareRoutesWithTransitionHooks(originalRoutes(store));
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
