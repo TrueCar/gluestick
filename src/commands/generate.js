@@ -60,8 +60,14 @@ module.exports = function (command, name, cb) {
   template = replaceName(template, generatedFileName);
 
   // Check if the file already exists before we write to it
-  const destinationRoot = path.resolve(path.join(CWD, "src", availableCommands[command]), dirname);
+  const generateRoot = path.join(CWD, "src", availableCommands[command]);
+  const destinationRoot = path.resolve(generateRoot, dirname);
   const destinationPath = path.join(destinationRoot, generatedFileName + ".js");
+
+  if (destinationPath.indexOf(generateRoot) !== 0) {
+    return cb(`${command} generation is not supported outside of ${path.relative(CWD, generateRoot)}`);
+  }
+
   let fileExists = true;
   try {
     fs.statSync(destinationPath);

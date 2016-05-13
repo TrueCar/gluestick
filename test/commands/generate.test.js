@@ -156,6 +156,16 @@ describe("cli: gluestick generate", function () {
         done();
       });
     });
+
+    it("reports an error if the directory path resolves outside of the root path", done => {
+      const type = "component";
+      stubProject(type);
+      generate(type, "../common/mycomponent", (err) => {
+        expect(err).to.not.be.undefined;
+        expect(err).to.contain("not supported");
+        done();
+      });
+    });
   });
 
 });
