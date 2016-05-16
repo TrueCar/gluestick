@@ -123,6 +123,7 @@ describe("cli: gluestick destroy", function () {
 
   describe("when sub-directories are provided", function() {
     beforeEach(() => {
+      createDirectories(tmpDir, path.join("components", "mydirectory"));
       const componentPath = path.join(tmpDir, "src/components/mydirectory/TestComponent.js");
       const componentTestPath = path.join(tmpDir, "test/components/mydirectory/TestComponent.test.js");
       createFiles(componentPath, componentTestPath);
@@ -131,7 +132,8 @@ describe("cli: gluestick destroy", function () {
     it("removes the files under the directory", () => {
       expect(fileExists("src/components/mydirectory/TestComponent.js")).to.be.true;
       expect(fileExists("test/components/mydirectory/TestComponent.test.js")).to.be.true;
-      destroy("component", "TestComponent");
+      destroy("component", "mydirectory/TestComponent");
+      expect(logger.error.called).to.be.false;
       expect(fileExists("src/components/mydirectory/TestComponent.js")).to.be.false;
       expect(fileExists("test/components/mydirectory/TestComponent.test.js")).to.be.false;
     });
