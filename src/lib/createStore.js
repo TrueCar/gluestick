@@ -2,7 +2,6 @@ import thunk from "redux-thunk";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 
 import promiseMiddleware from "../lib/promiseMiddleware";
-import DevTools from "../containers/DevTools";
 
 /**
  * This reducer always returns the original state, this prevents an error when
@@ -26,14 +25,11 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
     middleware.push(require("redux-immutable-state-invariant")());
   }
 
-  const composeArgs = [
-    applyMiddleware.apply(this, middleware)
-  ];
 
-  // Include dev tools only if we are in development mode
-  if (devMode) {
-    composeArgs.push(DevTools.instrument());
-  }
+  const composeArgs = [
+    applyMiddleware.apply(this, middleware),
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+  ];
 
   const finalCreateStore = compose.apply(null, composeArgs)(createStore);
   const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});

@@ -3,7 +3,6 @@ import { Router, Route, browserHistory } from "react-router"
 import { Provider } from "react-redux";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
-import DevTools from "./DevTools";
 
 export default class Root extends Component {
   static propTypes = {
@@ -35,14 +34,9 @@ export default class Root extends Component {
       store
     } = this.props;
 
-    const devTools = this._renderDevTools();
-    
     return (
       <Provider store={store}>
-        <div>
-            {this.router}
-            {devTools}
-        </div>
+          {this.router}
       </Provider>
     );
   }
@@ -63,13 +57,5 @@ export default class Root extends Component {
       </Router>
     );
   }
-
-  _renderDevTools () {
-    if (!this.state.mounted || window.__GS_ENVIRONMENT__ === "production") return null;
-    return (
-      <DevTools />
-    );
-  }
-
 }
 
