@@ -84,8 +84,8 @@ function useMocha(options) {
         ...createMochaArgs(options, true)
       ],
       {
-        // ignore stdin and stdout, but show errors!
-        stdio: ["ignore", "ignore", "inherit"],
+        // Suppress error output since it includes the entire test run!
+        stdio: "ignore",
         env: MOCHA_ENV
       }
     ],
