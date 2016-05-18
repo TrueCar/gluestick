@@ -1,10 +1,21 @@
-# GlueStick
+# GlueStick - Beyond the Boilerplate
 [![npm](https://img.shields.io/npm/v/gluestick.svg)](https://www.npmjs.com/package/gluestick)
 [![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
 
 GlueStick is a command line interface for quickly developing universal web
-applications using React.
+applications using React and Redux.
 
+## Why your project or boilerplate isn't enough?
+1. You need integrated updates. Without integrated updates, you are forced to manually merge in new features/fixes.
+2. Isomorphic rendering. Server-side and client-side rendering are identical. No more worries about SEO, pesky “loading” spinners, or users with javascript disabled
+3. Integrated dockerization. Go from development to production as simple as `gluestick dockerize MyApp` 
+4. Automatic babel and webpack loader support. Cause writing ES5 is so boring
+5. Automatic test framework setup. Preloaded with `Mocha`, `Chai`, `Sinon`, `Enzyme`, and `React.TestUtils` right out of the box
+6. Built in common practices. Things like code splitting, hot module replacement, react-router, etc
+7. Rails like generators for common needs like components/reducers/containers/etc, with all necessary hooks and tests
+
+
+## Why GlueStick?
 GlueStick allows users to quickly create new applications with its bootstrap
 generator, along with generators for components, containers, and reducers. In
 addition, GlueStick contains a fully functional test environment, server-side
@@ -17,8 +28,7 @@ one location that the developer doesn't have to worry about. Not only does this
 make your application code cleaner but it makes it easier to update the
 boilerplate code as new improvements are discovered.
 
-Currently it is still very experimental and is likely
-to change frequently.
+Is actively being worked on and supported by TrueCar.
 
 ## Requirements
 GlueStick works best with v5+ of node but some people have had success running
@@ -86,20 +96,8 @@ will be executed through the test runner.
 
 ## Styles
 The preferred way to style components in the GlueStick environment is to use
-[Radium](https://github.com/FormidableLabs/radium).
-
-To prepare a component for using Radium, simply use the @Radium decorator above
-your component class. When styling with Radium, your style updates will be hot
-loaded in development mode so you do not need to refresh the browser to see
-your changes. Please read the Radium docs for more information on how to use
-Radium.
-
-Example:
-```
-@Radium
-export default class MyComponent extends Component {
-…
-```
+[Radium](https://github.com/FormidableLabs/radium), but we also actively use 
+and support css and sass.
 
 #### CSS and SASS
 If you want to include a base stylesheet (like bootstrap css), you can import
