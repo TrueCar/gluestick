@@ -147,6 +147,19 @@ describe("cli: gluestick generate", function () {
     });
   });
 
+  describe("when reducers are generated", function () {
+    it("references the correct import path within reducer tests", done => {
+      const type = "reducer";
+      const testFilePath = path.join(tmpDir, "test", "reducers", "myreducer.test.js");
+      stubProject(type);
+      generate(type, "myreducer", (err) => {
+        expect(err).to.be.undefined;
+        assertImportPath(testFilePath, `${type}s/myreducer`);
+        done();
+      });
+    });
+  });
+
   describe("when directories are provided", function () {
     it("creates the generated component inside a specified directory", done => {
       const type = "component";
@@ -185,7 +198,7 @@ describe("cli: gluestick generate", function () {
       });
     });
 
-    it("references the correct directory path within tests", done => {
+    it("references the correct import path within component tests", done => {
       const type = "component";
       const testFilePath = path.join(tmpDir, "test", "components", "common", "Mycomponent.test.js");
       stubProject(type);
@@ -196,7 +209,7 @@ describe("cli: gluestick generate", function () {
       });
     });
 
-    it("references the correct (resolved) directory path within tests", done => {
+    it("references the correct (resolved) import path within container tests", done => {
       const type = "container";
       const testFilePath = path.join(tmpDir, "test", "containers", "common", "Mycontainer.test.js");
       stubProject(type);
