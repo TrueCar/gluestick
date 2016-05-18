@@ -1,10 +1,10 @@
 /*global React*/
 /*global describe it*/
 /*global expect*/
-import __$NAME__ from "components/__$NAME__";
+import __$NAME__ from "__$PATH__";
 import { shallow } from "enzyme";
 
-describe("components/__$NAME__", () => {
+describe("__$PATH__", () => {
   it("renders without an issue", () => {
     const subject = <__$NAME__ />;
     const wrapper = shallow(subject);

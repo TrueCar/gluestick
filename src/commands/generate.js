@@ -10,8 +10,12 @@ const availableCommands = {
   "reducer": "reducers"
 };
 
-function replaceName (input, name) {
-  return input.replace(/__\$NAME__/g, name);
+function replaceName (input, name, localpath=null) {
+  const replacedName = input.replace(/__\$NAME__/g, name);
+  if (!localpath) {
+    return replacedName;
+  }
+  return replacedName.replace(/__\$PATH__/g, localpath);
 }
 
 module.exports = function (command, name, cb) {
@@ -60,7 +64,8 @@ module.exports = function (command, name, cb) {
   template = replaceName(template, generatedFileName);
 
   // Check if the file already exists before we write to it
-  const generateRoot = path.join(CWD, "src", availableCommands[command]);
+  const srcRoot = path.join(CWD, "src");
+  const generateRoot = path.join(srcRoot, availableCommands[command]);
   const destinationRoot = path.resolve(generateRoot, dirname);
   const destinationPath = path.join(destinationRoot, generatedFileName + ".js");
 
@@ -132,7 +137,8 @@ module.exports = function (command, name, cb) {
   }
 
   try {
-    fs.writeFileSync(testPath, replaceName(testTemplate, generatedFileName));
+    const generatedComponentPath = destinationPath.replace(srcRoot, "").replace(".js", "").slice(1);
+    fs.writeFileSync(testPath, replaceName(testTemplate, generatedFileName, generatedComponentPath));
   }
   catch (e) {
     return cb("Couldn't create test file");

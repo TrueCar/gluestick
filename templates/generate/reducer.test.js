@@ -1,8 +1,8 @@
 /*global describe it*/
 /*global expect*/
-import reducer from "reducers/__$NAME__";
+import reducer from "__$PATH__";
 
-describe("reducers/__$NAME__", () => {
+describe("__$PATH__", () => {
   it("returns the initial state", () => {
     const state = void 0;
     expect(

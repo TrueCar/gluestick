@@ -39,6 +39,24 @@ function makeGeneratedFilesAssertion(dir, type, name, done) {
   done();
 }
 
+function assertImportPath(filePath, expectedPath) {
+  const importLineRegex = /^import\s+\{?\s*(\w+)\s*\}?\s+from\s+\"([\w\/]+)\"/;
+  const types = ["container", "reducer", "component"];
+
+  let matchFound = false;
+  fs.readFileSync(filePath, "utf8").split("\n").forEach(line => {
+    const match = line.match(importLineRegex);
+    if (match !== null && types.some(c => match[0].includes(c))) {
+      matchFound = true;
+      expect(match[2]).to.equal(expectedPath);
+    }
+  });
+
+  if (!matchFound) {
+    expect.fail();
+  }
+}
+
 describe("cli: gluestick generate", function () {
 
   let originalCwd, tmpDir;
@@ -129,6 +147,19 @@ describe("cli: gluestick generate", function () {
     });
   });
 
+  describe("when reducers are generated", function () {
+    it("references the correct import path within reducer tests", done => {
+      const type = "reducer";
+      const testFilePath = path.join(tmpDir, "test", "reducers", "myreducer.test.js");
+      stubProject(type);
+      generate(type, "myreducer", (err) => {
+        expect(err).to.be.undefined;
+        assertImportPath(testFilePath, `${type}s/myreducer`);
+        done();
+      });
+    });
+  });
+
   describe("when directories are provided", function () {
     it("creates the generated component inside a specified directory", done => {
       const type = "component";
@@ -163,6 +194,28 @@ describe("cli: gluestick generate", function () {
       generate(type, "../common/mycomponent", (err) => {
         expect(err).to.not.be.undefined;
         expect(err).to.contain("not supported");
+        done();
+      });
+    });
+
+    it("references the correct import path within component tests", done => {
+      const type = "component";
+      const testFilePath = path.join(tmpDir, "test", "components", "common", "Mycomponent.test.js");
+      stubProject(type);
+      generate(type, "common/mycomponent", (err) => {
+        expect(err).to.be.undefined;
+        assertImportPath(testFilePath, `${type}s/common/Mycomponent`);
+        done();
+      });
+    });
+
+    it("references the correct (resolved) import path within container tests", done => {
+      const type = "container";
+      const testFilePath = path.join(tmpDir, "test", "containers", "common", "Mycontainer.test.js");
+      stubProject(type);
+      generate(type, "../containers/common/mycontainer", (err) => {
+        expect(err).to.be.undefined;
+        assertImportPath(testFilePath, `${type}s/common/Mycontainer`);
         done();
       });
     });
