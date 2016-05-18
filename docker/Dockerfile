@@ -61,6 +61,7 @@ RUN apt-get update && \
     npm install -g gluestick@$GLUESTICK_VERSION && \
     npm install && \
     apt-get remove -y $BUILD_PACKAGES && \
+    apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8888
