@@ -17,6 +17,7 @@ export default function getHttpClient (options={}, req, httpClient=axios) {
   // If a request object is provided, then we want to merge the custom headers
   // with the headers that we sent from the browser in the request.
   return httpClient.create({
+    baseURL: req.headers.host,
     headers: {
       ...req.headers,
       ...headers

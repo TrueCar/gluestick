@@ -28,7 +28,8 @@ describe("lib/getHttpClient", () => {
     };
     const req = {
       headers: {
-        "cookie": "name=Lincoln"
+        "cookie": "name=Lincoln",
+        "host": "hola.com:332211"
       }
     };
     const mockAxios = {
@@ -39,6 +40,7 @@ describe("lib/getHttpClient", () => {
 
     const { headers, ...config } = options;
     expect(mockAxios.create.lastCall.args[0]).to.deep.equal({
+      baseURL: req.headers.host,
       headers: {
         ...req.headers,
         ...headers
