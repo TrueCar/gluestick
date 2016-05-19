@@ -40,13 +40,43 @@ describe("lib/getHttpClient", () => {
 
     const { headers, ...config } = options;
     expect(mockAxios.create.lastCall.args[0]).to.deep.equal({
-      baseURL: req.headers.host,
+      baseURL: `http://${req.headers.host}`,
       headers: {
         ...req.headers,
         ...headers
       },
       ...config
     });
+  });
+
+  it("should set baseURL with https if req.secure is true", () => {
+    const req = {
+      headers: {
+        "cookie": "name=Lincoln",
+        "host": "hola.com:332211"
+      },
+      secure: true
+    };
+    const mockAxios = {
+      create: sinon.spy()
+    };
+    const client = getHttpClient({}, req, mockAxios);
+    expect(mockAxios.create.lastCall.args[0].baseURL).to.equal(`https://${req.headers.host}`);
+  });
+
+  it("should set baseURL with http if req.secure is false", () => {
+    const req = {
+      headers: {
+        "cookie": "name=Lincoln",
+        "host": "hola.com:332211"
+      },
+      secure: false
+    };
+    const mockAxios = {
+      create: sinon.spy()
+    };
+    const client = getHttpClient({}, req, mockAxios);
+    expect(mockAxios.create.lastCall.args[0].baseURL).to.equal(`http://${req.headers.host}`);
   });
 });
 
