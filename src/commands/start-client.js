@@ -114,7 +114,7 @@ module.exports = function (buildOnly) {
 
     // Proxy http requests from server to client in development mode
     app.use(proxy({
-      changeOrigin: true,
+      changeOrigin: false,
       target: "http://localhost:8880",
       onError: (err, req, res) => {
         // When the client is restarting, show our polling message
