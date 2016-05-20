@@ -7,7 +7,7 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const webpackSharedConfig = require("../config/webpack-shared-config");
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
-const { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
+const { additionalLoaders, additionalPreLoaders, vendor } = getWebpackAdditions();
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 
@@ -18,7 +18,7 @@ if (assetPath.substr(-1) !== "/") {
 
 const PORT = 8888;
 const OUTPUT_PATH = path.join(process.cwd(), "build");
-const OUTPUT_FILE = "main-bundle.js";
+const OUTPUT_FILE = "main.bundle.js";
 const PUBLIC_PATH = assetPath;
 
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
@@ -73,7 +73,8 @@ const compiler = webpack({
   context: process.cwd(),
   devtool: isProduction ? null : "cheap-module-eval-source-map",
   entry: {
-    "main": entry
+    main: entry,
+    vendor: vendor
   },
   module: {
     loaders: [
@@ -96,7 +97,9 @@ const compiler = webpack({
       "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
       "process.env": exposedEnvironmentVariables
     }),
-    new webpack.IgnorePlugin(/\.server(\.js)?$/)
+    new webpack.IgnorePlugin(/\.server(\.js)?$/),
+    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+    new webpack.optimize.AggressiveMergingPlugin()
   ].concat(environmentPlugins, webpackSharedConfig.plugins),
   resolve: {
     ...webpackSharedConfig.resolve
