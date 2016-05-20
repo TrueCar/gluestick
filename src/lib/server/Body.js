@@ -18,7 +18,8 @@ export default class Body extends Component {
       <div>
         <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState)};`}}></script>
-        <script type="text/javascript" src={`${config.assetPath}/main-bundle.js`}></script>
+        <script type="text/javascript" src={`${config.assetPath}/vendor.bundle.js`}></script>
+        <script type="text/javascript" src={`${config.assetPath}/main.bundle.js`}></script>
       </div>
     );
   }
