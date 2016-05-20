@@ -5,6 +5,7 @@ import * as secureHandlebars from "secure-handlebars";
 import logger from "../logger";
 
 const pretty = new PrettyError();
+pretty.withoutColors();
 
 /**
  * Register handlebars helper that allows condition blocks for non production
