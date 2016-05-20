@@ -41,7 +41,8 @@ function prepareUserAdditionsForWebpack (additions) {
 export default function (isomorphic=false) {
   let userAdditions = {
     additionalLoaders: [],
-    additionalPreLoaders: []
+    additionalPreLoaders: [],
+    vendor: []
   };
 
   // Babel will try to resolve require statements ahead of time which will cause an error
@@ -50,10 +51,11 @@ export default function (isomorphic=false) {
   try {
     const webpackAdditionsPath = path.join(process.cwd(), "src", "config", "webpack-additions.js");
     fs.statSync(webpackAdditionsPath);
-    const { additionalLoaders, additionalPreLoaders } = require(webpackAdditionsPath);
+    const { additionalLoaders, additionalPreLoaders, vendor } = require(webpackAdditionsPath);
     userAdditions = {
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
-      additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders)
+      additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
+      vendor: vendor || []
     };
   }
   catch (e) {
@@ -62,3 +64,4 @@ export default function (isomorphic=false) {
 
   return userAdditions;
 }
+
