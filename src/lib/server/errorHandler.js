@@ -5,7 +5,12 @@ import * as secureHandlebars from "secure-handlebars";
 import logger from "../logger";
 
 const pretty = new PrettyError();
-pretty.withoutColors();
+if (["1", "true"].includes(process.env.PRETTY_PRINT_WITHOUT_COLORS)) {
+  pretty.withoutColors();
+}
+else {
+  pretty.withColors();
+}
 
 /**
  * Register handlebars helper that allows condition blocks for non production
