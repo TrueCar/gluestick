@@ -1,4 +1,20 @@
-# Changelog
+# Change Log
+All notable changes to this project will be documented in this file.
+
+## 0.7.0 - 2016-05-20
+### Added
+- Ability to pass directories to the gluestick destroy command [#166](https://github.com/TrueCar/gluestick/pull/166) 
+- Ability to pass directories to the gluestick generate command [#164](https://github.com/TrueCar/gluestick/pull/164) 
+- Allow customizations to HTTP client in config [#161](https://github.com/TrueCar/gluestick/pull/161)
+
+### Changed
+- Update Gluestick Docker file to opitimize Gluestick base image [#174](https://github.com/TrueCar/gluestick/pull/174)
+- Update npm dependencies for Gluestick and its apps [#176](https://github.com/TrueCar/gluestick/pull/176)
+- Update README to better convey use case [#175](https://github.com/TrueCar/gluestick/pull/175)
+- Supress errors during coverage report generation [#169](https://github.com/TrueCar/gluestick/pull/175)
+
+### Fixed
+- Set base URL on proxied requests and fix origin URL [#177](https://github.com/TrueCar/gluestick/pull/177)
 
 ## 0.3.0
 [improved eslintrc defaults](https://github.com/TrueCar/gluestick/pull/78)
