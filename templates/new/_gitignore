@@ -1,5 +1,6 @@
 # Output from webpack asset bunlding
 webpack-assets.json
+webpack-bundle-stats.json
 
 # Logs
 logs

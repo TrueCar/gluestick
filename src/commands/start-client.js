@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const process = require("process");
@@ -7,7 +8,7 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const webpackSharedConfig = require("../config/webpack-shared-config");
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
-const { additionalLoaders, additionalPreLoaders, vendor } = getWebpackAdditions();
+const { additionalLoaders, additionalPreLoaders, vendor, plugins } = getWebpackAdditions();
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
 
@@ -100,7 +101,7 @@ const compiler = webpack({
     new webpack.IgnorePlugin(/\.server(\.js)?$/),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
     new webpack.optimize.AggressiveMergingPlugin()
-  ].concat(environmentPlugins, webpackSharedConfig.plugins),
+  ].concat(environmentPlugins, webpackSharedConfig.plugins, plugins),
   resolve: {
     ...webpackSharedConfig.resolve
   }
@@ -137,6 +138,7 @@ module.exports = function (buildOnly) {
   else {
     logger.info("Bundling assets…");
     compiler.run((error, stats) => {
+      fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(stats.toJson()));
       const errors = stats.toJson().errors;
       if (errors.length) {
         errors.forEach((e) => {
