@@ -7,7 +7,8 @@ import { render } from "react-dom";
 import "../../Index.js";
 
 import { Root, getHttpClient } from "gluestick-shared";
-import { match, browserHistory as history } from "react-router";
+import match from "react-router/lib/match";
+import browserHistory from "react-router/lib/browserHistory";
 import routes from "./routes";
 import store from "./.store";
 import { StyleRoot } from "radium";
@@ -44,7 +45,7 @@ export default class Entry extends Component {
 
 Entry.start = function () {
   const newStore = store(httpClient);
-  match({ history, routes: getRoutes(newStore) }, (error, redirectLocation, renderProps) => {
+  match({ history: browserHistory, routes: getRoutes(newStore) }, (error, redirectLocation, renderProps) => {
     render(<Entry radiumConfig={{userAgent: window.navigator.userAgent}} store={newStore} {...renderProps} />, document.getElementById("main"));
   });
 };
