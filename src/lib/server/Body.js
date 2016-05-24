@@ -6,10 +6,25 @@ export default class Body extends Component {
   static propTypes = {
     config: PropTypes.object.isRequired,
     html: PropTypes.string.isRequired,
+    isEmail: PropTypes.bool.isRequired,
     initialState: PropTypes.any.isRequired
   };
 
   render () {
+    const { isEmail } = this.props;
+
+    if (isEmail) {
+      return (
+        <div>
+          <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />
+        </div>
+      );
+    }
+
+    return this._renderWithScriptTags();
+  }
+
+  _renderWithScriptTags() {
     const {
       initialState,
       config

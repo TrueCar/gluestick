@@ -1,7 +1,7 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
-import { renderToString } from "react-dom/server";
+import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND,
   prepareRoutesWithTransitionHooks, getHttpClient } from "gluestick-shared";
 import { match, RouterContext } from "react-router";
@@ -11,6 +11,16 @@ import getHead from "./getHead";
 
 import logger from "../logger";
 import showHelpText, { MISSING_404_TEXT } from "../../lib/helpText";
+
+
+const HTML5 = "<!DOCTYPE html>";
+
+function getEmailAttributes (routes) {
+  const lastRoute = routes[routes.length - 1];
+  const email = lastRoute.email || false;
+  const docType = lastRoute.docType || HTML5;
+  return { email, docType };
+}
 
 process.on("unhandledRejection", (reason, promise) => {
   logger.error(reason, promise);
@@ -55,11 +65,12 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         }
         else if (renderProps) {
+
           // If we have a matching route, set up a routing context so
           // that we render the proper page. On the client side, you
           // embed the router itself, on the server you embed a routing
           // context.
-          // [https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md]
+          // [https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md]
           await runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
           const routerContext = createElement(RouterContext, renderProps);
 
@@ -68,10 +79,14 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           const radiumConfig = { userAgent: req.headers["user-agent"] };
           const main = createElement(Entry, {store: store, routerContext: routerContext, config: config, radiumConfig: radiumConfig});
 
+          const routeAttrs = getEmailAttributes(renderProps.routes);
+          const isEmail = routeAttrs.email;
+          const reactRenderFunc = isEmail ? renderToStaticMarkup : renderToString;
+
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
-          const body = createElement(Body, {html: renderToString(main), config: config, initialState: store.getState()});
-          const head = getHead(config, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
+          const body = createElement(Body, {html: reactRenderFunc(main), config: config, initialState: store.getState(), isEmail: isEmail});
+          const head = isEmail ? null : getHead(config, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
             res.status(404);
@@ -86,7 +101,7 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           // always add inside the <head> tag.
           //
           // Bundle it all up into a string, add the doctype and deliver
-          res.send("<!DOCTYPE html>\n" + renderToString(createElement(Index, {body: body, head: head})));
+          res.send(routeAttrs.docType + "\n" + reactRenderFunc(createElement(Index, {body: body, head: head})));
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
