@@ -44,39 +44,47 @@ module.exports = function startServer (debug=false) {
       process.exit(2);
     }
 
-    pm2.start({
-      script: scriptPath,
-      name: name,
-      cwd: CWD,
-      exec_mode: "cluster",
-      instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
-      max_memory_restart: process.env.MAX_MEMORY_RESTART || "200M",
-      environment_name: process.env.NODE_ENV,
-      no_autorestart: false,
-      merge_logs: true,
-      watch: process.env.NODE_ENV !== "production" ? ["assets", "src", "Index.js"] : false
-    }, (error) => {
-      if (error) {
-        logger.error(error);
-        pm2.disconnect();
-      }
-
-      // start showing the logs
-      spawn(path.join(__dirname, "..", "..", "node_modules", ".bin", "pm2"), ["logs", name, "--raw", "--lines", 0], {stdio: "inherit"});
-    });
-
-    /**
-     * When the app is quit, we go through all of the processes that were
-     * started up because of PM2 and we terminate them.
-     */
-    process.on("SIGINT", () => {
-      logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
-      pm2.delete(name, () => {
-        pm2.disconnect(() => {
-          process.exit();
-        });
-      });
+    // Stop any previous processes with the same name before starting new
+    // instances
+    pm2.stop(name, () => {
+      startPM2(scriptPath, name);
     });
   });
 };
+
+function startPM2 (scriptPath, name) {
+  pm2.start({
+    script: scriptPath,
+    name: name,
+    cwd: CWD,
+    exec_mode: "cluster",
+    instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
+    max_memory_restart: process.env.MAX_MEMORY_RESTART || "200M",
+    environment_name: process.env.NODE_ENV,
+    no_autorestart: false,
+    merge_logs: true,
+    watch: process.env.NODE_ENV !== "production" ? ["assets", "src", "Index.js"] : false
+  }, (error) => {
+    if (error) {
+      logger.error(error);
+      pm2.disconnect();
+    }
+
+    // start showing the logs
+    spawn(path.join(__dirname, "..", "..", "node_modules", ".bin", "pm2"), ["logs", name, "--raw", "--lines", 0], {stdio: "inherit"});
+  });
+
+  /**
+   * When the app is quit, we go through all of the processes that were
+   * started up because of PM2 and we terminate them.
+   */
+  process.on("SIGINT", () => {
+    logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
+    pm2.delete(name, () => {
+      pm2.disconnect(() => {
+        process.exit();
+      });
+    });
+  });
+}
 
