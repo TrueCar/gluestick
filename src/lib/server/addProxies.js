@@ -1,6 +1,4 @@
-import { parse } from "url";
 import httpProxyMiddleware from "http-proxy-middleware";
-import logger from "../../lib/logger";
 
 /**
  * The array of proxy objects follow the following pattern

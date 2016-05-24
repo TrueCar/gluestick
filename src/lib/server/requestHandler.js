@@ -2,12 +2,17 @@
 import path from "path";
 import { createElement } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
-import { runBeforeRoutes, ROUTE_NAME_404_NOT_FOUND,
-  prepareRoutesWithTransitionHooks, getHttpClient } from "gluestick-shared";
+
+import {
+  runBeforeRoutes,
+  ROUTE_NAME_404_NOT_FOUND,
+  prepareRoutesWithTransitionHooks } from "gluestick-shared";
+
 import { match, RouterContext } from "react-router";
 import errorHandler from "./errorHandler";
 import Body from "./Body";
 import getHead from "./getHead";
+import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEntrypoints";
 
 // E-mail support
 import Oy from "oy-vey";
@@ -34,30 +39,11 @@ module.exports = async function (req, res) {
     // Forward all request headers from the browser into http requests made by
     // node
     const config = require(path.join(process.cwd(), "src", "config", "application")).default;
-    const httpClient = getHttpClient(config.httpClient, req);
 
-    const Index = require(path.join(process.cwd(), "Index")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-    const store = require(path.join(process.cwd(), "src/config/.store")).default(httpClient);
-    let originalRoutes = require(path.join(process.cwd(), "src/config/routes")).default;
+    const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, config);
 
-    // @TODO: Remove this in the future when people have had enough time to
-    // upgrade.  When this deprecation notice and backward compatibility check
-    // are removed, remove from templates/new/src/config/.entry as well
-    if (typeof originalRoutes !== "function") {
-      logger.warn(`
-##########################################################################
-Deprecation Notice: src/config/routes.js is expected to export a
-function that returns the routes object, not the routes object
-itself. This gives you access to the redux store so you can use it
-in async react-router methods. For a simple example see:
-https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/routes.js
-##########################################################################
-`);
-      originalRoutes = () => originalRoutes;
-    }
-
-    const routes = prepareRoutesWithTransitionHooks(originalRoutes(store));
+    const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
@@ -79,7 +65,9 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           // grab the main component which is capable of loading routes
           // and hot loading them if in development mode
           const radiumConfig = { userAgent: req.headers["user-agent"] };
-          const main = createElement(Entry, {store: store, routerContext: routerContext, config: config, radiumConfig: radiumConfig});
+
+          // @TODO fill this in with stuff we got from the whole entry points madness from below
+          const main = createElement(Entry, {store, routerContext, config, radiumConfig, getRoutes});
 
           // gather attributes that were included on the route in order to
           // determine whether to render as an e-mail or not
@@ -89,7 +77,7 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
 
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
-          const body = createElement(Body, {html: reactRenderFunc(main), config: config, initialState: store.getState(), isEmail: isEmail});
+          const body = createElement(Body, {html: reactRenderFunc(main), entryPoint: fileName, config: config, initialState: store.getState(), isEmail: isEmail});
           const head = isEmail ? null : getHead(config, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {

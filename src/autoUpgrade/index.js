@@ -58,7 +58,6 @@ module.exports = async function () {
   // update
   [
     ".entry.js",
-    ".store.js",
     ".Dockerfile"   //-> last updated in 0.2.0
   ].forEach((fileName) => {
     const currentFile = fs.readFileSync(getCurrentFilePath(fileName));
