@@ -86,11 +86,18 @@ function startPM2 (scriptPath, name) {
    */
   process.on("SIGINT", () => {
     logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
-    pm2.delete(name, () => {
+    try {
+      pm2.delete(name, () => {
+        pm2.disconnect(() => {
+          process.exit();
+        });
+      });
+    }
+    catch (e) {
       pm2.disconnect(() => {
         process.exit();
       });
-    });
+    }
   });
 }
 
