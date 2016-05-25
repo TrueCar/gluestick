@@ -45,8 +45,16 @@ module.exports = function startServer (debug=false) {
     }
 
     // Stop any previous processes with the same name before starting new
-    // instances
-    pm2.stop(name, () => {
+    // instances. If no instances with that name are found then we just
+    // fall back to starting normally
+    checkIfPM2ProcessExists(name, (exists) => {
+      if (exists) {
+        pm2.stop(name, () => {
+          startPM2(scriptPath, name);
+        });
+        return;
+      }
+
       startPM2(scriptPath, name);
     });
   });
@@ -80,11 +88,26 @@ function startPM2 (scriptPath, name) {
    */
   process.on("SIGINT", () => {
     logger.info(`Stopping pm2 instance: ${highlight(name)}…`);
-    pm2.delete(name, () => {
+    checkIfPM2ProcessExists(name, (exists) => {
+      if (exists) {
+        pm2.delete(name, () => {
+          pm2.disconnect(() => {
+            process.exit();
+          });
+        });
+        return;
+      }
+
       pm2.disconnect(() => {
         process.exit();
       });
     });
+  });
+}
+
+function checkIfPM2ProcessExists (name, callback) {
+  pm2.list((error, result) => {
+    callback(result.map((i) => i.name === name).length > 0);
   });
 }
 
