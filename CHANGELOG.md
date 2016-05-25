@@ -1,6 +1,21 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- Check whether docker is installed before calling it [#179](https://github.com/TrueCar/gluestick/pull/179)
+
+## 0.7.1 - 2016-05-24
+### Added
+- Add support for custom webpack plugins [#184](https://github.com/TrueCar/gluestick/pull/184) 
+- Add way to render server side errors without colors [#184](https://github.com/TrueCar/gluestick/pull/181)
+- Ability to build separate vendor bundle for dependencies [#182](https://github.com/TrueCar/gluestick/pull/182)
+
+### Changed
+- Improve production mode [#186](https://github.com/TrueCar/gluestick/pull/186)
+
+### Fixed
+- Fix reference to NODE_ENV variable for webpack isomorphic tools [#185](https://github.com/TrueCar/gluestick/pull/186/files)
+
 ## 0.7.0 - 2016-05-20
 ### Added
 - Ability to pass directories to the gluestick destroy command [#166](https://github.com/TrueCar/gluestick/pull/166) 
