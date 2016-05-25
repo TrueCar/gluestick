@@ -92,6 +92,7 @@
     "secure-handlebars": "1.2.0",
     "serialize-javascript": "1.2.0",
     "sha1": "1.1.1",
+    "shelljs": "0.7.0",
     "sinon": "1.17.4",
     "sorted-object": "2.0.0",
     "url-loader": "0.5.7",
