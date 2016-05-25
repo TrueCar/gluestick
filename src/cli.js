@@ -36,6 +36,7 @@ const karmaTestOption = ["-k, --karma", "run tests in Karma"];
 const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
+const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 
 commander
   .version(currentGluestickVersion);
@@ -82,6 +83,7 @@ commander
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .option(...karmaTestOption)
+  .option(...skipBuildOption)
   .action(checkGluestickProject)
   .action(() => notifyUpdates())
   .action(startAll)
@@ -210,7 +212,14 @@ async function startAll(options) {
     process.exit();
   }
 
-  spawnProcess("client");
+  // in production spawning the client really just creates a build. Our docker
+  // images pre-build and therefor they start with the skip build option as
+  // true.  We only want to start the client in development mode or if
+  // skipBuild is not specified
+  if (!(isProduction && options.skipBuild)) {
+    spawnProcess("client");
+  }
+
   spawnProcess("server", (options.debugServer ? ["--debug-server"] : []));
 
   // Start tests unless they asked us not to or we are in production mode
