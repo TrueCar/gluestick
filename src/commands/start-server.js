@@ -45,10 +45,16 @@ module.exports = function startServer (debug=false) {
     }
 
     // Stop any previous processes with the same name before starting new
-    // instances
-    pm2.stop(name, () => {
+    // instances. If no instances with that name are found then we just
+    // fall back to starting normally
+    try {
+      pm2.stop(name, () => {
+        startPM2(scriptPath, name);
+      });
+    }
+    catch (e) {
       startPM2(scriptPath, name);
-    });
+    }
   });
 };
 
