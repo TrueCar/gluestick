@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## Changed
 - Check whether docker is installed before calling it [#179](https://github.com/TrueCar/gluestick/pull/179)
 
 ## 0.7.1 - 2016-05-24
