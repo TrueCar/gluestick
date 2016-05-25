@@ -77,6 +77,7 @@ commander
 
 commander
   .command("start")
+  .alias("s")
   .description("start everything")
   .option("-T, --skip-tests", "ignore test hook")
   .option(...debugServerOption)
