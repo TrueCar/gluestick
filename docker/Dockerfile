@@ -18,7 +18,6 @@ ENV BUILD_PACKAGES "autoconf \
                     file \
                     g++ \
                     gcc \
-                    git \
                     imagemagick \
                     libbz2-dev \
                     libc6-dev \
@@ -57,6 +56,7 @@ ENV BUILD_PACKAGES "autoconf \
                     zlib1g-dev"
 
 RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
     npm install -g gluestick@$GLUESTICK_VERSION && \
     npm install && \
