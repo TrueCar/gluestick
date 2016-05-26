@@ -31,6 +31,7 @@ export default class Index extends Component {
           {helmet.meta.toComponent()}
           {helmet.link.toComponent()}
           {helmet.script.toComponent()}
+          {helmet.style.toComponent()}
           {head /* DO NOT REMOVE */}
         </head>
         <body {...bodyAttributes}>
