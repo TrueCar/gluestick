@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Helmet from "react-helmet";
+import { BodyAttributes } from "gluestick-shared";
 import "assets/css/normalize.css";
 
 /**
@@ -20,6 +21,7 @@ export default class Index extends Component {
     } = this.props;
 
     const helmet = Helmet.rewind();
+    const bodyAttributes = BodyAttributes.rewind();
 
     return (
       <html lang="en-us">
@@ -29,9 +31,10 @@ export default class Index extends Component {
           {helmet.meta.toComponent()}
           {helmet.link.toComponent()}
           {helmet.script.toComponent()}
+          {helmet.style.toComponent()}
           {head /* DO NOT REMOVE */}
         </head>
-        <body>
+        <body {...bodyAttributes}>
           {body /* DO NOT REMOVE */}
         </body>
       </html>

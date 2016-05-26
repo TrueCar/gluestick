@@ -6,22 +6,43 @@ export default class Body extends Component {
   static propTypes = {
     config: PropTypes.object.isRequired,
     html: PropTypes.string.isRequired,
+    isEmail: PropTypes.bool.isRequired,
     initialState: PropTypes.any.isRequired
   };
 
   render () {
+    const { isEmail } = this.props;
+
+    if (isEmail) { return this._renderWithoutScriptTags(); }
+    return this._renderWithScriptTags();
+  }
+
+  _renderWithoutScriptTags () {
+    return (
+      <div>
+        { this._renderMainContent() }
+      </div>
+    );
+  }
+
+  _renderWithScriptTags () {
     const {
       initialState,
       config
     } = this.props;
+
     return (
       <div>
-        <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />
+        { this._renderMainContent() }
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState)};`}}></script>
         <script type="text/javascript" src={`${config.assetPath}/vendor.bundle.js`}></script>
         <script type="text/javascript" src={`${config.assetPath}/main.bundle.js`}></script>
       </div>
     );
+  }
+
+  _renderMainContent () {
+    return <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />;
   }
 }
 

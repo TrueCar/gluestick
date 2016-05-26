@@ -84,6 +84,9 @@ const compiler = webpack({
     // only place client specific preLoaders here
     ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
   },
+  node: {
+    fs: "empty"
+  },
   output: {
     path: OUTPUT_PATH,
     filename: OUTPUT_FILE,
