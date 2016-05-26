@@ -34,9 +34,14 @@ function handleStateChangeOnClient(attrs) {
 function transformHTML4Props(props) {
   const transformedProps = {};
 
-  // Provide support for HTML4 attributes on the body tag for
-  // e-mail purposes. Convert tags to ones oy-vey can translate
-  // during the render.
+  /*
+   * Provide support for HTML4 attributes on the body tag for
+   * e-mail purposes. Convert tags to ones oy-vey can translate
+   * during the render.
+   *
+   * Note: Only attributes that are white-listed by oy-vey will be rendered
+   *
+   */
   Object.keys(supportedHTML4Attributes).forEach(propName => {
     if (props.hasOwnProperty(propName)) {
       const name = supportedHTML4Attributes[propName];
