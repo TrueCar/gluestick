@@ -1,4 +1,4 @@
-import { match } from 'react-router';
+import { match } from "react-router";
 
 const getBeforeRoute = (component = {}) => {
   const c = component.WrappedComponent || component;
@@ -16,10 +16,12 @@ function getRouteComponents(routes) {
   const components = [];
 
   routes.forEach(route => {
-    if (route.components)
+    if (route.components) {
       Object.values(route.components).forEach(c => components.push(c));
-    else if (route.component)
+    }
+    else if (route.component) {
       components.push(route.component);
+    }
   });
 
   return components;
@@ -42,14 +44,14 @@ export function runBeforeRoutes (store, renderProps, serverProps) {
   .map(getBeforeRoute).filter(f => f) // only look at ones with a static gsBeforeRoute()
   .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps));  // call fetch data methods and save promises
 
-  return Promise.all(promises)
+  return Promise.all(promises);
 }
 
 export function createTransitionHook (store, routes) {
   return function(location, cb) {
     match({routes: routes, location}, async function (error, redirectLocation, renderProps) {
       try {
-        await runBeforeRoutes(store, renderProps)
+        await runBeforeRoutes(store, renderProps);
       } catch(err) {
         console.error(err);
       } finally {
