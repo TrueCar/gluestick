@@ -13,8 +13,12 @@ BodyAttributes.propTypes = {
 
 function reducePropsToState(propsList) {
   const attrs = {};
+  const transformedAttrs = {};
   propsList.forEach(function (props) {
-    Object.assign(attrs, props);
+    if (props.hasOwnProperty("bgColor")) {
+      Object.assign(transformedAttrs, {"data-oy-bgcolor": props["bgColor"]});
+    }
+    Object.assign(attrs, props, transformedAttrs);
   });
   return attrs;
 }
