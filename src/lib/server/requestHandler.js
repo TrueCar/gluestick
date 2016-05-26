@@ -9,11 +9,13 @@ import errorHandler from "./errorHandler";
 import Body from "./Body";
 import getHead from "./getHead";
 
+// E-mail support
+import Oy from "oy-vey";
+const HTML5 = "<!DOCTYPE html>";
+
 import logger from "../logger";
 import showHelpText, { MISSING_404_TEXT } from "../../lib/helpText";
 
-
-const HTML5 = "<!DOCTYPE html>";
 
 function getEmailAttributes (routes) {
   const lastRoute = routes[routes.length - 1];
@@ -79,6 +81,8 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           const radiumConfig = { userAgent: req.headers["user-agent"] };
           const main = createElement(Entry, {store: store, routerContext: routerContext, config: config, radiumConfig: radiumConfig});
 
+          // gather attributes that were included on the route in order to
+          // determine whether to render as an e-mail or not
           const routeAttrs = getEmailAttributes(renderProps.routes);
           const isEmail = routeAttrs.email;
           const reactRenderFunc = isEmail ? renderToStaticMarkup : renderToString;
@@ -101,7 +105,15 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/src/config/route
           // always add inside the <head> tag.
           //
           // Bundle it all up into a string, add the doctype and deliver
-          res.send(routeAttrs.docType + "\n" + reactRenderFunc(createElement(Index, {body: body, head: head})));
+          const rootElement = createElement(Index, {body: body, head: head});
+
+          if (isEmail) {
+            const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
+            res.send(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
+          }
+          else {
+            res.send(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
+          }
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
