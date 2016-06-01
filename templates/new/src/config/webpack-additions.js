@@ -19,8 +19,24 @@
  * Loaders also support `include`, `exclude` and `query`.
  * Additionally, you can provide a `test` regex instead of `extensions`
  * in order to bypass webpack-isomorphic-tools when needed.
+ *
+ *
+ * When adding additionalAliases, follow this pattern:
+ * additionalAliases: {
+ *   "aliasName": ["path", "to", "location"]
+ * }
+ *
+ * for example:
+ * additionalAliases: {
+ *   "lib" : ["src", "lib"],
+ *   "selectors" : ["src", "selectors"]
+ * }
+ *
  */
 module.exports = {
   additionalLoaders: [],
-  additionalPreLoaders: []
+  additionalPreLoaders: [],
+  additionalAliases: {},
+  plugins: [],
+  vendor: []
 };
