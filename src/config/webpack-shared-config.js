@@ -6,6 +6,9 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
+const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
+const { additionalAliases } = getWebpackAdditions();
+
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
 .development(process.env.NODE_ENV !== "production");
 
@@ -17,7 +20,8 @@ module.exports = {
       "actions": path.join(process.cwd(), "src", "actions"),
       "components": path.join(process.cwd(), "src", "components"),
       "containers": path.join(process.cwd(), "src", "containers"),
-      "reducers": path.join(process.cwd(), "src", "reducers")
+      "reducers": path.join(process.cwd(), "src", "reducers"),
+      ...additionalAliases
     }
   },
   loaders: [

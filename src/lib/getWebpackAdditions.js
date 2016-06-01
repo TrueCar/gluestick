@@ -38,10 +38,22 @@ function prepareUserAdditionsForWebpack (additions) {
   });
 }
 
+/**
+ * avoid having the client application having to include path in its dependencies by creating
+ * the paths here rather than in webpack-additions.js
+ */
+function makeUserAdditionalAliases (aliasesDictionary) {
+  return Object.entries(aliasesDictionary).reduce((map, [aliasName, aliasPath]) => {
+    map[aliasName] = path.join(process.cwd(), ...aliasPath);
+    return map;
+  }, {});
+}
+
 export default function (isomorphic=false) {
   let userAdditions = {
     additionalLoaders: [],
     additionalPreLoaders: [],
+    additionalAliases: {},
     vendor: [],
     plugins: []
   };
@@ -52,10 +64,11 @@ export default function (isomorphic=false) {
   try {
     const webpackAdditionsPath = path.join(process.cwd(), "src", "config", "webpack-additions.js");
     fs.statSync(webpackAdditionsPath);
-    const { additionalLoaders, additionalPreLoaders, vendor, plugins } = require(webpackAdditionsPath);
+    const { additionalLoaders, additionalPreLoaders, additionalAliases, vendor, plugins } = require(webpackAdditionsPath);
     userAdditions = {
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
+      additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
       vendor: vendor || [],
       plugins: plugins || []
     };
