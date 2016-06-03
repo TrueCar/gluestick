@@ -44,7 +44,7 @@ function noop() {
 //
 // "Since the Module system is locked, this feature will probably never go away. However, it may have subtle bugs
 // and complexities that are best left untouched."
-[".css", ".jpg", ".png", ".scss", ".svg"].forEach((extension) => {
+[".css", ".jpg", ".png", ".scss", ".svg", ".gif", ".ico", ".sass"].forEach((extension) => {
   require.extensions[extension] = noop;
 });
 
