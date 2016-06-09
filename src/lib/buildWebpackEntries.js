@@ -6,6 +6,12 @@ function getBasePath () {
   return path.join(process.cwd(), "src", "config", ".entries");
 }
 
+/**
+ * This method is a information preparer/gatherer. This information is used by
+ * `buildWebpackEntries` and the server request handler. It sets up the default
+ * entry point that will be used by most apps, as well as combining any
+ * additional entry points specified in the webpack additions.
+ */
 export function getWebpackEntries () {
   const output = {};
   const cwd = process.cwd();
@@ -38,6 +44,17 @@ export function getWebpackEntries () {
 }
 
 
+/**
+ * This method will wipe out the `config/.entries` hidden folder and rebuild it
+ * it based on the defined entry points. It creates entry point files for each
+ * of the entry points and returns the hash that webpack uses when bundling
+ * code.
+ *
+ * Each entry point will be an array including the shared client entry point
+ * file which includes global dependencies like the babel polyfill. It then
+ * includes the generated entry point. Finally, if we are in development mode
+ * it will start the array off with the webpack hot middleware client.
+ */
 export default function buildWebpackEntries (isProduction) {
   const output = {};
   const basePath = getBasePath();

@@ -66,7 +66,6 @@ module.exports = async function (req, res) {
           // and hot loading them if in development mode
           const radiumConfig = { userAgent: req.headers["user-agent"] };
 
-          // @TODO fill this in with stuff we got from the whole entry points madness from below
           const main = createElement(Entry, {store, routerContext, config, radiumConfig, getRoutes});
 
           // gather attributes that were included on the route in order to
