@@ -2,6 +2,9 @@
 webpack-assets.json
 webpack-bundle-stats.json
 
+# Files generated at runtime
+src/config/.entries
+
 # Logs
 logs
 *.log

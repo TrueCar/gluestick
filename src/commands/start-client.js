@@ -8,6 +8,7 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const webpackSharedConfig = require("../config/webpack-shared-config");
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
+const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
 const { additionalLoaders, additionalPreLoaders, vendor, plugins } = getWebpackAdditions();
 const logger = require("../lib/logger");
 const logsColorScheme = require("../lib/logsColorScheme");
@@ -19,7 +20,7 @@ if (assetPath.substr(-1) !== "/") {
 
 const PORT = 8888;
 const OUTPUT_PATH = path.join(process.cwd(), "build");
-const OUTPUT_FILE = "main.bundle.js";
+const OUTPUT_FILE = "app.bundle.js";
 const PUBLIC_PATH = assetPath;
 
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
@@ -27,10 +28,6 @@ const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require(".
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
 const isProduction = process.env.NODE_ENV === "production";
-
-const entry = [
-  path.join(__dirname, "../entrypoints/client.js")
-];
 
 let environmentPlugins = [];
 
@@ -51,12 +48,6 @@ else {
   ]);
 }
 
-// Include hot middleware in development mode only
-if (!isProduction) {
-  entry.unshift("webpack-hot-middleware/client");
-}
-
-
 // The config/application.js file is consumed on both the server side and the
 // client side. However, we want developers to have access to environment
 // constiables in there so they can override defaults with an environment
@@ -74,7 +65,7 @@ const compiler = webpack({
   context: process.cwd(),
   devtool: isProduction ? null : "cheap-module-eval-source-map",
   entry: {
-    main: entry,
+    ...buildWebpackEntries(isProduction),
     vendor: vendor
   },
   module: {
@@ -89,8 +80,8 @@ const compiler = webpack({
   },
   output: {
     path: OUTPUT_PATH,
-    filename: OUTPUT_FILE,
-    chunkFilename: `[name]-${OUTPUT_FILE}`,
+    filename: `[name]-${OUTPUT_FILE}`,
+    chunkFilename: `[name]-chunk-${OUTPUT_FILE}`,
     publicPath: PUBLIC_PATH
   },
   plugins: [
@@ -98,11 +89,11 @@ const compiler = webpack({
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      "__PATH_TO_ENTRY__": JSON.stringify(path.join(process.cwd(), "src/config/.entry")),
       "process.env": exposedEnvironmentVariables
     }),
     new webpack.IgnorePlugin(/\.server(\.js)?$/),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
+    new webpack.optimize.CommonsChunkPlugin("commons", "commons.bundle.js"),
     new webpack.optimize.AggressiveMergingPlugin()
   ].concat(environmentPlugins, webpackSharedConfig.plugins, plugins),
   resolve: {
@@ -155,3 +146,4 @@ module.exports = function (buildOnly) {
     });
   }
 };
+
