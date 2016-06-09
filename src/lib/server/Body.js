@@ -37,8 +37,8 @@ export default class Body extends Component {
       <div>
         { this._renderMainContent() }
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState)};`}}></script>
-        <script type="text/javascript" src={`${config.assetPath}/vendor.bundle.js`}></script>
         <script type="text/javascript" src={`${config.assetPath}/commons.bundle.js`}></script>
+        <script type="text/javascript" src={`${config.assetPath}/vendor.bundle.js`}></script>
         <script type="text/javascript" src={`${config.assetPath}/${entryPoint}-app.bundle.js`}></script>
       </div>
     );
