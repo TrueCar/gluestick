@@ -1,7 +1,7 @@
 /*eslint-disable no-console*/
 import logsColorScheme from "./logsColorScheme";
 
-const PREFIX = "[Gluestick]";
+const PREFIX = "[GlueStick]";
 
 function success(...args){
   console.log(PREFIX, ...args.map(arg => logsColorScheme.success(arg)));
