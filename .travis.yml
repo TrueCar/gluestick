@@ -22,6 +22,7 @@ before_deploy:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
+- npm run lint
 - npm run test-coverage #run full tests and coverage
 
 deploy:
