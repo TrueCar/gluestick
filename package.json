@@ -101,7 +101,7 @@
     "webpack": "1.13.1",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.10.0",
-    "webpack-isomorphic-tools": "2.3.0"
+    "webpack-isomorphic-tools": "2.3.2"
   },
   "peerDependencies": {},
   "devDependencies": {
