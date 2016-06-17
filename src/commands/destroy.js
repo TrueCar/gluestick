@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const inquirer = require("inquirer");
-const logger = require("../lib/logger");
-const logsColorScheme = require("../lib/logsColorScheme");
-const { highlight, filename } = logsColorScheme;
+const logger = require("../lib/cliLogger");
+const cliColorScheme = require("../lib/cliColorScheme");
+const { highlight, filename } = cliColorScheme;
 
 const availableCommands = {
   "container": "containers",

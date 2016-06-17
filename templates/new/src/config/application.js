@@ -12,7 +12,11 @@ const headContent = {
 const config = {
   development: {
     assetPath: "http://localhost:8888/assets",
-    head: headContent
+    head: headContent,
+    logger: {
+      pretty: true,
+      level: "info"
+    }
   },
   production: {
     // This should be a CDN in development

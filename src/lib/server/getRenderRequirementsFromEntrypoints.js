@@ -1,6 +1,8 @@
 import { parse as parseURL } from "url";
 import { getWebpackEntries } from "../buildWebpackEntries";
 import isChildPath from "../isChildPath";
+import { getLogger } from "./logger";
+const logger = getLogger();
 import { getHttpClient } from "gluestick-shared";
 
 /**
@@ -11,6 +13,7 @@ import { getHttpClient } from "gluestick-shared";
  */
 export default function getRenderRequirementsFromEntrypoints (req, res, config={}, customRequire=require) {
   const httpClient = getHttpClient(config.httpClient, req, res);
+  logger.debug("Getting webpack entries");
   const entryPoints = getWebpackEntries();
 
   /**
@@ -18,6 +21,7 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
    * found in the url. It will test the most deeply nested entry points first
    * while finally falling back to the default index parameter.
    */
+  logger.debug("Sorting through entry points");
   const sortedEntries = Object.keys(entryPoints).sort((a, b) => {
     const bSplitLength = b.split("/").length;
     const aSplitLength = a.split("/").length;
@@ -34,9 +38,11 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
    * Loop through the sorted entry points and return the variables that the
    * server needs to render based on the best matching entry point.
    */
+  logger.debug("Looping through sorted entry points");
   for (const path of sortedEntries) {
     if (isChildPath(path, urlPath)) {
       const { routes, index, fileName, filePath } = entryPoints[path];
+      logger.debug("Found entrypoint and performing requires for", index, filePath, routes);
       return {
         Index: customRequire(index + ".js").default,
         store: customRequire(filePath).getStore(httpClient),

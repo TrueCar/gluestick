@@ -7,7 +7,7 @@ import path from "path";
 import temp from "temp";
 import rimraf from "rimraf";
 import mkdirp from "mkdirp";
-import logger from "../../src/lib/logger";
+import logger from "../../src/lib/cliLogger";
 import destroy from "../../src/commands/destroy";
 
 

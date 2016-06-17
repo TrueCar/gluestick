@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import logger from "./logger";
-import { highlight } from "./logsColorScheme";
+import logger from "./cliLogger";
+import { highlight } from "./cliColorScheme";
 
 export function quitUnlessGluestickProject(command) {
   if (!isGluestickProject()) {
