@@ -41,7 +41,7 @@ module.exports = async function (req, res) {
     const config = require(path.join(process.cwd(), "src", "config", "application")).default;
 
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-    const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, config);
+    const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
 
     const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
