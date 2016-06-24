@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
 import { expect } from "chai";
-import { stub } from "sinon";
+import { stub, spy } from "sinon";
 
 import newApp from "../../../src/commands/new";
 import npmDependencies from "../../../src/lib/npmDependencies";
@@ -16,13 +16,17 @@ const MOCK_REQUEST = {
 };
 
 describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
-  let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath;
+  let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath, mockServerResponse;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
     fakeNpm = stub(npmDependencies, "install");
     process.chdir(tmpDir);
+
+    mockServerResponse = {
+      append: spy()
+    };
 
     newApp("test-app");
     const appDir = path.join(tmpDir, "test-app");
@@ -46,7 +50,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
       default: `Contents of ${path}`
     });
     const request = { ...MOCK_REQUEST, url: "http://kook.com/todd" };
-    const result = getRenderRequirementsFromEntrypoints(request, {}, mockRequire);
+    const result = getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: "main",
@@ -64,7 +68,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
     const request = { ...MOCK_REQUEST, url: "http://kook.com/used-cars-for-sale" };
     const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
-    const result = getRenderRequirementsFromEntrypoints(request, {}, mockRequire);
+    const result = getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: "used",
