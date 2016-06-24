@@ -9,8 +9,8 @@ import { getHttpClient } from "gluestick-shared";
  * variables that the server needs to render. These variables include Index,
  * store, getRoutes and fileName.
  */
-export default function getRenderRequirementsFromEntrypoints (req, config={}, customRequire=require) {
-  const httpClient = getHttpClient(config.httpClient, req);
+export default function getRenderRequirementsFromEntrypoints (req, res, config={}, customRequire=require) {
+  const httpClient = getHttpClient(config.httpClient, req, res);
   const entryPoints = getWebpackEntries();
 
   /**
