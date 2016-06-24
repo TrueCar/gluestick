@@ -28,7 +28,6 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
       append: spy()
     };
 
-
     newApp("test-app");
     const appDir = path.join(tmpDir, "test-app");
     process.chdir(appDir);
