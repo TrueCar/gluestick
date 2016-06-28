@@ -12,12 +12,12 @@ if (assetPath.substr(-1) !== "/") {
 
 const isProduction = process.env.NODE_ENV === "production";
 
-export default (config, assets) => {
+export default (config, entryPoint, assets) => {
   const tags = [];
   let key = 0;
 
   if (isProduction) {
-    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={`${config.assetPath}/main.css`} />);
+    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={`${config.assetPath}/${entryPoint}.css`} />);
   }
   else {
     // Resolve style flicker on page load in dev mode
