@@ -12,12 +12,12 @@ export default function getHttpClient (options={}, req, serverResponse, httpClie
     return httpClient.create(options);
   }
 
-  const { headers, ...httpConfig } = options;
+  const { headers, modifyInstance, ...httpConfig } = options;
   const protocol = req.secure ? "https://" : "http://";
 
   // If a request object is provided, then we want to merge the custom headers
   // with the headers that we sent from the browser in the request.
-  const client = httpClient.create({
+  let client = httpClient.create({
     baseURL: protocol + req.headers.host,
     headers: {
       ...req.headers,
@@ -37,6 +37,12 @@ export default function getHttpClient (options={}, req, serverResponse, httpClie
     serverResponse.append("Set-Cookie", response.headers["set-cookie"]);
     return response;
   });
+
+  // Provide a hook where developers can have early access to the httpClient
+  // instance so that they can do things like add interceptors.
+  if (modifyInstance) {
+    client = modifyInstance(client, serverResponse);
+  }
 
   return client;
 }

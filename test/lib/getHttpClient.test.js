@@ -113,5 +113,25 @@ describe("lib/getHttpClient", () => {
     expect(mockServerResponse.append.lastCall.args[0]).to.equal("Set-Cookie");
     expect(mockServerResponse.append.lastCall.args[1]).to.equal("oh hai");
   });
+
+  it("should allow you to modify the axios instance with `modifyInstance`", () => {
+    const calledInsideModify = sinon.spy();
+    const options = {
+      modifyInstance: (client) => {
+        calledInsideModify();
+        client.modifiedClient = true;
+        return client;
+      }
+    };
+    const req = {
+      headers: {
+        "host": "hola.com:332211"
+      },
+      secure: false
+    };
+    const client = getHttpClient(options, req);
+    expect(calledInsideModify.called).to.equal(true);
+    expect(client.modifiedClient).to.equal(true);
+  });
 });
 
