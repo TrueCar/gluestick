@@ -4,7 +4,7 @@ import sinon from "sinon";
 import fs from "fs";
 import temp from "temp";
 import rimraf from "rimraf";
-import logger from "../../src/lib/logger";
+import logger from "../../src/lib/cliLogger";
 import { isGluestickProject, quitUnlessGluestickProject, compareVersions } from "../../src/lib/utils";
 
 describe("utils", function () {

@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 import inquirer from "inquirer";
-import chalk from "chalk";
-import logger from "../lib/logger";
+import { getLogger } from "../lib/server/logger";
+const logger = getLogger();
 import readFileSyncStrip from "../lib/readFileSyncStrip";
 
 const CWD = process.cwd();
@@ -35,7 +35,7 @@ export default function updateConfig () {
     } else {
       logger.warn("You should export the correct config object based on the environment.");
     }
-    logger.info(`Example:\n${chalk.cyan(exampleContents)}`);
+    logger.info(`Example:\n${exampleContents}`);
 
     if (hasExportUpgrade) {
       return resolve();

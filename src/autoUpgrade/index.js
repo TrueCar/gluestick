@@ -3,8 +3,8 @@ import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./updatePackage";
 import updateConfig from "./updateConfig";
-import logger from "../lib/logger";
-import { highlight, filename } from "../lib/logsColorScheme";
+import { getLogger } from "../lib/server/logger";
+const logger = getLogger();
 
 const CWD = process.cwd();
 
@@ -16,9 +16,8 @@ const CWD = process.cwd();
  */
 function replaceFile (name, data) {
   const filePath = getCurrentFilePath(name);
-  logger.info(`${highlight(name)} file out of date.`);
-  logger.success(`Updating ${filename(filePath)}`);
-
+  logger.info(`${name} file out of date.`);
+  logger.info(`Updating ${filePath}`);
   fs.writeFileSync(filePath, data);
 }
 
@@ -31,7 +30,9 @@ function getCurrentFilePath (name) {
   return path.join(CWD, "src", "config", name);
 }
 
-module.exports = async function () {
+module.exports = async function (logLevel) {
+  logger.level = logLevel || "warn";
+
   await updatePackage();
 
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them

@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import temp from "temp";
 import rimraf from "rimraf";
-import logger from "../../src/lib/logger";
+import logger from "../../src/lib/cliLogger";
 import updateLastVersionUsed from "../../src/lib/updateVersion";
 
 

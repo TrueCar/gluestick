@@ -4,7 +4,8 @@ import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "cross-spawn";
-import logger from "../lib/logger";
+import { getLogger } from "../lib/server/logger";
+const logger = getLogger();
 import sO from "sorted-object";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
@@ -184,7 +185,7 @@ function performModulesUpdate (mismatchedModules, done) {
   const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 
   npmInstall.on("close", () => {
-    logger.success("node_modules have been updated.");
+    logger.info("node_modules have been updated.");
     done();
   });
 }

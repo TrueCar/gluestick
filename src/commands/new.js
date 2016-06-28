@@ -5,9 +5,9 @@ const path = require("path");
 const npmDependencies = require("../lib/npmDependencies");
 const utils = require("../lib/utils");
 const { isGluestickProject } = utils;
-const logger = require("../lib/logger");
-const logsColorScheme = require("../lib/logsColorScheme");
-const { highlight, filename } = logsColorScheme;
+const logger = require("../lib/cliLogger");
+const cliColorScheme = require("../lib/cliColorScheme");
+const { highlight, filename } = cliColorScheme;
 
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../templates/new"), destination);

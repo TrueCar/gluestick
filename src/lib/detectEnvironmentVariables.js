@@ -1,6 +1,6 @@
 const babel = require("babel-core");
 const traverse = require("babel-traverse").default;
-const logger = require("./logger");
+const logger = require("./cliLogger");
 
 /**
  * Read the contents of a file, convert it to an abstract syntax tree and

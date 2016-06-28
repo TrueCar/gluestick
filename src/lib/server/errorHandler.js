@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import PrettyError from "pretty-error";
 import * as secureHandlebars from "secure-handlebars";
-import logger from "../logger";
+import logger from "../cliLogger";
 
 const pretty = new PrettyError();
 if (["1", "true"].includes(process.env.PRETTY_PRINT_WITHOUT_COLORS)) {

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import logger from "./logger";
+import logger from "./cliLogger";
 import readFileSyncStrip from "./readFileSyncStrip";
 import { compareVersions } from "./utils";
 

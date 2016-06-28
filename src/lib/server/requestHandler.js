@@ -18,8 +18,9 @@ import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEnt
 import Oy from "oy-vey";
 const HTML5 = "<!DOCTYPE html>";
 
-import logger from "../logger";
-import showHelpText, { MISSING_404_TEXT } from "../../lib/helpText";
+import { getLogger } from "./logger";
+const logger = getLogger();
+import showHelpText, { MISSING_404_TEXT } from "./helpText";
 
 
 function getEmailAttributes (routes) {
@@ -29,21 +30,21 @@ function getEmailAttributes (routes) {
   return { email, docType };
 }
 
-process.on("unhandledRejection", (reason, promise) => {
-  logger.error(reason, promise);
+process.on("unhandledRejection", (reason) => {
+  const message = reason.message || reason.statusText || reason;
+  logger.error(reason, "Unhandled promise rejection:", message);
 });
 
 module.exports = async function (req, res) {
   try {
 
-    // Forward all request headers from the browser into http requests made by
-    // node
+    // Forward all request headers from the browser into http requests made by node
     const config = require(path.join(process.cwd(), "src", "config", "application")).default;
-
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
     const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
 
     const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
+
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
@@ -60,6 +61,7 @@ module.exports = async function (req, res) {
           // context.
           // [https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md]
           await runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
+
           const routerContext = createElement(RouterContext, renderProps);
 
           // grab the main component which is capable of loading routes

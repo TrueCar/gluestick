@@ -10,8 +10,8 @@ const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
 const { additionalLoaders, additionalPreLoaders, vendor, plugins } = getWebpackAdditions();
-const logger = require("../lib/logger");
-const logsColorScheme = require("../lib/logsColorScheme");
+import { getLogger } from "../lib/server/logger";
+const logger = getLogger();
 
 let assetPath = require(path.join(process.cwd(), "src", "config", "application")).default.assetPath;
 if (assetPath.substr(-1) !== "/") {
@@ -114,6 +114,10 @@ module.exports = function (buildOnly) {
     app.use(proxy({
       changeOrigin: false,
       target: "http://localhost:8880",
+      logLevel: logger.level,
+      logProvider: () => {
+        return logger;
+      },
       onError: (err, req, res) => {
         // When the client is restarting, show our polling message
         res.status(200).sendFile("poll.html", {root: path.join(__dirname, "../lib")});
@@ -126,7 +130,7 @@ module.exports = function (buildOnly) {
         return;
       }
 
-      logger.success("Server running on http://localhost:" + PORT);
+      logger.info(`Server running on http://localhost:${PORT}`);
     });
   }
   else {
@@ -141,8 +145,8 @@ module.exports = function (buildOnly) {
         return;
       }
 
-      logger.success("Assets have been prepared for production.");
-      logger.success(`Assets can be served from the ${logsColorScheme.filename("/assets")} route but it is recommended that you serve the generated ${logsColorScheme.filename("build")} folder from a Content Delivery Network`);
+      logger.info("Assets have been prepared for production.");
+      logger.info("Assets can be served from the \"/assets\" route but it is recommended that you serve the generated \"build\" folder from a Content Delivery Network");
     });
   }
 };

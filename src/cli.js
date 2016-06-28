@@ -15,9 +15,10 @@ const dockerize = lazyMethodRequire("./commands/dockerize");
 
 const updateLastVersionUsed = require("./lib/updateVersion");
 const getVersion = require("./lib/getVersion");
-const logger = require("./lib/logger");
-const logsColorScheme = require("./lib/logsColorScheme");
-const { highlight } = logsColorScheme;
+
+const logger = require("./lib/cliLogger");
+const cliColorScheme = require("./lib/cliColorScheme");
+const { highlight } = cliColorScheme;
 
 const utils = require("./lib/utils");
 const { quitUnlessGluestickProject } = utils;
@@ -80,6 +81,7 @@ commander
   .alias("s")
   .description("start everything")
   .option("-T, --skip-tests", "ignore test hook")
+  .option("-L, --log-level <level>", "logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option(...debugServerOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
@@ -170,7 +172,7 @@ function notifyUpdates () {
     logger.info(`
 ##########################################################################
 Upgrade Notice: Newer versions of Index.js now include react-helmet
-for allowing dynamic changes to document header data. You will need to 
+for allowing dynamic changes to document header data. You will need to
 manually update your Index.js file to receive this change.
 For a simple example see:
 https://github.com/TrueCar/gluestick/blob/develop/templates/new/Index.js
@@ -206,12 +208,16 @@ function spawnProcess (type, args=[]) {
  */
 async function startAll(options) {
   try {
-    await autoUpgrade();
+    await autoUpgrade(options.logLevel);
   }
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);
     process.exit();
   }
+
+  // Set parsed command line args so that spawned processes can refer to them
+  const parsedOptions = getCommandOptions(options);
+  process.env.GS_COMMAND_OPTIONS = JSON.stringify(parsedOptions);
 
   // in production spawning the client really just creates a build. Our docker
   // images pre-build and therefor they start with the skip build option as
@@ -234,3 +240,14 @@ async function upgradeAndDockerize (name) {
   dockerize(name);
 }
 
+function getCommandOptions(options) {
+  const parsedOptionEntries = Object.entries(options).filter(entry => !(entry[0].match(/^_.+/)));
+  const parsedOptions = parsedOptionEntries.reduce((obj, [key, value]) => {
+    // remove keys that are internal to commander
+    if (["parent", "options", "commands"].includes(key)) {
+      return obj;
+    }
+    return {...obj, [key]: value};
+  }, {});
+  return parsedOptions;
+}

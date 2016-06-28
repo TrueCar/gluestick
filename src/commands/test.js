@@ -6,7 +6,7 @@ const spawn = require("cross-spawn").spawn;
 const path = require("path");
 const CWD = process.cwd();
 const chokidar = require("chokidar");
-const logger = require("../lib/logger");
+const logger = require("../lib/cliLogger");
 
 const NODE_MODULES_PATH = path.join(__dirname, "..", "..", "node_modules");
 const MOCHA_PATH = path.join(NODE_MODULES_PATH, ".bin", "mocha");

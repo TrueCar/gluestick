@@ -1,5 +1,5 @@
-import logger from "../lib/logger";
-import { highlight } from "../lib/logsColorScheme";
+import logger from "../lib/cliLogger";
+import { highlight } from "../lib/cliColorScheme";
 
 const path = require("path");
 const process = require("process");

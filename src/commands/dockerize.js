@@ -1,7 +1,7 @@
 import { spawn } from "cross-spawn";
 import path from "path";
 import process from "process";
-import logger from "../lib/logger.js";
+import logger from "../lib/cliLogger.js";
 import { which } from "shelljs";
 
 module.exports = function (name) {

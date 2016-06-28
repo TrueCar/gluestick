@@ -2,7 +2,7 @@ import fs from "fs";
 import process from "process";
 import path from "path";
 import WebpackIsomorphicToolsPlugin from "webpack-isomorphic-tools/plugin";
-import logger from "./logger";
+import logger from "./cliLogger";
 
 /**
  * GlueStick uses webpack-isomorphic-tools to support server side rendering.

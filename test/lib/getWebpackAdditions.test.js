@@ -3,7 +3,7 @@ import path from "path";
 import temp from "temp";
 import { expect } from "chai";
 import sinon, { stub } from "sinon";
-import logger from "../../src/lib/logger";
+import logger from "../../src/lib/cliLogger";
 
 import newApp from "../../src/commands/new";
 import npmDependencies from "../../src/lib/npmDependencies";
