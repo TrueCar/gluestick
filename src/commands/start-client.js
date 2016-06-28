@@ -114,6 +114,10 @@ module.exports = function (buildOnly) {
     app.use(proxy({
       changeOrigin: false,
       target: "http://localhost:8880",
+      logLevel: logger.level,
+      logProvider: () => {
+        return logger;
+      },
       onError: (err, req, res) => {
         // When the client is restarting, show our polling message
         res.status(200).sendFile("poll.html", {root: path.join(__dirname, "../lib")});

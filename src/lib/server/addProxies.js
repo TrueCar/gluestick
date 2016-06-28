@@ -1,4 +1,6 @@
 import httpProxyMiddleware from "http-proxy-middleware";
+import { getLogger } from "./logger";
+const logger = getLogger();
 
 /**
  * The array of proxy objects follow the following pattern
@@ -24,6 +26,10 @@ export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddlew
   proxyConfigs.forEach((proxyConfig) => {
     const { path, destination, options } = proxyConfig;
     app.use(path, proxy({
+      logLevel: logger.level,
+      logProvider: () => {
+        return logger;
+      },
       target: destination,
       pathRewrite: {
         [`^${path}`]: ""
