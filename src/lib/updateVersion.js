@@ -18,6 +18,8 @@ module.exports = function updateLastVersionUsed(gluestickVersion, withWarnings=t
 
   if (withWarnings && needsUpdate) {
     logger.warn("This project is configured to work with versions >= " + project.version + " Please upgrade your global `gluestick` module with `sudo npm install gluestick -g");
+    process.exit(1);
+    return;
   }
 
   // Update version in dot file

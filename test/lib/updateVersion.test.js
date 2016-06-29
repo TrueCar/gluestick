@@ -26,6 +26,7 @@ describe("cli: gluestick touch", function () {
 
     sandbox = sinon.sandbox.create();
     sandbox.spy(logger, "warn");
+    sandbox.stub(process, "exit");
   });
 
   afterEach(done => {
@@ -47,6 +48,14 @@ describe("cli: gluestick touch", function () {
     newDotFileContents(JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion);
     expect(logger.warn.calledOnce).to.be.true;
+  });
+
+  it("exits when the project version is greater than the gluestick version", () => {
+    const projectVersion = "0.2.0";
+    const gluestickVersion = "0.1.0";
+    newDotFileContents(JSON.stringify({version: projectVersion}));
+    updateLastVersionUsed(gluestickVersion);
+    expect(process.exit.calledOnce).to.be.true;
   });
 
   it("does not display a warning when the flag is set to false", () => {
