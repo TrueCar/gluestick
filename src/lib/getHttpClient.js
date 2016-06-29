@@ -8,16 +8,27 @@ import axios from "axios";
  * @param {axios} [httpClient] optionally override axios (used for tests/mocking)
  */
 export default function getHttpClient (options={}, req, serverResponse, httpClient=axios) {
+  const { headers, modifyInstance, ...httpConfig } = options;
+  let client;
+
+  // If there is no request object then we are in the browser and we don't need
+  // to worry about headers or cookies but we still need to pass options and
+  // give developers a chance to modify the instance
   if (!req) {
-    return httpClient.create(options);
+    client = httpClient.create(options);
+
+    if (modifyInstance) {
+      client = modifyInstance(client);
+    }
+
+    return client;
   }
 
-  const { headers, modifyInstance, ...httpConfig } = options;
   const protocol = req.secure ? "https://" : "http://";
 
   // If a request object is provided, then we want to merge the custom headers
   // with the headers that we sent from the browser in the request.
-  let client = httpClient.create({
+  client = httpClient.create({
     baseURL: protocol + req.headers.host,
     headers: {
       ...req.headers,
@@ -43,6 +54,7 @@ export default function getHttpClient (options={}, req, serverResponse, httpClie
   if (modifyInstance) {
     client = modifyInstance(client, serverResponse);
   }
+  debugger;
 
   return client;
 }
