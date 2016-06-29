@@ -26,16 +26,19 @@ describe("lib/getHttpClient", () => {
     };
   });
 
-  it("should call create with passed params", () => {
+  it("should call create with passed params, except headers and modifyInstance", () => {
     const options = {
       headers: {
         "X-Todd": "Hi",
         "test": "best"
       },
-      rewriteRequest: [() => {}]
+      rewriteRequest: [() => {}],
+      modifyInstance: c => c,
+      abc: 123
     };
     const client = getHttpClient(options, undefined, undefined, axiosMock);
-    expect(axiosMock.create.calledWith(options)).to.equal(true);
+    const { headers, modifyInstance, ...expectedResult } = options;
+    expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
   });
 
   it("should merge request headers if request object is passed", () => {

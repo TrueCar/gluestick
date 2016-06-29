@@ -7,7 +7,7 @@ import axios from "axios";
  * https://github.com/mzabriskie/axios#request-config
  * @param {axios} [httpClient] optionally override axios (used for tests/mocking)
  */
-export default function getHttpClient (options={}, req, serverResponse, httpClient=axios) {
+export default function getHttpClient (options={}, req, res, httpClient=axios) {
   const { headers, modifyInstance, ...httpConfig } = options;
   let client;
 
@@ -15,7 +15,7 @@ export default function getHttpClient (options={}, req, serverResponse, httpClie
   // to worry about headers or cookies but we still need to pass options and
   // give developers a chance to modify the instance
   if (!req) {
-    client = httpClient.create(options);
+    client = httpClient.create(httpConfig);
 
     if (modifyInstance) {
       client = modifyInstance(client);
@@ -45,16 +45,15 @@ export default function getHttpClient (options={}, req, serverResponse, httpClie
     // undesired effects. Currently, the suggested solution for dealing with
     // this problem is to make the API requests to A or B in the browser and
     // not in gsBeforeRoute for apps where that is an issue.
-    serverResponse.append("Set-Cookie", response.headers["set-cookie"]);
+    res.append("Set-Cookie", response.headers["set-cookie"]);
     return response;
   });
 
   // Provide a hook where developers can have early access to the httpClient
   // instance so that they can do things like add interceptors.
   if (modifyInstance) {
-    client = modifyInstance(client, serverResponse);
+    client = modifyInstance(client, res);
   }
-  debugger;
 
   return client;
 }
