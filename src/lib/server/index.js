@@ -1,5 +1,5 @@
 import express from "express";
-import { getLogger, getRequestLogger } from "./logger";
+import { getLogger, getLoggerMiddleware } from "./logger";
 const logger = getLogger();
 import requestHandler from "./requestHandler";
 import addProxies from "./addProxies";
@@ -13,6 +13,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const port = process.env.PORT || (isProduction? 8888 : 8880);
 
 const app = express();
+app.use(getLoggerMiddleware());
 
 // Hook up all of the API proxies
 addProxies(app, config.proxies);
@@ -31,7 +32,6 @@ else {
   logger.info("Server side rendering proxy running");
 }
 
-app.use(getRequestLogger());
 app.use(requestHandler);
 app.listen(port);
 

@@ -1,16 +1,6 @@
 import fs from "fs";
 import path from "path";
-import PrettyError from "pretty-error";
 import * as secureHandlebars from "secure-handlebars";
-import logger from "../cliLogger";
-
-const pretty = new PrettyError();
-if (["1", "true"].includes(process.env.PRETTY_PRINT_WITHOUT_COLORS)) {
-  pretty.withoutColors();
-}
-else {
-  pretty.withColors();
-}
 
 /**
  * Register handlebars helper that allows condition blocks for non production
@@ -36,14 +26,14 @@ secureHandlebars.registerHelper("notForProduction", function (options) {
 export default function serverErrorHandler(req, res, error) {
   res.status(500);
   const custom505FilePath = path.join(process.cwd(), "505.hbs");
-  logger.error(pretty.render(error));
+  res.log.error(error);
 
   // Check if we have a custom 505 error page
   fs.stat(custom505FilePath, (statError, stats) => {
 
     // If we don't have a custom 505 error page then just throw the stack trace
     if(statError || !stats.isFile()) {
-      logger.info(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`);
+      res.log.info(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`);
       return res.send({error: error});
     }
 

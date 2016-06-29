@@ -56,6 +56,6 @@ export function getLogger(middleware=false) {
   return middleware ? expressPinoLogger(logConfig, prettyConfig) : pino(logConfig, prettyConfig);
 }
 
-export function getRequestLogger() {
+export function getLoggerMiddleware() {
   return getLogger(true);
 }
