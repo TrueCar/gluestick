@@ -2,6 +2,10 @@ import httpProxyMiddleware from "http-proxy-middleware";
 import { getLogger } from "./logger";
 const logger = getLogger();
 
+const onError = ("error", (err, req, res) => {
+  res.log.error(err, "Proxy error:");
+});
+
 /**
  * The array of proxy objects follow the following pattern
  * @typedef ProxyConfig
@@ -25,7 +29,7 @@ const logger = getLogger();
 export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddleware) {
   proxyConfigs.forEach((proxyConfig) => {
     const { path, destination, options } = proxyConfig;
-    app.use(path, proxy({
+    const proxyObj = proxy({
       logLevel: logger.level,
       logProvider: () => {
         return logger;
@@ -34,8 +38,10 @@ export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddlew
       pathRewrite: {
         [`^${path}`]: ""
       },
+      onError: onError,
       ...options
-    }));
+    });
+    app.use(path, proxyObj);
   });
 }
 
