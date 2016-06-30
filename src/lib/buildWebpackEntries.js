@@ -1,6 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 import getWebpackAdditions from "./getWebpackAdditions";
+import { getLogger } from "./server/logger";
+const logger = getLogger();
 
 function getBasePath () {
   return path.join(process.cwd(), "src", "config", ".entries");
@@ -71,8 +73,11 @@ export default function buildWebpackEntries (isProduction) {
     output[fileName] = [path.join(__dirname, "..", "entrypoints", "client.js"), filePath];
 
     // Include hot middleware in development mode only
-    if (!isProduction) {
+    if (!isProduction && !entry.disableHMR) {
       output[fileName].unshift("webpack-hot-middleware/client");
+    }
+    else if (entry.disableHMR) {
+      logger.debug("Disabling HMR for entry '%s'", entry.name);
     }
   }
 

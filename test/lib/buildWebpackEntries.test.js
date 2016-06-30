@@ -150,5 +150,24 @@ describe("src/lib/buildWebpackEntries", () => {
       expect(output).to.deep.equal(expectedResult);
     });
   });
+
+  it("should not include the hot module middleware if disableHMR is truthy for the entrypoint", () => {
+    const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used', disableHMR: true }}};";
+    fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
+    const output = buildWebpackEntries();
+    const clientPath = path.join(__dirname, "..", "..", "src", "entrypoints", "client.js");
+    const expectedResult = {
+      "main": [
+        "webpack-hot-middleware/client",
+        clientPath,
+        path.join(cwd, "/src/config/.entries/main.js")
+      ],
+      "used": [
+        clientPath,
+        path.join(cwd, "/src/config/.entries/used.js")
+      ]
+    };
+    expect(output).to.deep.equal(expectedResult);
+  });
 });
 
