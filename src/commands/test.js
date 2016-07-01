@@ -77,9 +77,9 @@ function useMocha(options) {
         "--root",
         "src",
         "--report",
-        "html",
+        "lcov",
         "--dir",
-        "coverage/html",
+        "coverage/lcov",
         MOCHA_COVERAGE_PATH,
         ...createMochaArgs(options, true)
       ],
