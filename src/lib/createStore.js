@@ -1,22 +1,14 @@
 import thunk from "redux-thunk";
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
-
+import _gluestick from "./reducers";
 import promiseMiddleware from "../lib/promiseMiddleware";
-
-/**
- * This reducer always returns the original state, this prevents an error when
- * no other reducers have been added.
- */
-function _gluestick(state=true, action) {
-  return state;
-}
 
 export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
   const middleware = [
-      promiseMiddleware(client),
-      thunk,
-      ...customMiddleware
+    promiseMiddleware(client),
+    thunk,
+    ...customMiddleware
   ];
 
   // Include middleware that will warn when you mutate the state object
@@ -28,7 +20,7 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
 
   const composeArgs = [
     applyMiddleware.apply(this, middleware),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+    typeof window === "object" && typeof window.devToolsExtension !== "undefined" ? window.devToolsExtension() : f => f
   ];
 
   const finalCreateStore = compose.apply(null, composeArgs)(createStore);

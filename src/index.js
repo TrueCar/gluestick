@@ -5,4 +5,5 @@ export prepareRoutesWithTransitionHooks from "./lib/prepareRoutesWithTransitionH
 export * from "./lib/route-helper";
 export * from "./lib/constants";
 export getHttpClient from "./lib/getHttpClient";
+export { render404, renderStatus } from "./lib/actions";
 
