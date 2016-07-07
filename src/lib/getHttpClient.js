@@ -38,14 +38,19 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
   });
 
   client.interceptors.response.use((response) => {
-    // @TODO: This will append all of the cookies sent back from server side
-    // requests in the initial page load. There is a potential issue if you are
-    // hitting 3rd party APIs. If site A sets a cookie and site B sets a cookie
-    // with the same key, then it will overwrite A's cookie and possibly create
-    // undesired effects. Currently, the suggested solution for dealing with
-    // this problem is to make the API requests to A or B in the browser and
-    // not in gsBeforeRoute for apps where that is an issue.
-    res.append("Set-Cookie", response.headers["set-cookie"]);
+    const cookiejar = response.headers["set-cookie"];
+
+    if (Array.isArray(cookiejar)) {
+      const cookieString = cookiejar.join("; ");
+
+      // Set all of the cookies sent back from server side requests in the initial page load.
+      res.header("Set-Cookie", cookieString);
+
+      // Ensure that any subsequent requests are passing the cookies.
+      // This is for instances where there is no browser persisting the cookies.
+      client.defaults.headers.cookie = cookieString;
+    }
+
     return response;
   });
 
@@ -57,4 +62,3 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
 
   return client;
 }
-
