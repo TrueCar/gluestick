@@ -19,19 +19,6 @@ export default (config, entryPoint, assets) => {
   if (isProduction) {
     tags.push(<link key={key++} rel="stylesheet" type="text/css" href={`${config.assetPath}/${entryPoint}.css`} />);
   }
-  else {
-    // Resolve style flicker on page load in dev mode
-    Object.keys(assets.assets).forEach(assetPath => {
-      if (!/\.(css|scss|sass|less)$/.test(assetPath)) { return; }
-
-      // webpack isomorphic tools converts `node_modules` to `~` in these
-      // paths. This means any css files imported directly out of a node_module
-      // will not be found. Unless we swap `~` back to `node_modules`.
-      assetPath = assetPath.replace("~", "node_modules");
-
-      tags.push(<style key={key++} dangerouslySetInnerHTML={{__html: require(path.join(process.cwd(), assetPath))}} />);
-    });
-  }
 
   tags.push(
     <script key={key++} type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__GS_PUBLIC_PATH__ = ${serialize(assetPath)}; window.__GS_ENVIRONMENT__ = ${serialize(process.env.NODE_ENV)}`}}></script>
