@@ -43,7 +43,13 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
     if (Array.isArray(cookiejar)) {
       const cookieString = cookiejar.join("; ");
 
-      // Set all of the cookies sent back from server side requests in the initial page load.
+      // @TODO: This will append all of the cookies sent back from server side
+      // requests in the initial page load. There is a potential issue if you are
+      // hitting 3rd party APIs. If site A sets a cookie and site B sets a cookie
+      // with the same key, then it will overwrite A's cookie and possibly create
+      // undesired effects. Currently, the suggested solution for dealing with
+      // this problem is to make the API requests to A or B in the browser and
+      // not in gsBeforeRoute for apps where that is an issue.
       res.header("Set-Cookie", cookieString);
 
       // Ensure that any subsequent requests are passing the cookies.
