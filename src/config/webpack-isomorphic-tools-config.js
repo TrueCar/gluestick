@@ -67,5 +67,6 @@ module.exports = {
     "containers": path.join(process.cwd(), "src", "containers"),
     "reducers": path.join(process.cwd(), "src", "reducers"),
     ...additionalAliases
-  }
+  },
+  patch_require: true
 };
