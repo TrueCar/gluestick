@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import { getLogger, getLoggerMiddleware } from "./logger";
 const logger = getLogger();
 import requestHandler from "./requestHandler";
@@ -14,6 +15,7 @@ const port = process.env.PORT || (isProduction? 8888 : 8880);
 
 const app = express();
 app.use(getLoggerMiddleware());
+app.use(compression());
 
 // Hook up all of the API proxies
 addProxies(app, config.proxies);
