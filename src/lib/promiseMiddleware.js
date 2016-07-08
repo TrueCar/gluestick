@@ -1,13 +1,16 @@
 export default function promiseMiddleware (client) {
+  // eslint-disable-next-line no-unused-vars
   return ({dispatch, getState}) => {
     return next => action => {
       const { promise, type, ...rest } = action;
 
-      if (!promise) return next(action);
+      if (!promise) {
+        return next(action);
+      }
 
       const SUCCESS = type;
-      const INIT = type + '_INIT';
-      const FAILURE = type + '_FAILURE';
+      const INIT = type + "_INIT";
+      const FAILURE = type + "_FAILURE";
 
       next({...rest, type: INIT});
 
@@ -31,6 +34,6 @@ export default function promiseMiddleware (client) {
           return false;
         });
     };
-  }
+  };
 }
 
