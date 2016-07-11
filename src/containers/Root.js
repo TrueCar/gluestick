@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import { Router, browserHistory } from "react-router";
+import { applyRouterMiddleware, Router, browserHistory } from "react-router";
 import { Provider } from "react-redux";
+import useScroll from "react-router-scroll";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
 
@@ -52,7 +53,7 @@ export default class Root extends Component {
     if (routerContext) return routerContext;
 
     return (
-      <Router history={routerHistory}>
+      <Router history={routerHistory} render={applyRouterMiddleware(useScroll())}>
         {prepareRoutesWithTransitionHooks(routes)}
       </Router>
     );
