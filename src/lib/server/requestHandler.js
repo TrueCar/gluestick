@@ -118,9 +118,9 @@ module.exports = async function (req, res) {
       }
       catch (error) {
         // Render any error that was set on GlueStick's internal state object if one exists
-        const error = getError(store.getState());
-        if (error !== null) {
-          res.status(error.status).send(error.message || "An error occurred.");
+        const errorState = getError(store.getState());
+        if (errorState !== null) {
+          res.status(errorState.status).send(errorState.message || "An error occurred.");
         }
         else {
           errorHandler(req, res, error);
