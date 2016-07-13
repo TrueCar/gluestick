@@ -1,4 +1,4 @@
-import { RENDER_STATUS } from "./actions";
+import { SET_STATUS_CODE } from "./actions";
 
 const INITIAL_STATE={};
 
@@ -9,13 +9,10 @@ const INITIAL_STATE={};
  */
 export default function _gluestick(state=INITIAL_STATE, action) {
   switch(action.type) {
-    case RENDER_STATUS: {
+    case SET_STATUS_CODE: {
       return {
         ...state,
-        error: {
-          message: action.message,
-          status: action.statusCode
-        }
+        statusCode: action.statusCode
       };
     }
     default:

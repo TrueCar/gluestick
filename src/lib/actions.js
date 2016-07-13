@@ -1,13 +1,13 @@
-export const RENDER_STATUS = "RENDER_STATUS";
+export const SET_STATUS_CODE = "SET_STATUS_CODE";
 
-export function render404 (message) {
-  return renderStatus (404, message);
+
+export function set404StatusCode() {
+  return setStatusCode(404);
 }
 
-export function renderStatus (statusCode, message) {
+export function setStatusCode(statusCode) {
   return {
-    type: RENDER_STATUS,
-    statusCode: statusCode,
-    message: message
+    type: SET_STATUS_CODE,
+    statusCode: statusCode
   };
 }
