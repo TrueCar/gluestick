@@ -1,4 +1,5 @@
 require("babel-polyfill");
+var ADDON_REGEX = require("../constants/configuration").ADDON_REGEX;
 require("babel-core/register")({
   presets: [
     "react",
@@ -18,6 +19,9 @@ require("babel-core/register")({
 
     // Make sure babel does not ignore
     if (filename.includes(gluestick_folder)) { return false; }
+
+    if (ADDON_REGEX.test(filename)) { return false; }
+
 
     return filename.includes(node_modules);
   }
