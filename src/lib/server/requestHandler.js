@@ -117,14 +117,8 @@ module.exports = async function (req, res) {
         }
       }
       catch (error) {
-        // Render any error that was set on GlueStick's internal state object if one exists
-        const errorStatus = getErrorStatusCode(store.getState());
-        if (errorStatus !== null) {
-          res.status(errorStatus).send("An error occurred.");
-        }
-        else {
-          errorHandler(req, res, error);
-        }
+        // Always return a 500 for exceptions
+        errorHandler(req, res, error);
       }
     });
   }
