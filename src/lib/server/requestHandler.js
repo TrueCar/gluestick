@@ -142,7 +142,7 @@ function getEmailAttributes (routes) {
 
 function getErrorStatusCode (state) {
   if (state._gluestick.hasOwnProperty("statusCode")) {
-    return state._gluestick.error;
+    return state._gluestick.statusCode;
   }
   return null;
 }
