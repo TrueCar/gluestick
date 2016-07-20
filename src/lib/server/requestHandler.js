@@ -92,9 +92,9 @@ module.exports = async function (req, res) {
           else {
             // Use the error's status code that was set on GlueStick's internal
             // state object if one exists
-            const error = getError(currentState);
-            if (error !== null) {
-              res.status(error.status);
+            const errorStatus = getErrorStatusCode(currentState);
+            if (errorStatus !== null) {
+              res.status(errorStatus);
             }
             else {
               res.status(200);
@@ -117,14 +117,8 @@ module.exports = async function (req, res) {
         }
       }
       catch (error) {
-        // Render any error that was set on GlueStick's internal state object if one exists
-        const errorState = getError(store.getState());
-        if (errorState !== null) {
-          res.status(errorState.status).send(errorState.message || "An error occurred.");
-        }
-        else {
-          errorHandler(req, res, error);
-        }
+        // Always return a 500 for exceptions
+        errorHandler(req, res, error);
       }
     });
   }
@@ -140,9 +134,9 @@ function getEmailAttributes (routes) {
   return { email, docType };
 }
 
-function getError (state) {
-  if (state._gluestick.hasOwnProperty("error")) {
-    return state._gluestick.error;
+function getErrorStatusCode (state) {
+  if (state._gluestick.hasOwnProperty("statusCode")) {
+    return state._gluestick.statusCode;
   }
   return null;
 }
