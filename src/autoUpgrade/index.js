@@ -3,6 +3,7 @@ import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./updatePackage";
 import updateConfig from "./updateConfig";
+import updateErrorFile from "./updateErrorFile";
 import { getLogger } from "../lib/server/logger";
 const logger = getLogger();
 
@@ -72,7 +73,9 @@ module.exports = async function (logLevel) {
     }
   });
 
-
   // -> prior to 0.2.2
   await updateConfig();
+
+  // -> prior to 0.8.12
+  await updateErrorFile();
 };
