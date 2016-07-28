@@ -50,7 +50,10 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       // undesired effects. Currently, the suggested solution for dealing with
       // this problem is to make the API requests to A or B in the browser and
       // not in gsBeforeRoute for apps where that is an issue.
-      res.header("Set-Cookie", cookieString);
+      res.removeHeader("Set-Cookie");
+      cookiejar.forEach(cookie => {
+        res.append("Set-Cookie", cookie);
+      });
 
       // Ensure that any subsequent requests are passing the cookies.
       // This is for instances where there is no browser persisting the cookies.
