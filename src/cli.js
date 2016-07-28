@@ -88,9 +88,9 @@ commander
   .option(...karmaTestOption)
   .option(...skipBuildOption)
   .action(checkGluestickProject)
+  .action(() => updateLastVersionUsed(currentGluestickVersion))
   .action(() => notifyUpdates())
-  .action(startAll)
-  .action(() => updateLastVersionUsed(currentGluestickVersion));
+  .action(startAll);
 
 commander
   .command("build")
@@ -104,8 +104,8 @@ commander
   .description("create docker image")
   .arguments("<name>")
   .action(checkGluestickProject)
-  .action(upgradeAndDockerize)
-  .action(() => updateLastVersionUsed(currentGluestickVersion));
+  .action(() => updateLastVersionUsed(currentGluestickVersion))
+  .action(upgradeAndDockerize);
 
 commander
   .command("start-client", null, {noHelp: true})
