@@ -23,7 +23,7 @@ secureHandlebars.registerHelper("notForProduction", function (options) {
  * @param Express.Response res The http response object for returning our response
  * @param Error error the error object that triggered this handler
  */
-export default function serverErrorHandler(req, res, error) {
+export default function serverErrorHandler(req, res, error, config={}) {
   res.status(500);
   const custom505FilePath = path.join(process.cwd(), "505.hbs");
   res.log.error(error);
@@ -39,7 +39,7 @@ export default function serverErrorHandler(req, res, error) {
 
     // If we do have a custom 505 page, render it
     fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
-      if (readFileError) { return res.send({error: readFileError}); }
+      if (readFileError) { return res.send({error: readFileError, config}); }
 
       // We use secure-handlebars to deliver the 505 page. This lets you
       // use a handlebars template so you can display the stack trace or
