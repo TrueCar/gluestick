@@ -30,10 +30,10 @@ process.on("unhandledRejection", (reason) => {
 });
 
 module.exports = async function (req, res) {
+  // Forward all request headers from the browser into http requests made by node
+  let config;
   try {
-
-    // Forward all request headers from the browser into http requests made by node
-    const config = require(path.join(process.cwd(), "src", "config", "application")).default;
+    config = require(path.join(process.cwd(), "src", "config", "application")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
     const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
 
@@ -42,7 +42,7 @@ module.exports = async function (req, res) {
     match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
-          errorHandler(req, res, error);
+          errorHandler(req, res, error, config);
         }
         else if (redirectLocation) {
           res.redirect(302, redirectLocation.pathname + redirectLocation.search);
@@ -118,12 +118,12 @@ module.exports = async function (req, res) {
       }
       catch (error) {
         // Always return a 500 for exceptions
-        errorHandler(req, res, error);
+        errorHandler(req, res, error, config);
       }
     });
   }
   catch (error) {
-    errorHandler(req, res, error);
+    errorHandler(req, res, error, config);
   }
 };
 
