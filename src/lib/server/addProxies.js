@@ -28,8 +28,8 @@ const onError = ("error", (err, req, res) => {
  */
 export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddleware) {
   proxyConfigs.forEach((proxyConfig) => {
-    const { path, destination, options } = proxyConfig;
-    const proxyObj = proxy({
+    const { filter, path, destination, options } = proxyConfig;
+    const actualConfig = {
       logLevel: logger.level,
       logProvider: () => {
         return logger;
@@ -40,7 +40,15 @@ export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddlew
       },
       onError: onError,
       ...options
-    });
+    };
+
+    let proxyObj;
+    if (typeof(filter) === "function") {
+      proxyObj = proxy(filter, actualConfig);
+    }
+    else {
+      proxyObj = proxy(actualConfig);
+    }
     app.use(path, proxyObj);
   });
 }

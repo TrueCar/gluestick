@@ -77,5 +77,31 @@ describe("lib/server/addProxies", function () {
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
     expect(mockExpressHttpProxy.lastCall.args[0].pathRewrite).to.equal(pathRewrite);
   });
+
+  it("should allow you to supply a filter function", () => {
+    const mockExpressHttpProxy = sinon.spy();
+    const proxyConfig = {
+      filter: (pathname) => {
+        return !!(pathname.match("/api") && !pathname.match("/api/foo"));
+      },
+      path: "/api",
+      destination: "http://www.test.com/api"
+    };
+    addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
+    expect(mockExpressHttpProxy.lastCall.args[0]).to.be.a("function");
+    expect(mockExpressHttpProxy.lastCall.args[0]).to.equal(proxyConfig.filter);
+  });
+
+  it("should not add the filter if it is not a function", () => {
+    const mockExpressHttpProxy = sinon.spy();
+    const proxyConfig = {
+      filter: "this is the wrong type for filter",
+      path: "/api",
+      destination: "http://www.test.com/api"
+    };
+    addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
+    expect(mockExpressHttpProxy.lastCall.args[0]).to.not.be.a("function");
+    expect(mockExpressHttpProxy.lastCall.args[0]).to.be.a("Object");
+  });
 });
 
