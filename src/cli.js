@@ -38,6 +38,7 @@ const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
+const usePm2Option = ["-U, --use-pm2", "use PM2 instead of forever for server-side rendering"];
 
 commander
   .version(currentGluestickVersion);
@@ -87,6 +88,7 @@ commander
   .option(...mochaReporterOption)
   .option(...karmaTestOption)
   .option(...skipBuildOption)
+  .option(...usePm2Option)
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
   .action(() => notifyUpdates())
@@ -120,8 +122,9 @@ commander
   .option(...debugServerOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
+  .option(...usePm2Option)
   .action(checkGluestickProject)
-  .action((options) => startServer(options.debugServer))
+  .action((options) => startServer(options.debugServer, options.usePm2))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -227,7 +230,17 @@ async function startAll(options) {
     spawnProcess("client");
   }
 
-  spawnProcess("server", (options.debugServer ? ["--debug-server"] : []));
+  const serverOptions = [];
+
+  if (options.debugServer) {
+    serverOptions.push("--debug-server");
+  }
+
+  if (options.usePm2) {
+    serverOptions.push("--use-pm2");
+  }
+
+  spawnProcess("server", serverOptions);
 
   // Start tests unless they asked us not to or we are in production mode
   if (!isProduction && !options.skipTests) {
