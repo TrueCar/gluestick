@@ -1,6 +1,7 @@
 import path from "path";
 import process from "process";
 import { spawn } from "cross-spawn";
+import startForever from "./start-server-forever";
 import startPM2 from "./start-server-pm2";
 
 import { getLogger } from "../lib/server/logger";
@@ -19,7 +20,7 @@ const CWD = process.cwd();
  *
  * @param {Boolean} debug whether or not to use node-inspector for debugging
  */
-module.exports = function startServer (debug=false, pm2=true) {
+module.exports = function startServer (debug=false, pm2=false) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
@@ -34,5 +35,7 @@ module.exports = function startServer (debug=false, pm2=true) {
   if (pm2) {
     startPM2(CWD, serverEntrypointPath, MAX_INSTANCES);
   }
-
+  else {
+    startForever(serverEntrypointPath);
+  }
 };
