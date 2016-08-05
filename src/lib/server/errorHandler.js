@@ -24,7 +24,7 @@ secureHandlebars.registerHelper("notForProduction", function (options) {
  * @param Error error the error object that triggered this handler
  */
 export default function serverErrorHandler(req, res, error, config={}) {
-  res.status(500);
+  res.status(error.status || 500);
   const custom505FilePath = path.join(process.cwd(), "505.hbs");
   res.log.error(error);
 
