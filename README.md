@@ -119,6 +119,25 @@ images and font files will automatically be handled as well.
 
 _If you would like to see better css support, please submit a pull request :)_
 
+## Caching
+Caching support has been added for server side rendering. This lets you cache
+entire page responses on pages where it makes sense like a home or landing
+page.
+
+Example:
+```
+<Route path="/" component={HomeApp} cache={true} />
+```
+
+*Route property:*
+`cache` - boolean
+
+*Additional optional cache properties:*
+`cacheTTL` - number of seconds to store the cache for a particular route
+`cacheKey` - If you do not want to use the URL as the key, you can specify a
+key. For advanced setups, you could access the store and create a key based
+on data in the store.
+
 ## Hot Loading
 GlueStick's development environment utilizing hotloading so your changes will
 show up in the browser as you go. This is sort of experimental but it works

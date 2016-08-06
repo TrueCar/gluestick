@@ -2,6 +2,7 @@
 import path from "path";
 import { createElement } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
+import NodeCache from "node-cache";
 
 import {
   runBeforeRoutes,
@@ -29,6 +30,11 @@ process.on("unhandledRejection", (reason) => {
   logger.error(reason, "Unhandled promise rejection:", message);
 });
 
+const cache = new NodeCache({
+  stdTTL: 60,
+  checkperiod: 600 // how frequently to clear out expired TTL
+});
+
 module.exports = async function (req, res) {
   // Forward all request headers from the browser into http requests made by node
   let config;
@@ -48,6 +54,19 @@ module.exports = async function (req, res) {
           res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         }
         else if (renderProps) {
+          // Check if the route has cache preferences
+          const currentRoute = renderProps.routes[renderProps.routes.length - 1];
+          const cacheKey = currentRoute.cacheKey || `${req.host}/${req.url}`;
+          if (currentRoute.cache) {
+            logger.debug(`Cache is on for route ${cacheKey}`);
+            const cachedResponse = cache.get(cacheKey);
+            if (cachedResponse) {
+              logger.debug(`serving cached response for ${cacheKey}`);
+              res.status(cachedResponse.status);
+              res.end(cachedResponse.responseData);
+              return;
+            }
+          }
 
           // If we have a matching route, set up a routing context so
           // that we render the proper page. On the client side, you
@@ -86,28 +105,43 @@ module.exports = async function (req, res) {
           const rootElement = createElement(Index, {body: body, head: head});
 
           // Set status code
+          let status;
           if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
-            res.status(404);
+            status = 404;
           }
           else {
             // Use the error's status code that was set on GlueStick's internal
             // state object if one exists
             const errorStatus = getErrorStatusCode(currentState);
             if (errorStatus !== null) {
-              res.status(errorStatus);
+              status = errorStatus;
             }
             else {
-              res.status(200);
+              status = 200;
             }
           }
 
+          let responseData;
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            res.send(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
+            responseData = routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
-            res.send(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
+            responseData = routeAttrs.docType + "\n" + reactRenderFunc(rootElement);
           }
+
+          // If caching has been enabled for this route, cache response for
+          // next time it is requested
+          if (currentRoute.cache) {
+            logger.debug(`Caching response for ${cacheKey} - ${currentRoute.cacheTTL}`);
+            cache.set(cacheKey, {
+              status,
+              responseData
+            }, currentRoute.cacheTTL);
+          }
+
+          res.status(status);
+          res.send(responseData);
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
