@@ -56,7 +56,7 @@ module.exports = async function (req, res) {
         else if (renderProps) {
           // Check if the route has cache preferences
           const currentRoute = renderProps.routes[renderProps.routes.length - 1];
-          const cacheKey = currentRoute.cacheKey || `${req.host}/${req.url}`;
+          const cacheKey = currentRoute.cacheKey || `${req.host}${req.url}`;
           if (currentRoute.cache) {
             logger.debug(`Cache is on for route ${cacheKey}`);
             const cachedResponse = cache.get(cacheKey);
