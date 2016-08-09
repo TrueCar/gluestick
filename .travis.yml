@@ -9,6 +9,7 @@ branches:
   only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
     - develop 
     - /^v[\d]+\.[\d]+\.[\d]+$/
+    - /^greenkeeper-.*$/
 
 services:
 - docker
