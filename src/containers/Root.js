@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { applyRouterMiddleware, Router, browserHistory } from "react-router";
 import { Provider } from "react-redux";
-import useScroll from "react-router-scroll";
+import { useScroll } from "react-router-scroll";
 
 import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
 
