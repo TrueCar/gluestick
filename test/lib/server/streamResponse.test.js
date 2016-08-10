@@ -24,6 +24,10 @@ describe("test/lib/server/streamResponse", () => {
     writeHead: sinon.spy()
   };
 
+  const other = {
+    "Content-Type": "text/html; charset=utf-8"
+  };
+
   beforeEach(() => {
     mockZlib.createDeflate.reset();
     mockZlib.createGzip.reset();
@@ -46,7 +50,7 @@ describe("test/lib/server/streamResponse", () => {
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
-    expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "deflate"});
+    expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "deflate", ...other});
     expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
   });
 
@@ -65,7 +69,7 @@ describe("test/lib/server/streamResponse", () => {
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
-    expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "gzip"});
+    expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "gzip", ...other});
     expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
   });
 
@@ -83,7 +87,7 @@ describe("test/lib/server/streamResponse", () => {
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
-    expect(lastCallArgs[1]).to.deep.equal({});
+    expect(lastCallArgs[1]).to.deep.equal({...other});
     expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
   });
 });
