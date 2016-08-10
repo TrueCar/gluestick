@@ -1,8 +1,10 @@
 /*global webpackIsomorphicTools*/
+import { Readable } from "stream";
 import path from "path";
 import { createElement } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import NodeCache from "node-cache";
+import streamResponse from "./streamResponse";
 
 import {
   runBeforeRoutes,
@@ -30,8 +32,9 @@ process.on("unhandledRejection", (reason) => {
   logger.error(reason, "Unhandled promise rejection:", message);
 });
 
+const DEFAULT_CACHE_TTL = 5;
 const cache = new NodeCache({
-  stdTTL: 60,
+  stdTTL: DEFAULT_CACHE_TTL,
   checkperiod: 600 // how frequently to clear out expired TTL
 });
 
@@ -39,6 +42,14 @@ module.exports = async function (req, res) {
   // Forward all request headers from the browser into http requests made by node
   let config;
   try {
+    const cacheKey = `h:${req.hostname} u:${req.url}`;
+    const cachedResponse = cache.get(cacheKey);
+    if (cachedResponse) {
+      logger.debug(`serving cached response for ${cacheKey}`);
+      streamResponse(req, res, cachedResponse);
+      return;
+    }
+
     config = require(path.join(process.cwd(), "src", "config", "application")).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
     const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
@@ -56,17 +67,6 @@ module.exports = async function (req, res) {
         else if (renderProps) {
           // Check if the route has cache preferences
           const currentRoute = renderProps.routes[renderProps.routes.length - 1];
-          const cacheKey = currentRoute.cacheKey || `h:${req.host} u:${req.url}`;
-          if (currentRoute.cache) {
-            logger.debug(`Cache is on for route ${cacheKey}`);
-            const cachedResponse = cache.get(cacheKey);
-            if (cachedResponse) {
-              logger.debug(`serving cached response for ${cacheKey}`);
-              res.status(cachedResponse.status);
-              res.end(cachedResponse.responseData);
-              return;
-            }
-          }
 
           // If we have a matching route, set up a routing context so
           // that we render the proper page. On the client side, you
@@ -121,27 +121,31 @@ module.exports = async function (req, res) {
             }
           }
 
-          let responseData;
+          const responseStream = new Readable();
+          responseStream.setEncoding("utf8");
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseData = routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
+            responseStream.push(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
           }
           else {
-            responseData = routeAttrs.docType + "\n" + reactRenderFunc(rootElement);
+            responseStream.push(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
           }
+
+          // mark that we are done with the stream
+          responseStream.push(null);
 
           // If caching has been enabled for this route, cache response for
           // next time it is requested
           if (currentRoute.cache) {
-            logger.debug(`Caching response for ${cacheKey} - ${currentRoute.cacheTTL}`);
+            const cacheTTL = currentRoute.cacheTTL || DEFAULT_CACHE_TTL;
+            logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
             cache.set(cacheKey, {
               status,
-              responseData
-            }, currentRoute.cacheTTL);
+              responseStream
+            }, cacheTTL);
           }
 
-          res.status(status);
-          res.send(responseData);
+          streamResponse(req, res, { status, responseStream });
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
