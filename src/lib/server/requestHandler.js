@@ -122,6 +122,7 @@ module.exports = async function (req, res) {
           }
 
           const responseStream = new Readable();
+          responseStream.setEncoding("utf8");
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
             responseStream.push(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
