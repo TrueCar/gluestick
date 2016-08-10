@@ -42,7 +42,7 @@ module.exports = async function (req, res) {
   // Forward all request headers from the browser into http requests made by node
   let config;
   try {
-    const cacheKey = `h:${req.host} u:${req.url}`;
+    const cacheKey = `h:${req.hostname} u:${req.url}`;
     const cachedResponse = cache.get(cacheKey);
     if (cachedResponse) {
       logger.debug(`serving cached response for ${cacheKey}`);
