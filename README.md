@@ -134,9 +134,6 @@ Example:
 
 *Additional optional cache properties:*
 `cacheTTL` - number of seconds to store the cache for a particular route
-`cacheKey` - If you do not want to use the URL as the key, you can specify a
-key. For advanced setups, you could access the store and create a key based
-on data in the store.
 
 ## Hot Loading
 GlueStick's development environment utilizing hotloading so your changes will
