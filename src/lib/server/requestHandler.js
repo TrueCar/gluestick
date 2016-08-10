@@ -45,6 +45,7 @@ module.exports = async function (req, res) {
     const cacheKey = `h:${req.host} u:${req.url}`;
     const cachedResponse = cache.get(cacheKey);
     if (cachedResponse) {
+      logger.debug(`serving cached response for ${cacheKey}`);
       streamResponse(req, res, cachedResponse);
       return;
     }
