@@ -11,6 +11,7 @@ import getWebpackAdditions from "../../src/lib/getWebpackAdditions";
 
 describe("src/lib/getWebpackAdditions", () => {
   let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath, sandbox;
+  let defaultAdditions;
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -30,6 +31,16 @@ describe("src/lib/getWebpackAdditions", () => {
     sandbox = sinon.sandbox.create();
     sandbox.spy(logger, "info");
     sandbox.spy(logger, "warn");
+
+    defaultAdditions = {
+      additionalAliases: {},
+      additionalExternals: {},
+      additionalLoaders: [],
+      additionalPreLoaders: [],
+      entryPoints: {},
+      plugins: [],
+      vendor: []
+    };
   });
 
   afterEach(() => {
@@ -43,14 +54,7 @@ describe("src/lib/getWebpackAdditions", () => {
     fs.outputFileSync(webpackAdditionsPath, "PaRSE ErRor");
     expect(logger.warn.called).to.equal(false);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
-      additionalAliases: {},
-      additionalLoaders: [],
-      additionalPreLoaders: [],
-      entryPoints: {},
-      plugins: [],
-      vendor: []
-    });
+    expect(result).to.deep.equal(defaultAdditions);
     expect(logger.warn.called).to.equal(true);
   });
 
@@ -77,7 +81,7 @@ describe("src/lib/getWebpackAdditions", () => {
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
     expect(result).to.deep.equal({
-      additionalAliases: {},
+      ...defaultAdditions,
       additionalLoaders: [
         {
           loader: "xml-loader",
@@ -93,10 +97,7 @@ describe("src/lib/getWebpackAdditions", () => {
           loader: "json-loader",
           test: /\.json$/
         }
-      ],
-      entryPoints: {},
-      plugins: [],
-      vendor: []
+      ]
     });
   });
 
@@ -105,19 +106,30 @@ describe("src/lib/getWebpackAdditions", () => {
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
     expect(result).to.deep.equal({
-      additionalAliases: {},
-      additionalLoaders: [],
-      additionalPreLoaders: [],
+      ...defaultAdditions,
       entryPoints: {
         "/used-cars-for-sale": {
           "name": "used"
         }
-      },
-      plugins: [],
-      vendor: []
+      }
     });
   });
 
+  it("should return additionalExternals when they are specified in webpack-additions", () => {
+    const additions = {
+      ...defaultAdditions,
+      additionalExternals: {
+        foo: true
+      }
+    };
+    const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
+    fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
+    const result = getWebpackAdditions();
+    expect(result).to.deep.equal({
+      ...defaultAdditions,
+      ...additions
+    });
+  });
   // @TODO: Write more tests that validate what happens in `prepareUserAdditionsForWebpack`
 });
 
