@@ -51,9 +51,10 @@ function makeUserAdditionalAliases (aliasesDictionary={}) {
 
 export default function (isomorphic=false) {
   let userAdditions = {
+    additionalAliases: {},
+    additionalExternals: {},
     additionalLoaders: [],
     additionalPreLoaders: [],
-    additionalAliases: {},
     vendor: [],
     entryPoints: {},
     plugins: []
@@ -65,11 +66,20 @@ export default function (isomorphic=false) {
   try {
     const webpackAdditionsPath = path.join(process.cwd(), "src", "config", "webpack-additions.js");
     fs.statSync(webpackAdditionsPath);
-    const { additionalLoaders, additionalPreLoaders, additionalAliases, vendor, plugins, entryPoints } = require(webpackAdditionsPath);
+    const {
+      additionalAliases,
+      additionalExternals,
+      additionalLoaders,
+      additionalPreLoaders,
+      vendor,
+      plugins,
+      entryPoints
+    } = require(webpackAdditionsPath);
     userAdditions = {
+      additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
+      additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
-      additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
       vendor: vendor || [],
       plugins: plugins || [],
       entryPoints: entryPoints || {}
