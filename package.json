@@ -84,7 +84,7 @@
     "pino": "2.7.1",
     "pm2": "1.1.3",
     "radium": "0.17.1",
-    "react": "15.1.0",
+    "react": "15.3.0",
     "react-addons-test-utils": "15.1.0",
     "react-dom": "15.1.0",
     "react-hot-loader": "1.3.0",
