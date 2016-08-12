@@ -131,7 +131,7 @@ module.exports = async function (req, res) {
 
           // If caching has been enabled for this route, cache response for
           // next time it is requested
-          if (currentRoute.cache) {
+          if (currentRoute.cache && process.env.NODE_ENV === "production") {
             const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
             logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
             cache.set(cacheKey, {
