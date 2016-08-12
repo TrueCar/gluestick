@@ -9,7 +9,13 @@ const webpackSharedConfig = require("../config/webpack-shared-config");
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
-const { additionalLoaders, additionalPreLoaders, vendor, plugins } = getWebpackAdditions();
+const {
+  additionalLoaders,
+  additionalPreLoaders,
+  additionalExternals,
+  vendor,
+  plugins
+} = getWebpackAdditions();
 import { getLogger } from "../lib/server/logger";
 const logger = getLogger();
 
@@ -101,6 +107,9 @@ const compiler = webpack({
   ].concat(environmentPlugins, webpackSharedConfig.plugins, plugins),
   resolve: {
     ...webpackSharedConfig.resolve
+  },
+  externals: {
+    ...additionalExternals
   }
 });
 
