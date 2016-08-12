@@ -91,7 +91,10 @@ const compiler = webpack({
     new webpack.DefinePlugin({
       "process.env": exposedEnvironmentVariables
     }),
-    new webpack.IgnorePlugin(/\.server(\.js)?$/),
+
+    // Make it so *.server.js files return empty function in client
+    new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, () => {}),
+
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
     new webpack.optimize.CommonsChunkPlugin("commons", "commons.bundle.js"),
     new webpack.optimize.AggressiveMergingPlugin()
