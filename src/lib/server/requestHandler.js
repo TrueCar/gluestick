@@ -1,9 +1,8 @@
 /*global webpackIsomorphicTools*/
-import { Readable } from "stream";
 import path from "path";
 import { createElement } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
-import NodeCache from "node-cache";
+import LRU from "lru-cache";
 import streamResponse from "./streamResponse";
 
 import {
@@ -32,10 +31,10 @@ process.on("unhandledRejection", (reason) => {
   logger.error(reason, "Unhandled promise rejection:", message);
 });
 
-const DEFAULT_CACHE_TTL = 5;
-const cache = new NodeCache({
-  stdTTL: DEFAULT_CACHE_TTL,
-  checkperiod: 600 // how frequently to clear out expired TTL
+const DEFAULT_CACHE_TTL = 5 * 1000;
+const cache = LRU({
+  max: 50,
+  maxAge: DEFAULT_CACHE_TTL
 });
 
 module.exports = async function (req, res) {
@@ -121,31 +120,27 @@ module.exports = async function (req, res) {
             }
           }
 
-          const responseStream = new Readable();
-          responseStream.setEncoding("utf8");
+          let responseBuffer;
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseStream.push(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
+            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
           }
           else {
-            responseStream.push(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
+            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
           }
-
-          // mark that we are done with the stream
-          responseStream.push(null);
 
           // If caching has been enabled for this route, cache response for
           // next time it is requested
           if (currentRoute.cache) {
-            const cacheTTL = currentRoute.cacheTTL || DEFAULT_CACHE_TTL;
+            const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
             logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
             cache.set(cacheKey, {
               status,
-              responseStream
+              responseBuffer
             }, cacheTTL);
           }
 
-          streamResponse(req, res, { status, responseStream });
+          streamResponse(req, res, { status, responseBuffer });
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
