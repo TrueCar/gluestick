@@ -56,9 +56,9 @@ else {
 
 // The config/application.js file is consumed on both the server side and the
 // client side. However, we want developers to have access to environment
-// constiables in there so they can override defaults with an environment
-// constiable. For that reason we are going to perform static analysis on that
-// file to determine all of the environment constiables that are used in that
+// variables in there so they can override defaults with an environment
+// variable. For that reason we are going to perform static analysis on that
+// file to determine all of the environment variables that are used in that
 // file and make sure that webpack makes those available in the application.
 const configEnvVariables = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
 configEnvVariables.push("NODE_ENV");
