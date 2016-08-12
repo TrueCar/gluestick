@@ -86,7 +86,7 @@
     "radium": "0.17.1",
     "react": "15.1.0",
     "react-addons-test-utils": "15.1.0",
-    "react-dom": "15.1.0",
+    "react-dom": "15.3.0",
     "react-hot-loader": "1.3.0",
     "react-loader": "2.4.0",
     "react-router": "2.4.1",
