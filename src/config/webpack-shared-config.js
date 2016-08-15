@@ -62,7 +62,7 @@ module.exports = {
     }
   ],
   plugins: [
-    new ExtractTextPlugin("[name].css"),
+    new ExtractTextPlugin("[name]-[chunkhash].css"),
   ],
   preLoaders: []
 };

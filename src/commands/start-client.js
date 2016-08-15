@@ -5,17 +5,14 @@ const express = require("express");
 const proxy = require("http-proxy-middleware");
 
 import getWebpackConfig from "../config/getWebpackClientConfig";
+import getAssetPath from "../lib/getAssetPath";
 
 import { getLogger } from "../lib/server/logger";
 const LOGGER = getLogger();
 
 const APP_ROOT = process.cwd();
 const APP_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.js");
-const APP_CONFIG = require(APP_CONFIG_PATH).default;
-let ASSET_PATH = APP_CONFIG.assetPath;
-if (ASSET_PATH.substr(-1) !== "/") {
-  ASSET_PATH = ASSET_PATH + "/";
-}
+const ASSET_PATH = getAssetPath();
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const PORT = 8888;

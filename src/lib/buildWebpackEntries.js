@@ -33,7 +33,7 @@ export function getWebpackEntries () {
     output[key] = {
       ...entry,
       fileName: fileName,
-      filePath: `${path.join(basePath, fileName)}.js`,
+      filePath: `${path.join(basePath, fileName)}-[chunkhash].js`,
       routes: entry.routes || path.join(cwd, "src", "config", "routes", fileName),
       reducers: entry.reducers || path.join(cwd, "src", "reducers", fileName),
       index: entry.index || path.join(cwd, "Index")
