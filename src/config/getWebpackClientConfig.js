@@ -64,8 +64,8 @@ export function getEnvironmentPlugins(isProduction) {
   return environmentPlugins;
 }
 
-// @TODO: Fix config vs. configFilePath
-export default function (appRoot, config, configFilePath, isProduction) {
+export default function (appRoot, appConfigFilePath, isProduction) {
+  const config = require(appConfigFilePath).default;
   return {
     context: appRoot,
     devtool: isProduction ? null : "cheap-module-eval-source-map",
@@ -94,7 +94,7 @@ export default function (appRoot, config, configFilePath, isProduction) {
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({
-        "process.env": getExposedEnvironmentVariables(configFilePath)
+        "process.env": getExposedEnvironmentVariables(appConfigFilePath)
       }),
 
       // Make it so *.server.js files return empty function in client

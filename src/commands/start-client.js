@@ -26,7 +26,7 @@ const PUBLIC_PATH = ASSET_PATH;
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
 module.exports = function () {
-  const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG, APP_CONFIG_PATH, IS_PRODUCTION));
+  const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
   if (!IS_PRODUCTION) {
     const app = express();
     app.use(require("webpack-dev-middleware")(compiler, {

@@ -9,9 +9,8 @@ const LOGGER = getLogger();
 module.exports = function() {
   const appRoot = process.cwd();
   const appConfigFilePath = path.join(appRoot, "src", "config", "application.js");
-  const appConfig = require(appConfigFilePath).default;
   const isProduction = process.env.NODE_ENV === "production";
-  const compiler = webpack(getWebpackConfig(appRoot, appConfig, appConfigFilePath, isProduction));
+  const compiler = webpack(getWebpackConfig(appRoot, appConfigFilePath, isProduction));
   LOGGER.info("Bundling assets…");
   compiler.run((error, stats) => {
     const statsJson = stats.toJson();
