@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
+const build = lazyMethodRequire("./commands/build");
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");
 const startServer = lazyMethodRequire("./commands/start-server");
@@ -96,7 +97,7 @@ commander
   .command("build")
   .description("create production asset build")
   .action(checkGluestickProject)
-  .action(() => startClient(true))
+  .action(() => build())
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
