@@ -10,15 +10,27 @@ describe("test/lib/server/streamResponse", () => {
     createGzip: sinon.stub().returns("gzip!")
   };
 
-  const mockResponseStream = {
-    pipe: sinon.stub()
-  };
-  mockResponseStream.pipe.returns(mockResponseStream);
+  const mockResponseBuffer = Buffer.from("hola hola hola");
 
   const mockCachedResponse = {
     status: 200,
-    responseStream: mockResponseStream
+    responseBuffer: mockResponseBuffer
   };
+
+  const setEncodingSpy = sinon.spy();
+  const pushSpy = sinon.spy();
+
+  class MockReadable {
+    static pipe;
+    static push = sinon.spy();
+    static setEncoding = sinon.spy();
+    constructor () {
+      this.setEncoding = MockReadable.setEncoding;
+      this.push = MockReadable.push;
+      MockReadable.pipe = sinon.stub().returns(this);
+      this.pipe = MockReadable.pipe;
+    }
+  }
 
   const mockResponse = {
     writeHead: sinon.spy()
@@ -31,8 +43,9 @@ describe("test/lib/server/streamResponse", () => {
   beforeEach(() => {
     mockZlib.createDeflate.reset();
     mockZlib.createGzip.reset();
-    mockResponseStream.pipe.reset();
     mockResponse.writeHead.reset();
+    setEncodingSpy.reset();
+    pushSpy.reset();
   });
 
   it("should deflate deflate supported", () => {
@@ -42,16 +55,16 @@ describe("test/lib/server/streamResponse", () => {
       }
     };
 
-    streamResponse(mockRequest, mockResponse, mockCachedResponse, mockZlib);
+    streamResponse(mockRequest, mockResponse, mockCachedResponse, MockReadable, mockZlib);
 
     expect(mockZlib.createDeflate.calledOnce).to.equal(true);
     expect(mockZlib.createGzip.callCount).to.equal(0);
-    expect(mockResponseStream.pipe.calledWith("deflate gate!")).to.equal(true);
+    expect(MockReadable.pipe.calledWith("deflate gate!")).to.equal(true);
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
     expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "deflate", ...other});
-    expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
+    expect(MockReadable.pipe.calledWith(mockResponse)).to.equal(true);
   });
 
   it("should gzip if gzip supported and deflate is not", () => {
@@ -61,16 +74,16 @@ describe("test/lib/server/streamResponse", () => {
       }
     };
 
-    streamResponse(mockRequest, mockResponse, mockCachedResponse, mockZlib);
+    streamResponse(mockRequest, mockResponse, mockCachedResponse, MockReadable, mockZlib);
 
     expect(mockZlib.createGzip.calledOnce).to.equal(true);
     expect(mockZlib.createDeflate.callCount).to.equal(0);
-    expect(mockResponseStream.pipe.calledWith("gzip!")).to.equal(true);
+    expect(MockReadable.pipe.calledWith("gzip!")).to.equal(true);
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
     expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "gzip", ...other});
-    expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
+    expect(MockReadable.pipe.calledWith(mockResponse)).to.equal(true);
   });
 
   it("should not deflate or gzip if neither are supported", () => {
@@ -78,17 +91,17 @@ describe("test/lib/server/streamResponse", () => {
       headers: {}
     };
 
-    streamResponse(mockRequest, mockResponse, mockCachedResponse, mockZlib);
+    streamResponse(mockRequest, mockResponse, mockCachedResponse, MockReadable, mockZlib);
 
     expect(mockZlib.createDeflate.callCount).to.equal(0);
     expect(mockZlib.createGzip.callCount).to.equal(0);
-    expect(mockResponseStream.pipe.calledWith("gzip!")).to.equal(false);
-    expect(mockResponseStream.pipe.calledWith("deflate gate!")).to.equal(false);
+    expect(MockReadable.pipe.calledWith("gzip!")).to.equal(false);
+    expect(MockReadable.pipe.calledWith("deflate gate!")).to.equal(false);
 
     const lastCallArgs = mockResponse.writeHead.lastCall.args;
     expect(lastCallArgs[0]).to.equal(200);
     expect(lastCallArgs[1]).to.deep.equal({...other});
-    expect(mockResponseStream.pipe.calledWith(mockResponse)).to.equal(true);
+    expect(MockReadable.pipe.calledWith(mockResponse)).to.equal(true);
   });
 });
 
