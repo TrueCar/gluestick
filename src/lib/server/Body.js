@@ -2,7 +2,7 @@
 import React, { Component, PropTypes} from "react";
 import serialize from "serialize-javascript";
 
-import getAssetPathForFile from "../lib/getAssetPathForFile";
+import getAssetPathForFile from "../getAssetPathForFile";
 
 export default class Body extends Component {
   static propTypes = {
