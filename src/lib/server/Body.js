@@ -39,7 +39,7 @@ export default class Body extends Component {
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState, {isJSON: true})};`}}></script>
         <script type="text/javascript" src={getAssetPathForFile("commons", "javascript")}></script>
         <script type="text/javascript" src={getAssetPathForFile("vendor", "javascript")}></script>
-        <script type="text/javascript" src={getAssetPathForFile(entryPoint)}></script>
+        <script type="text/javascript" src={getAssetPathForFile(entryPoint, "javascript")}></script>
       </div>
     );
   }
