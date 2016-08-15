@@ -2,8 +2,8 @@
 import React from "react";
 import serialize from "serialize-javascript";
 import process from "process";
-import getAssetPath from "../lib/getAssetPath";
-import getAssetPathForFile from "../lib/getAssetPathForFile";
+import getAssetPath from "../getAssetPath";
+import getAssetPathForFile from "../getAssetPathForFile";
 
 const isProduction = process.env.NODE_ENV === "production";
 
