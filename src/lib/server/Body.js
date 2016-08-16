@@ -2,9 +2,10 @@
 import React, { Component, PropTypes} from "react";
 import serialize from "serialize-javascript";
 
+import getAssetPathForFile from "../getAssetPathForFile";
+
 export default class Body extends Component {
   static propTypes = {
-    config: PropTypes.object.isRequired,
     html: PropTypes.string.isRequired,
     isEmail: PropTypes.bool.isRequired,
     entryPoint: PropTypes.string.isRequired,
@@ -29,17 +30,16 @@ export default class Body extends Component {
   _renderWithScriptTags () {
     const {
       initialState,
-      entryPoint,
-      config
+      entryPoint
     } = this.props;
 
     return (
       <div>
         { this._renderMainContent() }
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState, {isJSON: true})};`}}></script>
-        <script type="text/javascript" src={`${config.assetPath}/commons.bundle.js`}></script>
-        <script type="text/javascript" src={`${config.assetPath}/vendor.bundle.js`}></script>
-        <script type="text/javascript" src={`${config.assetPath}/${entryPoint}-app.bundle.js`}></script>
+        <script type="text/javascript" src={getAssetPathForFile("commons", "javascript")}></script>
+        <script type="text/javascript" src={getAssetPathForFile("vendor", "javascript")}></script>
+        <script type="text/javascript" src={getAssetPathForFile(entryPoint, "javascript")}></script>
       </div>
     );
   }
