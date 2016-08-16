@@ -41,7 +41,7 @@
     "babel-istanbul-loader": "0.1.0",
     "babel-plugin-react-transform": "2.0.2",
     "enzyme": "2.3.0",
-    "eslint": "2.10.2",
+    "eslint": "3.3.0",
     "eslint-plugin-react": "5.1.1",
     "node-inspector": "0.12.8",
     "react-addons-test-utils": "15.0.2",
