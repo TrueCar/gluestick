@@ -21,7 +21,7 @@ app.use(compression());
 addProxies(app, config.proxies);
 
 if (isProduction) {
-  app.use("/assets", express.static("build"));
+  app.use("/assets", express.static("build", { maxAge: 315360000 } ));
   logger.info("Server side rendering server running");
 }
 else {
