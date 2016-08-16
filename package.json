@@ -110,7 +110,7 @@
     "babel-eslint": "6.0.4",
     "enzyme": "2.3.0",
     "eslint": "3.3.0",
-    "eslint-plugin-react": "5.1.1",
+    "eslint-plugin-react": "6.1.0",
     "temp": "0.8.3"
   }
 }
