@@ -43,7 +43,7 @@ describe("src/lib/buildWebpackEntries", () => {
             routes: `${cwd}/src/config/routes`,
             reducers: `${cwd}/src/reducers`,
             fileName: "main",
-            filePath: `${cwd}/src/config/.entries/main.js`,
+            filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
             index: `${cwd}/Index`
         }
       };
@@ -58,7 +58,7 @@ describe("src/lib/buildWebpackEntries", () => {
       const expectedResult = {
         "/": {
           fileName: "main",
-          filePath: `${cwd}/src/config/.entries/main.js`,
+          filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
           index: `${cwd}/Index`,
           name: "main",
           reducers: `${cwd}/src/reducers`,
@@ -66,7 +66,7 @@ describe("src/lib/buildWebpackEntries", () => {
         },
         "/used-cars-for-sale": {
           fileName: "used",
-          filePath: `${cwd}/src/config/.entries/used.js`,
+          filePath: `${cwd}/src/config/.entries/used-[chunkhash].js`,
           index: `${cwd}/Index`,
           name: "used",
           reducers: `${cwd}/src/reducers/used`,
@@ -87,7 +87,7 @@ describe("src/lib/buildWebpackEntries", () => {
 
       const expectedResult = {
         fileName: "used",
-        filePath: `${cwd}/src/config/.entries/used.js`,
+        filePath: `${cwd}/src/config/.entries/used-[chunkhash].js`,
         index: indexPath,
         name: "used",
         reducers: reducersPath,
@@ -102,8 +102,8 @@ describe("src/lib/buildWebpackEntries", () => {
     it("should create necessary entry files", () => {
       const entriesFolder = path.join(cwd, "src", "config", ".entries");
       const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
-      const mainEntryPath = path.join(entriesFolder, "main.js");
-      const usedEntryPath = path.join(entriesFolder, "used.js");
+      const mainEntryPath = path.join(entriesFolder, "main-[chunkhash].js");
+      const usedEntryPath = path.join(entriesFolder, "used-[chunkhash].js");
       fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
       expect(() => fs.statSync(mainEntryPath)).to.throw("ENOENT");
       expect(() => fs.statSync(usedEntryPath)).to.throw("ENOENT");
@@ -121,12 +121,12 @@ describe("src/lib/buildWebpackEntries", () => {
         "main": [
           "webpack-hot-middleware/client",
           clientPath,
-          path.join(cwd, "/src/config/.entries/main.js")
+          path.join(cwd, "/src/config/.entries/main-[chunkhash].js")
         ],
         "used": [
           "webpack-hot-middleware/client",
           clientPath,
-          path.join(cwd, "/src/config/.entries/used.js")
+          path.join(cwd, "/src/config/.entries/used-[chunkhash].js")
         ]
       };
       expect(output).to.deep.equal(expectedResult);
@@ -140,11 +140,11 @@ describe("src/lib/buildWebpackEntries", () => {
       const expectedResult = {
         "main": [
           clientPath,
-          path.join(cwd, "/src/config/.entries/main.js")
+          path.join(cwd, "/src/config/.entries/main-[chunkhash].js")
         ],
         "used": [
           clientPath,
-          path.join(cwd, "/src/config/.entries/used.js")
+          path.join(cwd, "/src/config/.entries/used-[chunkhash].js")
         ]
       };
       expect(output).to.deep.equal(expectedResult);

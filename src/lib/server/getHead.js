@@ -1,14 +1,9 @@
 /*eslint-disable react/no-danger*/
 import React from "react";
 import serialize from "serialize-javascript";
-import path from "path";
 import process from "process";
-
-// Make sure path ends in forward slash
-let assetPath = require(path.resolve(path.join(process.cwd(), "src", "config", "application"))).default.assetPath;
-if (assetPath.substr(-1) !== "/") {
-  assetPath = assetPath + "/";
-}
+import getAssetPath from "../getAssetPath";
+import getAssetPathForFile from "../getAssetPathForFile";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -16,9 +11,10 @@ const isProduction = process.env.NODE_ENV === "production";
 export default (config, entryPoint, assets) => {
   const tags = [];
   let key = 0;
+  const assetPath = getAssetPath(config);
 
   if (isProduction) {
-    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={`${config.assetPath}/${entryPoint}.css`} />);
+    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={getAssetPathForFile(`${entryPoint}`, "styles")} />);
   }
 
   tags.push(

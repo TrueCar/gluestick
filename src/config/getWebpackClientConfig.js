@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const getAssetPath = require("../lib/getAssetPath").default;
 
 const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
@@ -16,8 +17,8 @@ const {
 
 const webpackSharedConfig = require("./webpack-shared-config");
 
-
-const OUTPUT_FILE = "app.bundle.js";
+const ASSET_PATH = getAssetPath();
+const OUTPUT_FILE = "app-[chunkhash].bundle.js";
 
 
 export function getExposedEnvironmentVariables(config) {
@@ -65,7 +66,6 @@ export function getEnvironmentPlugins(isProduction) {
 }
 
 export default function (appRoot, appConfigFilePath, isProduction) {
-  const config = require(appConfigFilePath).default;
   return {
     context: appRoot,
     devtool: isProduction ? null : "cheap-module-eval-source-map",
@@ -87,7 +87,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       path: path.join(appRoot, "build"),
       filename: `[name]-${OUTPUT_FILE}`,
       chunkFilename: `[name]-chunk-${OUTPUT_FILE}`,
-      publicPath: config.assetPath,
+      publicPath: ASSET_PATH,
     },
     plugins: [
       new webpack.optimize.DedupePlugin(),
@@ -100,8 +100,8 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       // Make it so *.server.js files return empty function in client
       new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, () => {}),
 
-      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js"),
-      new webpack.optimize.CommonsChunkPlugin("commons", "commons.bundle.js"),
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor-[hash].bundle.js"),
+      new webpack.optimize.CommonsChunkPlugin("commons", "commons-[hash].bundle.js"),
       new webpack.optimize.AggressiveMergingPlugin()
     ].concat(getEnvironmentPlugins(), webpackSharedConfig.plugins, plugins),
     resolve: {
