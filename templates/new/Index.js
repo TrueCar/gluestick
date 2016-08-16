@@ -11,7 +11,8 @@ import "assets/css/normalize.css";
 export default class Index extends Component {
   static propTypes = {
     head: PropTypes.any,
-    body: PropTypes.any
+    body: PropTypes.any,
+    req: PropTypes.object
   };
 
   render () {

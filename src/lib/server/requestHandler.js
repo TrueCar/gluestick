@@ -101,7 +101,7 @@ module.exports = async function (req, res) {
           // always add inside the <head> tag.
           //
           // Bundle it all up into a string, add the doctype and deliver
-          const rootElement = createElement(Index, {body: body, head: head});
+          const rootElement = createElement(Index, {body, head, req});
 
           // Set status code
           let status;
