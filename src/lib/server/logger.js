@@ -16,8 +16,8 @@ const CLI_PARAM_MAP = {
   "logPretty": "pretty"
 };
 
-export function parseLogParams(params) {
-  const object = JSON.parse(params);
+export function parseLogOptions(options) {
+  const object = JSON.parse(options);
   const result = {};
 
   Object.entries(CLI_PARAM_MAP).forEach(e => {
@@ -29,12 +29,12 @@ export function parseLogParams(params) {
   return result;
 }
 
-export function setupLogParams(config) {
+export function getLogConfig(config) {
   let pretty = null;
   let cliOptions = {};
 
   if (process.env.GS_COMMAND_OPTIONS) {
-    cliOptions = parseLogParams(process.env.GS_COMMAND_OPTIONS);
+    cliOptions = parseLogOptions(process.env.GS_COMMAND_OPTIONS);
   }
 
   if (!!config.pretty || !!cliOptions.pretty) {
@@ -60,7 +60,7 @@ export function getLogger(middleware=false) {
     // no application config file yet
     appLogConfig = {};
   }
-  const { logConfig, prettyConfig } = setupLogParams(appLogConfig);
+  const { logConfig, prettyConfig } = getLogConfig(appLogConfig);
   return middleware ? expressPinoLogger(logConfig, prettyConfig) : pino(logConfig, prettyConfig);
 }
 

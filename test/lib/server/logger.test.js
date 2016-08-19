@@ -2,20 +2,20 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import {
-  parseLogParams,
+  parseLogOptions,
   pinoBaseConfig,
-  setupLogParams
+  getLogConfig
 } from "../../../src/lib/server/logger";
 
 describe("lib/server/logger", () => {
 
   const defaultConfig = {...pinoBaseConfig};
 
-  describe("setupLogParams()", () => {
+  describe("getLogConfig()", () => {
 
     describe("when no custom configuration is provided", () => {
       it("sets up logging with proper defaults", () => {
-        const result = setupLogParams({});
+        const result = getLogConfig({});
         expect(result).to.deep.equal({
           logConfig: {
             ...defaultConfig
@@ -27,7 +27,7 @@ describe("lib/server/logger", () => {
 
     describe("when a custom configuration is provided", () => {
       it("overrides the default level with the level provided", () => {
-        const result = setupLogParams({level: "info"});
+        const result = getLogConfig({level: "info"});
         expect(result).to.deep.equal({
           logConfig: {
             ...defaultConfig,
@@ -38,7 +38,7 @@ describe("lib/server/logger", () => {
       });
 
       it("overrides the pretty configuration with the one provided", () => {
-        const result = setupLogParams({pretty: true});
+        const result = getLogConfig({pretty: true});
         expect(result.prettyConfig).to.not.be.null;
       });
 
@@ -48,7 +48,7 @@ describe("lib/server/logger", () => {
           res: sinon.spy(),
           error: sinon.spy()
         };
-        const result = setupLogParams({serializers});
+        const result = getLogConfig({serializers});
         expect(result).to.deep.equal({
           logConfig: {
             ...defaultConfig,
@@ -62,7 +62,7 @@ describe("lib/server/logger", () => {
     describe("when command line options are specified", () => {
       it("overrides the default level with the level provided", () => {
         process.env.GS_COMMAND_OPTIONS = JSON.stringify({logLevel: "debug"});
-        const result = setupLogParams({});
+        const result = getLogConfig({});
         expect({
           logConfig: {
             name: "GlueStick",
@@ -76,7 +76,7 @@ describe("lib/server/logger", () => {
 
       it("overrides the app config level with the level provided", () => {
         process.env.GS_COMMAND_OPTIONS = JSON.stringify({logLevel: "debug"});
-        const result = setupLogParams({level: "info"});
+        const result = getLogConfig({level: "info"});
         expect({
           logConfig: {
             name: "GlueStick",
@@ -90,17 +90,17 @@ describe("lib/server/logger", () => {
 
       it("overrides the pretty option with the option provided", () => {
         process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: true});
-        const result = setupLogParams({});
+        const result = getLogConfig({});
         expect(result.pretty).to.not.be.null;
         delete process.env.GS_COMMAND_OPTIONS;
       });
     });
   });
 
-  describe("parseLogParams()", () => {
+  describe("parseLogOptions()", () => {
     it("handles no params", () => {
       const params = JSON.stringify({});
-      expect(parseLogParams(params)).to.deep.equal({});
+      expect(parseLogOptions(params)).to.deep.equal({});
     });
 
     it("properly converts params", () => {
@@ -108,7 +108,7 @@ describe("lib/server/logger", () => {
         logLevel: "info",
         logPretty: true,
       });
-      expect(parseLogParams(params)).to.deep.equal({level: "info", pretty: true});
+      expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: true});
     });
   });
 });
