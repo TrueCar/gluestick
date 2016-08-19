@@ -9,7 +9,7 @@ export const pinoBaseConfig = {
   level: "warn"
 };
 
-function setupLogParams(config) {
+export function setupLogParams(config) {
   let level = null;
   let pretty = null;
 
