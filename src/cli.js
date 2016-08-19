@@ -82,7 +82,8 @@ commander
   .alias("s")
   .description("start everything")
   .option("-T, --skip-tests", "ignore test hook")
-  .option("-L, --log-level <level>", "logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
+  .option("-L, --log-level <level>", "set the logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
+  .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
   .option(...debugServerOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
@@ -161,6 +162,13 @@ commander
   });
 
 commander.parse(process.argv);
+
+function parseFlag (val) {
+  if (["false", "0", "no"].includes(val)) {
+    return false;
+  }
+  return true;
+}
 
 function checkGluestickProject () {
   quitUnlessGluestickProject(commander.rawArgs[2]);
