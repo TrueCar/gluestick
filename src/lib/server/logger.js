@@ -3,8 +3,6 @@ import path from "path";
 import pino from "pino";
 import expressPinoLogger from "express-pino-logger";
 
-
-
 export const pinoBaseConfig = {
   name: "GlueStick",
   safe: true,
@@ -22,10 +20,11 @@ export function parseLogOptions(options) {
 
   Object.entries(CLI_PARAM_MAP).forEach(e => {
     const [key, value] = e;
-    if (object[key]) {
+    if (object.hasOwnProperty(key)) {
       result[value] = object[key];
     }
   });
+
   return result;
 }
 
@@ -37,10 +36,10 @@ export function getLogConfig(config) {
     cliOptions = parseLogOptions(process.env.GS_COMMAND_OPTIONS);
   }
 
-  if (cliOptions.hasOwnProperty("pretty") && cliOptions.pretty !== "true") {
+  if (cliOptions.hasOwnProperty("pretty") && cliOptions.pretty !== true) {
     pretty = null;
   }
-  else if (!!config.pretty || cliOptions.pretty === "true") {
+  else if (!!config.pretty || cliOptions.pretty === true) {
     pretty = pino.pretty();
     pretty.pipe(process.stdout);
   }

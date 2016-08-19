@@ -89,14 +89,14 @@ describe("lib/server/logger", () => {
       });
 
       it("overrides the pretty option with the option provided", () => {
-        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: "true"});
+        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: true});
         const result = getLogConfig({});
         expect(result.prettyConfig).to.not.be.null;
         delete process.env.GS_COMMAND_OPTIONS;
       });
 
       it("overrides the app config pretty option with the option provided", () => {
-        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: "false"});
+        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: false});
         const result = getLogConfig({pretty: true});
         expect(result.prettyConfig).to.be.null;
         delete process.env.GS_COMMAND_OPTIONS;
@@ -116,6 +116,14 @@ describe("lib/server/logger", () => {
         logPretty: true,
       });
       expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: true});
+    });
+
+    it("properly converts falsey params", () => {
+      const params = JSON.stringify({
+        logLevel: "info",
+        logPretty: false,
+      });
+      expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: false});
     });
   });
 });
