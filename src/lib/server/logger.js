@@ -3,40 +3,47 @@ import path from "path";
 import pino from "pino";
 import expressPinoLogger from "express-pino-logger";
 
+
+
 export const pinoBaseConfig = {
   name: "GlueStick",
   safe: true,
   level: "warn"
 };
 
-export function setupLogParams(config) {
-  let level = null;
-  let pretty = null;
+const CLI_PARAM_MAP = {
+  "logLevel": "level",
+  "logPretty": "pretty"
+};
 
-  const commandOptions = process.env.GS_COMMAND_OPTIONS;
+export function parseLogParams(params) {
+  const object = JSON.parse(params);
+  const result = {};
 
-  // prefer logging options set on the command line
-  if (commandOptions) {
-    const options = JSON.parse(commandOptions);
-    if (options.hasOwnProperty("logLevel")) {
-      level = options.logLevel;
+  Object.entries(CLI_PARAM_MAP).forEach(e => {
+    const [key, value] = e;
+    if (object[key]) {
+      result[value] = object[key];
     }
+  });
+  return result;
+}
+
+export function setupLogParams(config) {
+  let pretty = null;
+  let cliOptions = {};
+
+  if (process.env.GS_COMMAND_OPTIONS) {
+    cliOptions = parseLogParams(process.env.GS_COMMAND_OPTIONS);
   }
 
-  // use the application config as a fallback
-  if (config) {
-    if (level === null) {
-      level = config.level;
-    }
-
-    if (!!config.pretty) {
-      pretty = pino.pretty();
-      pretty.pipe(process.stdout);
-    }
+  if (!!config.pretty || !!cliOptions.pretty) {
+    pretty = pino.pretty();
+    pretty.pipe(process.stdout);
   }
 
   return {
-    logConfig: {...pinoBaseConfig, level: level || pinoBaseConfig.level},
+    logConfig: {...pinoBaseConfig, ...config, ...cliOptions},
     prettyConfig: pretty
   };
 }
@@ -51,6 +58,7 @@ export function getLogger(middleware=false) {
   }
   catch(e) {
     // no application config file yet
+    appLogConfig = {};
   }
   const { logConfig, prettyConfig } = setupLogParams(appLogConfig);
   return middleware ? expressPinoLogger(logConfig, prettyConfig) : pino(logConfig, prettyConfig);
