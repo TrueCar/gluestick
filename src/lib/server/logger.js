@@ -37,7 +37,10 @@ export function getLogConfig(config) {
     cliOptions = parseLogOptions(process.env.GS_COMMAND_OPTIONS);
   }
 
-  if (!!config.pretty || !!cliOptions.pretty) {
+  if (cliOptions.hasOwnProperty("pretty") && cliOptions.pretty !== "true") {
+    pretty = null;
+  }
+  else if (!!config.pretty || cliOptions.pretty === "true") {
     pretty = pino.pretty();
     pretty.pipe(process.stdout);
   }

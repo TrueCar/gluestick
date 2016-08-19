@@ -89,9 +89,16 @@ describe("lib/server/logger", () => {
       });
 
       it("overrides the pretty option with the option provided", () => {
-        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: true});
+        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: "true"});
         const result = getLogConfig({});
-        expect(result.pretty).to.not.be.null;
+        expect(result.prettyConfig).to.not.be.null;
+        delete process.env.GS_COMMAND_OPTIONS;
+      });
+
+      it("overrides the app config pretty option with the option provided", () => {
+        process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: "false"});
+        const result = getLogConfig({pretty: true});
+        expect(result.prettyConfig).to.be.null;
         delete process.env.GS_COMMAND_OPTIONS;
       });
     });
