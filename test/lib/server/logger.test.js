@@ -14,7 +14,17 @@ describe("lib/server/logger", () => {
   describe("getLogConfig()", () => {
 
     describe("when no custom configuration is provided", () => {
-      it("sets up logging with proper defaults", () => {
+      it("sets up logging with proper defaults even when no config is provided", () => {
+        const result = getLogConfig(undefined); // eslint-disable-line no-undefined
+        expect(result).to.deep.equal({
+          logConfig: {
+            ...defaultConfig
+          },
+          prettyConfig: null
+        });
+      });
+
+      it("sets up logging with proper defaults when an empty config is provided", () => {
         const result = getLogConfig({});
         expect(result).to.deep.equal({
           logConfig: {

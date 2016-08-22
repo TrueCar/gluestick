@@ -21,7 +21,11 @@ const config = {
   production: {
     // This should be a CDN in development
     assetPath: process.env.ASSET_URL || "http://localhost:8888/assets",
-    head: headContent
+    head: headContent,
+    logger: {
+      pretty: false,
+      level: "warn"
+    }
   }
 };
 
