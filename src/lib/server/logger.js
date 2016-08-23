@@ -28,7 +28,7 @@ export function parseLogOptions(options) {
   return result;
 }
 
-export function getLogConfig(config) {
+export function getLogConfig(config={}) {
   let pretty = null;
   let cliOptions = {};
 
