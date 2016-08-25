@@ -34,4 +34,21 @@ describe("src/lib/detectEnvironmentVariables", () => {
     fs.writeFileSync(filePath, data);
     expect(detectEnvironmentVariables(filePath)).to.deep.equal(["NODE_ENV", "FOO", "BAR"]);
   });
+
+  it("should not duplicate any process.env variables found in a file", () => {
+    const data = `export default {
+      option: {
+        pretty: true,
+        verbose: false
+      },
+      env: process.env.NODE_ENV,
+      foo: process.env.FOO,
+      bar: process.env.BAR,
+      baz: "test",
+      somethingelse: process.env.NODE_ENV
+    };`;
+    const filePath = path.join(cwd, "config.js");
+    fs.writeFileSync(filePath, data);
+    expect(detectEnvironmentVariables(filePath)).to.deep.equal(["NODE_ENV", "FOO", "BAR"]);
+  });
 });
