@@ -15,7 +15,6 @@ var dockerfile = [
                      "ADD . /app",
                      "",
                      "RUN npm install",
-                     "RUN gluestick build",
                      ""
                  ];
 
