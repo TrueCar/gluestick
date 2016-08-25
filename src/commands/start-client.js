@@ -4,6 +4,7 @@ const process = require("process");
 const express = require("express");
 const proxy = require("http-proxy-middleware");
 
+import build from "./build";
 import getWebpackConfig from "../config/getWebpackClientConfig";
 import getAssetPath from "../lib/getAssetPath";
 
@@ -54,6 +55,9 @@ module.exports = function () {
 
       LOGGER.info(`Server running on http://localhost:${PORT}`);
     });
+  }
+  else {
+    build();
   }
 };
 
