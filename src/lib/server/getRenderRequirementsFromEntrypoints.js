@@ -5,6 +5,23 @@ import { getLogger } from "./logger";
 const logger = getLogger();
 import { getHttpClient } from "gluestick-shared";
 
+const entryPoints = getWebpackEntries();
+
+/**
+ * Sort through all of the entry points based on the number of `/` characters
+ * found in the url. It will test the most deeply nested entry points first
+ * while finally falling back to the default index parameter.
+ */
+const sortedEntries = Object.keys(entryPoints).sort((a, b) => {
+  const bSplitLength = b.split("/").length;
+  const aSplitLength = a.split("/").length;
+  if (bSplitLength === aSplitLength) {
+    return b.length - a.length;
+  }
+
+  return bSplitLength - aSplitLength;
+});
+
 /**
  * This method takes the server request object, determines which entry point
  * the server should use for rendering and then prepares the necessary
@@ -13,26 +30,9 @@ import { getHttpClient } from "gluestick-shared";
  */
 export default function getRenderRequirementsFromEntrypoints (req, res, config={}, customRequire=require) {
   const httpClient = getHttpClient(config.httpClient, req, res);
-  logger.debug("Getting webpack entries");
-  const entryPoints = getWebpackEntries();
-
-  /**
-   * Sort through all of the entry points based on the number of `/` characters
-   * found in the url. It will test the most deeply nested entry points first
-   * while finally falling back to the default index parameter.
-   */
-  logger.debug("Sorting through entry points");
-  const sortedEntries = Object.keys(entryPoints).sort((a, b) => {
-    const bSplitLength = b.split("/").length;
-    const aSplitLength = a.split("/").length;
-    if (bSplitLength === aSplitLength) {
-      return b.length - a.length;
-    }
-
-    return bSplitLength - aSplitLength;
-  });
-
   const { path: urlPath } = parseURL(req.url);
+
+  logger.debug("Getting webpack entries");
 
   /**
    * Loop through the sorted entry points and return the variables that the
