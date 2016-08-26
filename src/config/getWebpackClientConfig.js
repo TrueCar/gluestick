@@ -74,6 +74,23 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     },
     module: {
       loaders: [
+        {
+          test: /\.js$/,
+          loader: "babel-loader",
+          query: {
+            plugins: [
+              "babel-plugin-gluestick"
+            ],
+            presets: [
+              "react",
+              "es2015",
+              "stage-0"
+            ]
+          },
+          include: [
+            path.join(process.cwd(), "src/config/application.js"),
+          ]
+        }
       ].concat(webpackSharedConfig.loaders, additionalLoaders),
       preLoaders: [
       // only place client specific preLoaders here
