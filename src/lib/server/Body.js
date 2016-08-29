@@ -21,7 +21,7 @@ export default class Body extends Component {
 
   _renderWithoutScriptTags () {
     return (
-      <div>
+      <div id="main">
         { this.props.main }
       </div>
     );
@@ -35,7 +35,9 @@ export default class Body extends Component {
 
     return (
       <div>
-        { this.props.main }
+        <div id="main">
+          { this.props.main }
+        </div>
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__INITIAL_STATE__=${serialize(initialState, {isJSON: true})};`}}></script>
         <script type="text/javascript" src={getAssetPathForFile("commons", "javascript")}></script>
         <script type="text/javascript" src={getAssetPathForFile("vendor", "javascript")}></script>
