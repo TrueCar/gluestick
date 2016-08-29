@@ -1,10 +1,19 @@
 import { relative } from "path";
 
+const cache = {};
+
 export default function isChildPath (parent, child) {
-  if (parent === "/") {
-    return true;
+  const key = `${parent}-${child}`;
+  const cacheResult = cache[key];
+
+  if (cacheResult) {
+    return cacheResult;
   }
 
-  return relative(parent, child).substr(0, 1) !== ".";
+  if (parent === "/") {
+    return cache[key] = true;
+  }
+
+  return cache[key] = relative(parent, child).substr(0, 1) !== ".";
 }
 

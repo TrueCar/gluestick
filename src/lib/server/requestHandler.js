@@ -91,7 +91,7 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const currentState = store.getState();
-          const body = createElement(Body, {html: reactRenderFunc(main), entryPoint: fileName, initialState: currentState, isEmail});
+          const body = createElement(Body, {main, entryPoint: fileName, initialState: currentState, isEmail});
           const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
 
