@@ -88,7 +88,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
             ]
           },
           include: [
-            path.join(process.cwd(), "src/config/application.js"),
+            path.join(appRoot, "src/config/application.js"),
           ]
         }
       ].concat(webpackSharedConfig.loaders, additionalLoaders),
