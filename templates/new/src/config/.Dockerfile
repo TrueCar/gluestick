@@ -7,3 +7,4 @@ FROM truecar/gluestick:0.9.6
 ADD . /app
 
 RUN npm install
+RUN gluestick build

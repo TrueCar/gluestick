@@ -66,4 +66,4 @@ RUN apt-get update && \
 
 EXPOSE 8888
 
-CMD ["gluestick", "start"]
+CMD ["gluestick", "start", "-P"]
