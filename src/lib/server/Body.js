@@ -6,7 +6,7 @@ import getAssetPathForFile from "../getAssetPathForFile";
 
 export default class Body extends Component {
   static propTypes = {
-    main: PropTypes.string.object,
+    html: PropTypes.string,
     isEmail: PropTypes.bool.isRequired,
     entryPoint: PropTypes.string.isRequired,
     initialState: PropTypes.any.isRequired,
@@ -22,8 +22,8 @@ export default class Body extends Component {
 
   _renderWithoutScriptTags () {
     return (
-      <div id="main">
-        { this.props.main }
+      <div>
+        {this._renderMainContent()}
       </div>
     );
   }
@@ -37,8 +37,8 @@ export default class Body extends Component {
 
     return (
       <div>
-        <div id="main">
-          { this.props.main }
+        <div>
+          {this._renderMainContent()}
         </div>
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: windowVariables}}></script>
         <script type="text/javascript" src={getAssetPathForFile("commons", "javascript")}></script>
@@ -46,6 +46,10 @@ export default class Body extends Component {
         <script type="text/javascript" src={getAssetPathForFile(entryPoint, "javascript")} async></script>
       </div>
     );
+  }
+
+  _renderMainContent () {
+    return <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />;
   }
 
   _getGlobalVariables () {
