@@ -12,6 +12,7 @@ import {
 } from "gluestick-shared";
 
 import { match, RouterContext } from "react-router";
+import detectEnvironmentVariables from "../detectEnvironmentVariables";
 import errorHandler from "./errorHandler";
 import Body from "./Body";
 import getHead from "./getHead";
@@ -37,6 +38,9 @@ const cache = LRU({
   maxAge: DEFAULT_CACHE_TTL
 });
 
+const CONFIG_FILE_PATH = path.join(process.cwd(), "src", "config", "application.js");
+const EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(CONFIG_FILE_PATH);
+
 module.exports = async function (req, res) {
   // Forward all request headers from the browser into http requests made by node
   let config;
@@ -49,7 +53,7 @@ module.exports = async function (req, res) {
       return;
     }
 
-    config = require(path.join(process.cwd(), "src", "config", "application")).default;
+    config = require(CONFIG_FILE_PATH).default;
     const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
     const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
 
@@ -91,7 +95,7 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const currentState = store.getState();
-          const body = createElement(Body, {main, entryPoint: fileName, initialState: currentState, isEmail});
+          const body = createElement(Body, {main, entryPoint: fileName, initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
           const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
 

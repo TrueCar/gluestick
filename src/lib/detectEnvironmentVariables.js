@@ -11,7 +11,7 @@ const logger = require("./cliLogger");
  */
 module.exports = function detectEnvironmentVariables (pathToFile) {
   const ast = babel.transformFileSync(pathToFile).ast;
-  const environmentVariables = [];
+  const environmentVariables = new Set();
   traverse(ast.program, {
     enter: function (path) {
       if (path.type === "MemberExpression") {
@@ -19,7 +19,7 @@ module.exports = function detectEnvironmentVariables (pathToFile) {
         try {
           const target = node.object;
           if (!!target.object && target.object.name === "process" && target.property.name === "env") {
-            environmentVariables.push(node.property.name);
+            environmentVariables.add(node.property.name);
           }
         }
         catch (e) {
@@ -29,6 +29,6 @@ module.exports = function detectEnvironmentVariables (pathToFile) {
     }
   });
 
-  return environmentVariables;
+  return Array.from(environmentVariables);
 };
 
