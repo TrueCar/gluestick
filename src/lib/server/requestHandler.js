@@ -59,7 +59,7 @@ module.exports = async function (req, res) {
 
     const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
 
-    match({routes: routes, location: req.path}, async (error, redirectLocation, renderProps) => {
+    match({routes: routes, location: req.url}, async (error, redirectLocation, renderProps) => {
       try {
         if (error) {
           errorHandler(req, res, error, config);
