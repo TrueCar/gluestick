@@ -1,4 +1,5 @@
 import axios from "axios";
+import { merge, parse } from "./cookies";
 
 /**
  * @param {Object} options axios configuration options
@@ -50,14 +51,15 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       // undesired effects. Currently, the suggested solution for dealing with
       // this problem is to make the API requests to A or B in the browser and
       // not in gsBeforeRoute for apps where that is an issue.
-      res.removeHeader("Set-Cookie");
-      cookiejar.forEach(cookie => {
-        res.append("Set-Cookie", cookie);
+      const mergedCookieString = merge(client.defaults.headers.cookie, cookieString);
+      const cookies = parse(mergedCookieString);
+      cookies.forEach(cookie => {
+        res.cookie(cookie.name, cookie.value, cookie.options);
       });
 
       // Ensure that any subsequent requests are passing the cookies.
       // This is for instances where there is no browser persisting the cookies.
-      client.defaults.headers.cookie = cookieString;
+      client.defaults.headers.cookie = mergedCookieString;
     }
 
     return response;
