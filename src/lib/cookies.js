@@ -72,7 +72,7 @@ export function parse(cookieString) {
 }
 
 export function merge(oldCookieString, newCookieString) {
-  const oldCookieJar = parse(oldCookieString);
+  const oldCookieJar = !!oldCookieString ? parse(oldCookieString) : [];
   const newCookieJar = parse(newCookieString);
 
   const merged = [];

@@ -74,5 +74,12 @@ describe("lib/cookies", () => {
       const result = merge(oldCookies, newCookies);
       expect(result).to.equal("some-thing-a=true; path=/; foo=hi; path=/");
     });
+
+    it("handles undefined old cookies", () => {
+      const oldCookies = undefined;
+      const newCookies = "some-thing-a=true; path=/; foo=hi; path=/";
+      const result = merge(oldCookies, newCookies);
+      expect(result).to.equal("some-thing-a=true; path=/; foo=hi; path=/");
+    });
   });
 });
