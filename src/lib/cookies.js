@@ -16,20 +16,21 @@ function Cookie(name=null, value=null, options={}) {
 }
 
 Cookie.prototype.toString = function() {
-  const keyValues = [`${this.name}=${this.value}`];
-  const boolValues = [];
+  const kvs = [`${this.name}=${this.value}`];
+  const bvs = [];
 
-  Object.keys(COOKIE_OPTS).forEach(attribute => {
-    const value = this.options[attribute];
+  Object.keys(COOKIE_OPTS).forEach(attr => {
+    const value = this.options[attr];
+
     if (typeof(value) === "boolean") {
-      boolValues.push(attribute.charAt(0).toUpperCase() + attribute.slice(1));
+      bvs.push(attr.charAt(0).toUpperCase() + attr.slice(1));
     }
     else if (typeof(value) !== "undefined") {
-      keyValues.push(`${attribute}=${value}`);
+      kvs.push(`${attr}=${value}`);
     }
   });
 
-  return keyValues.concat(boolValues).join("; ").trim();
+  return kvs.concat(bvs).join("; ").trim();
 };
 
 function camelCase(string) {
@@ -44,7 +45,6 @@ export function parse(cookieString) {
 
   cookieString.split(";").forEach(s => {
     const m = new RegExp("([a-zA-Z\-\_]+)=([a-zA-Z0-9\%\-\_\=\/\.\,\:\\s]+)", "g").exec(s.trim());
-
     let k = s.trim(), v;
 
     if (m !== null) {
@@ -73,7 +73,7 @@ export function parse(cookieString) {
 
 export function merge(oldCookieString, newCookieString) {
   const oldCookieJar = !!oldCookieString ? parse(oldCookieString) : [];
-  const newCookieJar = parse(newCookieString);
+  const newCookieJar = !!newCookieString ? parse(newCookieString) : [];
 
   const merged = [];
   oldCookieJar.forEach(cookie => {

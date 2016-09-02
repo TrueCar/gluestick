@@ -75,11 +75,18 @@ describe("lib/cookies", () => {
       expect(result).to.equal("some-thing-a=true; path=/; foo=hi; path=/");
     });
 
-    it("handles undefined old cookies", () => {
-      const oldCookies = undefined;
+    it("handles invalid old cookies", () => {
       const newCookies = "some-thing-a=true; path=/; foo=hi; path=/";
-      const result = merge(oldCookies, newCookies);
-      expect(result).to.equal("some-thing-a=true; path=/; foo=hi; path=/");
+      expect(merge(undefined, newCookies)).to.equal(newCookies); // eslint-disable-line no-undefined
+      expect(merge(null, newCookies)).to.equal(newCookies);
+      expect(merge("", newCookies)).to.equal(newCookies);
+    });
+
+    it("handles invalid new cookies", () => {
+      const oldCookies = "foo=baz==";
+      expect(merge(oldCookies, undefined)).to.equal("foo=baz=="); // eslint-disable-line no-undefined
+      expect(merge(oldCookies, null)).to.equal("foo=baz==");
+      expect(merge(oldCookies, "")).to.equal("foo=baz==");
     });
   });
 });
