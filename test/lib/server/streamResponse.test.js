@@ -48,10 +48,10 @@ describe("test/lib/server/streamResponse", () => {
     pushSpy.reset();
   });
 
-  it("should deflate deflate supported", () => {
+  it("should deflate if deflate supported and gzip not", () => {
     const mockRequest = {
       headers: {
-        "accept-encoding": "gzip, deflate"
+        "accept-encoding": "deflate"
       }
     };
 
@@ -67,10 +67,29 @@ describe("test/lib/server/streamResponse", () => {
     expect(MockReadable.pipe.calledWith(mockResponse)).to.equal(true);
   });
 
-  it("should gzip if gzip supported and deflate is not", () => {
+  it("should gzip if gzip supported", () => {
     const mockRequest = {
       headers: {
         "accept-encoding": "gzip"
+      }
+    };
+
+    streamResponse(mockRequest, mockResponse, mockCachedResponse, MockReadable, mockZlib);
+
+    expect(mockZlib.createGzip.calledOnce).to.equal(true);
+    expect(mockZlib.createDeflate.callCount).to.equal(0);
+    expect(MockReadable.pipe.calledWith("gzip!")).to.equal(true);
+
+    const lastCallArgs = mockResponse.writeHead.lastCall.args;
+    expect(lastCallArgs[0]).to.equal(200);
+    expect(lastCallArgs[1]).to.deep.equal({"Content-Encoding": "gzip", ...other});
+    expect(MockReadable.pipe.calledWith(mockResponse)).to.equal(true);
+  });
+
+  it("should gzip if gzip supported even if deflate is supported", () => {
+    const mockRequest = {
+      headers: {
+        "accept-encoding": "deflate, gzip"
       }
     };
 

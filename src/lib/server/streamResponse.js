@@ -12,12 +12,13 @@ export default function streamResponse (req, res, {status, responseBuffer}, R=Re
   responseStream.push(responseBuffer);
   responseStream.push(null);
 
-  if (acceptEncoding.match(/\bdeflate\b/)) {
-    res.writeHead(status, {"Content-Encoding": "deflate", ...other});
-    responseStream.pipe(z.createDeflate()).pipe(res);
-  } else if (acceptEncoding.match(/\bgzip\b/)) {
+  if (acceptEncoding.match(/\bgzip\b/)) {
     res.writeHead(status, {"Content-Encoding": "gzip", ...other});
     responseStream.pipe(z.createGzip()).pipe(res);
+  }
+  else if (acceptEncoding.match(/\bdeflate\b/)) {
+    res.writeHead(status, {"Content-Encoding": "deflate", ...other});
+    responseStream.pipe(z.createDeflate()).pipe(res);
   }
   else {
     res.writeHead(status, {...other});
