@@ -52,8 +52,21 @@ export default class Root extends Component {
     // server rendering
     if (routerContext) return routerContext;
 
+    // router middleware
+    const render = applyRouterMiddleware(
+      useScroll((prevRouterProps, { routes }) => {
+        // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
+        // route components in the app. e.g.
+        // <Route ignoreScrollBehavior={true} path="mypage" component={MyComponent} />
+        if (routes.some(route => route.ignoreScrollBehavior)) {
+          return false;
+        }
+        return true;
+      })
+    );
+
     return (
-      <Router history={routerHistory} render={applyRouterMiddleware(useScroll())}>
+      <Router history={routerHistory} render={render}>
         {prepareRoutesWithTransitionHooks(routes)}
       </Router>
     );
