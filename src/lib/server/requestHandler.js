@@ -1,9 +1,13 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom/server";
+import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
 import LRU from "lru-cache";
+import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
+import { PassThrough } from "stream";
+
+const componentCache = LRURenderCache({max: 500 * 1024 * 1024});
 
 import {
   runBeforeRoutes,
@@ -124,27 +128,35 @@ module.exports = async function (req, res) {
             }
           }
 
-          let responseBuffer;
+          let responseStream;
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
+            responseStream = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
-            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
+            responseStream = reactRenderFunc(rootElement, {cache: componentCache});
           }
 
-          // If caching has been enabled for this route, cache response for
-          // next time it is requested
-          if (currentRoute.cache && process.env.NODE_ENV === "production") {
-            const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
-            logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
-            cache.set(cacheKey, {
-              status,
-              responseBuffer
-            }, cacheTTL);
-          }
+          const cachePass = new PassThrough();
+          let responseString = "";
+          cachePass.on("data", (chunk) => {
+            responseString += chunk;
+          });
+          cachePass.on("end", () => {
+            // If caching has been enabled for this route, cache response for
+            // next time it is requested
+            if (currentRoute.cache && process.env.NODE_ENV === "production") {
+              const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
+              logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
+              cache.set(cacheKey, {
+                status,
+                responseString,
+                docType: routeAttrs.docType
+              }, cacheTTL);
+            }
+          });
 
-          streamResponse(req, res, { status, responseBuffer });
+          streamResponse(req, res, {status, docType: routeAttrs.docType, responseStream: responseStream.pipe(cachePass)});
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
