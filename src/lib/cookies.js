@@ -63,7 +63,7 @@ export function parse(cookieString) {
         c = new Cookie();
       }
       c.name = k;
-      c.value = v;
+      c.value = decodeURIComponent(v);
     }
   });
   cookies.push(c);
