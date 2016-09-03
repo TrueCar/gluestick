@@ -138,9 +138,9 @@ module.exports = async function (req, res) {
           }
 
           const cachePass = new PassThrough();
-          let responseString = "";
+          const responseString = [];
           cachePass.on("data", (chunk) => {
-            responseString += chunk;
+            responseString.push(chunk);
           });
           cachePass.on("end", () => {
             // If caching has been enabled for this route, cache response for
@@ -150,7 +150,7 @@ module.exports = async function (req, res) {
               logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
               cache.set(cacheKey, {
                 status,
-                responseString,
+                responseString: responseString.join(""),
                 docType: routeAttrs.docType
               }, cacheTTL);
             }
