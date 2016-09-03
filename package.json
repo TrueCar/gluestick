@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
@@ -59,7 +59,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.30.0",
-    "gluestick-shared": "0.4.8",
+    "gluestick-shared": "0.4.9",
     "history": "3.0.0",
     "http-proxy-middleware": "0.17.1",
     "inquirer": "1.0.3",
