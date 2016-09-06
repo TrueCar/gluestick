@@ -44,7 +44,7 @@ export function parse(cookieString) {
   let c = new Cookie();
 
   cookieString.split(";").forEach(s => {
-    const m = new RegExp("([a-zA-Z\-\_]+)=([a-zA-Z0-9\%\-\_\=\/\.\,\:\\s]+)", "g").exec(s.trim());
+    const m = new RegExp("([\\w\%\-]+)=(.+)", "g").exec(s.trim());
     let k = s.trim(), v;
 
     if (m !== null) {

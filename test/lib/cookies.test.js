@@ -10,6 +10,13 @@ describe("lib/cookies", () => {
       expect(cookieJar[0].value).to.equal("barbaz==");
     });
 
+    it("parses a cookie's name containing alpha-numeric characters from a string", () => {
+      const cookieJar = parse("foo0123foo=barbaz==");
+      expect(cookieJar.length).to.equal(1);
+      expect(cookieJar[0].name).to.equal("foo0123foo");
+      expect(cookieJar[0].value).to.equal("barbaz==");
+    });
+
     it("parses a cookie's path from a string", () => {
       const cookieJar = parse("foo=barbaz==; path=/");
       expect(cookieJar.length).to.equal(1);
