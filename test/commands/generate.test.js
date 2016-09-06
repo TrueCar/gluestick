@@ -6,6 +6,8 @@ import mkdirp from "mkdirp";
 import glob from "glob";
 import temp from "temp";
 import rimraf from "rimraf";
+import sinon from "sinon";
+import logger from "../../src/lib/cliLogger";
 import generate from "../../src/commands/generate";
 
 function stubProject(type) {
@@ -59,15 +61,21 @@ function assertImportPath(filePath, expectedPath) {
 
 describe("cli: gluestick generate", function () {
 
-  let originalCwd, tmpDir;
+  let originalCwd, tmpDir, sandbox;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-generate");
     process.chdir(tmpDir);
+
+    // Prevent verbose output in tests
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(logger, "info");
+    sandbox.stub(logger, "success");
   });
 
   afterEach((done) => {
+    sandbox.restore();
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
   });

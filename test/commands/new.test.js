@@ -25,8 +25,8 @@ describe("cli: gluestick new", function () {
     process.chdir(tmpDir);
     fakeNpm = sinon.stub(npmDependencies, "install");
     sandbox = sinon.sandbox.create();
-    sandbox.spy(logger, "info");
-    sandbox.spy(logger, "warn");
+    sandbox.stub(logger, "info");
+    sandbox.stub(logger, "warn");
   });
 
   afterEach(done => {

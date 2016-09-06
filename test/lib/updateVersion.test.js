@@ -25,7 +25,7 @@ describe("cli: gluestick touch", function () {
     dotFile = path.join(tmpDir, ".gluestick");
 
     sandbox = sinon.sandbox.create();
-    sandbox.spy(logger, "warn");
+    sandbox.stub(logger, "warn");
     sandbox.stub(process, "exit");
   });
 

@@ -44,7 +44,7 @@ describe("utils", function () {
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
       sandbox.stub(process, "exit");
-      sandbox.spy(logger, "error");
+      sandbox.stub(logger, "error");
     });
 
     afterEach(() => {

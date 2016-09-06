@@ -29,8 +29,9 @@ describe("src/lib/getWebpackAdditions", () => {
     fs.unlinkSync(path.join(cwd, ".babelrc"));
 
     sandbox = sinon.sandbox.create();
-    sandbox.spy(logger, "info");
-    sandbox.spy(logger, "warn");
+    sandbox.stub(logger, "error");
+    sandbox.stub(logger, "info");
+    sandbox.stub(logger, "warn");
 
     defaultAdditions = {
       additionalAliases: {},
