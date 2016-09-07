@@ -16,7 +16,7 @@ function Cookie(name=null, value=null, options={}) {
 }
 
 Cookie.prototype.toString = function() {
-  const kvs = [`${this.name}=${this.value}`];
+  const kvs = [`${this.name}=${encodeURIComponent(this.value)}`];
   const bvs = [];
 
   Object.keys(COOKIE_OPTS).forEach(attr => {
@@ -44,7 +44,7 @@ export function parse(cookieString) {
   let c = new Cookie();
 
   cookieString.split(";").forEach(s => {
-    const m = new RegExp("([\\w\%\-]+)=(.+)", "g").exec(s.trim());
+    const m = new RegExp("([\\w\%\-\.]+)=(.*)", "g").exec(s.trim());
     let k = s.trim(), v;
 
     if (m !== null) {
