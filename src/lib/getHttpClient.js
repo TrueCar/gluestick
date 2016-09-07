@@ -55,7 +55,7 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       const cookies = parse(mergedCookieString);
       res.removeHeader("Set-Cookie");
       cookies.forEach(cookie => {
-        res.append("Set-Cookie", cookie);
+        res.append("Set-Cookie", cookie.toString());
       });
 
       // Ensure that any subsequent requests are passing the cookies.

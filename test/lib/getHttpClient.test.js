@@ -109,7 +109,8 @@ describe("lib/getHttpClient", () => {
 
     const mockServerResponse = {
       removeHeader: sinon.spy(),
-      cookie: sinon.spy()
+      cookie: sinon.spy(),
+      append: sinon.spy()
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
@@ -119,7 +120,7 @@ describe("lib/getHttpClient", () => {
       }
     });
 
-    expect(mockServerResponse.cookie.lastCall.args).to.deep.equal(["oh", "hai", {}]);
+    expect(mockServerResponse.append.lastCall.args).to.deep.equal(["Set-Cookie", "oh=hai"]);
   });
 
   it("should set default cookies on the axios instance", () => {
@@ -133,7 +134,8 @@ describe("lib/getHttpClient", () => {
 
     const mockServerResponse = {
       removeHeader: sinon.spy(),
-      cookie: sinon.spy()
+      cookie: sinon.spy(),
+      append: sinon.spy()
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
