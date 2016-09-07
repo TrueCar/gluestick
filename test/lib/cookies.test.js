@@ -10,6 +10,12 @@ describe("lib/cookies", () => {
       expect(cookieJar[0].value).to.equal("barbaz==");
     });
 
+    it("parses a cookie containing an empty value", () => {
+      const cookieJar = parse("foo=;");
+      expect(cookieJar[0].name).to.equal("foo");
+      expect(cookieJar[0].value).to.equal("");
+    });
+
     it("parses a cookie's name containing alpha-numeric characters from a string", () => {
       const cookieJar = parse("foo0123foo=barbaz==");
       expect(cookieJar.length).to.equal(1);
@@ -72,7 +78,7 @@ describe("lib/cookies", () => {
       const oldCookies = "foo=baz==";
       const newCookies = "some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly";
       const result = merge(oldCookies, newCookies);
-      expect(result).to.equal("foo=baz==; some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly");
+      expect(result).to.equal("foo=baz%3D%3D; some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly");
     });
 
     it("uses the newest value of a cookie if one exists", () => {
@@ -91,9 +97,9 @@ describe("lib/cookies", () => {
 
     it("handles invalid new cookies", () => {
       const oldCookies = "foo=baz==";
-      expect(merge(oldCookies, undefined)).to.equal("foo=baz=="); // eslint-disable-line no-undefined
-      expect(merge(oldCookies, null)).to.equal("foo=baz==");
-      expect(merge(oldCookies, "")).to.equal("foo=baz==");
+      expect(merge(oldCookies, undefined)).to.equal("foo=baz%3D%3D"); // eslint-disable-line no-undefined
+      expect(merge(oldCookies, null)).to.equal("foo=baz%3D%3D");
+      expect(merge(oldCookies, "")).to.equal("foo=baz%3D%3D");
     });
   });
 });
