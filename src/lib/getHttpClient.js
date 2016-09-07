@@ -53,8 +53,9 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       // not in gsBeforeRoute for apps where that is an issue.
       const mergedCookieString = merge(client.defaults.headers.cookie, cookieString);
       const cookies = parse(mergedCookieString);
+      res.removeHeader("Set-Cookie");
       cookies.forEach(cookie => {
-        res.cookie(cookie.name, cookie.value, cookie.options);
+        res.append("Set-Cookie", cookie);
       });
 
       // Ensure that any subsequent requests are passing the cookies.
