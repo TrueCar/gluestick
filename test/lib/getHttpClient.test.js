@@ -4,42 +4,50 @@ import { expect } from "chai";
 
 
 describe("lib/getHttpClient", () => {
-  let axiosMock, mockAxiosInstance;
+  let axiosMock;
 
   beforeEach(() => {
-    mockAxiosInstance = {
-      interceptors: {
-        response: {
-          use: (middleware) => {
-            mockAxiosInstance.interceptors.response.middleware.push(middleware);
+    function getInstance () {
+      const i = {
+        interceptors: {
+          response: {
+            use: (middleware) => {
+              i.interceptors.response.middleware.push(middleware);
+            },
+            middleware: [],
           },
-          middleware: [],
+          request: {
+            use: (middleware) => {
+              i.interceptors.request.middleware.push(middleware);
+            },
+            middleware: [],
+          }
         },
-        request: {
-          use: (middleware) => {
-            mockAxiosInstance.interceptors.request.middleware.push(middleware);
-          },
-          middleware: [],
+        config: {
+          headers: {}
+        },
+        get: (fakeResponse) => {
+          return {
+            request: i.interceptors.request.middleware.map(m => m(i.config)),
+            response: i.interceptors.response.middleware.map(m => m(fakeResponse))
+          };
+        },
+        defaults: {
+          headers: {
+            cookie: ''
+          }
         }
-      },
-      config: {
-        headers: {}
-      },
-      get: (fakeResponse) => {
-        return {
-          request: mockAxiosInstance.interceptors.request.middleware.map(m => m(mockAxiosInstance.config)),
-          response: mockAxiosInstance.interceptors.response.middleware.map(m => m(fakeResponse))
-        };
-      },
-      defaults: {
-        headers: {
-          cookie: ''
-        }
-      }
-    };
+      };
+
+      return i;
+    }
+
+    const create = sinon.stub().returns(getInstance());
+    create.onCall(1).returns(getInstance());
+    create.onCall(2).returns(getInstance());
 
     axiosMock = {
-      create: sinon.stub().returns(mockAxiosInstance)
+      create: create
     };
   });
 
@@ -163,7 +171,7 @@ describe("lib/getHttpClient", () => {
       headers: {}
     });
 
-    expect(request[0].headers.cookies).to.equal("_some_cookie=abc; another_cookie=something");
+    expect(request[0].headers.cookie).to.equal("name=Lincoln; _some_cookie=abc; another_cookie=something");
   });
 
   it("should not send received cookies in subsequent requests with a new instance", () => {
@@ -196,7 +204,7 @@ describe("lib/getHttpClient", () => {
       headers: {}
     });
 
-    expect(request[0].headers.cookies).to.equal("_some_cookie=abc; another_cookie=something");
+    expect(request[0].headers.cookie).to.equal("name=Lincoln");
   });
 
   it("should allow you to modify the axios instance with `modifyInstance`", () => {
