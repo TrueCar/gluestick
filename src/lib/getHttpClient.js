@@ -38,6 +38,27 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
     ...httpConfig
   });
 
+  let outgoingCookies = req.headers.cookie;
+  let incomingCookies = "";
+
+  // Send outgoing cookies received from the browser in each outgoing request
+  // along with any new cookies that we have received in API calls to fullfill
+  // this request.
+  client.interceptors.request.use((config) => {
+    // convert incoming cookies to outgoing cookies, strip off the options with
+    // `toString(false)`
+    const newCookies = parse(incomingCookies).map(c => c.toString(false)).join("; ");
+    const output = {
+      ...config,
+      headers: {
+        ...headers,
+        cookies: merge(config.headers.cookies, newCookies)
+      }
+    };
+
+    return output;
+  });
+
   client.interceptors.response.use((response) => {
     const cookiejar = response.headers["set-cookie"];
 
@@ -51,7 +72,7 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       // undesired effects. Currently, the suggested solution for dealing with
       // this problem is to make the API requests to A or B in the browser and
       // not in gsBeforeRoute for apps where that is an issue.
-      const mergedCookieString = merge(client.defaults.headers.cookie, cookieString);
+      const mergedCookieString = merge(incomingCookies, cookieString);
       const cookies = parse(mergedCookieString);
       res.removeHeader("Set-Cookie");
       cookies.forEach(cookie => {
@@ -59,8 +80,14 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
       });
 
       // Ensure that any subsequent requests are passing the cookies.
-      // This is for instances where there is no browser persisting the cookies.
-      client.defaults.headers.cookie = mergedCookieString;
+      // This is for instances where there is no browser persisting the
+      // cookies.
+      //
+      // @NOTE: This used to use the axios instance.defaults.headers… but it
+      // turns out axios recycles that object and cookies were being leaked
+      // across requests from different users! Now we just use our own string
+      // and add it using the request interceptor.
+      incomingCookies = mergedCookieString;
     }
 
     return response;
