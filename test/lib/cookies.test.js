@@ -102,4 +102,23 @@ describe("lib/cookies", () => {
       expect(merge(oldCookies, "")).to.equal("foo=baz%3D%3D");
     });
   });
+
+  describe("Cookie => toString", () => {
+    it("should return a cookie string with option attributes when incoming", () => {
+      const cookies = parse("some-thing-a=true; path=/; foo=hi; path=/ HttpOnly");
+      expect(`${cookies[0]}`).to.equal("some-thing-a=true; path=/");
+      expect(`${cookies[1]}`).to.equal("foo=hi; path=/ HttpOnly");
+    });
+
+    it("should return a cookie string without option attributes when outgoing", () => {
+      const cookies = parse("some-thing-a=true; path=/; foo=hi; path=/ HttpOnly");
+      expect(cookies[0].toString(false)).to.equal("some-thing-a=true");
+      expect(cookies[1].toString(false)).to.equal("foo=hi");
+    });
+
+    it("returns an empty string if cookie value doesn't have name", () => {
+      const cookies = parse("");
+      expect(cookies[0].toString()).to.equal("");
+    }); 
+  });
 });

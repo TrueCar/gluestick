@@ -15,9 +15,17 @@ function Cookie(name=null, value=null, options={}) {
   this.options = options;
 }
 
-Cookie.prototype.toString = function() {
+Cookie.prototype.toString = function(incoming=true) {
+  if (!this.name) {
+    return "";
+  }
+
   const kvs = [`${this.name}=${encodeURIComponent(this.value)}`];
   const bvs = [];
+
+  if (!incoming) {
+    return kvs[0];
+  }
 
   Object.keys(COOKIE_OPTS).forEach(attr => {
     const value = this.options[attr];

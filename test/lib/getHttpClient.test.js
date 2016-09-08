@@ -14,10 +14,22 @@ describe("lib/getHttpClient", () => {
             mockAxiosInstance.interceptors.response.middleware.push(middleware);
           },
           middleware: [],
+        },
+        request: {
+          use: (middleware) => {
+            mockAxiosInstance.interceptors.request.middleware.push(middleware);
+          },
+          middleware: [],
         }
       },
+      config: {
+        headers: {}
+      },
       get: (fakeResponse) => {
-        return mockAxiosInstance.interceptors.response.middleware.forEach(m => m(fakeResponse));
+        return {
+          request: mockAxiosInstance.interceptors.request.middleware.map(m => m(mockAxiosInstance.config)),
+          response: mockAxiosInstance.interceptors.response.middleware.map(m => m(fakeResponse))
+        };
       },
       defaults: {
         headers: {
@@ -114,7 +126,7 @@ describe("lib/getHttpClient", () => {
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
-    const response = client.get({
+    const { response } = client.get({
       headers: {
         "set-cookie": ["oh=hai"]
       }
@@ -123,7 +135,7 @@ describe("lib/getHttpClient", () => {
     expect(mockServerResponse.append.lastCall.args).to.deep.equal(["Set-Cookie", "oh=hai"]);
   });
 
-  it("should set default cookies on the axios instance", () => {
+  it("should send received cookies in subsequent requests with the same instance", () => {
     const req = {
       headers: {
         "cookie": "name=Lincoln",
@@ -135,17 +147,56 @@ describe("lib/getHttpClient", () => {
     const mockServerResponse = {
       removeHeader: sinon.spy(),
       cookie: sinon.spy(),
-      append: sinon.spy()
+      append: sinon.spy(),
+      headers: {
+        "set-cookie": ["_some_cookie=abc", "another_cookie=something"]
+      }
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
-    const response = client.get({
+    client.get({
+      headers: {
+        "set-cookie": ["_some_cookie=abc", "another_cookie=something"]
+      }
+    });
+    const { request } = client.get({
+      headers: {}
+    });
+
+    expect(request[0].headers.cookies).to.equal("_some_cookie=abc; another_cookie=something");
+  });
+
+  it("should not send received cookies in subsequent requests with a new instance", () => {
+    const req = {
+      headers: {
+        "cookie": "name=Lincoln",
+        "host": "hola.com:332211"
+      },
+      secure: false
+    };
+
+    const mockServerResponse = {
+      removeHeader: sinon.spy(),
+      cookie: sinon.spy(),
+      append: sinon.spy(),
+      headers: {
+        "set-cookie": ["_some_cookie=abc", "another_cookie=something"]
+      }
+    };
+
+    const client = getHttpClient({}, req, mockServerResponse, axiosMock);
+    client.get({
       headers: {
         "set-cookie": ["_some_cookie=abc", "another_cookie=something"]
       }
     });
 
-    expect(mockAxiosInstance.defaults.headers.cookie).to.equal("_some_cookie=abc; another_cookie=something");
+    const newClient = getHttpClient({}, req, mockServerResponse, axiosMock);
+    const { request } = newClient.get({
+      headers: {}
+    });
+
+    expect(request[0].headers.cookies).to.equal("_some_cookie=abc; another_cookie=something");
   });
 
   it("should allow you to modify the axios instance with `modifyInstance`", () => {
