@@ -47,7 +47,10 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-      loader: "file-loader?name=[name]-[hash].[ext]"
+      loaders: [
+        "file-loader?name=[name]-[hash].[ext]",
+        "image-webpack"
+      ]
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
