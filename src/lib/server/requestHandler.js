@@ -1,7 +1,8 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
+import { renderToString } from "react-dom-stream/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import LRU from "lru-cache";
 import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
@@ -99,9 +100,8 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const currentState = store.getState();
-          const body = createElement(Body, {html: renderToString(main), entryPoint: fileName, initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
+          const body = createElement(Body, {html: reactRenderFunc(main), entryPoint: fileName, initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
           const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
-
 
           // Grab the html from the project which is stored in the root
           // folder named Index.js. Pass the body and the head to that
@@ -128,19 +128,19 @@ module.exports = async function (req, res) {
             }
           }
 
-          let responseStream;
+          let responseStream, responseString;
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseStream = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
+            responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
             responseStream = reactRenderFunc(rootElement, {cache: componentCache});
           }
 
           const cachePass = new PassThrough();
-          let responseString = "";
+          let cachedResponse = "";
           cachePass.on("data", (chunk) => {
-            responseString += chunk;
+            cachedResponse += chunk;
           });
           cachePass.on("end", () => {
             // If caching has been enabled for this route, cache response for
@@ -150,13 +150,18 @@ module.exports = async function (req, res) {
               logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
               cache.set(cacheKey, {
                 status,
-                responseString,
+                responseString: cachedResponse,
                 docType: routeAttrs.docType
               }, cacheTTL);
             }
           });
 
-          streamResponse(req, res, {status, docType: routeAttrs.docType, responseStream: responseStream.pipe(cachePass)});
+          streamResponse(req, res, {
+            status,
+            docType: routeAttrs.docType,
+            responseStream: responseStream && responseStream.pipe(cachePass),
+            responseString
+          });
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A
