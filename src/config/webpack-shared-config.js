@@ -4,6 +4,7 @@ import process from "process";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
@@ -63,6 +64,7 @@ module.exports = {
   ],
   plugins: [
     new ExtractTextPlugin("[name]-[chunkhash].css"),
+    new OptimizeCSSAssetsPlugin()
   ],
   preLoaders: []
 };
