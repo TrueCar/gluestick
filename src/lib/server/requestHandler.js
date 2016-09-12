@@ -1,9 +1,14 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom/server";
+import { renderToString } from "react-dom-stream/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import LRU from "lru-cache";
+import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
+import { PassThrough } from "stream";
+
+const componentCache = LRURenderCache({max: 500 * 1024 * 1024});
 
 import {
   runBeforeRoutes,
@@ -95,9 +100,8 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const currentState = store.getState();
-          const body = createElement(Body, {html: renderToString(main), entryPoint: fileName, initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
+          const body = createElement(Body, {html: reactRenderFunc(main), entryPoint: fileName, initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
           const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
-
 
           // Grab the html from the project which is stored in the root
           // folder named Index.js. Pass the body and the head to that
@@ -124,27 +128,40 @@ module.exports = async function (req, res) {
             }
           }
 
-          let responseBuffer;
+          let responseStream, responseString;
           if (isEmail) {
             const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + Oy.renderTemplate(rootElement, {}, generateCustomTemplate));
+            responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
-            responseBuffer = Buffer.from(routeAttrs.docType + "\n" + reactRenderFunc(rootElement));
+            responseStream = reactRenderFunc(rootElement, {cache: componentCache});
           }
 
-          // If caching has been enabled for this route, cache response for
-          // next time it is requested
-          if (currentRoute.cache && process.env.NODE_ENV === "production") {
-            const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
-            logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
-            cache.set(cacheKey, {
-              status,
-              responseBuffer
-            }, cacheTTL);
-          }
+          const cachePass = new PassThrough();
+          let cachedResponse = "";
+          cachePass.on("data", (chunk) => {
+            cachedResponse += chunk;
+          });
+          cachePass.on("end", () => {
+            // If caching has been enabled for this route, cache response for
+            // next time it is requested
+            if (currentRoute.cache && process.env.NODE_ENV === "production") {
+              const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
+              logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
+              cache.set(cacheKey, {
+                status,
+                responseString: cachedResponse,
+                docType: routeAttrs.docType
+              }, cacheTTL);
+            }
+          });
 
-          streamResponse(req, res, { status, responseBuffer });
+          streamResponse(req, res, {
+            status,
+            docType: routeAttrs.docType,
+            responseStream: responseStream && responseStream.pipe(cachePass),
+            responseString
+          });
         }
         else {
           // This is only hit if there is no 404 handler in the react routes. A

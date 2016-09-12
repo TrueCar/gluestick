@@ -1,28 +1,33 @@
 import zlib from "zlib";
 import { Readable } from "stream";
+import DoctypeStream from "./DoctypeStream";
 
-export default function streamResponse (req, res, {status, responseBuffer}, R=Readable/*included for test mock*/, z=zlib/* included for test mock*/) {
+export default function streamResponse (req, res, {status, docType, responseString, responseStream}, R=Readable/*included for test mock*/, z=zlib/* included for test mock*/) {
   const acceptEncoding = req.headers["accept-encoding"] || "";
   const other = {
     "Content-Type": "text/html; charset=utf-8"
   };
 
-  const responseStream = new R();
-  responseStream.setEncoding("utf8");
-  responseStream.push(responseBuffer);
-  responseStream.push(null);
+  if (!responseStream) {
+    responseStream = new R();
+    responseStream.setEncoding("utf8");
+    responseStream.push(responseString);
+    responseStream.push(null);
+  }
 
+  const doctypeStream = new DoctypeStream(docType);
+  const head = {...other};
+  let outputStream = responseStream.pipe(doctypeStream);
   if (acceptEncoding.match(/\bgzip\b/)) {
-    res.writeHead(status, {"Content-Encoding": "gzip", ...other});
-    responseStream.pipe(z.createGzip()).pipe(res);
+    head["Content-Encoding"] = "gzip";
+    outputStream = outputStream.pipe(z.createGzip());
   }
   else if (acceptEncoding.match(/\bdeflate\b/)) {
-    res.writeHead(status, {"Content-Encoding": "deflate", ...other});
-    responseStream.pipe(z.createDeflate()).pipe(res);
+    head["Content-Encoding"] = "deflate";
+    outputStream = outputStream.pipe(z.createDeflate());
   }
-  else {
-    res.writeHead(status, {...other});
-    responseStream.pipe(res);
-  }
+
+  res.writeHead(status, head);
+  outputStream.pipe(res);
 }
 
