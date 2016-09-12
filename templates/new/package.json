@@ -21,6 +21,7 @@
     "file-loader": "0.8.5",
     "gluestick-shared": "0.4.15",
     "history": "3.0.0",
+    "image-webpack-loader": "2.0.0",
     "json-loader": "0.5.4",
     "node-sass": "3.7.0",
     "oy-vey": "0.7.0",
