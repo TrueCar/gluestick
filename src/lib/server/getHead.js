@@ -17,8 +17,6 @@ export default (config, entryPoint, assets) => {
     tags.push(<link key={key++} rel="stylesheet" type="text/css" href={getAssetPathForFile(`${entryPoint}`, "styles")} />);
   }
 
-  tags.push(<script key={key++} type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/script.js/2.5.8/script.min.js" />);
-
   tags.push(
     <script key={key++} type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__GS_PUBLIC_PATH__ = ${serialize(assetPath)}; window.__GS_ENVIRONMENT__ = ${serialize(process.env.NODE_ENV)}`}}></script>
   );
@@ -50,7 +48,7 @@ function getScriptLoader ({commons, vendor, entryPoint}:Object) {
     });
   `;
 
-  return <script type="text/javascript" dangerouslySetInnerHTML={{__html: scriptLoader}} />;
+  return <script key="script-loader" type="text/javascript" dangerouslySetInnerHTML={{__html: scriptLoader}} />;
 }
 
 // Sub resources give browsers a clue to assets they can preload and cache
@@ -59,8 +57,8 @@ function getScriptSubresources ({commons, vendor, entryPoint}) {
     commons,
     vendor,
     entryPoint
-  ].map((src) => {
-    return <link rel="subresource" href={src} />;
+  ].map((src, i) => {
+    return <link key={`sub-${i}`} rel="subresource" href={src} />;
   });
 }
 
