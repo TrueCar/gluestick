@@ -2,13 +2,10 @@
 import React, { Component, PropTypes} from "react";
 import serialize from "serialize-javascript";
 
-import getAssetPathForFile from "../getAssetPathForFile";
-
 export default class Body extends Component {
   static propTypes = {
     html: PropTypes.string,
     isEmail: PropTypes.bool.isRequired,
-    entryPoint: PropTypes.string.isRequired,
     initialState: PropTypes.any.isRequired,
     envVariables: PropTypes.array.isRequired
   };
@@ -29,10 +26,6 @@ export default class Body extends Component {
   }
 
   _renderWithScriptTags () {
-    const {
-      entryPoint
-    } = this.props;
-
     const windowVariables = this._getGlobalVariables();
 
     return (
@@ -41,12 +34,10 @@ export default class Body extends Component {
           {this._renderMainContent()}
         </div>
         <script type="text/javascript" dangerouslySetInnerHTML={{__html: windowVariables}}></script>
-        <script type="text/javascript" src={getAssetPathForFile("commons", "javascript")}></script>
-        <script type="text/javascript" src={getAssetPathForFile("vendor", "javascript")}></script>
-        <script type="text/javascript" src={getAssetPathForFile(entryPoint, "javascript")} async></script>
       </div>
     );
   }
+
 
   _renderMainContent () {
     return <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />;
