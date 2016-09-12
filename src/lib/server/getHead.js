@@ -53,6 +53,7 @@ function getScriptLoader ({commons, vendor, entryPoint}:Object) {
   return <script type="text/javascript" dangerouslySetInnerHTML={{__html: scriptLoader}} />;
 }
 
+// Sub resources give browsers a clue to assets they can preload and cache
 function getScriptSubresources ({commons, vendor, entryPoint}) {
   return [
     commons,
