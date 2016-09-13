@@ -16,7 +16,7 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
   // to worry about cookies but we still need to pass headers and options and
   // give developers a chance to modify the instance
   if (!req) {
-    client = httpClient.create(_extends({headers}, httpConfig));
+    client = httpClient.create({headers, ...httpConfig});
 
     if (modifyInstance) {
       client = modifyInstance(client);
