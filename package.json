@@ -60,7 +60,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.30.0",
-    "gluestick-shared": "0.4.15",
+    "gluestick-shared": "0.4.16",
     "history": "3.0.0",
     "http-proxy-middleware": "0.17.1",
     "image-webpack-loader": "2.0.0",
