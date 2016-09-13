@@ -2,6 +2,7 @@
 import path from "path";
 import { createElement } from "react";
 import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
+import { renderToStaticMarkup as renderToStaticMarkupEmail } from "react-dom/server";
 import LRU from "lru-cache";
 import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
@@ -96,7 +97,7 @@ module.exports = async function (req, res) {
           // determine whether to render as an e-mail or not
           const routeAttrs = getEmailAttributes(renderProps.routes);
           const isEmail = routeAttrs.email;
-          const reactRenderFunc = isEmail ? renderToStaticMarkup : renderToString;
+          const reactRenderFunc = isEmail ? renderToStaticMarkupEmail : renderToString;
 
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
