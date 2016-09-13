@@ -135,7 +135,7 @@ module.exports = async function (req, res) {
             responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
-            responseStream = renderToStaticMarkup(rootElement, {cache: componentCache});
+            responseStream = renderToStaticMarkup(rootElement);
           }
 
           const cachePass = new PassThrough();
