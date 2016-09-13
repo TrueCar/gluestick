@@ -7,7 +7,9 @@ import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
 import { PassThrough } from "stream";
 
-const componentCache = LRURenderCache({max: 500 * 1024 * 1024});
+const isProduction = process.env.NODE_ENV === "production";
+
+const componentCache = LRURenderCache({max: isProduction ? 500 * 1024 * 1024 : 0});
 
 import {
   runBeforeRoutes,
@@ -144,7 +146,7 @@ module.exports = async function (req, res) {
           cachePass.on("end", () => {
             // If caching has been enabled for this route, cache response for
             // next time it is requested
-            if (currentRoute.cache && process.env.NODE_ENV === "production") {
+            if (currentRoute.cache && isProduction) {
               const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
               logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
               cache.set(cacheKey, {
