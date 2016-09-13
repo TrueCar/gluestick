@@ -117,7 +117,6 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, () => {}),
 
       new webpack.optimize.CommonsChunkPlugin("vendor", `vendor${isProduction ? "-[hash]" : ""}.bundle.js`),
-      new webpack.optimize.CommonsChunkPlugin("commons", `commons${isProduction ? "-[hash]" : ""}.bundle.js`)
     ].concat(getEnvironmentPlugins(isProduction), webpackSharedConfig.plugins, plugins),
     resolve: {
       ...webpackSharedConfig.resolve
