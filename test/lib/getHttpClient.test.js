@@ -62,7 +62,7 @@ describe("lib/getHttpClient", () => {
       abc: 123
     };
     const client = getHttpClient(options, undefined, undefined, axiosMock);
-    const { headers, modifyInstance, ...expectedResult } = options;
+    const { modifyInstance, ...expectedResult } = options;
     expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
   });
 
