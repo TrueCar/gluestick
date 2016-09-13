@@ -51,7 +51,7 @@ describe("lib/getHttpClient", () => {
     };
   });
 
-  it("should call create with passed params, except headers and modifyInstance", () => {
+  it("should call create with passed params and headers, and without modifyInstance", () => {
     const options = {
       headers: {
         "X-Todd": "Hi",
@@ -62,7 +62,7 @@ describe("lib/getHttpClient", () => {
       abc: 123
     };
     const client = getHttpClient(options, undefined, undefined, axiosMock);
-    const { headers, modifyInstance, ...expectedResult } = options;
+    const { modifyInstance, ...expectedResult } = options;
     expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
   });
 
