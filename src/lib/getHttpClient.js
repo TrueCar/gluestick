@@ -13,10 +13,10 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
   let client;
 
   // If there is no request object then we are in the browser and we don't need
-  // to worry about headers or cookies but we still need to pass options and
+  // to worry about cookies but we still need to pass headers and options and
   // give developers a chance to modify the instance
   if (!req) {
-    client = httpClient.create(httpConfig);
+    client = httpClient.create(_extends({headers}, httpConfig));
 
     if (modifyInstance) {
       client = modifyInstance(client);
