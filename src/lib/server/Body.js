@@ -40,7 +40,11 @@ export default class Body extends Component {
 
 
   _renderMainContent () {
-    return <div id="main" dangerouslySetInnerHTML={{__html: this.props.html}} />;
+    return (
+      <div id="main">
+        <div dangerouslySetInnerHTML={{__html: this.props.html}} />
+      </div>
+    );
   }
 
   _getGlobalVariables () {
