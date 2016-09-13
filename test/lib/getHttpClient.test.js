@@ -51,7 +51,7 @@ describe("lib/getHttpClient", () => {
     };
   });
 
-  it("should call create with passed params, except headers and modifyInstance", () => {
+  it("should call create with passed params and headers, and without modifyInstance", () => {
     const options = {
       headers: {
         "X-Todd": "Hi",
