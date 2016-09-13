@@ -1,8 +1,7 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
 import { createElement } from "react";
-import { renderToString } from "react-dom-stream/server";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
 import LRU from "lru-cache";
 import LRURenderCache from "react-dom-stream/lru-render-cache";
 import streamResponse from "./streamResponse";
@@ -100,7 +99,7 @@ module.exports = async function (req, res) {
           // grab the react generated body stuff. This includes the
           // script tag that hooks up the client side react code.
           const currentState = store.getState();
-          const body = createElement(Body, {html: reactRenderFunc(main), initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
+          const body = createElement(Body, {html: reactRenderFunc(main, {cache: componentCache}), initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
           const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
 
           // Grab the html from the project which is stored in the root
@@ -134,7 +133,7 @@ module.exports = async function (req, res) {
             responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
           }
           else {
-            responseStream = reactRenderFunc(rootElement, {cache: componentCache});
+            responseStream = renderToStaticMarkup(rootElement, {cache: componentCache});
           }
 
           const cachePass = new PassThrough();
