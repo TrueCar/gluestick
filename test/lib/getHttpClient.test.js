@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 
 describe("lib/getHttpClient", () => {
-  let axiosMock;
+  let axiosMock, defaultHeaders;
 
   beforeEach(() => {
     function getInstance () {
@@ -46,12 +46,36 @@ describe("lib/getHttpClient", () => {
     create.onCall(1).returns(getInstance());
     create.onCall(2).returns(getInstance());
 
+    defaultHeaders = {
+      common: {
+        "Authorization": "TEST_AUTH_TOKEN"
+      },
+      post: {
+        "Content-Type": "TEST_CONTENT_TYPE"
+      }
+    };
+
     axiosMock = {
-      create: create
+      create: create,
+      defaults: {
+        headers: {...defaultHeaders}
+      }
     };
   });
 
-  it("should call create with passed params and headers, and without modifyInstance", () => {
+  it("should include default headers if not explicitly passed in params", () => {
+    const options = {
+      rewriteRequest: [() => {}],
+      modifyInstance: c => c,
+      abc: 123
+    };
+    const client = getHttpClient(options, undefined, undefined, axiosMock);
+    const { modifyInstance, ...expectedResult } = options;
+    expectedResult.headers = defaultHeaders;
+    expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
+  });
+
+  it("should call create with passed params (including merged headers) and without modifyInstance", () => {
     const options = {
       headers: {
         "X-Todd": "Hi",
@@ -62,7 +86,8 @@ describe("lib/getHttpClient", () => {
       abc: 123
     };
     const client = getHttpClient(options, undefined, undefined, axiosMock);
-    const { modifyInstance, ...expectedResult } = options;
+    const { modifyInstance, ...expectedResult} = options;
+    expectedResult.headers = {...expectedResult.headers, ...defaultHeaders};
     expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
   });
 

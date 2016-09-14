@@ -16,7 +16,8 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
   // to worry about cookies but we still need to pass headers and options and
   // give developers a chance to modify the instance
   if (!req) {
-    client = httpClient.create({headers, ...httpConfig});
+    const defaultHeaders = httpClient.defaults.headers || {};
+    client = httpClient.create({headers: {...defaultHeaders, ...headers}, ...httpConfig});
 
     if (modifyInstance) {
       client = modifyInstance(client);
@@ -38,7 +39,7 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
     ...httpConfig
   });
 
-  let outgoingCookies = req.headers.cookie;
+  const outgoingCookies = req.headers.cookie;
   let incomingCookies = "";
 
   // Send outgoing cookies received from the browser in each outgoing request
