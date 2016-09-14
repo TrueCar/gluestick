@@ -41,7 +41,9 @@ describe("cli: gluestick destroy", function () {
     createDirectories(tmpDir, "components", "reducers", "containers");
 
     sandbox = sinon.sandbox.create();
-    sandbox.spy(logger, "error");
+    sandbox.stub(logger, "error");
+    sandbox.stub(logger, "info");
+    sandbox.stub(logger, "success");
   });
 
   afterEach(done => {
