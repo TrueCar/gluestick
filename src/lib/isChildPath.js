@@ -3,6 +3,7 @@ import { relative } from "path";
 const cache = {};
 
 export default function isChildPath (parent, child) {
+  child = child.split("?")[0];
   const key = `${parent}-${child}`;
   const cacheResult = cache[key];
 
