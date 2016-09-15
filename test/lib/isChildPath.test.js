@@ -6,6 +6,8 @@ describe("src/lib/isChildPath", () => {
     const shouldBeTrue = [
       ["/my", "/my/test"],
       ["/my", "/my"],
+      ["/my", "/my?"],
+      ["/my", "/my?test"],
       //["/", "/anything"],
       ["/this/one/is/really/long", "/this/one/is/really/long/too"]
     ];
