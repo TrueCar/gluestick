@@ -2,7 +2,7 @@ import { getLogger } from "./logger";
 const logger = getLogger();
 
 const helpTextHandlers = {
-  [MISSING_404_TEXT]: showMissing404Text
+  MISSING_404_TEXT: showMissing404Text
 };
 
 function showMissing404Text () {
