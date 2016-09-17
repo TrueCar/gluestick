@@ -1,0 +1,4 @@
+#!/bin/sh
+cat /etc/resolv.conf.new > /etc/resolv.conf
+service dnsmasq start
+exec gluestick start -P
