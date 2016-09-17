@@ -1,0 +1,25 @@
+sudo: required
+
+language: node_js
+
+node_js:
+- '5'
+
+branches:
+  only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
+    - master 
+    - /^v[\d]+\.[\d]+\.[\d]+$/
+
+deploy:
+  provider: npm
+  email: toddsurfs@icloud.com
+  api_key:
+    secure: d6NkFa4UDdMkJpIN+xkUazJsqERu4RrODQ7/AVzal/KJAWvy0ihXIx1HWOIPCqwYwril+62WwGjqbUAnRAo1FHpip+gUt222A08mOLsEnOW+rbpKZl7A6HErXD1tYxW9tHzPfZ2daSWSo1EDL5c0N0iB3gmnFreBhBE7RDN63nMkvikCGj7UmQUAeDpRKyXuO2AXEUZacPPC68rmXX41WXuXNBSPCdBUF3AxAWRlwBlTnQ8yVntFfD2DL8emqUvdflAbhpZOUmD7003t/klVGhbrfWU49O6kGKOIXMy7Of8+bh+OQKKTXvWqMHX8BhKPMhfXPujfyAhHBNGl1e3ZiNP8zuWA1hEiGwkSK41I6yHA7Hc0ZXDN2nn/kPSp9BcDHvIpwQiooEfi46EW99RRp2Fw766AItDiI8CNu8nX1Hv4J9L+EDpSu/8ISu+fVH6CxHcCDJcRXfJYu0Rzru+GlKjDaPot3NqUer68yIVmsrm0IOBfzcFuJBYuzf3G84/bDTYAkZhZBs1nBJDJtgSxVJxFo49HcWlsWn9yfOJtE4MRno1uY/Gk5Q5HMFcrLqANRZ/xxO/O6hmQzYQEl22dQv/0SnE6eo+di1y3hwk+uzqFVOnJJnILD6tE/JF398AtGnF346vTRxIUpMObzVG7JyEk6RP/6+ZBmKDaJfUACFo=
+  on:
+    tags: true #only deploy tagged commits
+    repo: TrueCar/gluestick-shared #only deploy from official repo
+
+
+notifications:
+  slack:
+    secure: mve8/fpNKt7uzBX/aeoXB09tEJVY9RkbudAyw6hZf6OttXwjwh78WZ2ZeUKKfdAXIq7BsssgQBK9C9w7bB0SPFjyex2O8aeFjeJvpnTRJ8ntvuZWvIBQY0BEw00zl53g/d7EdnRwA3y6AyZRoEdjm2NAKW65D2tFISCz/p3qZ1hyf03VpRw8AOAZd7unu9fVl1fw/pHypIiEXWkmkFazH10UY8knvF4A1e1QWxLD7W3qYnwXsYf62GMZCOWN5vdlygWNvR3GvrqhglPJuG8nFI9ZBoalHgmRFUtgll1S2eOFKgGizfOWCGMIHWV2itHRBiQQrzzh5j9qxKaUN8zESymlI/rsA+mODGsw4cab0mwDPzvTu9XoAr/2geIThd2258hrLH0Z4esQm0apzpw2IytlgiAweBAnDdGeye7H2D4uJiaDbKDhEROadunCRSC5SlCm7wsS900H94HEfN/QLBvoMcD3pZXPXOMM4s1afaEXWeUwCZWZWHuzzIBNZ2UVARdKChax+uz7UvsLAuyuR1byTDraIqtTcfL4o+3tTbZM9jOas3X8RYobYfJrClRGizz5OylCQK/3o8+c8dPqtTFKce87COutDktVdWXMEW4UyXCANVpWvBBalrIURMRy4h17i3qxUGC8OhY/W1NWd/M+pVezmjjJTtzBVSphuXA=
