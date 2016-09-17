@@ -64,6 +64,13 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install dnsmasq -y
+
+ADD docker/resolv.conf /etc/resolv.conf.new
+ADD docker/dnsmasq.conf /etc/dnsmasq.conf
+ADD docker/start /app/start
+RUN chmod +x /app/start
+
 EXPOSE 8888
 
-CMD ["gluestick", "start", "-P"]
+CMD ["/app/start"]
