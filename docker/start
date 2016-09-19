@@ -1,4 +1,8 @@
 #!/bin/sh
-cat /etc/resolv.conf.new > /etc/resolv.conf
+#
+# Remove any lines that have a nameserver localhost (because we'll add it)
+sed -i '/^nameserver 127.0.0.1/d' /etc/resolv.conf
+# Now add our own nameserver for localhost above the first nameserver
+sed -i '0,/^nameserver .*/s/^nameserver /nameserver 127.0.0.1\n&/' /etc/resolv.conf
 service dnsmasq start
 exec gluestick start -P
