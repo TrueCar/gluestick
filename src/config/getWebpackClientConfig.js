@@ -67,7 +67,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
   return {
     context: appRoot,
-    devtool: isProduction ? null : "cheap-module-eval-source-map",
+    devtool: isProduction ? null : "inline-source-map",
     entry: {
       ...buildWebpackEntries(isProduction),
       vendor: vendor
