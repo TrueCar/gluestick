@@ -34,7 +34,7 @@
     "redux": "3.5.2",
     "sass-loader": "3.2.0",
     "style-loader": "0.13.1",
-    "webpack": "1.13.1"
+    "webpack": "1.13.2"
   },
   "author": "",
   "license": "ISC",
@@ -51,6 +51,6 @@
     "react-transform-catch-errors": "1.0.2",
     "react-transform-hmr": "1.0.4",
     "redbox-react": "1.2.4",
-    "webpack-hot-middleware": "2.10.0"
+    "webpack-hot-middleware": "2.12.2"
   }
 }
