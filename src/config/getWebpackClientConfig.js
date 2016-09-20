@@ -114,7 +114,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       }),
 
       // Make it so *.server.js files return empty function in client
-      new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, () => {}),
+      new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, "./serverFileMock.js")),
 
       new webpack.optimize.CommonsChunkPlugin("vendor", `vendor${isProduction ? "-[hash]" : ""}.bundle.js`),
     ].concat(getEnvironmentPlugins(isProduction), webpackSharedConfig.plugins, plugins),
