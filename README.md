@@ -36,7 +36,7 @@ it under v4. Versions prior to 4 are not currently supported.
 
 ## Install
 ```
-sudo npm install gluestick -g
+npm install gluestick -g
 ```
 
 ## Getting Started
