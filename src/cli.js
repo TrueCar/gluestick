@@ -13,6 +13,7 @@ const startTest = lazyMethodRequire("./commands/test");
 const generate = lazyMethodRequire("./commands/generate");
 const destroy = lazyMethodRequire("./commands/destroy");
 const dockerize = lazyMethodRequire("./commands/dockerize");
+const run = lazyMethodRequire("./commands/run");
 
 const updateLastVersionUsed = require("./lib/updateVersion");
 const getVersion = require("./lib/getVersion");
@@ -152,6 +153,14 @@ commander
     const proc = spawnProcess("test", commander.rawArgs.slice(3));
     proc.on("close", code => { process.exit(code); });
   });
+
+commander
+  .command("run")
+  .arguments("<script_path>")
+  .action(() => updateLastVersionUsed(currentGluestickVersion))
+  .action((scriptPath) => run(scriptPath, (err) => {
+    if (err) { logger.error(err); }
+  }));
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
