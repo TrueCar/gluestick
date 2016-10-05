@@ -10,6 +10,7 @@ module.exports = function (scriptPath, cb) {
       .server(process.cwd(), () => {
         try {
           require(path.join(process.cwd(), scriptPath));
+          cb();
         }
         catch (e) {
           cb(e);

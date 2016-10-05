@@ -1,5 +1,4 @@
 /*global afterEach beforeEach describe it*/
-import sinon from "sinon";
 import { expect } from "chai";
 import fs from "fs";
 import path from "path";
@@ -35,27 +34,24 @@ describe("cli: gluestick run", function () {
   });
 
   it("runs the provided script", (done) => {
-    const errorCallback = sinon.spy();
     mkdirp.sync(path.join(tmpDir, "scripts"));
     const filePath = path.join(tmpDir, "scripts", "doStuff.js");
     fs.closeSync(fs.openSync(path.join(tmpDir, "webpack-assets.json"), "w"));
     fs.writeFileSync(filePath, getDoStuffScript());
-    run("scripts/doStuff", errorCallback);
-
-    // wait till next tick so file write operation can finish
-    setTimeout(() => {
+    run("scripts/doStuff", (error) => {
       const output = fs.readFileSync(path.join(tmpDir, "test.txt"), "utf8");
       expect(output).to.equal("written from runner");
-      expect(errorCallback.called).to.equal(false);
+      expect(error).to.be.undefined;
       done();
-    }, 0);
+    });
   });
 
-  it("throws error if the provided script does not exist", () => {
-    const errorCallback = sinon.spy();
+  it("throws error if the provided script does not exist", (done) => {
     mkdirp.sync(path.join(tmpDir, "scripts"));
     fs.closeSync(fs.openSync(path.join(tmpDir, "webpack-assets.json"), "w"));
-    run("scripts/hi", errorCallback);
-    expect(errorCallback.called).to.equal(true);
+    run("scripts/hi", (error) => {
+      expect(error).to.not.be.undefined;
+      done();
+    });
   });
 });
