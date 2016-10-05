@@ -23,6 +23,7 @@ import detectEnvironmentVariables from "../detectEnvironmentVariables";
 import errorHandler from "./errorHandler";
 import Body from "./Body";
 import getHead from "./getHead";
+import getHeaders from "./getHeaders";
 import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEntrypoints";
 
 // E-mail support
@@ -112,6 +113,12 @@ module.exports = async function (req, res) {
           //
           // Bundle it all up into a string, add the doctype and deliver
           const rootElement = createElement(Index, {body, head, req});
+
+          // Set any headers provided on the route
+          const headers = getHeaders(currentRoute);
+          if (headers) {
+            res.set(headers);
+          }
 
           // Set status code
           let status;
