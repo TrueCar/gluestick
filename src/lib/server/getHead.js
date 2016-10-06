@@ -28,7 +28,7 @@ export default (config, entryPoint, assets) => {
 
   tags.push(getScriptLoader(scriptPaths));
 
-  return tags.concat(getScriptSubresources(scriptPaths));
+  return tags;
 };
 
 function getScriptLoader ({vendor, entryPoint}:Object) {
@@ -50,14 +50,3 @@ function getScriptLoader ({vendor, entryPoint}:Object) {
 
   return <script key="script-loader" type="text/javascript" dangerouslySetInnerHTML={{__html: scriptLoader}} />;
 }
-
-// Sub resources give browsers a clue to assets they can preload and cache
-function getScriptSubresources ({vendor, entryPoint}) {
-  return [
-    vendor,
-    entryPoint
-  ].map((src, i) => {
-    return <link key={`sub-${i}`} rel="subresource" href={src} />;
-  });
-}
-
