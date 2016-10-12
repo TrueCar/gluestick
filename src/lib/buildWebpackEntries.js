@@ -100,7 +100,7 @@ export function getStore (httpClient) {
 }
 
 if (typeof window === "object") {
-  Entry.start(getRoutes, getStore);
+  window.__startGSApp = function () { Entry.start(getRoutes, getStore); };
 }
 `;
 
