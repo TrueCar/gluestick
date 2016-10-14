@@ -1,206 +1,210 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
-import { createElement } from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
-import { renderToStaticMarkup as renderToStaticMarkupEmail } from "react-dom/server";
+import React from "react";
 import LRU from "lru-cache";
+import Oy from "oy-vey";
+import { renderToString, renderToStaticMarkup } from "react-dom-stream/server";
 import LRURenderCache from "react-dom-stream/lru-render-cache";
-import streamResponse from "./streamResponse";
+import { renderToStaticMarkup as renderToStaticMarkupEmail } from "react-dom/server";
+import { match, RouterContext } from "react-router";
+import {
+    runBeforeRoutes as _runBeforeRoutes,
+    prepareRoutesWithTransitionHooks,
+    ROUTE_NAME_404_NOT_FOUND
+} from "gluestick-shared";
+
+import _streamResponse from "./streamResponse";
+import _showHelpText, { MISSING_404_TEXT } from "./helpText";
+import _getHeaders from "./getHeaders";
+import _getHead from "./getHead";
+import Body from "./Body";
 import { PassThrough } from "stream";
+import { getLogger } from "./logger";
+const _logger = getLogger();
+
+const _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+const HTML5 = "<!DOCTYPE html>";
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const componentCache = LRURenderCache({max: isProduction ? 500 * 1024 * 1024 : 0});
 
-import {
-  runBeforeRoutes,
-  prepareRoutesWithTransitionHooks,
-  ROUTE_NAME_404_NOT_FOUND
-} from "gluestick-shared";
-
-import { match, RouterContext } from "react-router";
-import detectEnvironmentVariables from "../detectEnvironmentVariables";
-import errorHandler from "./errorHandler";
-import Body from "./Body";
-import getHead from "./getHead";
-import getHeaders from "./getHeaders";
-import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEntrypoints";
-
-// E-mail support
-import Oy from "oy-vey";
-const HTML5 = "<!DOCTYPE html>";
-
-import { getLogger } from "./logger";
-const logger = getLogger();
-import showHelpText, { MISSING_404_TEXT } from "./helpText";
-
-
-process.on("unhandledRejection", (reason) => {
-  const message = reason.message || reason.statusText || reason;
-  logger.error(reason, "Unhandled promise rejection:", message);
-});
-
 const DEFAULT_CACHE_TTL = 5 * 1000;
-const cache = LRU({
+const _cache = LRU({
   max: 50,
   maxAge: DEFAULT_CACHE_TTL
 });
 
-const CONFIG_FILE_PATH = path.join(process.cwd(), "src", "config", "application.js");
-const EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(CONFIG_FILE_PATH);
-
-module.exports = async function (req, res) {
-  // Forward all request headers from the browser into http requests made by node
-  let config;
-  try {
-    const cacheKey = `h:${req.hostname} u:${req.url}`;
-    const cachedResponse = cache.get(cacheKey);
-    if (cachedResponse) {
-      logger.debug(`serving cached response for ${cacheKey}`);
-      streamResponse(req, res, cachedResponse);
-      return;
-    }
-
-    config = require(CONFIG_FILE_PATH).default;
-    const Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-    const { Index, store, getRoutes, fileName } = getRenderRequirementsFromEntrypoints(req, res, config);
-
-    const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
-
-    match({routes: routes, location: req.url}, async (error, redirectLocation, renderProps) => {
-      try {
-        if (error) {
-          errorHandler(req, res, error, config);
-        }
-        else if (redirectLocation) {
-          res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-        }
-        else if (renderProps) {
-          // Check if the route has cache preferences
-          const currentRoute = renderProps.routes[renderProps.routes.length - 1];
-
-          // If we have a matching route, set up a routing context so
-          // that we render the proper page. On the client side, you
-          // embed the router itself, on the server you embed a routing
-          // context.
-          // [https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md]
-          await runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
-
-          const routerContext = createElement(RouterContext, renderProps);
-
-          // grab the main component which is capable of loading routes
-          // and hot loading them if in development mode
-          const radiumConfig = { userAgent: req.headers["user-agent"] };
-
-          const main = createElement(Entry, {store, routerContext, config, radiumConfig, getRoutes});
-
-          // gather attributes that were included on the route in order to
-          // determine whether to render as an e-mail or not
-          const routeAttrs = getEmailAttributes(renderProps.routes);
-          const isEmail = routeAttrs.email;
-          const reactRenderFunc = isEmail ? renderToStaticMarkupEmail : renderToString;
-
-          // grab the react generated body stuff. This includes the
-          // script tag that hooks up the client side react code.
-          const currentState = store.getState();
-          const body = createElement(Body, {html: reactRenderFunc(main, {cache: componentCache}), initialState: currentState, isEmail, envVariables: EXPOSED_ENV_VARIABLES});
-          const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
-
-          // Grab the html from the project which is stored in the root
-          // folder named Index.js. Pass the body and the head to that
-          // component. `head` includes stuff that we want the server to
-          // always add inside the <head> tag.
-          //
-          // Bundle it all up into a string, add the doctype and deliver
-          const rootElement = createElement(Index, {body, head, req});
-
-          // Set any headers provided on the route
-          const headers = getHeaders(currentRoute);
-          if (headers) {
-            res.set(headers);
-          }
-
-          // Set status code
-          let status;
-          if (renderProps.routes[renderProps.routes.length - 1].name === ROUTE_NAME_404_NOT_FOUND) {
-            status = 404;
-          }
-          else {
-            // Use the error's status code that was set on GlueStick's internal
-            // state object if one exists
-            const errorStatus = getErrorStatusCode(currentState);
-            if (errorStatus !== null) {
-              status = errorStatus;
-            }
-            else {
-              status = 200;
-            }
-          }
-
-          let responseStream, responseString;
-          if (isEmail) {
-            const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
-            responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
-          }
-          else {
-            responseStream = renderToStaticMarkup(rootElement);
-          }
-
-          const cachePass = new PassThrough();
-          let cachedResponse = "";
-          cachePass.on("data", (chunk) => {
-            cachedResponse += chunk;
-          });
-          cachePass.on("end", () => {
-            // If caching has been enabled for this route, cache response for
-            // next time it is requested
-            if (currentRoute.cache && isProduction) {
-              const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
-              logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
-              cache.set(cacheKey, {
-                status,
-                responseString: cachedResponse,
-                docType: routeAttrs.docType
-              }, cacheTTL);
-            }
-          });
-
-          streamResponse(req, res, {
-            status,
-            docType: routeAttrs.docType,
-            responseStream: responseStream && responseStream.pipe(cachePass),
-            responseString
-          });
-        }
-        else {
-          // This is only hit if there is no 404 handler in the react routes. A
-          // not found handler is included by default in new projects.
-          showHelpText(MISSING_404_TEXT);
-          res.status(404).send("Not Found");
-        }
-      }
-      catch (error) {
-        // Always return a 500 for exceptions
-        errorHandler(req, res, error, config);
-      }
-    });
-  }
-  catch (error) {
-    errorHandler(req, res, error, config);
-  }
-};
-
-function getEmailAttributes (routes) {
-  const lastRoute = routes[routes.length - 1];
-  const email = lastRoute.email || false;
-  const docType = lastRoute.docType || HTML5;
-  return { email, docType };
+export function getCacheKey ({hostname, url}) {
+  return `h:${hostname} u:${url}`;
 }
 
-function getErrorStatusCode (state) {
-  if (state._gluestick.hasOwnProperty("statusCode") && typeof(state._gluestick.statusCode) !== "undefined") {
-    return state._gluestick.statusCode;
+export function renderCachedResponse (req, res, cache=_cache, streamResponse=_streamResponse) {
+  const key = getCacheKey(req);
+  const result = cache.get(key);
+  if (result) {
+    streamResponse(req, res, result);
+    return true;
   }
-  return null;
+
+  return false;
+}
+
+export function  matchRoute (req, getRoutes, store) {
+  return new Promise((resolve, reject) => {
+    const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
+    match({routes: routes, location: req.url}, async (error, redirectLocation, renderProps) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve({redirectLocation, renderProps});
+    });
+  });
+}
+
+export function redirect (res, redirectLocation) {
+  res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+}
+
+export function renderNotFound (res, showHelpText=_showHelpText) {
+  // This is only hit if there is no 404 handler in the react routes. A
+  // not found handler is included by default in new projects.
+  showHelpText(MISSING_404_TEXT);
+  res.status(404).send("Not Found");
+}
+
+export function runPreRenderHooks (req, renderProps, store, runBeforeRoutes=_runBeforeRoutes) {
+  return runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
+}
+
+export function getCurrentRoute (renderProps) {
+  return renderProps.routes[renderProps.routes.length - 1];
+}
+
+export function getStatusCode (state, currentRoute) {
+  let status = 200;
+
+  // Check if status code was set in redux
+  if (state._gluestick.hasOwnProperty("statusCode") && typeof(state._gluestick.statusCode) !== "undefined") {
+    status = state._gluestick.statusCode;
+  }
+
+  // Check if this is the 404 route
+  // @deprecate in favor of route level status
+  else if (currentRoute.name === ROUTE_NAME_404_NOT_FOUND) {
+    status = 404;
+  }
+
+  // Check for something like <Route status={404} />
+  else if (currentRoute.status) {
+    status = currentRoute.status;
+  }
+
+  return status;
+}
+
+export function setHeaders (res, currentRoute, getHeaders=_getHeaders) {
+  const headers = getHeaders(currentRoute);
+  if (headers) {
+    res.set(headers);
+  }
+}
+
+export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry) {
+  const routerContext = <RouterContext {...renderProps} />;
+
+  const radiumConfig = { userAgent: req.headers["user-agent"] };
+
+  const main = (
+    <Entry
+      store={store}
+      routerContext={routerContext}
+      config={config}
+      radiumConfig={radiumConfig}
+      getRoutes={getRoutes}
+    />
+  );
+
+  // gather attributes that were included on the route in order to
+  // determine whether to render as an e-mail or not
+  const routeAttrs = getEmailAttributes(renderProps.routes);
+  const isEmail = routeAttrs.email;
+  const reactRenderFunc = isEmail ? renderToStaticMarkupEmail : renderToString;
+
+  // grab the react generated body stuff. This includes the
+  // script tag that hooks up the client side react code.
+  const currentState = store.getState();
+  const body = (
+    <Body
+      html={reactRenderFunc(main, {cache: componentCache})}
+      initialState={currentState}
+      isEmail={isEmail}
+      envVariables={envVariables}
+    />
+  );
+  const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
+
+  // Grab the html from the project which is stored in the root
+  // folder named Index.js. Pass the body and the head to that
+  // component. `head` includes stuff that we want the server to
+  // always add inside the <head> tag.
+  //
+  // Bundle it all up into a string, add the doctype and deliver
+  const rootElement = <Index body={body} head={head} req={req} />;
+
+  let responseStream, responseString;
+  if (isEmail) {
+    const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
+    responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
+  }
+  else {
+    responseStream = renderToStaticMarkup(rootElement);
+  }
+
+  return {
+    responseStream,
+    responseString
+  };
+}
+
+export function cacheAndRender (req, res, currentRoute, status, output, cache=_cache, streamResponse=_streamResponse, logger=_logger) {
+  const cachePass = new PassThrough();
+  const { responseStream, responseString } = output;
+  const cacheKey = getCacheKey(req);
+
+  const routeAttrs = getEmailAttributes(currentRoute);
+
+  let cachedResponse = "";
+  cachePass.on("data", (chunk) => {
+    cachedResponse += chunk;
+  });
+  cachePass.on("end", () => {
+    // If caching has been enabled for this route, cache response for
+    // next time it is requested
+    if (currentRoute.cache && isProduction) {
+      const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
+      logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
+      cache.set(cacheKey, {
+        status,
+        responseString: cachedResponse,
+        docType: routeAttrs.docType
+      }, cacheTTL);
+    }
+  });
+
+  streamResponse(req, res, {
+    status,
+    docType: routeAttrs.docType,
+    responseStream: responseStream && responseStream.pipe(cachePass),
+    responseString
+  });
+}
+
+export function getEmailAttributes (currentRoute) {
+  const email = currentRoute.email || false;
+  const docType = currentRoute.docType || HTML5;
+  return { email, docType };
 }
 

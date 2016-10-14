@@ -2,7 +2,7 @@ import express from "express";
 import compression from "compression";
 import { getLogger, getLoggerMiddleware } from "./logger";
 const logger = getLogger();
-import requestHandler from "./requestHandler";
+import gluestickExpressMiddleware from "./express-middleware";
 import addProxies from "./addProxies";
 import path from "path";
 
@@ -34,6 +34,6 @@ else {
   logger.info("Server side rendering proxy running");
 }
 
-app.use(requestHandler);
+app.use(gluestickExpressMiddleware);
 app.listen(port);
 
