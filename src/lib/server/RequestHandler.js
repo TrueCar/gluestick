@@ -22,7 +22,16 @@ import { PassThrough } from "stream";
 import { getLogger } from "./logger";
 const _logger = getLogger();
 
-const _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+let _Entry;
+/**
+ * We don't want to load Entry until the test runs when we are testing
+ * because the tests move around in folders and it wont exist when this file
+ * is initialized but instead when the method is run.
+ */
+if (process.env.NODE_ENV !== "test") {
+  _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+}
+
 const HTML5 = "<!DOCTYPE html>";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -72,7 +81,7 @@ export function renderNotFound (res, showHelpText=_showHelpText) {
   // This is only hit if there is no 404 handler in the react routes. A
   // not found handler is included by default in new projects.
   showHelpText(MISSING_404_TEXT);
-  res.status(404).send("Not Found");
+  res.status(404).end("Not Found");
 }
 
 export function runPreRenderHooks (req, renderProps, store, runBeforeRoutes=_runBeforeRoutes) {
@@ -113,6 +122,11 @@ export function setHeaders (res, currentRoute, getHeaders=_getHeaders) {
 }
 
 export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry) {
+  // this should only happen in tests
+  if (!Entry) {
+    Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+  }
+
   const routerContext = <RouterContext {...renderProps} />;
 
   const radiumConfig = { userAgent: req.headers["user-agent"] };
