@@ -4,6 +4,9 @@ import { stub, spy } from "sinon";
 import * as RequestHandler from "../../../src/lib/server/RequestHandler";
 import { Route, Redirect } from "react-router";
 import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
+import {
+    ROUTE_NAME_404_NOT_FOUND
+} from "gluestick-shared";
 
 describe.only("lib/server/RequestHandler", () => {
   describe("getCacheKey", () => {
@@ -180,19 +183,103 @@ describe.only("lib/server/RequestHandler", () => {
   });
 
   describe("runPreRenderHooks", () => {
-
+    it("forwards arguments to runBeforeRoutes", () => {
+      const req = {
+        url: "/abc"
+      };
+      const renderProps = {};
+      const store = {};
+      const runBeforeRoutes = spy();
+      RequestHandler.runPreRenderHooks(req, renderProps, store, runBeforeRoutes);
+      expect(runBeforeRoutes.calledWith(store, renderProps, {isServer: true, request: req})).to.equal.true;
+    });
   });
 
   describe("getCurrentRoute", () => {
-
+    it("returns the last route on renderProps.routes", () => {
+      const renderProps = {
+        routes: [
+          {path: "a"},
+          {path: "b"},
+          {path: "c"},
+          {path: "d"}
+        ]
+      };
+      expect(RequestHandler.getCurrentRoute(renderProps)).to.equal([...renderProps.routes].pop());
+    });
   });
 
   describe("getStatusCode", () => {
+    let state, currentRoute;
+    beforeEach(() => {
+      state = {
+        _gluestick: {}
+      };
+      currentRoute = {path: "abc"};
+    });
 
+    context("when no redux state, not a 404 route and no route status override", () => {
+      it("should return 200", () => {
+        expect(RequestHandler.getStatusCode(state, currentRoute)).to.equal(200);
+      });
+    });
+
+    context("when route status override", () => {
+      beforeEach(() => {
+        currentRoute = {path: "abc", status: 999};
+      });
+      it("should return the route's status", () => {
+        const status = RequestHandler.getStatusCode(state, currentRoute);
+        expect(status).to.equal(999);
+      });
+    });
+
+    context("when status is set in redux state", () => {
+      beforeEach(() => {
+        state._gluestick = {
+          statusCode: 201
+        };
+      });
+      it("should return the status code set in redux", () => {
+        const status = RequestHandler.getStatusCode(state, currentRoute);
+        expect(status).to.equal(201);
+      });
+    });
+
+    context("when route name is the 404 constant name", () => {
+      beforeEach(() => {
+        currentRoute = {path: "abc", name: ROUTE_NAME_404_NOT_FOUND};
+      });
+      it("should return 404", () => {
+        const status = RequestHandler.getStatusCode(state, currentRoute);
+        expect(status).to.equal(404);
+      });
+    });
   });
 
   describe("setHeaders", () => {
+    let res, currentRoute, getHeaders;
+    beforeEach(() => {
+      res = {
+        set: spy()
+      };
+    });
+    context("when the route specifies headers", () => {
+      beforeEach(() => {
+        currentRoute = {path: "abc", headers: {a: "hi"}};
+      });
+      it("should set the headers on the response object", () => {
+        RequestHandler.setHeaders(res, currentRoute);
+        expect(res.set.calledWith(currentRoute.headers)).to.equal.true;
+      });
+    });
 
+    context("when the route does not specify headers", () => {
+      it("should not set any headers on the response object", () => {
+        RequestHandler.setHeaders(res, currentRoute, getHeaders);
+        expect(res.set.called).to.equal.false;
+      });
+    });
   });
 
   describe("prepareOutput", () => {

@@ -15,7 +15,7 @@ import {
 
 import _streamResponse from "./streamResponse";
 import _showHelpText, { MISSING_404_TEXT } from "./helpText";
-import _getHeaders from "./getHeaders";
+import getHeaders from "./getHeaders";
 import _getHead from "./getHead";
 import Body from "./Body";
 import { PassThrough } from "stream";
@@ -114,7 +114,7 @@ export function getStatusCode (state, currentRoute) {
   return status;
 }
 
-export function setHeaders (res, currentRoute, getHeaders=_getHeaders) {
+export function setHeaders (res, currentRoute) {
   const headers = getHeaders(currentRoute);
   if (headers) {
     res.set(headers);
