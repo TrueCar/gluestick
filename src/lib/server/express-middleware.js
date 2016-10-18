@@ -5,8 +5,12 @@ import detectEnvironmentVariables from "../detectEnvironmentVariables";
 import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEntrypoints";
 
 const CONFIG_PATH = path.join(process.cwd(), "src", "config", "application");
-const CONFIG = require(CONFIG_PATH).default;
-const EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(CONFIG_PATH + ".js");
+
+let CONFIG, EXPOSED_ENV_VARIABLES;
+if (process.env.NODE_ENV !== "test") {
+  CONFIG = require(CONFIG_PATH).default;
+  EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(CONFIG_PATH + ".js");
+}
 
 const defaults = {
   config: CONFIG,
@@ -16,7 +20,7 @@ const defaults = {
   exposedEnvVariables: EXPOSED_ENV_VARIABLES
 };
 
-export default async (req, res, ...overrides) => {
+export default async (req, res, overrides) => {
   // Allow overriding of default methods, this is mostly to mock out methods
   // for testing
   const {

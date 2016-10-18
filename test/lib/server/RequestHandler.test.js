@@ -383,7 +383,7 @@ describe("lib/server/RequestHandler", () => {
     });
   });
 
-  describe.only("cacheAndRender", () => {
+  describe("cacheAndRender", () => {
     let req, res, currentRoute, status, output, cache, streamResponse, logger;
     beforeEach(() => {
       req = {
