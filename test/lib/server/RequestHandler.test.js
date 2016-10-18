@@ -291,6 +291,28 @@ describe.only("lib/server/RequestHandler", () => {
   });
 
   describe("getEmailAttributes", () => {
+    context("when the route has an email attribute and no doctype", () => {
+      it("should return the email attribute and the default HTML5 doctype", () => {
+        const result = RequestHandler.getEmailAttributes({email: true});
+        expect(result.email).to.equal.true;
+        expect(result.docType).to.equal("<!DOCTYPE html>");
+      });
+    });
 
+    context("when the route has an email and a doctype", () => {
+      it("should return the email attribute and custom docType", () => {
+        const result = RequestHandler.getEmailAttributes({email: true, docType: "<!XML>"});
+        expect(result.email).to.equal.true;
+        expect(result.docType).to.equal("<!XML>");
+      });
+    });
+
+    context("when the route has no email or doctype", () => {
+      it("should return the false for the email and the default HTML5 docType", () => {
+        const result = RequestHandler.getEmailAttributes({});
+        expect(result.email).to.equal.false;
+        expect(result.docType).to.equal("<!DOCTYPE html>");
+      });
+    });
   });
 });
