@@ -187,7 +187,7 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
   };
 }
 
-export function cacheAndRender (req, res, currentRoute, status, output, cache=_cache, streamResponse=_streamResponse, logger=_logger) {
+export function cacheAndRender (req, res, currentRoute, status, output, cache=_cache, streamResponse=_streamResponse, logger=_logger, enableCache=true) {
   const cachePass = new PassThrough();
   const { responseStream, responseString } = output;
   const cacheKey = getCacheKey(req);
@@ -201,7 +201,7 @@ export function cacheAndRender (req, res, currentRoute, status, output, cache=_c
   cachePass.on("end", () => {
     // If caching has been enabled for this route, cache response for
     // next time it is requested
-    if (currentRoute.cache && isProduction) {
+    if (currentRoute.cache && enableCache) {
       const cacheTTL = currentRoute.cacheTTL * 1000 || DEFAULT_CACHE_TTL;
       logger.debug(`Caching response for ${cacheKey} - ${cacheTTL}`);
       cache.set(cacheKey, {

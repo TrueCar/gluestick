@@ -5,11 +5,12 @@ import * as RequestHandler from "../../../src/lib/server/RequestHandler";
 import { Route, Redirect } from "react-router";
 import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
 import stringifyStream from "stream-to-string";
+import { Readable, Writable } from "stream";
 import {
     ROUTE_NAME_404_NOT_FOUND
 } from "gluestick-shared";
 
-describe.only("lib/server/RequestHandler", () => {
+describe("lib/server/RequestHandler", () => {
   describe("getCacheKey", () => {
     it("should return a key using the hostname and url", () => {
       const req = {
@@ -382,7 +383,90 @@ describe.only("lib/server/RequestHandler", () => {
     });
   });
 
-  describe("cacheAndRender", () => {
+  describe.only("cacheAndRender", () => {
+    let req, res, currentRoute, status, output, cache, streamResponse, logger;
+    beforeEach(() => {
+      req = {
+        hostname: "www.example.com",
+        url: "/abc",
+        headers: {
+          "accept-encoding": "gzip"
+        }
+      };
+      res = new Writable();
+      res.writeHead = spy();
+      status = 200;
+      const responseStream = new Readable();
+      responseStream.push("a");
+      responseStream.push("bc");
+      responseStream.push(null);
+
+      output={responseStream};
+      cache = {
+        set: spy()
+      };
+      logger = {
+        debug: spy()
+      };
+      currentRoute = {path: "/", docType: "<!FakeDoc>"};
+      //streamResponse = spy();
+    });
+
+    it("should pass along the status and route Attrs", () => {
+      streamResponse = spy();
+      RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+      const streamArgs = streamResponse.lastCall.args[2];
+      expect(streamResponse.calledWith(req, res)).to.be.true;
+      expect(streamArgs.status).to.equal(status);
+      expect(streamArgs.docType).to.equal("<!FakeDoc>");
+    });
+
+    context("when caching is enabled for the currentRoute", () => {
+      beforeEach(() => {
+        currentRoute.cache = true;
+      });
+
+      it("should set the status, string and docType to the cache on the cacheKey", (done) => {
+        RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+        // wait for next tick since so streams have time to be piped
+        setTimeout(() => {
+          expect(cache.set.called).to.be.true;
+          const key = RequestHandler.getCacheKey(req);
+          expect(cache.set.calledWith(key, {status, responseString: "abc", docType: "<!FakeDoc>"})).to.be.true;
+          done();
+        }, 0);
+      });
+
+      context("when cacheTTL is set on the current route", () => {
+        beforeEach(() => {
+          currentRoute.cacheTTL = 5;
+          RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+        });
+
+        it("should set cache converting cacheTTL to miliseconds", (done) => {
+          // wait for next tick since so streams have time to be piped
+          setTimeout(() => {
+            expect(cache.set.lastCall.args[2]).to.equal(5000);
+            done();
+          }, 0);
+        });
+      });
+    });
+
+    context("when caching is not enabled for the currentRoute", () => {
+      beforeEach(() => {
+        currentRoute.cache = false;
+      });
+
+      it("should not call cache.set", (done) => {
+        RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+        // wait for next tick since so streams have time to be piped
+        setTimeout(() => {
+          expect(cache.set.called).to.equal(false);
+          done();
+        }, 0);
+      });
+    });
   });
 
   describe("getEmailAttributes", () => {
