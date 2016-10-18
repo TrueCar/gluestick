@@ -121,7 +121,7 @@ export function setHeaders (res, currentRoute) {
   }
 }
 
-export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry) {
+export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -143,7 +143,8 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
 
   // gather attributes that were included on the route in order to
   // determine whether to render as an e-mail or not
-  const routeAttrs = getEmailAttributes(renderProps.routes);
+  const currentRoute = getCurrentRoute(renderProps);
+  const routeAttrs = getEmailAttributes(currentRoute);
   const isEmail = routeAttrs.email;
   const reactRenderFunc = isEmail ? renderToStaticMarkupEmail : renderToString;
 
@@ -158,7 +159,7 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? null : getHead(config, fileName, webpackIsomorphicTools.assets()); // eslint-disable-line webpackIsomorphicTools
+  const head = isEmail ? null : getHead(config, fileName, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -179,7 +180,10 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
 
   return {
     responseStream,
-    responseString
+    responseString,
+
+    // The following is returned for testing
+    rootElement
   };
 }
 

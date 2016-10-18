@@ -4,6 +4,7 @@ import { stub, spy } from "sinon";
 import * as RequestHandler from "../../../src/lib/server/RequestHandler";
 import { Route, Redirect } from "react-router";
 import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
+import stringifyStream from "stream-to-string";
 import {
     ROUTE_NAME_404_NOT_FOUND
 } from "gluestick-shared";
@@ -283,11 +284,105 @@ describe.only("lib/server/RequestHandler", () => {
   });
 
   describe("prepareOutput", () => {
+    let req, renderRequirements, renderProps, config, envVariables, getHead,
+        Entry, webpackIsomorphicTools;
 
+    class Index extends React.Component {
+      render () {
+        return <div>hi</div>;
+      }
+    }
+
+    beforeEach(() => {
+      req = {
+        headers: {
+          "user-agent": "Moznota Browser 1.0"
+        }
+      };
+
+      const routes = [
+        {path: "hola"}
+      ];
+
+      renderRequirements = {
+        Index,
+        store: {
+          getState: stub().returns({})
+        },
+        getRoutes: () => routes,
+        fileName: "abc"
+      };
+
+      renderProps = {
+        routes
+      };
+
+      config = {};
+      envVariables = {bestFood: "burritos"};
+      getHead = stub().returns(<div />);
+      Entry = class extends React.Component {
+        render () {
+          return (
+            <div>hi</div>
+          );
+        }
+      };
+      webpackIsomorphicTools = {
+        assets: stub()
+      };
+    });
+
+    context("when the route is an email route", () => {
+      let result;
+      beforeEach(() => {
+        renderProps.routes[0].email = true;
+        result = RequestHandler.prepareOutput(req, renderRequirements,
+          renderProps, config, envVariables, getHead, Entry,
+          webpackIsomorphicTools);
+      });
+      it("should return a responseString", () => {
+        expect(result.responseString).to.not.be.undefined;
+        expect(result.responseStream).to.be.undefined;
+      });
+
+      it("should not pass head to Index", () => {
+        expect(result.rootElement.props.head).to.be.null;
+      });
+
+      it("should not include react-id attributes in html because it uses renderToStaticMarkup", () => {
+        expect(result.rootElement.props.body.props.html).to.not.contain("data-reactid");
+      });
+    });
+
+    context("when the route is not an email route", () => {
+      let result;
+      beforeEach(() => {
+        delete renderProps.routes[0].email;
+        result = RequestHandler.prepareOutput(req, renderRequirements,
+          renderProps, config, envVariables, getHead, Entry,
+          webpackIsomorphicTools);
+      });
+
+      it("should return a responseStream", () => {
+        expect(result.responseString).to.be.undefined;
+        expect(result.responseStream).to.not.be.undefined;
+      });
+
+      it("should pass head to Index", () => {
+        expect(result.rootElement.props.head).to.not.be.null;
+      });
+
+      it("should include react-id attributes in html because it uses renderToString", (done) => {
+        // html is a stream so we have to convert it to a string to test it
+        stringifyStream(result.rootElement.props.body.props.html, (error, html) => {
+          expect(html).to.contain("data-reactid");
+          done();
+        });
+      });
+    });
   });
 
   describe("cacheAndRender", () => {
-
   });
 
   describe("getEmailAttributes", () => {
@@ -316,3 +411,4 @@ describe.only("lib/server/RequestHandler", () => {
     });
   });
 });
+
