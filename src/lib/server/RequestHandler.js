@@ -62,7 +62,7 @@ export function renderCachedResponse (req, res, cache=_cache, streamResponse=_st
 export function  matchRoute (req, getRoutes, store) {
   return new Promise((resolve, reject) => {
     const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
-    match({routes: routes, location: req.url}, async (error, redirectLocation, renderProps) => {
+    match({routes: routes, location: req.url}, (error, redirectLocation, renderProps) => {
       if (error) {
         reject(error);
         return;
@@ -74,7 +74,7 @@ export function  matchRoute (req, getRoutes, store) {
 }
 
 export function redirect (res, redirectLocation) {
-  res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+  res.redirect(301, redirectLocation.pathname + redirectLocation.search);
 }
 
 export function renderNotFound (res, showHelpText=_showHelpText) {

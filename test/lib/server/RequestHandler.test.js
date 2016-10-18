@@ -1,8 +1,11 @@
+import React from "react";
 import { expect } from "chai";
 import { stub, spy } from "sinon";
 import * as RequestHandler from "../../../src/lib/server/RequestHandler";
+import { Route, Redirect } from "react-router";
+import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
 
-describe("lib/server/RequestHandler", () => {
+describe.only("lib/server/RequestHandler", () => {
   describe("getCacheKey", () => {
     it("should return a key using the hostname and url", () => {
       const req = {
@@ -72,15 +75,108 @@ describe("lib/server/RequestHandler", () => {
   });
 
   describe("matchRoute", () => {
+    let req, getRoutes, store;
 
+    beforeEach(() => {
+      req = {
+        url: "/abc123"
+      };
+
+      getRoutes = stub().returns(
+        <Route>
+          <Route name="test1" path="abc123" />
+          <Route name="test2" path="321xyz" />
+          <Redirect name="test3" from="a" to="b" />
+        </Route>
+      );
+
+      store = {
+        getState: spy(),
+        dispatch: spy()
+      };
+    });
+
+    context("when a matching route (not a redirect) exists", () => {
+      it("should return the renderProps", (done) => {
+        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+          expect(redirectLocation).to.be.null;
+          expect(renderProps).to.not.be.undefined;
+          done();
+        });
+      });
+    });
+
+    context("when a matching redirect exists", () => {
+      beforeEach(() => {
+        req = {
+          url: "a"
+        };
+      });
+
+      it("should return the redirectLocation", (done) => {
+        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+          expect(redirectLocation).to.not.be.null;
+          expect(redirectLocation.pathname).to.equal("/b");
+          expect(renderProps).to.be.undefined;
+          done();
+        });
+      });
+    });
+
+    context("when no matching route exists", () => {
+      beforeEach(() => {
+        req = {
+          url: "zzzz"
+        };
+      });
+
+      it("should forward to the promise `catch` with an error", (done) => {
+        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+          expect(redirectLocation).to.be.undefined;
+          expect(renderProps).to.be.undefined;
+          done();
+        });
+      });
+    });
   });
 
   describe("redirect", () => {
-
+    it("should call the response object `redirect` method with 301 and path + search", () => {
+      const res = {
+        redirect: spy()
+      };
+      const redirectLocation = {
+        pathname: "/abc",
+        search: "?hi"
+      };
+      RequestHandler.redirect(res, redirectLocation);
+      expect(res.redirect.calledWith(301, redirectLocation.pathname + redirectLocation.search)).to.equal.true;
+    });
   });
 
   describe("renderNotFound", () => {
+    let res, showHelpText, end, status;
+    beforeEach(() => {
+      end = spy();
+      status = stub();
+      res = {
+        status,
+        end
+      };
+      res.status.returns(res);
+      showHelpText = spy();
+    });
 
+    it("should show React 404 help text", () => {
+      RequestHandler.renderNotFound(res, showHelpText);
+      expect(showHelpText.calledWith(MISSING_404_TEXT)).to.equal.true;
+    });
+
+    it("should set 404 status and end", () => {
+      RequestHandler.renderNotFound(res, showHelpText);
+      expect(res.status.calledWith(404)).to.equal.true;
+      expect(res.end.calledWith("Not Found")).to.equal.true;
+    });
   });
 
   describe("runPreRenderHooks", () => {
