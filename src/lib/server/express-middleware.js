@@ -1,19 +1,37 @@
 import path from "path";
+import fs from "fs";
 import * as RequestHandler from "./RequestHandler";
 import errorHandler from "./errorHandler";
 import detectEnvironmentVariables from "../detectEnvironmentVariables";
 import getRenderRequirementsFromEntrypoints from "./getRenderRequirementsFromEntrypoints";
 
-const CONFIG_PATH = path.join(process.cwd(), "src", "config", "application");
+const GLOBAL_CONFIG_PATH = path.join(process.cwd(), "src", "config", "application");
+const SERVER_CONFIG_PATH = `${GLOBAL_CONFIG_PATH}.server`;
 
-let CONFIG, EXPOSED_ENV_VARIABLES;
+let GLOBAL_CONFIG, SERVER_CONFIG, EXPOSED_ENV_VARIABLES;
+
 if (process.env.NODE_ENV !== "test") {
-  CONFIG = require(CONFIG_PATH).default;
-  EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(CONFIG_PATH + ".js");
+  GLOBAL_CONFIG = require(GLOBAL_CONFIG_PATH).default;
+
+  // Include application.server.js only if it exists
+  try {
+    fs.statSync(SERVER_CONFIG_PATH + ".js");
+    SERVER_CONFIG = require(SERVER_CONFIG_PATH).default;
+  }
+  catch (e) {
+    // NOOP
+  }
+
+  EXPOSED_ENV_VARIABLES = detectEnvironmentVariables(GLOBAL_CONFIG_PATH + ".js");
 }
 
 const defaults = {
-  config: CONFIG,
+  config: {
+    ...GLOBAL_CONFIG,
+    server: {
+      ...SERVER_CONFIG
+    }
+  },
   RequestHandler,
   errorHandler,
   getRenderRequirementsFromEntrypoints,
