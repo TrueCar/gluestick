@@ -52,6 +52,7 @@
     "ReactDOM": true,
     "window": true,
     "describe": true,
+    "context": true,
     "expect": true,
     "it": true,
     "TestUtils": true,

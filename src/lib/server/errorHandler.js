@@ -34,18 +34,18 @@ export default function serverErrorHandler(req, res, error, config={}) {
     // If we don't have a custom 505 error page then just throw the stack trace
     if(statError || !stats.isFile()) {
       res.log.info(`No custom 505 page found. You can create a custom 505 page at ${path.join(process.cwd(), "505.hbs")}`);
-      return res.send({error: error});
+      return res.end({error: error});
     }
 
     // If we do have a custom 505 page, render it
     fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
-      if (readFileError) { return res.send({error: readFileError, config}); }
+      if (readFileError) { return res.end({error: readFileError, config}); }
 
       // We use secure-handlebars to deliver the 505 page. This lets you
       // use a handlebars template so you can display the stack trace or
       // any request, response information you would like.
       const output = secureHandlebars.compile(data)({req, res, error});
-      res.send(output);
+      res.end(output);
     });
   });
 }
