@@ -217,8 +217,7 @@ describe("lib/server/express-middleware", () => {
           mockRes,
           currentRoute,
           overrides.RequestHandler.getStatusCode(),
-          output,
-          overrides.config
+          output
         )).to.be.true;
       });
     });
