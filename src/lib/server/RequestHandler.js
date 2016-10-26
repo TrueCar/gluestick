@@ -114,7 +114,7 @@ export function setHeaders (res, currentRoute) {
   }
 }
 
-export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
+export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -148,9 +148,14 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
   let headContent, bodyContent;
   const renderMethod = config.server.renderMethod;
   if (renderMethod) {
-    const renderOutput  = renderMethod(reactRenderFunc, main);
-    headContent = renderOutput.head;
-    bodyContent = renderOutput.body;
+    try {
+      const renderOutput  = await renderMethod(reactRenderFunc, main);
+      headContent = renderOutput.head;
+      bodyContent = renderOutput.body;
+    }
+    catch (e) {
+      throw new Error(e);
+    }
   }
   else {
     bodyContent = reactRenderFunc(main);
