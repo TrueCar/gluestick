@@ -55,11 +55,16 @@ ENV BUILD_PACKAGES "autoconf \
                     xz-utils \
                     zlib1g-dev"
 
+
+RUN apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3 && \
+    echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    npm install -g gluestick@$GLUESTICK_VERSION && \
-    npm install && \
+    apt-get install -y yarn && \
+    yarn global add gluestick@$GLUESTICK_VERSION && \
+    yarn && \
     apt-get remove -y $BUILD_PACKAGES && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
