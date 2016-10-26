@@ -28,6 +28,10 @@ export default class Entry extends Component {
 }
 
 Entry.start = function (getRoutes, getStore, match=originalMatch, history=browserHistory) {
+  // Allow developers to include code that will be executed before the app is
+  // set up in the browser. If the file doesn't exist then nothing will happen
+  require("./init.browser");
+
   const newStore = getStore(httpClient);
   match({ history, routes: getRoutes(newStore)}, (error, redirectLocation, renderProps) => {
     const entry = (
