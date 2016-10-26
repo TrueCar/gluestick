@@ -75,6 +75,8 @@ export default async (req, res, overrides) => {
       return;
     }
 
+    RequestHandler.enableComponentCaching(config.server.componentCacheConfig);
+
     await RequestHandler.runPreRenderHooks(req, renderProps, store);
 
     const currentRoute = RequestHandler.getCurrentRoute(renderProps);

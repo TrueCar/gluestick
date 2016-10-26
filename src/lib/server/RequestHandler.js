@@ -1,5 +1,6 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
+import _SSRCaching from "electrode-react-ssr-caching";
 import React from "react";
 import LRU from "lru-cache";
 import Oy from "oy-vey";
@@ -17,6 +18,12 @@ import getHeaders from "./getHeaders";
 import _getHead from "./getHead";
 import Body from "./Body";
 import { getLogger } from "./logger";
+
+const basicStrategy = {
+  strategy: "simple",
+  enable: true
+};
+
 const _logger = getLogger();
 
 let _Entry;
@@ -112,6 +119,17 @@ export function setHeaders (res, currentRoute) {
   if (headers) {
     res.set(headers);
   }
+}
+
+export function enableComponentCaching (componentCacheConfig={}, SSRCaching=_SSRCaching) {
+  console.log("### CACHED COMPONENTS COUNT", SSRCaching.cacheEntries());
+  if (this._ranOnce) {
+    return;
+  }
+
+  SSRCaching.enableCaching(true);
+  SSRCaching.setCachingConfig(componentCacheConfig);
+  this._ranOnce = true;
 }
 
 export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
