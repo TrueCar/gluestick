@@ -19,11 +19,6 @@ import _getHead from "./getHead";
 import Body from "./Body";
 import { getLogger } from "./logger";
 
-const basicStrategy = {
-  strategy: "simple",
-  enable: true
-};
-
 const _logger = getLogger();
 
 let _Entry;
@@ -121,14 +116,17 @@ export function setHeaders (res, currentRoute) {
   }
 }
 
-export function enableComponentCaching (componentCacheConfig={}, SSRCaching=_SSRCaching) {
-  console.log("### CACHED COMPONENTS COUNT", SSRCaching.cacheEntries());
+export function enableComponentCaching (componentCacheConfig, SSRCaching=_SSRCaching) {
+  // caching only has to be enabled once
   if (this._ranOnce) {
     return;
   }
 
-  SSRCaching.enableCaching(true);
+  // only enable caching if componentCacheConfig has an object
+  SSRCaching.enableCaching(!!componentCacheConfig);
   SSRCaching.setCachingConfig(componentCacheConfig);
+
+  // yay we did it! remember that we did it so we don't do it again
   this._ranOnce = true;
 }
 
