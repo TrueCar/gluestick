@@ -8,7 +8,7 @@ import getAssetPathForFile from "../getAssetPathForFile";
 const isProduction = process.env.NODE_ENV === "production";
 
 // eslint-disable-next-line no-unused-vars
-export default (config, entryPoint, assets) => {
+export default (config, entryPoint, headContent, assets) => {
   const tags = [];
   let key = 0;
   const assetPath = getAssetPath(config);
@@ -25,6 +25,8 @@ export default (config, entryPoint, assets) => {
     vendor: getAssetPathForFile("vendor", "javascript"),
     entryPoint: getAssetPathForFile(entryPoint, "javascript")
   };
+
+  tags.push(headContent);
 
   tags.push(getScriptLoader(scriptPaths));
 

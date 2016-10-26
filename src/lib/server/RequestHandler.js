@@ -145,25 +145,26 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
   // script tag that hooks up the client side react code.
   const currentState = store.getState();
 
-  let html;
+  let headContent, bodyContent;
   const renderMethod = config.server.renderMethod;
   if (renderMethod) {
-    const renderOutput = renderMethod(reactRenderFunc, main);
-    html = renderOutput;
+    const renderOutput  = renderMethod(reactRenderFunc, main);
+    headContent = renderOutput.head;
+    bodyContent = renderOutput.body;
   }
   else {
-    html = reactRenderFunc(main);
+    bodyContent = reactRenderFunc(main);
   }
 
   const body = (
     <Body
-      html={html}
+      html={bodyContent}
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? null : getHead(config, fileName, _webpackIsomorphicTools.assets());
+  const head = isEmail ? null : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
