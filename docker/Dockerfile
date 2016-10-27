@@ -1,4 +1,4 @@
-FROM node:6.7-slim
+FROM node:6.9-slim
 
 ARG GLUESTICK_VERSION
 
