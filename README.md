@@ -31,7 +31,7 @@ boilerplate code as new improvements are discovered.
 Is actively being worked on and supported by TrueCar.
 
 ## Requirements
-GlueStick works best with v6.x.x of node. Versions prior to 4 are not currently supported and node v7 has known issues: https://github.com/TrueCar/gluestick/issues/322
+GlueStick works best with v6.x.x of node. Versions prior to v6 are not currently supported and node v7 has known issues: https://github.com/TrueCar/gluestick/issues/322
 
 ## Install
 ```
