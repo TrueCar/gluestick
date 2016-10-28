@@ -116,7 +116,11 @@ export function setHeaders (res, currentRoute) {
   }
 }
 
-export function enableComponentCaching (componentCacheConfig, SSRCaching=_SSRCaching) {
+export function enableComponentCaching (componentCacheConfig, isProduction, SSRCaching=_SSRCaching) {
+  if (!isProduction) {
+    return;
+  }
+
   // only enable caching if componentCacheConfig has an object
   SSRCaching.enableCaching(!!componentCacheConfig);
   if (!!componentCacheConfig) {

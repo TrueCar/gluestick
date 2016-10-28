@@ -496,22 +496,29 @@ describe("lib/server/RequestHandler", () => {
     });
 
     context("when it hasn't yet been called", () => {
+      context("outside of production", () => {
+        it("shouldn't enable caching", () => {
+          RequestHandler.enableComponentCaching({}, false, mockCache);
+          expect(mockCache.enableCaching.called).to.equal(false);
+        });
+      });
+
       context("when no config is set", () => {
         it("should pass `false` to enableComponentCaching", () => {
-          RequestHandler.enableComponentCaching(undefined, mockCache); // eslint-disable-line no-undefined
+          RequestHandler.enableComponentCaching(undefined, true, mockCache); // eslint-disable-line no-undefined
           expect(mockCache.enableCaching.calledWith(false)).to.equal(true);
         });
       });
 
       context("when config is set", () => {
         it("should pass `true` to enableComponentCaching", () => {
-          RequestHandler.enableComponentCaching({}, mockCache);
+          RequestHandler.enableComponentCaching({}, true, mockCache);
           expect(mockCache.enableCaching.calledWith(true)).to.equal(true);
         });
 
         it("should pass the provided `componentCacheConfig` to setCachingConfig", () => {
           const config = {components: {"Home": {}}};
-          RequestHandler.enableComponentCaching(config, mockCache);
+          RequestHandler.enableComponentCaching(config, true, mockCache);
           expect(mockCache.setCachingConfig.calledWith(config)).to.equal(true);
         });
       });
