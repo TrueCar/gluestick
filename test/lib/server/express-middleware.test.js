@@ -165,7 +165,7 @@ describe("lib/server/express-middleware", () => {
 
       it("should redirect the user to the location", async () => {
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
-        expect(overrides.RequestHandler.redirect.calledWith("http://www.example.com")).to.be.true;
+        expect(overrides.RequestHandler.redirect.calledWith(mockRes, "http://www.example.com")).to.be.true;
       });
     });
 
