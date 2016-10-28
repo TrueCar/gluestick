@@ -48,7 +48,7 @@ export default async (req, res, overrides) => {
     } = await RequestHandler.matchRoute(req, getRoutes, store);
 
     if (redirectLocation) {
-      RequestHandler.redirect(redirectLocation);
+      RequestHandler.redirect(res, redirectLocation);
       return;
     }
 
