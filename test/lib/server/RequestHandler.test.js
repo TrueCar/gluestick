@@ -4,8 +4,7 @@ import { stub, spy } from "sinon";
 import * as RequestHandler from "../../../src/lib/server/RequestHandler";
 import { Route, Redirect } from "react-router";
 import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
-import stringifyStream from "stream-to-string";
-import { Readable, Writable } from "stream";
+import { Writable } from "stream";
 import {
     ROUTE_NAME_404_NOT_FOUND
 } from "gluestick-shared";
@@ -343,7 +342,6 @@ describe("lib/server/RequestHandler", () => {
       });
       it("should return a responseString", () => {
         expect(result.responseString).to.not.be.undefined;
-        expect(result.responseStream).to.be.undefined;
       });
 
       it("should not pass head to Index", () => {
@@ -364,21 +362,17 @@ describe("lib/server/RequestHandler", () => {
           webpackIsomorphicTools);
       });
 
-      it("should return a responseStream", () => {
-        expect(result.responseString).to.be.undefined;
-        expect(result.responseStream).to.not.be.undefined;
+      it("should return a responseString", () => {
+        expect(result.responseString).to.not.be.undefined;
       });
 
       it("should pass head to Index", () => {
         expect(result.rootElement.props.head).to.not.be.null;
       });
 
-      it("should include react-id attributes in html because it uses renderToString", (done) => {
+      it("should include react-id attributes in html because it uses renderToString", () => {
         // html is a stream so we have to convert it to a string to test it
-        stringifyStream(result.rootElement.props.body.props.html, (error, html) => {
-          expect(html).to.contain("data-reactid");
-          done();
-        });
+        expect(result.rootElement.props.body.props.html).to.contain("data-reactid");
       });
     });
   });
@@ -396,12 +390,9 @@ describe("lib/server/RequestHandler", () => {
       res = new Writable();
       res.writeHead = spy();
       status = 200;
-      const responseStream = new Readable();
-      responseStream.push("a");
-      responseStream.push("bc");
-      responseStream.push(null);
+      const responseString = "abc";
 
-      output={responseStream};
+      output={responseString};
       cache = {
         set: spy()
       };
@@ -491,6 +482,45 @@ describe("lib/server/RequestHandler", () => {
         const result = RequestHandler.getEmailAttributes({});
         expect(result.email).to.equal.false;
         expect(result.docType).to.equal("<!DOCTYPE html>");
+      });
+    });
+  });
+
+  describe("enableComponentCaching", () => {
+    let mockCache;
+    beforeEach(() => {
+      mockCache = {
+        enableCaching: spy(),
+        setCachingConfig: spy()
+      };
+    });
+
+    context("when it hasn't yet been called", () => {
+      context("outside of production", () => {
+        it("shouldn't enable caching", () => {
+          RequestHandler.enableComponentCaching({}, false, mockCache);
+          expect(mockCache.enableCaching.called).to.equal(false);
+        });
+      });
+
+      context("when no config is set", () => {
+        it("should pass `false` to enableComponentCaching", () => {
+          RequestHandler.enableComponentCaching(undefined, true, mockCache); // eslint-disable-line no-undefined
+          expect(mockCache.enableCaching.calledWith(false)).to.equal(true);
+        });
+      });
+
+      context("when config is set", () => {
+        it("should pass `true` to enableComponentCaching", () => {
+          RequestHandler.enableComponentCaching({}, true, mockCache);
+          expect(mockCache.enableCaching.calledWith(true)).to.equal(true);
+        });
+
+        it("should pass the provided `componentCacheConfig` to setCachingConfig", () => {
+          const config = {components: {"Home": {}}};
+          RequestHandler.enableComponentCaching(config, true, mockCache);
+          expect(mockCache.setCachingConfig.calledWith(config)).to.equal(true);
+        });
       });
     });
   });

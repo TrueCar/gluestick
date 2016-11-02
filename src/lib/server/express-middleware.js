@@ -38,6 +38,10 @@ const defaults = {
   exposedEnvVariables: EXPOSED_ENV_VARIABLES
 };
 
+// This has been moved outside of the render method because it only needs to be
+// run once
+RequestHandler.enableComponentCaching(defaults.config.server.componentCacheConfig, process.env.NODE_ENV === "production");
+
 export default async (req, res, overrides) => {
   // Allow overriding of default methods, this is mostly to mock out methods
   // for testing
@@ -66,7 +70,7 @@ export default async (req, res, overrides) => {
     } = await RequestHandler.matchRoute(req, getRoutes, store);
 
     if (redirectLocation) {
-      RequestHandler.redirect(redirectLocation);
+      RequestHandler.redirect(res, redirectLocation);
       return;
     }
 

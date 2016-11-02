@@ -1,5 +1,6 @@
 /*global webpackIsomorphicTools*/
 import path from "path";
+import _SSRCaching from "electrode-react-ssr-caching";
 import React from "react";
 import LRU from "lru-cache";
 import Oy from "oy-vey";
@@ -17,6 +18,7 @@ import getHeaders from "./getHeaders";
 import _getHead from "./getHead";
 import Body from "./Body";
 import { getLogger } from "./logger";
+
 const _logger = getLogger();
 
 let _Entry;
@@ -111,6 +113,18 @@ export function setHeaders (res, currentRoute) {
   const headers = getHeaders(currentRoute);
   if (headers) {
     res.set(headers);
+  }
+}
+
+export function enableComponentCaching (componentCacheConfig, isProduction, SSRCaching=_SSRCaching) {
+  if (!isProduction) {
+    return;
+  }
+
+  // only enable caching if componentCacheConfig has an object
+  SSRCaching.enableCaching(!!componentCacheConfig);
+  if (!!componentCacheConfig) {
+    SSRCaching.setCachingConfig(componentCacheConfig);
   }
 }
 

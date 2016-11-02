@@ -16,7 +16,18 @@ describe("lib/server/express-middleware", () => {
       getState: stub().returns({})
     };
     overrides = {
-      config: {},
+      config: {
+        server: {
+          componentCacheConfig: {
+            components: {
+              "Test": {
+                enable: true,
+                strategy: "simple"
+              }
+            }
+          }
+        }
+      },
       RequestHandler: {
         renderCachedResponse: stub().returns(false),
         matchRoute: stub().returns(new Promise((r) => r({redirectLocation, renderProps}))),
@@ -27,7 +38,8 @@ describe("lib/server/express-middleware", () => {
         setHeaders: stub(),
         getStatusCode: stub().returns(200),
         prepareOutput: stub().returns({}),
-        cacheAndRender: stub()
+        cacheAndRender: stub(),
+        enableComponentCaching: stub()
       },
       errorHandler: spy(),
       getRenderRequirementsFromEntrypoints: stub().returns({
@@ -153,7 +165,7 @@ describe("lib/server/express-middleware", () => {
 
       it("should redirect the user to the location", async () => {
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
-        expect(overrides.RequestHandler.redirect.calledWith("http://www.example.com")).to.be.true;
+        expect(overrides.RequestHandler.redirect.calledWith(mockRes, "http://www.example.com")).to.be.true;
       });
     });
 
