@@ -17,23 +17,23 @@ describe("lib/server/serveAssets", () => {
   context("when no asset configuration has been set", () => {
     it("should use the default configuration", () => {
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
-      expect(mockStaticMiddleware.calledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.headers)).to.equal(true);
+      expect(mockStaticMiddleware.calledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options)).to.equal(true);
       expect(app.use.calledWith(DEFAULT_ASSETS_CONFIG.path));
     });
   });
 
   context("when asset configuration has been set", () => {
-    it("should merge custom headers", () => {
+    it("should merge custom options", () => {
       mockLoadServerConfig.returns({
         assets: {
-          headers: {
+          options: {
             test: "best"
           }
         }
       });
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
       expect(mockStaticMiddleware.lastCall.args[1]).to.deep.equal({
-        ...DEFAULT_ASSETS_CONFIG.headers,
+        ...DEFAULT_ASSETS_CONFIG.options,
         test: "best",
       });
     });

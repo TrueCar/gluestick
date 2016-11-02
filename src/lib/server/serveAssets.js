@@ -4,7 +4,7 @@ import deepMerge from "deepmerge";
 import _loadServerConfig from "./loadServerConfig";
 
 export const DEFAULT_ASSETS_CONFIG = {
-  headers: {
+  options: {
     maxAge: 315360000000
   },
   path: "/assets",
@@ -19,6 +19,6 @@ export default function serveAssets (app, loadServerConfig=_loadServerConfig, st
     config = deepMerge(config, serverConfig.assets);
   }
 
-  app.use(config.path, staticMiddleware(config.buildFolder, config.headers));
+  app.use(config.path, staticMiddleware(config.buildFolder, config.options));
 }
 
