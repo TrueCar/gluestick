@@ -5,6 +5,7 @@ const logger = getLogger();
 import gluestickExpressMiddleware from "./express-middleware";
 import addProxies from "./addProxies";
 import path from "path";
+import serveAssets from "./serveAssets";
 
 // Imported using `require` so that we can use `process.cwd()`
 const config = require(path.join(process.cwd(), "src", "config", "application")).default;
@@ -21,7 +22,7 @@ app.use(compression());
 addProxies(app, config.proxies);
 
 if (isProduction) {
-  app.use("/assets", express.static("build", { maxAge: 315360000000 } ));
+  serveAssets(app);
   logger.info("Server side rendering server running");
 }
 else {
