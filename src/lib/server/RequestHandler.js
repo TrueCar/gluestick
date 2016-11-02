@@ -163,7 +163,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const renderMethod = config.server.renderMethod;
   if (renderMethod) {
     try {
-      const renderOutput  = await renderMethod(reactRenderFunc, main);
+      const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
       headContent = renderOutput.head;
       bodyContent = renderOutput.body;
     }
