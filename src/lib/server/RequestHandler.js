@@ -183,7 +183,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? null : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
+  const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
