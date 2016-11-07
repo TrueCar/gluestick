@@ -2,8 +2,7 @@ import fs from "fs";
 import path from "path";
 import sha1 from "sha1";
 import updatePackage from "./updatePackage";
-import { getLogger } from "../lib/server/logger";
-const logger = getLogger();
+import logger from "../lib/cliLogger";
 
 const CWD = process.cwd();
 
@@ -29,9 +28,7 @@ function getCurrentFilePath (name) {
   return path.join(CWD, "src", "config", name);
 }
 
-module.exports = async function (logLevel) {
-  logger.level = logLevel || "warn";
-
+module.exports = async function () {
   await updatePackage();
 
   // Check for certain files that we've added to new Gluestick applications. If those files don't exist, add them

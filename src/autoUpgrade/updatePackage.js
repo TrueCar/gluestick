@@ -4,8 +4,7 @@ import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { spawn } from "cross-spawn";
-import { getLogger } from "../lib/server/logger";
-const logger = getLogger();
+import logger from "../lib/cliLogger";
 import sO from "sorted-object";
 
 const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
@@ -166,9 +165,8 @@ Would you like to automatically update your project's dependencies to match the 
  */
 function performModulesUpdate (mismatchedModules, done) {
   const projectPackageData = loadProjectPackage();
-  let module;
   for (const moduleName in mismatchedModules) {
-    module = mismatchedModules[moduleName];
+    const module = mismatchedModules[moduleName];
     projectPackageData[module.type][moduleName] = module.required;
   }
 

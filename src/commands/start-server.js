@@ -76,7 +76,7 @@ function startPM2 (scriptPath, name) {
     watch: process.env.NODE_ENV !== "production" ? ["assets", "src", "Index.js"] : false
   };
 
-  logger.debug(pm2Config, "Starting PM2 server with config");
+  logger.debug("Starting PM2 server with config:\n", pm2Config);
 
   pm2.start(pm2Config, (error) => {
     if (error) {

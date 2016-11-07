@@ -226,7 +226,7 @@ function spawnProcess (type, args=[]) {
  */
 async function startAll(options) {
   try {
-    await autoUpgrade(options.logLevel);
+    await autoUpgrade();
   }
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);

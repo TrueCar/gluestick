@@ -1,6 +1,6 @@
 import express from "express";
 import compression from "compression";
-import { getLogger, getLoggerMiddleware } from "./logger";
+import { getLogger } from "./logger";
 const logger = getLogger();
 import gluestickExpressMiddleware from "./express-middleware";
 import addProxies from "./addProxies";
@@ -15,7 +15,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const port = process.env.PORT || (isProduction? 8888 : 8880);
 
 const app = express();
-app.use(getLoggerMiddleware());
+//app.use(getLoggerMiddleware());
 app.use(compression());
 
 // Hook up all of the API proxies
