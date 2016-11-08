@@ -45,7 +45,7 @@ export default function (filename, section, webpackAssets=WEBPACK_ASSETS, isProd
   // during the build step matches the current assetPath. If not, then we
   // replace what was the assetPath with what is the assetPath.
   const originalPath = webpackAssets.path;
-  if (originalPath !== assetPath) {
+  if (webpackPath && originalPath !== assetPath) {
     return `${assetPath}${webpackPath.substr(originalPath.length)}`;
   }
 
