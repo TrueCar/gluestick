@@ -4,6 +4,7 @@ import webpack from "webpack";
 import getWebpackConfig from "../config/getWebpackClientConfig";
 
 import { getLogger } from "../lib/server/logger";
+import getAssetPath from "../lib/getAssetPath";
 const LOGGER = getLogger();
 
 module.exports = function() {
@@ -15,6 +16,7 @@ module.exports = function() {
   compiler.run((error, stats) => {
     const statsJson = stats.toJson();
     fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(statsJson));
+    fs.writeFileSync("build/asset-path.json", JSON.stringify({assetPath: getAssetPath()}));
     const errors = statsJson.errors;
     if (errors.length) {
       errors.forEach((e) => {
