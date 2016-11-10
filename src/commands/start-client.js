@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const process = require("process");
 const express = require("express");
 const proxy = require("http-proxy-middleware");
+const fs = require("fs-extra");
 
 import build from "./build";
 import getWebpackConfig from "../config/getWebpackClientConfig";
@@ -24,7 +25,11 @@ const PUBLIC_PATH = ASSET_PATH;
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
 module.exports = function () {
+  // clean the slate by removing `webpack-asset.json` before building a new one
+  fs.removeSync(path.join(process.cwd(), "webpack-assets.json"));
+
   const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
+
   if (!IS_PRODUCTION) {
     const app = express();
     app.use(require("webpack-dev-middleware")(compiler, {
