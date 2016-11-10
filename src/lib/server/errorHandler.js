@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import * as secureHandlebars from "secure-handlebars";
+import * as Handlebars from "handlebars";
 
 /**
  * Register handlebars helper that allows condition blocks for non production
@@ -9,12 +9,12 @@ import * as secureHandlebars from "secure-handlebars";
  * Example:
  *  {{#notForProduction}}<pre>{{error.stack}}</pre>{{/notForProduction}}
  */
-secureHandlebars.registerHelper("notForProduction", function (options) {
+Handlebars.registerHelper("notForProduction", function (options) {
   return process.env.NODE_ENV === "production" ? "" : options.fn(this);
 });
 
 /**
- * The custom 505 error page uses secure-handlebars for templates. We don't use
+ * The custom 505 error page uses handlebars for templates. We don't use
  * React because React might be responsible for for 505 error in the first
  * place. We do pass the request, response and error object to the template for
  * optional use.
@@ -41,10 +41,10 @@ export default function serverErrorHandler(req, res, error, config={}) {
     fs.readFile(custom505FilePath, "utf8", (readFileError, data) => {
       if (readFileError) { return res.end({error: readFileError, config}); }
 
-      // We use secure-handlebars to deliver the 505 page. This lets you
+      // We use handlebars to deliver the 505 page. This lets you
       // use a handlebars template so you can display the stack trace or
       // any request, response information you would like.
-      const output = secureHandlebars.compile(data)({req, res, error});
+      const output = Handlebars.compile(data)({req, res, error});
       res.end(output);
     });
   });

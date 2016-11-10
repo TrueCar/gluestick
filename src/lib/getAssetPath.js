@@ -11,7 +11,7 @@ catch (e) {
 }
 
 export default function (config=APP_CONFIG) {
-  let assetPath = config.assetPath;
+  let assetPath = config.assetPath || "/assets";
   if (assetPath.substr(-1) !== "/") {
     assetPath = assetPath + "/";
   }
