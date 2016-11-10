@@ -160,7 +160,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const currentState = store.getState();
 
   let headContent, bodyContent;
-  const renderMethod = config.server.renderMethod;
+  const renderMethod = config.server && config.server.renderMethod;
   if (renderMethod) {
     try {
       const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
