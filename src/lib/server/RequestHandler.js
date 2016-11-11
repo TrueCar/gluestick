@@ -128,7 +128,7 @@ export function enableComponentCaching (componentCacheConfig, isProduction, SSRC
   }
 }
 
-export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
+export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -159,15 +159,31 @@ export function prepareOutput(req, {Index, store, getRoutes, fileName}, renderPr
   // script tag that hooks up the client side react code.
   const currentState = store.getState();
 
+  let headContent, bodyContent;
+  const renderMethod = config.server && config.server.renderMethod;
+  if (renderMethod) {
+    try {
+      const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
+      headContent = renderOutput.head;
+      bodyContent = renderOutput.body;
+    }
+    catch (e) {
+      throw new Error(e);
+    }
+  }
+  else {
+    bodyContent = reactRenderFunc(main);
+  }
+
   const body = (
     <Body
-      html={reactRenderFunc(main)}
+      html={bodyContent}
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? null : getHead(config, fileName, _webpackIsomorphicTools.assets());
+  const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that

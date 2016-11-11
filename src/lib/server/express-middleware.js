@@ -77,7 +77,7 @@ export default async (req, res, overrides) => {
     RequestHandler.setHeaders(res, currentRoute);
 
     const status = RequestHandler.getStatusCode(store.getState(), currentRoute);
-    const output = RequestHandler.prepareOutput(req, renderRequirements, renderProps, config, exposedEnvVariables);
+    const output = await RequestHandler.prepareOutput(req, renderRequirements, renderProps, config, exposedEnvVariables);
     RequestHandler.cacheAndRender(req, res, currentRoute, status, output);
   }
   catch (e) {

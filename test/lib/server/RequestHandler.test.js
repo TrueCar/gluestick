@@ -332,47 +332,99 @@ describe("lib/server/RequestHandler", () => {
       };
     });
 
-    context("when the route is an email route", () => {
-      let result;
-      beforeEach(() => {
-        renderProps.routes[0].email = true;
-        result = RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, config, envVariables, getHead, Entry,
-          webpackIsomorphicTools);
-      });
-      it("should return a responseString", () => {
-        expect(result.responseString).to.not.be.undefined;
+    context("without a custom render method", () => {
+      context("when the route is an email route", () => {
+        let result;
+        beforeEach(async () => {
+          renderProps.routes[0].email = true;
+          result = await RequestHandler.prepareOutput(req, renderRequirements,
+            renderProps, config, envVariables, getHead, Entry,
+            webpackIsomorphicTools);
+        });
+        it("should return a responseString", () => {
+          expect(result.responseString).to.not.be.undefined;
+        });
+
+        it("should not pass head to Index", () => {
+          expect(result.rootElement.props.head).to.be.undefined;
+        });
+
+        it("should not include react-id attributes in html because it uses renderToStaticMarkup", () => {
+          expect(result.rootElement.props.body.props.html).to.not.contain("data-reactid");
+        });
       });
 
-      it("should not pass head to Index", () => {
-        expect(result.rootElement.props.head).to.be.null;
-      });
+      context("when the route is not an email route", () => {
+        let result;
+        beforeEach(async () => {
+          delete renderProps.routes[0].email;
+          result = await RequestHandler.prepareOutput(req, renderRequirements,
+            renderProps, config, envVariables, getHead, Entry,
+            webpackIsomorphicTools);
+        });
 
-      it("should not include react-id attributes in html because it uses renderToStaticMarkup", () => {
-        expect(result.rootElement.props.body.props.html).to.not.contain("data-reactid");
+        it("should return a responseString", () => {
+          expect(result.responseString).to.not.be.undefined;
+        });
+
+        it("should pass head to Index", () => {
+          expect(result.rootElement.props.head).to.not.be.null;
+        });
+
+        it("should include react-id attributes in html because it uses renderToString", () => {
+          // html is a stream so we have to convert it to a string to test it
+          expect(result.rootElement.props.body.props.html).to.contain("data-reactid");
+        });
       });
     });
 
-    context("when the route is not an email route", () => {
-      let result;
-      beforeEach(() => {
-        delete renderProps.routes[0].email;
-        result = RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, config, envVariables, getHead, Entry,
+    context("with a custom render method", () => {
+      let updatedConfig, result, headJSX;
+      beforeEach(async () => {
+        headJSX = <meta name="hi" value="hola" />;
+        updatedConfig = {
+          ...config,
+          server: {
+            ...config.server,
+            renderMethod: () => ({
+              head: headJSX,
+              body: "<div>That body!</div>"
+            })
+          }
+        };
+      });
+
+      it("should pass bodyContent to html prop", async () => {
+        result = await RequestHandler.prepareOutput(req, renderRequirements,
+          renderProps, updatedConfig, envVariables, getHead, Entry,
           webpackIsomorphicTools);
+        expect(result.rootElement.props.body.props.html).to.equal("<div>That body!</div>");
       });
 
-      it("should return a responseString", () => {
-        expect(result.responseString).to.not.be.undefined;
+      context("not an email", () => {
+        beforeEach(async () => {
+          delete renderProps.routes[0].email;
+          result = await RequestHandler.prepareOutput(req, renderRequirements,
+            renderProps, updatedConfig, envVariables, getHead, Entry,
+            webpackIsomorphicTools);
+        });
+
+        it("should pass headContent to getHead", () => {
+          expect(getHead.lastCall.args[2]).to.equal(headJSX);
+        });
       });
 
-      it("should pass head to Index", () => {
-        expect(result.rootElement.props.head).to.not.be.null;
-      });
+      context("an email", () => {
+        beforeEach(async () => {
+          renderProps.routes[0].email = true;
+          result = await RequestHandler.prepareOutput(req, renderRequirements,
+            renderProps, updatedConfig, envVariables, getHead, Entry,
+            webpackIsomorphicTools);
+        });
 
-      it("should include react-id attributes in html because it uses renderToString", () => {
-        // html is a stream so we have to convert it to a string to test it
-        expect(result.rootElement.props.body.props.html).to.contain("data-reactid");
+        it("should pass headContent to getHead", async () => {
+          expect(result.rootElement.props.head).to.equal(headJSX);
+        });
       });
     });
   });
