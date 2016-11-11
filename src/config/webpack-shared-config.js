@@ -1,6 +1,7 @@
 // Webpack configuration that is shared between the client and tests
 import path from "path";
 import process from "process";
+import { GLUESTICK_ADDON_DIR_REGEX } from "./vars";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -42,7 +43,8 @@ module.exports = {
       include: [
         path.join(process.cwd(), "Index.js"),
         path.join(process.cwd(), "src"),
-        path.join(process.cwd(), "test")
+        path.join(process.cwd(), "test"),
+        GLUESTICK_ADDON_DIR_REGEX
       ]
     },
     {
