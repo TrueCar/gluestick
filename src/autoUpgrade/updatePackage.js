@@ -1,10 +1,9 @@
 import fs from "fs";
 import path from "path";
-import rimraf from "rimraf";
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { spawn } from "cross-spawn";
 import { getLogger } from "../lib/server/logger";
+import { install as installDeps, cleanSync as cleanDeps } from "../lib/npmDependencies";
 const logger = getLogger();
 import sO from "sorted-object";
 
@@ -156,7 +155,7 @@ Would you like to automatically update your project's dependencies to match the 
 
 /**
  * Given an object of mismatched modules, load up the project's package.json
- * file, update it so the versions match, then run `npm install`. Once that
+ * file, update it so the versions match, then install dependencies. Once that
  * completes, the `done` callback is called.
  *
  * @param {Object} mismatchedModules see `fixVersionMismatch` function at the
@@ -177,14 +176,9 @@ function performModulesUpdate (mismatchedModules, done) {
 
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
 
-  const postFix = process.platform === "win32" ? ".cmd" : "";
-
-  // wipe the existing node_modules folder so we can have a clean start
-  rimraf.sync(path.join(process.cwd(), "node_modules"));
-  spawn.sync("npm", ["cache", "clean"], {stdio: "inherit"});
-  const npmInstall = spawn("npm" + postFix, ["install"], {stdio: "inherit"});
-
-  npmInstall.on("close", () => {
+  cleanDeps();
+  const installProcess = installDeps();
+  installProcess.on("close", () => {
     logger.info("node_modules have been updated.");
     done();
   });
