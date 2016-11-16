@@ -1,10 +1,15 @@
 import path from "path";
 import rimraf from "rimraf";
 const spawn = require("cross-spawn").spawn;
+import { which } from "shelljs";
 
 const IS_WINDOWS = process.platform === "win32";
 
 function install () {
+  if (which("yarn") !== null) {
+    return spawn("yarn");
+  }
+
   const postFix = IS_WINDOWS ? ".cmd" : "";
   return spawn("npm" + postFix, ["install"], {stdio: "inherit"});
 }
