@@ -17,6 +17,7 @@ const run = lazyMethodRequire("./commands/run");
 
 const updateLastVersionUsed = require("./lib/updateVersion");
 const getVersion = require("./lib/getVersion");
+const updateWebpackAssetPath = require("./lib/updateWebpackAssetPath");
 
 const logger = require("./lib/cliLogger");
 const cliColorScheme = require("./lib/cliColorScheme");
@@ -231,6 +232,11 @@ async function startAll(options) {
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);
     process.exit();
+  }
+
+  // Update the ASSET_PATH in webpack-assets.json in production environments
+  if (isProduction) {
+    updateWebpackAssetPath();
   }
 
   // Set parsed command line args so that spawned processes can refer to them
