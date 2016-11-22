@@ -17,56 +17,20 @@ describe("lib/getAssetPathForFile", () => {
     path: "/assets/"
   };
 
-  context("when assetPath is the default `/assets` override is set", () => {
-    it("should return the asset path for a file listed in the javascript section", () => {
-      const result = getAssetPathForFile("main", "javascript", WEBPACK_ASSETS);
-      expect(result).to.equal(WEBPACK_ASSETS.javascript.main);
-
-      // production should be the same
-      const prodResult = getAssetPathForFile("main", "javascript", WEBPACK_ASSETS, true);
-      expect(prodResult).to.equal(result);
-    });
-
-    it("should return the asset path for a file listed in the styles section", () => {
-      const result = getAssetPathForFile("main", "styles", WEBPACK_ASSETS);
-      expect(result).to.equal(WEBPACK_ASSETS.styles.main);
-
-      // production should be the same
-      const prodResult = getAssetPathForFile("main", "styles", WEBPACK_ASSETS, true);
-      expect(prodResult).to.equal(result);
-    });
-
-    it("should return the asset path for a file listed in the assets section", () => {
-      const img = "./assets/img/logo.png";
-      const result = getAssetPathForFile(img, "assets", WEBPACK_ASSETS);
-      expect(result).to.equal(WEBPACK_ASSETS.assets[img]);
-
-      // production should be the same
-      const prodResult = getAssetPathForFile(img, "assets", WEBPACK_ASSETS, true);
-      expect(prodResult).to.equal(result);
-    });
+  it("should return the asset path for a file listed in the javascript section", () => {
+    const result = getAssetPathForFile("main", "javascript", WEBPACK_ASSETS);
+    expect(result).to.equal(WEBPACK_ASSETS.javascript.main);
   });
 
-  context("when config exports a different assetPath than `/assets`", () => {
-    const config = {
-      assetPath: "http://www.example.com/a$$ets"
-    };
+  it("should return the asset path for a file listed in the styles section", () => {
+    const result = getAssetPathForFile("main", "styles", WEBPACK_ASSETS);
+    expect(result).to.equal(WEBPACK_ASSETS.styles.main);
+  });
 
-    it("should return the asset path for a file listed in the javascript section", () => {
-      const result = getAssetPathForFile("main", "javascript", WEBPACK_ASSETS, true, config);
-      expect(result).to.equal("http://www.example.com/a$$ets/main-app-8ec5dba463cc8f7a38e2.bundle.js");
-    });
-
-    it("should return the asset path for a file listed in the styles section", () => {
-      const result = getAssetPathForFile("main", "styles", WEBPACK_ASSETS, true, config);
-      expect(result).to.equal("http://www.example.com/a$$ets/main-8ec5dba463cc8f7a38e2.css");
-    });
-
-    it("should return the asset path for a file listed in the assets section", () => {
-      const img = "./assets/img/logo.png";
-      const result = getAssetPathForFile(img, "assets", WEBPACK_ASSETS, true, config);
-      expect(result).to.equal("http://www.example.com/a$$ets/logo-0c9589cb57d3f36c1633353f3fd27185.png");
-    });
+  it("should return the asset path for a file listed in the assets section", () => {
+    const img = "./assets/img/logo.png";
+    const result = getAssetPathForFile(img, "assets", WEBPACK_ASSETS);
+    expect(result).to.equal(WEBPACK_ASSETS.assets[img]);
   });
 });
 
