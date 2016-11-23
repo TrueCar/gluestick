@@ -128,7 +128,7 @@ export function enableComponentCaching (componentCacheConfig, isProduction, SSRC
   }
 }
 
-export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
+export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, staticBuild=false, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -150,18 +150,24 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
 
   // gather attributes that were included on the route in order to
   // determine whether to render as an e-mail or not
-  const currentRoute = getCurrentRoute(renderProps);
-  const routeAttrs = getEmailAttributes(currentRoute);
-  const isEmail = routeAttrs.email;
-  const reactRenderFunc = isEmail ? renderToStaticMarkup: renderToString;
+  let currentRoute, routeAttrs, isEmail, reactRenderFunc, currentState = {};
+  if (!staticBuild) {
+    currentRoute = getCurrentRoute(renderProps);
+    routeAttrs = getEmailAttributes(currentRoute);
+    isEmail = routeAttrs.email;
+    reactRenderFunc = isEmail ? renderToStaticMarkup: renderToString;
+    currentState = store.getState();
+  }
 
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
-  const currentState = store.getState();
 
   let headContent, bodyContent;
   const renderMethod = config.server && config.server.renderMethod;
-  if (renderMethod) {
+  if (staticBuild) {
+    bodyContent = "";
+  }
+  else if (renderMethod) {
     try {
       const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
       headContent = renderOutput.head;
@@ -183,6 +189,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
       envVariables={envVariables}
     />
   );
+
   const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
