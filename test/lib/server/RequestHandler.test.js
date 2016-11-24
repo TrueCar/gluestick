@@ -427,6 +427,20 @@ describe("lib/server/RequestHandler", () => {
         });
       });
     });
+
+    context("with the static build option", () => {
+      let result;
+      beforeEach(async () => {
+        staticBuild = true;
+        result = await RequestHandler.prepareOutput(req, renderRequirements,
+          renderProps, config, envVariables, staticBuild, getHead, Entry,
+          webpackIsomorphicTools);
+      });
+
+      it("should return an empty body", () => {
+        expect(result.rootElement.props.body.props.html).to.equal("");
+      });
+    });
   });
 
   describe("cacheAndRender", () => {
