@@ -284,7 +284,7 @@ describe("lib/server/RequestHandler", () => {
   });
 
   describe("prepareOutput", () => {
-    let req, renderRequirements, renderProps, config, envVariables, getHead,
+    let req, renderRequirements, renderProps, config, envVariables, staticBuild, getHead,
         Entry, webpackIsomorphicTools;
 
     class Index extends React.Component {
@@ -338,7 +338,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, getHead, Entry,
+            renderProps, config, envVariables, staticBuild, getHead, Entry,
             webpackIsomorphicTools);
         });
         it("should return a responseString", () => {
@@ -359,7 +359,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, getHead, Entry,
+            renderProps, config, envVariables, staticBuild, getHead, Entry,
             webpackIsomorphicTools);
         });
 
@@ -396,7 +396,7 @@ describe("lib/server/RequestHandler", () => {
 
       it("should pass bodyContent to html prop", async () => {
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, updatedConfig, envVariables, getHead, Entry,
+          renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
           webpackIsomorphicTools);
         expect(result.rootElement.props.body.props.html).to.equal("<div>That body!</div>");
       });
@@ -405,7 +405,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, getHead, Entry,
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
             webpackIsomorphicTools);
         });
 
@@ -418,7 +418,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, getHead, Entry,
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
             webpackIsomorphicTools);
         });
 
