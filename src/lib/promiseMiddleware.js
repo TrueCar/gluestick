@@ -25,14 +25,16 @@ export default function promiseMiddleware (client) {
       }
 
       return getPromise(client)
-        .then(value => {
-          next({...rest, value, type: SUCCESS});
-          return value || true;
-        })
-        .catch(error => {
-          next({...rest, error, type: FAILURE});
-          return false;
-        });
+        .then(
+          value => {
+            next({...rest, value, type: SUCCESS});
+            return value || true;
+          },
+          error => {
+            next({...rest, error, type: FAILURE});
+            return false;
+          }
+        );
     };
   };
 }
