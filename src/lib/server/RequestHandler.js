@@ -168,7 +168,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
       bodyContent = renderOutput.body;
     }
     catch (e) {
-      throw new Error(e);
+      throw e;
     }
   }
   else {
