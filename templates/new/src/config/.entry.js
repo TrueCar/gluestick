@@ -1,15 +1,9 @@
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
-import { render } from "react-dom";
 
 import { getHttpClient, Root } from "gluestick-shared";
-import originalMatch from "react-router/lib/match";
-import browserHistory from "react-router/lib/browserHistory";
 import { StyleRoot } from "radium";
 import config from "./application";
-import { AppContainer } from "react-hot-loader";
-
-const httpClient = getHttpClient(config.httpClient);
 
 export default class Entry extends Component {
   render () {
@@ -31,25 +25,4 @@ export default class Entry extends Component {
     );
   }
 }
-
-Entry.start = function (getRoutes, getStore, match=originalMatch, history=browserHistory) {
-  // Allow developers to include code that will be executed before the app is
-  // set up in the browser.
-  require("./init.browser");
-
-  const newStore = getStore(httpClient);
-  match({ history, routes: getRoutes(newStore)}, (error, redirectLocation, renderProps) => {
-    const entry = (
-      <AppContainer>
-        <Entry
-          radiumConfig={{userAgent: window.navigator.userAgent}}
-          store={newStore}
-          getRoutes={getRoutes}
-          {...renderProps}
-        />
-      </AppContainer>
-    );
-    render(entry, document.getElementById("main"));
-  });
-};
 

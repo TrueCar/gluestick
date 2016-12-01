@@ -90,10 +90,16 @@ function getEntryPointContent (entry) {
 
 // Make sure that webpack considers new dependencies introduced in the Index
 // file
+import React from "react";
+import history from "react-router/lib/browserHistory";
+import match from "react-router/lib/match";
+import { AppContainer } from "react-hot-loader";
+import { getHttpClient, createStore } from "gluestick-shared";
+import { render } from "react-dom";
+
 import "${index}";
 import config from "${config}";
 import Entry from "${mainEntry}";
-import { createStore } from "gluestick-shared";
 import middleware from "${reduxMiddlewarePath}";
 
 export function getStore (httpClient) {
@@ -101,7 +107,41 @@ export function getStore (httpClient) {
 }
 
 if (typeof window === "object") {
-  Entry.start(getRoutes, getStore);
+  const httpClient = getHttpClient(config.httpClient);
+
+  // Allow developers to include code that will be executed before the app is
+  // set up in the browser.
+  require("../init.browser");
+
+  const newStore = getStore(httpClient);
+  match({ history, routes: getRoutes(newStore)}, (error, redirectLocation, renderProps) => {
+    render((
+      <AppContainer>
+        <Entry
+          radiumConfig={{userAgent: window.navigator.userAgent}}
+          store={newStore}
+          getRoutes={getRoutes}
+          {...renderProps}
+        />
+      </AppContainer>
+    ), document.getElementById("main"));
+
+    if (module.hot) {
+      module.hot.accept("../.entry", () => {
+        const UpdateEntry = require("${mainEntry}").default;
+        render((
+          <AppContainer>
+            <UpdatedEntry
+              radiumConfig={{userAgent: window.navigator.userAgent}}
+              store={newStore}
+              getRoutes={getRoutes}
+              {...renderProps}
+            />
+          </AppContainer>
+        ), document.getElementById("main"));
+      });
+    }
+  });
 }
 `;
 
