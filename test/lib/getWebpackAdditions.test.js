@@ -38,6 +38,7 @@ describe("src/lib/getWebpackAdditions", () => {
       additionalExternals: {},
       additionalLoaders: [],
       additionalPreLoaders: [],
+      additionalWebpackNodeConfig: {},
       entryPoints: {},
       plugins: [],
       vendor: []
@@ -133,4 +134,3 @@ describe("src/lib/getWebpackAdditions", () => {
   });
   // @TODO: Write more tests that validate what happens in `prepareUserAdditionsForWebpack`
 });
-
