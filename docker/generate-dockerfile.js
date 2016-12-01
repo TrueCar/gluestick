@@ -15,7 +15,7 @@ var dockerfile = [
                      "ADD . /app",
                      "",
                      "RUN yarn",
-                     "RUN gluestick build",
+                     "RUN ASSET_URL=__GS_ASSET_URL__ gluestick build",
                      ""
                  ];
 
