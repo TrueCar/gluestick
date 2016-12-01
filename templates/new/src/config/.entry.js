@@ -2,11 +2,12 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 
-import { Root, getHttpClient } from "gluestick-shared";
+import { getHttpClient, Root } from "gluestick-shared";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 import { StyleRoot } from "radium";
 import config from "./application";
+import { AppContainer } from "react-hot-loader";
 
 const httpClient = getHttpClient(config.httpClient);
 
@@ -21,7 +22,11 @@ export default class Entry extends Component {
 
     return (
       <StyleRoot radiumConfig={radiumConfig}>
-        <Root routerContext={routerContext} routes={getRoutes(store)} store={store} />
+        <Root
+          routerContext={routerContext}
+          routes={getRoutes(store)}
+          store={store}
+        />
       </StyleRoot>
     );
   }
@@ -35,12 +40,14 @@ Entry.start = function (getRoutes, getStore, match=originalMatch, history=browse
   const newStore = getStore(httpClient);
   match({ history, routes: getRoutes(newStore)}, (error, redirectLocation, renderProps) => {
     const entry = (
-      <Entry
-        radiumConfig={{userAgent: window.navigator.userAgent}}
-        store={newStore}
-        getRoutes={getRoutes}
-        {...renderProps}
-      />
+      <AppContainer>
+        <Entry
+          radiumConfig={{userAgent: window.navigator.userAgent}}
+          store={newStore}
+          getRoutes={getRoutes}
+          {...renderProps}
+        />
+      </AppContainer>
     );
     render(entry, document.getElementById("main"));
   });

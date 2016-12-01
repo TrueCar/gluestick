@@ -72,6 +72,7 @@ export default function buildWebpackEntries (isProduction) {
 
     // Include hot middleware in development mode only
     if (!isProduction) {
+      output[fileName].unshift("react-hot-loader/patch");
       output[fileName].unshift("webpack-hot-middleware/client");
     }
   }
