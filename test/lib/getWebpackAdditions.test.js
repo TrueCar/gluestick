@@ -132,5 +132,21 @@ describe("src/lib/getWebpackAdditions", () => {
       ...additions
     });
   });
+
+  it("should return additionalWebpackNodeConfig when they are specified in webpack-additions", () => {
+    const additions = {
+      ...defaultAdditions,
+      additionalWebpackNodeConfig: {
+        mish: "kin"
+      }
+    };
+    const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
+    fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
+    const result = getWebpackAdditions();
+    expect(result).to.deep.equal({
+      ...defaultAdditions,
+      ...additions
+    });
+  });
   // @TODO: Write more tests that validate what happens in `prepareUserAdditionsForWebpack`
 });
