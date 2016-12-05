@@ -11,6 +11,7 @@ const {
   additionalLoaders,
   additionalPreLoaders,
   additionalExternals,
+  additionalWebpackNodeConfig,
   vendor,
   plugins
 } = getWebpackAdditions();
@@ -98,7 +99,8 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
     },
     node: {
-      fs: "empty"
+      fs: "empty",
+      ...additionalWebpackNodeConfig
     },
     output: {
       path: path.join(appRoot, "build"),
