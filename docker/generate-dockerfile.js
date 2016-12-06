@@ -14,7 +14,7 @@ var dockerfile = [
                      "",
                      "ADD . /app",
                      "",
-                     "RUN npm install",
+                     "RUN yarn",
                      "RUN ASSET_URL=__GS_ASSET_URL__ gluestick build",
                      ""
                  ];
