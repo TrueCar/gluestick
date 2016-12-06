@@ -64,7 +64,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
     apt-get install -y yarn && \
     yarn global add gluestick@$GLUESTICK_VERSION && \
-    npm install && \
+    yarn && \
     apt-get remove -y $BUILD_PACKAGES && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
