@@ -62,7 +62,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3 && \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    apt-get install -y yarn=0.16.0 && \
+    apt-get install -y yarn && \
     yarn global add gluestick@$GLUESTICK_VERSION && \
     npm install && \
     apt-get remove -y $BUILD_PACKAGES && \
