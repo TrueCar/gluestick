@@ -251,4 +251,111 @@ describe("lib/getHttpClient", () => {
     expect(calledInsideModify.called).to.equal(true);
     expect(client.modifiedClient).to.equal(true);
   });
+
+  it("should merge headers from 3 sources when in the browser", (done) => {
+    // Mock axios by specifying an adapter https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
+    // Would like to use github.com/mzabriskie/moxios but it did not work with axios 0.12.0 in gluestick-shared.
+    function mockSuccessAdapter(resolve, reject, config) {
+      const response = {
+        config,
+        data: null,
+        headers: {},
+        request: null,
+        status: 200,
+        statusText: "",
+      }
+      resolve(response);
+    }
+    function modifyInstance(client, res) {
+      client.interceptors.request.use(
+        (config) => ({
+          ...config,
+          headers: {
+            ...config.headers,
+            "header3": "from modifyInstance",
+          }
+        })
+      );
+      return client;
+    }
+    const optionsForGetHttpClient = {
+      adapter: mockSuccessAdapter,
+      headers: {
+        "header1": "from optionsForGetHttpClient",
+      },
+      modifyInstance: modifyInstance,
+    };
+    const optionsForGet = {
+      headers: {
+        "header2": "from optionsForGet",
+      }
+    };
+    const client = getHttpClient(optionsForGetHttpClient);
+    client.get("/test/url", optionsForGet).then((response) => {
+      const { headers } = response.config;
+      expect(headers.header1).to.equal("from optionsForGetHttpClient")
+      expect(headers.header2).to.equal("from optionsForGet")
+      expect(headers.header3).to.equal("from modifyInstance")
+      done();
+    });
+  });
+
+  it("should merge headers from 4 sources when on the server", (done) => {
+    // Mock axios by specifying an adapter https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
+    // Would like to use github.com/mzabriskie/moxios but it did not work with axios 0.12.0 in gluestick-shared.
+    function mockSuccessAdapter(resolve, reject, config) {
+      const response = {
+        config,
+        data: null,
+        headers: {},
+        request: null,
+        status: 200,
+        statusText: "",
+      }
+      resolve(response);
+    }
+    function modifyInstance(client, res) {
+      client.interceptors.request.use(
+        (config) => ({
+          ...config,
+          headers: {
+            ...config.headers,
+            "header4": "from modifyInstance",
+          }
+        })
+      );
+      return client;
+    }
+    const optionsForGetHttpClient = {
+      adapter: mockSuccessAdapter,
+      headers: {
+        "header2": "from optionsForGetHttpClient",
+      },
+      modifyInstance: modifyInstance,
+    };
+    const req = {
+      headers: {
+        "header1": "from req",
+      },
+    };
+    const mockServerResponse = {
+      removeHeader: sinon.spy(),
+      cookie: sinon.spy(),
+      append: sinon.spy()
+    };
+    const optionsForGet = {
+      headers: {
+        "header3": "from optionsForGet",
+      }
+    };
+    const client = getHttpClient(optionsForGetHttpClient, req, mockServerResponse);
+    client.get("/test/url", optionsForGet).then((response) => {
+      const { headers } = response.config;
+      expect(headers.header1).to.equal("from req")
+      expect(headers.header2).to.equal("from optionsForGetHttpClient")
+      expect(headers.header3).to.equal("from optionsForGet")
+      expect(headers.header4).to.equal("from modifyInstance")
+      done();
+    });
+  });
 });

@@ -52,7 +52,7 @@ export default function getHttpClient (options={}, req, res, httpClient=axios) {
     const output = {
       ...config,
       headers: {
-        ...headers,
+        ...config.headers,
         cookie: merge(outgoingCookies, merge(config.headers.cookie, newCookies))
       }
     };
