@@ -15,6 +15,7 @@ services:
 
 before_install:
 - for var in ${!TRAVIS_@}; do echo ${var}=${!var}; done #show travis env vars
+- 'curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.16.1'
 
 before_deploy:
 - sudo apt-get update -qq
