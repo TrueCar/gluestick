@@ -41,6 +41,7 @@ const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
+const prepareStaticOption = ["-Z, --static", "prepare html file for static hosting in the build"];
 
 commander
   .version(currentGluestickVersion);
@@ -99,8 +100,9 @@ commander
 commander
   .command("build")
   .description("create production asset build")
+  .option(...prepareStaticOption)
   .action(checkGluestickProject)
-  .action(() => build())
+  .action((options) => build(options.static))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
