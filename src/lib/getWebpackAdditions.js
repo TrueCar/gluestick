@@ -55,6 +55,7 @@ export default function (isomorphic=false) {
     additionalExternals: {},
     additionalLoaders: [],
     additionalPreLoaders: [],
+    additionalWebpackNodeConfig: {},
     vendor: [],
     entryPoints: {},
     plugins: []
@@ -71,6 +72,7 @@ export default function (isomorphic=false) {
       additionalExternals,
       additionalLoaders,
       additionalPreLoaders,
+      additionalWebpackNodeConfig,
       vendor,
       plugins,
       entryPoints
@@ -80,6 +82,7 @@ export default function (isomorphic=false) {
       additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
+      additionalWebpackNodeConfig: additionalWebpackNodeConfig || {},
       vendor: vendor || [],
       plugins: plugins || [],
       entryPoints: entryPoints || {}
@@ -91,4 +94,3 @@ export default function (isomorphic=false) {
 
   return userAdditions;
 }
-

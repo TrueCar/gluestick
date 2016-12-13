@@ -11,6 +11,7 @@ const {
   additionalLoaders,
   additionalPreLoaders,
   additionalExternals,
+  additionalWebpackNodeConfig,
   vendor,
   plugins
 } = getWebpackAdditions();
@@ -65,9 +66,10 @@ export function getEnvironmentPlugins(isProduction) {
 
 export default function (appRoot, appConfigFilePath, isProduction) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
+  const devtool = process.env.DEVTOOL || "inline-source-map";
   return {
     context: appRoot,
-    devtool: isProduction ? null : "inline-source-map",
+    devtool: isProduction ? null : devtool,
     entry: {
       ...buildWebpackEntries(isProduction),
       vendor: vendor
@@ -97,7 +99,8 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
     },
     node: {
-      fs: "empty"
+      fs: "empty",
+      ...additionalWebpackNodeConfig
     },
     output: {
       path: path.join(appRoot, "build"),

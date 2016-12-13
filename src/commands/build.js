@@ -1,3 +1,4 @@
+import { rm, ls } from "shelljs";
 import fs from "fs-extra";
 import path from "path";
 import webpack from "webpack";
@@ -13,6 +14,16 @@ module.exports = function() {
   const isProduction = process.env.NODE_ENV === "production";
   const compiler = webpack(getWebpackConfig(appRoot, appConfigFilePath, isProduction));
   LOGGER.info("Bundling assets…");
+
+  // clean the slate, `shelljs.rm` throws a warning if you try to remove a
+  // folder or file that doesn't exist. To get around that warning we combine
+  // `ls` and `filter` to only remove the target files if the exist.
+  const removeableTargets = ["build", "_build", "webpack-assets.json", "_webpack-assets.json"];
+  const removable = ls(appRoot).filter((f) => removeableTargets.includes(f));
+  if (removable.length) {
+    rm("-R", removable);
+  }
+
   compiler.run((error, stats) => {
     const statsJson = stats.toJson();
     fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(statsJson));

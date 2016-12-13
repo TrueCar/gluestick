@@ -56,13 +56,13 @@ ENV BUILD_PACKAGES "autoconf \
                     zlib1g-dev"
 
 
-RUN apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3 && \
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    apt-get install -y yarn && \
+    apt-get install -y yarn=0.16.1-1  && \
     yarn global add gluestick@$GLUESTICK_VERSION && \
     yarn && \
     apt-get remove -y $BUILD_PACKAGES && \

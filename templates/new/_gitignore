@@ -1,5 +1,6 @@
 # Output from webpack asset bunlding
 webpack-assets.json
+_webpack-assets.json
 webpack-bundle-stats.json
 
 # Files generated at runtime
@@ -29,6 +30,7 @@ coverage
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build
+_build
 
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
