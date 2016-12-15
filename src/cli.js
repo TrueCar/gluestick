@@ -41,6 +41,7 @@ const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
+const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
 
 commander
   .version(currentGluestickVersion);
@@ -65,8 +66,9 @@ commander
   .command("generate <container|component|reducer>")
   .description("generate a new container")
   .arguments("<name>")
+  .option(...statelessFunctionalOption)
   .action(checkGluestickProject)
-  .action((type, name) => generate(type, name, (err) => {
+  .action((type, name, options) => generate(type, name, options, (err) => {
     if (err) { logger.error(err); }
   }))
   .action(() => updateLastVersionUsed(currentGluestickVersion));

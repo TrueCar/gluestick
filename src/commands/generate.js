@@ -7,7 +7,8 @@ const { highlight, filename } = cliColorScheme;
 const availableCommands = {
   "container": "containers",
   "component": "components",
-  "reducer": "reducers"
+  "reducer": "reducers",
+  "functionalComponent": "components"
 };
 
 function replaceName (input, name, localpath=null) {
@@ -18,9 +19,13 @@ function replaceName (input, name, localpath=null) {
   return replacedName.replace(/__\$PATH__/g, localpath);
 }
 
-module.exports = function (command, name, cb) {
+module.exports = function (command, name, options, cb) {
   const CWD = process.cwd();
 
+  if (command === "component" && options.functional){
+	  command = "functionalComponent";
+  }
+  
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.info(`Available generators: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
@@ -45,7 +50,7 @@ module.exports = function (command, name, cb) {
 
   // Possibly mutate the name by converting it to Pascal Case (only for container and component for now)
   let generatedFileName = basename;
-  if (["container", "component"].indexOf(command) !== -1) {
+  if (["container", "component", "functionalComponent"].indexOf(command) !== -1) {
     generatedFileName = generatedFileName.substr(0, 1).toUpperCase() + generatedFileName.substr(1);
   }
   if (["reducer", "action-creator"].indexOf(command) !== -1) {
