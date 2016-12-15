@@ -23,7 +23,7 @@ module.exports = function (command, name, options, cb) {
   const CWD = process.cwd();
 
   if (command === "component" && options.functional){
-	  command = "functionalComponent";
+    command = "functionalComponent";
   }
   
   // Validate the command type by verifying that it exists in `availableCommands`
