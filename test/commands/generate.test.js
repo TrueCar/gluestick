@@ -149,7 +149,7 @@ describe("cli: gluestick generate", function () {
         expect(contents).to.contain("export default class Mycomponent extends Component");
         done();
       });
-    })
+    });
   });
 
   describe("when containers are generated", function () {

@@ -25,7 +25,7 @@ module.exports = function (command, name, options, cb) {
   if (command === "component" && options.functional){
     command = "functionalComponent";
   }
-  
+
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.info(`Available generators: ${Object.keys(availableCommands).map(c => highlight(c)).join(", ")}`);
