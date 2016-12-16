@@ -83,21 +83,21 @@ describe("cli: gluestick generate", function () {
   describe("when invalid arguments are provided", function () {
     it("reports an error if an invalid command type was provided", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
-      generate("invalidtype", "myname", (err) => {
+      generate("invalidtype", "myname", {}, (err) => {
         expect(err).to.contain("is not a valid generator");
       });
     });
 
     it("reports an error if a blank name is provided", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
-      generate("container", "", (err) => {
+      generate("container", "", {}, (err) => {
         expect(err).to.contain("must specify a name");
       });
     });
 
     it("reports an error if non-word characters are in the name", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
-      generate("container", "f##@", (err) => {
+      generate("container", "f##@", {}, (err) => {
         expect(err).to.contain("is not a valid name");
       });
     });
@@ -107,7 +107,7 @@ describe("cli: gluestick generate", function () {
     it("capitalizes the first letter of the name if the type is `container`", done => {
       const type = "container";
       stubProject(type);
-      generate(type, "mycontainer", (err) => {
+      generate(type, "mycontainer", {}, (err) => {
         expect(err).to.be.undefined;
         makeGeneratedFilesAssertion(process.cwd(), type, "Mycontainer", done);
       });
@@ -116,7 +116,7 @@ describe("cli: gluestick generate", function () {
     it("capitalizes the first letter of the name if the type is `component`", done => {
       const type = "component";
       stubProject(type);
-      generate(type, "mycomponent", (err) => {
+      generate(type, "mycomponent", {}, (err) => {
         expect(err).to.be.undefined;
         makeGeneratedFilesAssertion(process.cwd(), type, "Mycomponent", done);
       });
@@ -125,9 +125,29 @@ describe("cli: gluestick generate", function () {
     it("lowercases the first letter of the name if the type is `reducer`", done => {
       const type = "reducer";
       stubProject(type);
-      generate(type, "Myreducer", (err) => {
+      generate(type, "Myreducer", {}, (err) => {
         expect(err).to.be.undefined;
         makeGeneratedFilesAssertion(process.cwd(), type, "myreducer", done);
+      });
+    });
+  });
+
+  describe("when components are generated", function(){
+    const type = "component";
+    it("makes a stateless functional component if the 'functional' option is provided", done => {
+      stubProject(type);
+      generate(type, "mycomponent", {functional: true}, () => {
+        const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
+        expect(contents).to.contain("export default function Mycomponent ()");
+        done();
+      });
+    });
+    it("makes a normal component with no options present", done => {
+      stubProject(type);
+      generate(type, "mycomponent", {}, () => {
+        const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
+        expect(contents).to.contain("export default class Mycomponent extends Component");
+        done();
       });
     });
   });
@@ -137,7 +157,7 @@ describe("cli: gluestick generate", function () {
       const type = "container";
       stubProject(type);
       fs.closeSync(fs.openSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "w"));
-      generate(type, "mycontainer", (err) => {
+      generate(type, "mycontainer", {}, (err) => {
         expect(err).to.not.be.undefined;
         expect(err).to.contain("already exists");
         done();
@@ -147,7 +167,7 @@ describe("cli: gluestick generate", function () {
     it("generates a container that sets the document title", done => {
       const type = "container";
       stubProject(type);
-      generate(type, "mycontainer", () => {
+      generate(type, "mycontainer", {}, () => {
         const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "utf8");
         expect(contents).to.contain("<Helmet title=\"Mycontainer\"/>");
         done();
@@ -160,7 +180,7 @@ describe("cli: gluestick generate", function () {
       const type = "reducer";
       const testFilePath = path.join(tmpDir, "test", "reducers", "myreducer.test.js");
       stubProject(type);
-      generate(type, "myreducer", (err) => {
+      generate(type, "myreducer", {}, (err) => {
         expect(err).to.be.undefined;
         assertImportPath(testFilePath, `${type}s/myreducer`);
         done();
@@ -172,7 +192,7 @@ describe("cli: gluestick generate", function () {
     it("creates the generated component inside a specified directory", done => {
       const type = "component";
       stubProject(type);
-      generate(type, "common/mycontainer", (err) => {
+      generate(type, "common/mycontainer", {}, (err) => {
         expect(err).to.be.undefined;
         makeGeneratedFilesAssertion(process.cwd(), type, "common/Mycontainer", done);
       });
@@ -181,7 +201,7 @@ describe("cli: gluestick generate", function () {
     it("creates the generated container inside a specified directory n levels deep", done => {
       const type = "container";
       stubProject(type);
-      generate(type, "path/to/my/directory/mycontainer", (err) => {
+      generate(type, "path/to/my/directory/mycontainer", {}, (err) => {
         expect(err).to.be.undefined;
         makeGeneratedFilesAssertion(process.cwd(), type, "path/to/my/directory/Mycontainer", done);
       });
@@ -190,7 +210,7 @@ describe("cli: gluestick generate", function () {
     it("reports an error if directories are provided for reducers", done => {
       const type = "reducer";
       stubProject(type);
-      generate(type, "common/myreducer", (err) => {
+      generate(type, "common/myreducer", {}, (err) => {
         expect(err).to.not.be.undefined;
         done();
       });
@@ -199,7 +219,7 @@ describe("cli: gluestick generate", function () {
     it("reports an error if the directory path resolves outside of the root path", done => {
       const type = "component";
       stubProject(type);
-      generate(type, "../common/mycomponent", (err) => {
+      generate(type, "../common/mycomponent", {}, (err) => {
         expect(err).to.not.be.undefined;
         expect(err).to.contain("not supported");
         done();
@@ -210,7 +230,7 @@ describe("cli: gluestick generate", function () {
       const type = "component";
       const testFilePath = path.join(tmpDir, "test", "components", "common", "Mycomponent.test.js");
       stubProject(type);
-      generate(type, "common/mycomponent", (err) => {
+      generate(type, "common/mycomponent", {}, (err) => {
         expect(err).to.be.undefined;
         assertImportPath(testFilePath, `${type}s/common/Mycomponent`);
         done();
@@ -221,7 +241,7 @@ describe("cli: gluestick generate", function () {
       const type = "container";
       const testFilePath = path.join(tmpDir, "test", "containers", "common", "Mycontainer.test.js");
       stubProject(type);
-      generate(type, "../containers/common/mycontainer", (err) => {
+      generate(type, "../containers/common/mycontainer", {}, (err) => {
         expect(err).to.be.undefined;
         assertImportPath(testFilePath, `${type}s/common/Mycontainer`);
         done();
