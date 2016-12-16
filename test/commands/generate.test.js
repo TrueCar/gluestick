@@ -132,6 +132,26 @@ describe("cli: gluestick generate", function () {
     });
   });
 
+  describe("when components are generated", function(){
+    const type = "component";
+    it("makes a stateless functional component if the 'functional' option is provided", done => {
+      stubProject(type);
+      generate(type, "mycomponent", {functional: true}, () => {
+        const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
+        expect(contents).to.contain("export default function Mycomponent ()");
+        done();
+      });
+    });
+    it("makes a normal component with no options present", done => {
+      stubProject(type);
+      generate(type, "mycomponent", {}, () => {
+        const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
+        expect(contents).to.contain("export default class Mycomponent extends Component");
+        done();
+      });
+    })
+  });
+
   describe("when containers are generated", function () {
     it("does not generate a container if it already exists", done => {
       const type = "container";
