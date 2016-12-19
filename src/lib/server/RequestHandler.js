@@ -1,4 +1,3 @@
-/*global webpackIsomorphicTools*/
 import path from "path";
 import _SSRCaching from "electrode-react-ssr-caching";
 import React from "react";
@@ -120,7 +119,7 @@ export function enableComponentCaching (componentCacheConfig, isProduction, SSRC
 
 let _Entry;
 
-export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, staticBuild=false, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
+export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, staticBuild=false, getHead=_getHead, Entry=_Entry) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;

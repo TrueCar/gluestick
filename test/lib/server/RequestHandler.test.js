@@ -327,9 +327,6 @@ describe("lib/server/RequestHandler", () => {
           );
         }
       };
-      webpackIsomorphicTools = {
-        assets: stub()
-      };
     });
 
     context("without a custom render method", () => {
@@ -338,8 +335,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, staticBuild, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, config, envVariables, staticBuild, getHead, Entry);
         });
         it("should return a responseString", () => {
           expect(result.responseString).to.not.be.undefined;
@@ -359,8 +355,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, staticBuild, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, config, envVariables, staticBuild, getHead, Entry);
         });
 
         it("should return a responseString", () => {
@@ -396,8 +391,7 @@ describe("lib/server/RequestHandler", () => {
 
       it("should pass bodyContent to html prop", async () => {
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
-          webpackIsomorphicTools);
+          renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry);
         expect(result.rootElement.props.body.props.html).to.equal("<div>That body!</div>");
       });
 
@@ -405,8 +399,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry);
         });
 
         it("should pass headContent to getHead", () => {
@@ -418,8 +411,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry);
         });
 
         it("should pass headContent to getHead", async () => {
@@ -433,8 +425,7 @@ describe("lib/server/RequestHandler", () => {
       beforeEach(async () => {
         staticBuild = true;
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, config, envVariables, staticBuild, getHead, Entry,
-          webpackIsomorphicTools);
+          renderProps, config, envVariables, staticBuild, getHead, Entry);
       });
 
       it("should return an empty body", () => {
@@ -591,4 +582,3 @@ describe("lib/server/RequestHandler", () => {
     });
   });
 });
-
