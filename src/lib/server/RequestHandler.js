@@ -21,16 +21,6 @@ import { getLogger } from "./logger";
 
 const _logger = getLogger();
 
-let _Entry;
-/**
- * We don't want to load Entry until the test runs when we are testing
- * because the tests move around in folders and it wont exist when this file
- * is initialized but instead when the method is run.
- */
-if (process.env.NODE_ENV !== "test") {
-  _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-}
-
 const HTML5 = "<!DOCTYPE html>";
 
 const DEFAULT_CACHE_TTL = 5 * 1000;
@@ -127,6 +117,8 @@ export function enableComponentCaching (componentCacheConfig, isProduction, SSRC
     SSRCaching.setCachingConfig(componentCacheConfig);
   }
 }
+
+let _Entry;
 
 export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, staticBuild=false, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
   // this should only happen in tests
