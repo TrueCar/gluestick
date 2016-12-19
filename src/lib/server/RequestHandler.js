@@ -182,7 +182,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
     />
   );
 
-  const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
+  const head = isEmail ? headContent : getHead(config, fileName, headContent);
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -237,4 +237,3 @@ export function getEmailAttributes (currentRoute) {
   const docType = currentRoute.docType || HTML5;
   return { email, docType };
 }
-
