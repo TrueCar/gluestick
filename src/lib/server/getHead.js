@@ -14,7 +14,7 @@ export default (config, entryPoint, headContent, assets) => {
   const assetPath = getAssetPath(config);
 
   if (isProduction) {
-    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={assets.styles.main} />);
+    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={getAssetPathForFile(`${entryPoint}`, "styles")} />);
   }
 
   tags.push(
@@ -22,8 +22,8 @@ export default (config, entryPoint, headContent, assets) => {
   );
 
   const scriptPaths = {
-    vendor: assets.javascript.vendor,
-    entryPoint: assets.javascript.main
+    vendor: getAssetPathForFile("vendor", "javascript"),
+    entryPoint: getAssetPathForFile(entryPoint, "javascript")
   };
 
   tags.push(headContent);
