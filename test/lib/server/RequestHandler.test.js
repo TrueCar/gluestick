@@ -428,8 +428,16 @@ describe("lib/server/RequestHandler", () => {
           renderProps, config, envVariables, staticBuild, getHead, Entry);
       });
 
-      it("should return an empty body", () => {
+      it("should pass blank html to body", () => {
         expect(result.rootElement.props.body.props.html).to.equal("");
+      });
+
+      it("should pass isEmail false to body", () => {
+        expect(result.rootElement.props.body.props.isEmail).to.equal.false;
+      });
+
+      it("should pass empty initialState to body", () => {
+        expect(result.rootElement.props.body.props.initialState).to.be.empty;
       });
     });
   });
