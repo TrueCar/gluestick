@@ -26,7 +26,6 @@ export default async function () {
     .server(process.cwd(), async () => {
       try {
         const envVars = detectEnvironmentVariables(path.join(process.cwd(), "src", "config", "application.js"));
-        const Index = require(path.join(process.cwd(), "Index.js")).default;
         const renderRequirements = getRenderRequirementsFromEntrypoints(mockReq, mockRes, mockConfig);
         const output = await prepareOutput(mockReq, renderRequirements, {}, {}, envVars, true);
         fs.writeFileSync(path.join(process.cwd(), "build", "index.html"), output.responseString);

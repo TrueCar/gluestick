@@ -285,7 +285,7 @@ describe("lib/server/RequestHandler", () => {
 
   describe("prepareOutput", () => {
     let req, renderRequirements, renderProps, config, envVariables, staticBuild, getHead,
-        Entry, webpackIsomorphicTools;
+        Entry;
 
     class Index extends React.Component {
       render () {
