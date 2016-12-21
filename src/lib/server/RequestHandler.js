@@ -136,14 +136,11 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
 
   const routerContext = <RouterContext {...renderProps} />;
 
-  const radiumConfig = { userAgent: req.headers["user-agent"] };
-
   const main = (
     <Entry
       store={store}
       routerContext={routerContext}
       config={config}
-      radiumConfig={radiumConfig}
       getRoutes={getRoutes}
     />
   );

@@ -95,8 +95,8 @@ will be executed through the test runner.
 
 ## Styles
 The preferred way to style components in the GlueStick environment is to use
-[Radium](https://github.com/FormidableLabs/radium), but we also actively use 
-and support css and sass.
+[Aphrodite](https://github.com/Khan/aphrodite), but we also actively use and
+support css and sass.
 
 #### CSS and SASS
 If you want to include a base stylesheet (like bootstrap css), you can import
