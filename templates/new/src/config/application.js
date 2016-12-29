@@ -11,12 +11,6 @@ const headContent = {
 
 const config = {
   development: {
-    server: { // gluestick/start-client.js
-      protocol: "http",
-      host: "0.0.0.0",
-      port: 8888
-    },
-    assetPort: 8880,
     assetPath: "/assets",
     head: headContent,
     logger: {

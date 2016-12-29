@@ -14,11 +14,10 @@ const LOGGER = getLogger();
 
 const APP_ROOT = process.cwd();
 const APP_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.js");
+const APP_SERVER_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.server.js");
 const ASSET_PATH = getAssetPath();
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-
-const appConfig = require(APP_CONFIG_PATH).default;
 
 // @TODO Make this value a function rather than a global, or better yet, get it passed in
 const PUBLIC_PATH = ASSET_PATH;
@@ -31,8 +30,9 @@ module.exports = function () {
 
   const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
 
-  const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appConfig.server);
-  const assetPort = appConfig.assetPort || 8880;
+  const appServerConfig = require(APP_SERVER_CONFIG_PATH).default;
+  const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appServerConfig);
+  const assetPort = appServerConfig.assetPort || 8880;
 
   if (!IS_PRODUCTION) {
     const app = express();
