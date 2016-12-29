@@ -73,6 +73,12 @@ export default function buildWebpackEntries (isProduction) {
     // Include hot middleware in development mode only
     if (!isProduction) {
       output[fileName].unshift("webpack-hot-middleware/client");
+
+      // eventsource-polyfill added here because it needs to go before
+      // webpack-hot-middleware pointing to local node_modules so it pulls from
+      // gluestick project and not from the app. This is needed to support HMR in
+      // browsers like IE11
+      output[fileName].unshift(path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill"));
     }
   }
 
