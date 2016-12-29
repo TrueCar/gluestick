@@ -17,7 +17,8 @@ const APP_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.js");
 const ASSET_PATH = getAssetPath();
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-const PORT = 8888;
+
+const appConfig = require(APP_CONFIG_PATH).default;
 
 // @TODO Make this value a function rather than a global, or better yet, get it passed in
 const PUBLIC_PATH = ASSET_PATH;
@@ -30,6 +31,9 @@ module.exports = function () {
 
   const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
 
+  const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appConfig.server);
+  const assetPort = appConfig.assetPort || 8880;
+
   if (!IS_PRODUCTION) {
     const app = express();
     app.use(require("webpack-dev-middleware")(compiler, {
@@ -41,7 +45,7 @@ module.exports = function () {
     // Proxy http requests from server to client in development mode
     app.use(proxy({
       changeOrigin: false,
-      target: "http://localhost:8880",
+      target: `${server.protocol}://${server.host}:${assetPort}`,
       logLevel: LOGGER.level,
       logProvider: () => {
         return LOGGER;
@@ -52,13 +56,13 @@ module.exports = function () {
       }
     }));
 
-    app.listen(PORT, "localhost", function (error) {
+    app.listen(server.port, server.host, function (error) {
       if (error) {
         LOGGER.error(error);
         return;
       }
 
-      LOGGER.info(`Server running on http://localhost:${PORT}`);
+      LOGGER.info(`Server running on ${server.protocol}://${server.host}:${server.port}`);
     });
   }
   else {
