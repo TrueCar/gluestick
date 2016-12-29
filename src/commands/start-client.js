@@ -31,7 +31,8 @@ module.exports = function () {
 
   const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
 
-  const server = appConfig.server;
+  const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appConfig.server);
+  const assetPort = appConfig.assetPort || 8880;
 
   if (!IS_PRODUCTION) {
     const app = express();
@@ -44,7 +45,7 @@ module.exports = function () {
     // Proxy http requests from server to client in development mode
     app.use(proxy({
       changeOrigin: false,
-      target: `${server.protocol}://${server.host}:${appConfig.assetPort}`,
+      target: `${server.protocol}://${server.host}:${assetPort}`,
       logLevel: LOGGER.level,
       logProvider: () => {
         return LOGGER;
