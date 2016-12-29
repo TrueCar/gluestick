@@ -117,13 +117,16 @@ describe("src/lib/buildWebpackEntries", () => {
       fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
       const output = buildWebpackEntries();
       const clientPath = path.join(__dirname, "..", "..", "src", "entrypoints", "client.js");
+      const eventSourcePolyfillPath = path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill");
       const expectedResult = {
         "main": [
+          eventSourcePolyfillPath,
           "webpack-hot-middleware/client",
           clientPath,
           path.join(cwd, "/src/config/.entries/main-[chunkhash].js")
         ],
         "used": [
+          eventSourcePolyfillPath,
           "webpack-hot-middleware/client",
           clientPath,
           path.join(cwd, "/src/config/.entries/used-[chunkhash].js")
