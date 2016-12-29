@@ -7,4 +7,4 @@ FROM truecar/gluestick:0.10.16
 ADD . /app
 
 RUN yarn
-RUN ASSET_URL=__GS_ASSET_URL__ gluestick build
+RUN gluestick build
