@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 import inquirer from "inquirer";
+import semver from "semver";
 import { getLogger } from "../lib/server/logger";
 import { install as installDeps, cleanSync as cleanDeps } from "../lib/npmDependencies";
 const logger = getLogger();
@@ -36,6 +37,10 @@ let _projectPackageData;
  *
  * @return {Promise}
  */
+function isValidVersion (version, requiredVersion) {
+  return semver.satisfies(version, requiredVersion) || semver.gte(version, requiredVersion);
+}
+
 export default function fixVersionMismatch () {
   return new Promise((resolve) => {
     const projectPackageData = loadProjectPackage();
@@ -47,7 +52,7 @@ export default function fixVersionMismatch () {
     // Compare the new project dependencies, mark any module that is missing in
     // the generated project's dependencies
     for(const key in newProjectDependencies) {
-      if (newProjectDependencies[key] !== projectDependencies[key]) {
+      if (!isValidVersion(projectDependencies[key], newProjectDependencies[key])) {
         mismatchedModules[key] = { required: newProjectDependencies[key], project: projectDependencies[key] || "missing", type: "dependencies" };
       }
     }
@@ -55,7 +60,7 @@ export default function fixVersionMismatch () {
     // Compare the new project development dependencies, mark any module that
     // is missing in the generated project's development dependencies
     for(const key in newProjectDevDependencies) {
-      if (newProjectDevDependencies[key] !== projectDevDependencies[key]) {
+      if (!isValidVersion(projectDevDependencies[key], newProjectDevDependencies[key])) {
         mismatchedModules[key] = { required: newProjectDevDependencies[key], project: projectDevDependencies[key] || "missing", type: "devDependencies" };
       }
     }
