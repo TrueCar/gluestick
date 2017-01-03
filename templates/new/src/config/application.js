@@ -11,7 +11,7 @@ const headContent = {
 
 const config = {
   development: {
-    assetPath: "http://localhost:8888/assets",
+    assetPath: "/assets",
     head: headContent,
     logger: {
       pretty: true,
@@ -20,7 +20,7 @@ const config = {
   },
   production: {
     // This should be a CDN in development
-    assetPath: process.env.ASSET_URL || "http://localhost:8888/assets",
+    assetPath: process.env.ASSET_URL || "/assets",
     head: headContent,
     logger: {
       pretty: false,
