@@ -38,6 +38,10 @@ let _projectPackageData;
  * @return {Promise}
  */
 function isValidVersion (version, requiredVersion) {
+  if (!version) {
+    return false;
+  }
+
   return semver.satisfies(version, requiredVersion) || semver.gte(version, requiredVersion);
 }
 
