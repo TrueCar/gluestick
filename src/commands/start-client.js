@@ -8,13 +8,13 @@ const fs = require("fs-extra");
 import build from "./build";
 import getWebpackConfig from "../config/getWebpackClientConfig";
 import getAssetPath from "../lib/getAssetPath";
+import loadServerConfig from "../lib/server/loadServerConfig";
 
 import { getLogger } from "../lib/server/logger";
 const LOGGER = getLogger();
 
 const APP_ROOT = process.cwd();
 const APP_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.js");
-const APP_SERVER_CONFIG_PATH = path.join(APP_ROOT, "src", "config", "application.server.js");
 const ASSET_PATH = getAssetPath();
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -30,7 +30,7 @@ module.exports = function () {
 
   const compiler = webpack(getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION));
 
-  const appServerConfig = require(APP_SERVER_CONFIG_PATH).default;
+  const appServerConfig = loadServerConfig();
   const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appServerConfig);
   const assetPort = appServerConfig.assetPort || 8880;
 
