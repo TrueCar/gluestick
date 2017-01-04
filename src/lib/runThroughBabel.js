@@ -1,6 +1,5 @@
 const configVars = require("../config/vars");
 
-require("babel-polyfill");
 require("babel-core/register")({
   presets: [
     "react",
@@ -8,6 +7,7 @@ require("babel-core/register")({
     "stage-0"
   ],
   plugins: [
+    "transform-runtime",
     "transform-decorators-legacy"
   ],
   ignore: function(filename) {

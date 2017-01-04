@@ -15,7 +15,7 @@ const addPath = require("app-module-path").addPath;
 addPath(CWD + (IS_WINDOWS ? "'" : "/") + "assets");
 addPath(CWD + (IS_WINDOWS ? "'" : "/") + "src");
 
-require("babel-register");
+require("./runThroughBabel");
 
 // Set up jsdom for component rendering through Enzyme.
 // This code is directly from Enzyme's docs.
