@@ -14,6 +14,14 @@ const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 // don't have to do file I/O more than once
 let _projectPackageData;
 
+// Used for testing purposes so we can override methods used in fixVersionMismatch
+export const FIX_VERSION_MISMATCH_OVERRIDES = {
+  loadProjectPackage,
+  loadCLIPackage,
+  promptModulesUpdate,
+  rejectOnFailure: false
+};
+
 /**
  * Open the package.json file in both the project as well as the one used by
  * this command line interface, then compare the versions for shared modules.
@@ -37,16 +45,8 @@ let _projectPackageData;
  *
  * @return {Promise}
  */
-function isValidVersion (version, requiredVersion) {
-  if (!version) {
-    return false;
-  }
-
-  return semver.satisfies(version, requiredVersion) || semver.gte(version, requiredVersion);
-}
-
-export default function fixVersionMismatch () {
-  return new Promise((resolve) => {
+export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage, promptModulesUpdate, rejectOnFailure} = FIX_VERSION_MISMATCH_OVERRIDES) {
+  return new Promise((resolve, reject) => {
     const projectPackageData = loadProjectPackage();
     const { dependencies: projectDependencies, devDependencies: projectDevDependencies } = projectPackageData;
     const { dependencies: cliDependencies } = loadCLIPackage();
@@ -80,6 +80,11 @@ export default function fixVersionMismatch () {
     // prompt for updates if we have any, otherwise we are done
     if (Object.keys(mismatchedModules).length > 0) {
       promptModulesUpdate(mismatchedModules, resolve);
+
+      // Adding for testing purposes
+      if (rejectOnFailure) {
+        reject();
+      }
     }
     else {
       resolve();
@@ -192,3 +197,20 @@ function performModulesUpdate (mismatchedModules, done) {
     done();
   });
 }
+
+/**
+ * Determine a version meets or exceeds a requirement.
+ *
+ * @param {String} version the version to test
+ * @param {String} requiredVersion the version to test against
+ *
+ * @return {Boolean}
+ */
+export function isValidVersion (version, requiredVersion) {
+  if (!version) {
+    return false;
+  }
+
+  return semver.satisfies(version, requiredVersion) || semver.gte(version, requiredVersion);
+}
+
