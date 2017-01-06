@@ -37,6 +37,7 @@ module.exports = {
   additionalLoaders: [],
   additionalPreLoaders: [],
   additionalAliases: {},
+  postcss: [],
   plugins: [],
   vendor: []
 };

@@ -12,6 +12,7 @@ const {
   additionalPreLoaders,
   additionalExternals,
   additionalWebpackNodeConfig,
+  postcss,
   vendor,
   plugins
 } = getWebpackAdditions();
@@ -124,7 +125,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     resolve: {
       ...webpackSharedConfig.resolve
     },
-    postcss: getWebpackAdditions.postcss,
+    postcss,
     externals: {
       ...additionalExternals
     }
