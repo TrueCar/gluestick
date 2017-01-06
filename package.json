@@ -33,6 +33,7 @@
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "dependencies": {
     "app-module-path": "1.1.0",
+    "autoprefixer": "6.6.1",
     "axios": "0.12.0",
     "babel-cli": "6.10.1",
     "babel-core": "6.14.0",
@@ -92,6 +93,7 @@
     "oy-vey": "0.7.0",
     "pino": "2.8.3",
     "pm2": "2.0.12",
+    "postcss-loader": "1.2.1",
     "radium": "0.17.1",
     "react": "15.1.0",
     "react-addons-test-utils": "15.1.0",

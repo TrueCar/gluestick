@@ -60,7 +60,7 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
+      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!postcss!sass"
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("json"),

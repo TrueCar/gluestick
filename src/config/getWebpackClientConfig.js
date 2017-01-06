@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const getAssetPath = require("../lib/getAssetPath").default;
+import Autoprefixer from "autoprefixer";
 
 const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
 const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
@@ -124,6 +125,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     resolve: {
       ...webpackSharedConfig.resolve
     },
+    postcss: [Autoprefixer({ browsers: "> 0%" })],
     externals: {
       ...additionalExternals
     }
