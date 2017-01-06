@@ -56,6 +56,7 @@ export default function (isomorphic=false) {
     additionalLoaders: [],
     additionalPreLoaders: [],
     additionalWebpackNodeConfig: {},
+    postcss: [],
     vendor: [],
     entryPoints: {},
     plugins: []
@@ -73,6 +74,7 @@ export default function (isomorphic=false) {
       additionalLoaders,
       additionalPreLoaders,
       additionalWebpackNodeConfig,
+      postcss,
       vendor,
       plugins,
       entryPoints
@@ -83,6 +85,7 @@ export default function (isomorphic=false) {
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
       additionalWebpackNodeConfig: additionalWebpackNodeConfig || {},
+      postcss: postcss || [],
       vendor: vendor || [],
       plugins: plugins || [],
       entryPoints: entryPoints || {}
