@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 import inquirer from "inquirer";
+import semver from "semver";
 import { getLogger } from "../lib/server/logger";
 import { install as installDeps, cleanSync as cleanDeps } from "../lib/npmDependencies";
 const logger = getLogger();
@@ -12,6 +13,14 @@ const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
 // When we load the project package file, we will cache the result so that we
 // don't have to do file I/O more than once
 let _projectPackageData;
+
+// Used for testing purposes so we can override methods used in fixVersionMismatch
+export const FIX_VERSION_MISMATCH_OVERRIDES = {
+  loadProjectPackage,
+  loadCLIPackage,
+  promptModulesUpdate,
+  rejectOnFailure: false
+};
 
 /**
  * Open the package.json file in both the project as well as the one used by
@@ -36,8 +45,8 @@ let _projectPackageData;
  *
  * @return {Promise}
  */
-export default function fixVersionMismatch () {
-  return new Promise((resolve) => {
+export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage, promptModulesUpdate, rejectOnFailure} = FIX_VERSION_MISMATCH_OVERRIDES) {
+  return new Promise((resolve, reject) => {
     const projectPackageData = loadProjectPackage();
     const { dependencies: projectDependencies, devDependencies: projectDevDependencies } = projectPackageData;
     const { dependencies: cliDependencies } = loadCLIPackage();
@@ -47,7 +56,7 @@ export default function fixVersionMismatch () {
     // Compare the new project dependencies, mark any module that is missing in
     // the generated project's dependencies
     for(const key in newProjectDependencies) {
-      if (newProjectDependencies[key] !== projectDependencies[key]) {
+      if (!isValidVersion(projectDependencies[key], newProjectDependencies[key])) {
         mismatchedModules[key] = { required: newProjectDependencies[key], project: projectDependencies[key] || "missing", type: "dependencies" };
       }
     }
@@ -55,7 +64,7 @@ export default function fixVersionMismatch () {
     // Compare the new project development dependencies, mark any module that
     // is missing in the generated project's development dependencies
     for(const key in newProjectDevDependencies) {
-      if (newProjectDevDependencies[key] !== projectDevDependencies[key]) {
+      if (!isValidVersion(projectDevDependencies[key], newProjectDevDependencies[key])) {
         mismatchedModules[key] = { required: newProjectDevDependencies[key], project: projectDevDependencies[key] || "missing", type: "devDependencies" };
       }
     }
@@ -71,6 +80,11 @@ export default function fixVersionMismatch () {
     // prompt for updates if we have any, otherwise we are done
     if (Object.keys(mismatchedModules).length > 0) {
       promptModulesUpdate(mismatchedModules, resolve);
+
+      // Adding for testing purposes
+      if (rejectOnFailure) {
+        reject();
+      }
     }
     else {
       resolve();
@@ -183,3 +197,20 @@ function performModulesUpdate (mismatchedModules, done) {
     done();
   });
 }
+
+/**
+ * Determine a version meets or exceeds a requirement.
+ *
+ * @param {String} version the version to test
+ * @param {String} requiredVersion the version to test against
+ *
+ * @return {Boolean}
+ */
+export function isValidVersion (version, requiredVersion) {
+  if (!version) {
+    return false;
+  }
+
+  return semver.satisfies(version, requiredVersion) || semver.gte(version, requiredVersion);
+}
+
