@@ -97,7 +97,7 @@ describe("autoUpgrade/updatePackage", () => {
   });
 
   describe("isValidVersion", () => {
-    it("should return true when version is greater than or equal equiredVersion", () => {
+    it("should return true when version is greater than or equal requiredVersion", () => {
       expect(isValidVersion("10.0.0", "1.0.0")).to.be.true;
       expect(isValidVersion("0.0.2", "0.0.1")).to.be.true;
       expect(isValidVersion("2.1.1", "2.1.1")).to.be.true;
