@@ -1,6 +1,7 @@
-const babel = require("babel-core");
+const babylon = require("babylon");
 const traverse = require("babel-traverse").default;
 const logger = require("./cliLogger");
+const fs = require("fs");
 
 /**
  * Read the contents of a file, convert it to an abstract syntax tree and
@@ -10,7 +11,13 @@ const logger = require("./cliLogger");
  * @param {String} pathToFile absolute path to the file to analyze
  */
 module.exports = function detectEnvironmentVariables (pathToFile) {
-  const ast = babel.transformFileSync(pathToFile).ast;
+  const code = fs.readFileSync(pathToFile, {encoding: "utf8"});
+  const ast = babylon.parse(code, {
+    sourceType: "module",
+    plugins: [
+      "objectRestSpread"
+    ]
+  });
   const environmentVariables = new Set();
   traverse(ast.program, {
     enter: function (path) {
