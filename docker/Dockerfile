@@ -71,7 +71,6 @@ RUN apt-get update && \
 
 RUN apt-get update && apt-get install dnsmasq -y
 
-ADD docker/resolv.conf /etc/resolv.conf.new
 ADD docker/dnsmasq.conf /etc/dnsmasq.conf
 ADD docker/start /app/start
 RUN chmod +x /app/start
