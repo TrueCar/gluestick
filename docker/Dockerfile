@@ -51,6 +51,7 @@ ENV BUILD_PACKAGES "autoconf \
                     openssh-client \
                     patch \
                     procps \
+                    python \
                     subversion \
                     xz-utils \
                     zlib1g-dev"
@@ -65,7 +66,6 @@ RUN apt-get update && \
     apt-get install -y yarn=0.16.1-1  && \
     yarn global add gluestick@$GLUESTICK_VERSION && \
     yarn && \
-    apt-get remove -y $BUILD_PACKAGES && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
