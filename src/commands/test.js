@@ -13,7 +13,6 @@ const MOCHA_PATH = path.join(NODE_MODULES_PATH, ".bin", "mocha");
 const MOCHA_COVERAGE_PATH = path.join(NODE_MODULES_PATH, ".bin", "_mocha");
 const MOCHA_TEST_PATH = `${CWD}/test/**/*.test.js`;
 const MOCHA_HELPER_PATH = path.join(__dirname, "..", "lib", "testHelperMocha.js");
-const BABEL_NODE_PATH = path.join(NODE_MODULES_PATH, ".bin", "babel-node");
 const BABEL_ISTANBUL_PATH = path.join(NODE_MODULES_PATH, ".bin", "babel-istanbul");
 const INSPECTOR_PATH = path.join(NODE_MODULES_PATH, ".bin", "node-inspector");
 const MOCHA_ENV = { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }};
@@ -69,7 +68,7 @@ function useMocha(options) {
       }
     ],
     coverage: [
-      BABEL_NODE_PATH,
+      "node",
       [
         BABEL_ISTANBUL_PATH,
         "cover",
@@ -90,7 +89,7 @@ function useMocha(options) {
       }
     ],
     single: [
-      BABEL_NODE_PATH,
+      "node",
       [
         BABEL_ISTANBUL_PATH,
         "cover",
