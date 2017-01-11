@@ -23,8 +23,7 @@ before_install:
 - export PATH="/usr/share/yarn/bin:$PATH"
 
 cache:
-  directories:
-    - $HOME/.yarn-cache
+  yarn: false
 
 before_deploy:
 - sudo apt-get update -qq
