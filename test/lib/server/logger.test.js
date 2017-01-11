@@ -135,5 +135,21 @@ describe("lib/server/logger", () => {
       });
       expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: false});
     });
+
+    it("excludes null options", () => {
+      const params = JSON.stringify({
+        logLevel: null,
+        logPretty: false,
+      });
+      expect(parseLogOptions(params)).to.deep.equal({pretty: false});
+    });
+
+    it("excludes undefined options", () => {
+      const params = JSON.stringify({
+        logLevel: undefined, // eslint-disable-line no-undefined
+        logPretty: false,
+      });
+      expect(parseLogOptions(params)).to.deep.equal({pretty: false});
+    });
   });
 });
