@@ -26,7 +26,6 @@ cache:
   yarn: false
 
 before_deploy:
-- sudo apt-get update -qq
 - sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
