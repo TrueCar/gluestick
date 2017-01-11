@@ -20,7 +20,7 @@ export function parseLogOptions(options) {
 
   Object.entries(CLI_PARAM_MAP).forEach(e => {
     const [key, value] = e;
-    if (object.hasOwnProperty(key)) {
+    if (object.hasOwnProperty(key) && object[key] !== null) {
       result[value] = object[key];
     }
   });
