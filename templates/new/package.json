@@ -28,6 +28,7 @@
     "json-loader": "0.5.4",
     "node-sass": "3.7.0",
     "oy-vey": "0.7.0",
+    "postcss-loader": "1.2.1",
     "radium": "0.17.1",
     "react": "15.1.0",
     "react-dom": "15.1.0",
