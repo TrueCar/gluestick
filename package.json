@@ -110,6 +110,7 @@
     "gluestick-shared": "0.4.20",
     "oy-vey": "0.7.0",
     "react": "15.1.0",
+    "react-addons-test-utils": "15.0.2",
     "react-dom": "15.1.0",
     "react-router": "2.4.1",
     "stream-to-string": "1.1.0",
