@@ -23,7 +23,8 @@ before_install:
 - export PATH="/usr/share/yarn/bin:$PATH"
 
 cache:
-  yarn: false
+  directories:
+    - $HOME/.yarn-cache
 
 before_deploy:
 #- sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
