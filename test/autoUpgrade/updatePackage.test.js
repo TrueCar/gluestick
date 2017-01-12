@@ -114,6 +114,20 @@ describe("autoUpgrade/updatePackage", () => {
       expect(isValidVersion("0.0.2", "0.0.3")).to.be.false;
       expect(isValidVersion("2.1.1", "2.1.2")).to.be.false;
     });
+
+    it("should return true when version is valid but starts with carrot or similar", () => {
+      expect(isValidVersion("~10.0.0", "8.0.0")).to.be.true;
+      expect(isValidVersion(">=10.0.0", "8.0.0")).to.be.true;
+      expect(isValidVersion(">0.0.2", "0.0.1")).to.be.true;
+      expect(isValidVersion("^2.1.1", "2.1.1")).to.be.true;
+    });
+
+    it("should return false when version starts with carrot or similar but is still too far behind", () => {
+      expect(isValidVersion("~10.0.0", "11.0.0")).to.be.false;
+      expect(isValidVersion(">=10.0.0", "11.0.0")).to.be.false;
+      expect(isValidVersion(">0.0.2", "0.0.3")).to.be.false;
+      expect(isValidVersion("^2.1.1", "2.5.1")).to.be.false;
+    });
   });
 });
 
