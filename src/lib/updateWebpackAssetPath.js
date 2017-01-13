@@ -1,4 +1,13 @@
-import { cp, ls, sed, rm } from "shelljs";
+/**
+ * @NOTE: Don't use shelljs.sed unless it is fixed:
+ * Using `replaceInFile` instead of shelljs.sed because shelljs.sed reads files
+ * into an array, then runs replace over each line before writing back to the
+ * file. This was a problem when trying to read binary files like images.
+ * `replace-in-file` has better code that doesn't try to split the file into an
+ * array, then join it back and it wont change the file if nothing is changed.
+ */
+import { cp, rm } from "shelljs";
+import replaceInFile from "replace-in-file";
 const fs = require("fs-extra");
 const path = require("path");
 
@@ -33,7 +42,11 @@ module.exports = function (assetUrl=process.env.ASSET_URL) {
   // swap webpack assets with original before our replace
   rm(webpackAssetsPath);
   cp(webpackAssetsPathOriginalCopy, webpackAssetsPath);
-  sed("-i", PLACEHOLDER, assetUrl, webpackAssetsPath);
+  replaceInFile.sync({
+    files: [webpackAssetsPath],
+    replace: PLACEHOLDER,
+    with: assetUrl
+  });
 
   // swap build folder with original before our replace
   rm("-R", buildPath);
@@ -41,7 +54,10 @@ module.exports = function (assetUrl=process.env.ASSET_URL) {
 
   // grab ALL of the files in the build folder (filter exists because of
   // awkward `ls` output
-  const buildFiles = ls("build/**").filter(f => f.substr(0, 6) === "build/");
-  sed("-i", PLACEHOLDER, assetUrl, buildFiles);
+  replaceInFile.sync({
+    files: [path.join(process.cwd(), "build/**")],
+    replace: PLACEHOLDER,
+    with: assetUrl
+  });
 };
 

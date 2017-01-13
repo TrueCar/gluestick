@@ -21,12 +21,14 @@ const ASSETS_STRING = JSON.stringify({
 });
 
 describe("lib/updateWebpackAssetPath", () => {
-  let originalCwd, tmpDir;
+  let originalCwd, tmpDir, buildFolder;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
     process.chdir(tmpDir);
+    buildFolder = path.join(process.cwd(), "build");
+    mkdir(buildFolder);
   });
 
   afterEach(done => {
@@ -68,8 +70,6 @@ describe("lib/updateWebpackAssetPath", () => {
   });
 
   it("should replace `__GS_ASSET_URL__` in the build folder", () => {
-    const buildFolder = path.join(process.cwd(), "build");
-    mkdir(buildFolder);
     const filePath = path.join(buildFolder, "test.css");
 
     fs.writeFileSync(path.join(process.cwd(), "webpack-assets.json"), ASSETS_STRING);
