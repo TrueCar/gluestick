@@ -51,7 +51,7 @@ ENV BUILD_PACKAGES "autoconf \
                     openssh-client \
                     patch \
                     procps \
-                    python \
+                    python-dev \
                     subversion \
                     xz-utils \
                     zlib1g-dev"
