@@ -103,6 +103,7 @@
   },
   "peerDependencies": {},
   "devDependencies": {
+    "axios": "0.12.0",
     "babel-eslint": "6.0.4",
     "electrode-react-ssr-caching": "0.1.5",
     "enzyme": "2.7.0",
