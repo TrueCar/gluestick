@@ -114,6 +114,7 @@
     "react-addons-test-utils": "15.4.2",
     "react-dom": "15.4.2",
     "react-router": "3.0.1",
+    "react-redux": "5.0.2",
     "stream-to-string": "1.1.0",
     "temp": "0.8.3"
   }
