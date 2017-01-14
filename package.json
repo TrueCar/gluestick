@@ -108,7 +108,7 @@
     "enzyme": "2.7.0",
     "eslint": "3.3.1",
     "eslint-plugin-react": "6.1.1",
-    "gluestick-shared": "0.4.20",
+    "gluestick-shared": "0.4.21",
     "oy-vey": "0.7.0",
     "react": "15.4.2",
     "react-addons-test-utils": "15.4.2",
