@@ -1,6 +1,6 @@
 {
   "name": "gluestick-shared",
-  "version": "0.4.20",
+  "version": "0.4.21",
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
@@ -23,19 +23,13 @@
   },
   "homepage": "https://github.com/TrueCar/gluestick-shared#readme",
   "dependencies": {
-    "axios": "0.12.0",
-    "radium": "0.17.1",
-    "react": "15.1.0",
-    "react-dom": "15.1.0",
-    "react-redux": "4.4.5",
-    "react-router": "2.4.1",
     "react-router-scroll": "0.3.2",
     "react-side-effect": "1.0.2",
-    "redux": "3.5.2",
     "redux-immutable-state-invariant": "1.2.2",
     "redux-thunk": "2.0.1"
   },
   "devDependencies": {
+    "axios": "0.12.0",
     "babel-cli": "^6.8.0",
     "babel-loader": "6.2.4",
     "babel-polyfill": "^6.8.0",
@@ -44,6 +38,12 @@
     "babel-preset-stage-0": "6.5.0",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "radium": ">=0.17.1",
+    "react": ">=15.1.0",
+    "react-dom": ">=15.1.0",
+    "react-redux": ">=4.4.5",
+    "react-router": ">=2.4.1",
+    "redux": ">=3.5.2",
     "rimraf": "^2.5.0",
     "sinon": "^1.17.4"
   }
