@@ -233,6 +233,7 @@ async function startAll(options) {
   }
   catch (e) {
     logger.error(`During auto upgrade: ${e}`);
+    logger.debug(e.stack);
     process.exit();
   }
 
