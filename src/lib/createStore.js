@@ -20,11 +20,9 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
   // When `customMiddleware` is of type `function`, pass it a shallow
   // copy of the current array of `middlewares` and expect a new value
   // in return. Fallback to default behaviour.
-  if (typeof customMiddleware === 'function') {
-    middleware = customMiddleware([...middleware]);
-  } else {
-    middleware.concat(customMiddleware);
-  }
+  middleware = typeof customMiddleware === 'function'
+    ? customMiddleware([...middleware])
+    : middleware.concat(customMiddleware);
 
   const composeArgs = [
     applyMiddleware.apply(this, middleware),
