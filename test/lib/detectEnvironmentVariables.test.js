@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
@@ -32,7 +31,7 @@ describe("src/lib/detectEnvironmentVariables", () => {
     };`;
     const filePath = path.join(cwd, "config.js");
     fs.writeFileSync(filePath, data);
-    expect(detectEnvironmentVariables(filePath)).to.deep.equal(["NODE_ENV", "FOO", "BAR"]);
+    expect(detectEnvironmentVariables(filePath)).toEqual(["NODE_ENV", "FOO", "BAR"]);
   });
 
   it("should not duplicate any process.env variables found in a file", () => {
@@ -49,6 +48,6 @@ describe("src/lib/detectEnvironmentVariables", () => {
     };`;
     const filePath = path.join(cwd, "config.js");
     fs.writeFileSync(filePath, data);
-    expect(detectEnvironmentVariables(filePath)).to.deep.equal(["NODE_ENV", "FOO", "BAR"]);
+    expect(detectEnvironmentVariables(filePath)).toEqual(["NODE_ENV", "FOO", "BAR"]);
   });
 });

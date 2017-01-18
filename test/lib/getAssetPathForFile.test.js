@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import getAssetPathForFile from "../../src/lib/getAssetPathForFile.js";
 
 describe("lib/getAssetPathForFile", () => {
@@ -19,18 +18,18 @@ describe("lib/getAssetPathForFile", () => {
 
   it("should return the asset path for a file listed in the javascript section", () => {
     const result = getAssetPathForFile("main", "javascript", WEBPACK_ASSETS);
-    expect(result).to.equal(WEBPACK_ASSETS.javascript.main);
+    expect(result).toEqual(WEBPACK_ASSETS.javascript.main);
   });
 
   it("should return the asset path for a file listed in the styles section", () => {
     const result = getAssetPathForFile("main", "styles", WEBPACK_ASSETS);
-    expect(result).to.equal(WEBPACK_ASSETS.styles.main);
+    expect(result).toEqual(WEBPACK_ASSETS.styles.main);
   });
 
   it("should return the asset path for a file listed in the assets section", () => {
     const img = "./assets/img/logo.png";
     const result = getAssetPathForFile(img, "assets", WEBPACK_ASSETS);
-    expect(result).to.equal(WEBPACK_ASSETS.assets[img]);
+    expect(result).toEqual(WEBPACK_ASSETS.assets[img]);
   });
 });
 

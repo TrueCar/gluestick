@@ -4,6 +4,18 @@ import sinon from "sinon";
 
 import streamResponse from "../../../src/lib/server/streamResponse";
 
+class MockReadable {
+  static pipe;
+  static push = sinon.spy();
+  static setEncoding = sinon.spy();
+  constructor () {
+    this.setEncoding = MockReadable.setEncoding;
+    this.push = MockReadable.push;
+    MockReadable.pipe = sinon.stub().returns(this);
+    this.pipe = MockReadable.pipe;
+  }
+}
+
 describe("test/lib/server/streamResponse", () => {
   const mockZlib = {
     createDeflate: sinon.stub().returns("deflate gate!"),
@@ -19,18 +31,6 @@ describe("test/lib/server/streamResponse", () => {
 
   const setEncodingSpy = sinon.spy();
   const pushSpy = sinon.spy();
-
-  class MockReadable {
-    static pipe;
-    static push = sinon.spy();
-    static setEncoding = sinon.spy();
-    constructor () {
-      this.setEncoding = MockReadable.setEncoding;
-      this.push = MockReadable.push;
-      MockReadable.pipe = sinon.stub().returns(this);
-      this.pipe = MockReadable.pipe;
-    }
-  }
 
   const mockResponse = {
     writeHead: sinon.spy()

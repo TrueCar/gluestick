@@ -14,7 +14,7 @@ describe("lib/server/serveAssets", () => {
     };
   });
 
-  context("when no asset configuration has been set", () => {
+  describe("when no asset configuration has been set", () => {
     it("should use the default configuration", () => {
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
       expect(mockStaticMiddleware.calledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options)).to.equal(true);
@@ -22,7 +22,7 @@ describe("lib/server/serveAssets", () => {
     });
   });
 
-  context("when asset configuration has been set", () => {
+  describe("when asset configuration has been set", () => {
     it("should merge custom options", () => {
       mockLoadServerConfig.returns({
         assets: {

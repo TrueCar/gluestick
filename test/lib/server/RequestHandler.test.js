@@ -35,7 +35,7 @@ describe("lib/server/RequestHandler", () => {
       streamResponse = spy();
     });
 
-    context("when a cached result exists", () => {
+    describe("when a cached result exists", () => {
       beforeEach(() => {
         mockCache = {
           get: stub().returns("Sup brah!")
@@ -59,7 +59,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when cached result does not exist", () => {
+    describe("when cached result does not exist", () => {
       beforeEach(() => {
         mockCache = {
           get: stub().returns(null)
@@ -100,7 +100,7 @@ describe("lib/server/RequestHandler", () => {
       };
     });
 
-    context("when a matching route (not a redirect) exists", () => {
+    describe("when a matching route (not a redirect) exists", () => {
       it("should return the renderProps", (done) => {
         RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
           expect(redirectLocation).to.be.null;
@@ -110,7 +110,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when a matching redirect exists", () => {
+    describe("when a matching redirect exists", () => {
       beforeEach(() => {
         req = {
           url: "a"
@@ -127,7 +127,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when no matching route exists", () => {
+    describe("when no matching route exists", () => {
       beforeEach(() => {
         req = {
           url: "zzzz"
@@ -219,13 +219,16 @@ describe("lib/server/RequestHandler", () => {
       currentRoute = {path: "abc"};
     });
 
-    context("when no redux state, not a 404 route and no route status override", () => {
-      it("should return 200", () => {
-        expect(RequestHandler.getStatusCode(state, currentRoute)).to.equal(200);
-      });
-    });
+    describe(
+      "when no redux state, not a 404 route and no route status override",
+      () => {
+        it("should return 200", () => {
+          expect(RequestHandler.getStatusCode(state, currentRoute)).to.equal(200);
+        });
+      }
+    );
 
-    context("when route status override", () => {
+    describe("when route status override", () => {
       beforeEach(() => {
         currentRoute = {path: "abc", status: 999};
       });
@@ -235,7 +238,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when status is set in redux state", () => {
+    describe("when status is set in redux state", () => {
       beforeEach(() => {
         state._gluestick = {
           statusCode: 201
@@ -247,7 +250,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when route name is the 404 constant name", () => {
+    describe("when route name is the 404 constant name", () => {
       beforeEach(() => {
         currentRoute = {path: "abc", name: ROUTE_NAME_404_NOT_FOUND};
       });
@@ -265,7 +268,7 @@ describe("lib/server/RequestHandler", () => {
         set: spy()
       };
     });
-    context("when the route specifies headers", () => {
+    describe("when the route specifies headers", () => {
       beforeEach(() => {
         currentRoute = {path: "abc", headers: {a: "hi"}};
       });
@@ -275,7 +278,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when the route does not specify headers", () => {
+    describe("when the route does not specify headers", () => {
       it("should not set any headers on the response object", () => {
         RequestHandler.setHeaders(res, currentRoute, getHeaders);
         expect(res.set.called).to.equal.false;
@@ -332,8 +335,8 @@ describe("lib/server/RequestHandler", () => {
       };
     });
 
-    context("without a custom render method", () => {
-      context("when the route is an email route", () => {
+    describe("without a custom render method", () => {
+      describe("when the route is an email route", () => {
         let result;
         beforeEach(async () => {
           renderProps.routes[0].email = true;
@@ -354,7 +357,7 @@ describe("lib/server/RequestHandler", () => {
         });
       });
 
-      context("when the route is not an email route", () => {
+      describe("when the route is not an email route", () => {
         let result;
         beforeEach(async () => {
           delete renderProps.routes[0].email;
@@ -378,7 +381,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("with a custom render method", () => {
+    describe("with a custom render method", () => {
       let updatedConfig, result, headJSX;
       beforeEach(async () => {
         headJSX = <meta name="hi" value="hola" />;
@@ -401,7 +404,7 @@ describe("lib/server/RequestHandler", () => {
         expect(result.rootElement.props.body.props.html).to.equal("<div>That body!</div>");
       });
 
-      context("not an email", () => {
+      describe("not an email", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
@@ -414,7 +417,7 @@ describe("lib/server/RequestHandler", () => {
         });
       });
 
-      context("an email", () => {
+      describe("an email", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
@@ -464,7 +467,7 @@ describe("lib/server/RequestHandler", () => {
       expect(streamArgs.docType).to.equal("<!FakeDoc>");
     });
 
-    context("when caching is enabled for the currentRoute", () => {
+    describe("when caching is enabled for the currentRoute", () => {
       beforeEach(() => {
         currentRoute.cache = true;
       });
@@ -480,7 +483,7 @@ describe("lib/server/RequestHandler", () => {
         }, 0);
       });
 
-      context("when cacheTTL is set on the current route", () => {
+      describe("when cacheTTL is set on the current route", () => {
         beforeEach(() => {
           currentRoute.cacheTTL = 5;
           RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
@@ -496,7 +499,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when caching is not enabled for the currentRoute", () => {
+    describe("when caching is not enabled for the currentRoute", () => {
       beforeEach(() => {
         currentRoute.cache = false;
       });
@@ -513,7 +516,7 @@ describe("lib/server/RequestHandler", () => {
   });
 
   describe("getEmailAttributes", () => {
-    context("when the route has an email attribute and no doctype", () => {
+    describe("when the route has an email attribute and no doctype", () => {
       it("should return the email attribute and the default HTML5 doctype", () => {
         const result = RequestHandler.getEmailAttributes({email: true});
         expect(result.email).to.equal.true;
@@ -521,7 +524,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when the route has an email and a doctype", () => {
+    describe("when the route has an email and a doctype", () => {
       it("should return the email attribute and custom docType", () => {
         const result = RequestHandler.getEmailAttributes({email: true, docType: "<!XML>"});
         expect(result.email).to.equal.true;
@@ -529,7 +532,7 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("when the route has no email or doctype", () => {
+    describe("when the route has no email or doctype", () => {
       it("should return the false for the email and the default HTML5 docType", () => {
         const result = RequestHandler.getEmailAttributes({});
         expect(result.email).to.equal.false;
@@ -547,22 +550,22 @@ describe("lib/server/RequestHandler", () => {
       };
     });
 
-    context("when it hasn't yet been called", () => {
-      context("outside of production", () => {
+    describe("when it hasn't yet been called", () => {
+      describe("outside of production", () => {
         it("shouldn't enable caching", () => {
           RequestHandler.enableComponentCaching({}, false, mockCache);
           expect(mockCache.enableCaching.called).to.equal(false);
         });
       });
 
-      context("when no config is set", () => {
+      describe("when no config is set", () => {
         it("should pass `false` to enableComponentCaching", () => {
           RequestHandler.enableComponentCaching(undefined, true, mockCache); // eslint-disable-line no-undefined
           expect(mockCache.enableCaching.calledWith(false)).to.equal(true);
         });
       });
 
-      context("when config is set", () => {
+      describe("when config is set", () => {
         it("should pass `true` to enableComponentCaching", () => {
           RequestHandler.enableComponentCaching({}, true, mockCache);
           expect(mockCache.enableCaching.calledWith(true)).to.equal(true);

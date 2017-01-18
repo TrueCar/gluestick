@@ -25,13 +25,13 @@ describe("lib/server/loadServerConfig", () => {
     rimraf(tmpDir, done);
   });
 
-  context("when no application.server file exists", () => {
+  describe("when no application.server file exists", () => {
     it("should return an empty object", () => {
       expect(loadServerConfig()).to.deep.equal({});
     });
   });
 
-  context("when application.server has an object", () => {
+  describe("when application.server has an object", () => {
     beforeEach(() => {
       fs.writeFileSync("src/config/application.server.js", `
         module.exports = {

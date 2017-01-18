@@ -56,7 +56,7 @@ describe("lib/server/express-middleware", () => {
     };
   });
 
-  context("when there is an error", () => {
+  describe("when there is an error", () => {
     it("should pass errors from renderCachedResponse to the error handler", () => {
       overrides.RequestHandler.renderCachedResponse.throws(new Error("Error with cached response"));
       gluestickExpressMiddleware(mockReq, mockRes, overrides);
@@ -95,7 +95,7 @@ describe("lib/server/express-middleware", () => {
       expect(getErrorMessage()).to.equal("render not found error");
     });
 
-    context("with render props", () => {
+    describe("with render props", () => {
       beforeEach(() => {
         overrides.RequestHandler.matchRoute.returns(new Promise((res) => {
           res({
@@ -142,7 +142,7 @@ describe("lib/server/express-middleware", () => {
     });
   });
 
-  context("when there is a cached response", () => {
+  describe("when there is a cached response", () => {
     beforeEach(() => {
       overrides.RequestHandler.renderCachedResponse.returns(true);
     });
@@ -153,8 +153,8 @@ describe("lib/server/express-middleware", () => {
     });
   });
 
-  context("when there is no cached response", () => {
-    context("when there is a redirect location", () => {
+  describe("when there is no cached response", () => {
+    describe("when there is a redirect location", () => {
       beforeEach(() => {
         overrides.RequestHandler.matchRoute.returns(new Promise((res) => {
           res({
@@ -169,14 +169,14 @@ describe("lib/server/express-middleware", () => {
       });
     });
 
-    context("when there is no redirect location or render props", () => {
+    describe("when there is no redirect location or render props", () => {
       it("should call render not found", async () => {
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(overrides.RequestHandler.renderNotFound.called).to.be.true;
       });
     });
 
-    context("when there are render props and no redirect", () => {
+    describe("when there are render props and no redirect", () => {
       beforeEach(() => {
         overrides.RequestHandler.matchRoute.returns(new Promise((res) => {
           res({
