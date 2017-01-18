@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+require("../lib/projectRequireHack");
 require("../lib/runThroughBabel");
 
 // Developers can add an optional file in src/config/init.server.js that

@@ -15,12 +15,20 @@ services:
 
 before_install:
 - for var in ${!TRAVIS_@}; do echo ${var}=${!var}; done #show travis env vars
-- 'curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.16.1'
+# Repo for Yarn
+- sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+- echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+- sudo apt-get update -qq
+- sudo apt-get install -y -qq yarn=0.16.1-1
+- export PATH="/usr/share/yarn/bin:$PATH"
+
+cache:
+  directories:
+    - $HOME/.yarn-cache
 
 before_deploy:
-- sudo apt-get update -qq
-- sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
-- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+#- sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
 - npm run lint
