@@ -3,12 +3,20 @@ import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import _gluestick from "./reducers";
 import promiseMiddleware from "../lib/promiseMiddleware";
 
+const getMiddlewares = (middlewares, customMiddlewares) => {
+  if (typeof customMiddlewares === 'function') {
+    return customMiddlewares(middlewares);
+  }
+
+  return middlewares.concat(customMiddlewares);
+};
+
 export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-  const middleware = [
+
+  let middleware = [
     promiseMiddleware(client),
     thunk,
-    ...customMiddleware
   ];
 
   // Include middleware that will warn when you mutate the state object
@@ -17,6 +25,14 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
     middleware.push(require("redux-immutable-state-invariant")());
   }
 
+  // When `customMiddleware` is of type `function`, pass it a shallow
+  // copy of the current array of `middlewares` and expect a new value
+  // in return. Fallback to default behaviour.
+  if (typeof customMiddleware === 'function') {
+    middleware = customMiddleware([...middleware]);
+  } else {
+    middleware.concat(customMiddleware);
+  }
 
   const composeArgs = [
     applyMiddleware.apply(this, middleware),
