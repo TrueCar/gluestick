@@ -1,6 +1,7 @@
 // Webpack configuration that is shared between the client and tests
 import path from "path";
 import process from "process";
+import HappyPack from "happypack";
 import { GLUESTICK_ADDON_DIR_REGEX } from "./vars";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
@@ -29,16 +30,9 @@ module.exports = {
   loaders: [
     {
       test: /\.js$/,
-      loader: "babel-loader",
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
       query: {
-        plugins: [
-          "transform-decorators-legacy"
-        ],
-        presets: [
-          "react",
-          "es2015",
-          "stage-0"
-        ]
+        id: "babel",
       },
       include: [
         path.join(process.cwd(), "Index.js"),
@@ -49,27 +43,64 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-      loaders: [
-        "file-loader?name=[name]-[hash].[ext]",
-        "image-webpack"
-      ]
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
+      query: {
+        id: "files",
+      },
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-      loader: "file-loader?name=[name]-[hash].[ext]"
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
+      query: {
+        id: "fonts",
+      },
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
+      query: {
+        id: "styles",
+      },
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-      loader: "json"
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
+      query: {
+        id: "json",
+      },
     }
   ],
   plugins: [
     new ExtractTextPlugin("[name]-[chunkhash].css"),
-    new OptimizeCSSAssetsPlugin()
+    new OptimizeCSSAssetsPlugin(),
+    new HappyPack({
+      id: "babel",
+      loaders: ["babel-loader?presets[]=react&presets[]=es2015&presets[]=stage-0&plugins[]=transform-decorators-legacy"],
+      threads: 4,
+    }),
+    new HappyPack({
+      id: "image",
+      loaders: [
+        "file-loader?name=[name]-[hash].[ext]",
+        "image-webpack"
+      ],
+      threads: 4,
+    }),
+    new HappyPack({
+      id: "fonts",
+      loaders: ["file-loader?name=[name]-[hash].[ext]"],
+      threads: 2,
+    }),
+    new HappyPack({
+      id: "styles",
+      loaders: [isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"],
+      threads: 2,
+    }),
+    new HappyPack({
+      id: "json",
+      loaders: ["json"],
+      threads: 2,
+    }),
   ],
   preLoaders: []
 };
