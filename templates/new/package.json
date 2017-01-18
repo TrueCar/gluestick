@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "gluestick start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gluestick test -S"
   },
   "dependencies": {
     "axios": "0.12.0",
