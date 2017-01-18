@@ -214,6 +214,9 @@ export function isValidVersion (version, requiredVersion) {
 
   // Trim off carrot or other things on the version like `^3.0.1` or `>3.0.1`
   const trimmedVersion = version.replace(/^\D*/, "");
+  if (!semver.valid(trimmedVersion)){
+    return false;
+  }
 
   return semver.satisfies(trimmedVersion, requiredVersion) || semver.gte(trimmedVersion, requiredVersion);
 }
