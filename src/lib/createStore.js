@@ -3,14 +3,6 @@ import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import _gluestick from "./reducers";
 import promiseMiddleware from "../lib/promiseMiddleware";
 
-const getMiddlewares = (middlewares, customMiddlewares) => {
-  if (typeof customMiddlewares === 'function') {
-    return customMiddlewares(middlewares);
-  }
-
-  return middlewares.concat(customMiddlewares);
-};
-
 export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
 
