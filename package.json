@@ -12,7 +12,9 @@
     "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
     "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive",
     "prepublish": "./docker/generate-dockerfile.js",
-    "postpublish": "./docker/create-base-image.js"
+    "postpublish": "./docker/create-base-image.js",
+    "update-version": "npm version",
+    "postupdate-version": "./docker/generate-dockerfile.js"
   },
   "keywords": [
     "react",
