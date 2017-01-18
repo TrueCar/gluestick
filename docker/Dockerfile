@@ -51,6 +51,7 @@ ENV BUILD_PACKAGES "autoconf \
                     openssh-client \
                     patch \
                     procps \
+                    python-dev \
                     subversion \
                     xz-utils \
                     zlib1g-dev"
@@ -65,13 +66,11 @@ RUN apt-get update && \
     apt-get install -y yarn=0.16.1-1  && \
     yarn global add gluestick@$GLUESTICK_VERSION && \
     yarn && \
-    apt-get remove -y $BUILD_PACKAGES && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install dnsmasq -y
 
-ADD docker/resolv.conf /etc/resolv.conf.new
 ADD docker/dnsmasq.conf /etc/dnsmasq.conf
 ADD docker/start /app/start
 RUN chmod +x /app/start

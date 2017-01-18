@@ -1,4 +1,4 @@
-{
+export const validProjectPackage = {
   "name": "AppName",
   "version": "1.0.0",
   "description": "",
@@ -18,7 +18,7 @@
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "6.14.0",
     "babel-runtime": "6.9.2",
-    "babel-traverse": "6.14.0",
+    "babel-traverse": "6.21.0",
     "css-loader": "0.23.1",
     "electrode-react-ssr-caching": "0.1.3",
     "file-loader": "0.8.5",
@@ -56,4 +56,30 @@
     "redbox-react": "1.2.4",
     "webpack-hot-middleware": "2.12.2"
   }
-}
+};
+
+export const validLargerProjectPackage = {
+  ...validProjectPackage,
+  dependencies: {
+    ...validProjectPackage.dependencies,
+    "axios": "9.9.9"
+  }
+};
+
+export const invalidProjectPackage = {
+  ...validProjectPackage,
+  dependencies: {
+    ...validProjectPackage.dependencies,
+    "axios": "0.0.1"
+  }
+};
+
+const missingProjectPackage = {
+  ...validProjectPackage,
+  dependencies: {
+    ...validProjectPackage.dependencies
+  }
+};
+delete missingProjectPackage.dependencies.axios;
+export { missingProjectPackage };
+
