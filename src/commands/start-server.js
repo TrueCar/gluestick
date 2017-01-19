@@ -19,12 +19,24 @@ const CWD = process.cwd();
  *
  * @param {Boolean} debug whether or not to use node-inspector for debugging
  */
-module.exports = function startServer (debug=false) {
+module.exports = function startServer (debug = false, debugPort, noBreak = false) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
   if (debug) {
-    const debugSpawn = spawn(path.join(CWD, "node_modules", ".bin", "node-debug"), [serverEntrypointPath], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: "development-server"})});
+    const debugSpawn = spawn(
+      "node",
+      [
+        "--",
+        `--inspect${debugPort ? `=${debugPort}` : ""}`,
+        "--debug-brk",
+        serverEntrypointPath
+      ],
+      {
+        stdio: "inherit",
+        env: Object.assign({}, process.env, { NODE_ENV: "development-server" })
+      }
+    );
     debugSpawn.on("error", (e) => {
       logger.error(e);
     });
