@@ -14,7 +14,17 @@ export default (config, entryPoint, headContent, assets) => {
   const assetPath = getAssetPath(config);
 
   if (isProduction) {
-    tags.push(<link key={key++} rel="stylesheet" type="text/css" href={getAssetPathForFile(`${entryPoint}`, "styles")} />);
+    const assetHref = getAssetPathForFile(entryPoint, "styles");
+    tags.push(
+      <link key={key++} rel="stylesheet" type="text/css" href={assetHref} />
+    );
+    // Need to explicitly check if there is CSS vendor bundle and include it
+    const vendorStylesHref = getAssetPathForFile("vendor", "styles");
+    if (vendorStylesHref) {
+      tags.push(
+         <link key={key++} rel="stylesheet" type="text/css" href={vendorStylesHref} />
+      );
+    }
   }
 
   tags.push(
