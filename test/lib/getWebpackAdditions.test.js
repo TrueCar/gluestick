@@ -38,7 +38,7 @@ describe("src/lib/getWebpackAdditions", () => {
       additionalExternals: {},
       additionalLoaders: [],
       additionalPreLoaders: [],
-      additionalWebpackNodeConfig: {},
+      additionalWebpackConfig: {},
       entryPoints: {},
       plugins: [],
       vendor: []
@@ -133,10 +133,10 @@ describe("src/lib/getWebpackAdditions", () => {
     });
   });
 
-  it("should return additionalWebpackNodeConfig when they are specified in webpack-additions", () => {
+  it("should return additionalWebpackConfig when they are specified in webpack-additions", () => {
     const additions = {
       ...defaultAdditions,
-      additionalWebpackNodeConfig: {
+      additionalWebpackConfig: {
         mish: "kin"
       }
     };
