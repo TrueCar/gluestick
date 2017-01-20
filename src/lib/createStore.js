@@ -5,10 +5,10 @@ import promiseMiddleware from "../lib/promiseMiddleware";
 
 export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
   const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
-  const middleware = [
+
+  let middleware = [
     promiseMiddleware(client),
     thunk,
-    ...customMiddleware
   ];
 
   // Include middleware that will warn when you mutate the state object
@@ -17,6 +17,12 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
     middleware.push(require("redux-immutable-state-invariant")());
   }
 
+  // When `customMiddleware` is of type `function`, pass it current
+  // array of `middlewares` and expect a new value in return.
+  // Fallback to default behaviour.
+  middleware = typeof customMiddleware === 'function'
+    ? customMiddleware([...middleware])
+    : middleware.concat(customMiddleware);
 
   const composeArgs = [
     applyMiddleware.apply(this, middleware),
