@@ -1,8 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
-import { expect } from "chai";
-import { stub, spy } from "sinon";
 
 import newApp from "../../../src/commands/new";
 import npmDependencies from "../../../src/lib/npmDependencies";
@@ -21,11 +19,12 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    fakeNpm = stub(npmDependencies, "install");
+    npmDependencies.install = jest.fn();
+    const fakeNpm = npmDependencies.install;
     process.chdir(tmpDir);
 
     mockServerResponse = {
-      append: spy()
+      append: jest.fn()
     };
 
     newApp("test-app");
@@ -41,7 +40,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
   afterEach(() => {
     process.chdir(originalCwd);
     fs.removeSync(tmpDir);
-    fakeNpm.restore();
+    jest.resetAllMocks();
   });
 
   it("return the default data if no entry points are defined no matter what the path", () => {
@@ -57,7 +56,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
       getRoutes: `Contents of ${cwd}/src/config/routes`,
       store: `getStore: ${cwd}/src/config/.entries/main-[chunkhash].js`
     };
-    expect(result).to.deep.equal(expectedResult);
+    expect(result).toEqual(expectedResult);
   });
 
   it("return the default data if no entry points are defined no matter what the path", () => {
@@ -75,7 +74,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
       getRoutes: `Contents of ${cwd}/src/config/routes/used`,
       store: `getStore: ${cwd}/src/config/.entries/used-[chunkhash].js`
     };
-    expect(result).to.deep.equal(expectedResult);
+    expect(result).toEqual(expectedResult);
   });
 });
 

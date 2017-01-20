@@ -1,6 +1,4 @@
 /*global afterEach beforeEach describe it*/
-import sinon from "sinon";
-import { expect } from "chai";
 import fs from "fs";
 import path from "path";
 import temp from "temp";
@@ -24,13 +22,12 @@ describe("cli: gluestick touch", function () {
     fs.closeSync(fs.openSync(".gluestick", "w"));
     dotFile = path.join(tmpDir, ".gluestick");
 
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(logger, "warn");
-    sandbox.stub(process, "exit");
+    logger.warn = jest.fn();
+    process.exit = jest.fn();
   });
 
   afterEach(done => {
-    sandbox.restore();
+    jest.resetAllMocks();
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
   });
@@ -39,7 +36,7 @@ describe("cli: gluestick touch", function () {
     const gluestickVersion = "0.1.0";
     newDotFileContents("DO NOT MODIFY\n");
     updateLastVersionUsed(gluestickVersion);
-    sinon.assert.notCalled(logger.warn);
+    expect(logger.warn).not.toBeCalled();
   });
 
   it("displays a warning when the project version is greater than the gluestick version", () => {
@@ -47,7 +44,7 @@ describe("cli: gluestick touch", function () {
     const gluestickVersion = "0.1.0";
     newDotFileContents(JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion);
-    expect(logger.warn.calledOnce).to.be.true;
+    expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 
   it("exits when the project version is greater than the gluestick version", () => {
@@ -55,7 +52,7 @@ describe("cli: gluestick touch", function () {
     const gluestickVersion = "0.1.0";
     newDotFileContents(JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion);
-    expect(process.exit.calledOnce).to.be.true;
+    expect(process.exit).toHaveBeenCalledTimes(1);
   });
 
   it("does not display a warning when the flag is set to false", () => {
@@ -63,7 +60,7 @@ describe("cli: gluestick touch", function () {
     const gluestickVersion = "0.1.0";
     newDotFileContents(JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion, false);
-    sinon.assert.notCalled(logger.warn);
+    expect(logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it("does not display a warning when the project version is less than the gluestick version", () => {
@@ -71,7 +68,7 @@ describe("cli: gluestick touch", function () {
     const gluestickVersion = "0.2.0";
     newDotFileContents(JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion);
-    sinon.assert.notCalled(logger.warn);
+    expect(logger.warn).toHaveBeenCalledTimes(0);
   });
 
   it("removes the \"DO NOT MODIFY\" header from the .gluestick file", () => {
@@ -80,7 +77,7 @@ describe("cli: gluestick touch", function () {
     newDotFileContents("DO NOT MODIFY\n" + JSON.stringify({version: projectVersion}));
     updateLastVersionUsed(gluestickVersion);
     const fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
-    expect(fileContents.indexOf("DO NOT MODIFY")).to.equal(-1);
+    expect(fileContents.indexOf("DO NOT MODIFY")).toEqual(-1);
   });
 
   it("updates the project version to current gluestick version", () => {
@@ -90,6 +87,6 @@ describe("cli: gluestick touch", function () {
     updateLastVersionUsed(gluestickVersion);
     const fileContents = fs.readFileSync(dotFile, {encoding: "utf8"});
     const project = JSON.parse(fileContents);
-    expect(project.version).to.equal(gluestickVersion);
+    expect(project.version).toEqual(gluestickVersion);
   });
 });

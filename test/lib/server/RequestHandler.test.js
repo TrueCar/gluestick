@@ -1,6 +1,4 @@
 import React from "react";
-import { expect } from "chai";
-import { stub, spy } from "sinon";
 import * as RequestHandler from "../../../src/lib/server/RequestHandler";
 import { Route, Redirect } from "react-router";
 import { MISSING_404_TEXT } from "../../../src/lib/server/helpText";
@@ -17,7 +15,7 @@ describe("lib/server/RequestHandler", () => {
         url: "/the-path"
       };
       const key = RequestHandler.getCacheKey(req);
-      expect(key).to.equal("h:www.example.com u:/the-path");
+      expect(key).toEqual("h:www.example.com u:/the-path");
     });
   });
 
@@ -30,50 +28,50 @@ describe("lib/server/RequestHandler", () => {
       };
       res = {};
       mockCache = {
-        get: stub().returns("Sup brah!")
+        get: jest.fn().mockImplementation(() => "Sup brah!")
       };
-      streamResponse = spy();
+      streamResponse = jest.fn();
     });
 
     describe("when a cached result exists", () => {
       beforeEach(() => {
         mockCache = {
-          get: stub().returns("Sup brah!")
+          get: jest.fn().mockImplementation(() => "Sup brah!")
         };
       });
 
       it("should return true", () => {
         const result = RequestHandler.renderCachedResponse(req, res, mockCache, streamResponse);
-        expect(result).to.equal(true);
+        expect(result).toEqual(true);
       });
 
       it("should use the correct key when looking up the cached value", () => {
         RequestHandler.renderCachedResponse(req, res, mockCache, streamResponse);
         const key = RequestHandler.getCacheKey(req);
-        expect(mockCache.get.calledWith(key)).to.equal(true);
+        expect(mockCache.get).toBeCalledWith(key);
       });
 
       it("should pass the cached result, req, and res object to streamResponse", () => {
         RequestHandler.renderCachedResponse(req, res, mockCache, streamResponse);
-        expect(streamResponse.calledWith(req, res, "Sup brah!")).to.equal(true);
+        expect(streamResponse).toBeCalledWith(req, res, "Sup brah!");
       });
     });
 
     describe("when cached result does not exist", () => {
       beforeEach(() => {
         mockCache = {
-          get: stub().returns(null)
+          get: jest.fn().mockImplementation(() => null)
         };
       });
 
       it("should return false", () => {
         const result = RequestHandler.renderCachedResponse(req, res, mockCache, streamResponse);
-        expect(result).to.equal(false);
+        expect(result).toEqual(false);
       });
 
       it("should not call streamResponse", () => {
         RequestHandler.renderCachedResponse(req, res, mockCache, streamResponse);
-        expect(streamResponse.called).to.equal(false);
+        expect(streamResponse).not.toHaveBeenCalled();
       });
     });
   });
@@ -86,7 +84,7 @@ describe("lib/server/RequestHandler", () => {
         url: "/abc123"
       };
 
-      getRoutes = stub().returns(
+      getRoutes = jest.fn().mockImplementation(() =>
         <Route>
           <Route name="test1" path="abc123" />
           <Route name="test2" path="321xyz" />
@@ -95,16 +93,16 @@ describe("lib/server/RequestHandler", () => {
       );
 
       store = {
-        getState: spy(),
-        dispatch: spy()
+        getState: jest.fn(),
+        dispatch: jest.fn()
       };
     });
 
     describe("when a matching route (not a redirect) exists", () => {
       it("should return the renderProps", (done) => {
         RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
-          expect(redirectLocation).to.be.null;
-          expect(renderProps).to.not.be.undefined;
+          expect(redirectLocation).toBeNull();
+          expect(renderProps).toBeDefined();
           done();
         });
       });
@@ -119,9 +117,9 @@ describe("lib/server/RequestHandler", () => {
 
       it("should return the redirectLocation", (done) => {
         RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
-          expect(redirectLocation).to.not.be.null;
-          expect(redirectLocation.pathname).to.equal("/b");
-          expect(renderProps).to.be.undefined;
+          expect(redirectLocation).not.toBeNull();
+          expect(redirectLocation.pathname).toEqual("/b");
+          expect(renderProps).toBeUndefined();
           done();
         });
       });
@@ -136,8 +134,8 @@ describe("lib/server/RequestHandler", () => {
 
       it("should forward to the promise `catch` with an error", (done) => {
         RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
-          expect(redirectLocation).to.be.undefined;
-          expect(renderProps).to.be.undefined;
+          expect(redirectLocation).toBeUndefined();
+          expect(renderProps).toBeUndefined();
           done();
         });
       });
@@ -147,39 +145,39 @@ describe("lib/server/RequestHandler", () => {
   describe("redirect", () => {
     it("should call the response object `redirect` method with 301 and path + search", () => {
       const res = {
-        redirect: spy()
+        redirect: jest.fn()
       };
       const redirectLocation = {
         pathname: "/abc",
         search: "?hi"
       };
       RequestHandler.redirect(res, redirectLocation);
-      expect(res.redirect.calledWith(301, redirectLocation.pathname + redirectLocation.search)).to.equal.true;
+      expect(res.redirect).toBeCalledWith(301, redirectLocation.pathname + redirectLocation.search);
     });
   });
 
   describe("renderNotFound", () => {
     let res, showHelpText, end, status;
     beforeEach(() => {
-      end = spy();
-      status = stub();
+      end = jest.fn();
+      status = jest.fn();
       res = {
         status,
         end
       };
-      res.status.returns(res);
-      showHelpText = spy();
+      res.status = jest.fn().mockImplementation(() => res);
+      showHelpText = jest.fn();
     });
 
     it("should show React 404 help text", () => {
       RequestHandler.renderNotFound(res, showHelpText);
-      expect(showHelpText.calledWith(MISSING_404_TEXT)).to.equal.true;
+      expect(showHelpText).toBeCalledWith(MISSING_404_TEXT);
     });
 
     it("should set 404 status and end", () => {
       RequestHandler.renderNotFound(res, showHelpText);
-      expect(res.status.calledWith(404)).to.equal.true;
-      expect(res.end.calledWith("Not Found")).to.equal.true;
+      expect(res.status).toBeCalledWith(404);
+      expect(res.end).toBeCalledWith("Not Found");
     });
   });
 
@@ -190,9 +188,9 @@ describe("lib/server/RequestHandler", () => {
       };
       const renderProps = {};
       const store = {};
-      const runBeforeRoutes = spy();
+      const runBeforeRoutes = jest.fn();
       RequestHandler.runPreRenderHooks(req, renderProps, store, runBeforeRoutes);
-      expect(runBeforeRoutes.calledWith(store, renderProps, {isServer: true, request: req})).to.equal.true;
+      expect(runBeforeRoutes).toBeCalledWith(store, renderProps, {isServer: true, request: req});
     });
   });
 
@@ -206,7 +204,7 @@ describe("lib/server/RequestHandler", () => {
           {path: "d"}
         ]
       };
-      expect(RequestHandler.getCurrentRoute(renderProps)).to.equal([...renderProps.routes].pop());
+      expect(RequestHandler.getCurrentRoute(renderProps)).toEqual([...renderProps.routes].pop());
     });
   });
 
@@ -223,7 +221,7 @@ describe("lib/server/RequestHandler", () => {
       "when no redux state, not a 404 route and no route status override",
       () => {
         it("should return 200", () => {
-          expect(RequestHandler.getStatusCode(state, currentRoute)).to.equal(200);
+          expect(RequestHandler.getStatusCode(state, currentRoute)).toEqual(200);
         });
       }
     );
@@ -234,7 +232,7 @@ describe("lib/server/RequestHandler", () => {
       });
       it("should return the route's status", () => {
         const status = RequestHandler.getStatusCode(state, currentRoute);
-        expect(status).to.equal(999);
+        expect(status).toEqual(999);
       });
     });
 
@@ -246,7 +244,7 @@ describe("lib/server/RequestHandler", () => {
       });
       it("should return the status code set in redux", () => {
         const status = RequestHandler.getStatusCode(state, currentRoute);
-        expect(status).to.equal(201);
+        expect(status).toEqual(201);
       });
     });
 
@@ -256,16 +254,16 @@ describe("lib/server/RequestHandler", () => {
       });
       it("should return 404", () => {
         const status = RequestHandler.getStatusCode(state, currentRoute);
-        expect(status).to.equal(404);
+        expect(status).toEqual(404);
       });
     });
   });
 
   describe("setHeaders", () => {
-    let res, currentRoute, getHeaders;
+    let res, currentRoute;
     beforeEach(() => {
       res = {
-        set: spy()
+        set: jest.fn()
       };
     });
     describe("when the route specifies headers", () => {
@@ -274,14 +272,15 @@ describe("lib/server/RequestHandler", () => {
       });
       it("should set the headers on the response object", () => {
         RequestHandler.setHeaders(res, currentRoute);
-        expect(res.set.calledWith(currentRoute.headers)).to.equal.true;
+        expect(res.set).toHaveBeenCalledWith(currentRoute.headers);
       });
     });
 
     describe("when the route does not specify headers", () => {
       it("should not set any headers on the response object", () => {
-        RequestHandler.setHeaders(res, currentRoute, getHeaders);
-        expect(res.set.called).to.equal.false;
+        currentRoute = {path: "abc"};
+        RequestHandler.setHeaders(res, currentRoute);
+        expect(res.set).not.toBeCalled();
       });
     });
   });
@@ -310,7 +309,7 @@ describe("lib/server/RequestHandler", () => {
       renderRequirements = {
         Index,
         store: {
-          getState: stub().returns({})
+          getState: jest.fn().mockImplementation(() => {})
         },
         getRoutes: () => routes,
         fileName: "abc"
@@ -322,7 +321,7 @@ describe("lib/server/RequestHandler", () => {
 
       config = {};
       envVariables = {bestFood: "burritos"};
-      getHead = stub().returns(<div />);
+      getHead = jest.fn().mockImplementation(() => <div />);
       Entry = class extends React.Component {
         render () {
           return (
@@ -331,7 +330,7 @@ describe("lib/server/RequestHandler", () => {
         }
       };
       webpackIsomorphicTools = {
-        assets: stub()
+        assets: jest.fn(),
       };
     });
 
@@ -345,15 +344,15 @@ describe("lib/server/RequestHandler", () => {
             webpackIsomorphicTools);
         });
         it("should return a responseString", () => {
-          expect(result.responseString).to.not.be.undefined;
+          expect(result.responseString).toBeDefined();
         });
 
         it("should not pass head to Index", () => {
-          expect(result.rootElement.props.head).to.be.undefined;
+          expect(result.rootElement.props.head).toBeUndefined();
         });
 
         it("should not include react-id attributes in html because it uses renderToStaticMarkup", () => {
-          expect(result.rootElement.props.body.props.html).to.not.contain("data-reactid");
+          expect(result.rootElement.props.body.props.html).not.toContain("data-reactid");
         });
       });
 
@@ -367,16 +366,16 @@ describe("lib/server/RequestHandler", () => {
         });
 
         it("should return a responseString", () => {
-          expect(result.responseString).to.not.be.undefined;
+          expect(result.responseString).toBeDefined();
         });
 
         it("should pass head to Index", () => {
-          expect(result.rootElement.props.head).to.not.be.null;
+          expect(result.rootElement.props.head).not.toBeNull();
         });
 
         it("should include react-id attributes in html because it uses renderToString", () => {
           // html is a stream so we have to convert it to a string to test it
-          expect(result.rootElement.props.body.props.html).to.contain("data-reactid");
+          expect(result.rootElement.props.body.props.html).toContain("data-reactid");
         });
       });
     });
@@ -399,9 +398,9 @@ describe("lib/server/RequestHandler", () => {
 
       it("should pass bodyContent to html prop", async () => {
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, updatedConfig, envVariables, getHead, Entry,
-          webpackIsomorphicTools);
-        expect(result.rootElement.props.body.props.html).to.equal("<div>That body!</div>");
+        renderProps, updatedConfig, envVariables, getHead, Entry,
+        webpackIsomorphicTools);
+        expect(result.rootElement.props.body.props.html).toEqual("<div>That body!</div>");
       });
 
       describe("not an email", () => {
@@ -413,7 +412,7 @@ describe("lib/server/RequestHandler", () => {
         });
 
         it("should pass headContent to getHead", () => {
-          expect(getHead.lastCall.args[2]).to.equal(headJSX);
+          expect(getHead.mock.calls[0][2]).toEqual(headJSX);
         });
       });
 
@@ -426,7 +425,7 @@ describe("lib/server/RequestHandler", () => {
         });
 
         it("should pass headContent to getHead", async () => {
-          expect(result.rootElement.props.head).to.equal(headJSX);
+          expect(result.rootElement.props.head).toEqual(headJSX);
         });
       });
     });
@@ -443,28 +442,27 @@ describe("lib/server/RequestHandler", () => {
         }
       };
       res = new Writable();
-      res.writeHead = spy();
+      res.writeHead = jest.fn();
       status = 200;
       const responseString = "abc";
 
       output={responseString};
       cache = {
-        set: spy()
+        set: jest.fn()
       };
       logger = {
-        debug: spy()
+        debug: jest.fn()
       };
       currentRoute = {path: "/", docType: "<!FakeDoc>"};
-      //streamResponse = spy();
     });
 
     it("should pass along the status and route Attrs", () => {
-      streamResponse = spy();
+      streamResponse = jest.fn();
       RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
-      const streamArgs = streamResponse.lastCall.args[2];
-      expect(streamResponse.calledWith(req, res)).to.be.true;
-      expect(streamArgs.status).to.equal(status);
-      expect(streamArgs.docType).to.equal("<!FakeDoc>");
+      const streamArgs = streamResponse.mock.calls[0][2];
+      expect(streamResponse.mock.calls[0][0]).toEqual(expect.objectContaining(req, res));
+      expect(streamArgs.status).toEqual(status);
+      expect(streamArgs.docType).toEqual("<!FakeDoc>");
     });
 
     describe("when caching is enabled for the currentRoute", () => {
@@ -476,9 +474,9 @@ describe("lib/server/RequestHandler", () => {
         RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
         // wait for next tick since so streams have time to be piped
         setTimeout(() => {
-          expect(cache.set.called).to.be.true;
+          expect(cache.set).toHaveBeenCalledTimes(1);
           const key = RequestHandler.getCacheKey(req);
-          expect(cache.set.calledWith(key, {status, responseString: "abc", docType: "<!FakeDoc>"})).to.be.true;
+          expect(cache.set.mock.calls[0]).toContain(key, {status, responseString: "abc", docType: "<!FakeDoc>"});
           done();
         }, 0);
       });
@@ -492,7 +490,7 @@ describe("lib/server/RequestHandler", () => {
         it("should set cache converting cacheTTL to miliseconds", (done) => {
           // wait for next tick since so streams have time to be piped
           setTimeout(() => {
-            expect(cache.set.lastCall.args[2]).to.equal(5000);
+            expect(cache.set.mock.calls[0][2]).toEqual(5000);
             done();
           }, 0);
         });
@@ -508,7 +506,7 @@ describe("lib/server/RequestHandler", () => {
         RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
         // wait for next tick since so streams have time to be piped
         setTimeout(() => {
-          expect(cache.set.called).to.equal(false);
+          expect(cache.set).not.toBeCalled();
           done();
         }, 0);
       });
@@ -519,24 +517,24 @@ describe("lib/server/RequestHandler", () => {
     describe("when the route has an email attribute and no doctype", () => {
       it("should return the email attribute and the default HTML5 doctype", () => {
         const result = RequestHandler.getEmailAttributes({email: true});
-        expect(result.email).to.equal.true;
-        expect(result.docType).to.equal("<!DOCTYPE html>");
+        expect(result.email).toEqual(true);
+        expect(result.docType).toEqual("<!DOCTYPE html>");
       });
     });
 
     describe("when the route has an email and a doctype", () => {
       it("should return the email attribute and custom docType", () => {
         const result = RequestHandler.getEmailAttributes({email: true, docType: "<!XML>"});
-        expect(result.email).to.equal.true;
-        expect(result.docType).to.equal("<!XML>");
+        expect(result.email).toEqual(true);
+        expect(result.docType).toEqual("<!XML>");
       });
     });
 
     describe("when the route has no email or doctype", () => {
       it("should return the false for the email and the default HTML5 docType", () => {
         const result = RequestHandler.getEmailAttributes({});
-        expect(result.email).to.equal.false;
-        expect(result.docType).to.equal("<!DOCTYPE html>");
+        expect(result.email).toEqual(false);
+        expect(result.docType).toEqual("<!DOCTYPE html>");
       });
     });
   });
@@ -545,8 +543,8 @@ describe("lib/server/RequestHandler", () => {
     let mockCache;
     beforeEach(() => {
       mockCache = {
-        enableCaching: spy(),
-        setCachingConfig: spy()
+        enableCaching: jest.fn(),
+        setCachingConfig: jest.fn()
       };
     });
 
@@ -554,27 +552,27 @@ describe("lib/server/RequestHandler", () => {
       describe("outside of production", () => {
         it("shouldn't enable caching", () => {
           RequestHandler.enableComponentCaching({}, false, mockCache);
-          expect(mockCache.enableCaching.called).to.equal(false);
+          expect(mockCache.enableCaching).not.toBeCalled();
         });
       });
 
       describe("when no config is set", () => {
         it("should pass `false` to enableComponentCaching", () => {
           RequestHandler.enableComponentCaching(undefined, true, mockCache); // eslint-disable-line no-undefined
-          expect(mockCache.enableCaching.calledWith(false)).to.equal(true);
+          expect(mockCache.enableCaching).toBeCalledWith(false);
         });
       });
 
       describe("when config is set", () => {
         it("should pass `true` to enableComponentCaching", () => {
           RequestHandler.enableComponentCaching({}, true, mockCache);
-          expect(mockCache.enableCaching.calledWith(true)).to.equal(true);
+          expect(mockCache.enableCaching).toBeCalledWith(true);
         });
 
         it("should pass the provided `componentCacheConfig` to setCachingConfig", () => {
           const config = {components: {"Home": {}}};
           RequestHandler.enableComponentCaching(config, true, mockCache);
-          expect(mockCache.setCachingConfig.calledWith(config)).to.equal(true);
+          expect(mockCache.setCachingConfig).toBeCalledWith(config);
         });
       });
     });

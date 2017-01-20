@@ -1,14 +1,12 @@
-import sinon from "sinon";
 import fs from "fs";
 import temp from "temp";
 import { join } from "path";
 import rimraf from "rimraf";
-import { expect } from "chai";
 
 import loadServerConfig from "../../../src/lib/server/loadServerConfig";
 
 describe("lib/server/loadServerConfig", () => {
-  let originalCwd, tmpDir, sandbox;
+  let originalCwd, tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -16,18 +14,16 @@ describe("lib/server/loadServerConfig", () => {
     process.chdir(tmpDir);
     fs.mkdirSync(join(tmpDir, "src"));
     fs.mkdirSync(join(tmpDir, "src", "config"));
-    sandbox = sinon.sandbox.create();
   });
 
   afterEach(done => {
-    sandbox.restore();
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
   });
 
   describe("when no application.server file exists", () => {
     it("should return an empty object", () => {
-      expect(loadServerConfig()).to.deep.equal({});
+      expect(loadServerConfig()).toEqual({});
     });
   });
 
@@ -47,7 +43,7 @@ describe("lib/server/loadServerConfig", () => {
     });
 
     it("should return the data in application.server", () => {
-      expect(loadServerConfig()).to.deep.equal({
+      expect(loadServerConfig()).toEqual({
         assets: {
           headers: {
             maxAge: 1000

@@ -1,8 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
-import { expect } from "chai";
-import sinon, { stub } from "sinon";
 import logger from "../../src/lib/cliLogger";
 
 import newApp from "../../src/commands/new";
@@ -16,7 +14,8 @@ describe("src/lib/getWebpackAdditions", () => {
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    fakeNpm = stub(npmDependencies, "install");
+    npmDependencies.install = jest.fn();
+    const fakeNpm = npmDependencies.install;
     process.chdir(tmpDir);
 
     newApp("test-app");
@@ -28,10 +27,9 @@ describe("src/lib/getWebpackAdditions", () => {
     // Remove .babelrc so it wont complain about missing react preset
     fs.unlinkSync(path.join(cwd, ".babelrc"));
 
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(logger, "error");
-    sandbox.stub(logger, "info");
-    sandbox.stub(logger, "warn");
+    logger.error = jest.fn();
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
 
     defaultAdditions = {
       additionalAliases: {},
@@ -48,16 +46,15 @@ describe("src/lib/getWebpackAdditions", () => {
   afterEach(() => {
     process.chdir(originalCwd);
     fs.removeSync(tmpDir);
-    fakeNpm.restore();
-    sandbox.restore();
+    jest.resetAllMocks();
   });
 
   it("logger.warn an error and return default empty additions when there is an error parsing the additions file", () => {
     fs.outputFileSync(webpackAdditionsPath, "PaRSE ErRor");
-    expect(logger.warn.called).to.equal(false);
+    expect(logger.warn).toHaveBeenCalledTimes(0);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal(defaultAdditions);
-    expect(logger.warn.called).to.equal(true);
+    expect(result).toEqual(defaultAdditions);
+    expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 
   it("should return additionalLoaders and additionalPreLoaders when they are specified in webpack-additions", () => {
@@ -82,7 +79,7 @@ describe("src/lib/getWebpackAdditions", () => {
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       additionalLoaders: [
         {
@@ -107,7 +104,7 @@ describe("src/lib/getWebpackAdditions", () => {
     const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       entryPoints: {
         "/used-cars-for-sale": {
@@ -127,7 +124,7 @@ describe("src/lib/getWebpackAdditions", () => {
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       ...additions
     });
@@ -143,7 +140,7 @@ describe("src/lib/getWebpackAdditions", () => {
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       ...additions
     });
