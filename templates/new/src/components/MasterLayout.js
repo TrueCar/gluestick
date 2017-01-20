@@ -1,12 +1,12 @@
 /* @flow */
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import Helmet from "react-helmet";
 import config from "../config/application";
 
 export default class MasterLayout extends Component {
-  static propTypes = {
-    children: PropTypes.any
-  };
+  props: {
+    children: ?any
+  }
 
   render () {
     return (

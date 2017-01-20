@@ -20,10 +20,11 @@ export default (config, entryPoint, headContent, assets) => {
   tags.push(
     <script key={key++} type="text/javascript" dangerouslySetInnerHTML={{__html: `window.__GS_PUBLIC_PATH__ = ${serialize(assetPath)}; window.__GS_ENVIRONMENT__ = ${serialize(process.env.NODE_ENV)}`}}></script>
   );
-
+  const loadjsDefault = {before: () => { }};
   const scriptPaths = {
     vendor: getAssetPathForFile("vendor", "javascript"),
-    entryPoint: getAssetPathForFile(entryPoint, "javascript")
+    entryPoint: getAssetPathForFile(entryPoint, "javascript"),
+    loadjsConfig: Object.assign(loadjsDefault, config.server.loadjs)
   };
 
   tags.push(headContent);
@@ -33,40 +34,26 @@ export default (config, entryPoint, headContent, assets) => {
   return tags;
 };
 
-function getScriptLoader ({vendor, entryPoint}:Object) {
+function getScriptLoader ({vendor, entryPoint, loadjsConfig}:Object) {
   // eslint-disable-next-line quotes
   const scriptLoader = `
-    loadjs=function(){function n(n,e){n=n.push?n:[n];var t,r,o,c,i=[],s=n.length,h=s;for(t=function(n,t){t.length&&i.push(n),h--,h||e(i)};s--;)r=n[s],o=u[r],o?t(r,o):(c=f[r]=f[r]||[],c.push(t))}function e(n,e){if(n){var t=f[n];if(u[n]=e,t)for(;t.length;)t[0](n,e),t.splice(0,1)}}function t(n,e,t){var r,o,c=document;/\.css$/.test(n)?(r=!0,o=c.createElement("link"),o.rel="stylesheet",o.href=n):(o=c.createElement("script"),o.src=n,o.async=void 0===t||t),o.onload=o.onerror=o.onbeforeload=function(t){var c=t.type[0];if(r&&"hideFocus"in o)try{o.sheet.cssText.length||(c="e")}catch(n){c="e"}e(n,c,t.defaultPrevented)},c.head.appendChild(o)}function r(n,e,r){n=n.push?n:[n];var o,c,i=n.length,u=i,f=[];for(o=function(n,t,r){if("e"==t&&f.push(n),"b"==t){if(!r)return;f.push(n)}i--,i||e(f)},c=0;c<u;c++)t(n[c],o,r)}function o(n,t,o){var u,f;if(t&&t.trim&&(u=t),f=(u?o:t)||{},u){if(u in i)throw new Error("LoadJS");i[u]=!0}r(n,function(n){n.length?(f.error||c)(n):(f.success||c)(),e(u,n)},f.async)}var c=function(){},i={},u={},f={};return o.ready=function(e,t){return n(e,function(n){n.length?(t.error||c)(n):(t.success||c)()}),o},o.done=function(n){e(n,[])},o}();
-    var maxRetries = 10;
-    var vendorRetries = 0;
-    var appRetries = 0;
+    var config = ${serialize(loadjsConfig)};
+    loadjs=loadjs=function(){function e(e,n){e=e.push?e:[e];var t,r,o,i,c=[],s=e.length,h=s;for(t=function(e,t){t.length&&c.push(e),h--,h||n(c)};s--;)r=e[s],o=u[r],o?t(r,o):(i=f[r]=f[r]||[],i.push(t))}function n(e,n){if(e){var t=f[e];if(u[e]=n,t)for(;t.length;)t[0](e,n),t.splice(0,1)}}function t(e,n,r,o){var c,u,f=document,s=r.async,h=(r.numRetries||0)+1,a=r.before||i;o=o||0,/\.css$/.test(e)?(c=!0,u=f.createElement("link"),u.rel="stylesheet",u.href=e):(u=f.createElement("script"),u.src=e,u.async=void 0===s||s),u.onload=u.onerror=u.onbeforeload=function(i){var f=i.type[0];if(c&&"hideFocus"in u)try{u.sheet.cssText.length||(f="e")}catch(e){f="e"}return"e"==f&&(o+=1,o<h)?t(e,n,r,o):void n(e,f,i.defaultPrevented)},a(e,u),f.head.appendChild(u)}function r(e,n,r){e=e.push?e:[e];var o,i,c=e.length,u=c,f=[];for(o=function(e,t,r){if("e"==t&&f.push(e),"b"==t){if(!r)return;f.push(e)}c--,c||n(f)},i=0;i<u;i++)t(e[i],o,r)}function o(e,t,o){var u,f;if(t&&t.trim&&(u=t),f=(u?o:t)||{},u){if(u in c)throw new Error("LoadJS");c[u]=!0}r(e,function(e){e.length?(f.error||i)(e):(f.success||i)(),n(u,e)},f)}var i=function(){},c={},u={},f={};return o.ready=function(n,t){return e(n,function(e){e.length?(t.error||i)(e):(t.success||i)()}),o},o.done=function(e){n(e,[])},o}();
 
     var loadEntryPoint = function() {
       loadjs("${entryPoint}", {
-        error: function() {
-          appRetries++;
-          if (appRetries < maxRetries) {
-            setTimeout(function() { loadEntryPoint();}, 100);
-          }
-          else {
-            throw new Error("Failed to load ${entryPoint}");
-          }
-        }
+        before: config.before,
+        error: function() { throw new Error("Failed to load ${entryPoint}"); },
+        numRetries: 10
       });
     };
 
     var loadVendorThenEntry = function() {
       loadjs("${vendor}", {
+        before: config.before,
         success: loadEntryPoint,
-        error: function() {
-          vendorRetries++;
-          if (vendorRetries < maxRetries) {
-            setTimeout(function() { loadVendorThenEntry();}, 100);
-          }
-          else {
-            throw new Error("Failed to load ${vendor}");
-          }
-        }
+        error: function() { throw new Error("Failed to load ${vendor}"); },
+        numRetries: 10
       });
     };
 
