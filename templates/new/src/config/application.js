@@ -1,9 +1,6 @@
 // WARNING: The contents of this file _including process.env variables_ will be
 // exposed in the client code.
 
-// Ensure env prop exists in process object.
-process.env = process.env || {};
-
 const headContent = {
   title: "My Gluestick App",
   titleTemplate: "%s | Gluestick Application",
