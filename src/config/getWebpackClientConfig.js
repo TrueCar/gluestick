@@ -70,7 +70,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
   const devtool = process.env.DEVTOOL || "inline-source-map";
   const baseWebpackConfig = {
     context: appRoot,
-    devtool: isProduction ? null : devtool,
+    devtool: isProduction ? "source-map" : devtool,
     entry: {
       ...buildWebpackEntries(isProduction),
       vendor: vendor
