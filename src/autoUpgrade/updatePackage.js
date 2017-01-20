@@ -18,6 +18,7 @@ let _projectPackageData;
 export const FIX_VERSION_MISMATCH_OVERRIDES = {
   loadProjectPackage,
   loadCLIPackage,
+  loadNewProjectPackage,
   promptModulesUpdate,
   rejectOnFailure: false
 };
@@ -45,7 +46,7 @@ export const FIX_VERSION_MISMATCH_OVERRIDES = {
  *
  * @return {Promise}
  */
-export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage, promptModulesUpdate, rejectOnFailure} = FIX_VERSION_MISMATCH_OVERRIDES) {
+export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage, loadNewProjectPackage, promptModulesUpdate, rejectOnFailure} = FIX_VERSION_MISMATCH_OVERRIDES) {
   return new Promise((resolve, reject) => {
     const projectPackageData = loadProjectPackage();
     const { dependencies: projectDependencies, devDependencies: projectDevDependencies } = projectPackageData;
