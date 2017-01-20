@@ -12,8 +12,6 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
-    "mocha": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
-    "mocha-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive",
     "prepublish": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js"
   },
