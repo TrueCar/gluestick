@@ -56,13 +56,13 @@ describe("lib/server/express-middleware", () => {
 
   describe("when there is an error", () => {
     it("should pass errors from renderCachedResponse to the error handler", () => {
-      overrides.RequestHandler.renderCachedResponse.mockImplementationOnce(() => { throw new Error("Error with cached response") });
+      overrides.RequestHandler.renderCachedResponse.mockImplementationOnce(() => { throw new Error("Error with cached response"); });
       gluestickExpressMiddleware(mockReq, mockRes, overrides);
       expect(getErrorMessage()).toEqual("Error with cached response");
     });
 
     it("should pass errors from getRenderRequirementsFromEntrypoints to the error handler", () => {
-      overrides.RequestHandler.renderCachedResponse.mockImplementationOnce(() => { throw new Error("Error with render reqs") });
+      overrides.RequestHandler.renderCachedResponse.mockImplementationOnce(() => { throw new Error("Error with render reqs"); });
       gluestickExpressMiddleware(mockReq, mockRes, overrides);
       expect(getErrorMessage()).toEqual("Error with render reqs");
     });
@@ -82,13 +82,13 @@ describe("lib/server/express-middleware", () => {
           redirectLocation: "http://www.example.com"
         });
       }));
-      overrides.RequestHandler.redirect.mockImplementationOnce(() => { throw new Error("redirect error") });
+      overrides.RequestHandler.redirect.mockImplementationOnce(() => { throw new Error("redirect error"); });
       await gluestickExpressMiddleware(mockReq, mockRes, overrides);
       expect(getErrorMessage()).toEqual("redirect error");
     });
 
     it("should pass errors caught in renderNotFound to error handler", async () => {
-      overrides.RequestHandler.renderNotFound.mockImplementationOnce(() => { throw new Error("render not found error") });
+      overrides.RequestHandler.renderNotFound.mockImplementationOnce(() => { throw new Error("render not found error"); });
       await gluestickExpressMiddleware(mockReq, mockRes, overrides);
       expect(getErrorMessage()).toEqual("render not found error");
     });
@@ -103,37 +103,37 @@ describe("lib/server/express-middleware", () => {
       });
 
       it("should pass errors caught in renderPreRenderHooks to error handler", async () => {
-        overrides.RequestHandler.runPreRenderHooks.mockImplementationOnce(() => { throw new Error("pre hook error") });
+        overrides.RequestHandler.runPreRenderHooks.mockImplementationOnce(() => { throw new Error("pre hook error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("pre hook error");
       });
 
       it("should pass errors caught in getCurrentRoute to error handler", async () => {
-        overrides.RequestHandler.getCurrentRoute.mockImplementationOnce(() => { throw new Error("current route error") });
+        overrides.RequestHandler.getCurrentRoute.mockImplementationOnce(() => { throw new Error("current route error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("current route error");
       });
 
       it("should pass errors caught in setHeaders to error handler", async () => {
-        overrides.RequestHandler.setHeaders.mockImplementationOnce(() => { throw new Error("set headers error") });
+        overrides.RequestHandler.setHeaders.mockImplementationOnce(() => { throw new Error("set headers error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("set headers error");
       });
 
       it("should pass errors caught in getStatusCode to error handler", async () => {
-        overrides.RequestHandler.getStatusCode.mockImplementationOnce(() => { throw new Error("get status code error") });
+        overrides.RequestHandler.getStatusCode.mockImplementationOnce(() => { throw new Error("get status code error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("get status code error");
       });
 
       it("should pass errors caught in prepareOutput to error handler", async () => {
-        overrides.RequestHandler.prepareOutput.mockImplementationOnce(() => { throw new Error("prepare output error") });
+        overrides.RequestHandler.prepareOutput.mockImplementationOnce(() => { throw new Error("prepare output error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("prepare output error");
       });
 
       it("should pass errors caught in cacheAndRender to error handler", async () => {
-        overrides.RequestHandler.prepareOutput.mockImplementationOnce(() => { throw new Error("cache and render error") });
+        overrides.RequestHandler.prepareOutput.mockImplementationOnce(() => { throw new Error("cache and render error"); });
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         expect(getErrorMessage()).toEqual("cache and render error");
       });
@@ -192,7 +192,7 @@ describe("lib/server/express-middleware", () => {
         await gluestickExpressMiddleware(mockReq, mockRes, overrides);
         const getCurrentRoute = overrides.RequestHandler.getCurrentRoute;
         expect(getCurrentRoute).toHaveBeenCalledTimes(1);
-        const currentRoute = getCurrentRoute()
+        const currentRoute = getCurrentRoute();
         expect(overrides.RequestHandler.setHeaders).toBeCalledWith(mockRes, currentRoute);
       });
 

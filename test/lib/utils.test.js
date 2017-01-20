@@ -36,7 +36,6 @@ describe("utils", function () {
 
   describe("quitUnlessGluestickProject", function () {
 
-    let sandbox;
     process.exit = jest.fn();
     logger.error = jest.fn();
 

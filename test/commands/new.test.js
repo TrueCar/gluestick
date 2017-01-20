@@ -5,7 +5,6 @@ import rimraf from "rimraf";
 import glob from "glob";
 import path from "path";
 import newApp from "../../src/commands/new";
-import npmDependencies from "../../src/lib/npmDependencies";
 import logger from "../../src/lib/cliLogger";
 
 const newFilesTemplate = glob.sync("**", {
@@ -18,8 +17,6 @@ describe("cli: gluestick new", function () {
   let originalCwd, tmpDir;
   logger.info = jest.fn();
   logger.warn = jest.fn();
-  npmDependencies.install = jest.fn();
-  const fakeNpm = npmDependencies.install;
 
   beforeEach(() => {
     originalCwd = process.cwd();

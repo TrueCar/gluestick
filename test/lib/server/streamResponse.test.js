@@ -1,7 +1,3 @@
-/*global beforeEach describe it*/
-//import { expect } from "chai";
-import sinon from "sinon";
-
 import streamResponse from "../../../src/lib/server/streamResponse";
 
 describe("test/lib/server/streamResponse", () => {
@@ -16,9 +12,6 @@ describe("test/lib/server/streamResponse", () => {
     status: 200,
     responseBuffer: mockResponseBuffer
   };
-
-  const setEncodingSpy = sinon.spy();
-  const pushSpy = sinon.spy();
 
   class MockReadable {
     static pipe;

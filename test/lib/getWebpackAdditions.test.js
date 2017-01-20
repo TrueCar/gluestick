@@ -4,18 +4,15 @@ import temp from "temp";
 import logger from "../../src/lib/cliLogger";
 
 import newApp from "../../src/commands/new";
-import npmDependencies from "../../src/lib/npmDependencies";
 import getWebpackAdditions from "../../src/lib/getWebpackAdditions";
 
 describe("src/lib/getWebpackAdditions", () => {
-  let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath, sandbox;
+  let originalCwd, tmpDir, cwd, webpackAdditionsPath;
   let defaultAdditions;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    npmDependencies.install = jest.fn();
-    const fakeNpm = npmDependencies.install;
     process.chdir(tmpDir);
 
     newApp("test-app");

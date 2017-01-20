@@ -23,7 +23,7 @@ function createDirectories(rootDir, ...directories) {
 
 describe("cli: gluestick destroy", function () {
 
-  let originalCwd, tmpDir, sandbox;
+  let originalCwd, tmpDir;
 
   const fileExists = filePath => {
     return fs.existsSync(path.join(tmpDir, filePath));
@@ -67,7 +67,7 @@ describe("cli: gluestick destroy", function () {
 
       it("reports an error when a name not specified", () => {
         destroy("component","");
-        expect(logger.error).toBeCalledWith(`invalid arguments. You must specify a name.`);
+        expect(logger.error).toBeCalledWith("invalid arguments. You must specify a name.");
       });
 
       it("reports an error when a name only consists of whitespace", () => {
@@ -77,13 +77,13 @@ describe("cli: gluestick destroy", function () {
 
       it("reports an error when the specified name does not exist", () => {
         destroy("component","somethingthatdoesnotexist");
-          expect(logger.error.mock.calls[0][0]).toContain("does not exist");
+        expect(logger.error.mock.calls[0][0]).toContain("does not exist");
       });
 
       it("should ask whether to continue if the name does not match (case sensitive)", done => {
         inquirer.prompt = jest.fn().mockImplementation((questions, cb) => {
           setTimeout(() => {
-              cb({confirm: true});
+            cb({confirm: true});
           }, 0);
         });
 

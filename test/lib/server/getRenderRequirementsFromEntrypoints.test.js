@@ -3,7 +3,6 @@ import path from "path";
 import temp from "temp";
 
 import newApp from "../../../src/commands/new";
-import npmDependencies from "../../../src/lib/npmDependencies";
 
 import getRenderRequirementsFromEntrypoints from "../../../src/lib/server/getRenderRequirementsFromEntrypoints";
 
@@ -14,13 +13,11 @@ const MOCK_REQUEST = {
 };
 
 describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
-  let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath, mockServerResponse;
+  let originalCwd, tmpDir, cwd, webpackAdditionsPath, mockServerResponse;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    npmDependencies.install = jest.fn();
-    const fakeNpm = npmDependencies.install;
     process.chdir(tmpDir);
 
     mockServerResponse = {

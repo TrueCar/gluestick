@@ -59,7 +59,7 @@ describe("autoUpgrade/updatePackage", () => {
       catch (e) {
         // NOOP
       }
-  
+
       expect(prompt).toHaveBeenCalledTimes(1);
     });
 
@@ -74,7 +74,7 @@ describe("autoUpgrade/updatePackage", () => {
       catch (e) {
         // NOOP
       }
-  
+
       expect(prompt).not.toHaveBeenCalled();
     });
 
@@ -88,7 +88,7 @@ describe("autoUpgrade/updatePackage", () => {
       catch (e) {
         // NOOP
       }
-  
+
       expect(prompt).not.toHaveBeenCalled();
     });
   });
