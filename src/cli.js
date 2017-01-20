@@ -36,7 +36,6 @@ const currentGluestickVersion = getVersion();
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
 const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
-const debugServerNoBreakOption = ["-n, --no-break", "disable break on first line"];
 const debugTestOption = ["-B, --debug-test", "debug tests with node-inspector"];
 const karmaTestOption = ["-k, --karma", "run tests in Karma"];
 const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
@@ -92,7 +91,6 @@ commander
   .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
-  .option(...debugServerNoBreakOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .option(...karmaTestOption)
@@ -129,7 +127,6 @@ commander
   .description("start server")
   .option(...debugServerOption)
   .option(...debugServerPortOption)
-  .option(...debugServerNoBreakOption)
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .action(checkGluestickProject)
