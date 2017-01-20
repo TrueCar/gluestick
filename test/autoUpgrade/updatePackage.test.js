@@ -71,6 +71,7 @@ describe("autoUpgrade/updatePackage", () => {
       try {
         await fixVersionMismatch({
           ...overrides,
+          loadNewProjectPackage: mockLoadProjectPackage.bind(null, "valid"),
           loadProjectPackage: mockLoadProjectPackage.bind(null, "valid")
         });
       }
