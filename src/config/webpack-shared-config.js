@@ -20,7 +20,7 @@ module.exports = {
     alias: {
       "assets": path.join(process.cwd(), "assets"),
       "actions": path.join(process.cwd(), "src", "actions"),
-      // "components": path.join(process.cwd(), "src", "components"),
+      "components": path.join(process.cwd(), "src", "components"),
       "containers": path.join(process.cwd(), "src", "containers"),
       "reducers": path.join(process.cwd(), "src", "reducers"),
       ...additionalAliases
