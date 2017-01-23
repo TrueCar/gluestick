@@ -9,16 +9,16 @@
   "license": "MIT",
   "scripts": {
     "lint": "./node_modules/.bin/eslint src test templates",
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
-    "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage",
     "prepublish": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js"
   },
   "keywords": [
     "react",
     "redux",
-    "karma",
-    "mocha",
+    "jest",
     "es6",
     "es2015",
     "universal",
@@ -102,18 +102,26 @@
   },
   "peerDependencies": {},
   "devDependencies": {
+    "axios": "0.12.0",
     "babel-eslint": "6.0.4",
-    "electrode-react-ssr-caching": "0.1.3",
-    "enzyme": "2.3.0",
+    "electrode-react-ssr-caching": "0.1.5",
+    "enzyme": "2.7.0",
     "eslint": "3.3.1",
     "eslint-plugin-react": "6.1.1",
-    "gluestick-shared": "0.4.20",
+    "gluestick-shared": "0.4.21",
+    "jest": "18.1.0",
     "oy-vey": "0.7.0",
-    "react": "15.1.0",
-    "react-addons-test-utils": "15.0.2",
-    "react-dom": "15.1.0",
-    "react-router": "2.4.1",
+    "radium": "0.18.1",
+    "react": "15.4.2",
+    "react-addons-test-utils": "15.4.2",
+    "react-dom": "15.4.2",
+    "react-redux": "5.0.2",
+    "react-router": "3.0.1",
+    "redux": "3.6.0",
     "stream-to-string": "1.1.0",
     "temp": "0.8.3"
+  },
+  "jest": {
+    "testPathDirs": ["test"]
   }
 }

@@ -1,6 +1,3 @@
-import { spy } from "sinon";
-import { expect } from "chai";
-
 import fixVersionMismatch, { isValidVersion, FIX_VERSION_MISMATCH_OVERRIDES } from "../../src/autoUpgrade/updatePackage";
 import {
   missingProjectPackage,
@@ -8,7 +5,6 @@ import {
   validProjectPackage,
   validLargerProjectPackage,
 } from "../fixtures/projectPackages";
-
 
 function mockLoadProjectPackage (fixture) {
   switch (fixture) {
@@ -26,7 +22,7 @@ function mockLoadProjectPackage (fixture) {
 
 describe("autoUpgrade/updatePackage", () => {
   describe("fixVersionMismatch", () => {
-    const prompt = spy();
+    const prompt = jest.fn();
     const overrides = {
       ...FIX_VERSION_MISMATCH_OVERRIDES,
       loadNewProjectPackage: mockLoadProjectPackage.bind(null, "valid"),
@@ -35,7 +31,7 @@ describe("autoUpgrade/updatePackage", () => {
     };
 
     afterEach(() => {
-      prompt.reset();
+      prompt.mockClear();
     });
 
     it("should prompt when there is a missing module", async () => {
@@ -49,8 +45,8 @@ describe("autoUpgrade/updatePackage", () => {
         // NOOP
       }
 
-      expect(prompt.called).to.equal(true);
-      expect(prompt.lastCall.args[0].axios.project).to.equal("missing");
+      expect(prompt).toHaveBeenCalledTimes(1);
+      expect(prompt.mock.calls[0][0].axios.project).toEqual("missing");
     });
 
     it("should prompt when there a module has lower than required version", async () => {
@@ -64,13 +60,14 @@ describe("autoUpgrade/updatePackage", () => {
         // NOOP
       }
 
-      expect(prompt.called).to.equal(true);
+      expect(prompt).toHaveBeenCalledTimes(1);
     });
 
     it("should not prompt when module version match", async () => {
       try {
         await fixVersionMismatch({
           ...overrides,
+          loadNewProjectPackage: mockLoadProjectPackage.bind(null, "valid"),
           loadProjectPackage: mockLoadProjectPackage.bind(null, "valid")
         });
       }
@@ -78,7 +75,7 @@ describe("autoUpgrade/updatePackage", () => {
         // NOOP
       }
 
-      expect(prompt.called).to.equal(false);
+      expect(prompt).not.toHaveBeenCalled();
     });
 
     it("should not prompt when module version is larger", async () => {
@@ -92,41 +89,41 @@ describe("autoUpgrade/updatePackage", () => {
         // NOOP
       }
 
-      expect(prompt.called).to.equal(false);
+      expect(prompt).not.toHaveBeenCalled();
     });
   });
 
   describe("isValidVersion", () => {
     it("should return true when version is greater than or equal requiredVersion", () => {
-      expect(isValidVersion("10.0.0", "1.0.0")).to.be.true;
-      expect(isValidVersion("0.0.2", "0.0.1")).to.be.true;
-      expect(isValidVersion("2.1.1", "2.1.1")).to.be.true;
+      expect(isValidVersion("10.0.0", "1.0.0")).toEqual(true);
+      expect(isValidVersion("0.0.2", "0.0.1")).toEqual(true);
+      expect(isValidVersion("2.1.1", "2.1.1")).toEqual(true);
     });
 
     it("should return false when version is null or undefined", () => {
       const o = {};
-      expect(isValidVersion(null, "1.0.0")).to.be.false;
-      expect(isValidVersion(o.version, "0.0.1")).to.be.false;
+      expect(isValidVersion(null, "1.0.0")).toEqual(false);
+      expect(isValidVersion(o.version, "0.0.1")).toEqual(false);
     });
 
     it("should return false when version does not meet requirement", () => {
-      expect(isValidVersion("10.0.0", "11.0.0")).to.be.false;
-      expect(isValidVersion("0.0.2", "0.0.3")).to.be.false;
-      expect(isValidVersion("2.1.1", "2.1.2")).to.be.false;
+      expect(isValidVersion("10.0.0", "11.0.0")).toEqual(false);
+      expect(isValidVersion("0.0.2", "0.0.3")).toEqual(false);
+      expect(isValidVersion("2.1.1", "2.1.2")).toEqual(false);
     });
 
     it("should return true when version is valid but starts with carrot or similar", () => {
-      expect(isValidVersion("~10.0.0", "8.0.0")).to.be.true;
-      expect(isValidVersion(">=10.0.0", "8.0.0")).to.be.true;
-      expect(isValidVersion(">0.0.2", "0.0.1")).to.be.true;
-      expect(isValidVersion("^2.1.1", "2.1.1")).to.be.true;
+      expect(isValidVersion("~10.0.0", "8.0.0")).toEqual(true);
+      expect(isValidVersion(">=10.0.0", "8.0.0")).toEqual(true);
+      expect(isValidVersion(">0.0.2", "0.0.1")).toEqual(true);
+      expect(isValidVersion("^2.1.1", "2.1.1")).toEqual(true);
     });
 
     it("should return false when version starts with carrot or similar but is still too far behind", () => {
-      expect(isValidVersion("~10.0.0", "11.0.0")).to.be.false;
-      expect(isValidVersion(">=10.0.0", "11.0.0")).to.be.false;
-      expect(isValidVersion(">0.0.2", "0.0.3")).to.be.false;
-      expect(isValidVersion("^2.1.1", "2.5.1")).to.be.false;
+      expect(isValidVersion("~10.0.0", "11.0.0")).toEqual(false);
+      expect(isValidVersion(">=10.0.0", "11.0.0")).toEqual(false);
+      expect(isValidVersion(">0.0.2", "0.0.3")).toEqual(false);
+      expect(isValidVersion("^2.1.1", "2.5.1")).toEqual(false);
     });
   });
 });
