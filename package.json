@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.10.21",
+  "version": "0.10.22",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
@@ -13,7 +13,9 @@
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
     "prepublish": "./docker/generate-dockerfile.js",
-    "postpublish": "./docker/create-base-image.js"
+    "postpublish": "./docker/create-base-image.js",
+    "update-version": "npm version",
+    "postupdate-version": "./docker/generate-dockerfile.js"
   },
   "keywords": [
     "react",
@@ -109,7 +111,7 @@
     "enzyme": "2.7.0",
     "eslint": "3.3.1",
     "eslint-plugin-react": "6.1.1",
-    "gluestick-shared": "0.4.21",
+    "gluestick-shared": "0.4.22",
     "jest": "18.1.0",
     "oy-vey": "0.7.0",
     "radium": "0.18.1",
