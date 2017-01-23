@@ -36,7 +36,7 @@ const currentGluestickVersion = getVersion();
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
 const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
-const debugTestOption = ["-B, --debug-test", "debug tests with node-inspector"];
+const debugTestOption = ["-B, --debug-test", "debug tests with built-in node inspector"];
 const karmaTestOption = ["-k, --karma", "run tests in Karma"];
 const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
