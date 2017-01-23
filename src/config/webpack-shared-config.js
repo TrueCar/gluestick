@@ -14,6 +14,8 @@ const { additionalAliases } = getWebpackAdditions();
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
 .development(process.env.NODE_ENV !== "production");
 
+const ExtractCSSPlugin = new ExtractTextPlugin("[name]-[chunkhash].css")
+
 module.exports = {
   resolve: {
     extensions: [".js", ".css", ".json"],
@@ -51,7 +53,7 @@ module.exports = {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
       loaders: [
         "file-loader?name=[name]-[hash].[ext]",
-        "image-webpack"
+        "image-webpack-loader"
       ]
     },
     {
@@ -60,11 +62,27 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
+      use:
+        isProduction ?
+        ExtractCSSPlugin.extract({
+          fallbackLoader: "style-loader",
+          loader: [
+            {
+              loader: "css-loader"
+            },
+            {
+              loader: "sass-loader"
+            }
+          ],
+        }) : [
+          "style-loader",
+          "css-loader",
+          "sass-loader"
+        ]
     },
   ],
   plugins: [
-    new ExtractTextPlugin("[name]-[chunkhash].css"),
+    ExtractCSSPlugin,
     new OptimizeCSSAssetsPlugin()
   ],
 };

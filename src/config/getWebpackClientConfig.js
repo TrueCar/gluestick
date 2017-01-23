@@ -67,6 +67,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
   const devtool = process.env.DEVTOOL || "inline-source-map";
   const vendors = vendor ? { vendor } : {};
+
   return {
     context: appRoot,
     devtool: isProduction ? "source-map" : devtool,
@@ -106,8 +107,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       publicPath: ASSET_PATH,
     },
     plugins: [
-      new webpack.optimize.DedupePlugin(),
-      new webpack.NoErrorsPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         "process.env": getExposedEnvironmentVariables(appConfigFilePath)
       }),
