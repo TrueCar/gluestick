@@ -35,7 +35,7 @@ const testTemplate = createTemplate`
 import ${args => args.name} from "${args => args.path}";
 import { shallow } from "enzyme";
 
-describe("${args => args.path}", () => {
+describe("${args => args.name}", () => {
   it("renders without an issue", () => {
     const subject = <${args => args.name} />;
     const wrapper = shallow(subject);
