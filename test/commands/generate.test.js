@@ -1,12 +1,10 @@
 /*global afterEach beforeEach describe it*/
-import { expect } from "chai";
 import fs from "fs";
 import path from "path";
 import mkdirp from "mkdirp";
 import glob from "glob";
 import temp from "temp";
 import rimraf from "rimraf";
-import sinon from "sinon";
 import logger from "../../src/lib/cliLogger";
 import generate from "../../src/commands/generate";
 
@@ -37,7 +35,7 @@ function makeGeneratedFilesAssertion(dir, type, name, done) {
   const missingFiles = expectedFiles.filter(f => !generatedFiles.has(f));
   // Use an empty array here rather than `be.empty` so that
   // any missing files will be printed during test failures
-  expect(missingFiles).to.deep.equal([]);
+  expect(missingFiles).toEqual([]);
   done();
 }
 
@@ -50,7 +48,7 @@ function assertImportPath(filePath, expectedPath) {
     const match = line.match(importLineRegex);
     if (match !== null && types.some(c => match[0].includes(c))) {
       matchFound = true;
-      expect(match[2]).to.equal(expectedPath);
+      expect(match[2]).toBe(expectedPath);
     }
   });
 
@@ -61,21 +59,18 @@ function assertImportPath(filePath, expectedPath) {
 
 describe("cli: gluestick generate", function () {
 
-  let originalCwd, tmpDir, sandbox;
+  let originalCwd, tmpDir;
+  logger.info = jest.fn();
+  logger.success = jest.fn();
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-generate");
     process.chdir(tmpDir);
-
-    // Prevent verbose output in tests
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(logger, "info");
-    sandbox.stub(logger, "success");
   });
 
   afterEach((done) => {
-    sandbox.restore();
+    jest.resetAllMocks();
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
   });
@@ -84,21 +79,21 @@ describe("cli: gluestick generate", function () {
     it("reports an error if an invalid command type was provided", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
       generate("invalidtype", "myname", {}, (err) => {
-        expect(err).to.contain("is not a valid generator");
+        expect(err).toContain("is not a valid generator");
       });
     });
 
     it("reports an error if a blank name is provided", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
       generate("container", "", {}, (err) => {
-        expect(err).to.contain("must specify a name");
+        expect(err).toContain("must specify a name");
       });
     });
 
     it("reports an error if non-word characters are in the name", () => {
       fs.closeSync(fs.openSync(".gluestick", "w"));
       generate("container", "f##@", {}, (err) => {
-        expect(err).to.contain("is not a valid name");
+        expect(err).toContain("is not a valid name");
       });
     });
   });
@@ -108,7 +103,7 @@ describe("cli: gluestick generate", function () {
       const type = "container";
       stubProject(type);
       generate(type, "mycontainer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         makeGeneratedFilesAssertion(process.cwd(), type, "Mycontainer", done);
       });
     });
@@ -117,7 +112,7 @@ describe("cli: gluestick generate", function () {
       const type = "component";
       stubProject(type);
       generate(type, "mycomponent", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         makeGeneratedFilesAssertion(process.cwd(), type, "Mycomponent", done);
       });
     });
@@ -126,7 +121,7 @@ describe("cli: gluestick generate", function () {
       const type = "reducer";
       stubProject(type);
       generate(type, "Myreducer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         makeGeneratedFilesAssertion(process.cwd(), type, "myreducer", done);
       });
     });
@@ -138,7 +133,7 @@ describe("cli: gluestick generate", function () {
       stubProject(type);
       generate(type, "mycomponent", {functional: true}, () => {
         const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
-        expect(contents).to.contain("export default function Mycomponent ()");
+        expect(contents).toContain("export default function Mycomponent ()");
         done();
       });
     });
@@ -146,7 +141,7 @@ describe("cli: gluestick generate", function () {
       stubProject(type);
       generate(type, "mycomponent", {}, () => {
         const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycomponent.js`), "utf8");
-        expect(contents).to.contain("export default class Mycomponent extends Component");
+        expect(contents).toContain("export default class Mycomponent extends Component");
         done();
       });
     });
@@ -158,8 +153,8 @@ describe("cli: gluestick generate", function () {
       stubProject(type);
       fs.closeSync(fs.openSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "w"));
       generate(type, "mycontainer", {}, (err) => {
-        expect(err).to.not.be.undefined;
-        expect(err).to.contain("already exists");
+        expect(err).toBeDefined();
+        expect(err).toContain("already exists");
         done();
       });
     });
@@ -169,7 +164,7 @@ describe("cli: gluestick generate", function () {
       stubProject(type);
       generate(type, "mycontainer", {}, () => {
         const contents = fs.readFileSync(path.join(process.cwd(), `src/${type}s/Mycontainer.js`), "utf8");
-        expect(contents).to.contain("<Helmet title=\"Mycontainer\"/>");
+        expect(contents).toContain("<Helmet title=\"Mycontainer\"/>");
         done();
       });
     });
@@ -181,7 +176,7 @@ describe("cli: gluestick generate", function () {
       const testFilePath = path.join(tmpDir, "test", "reducers", "myreducer.test.js");
       stubProject(type);
       generate(type, "myreducer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         assertImportPath(testFilePath, `${type}s/myreducer`);
         done();
       });
@@ -193,7 +188,7 @@ describe("cli: gluestick generate", function () {
       const type = "component";
       stubProject(type);
       generate(type, "common/mycontainer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         makeGeneratedFilesAssertion(process.cwd(), type, "common/Mycontainer", done);
       });
     });
@@ -202,7 +197,7 @@ describe("cli: gluestick generate", function () {
       const type = "container";
       stubProject(type);
       generate(type, "path/to/my/directory/mycontainer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         makeGeneratedFilesAssertion(process.cwd(), type, "path/to/my/directory/Mycontainer", done);
       });
     });
@@ -211,7 +206,7 @@ describe("cli: gluestick generate", function () {
       const type = "reducer";
       stubProject(type);
       generate(type, "common/myreducer", {}, (err) => {
-        expect(err).to.not.be.undefined;
+        expect(err).toBeDefined();
         done();
       });
     });
@@ -220,8 +215,8 @@ describe("cli: gluestick generate", function () {
       const type = "component";
       stubProject(type);
       generate(type, "../common/mycomponent", {}, (err) => {
-        expect(err).to.not.be.undefined;
-        expect(err).to.contain("not supported");
+        expect(err).toBeDefined();
+        expect(err).toContain("not supported");
         done();
       });
     });
@@ -231,7 +226,7 @@ describe("cli: gluestick generate", function () {
       const testFilePath = path.join(tmpDir, "test", "components", "common", "Mycomponent.test.js");
       stubProject(type);
       generate(type, "common/mycomponent", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         assertImportPath(testFilePath, `${type}s/common/Mycomponent`);
         done();
       });
@@ -242,7 +237,7 @@ describe("cli: gluestick generate", function () {
       const testFilePath = path.join(tmpDir, "test", "containers", "common", "Mycontainer.test.js");
       stubProject(type);
       generate(type, "../containers/common/mycontainer", {}, (err) => {
-        expect(err).to.be.undefined;
+        expect(err).toBeUndefined();
         assertImportPath(testFilePath, `${type}s/common/Mycontainer`);
         done();
       });

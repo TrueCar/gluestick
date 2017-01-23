@@ -1,13 +1,10 @@
-/*global beforeEach describe it*/
-import { expect } from "chai";
-import sinon from "sinon";
 import addProxies from "../../../src/lib/server/addProxies";
 
 describe("lib/server/addProxies", function () {
   let mockApp;
   beforeEach(() => {
     mockApp = {
-      use: sinon.spy()
+      use: jest.fn()
     };
   });
 
@@ -29,13 +26,13 @@ describe("lib/server/addProxies", function () {
       }
     ];
     addProxies(mockApp, proxies);
-    expect(mockApp.use.calledWith("/api")).to.equal(true);
-    expect(mockApp.use.calledWith("/api2")).to.equal(true);
-    expect(mockApp.use.calledWith("/not")).to.equal(false);
+    expect(mockApp.use.mock.calls).toHaveLength(2);
+    expect(mockApp.use.mock.calls[0][0]).toEqual("/api");
+    expect(mockApp.use.mock.calls[1][0]).toEqual("/api2");
   });
 
   it("should pass the correct proxy arguments when creating a proxy", () => {
-    const mockExpressHttpProxy = sinon.spy();
+    const mockExpressHttpProxy = jest.fn();
     const proxyConfig = {
       path: "/api",
       destination: "http://www.test.com/api",
@@ -44,14 +41,12 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.called).to.equal(true);
-    expect(mockExpressHttpProxy.lastCall.args[0].test).to.equal(proxyConfig.options.test);
+    expect(mockExpressHttpProxy).toHaveBeenCalledTimes(1);
+    expect(mockExpressHttpProxy.mock.calls[0][0].test).toEqual(proxyConfig.options.test);
   });
 
   it("should use the default forwardPath option for you when creating the proxy", () => {
-    const mockExpressHttpProxy = sinon.spy();
-    const mockRequest = sinon.stub();
-    mockRequest.url = "/todos";
+    const mockExpressHttpProxy = jest.fn();
     const proxyConfig = {
       path: "/api",
       destination: "http://www.test.com/api",
@@ -60,11 +55,11 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[0].pathRewrite).to.deep.equal({[`^${proxyConfig.path}`]: ""});
+    expect(mockExpressHttpProxy.mock.calls[0][0].pathRewrite).toEqual({[`^${proxyConfig.path}`]: ""});
   });
 
   it("should allow you to override pathRewrite", () => {
-    const mockExpressHttpProxy = sinon.spy();
+    const mockExpressHttpProxy = jest.fn();
     const pathRewrite = {"^/api": "/API"};
     const proxyConfig = {
       path: "/api",
@@ -75,11 +70,11 @@ describe("lib/server/addProxies", function () {
       }
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[0].pathRewrite).to.equal(pathRewrite);
+    expect(mockExpressHttpProxy.mock.calls[0][0].pathRewrite).toEqual(pathRewrite);
   });
 
   it("should allow you to supply a filter function", () => {
-    const mockExpressHttpProxy = sinon.spy();
+    const mockExpressHttpProxy = jest.fn();
     const proxyConfig = {
       filter: (pathname) => {
         return !!(pathname.match("/api") && !pathname.match("/api/foo"));
@@ -88,20 +83,19 @@ describe("lib/server/addProxies", function () {
       destination: "http://www.test.com/api"
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[0]).to.be.a("function");
-    expect(mockExpressHttpProxy.lastCall.args[0]).to.equal(proxyConfig.filter);
+    expect(mockExpressHttpProxy.mock.calls[0][0]).toEqual(proxyConfig.filter);
   });
 
   it("should not add the filter if it is not a function", () => {
-    const mockExpressHttpProxy = sinon.spy();
+    const mockExpressHttpProxy = jest.fn();
     const proxyConfig = {
       filter: "this is the wrong type for filter",
       path: "/api",
       destination: "http://www.test.com/api"
     };
     addProxies(mockApp, [proxyConfig], mockExpressHttpProxy);
-    expect(mockExpressHttpProxy.lastCall.args[0]).to.not.be.a("function");
-    expect(mockExpressHttpProxy.lastCall.args[0]).to.be.a("Object");
+    expect(mockExpressHttpProxy.mock.calls[0][0]).not.toBeInstanceOf(Function);
+    expect(mockExpressHttpProxy.mock.calls[0][0]).toBeInstanceOf(Object);
   });
 });
 
