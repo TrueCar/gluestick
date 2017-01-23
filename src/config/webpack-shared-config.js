@@ -43,10 +43,10 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
-      query: {
-        id: "files",
-      },
+      loaders: [
+        "file-loader?name=[name]-[hash].[ext]",
+        "image-webpack"
+      ]
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
@@ -57,17 +57,11 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
-      query: {
-        id: "styles",
-      },
+      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
-      query: {
-        id: "json",
-      },
+      loader: "json"
     }
   ],
   plugins: [
@@ -77,29 +71,6 @@ module.exports = {
       id: "babel",
       loaders: ["babel-loader?presets[]=react&presets[]=es2015&presets[]=stage-0&plugins[]=transform-decorators-legacy"],
       threads: 4,
-    }),
-    new HappyPack({
-      id: "image",
-      loaders: [
-        "file-loader?name=[name]-[hash].[ext]",
-        "image-webpack"
-      ],
-      threads: 4,
-    }),
-    new HappyPack({
-      id: "fonts",
-      loaders: ["file-loader?name=[name]-[hash].[ext]"],
-      threads: 2,
-    }),
-    new HappyPack({
-      id: "styles",
-      loaders: [isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"],
-      threads: 2,
-    }),
-    new HappyPack({
-      id: "json",
-      loaders: ["json"],
-      threads: 2,
     }),
   ],
   preLoaders: []
