@@ -17,7 +17,8 @@ const CWD = process.cwd();
  * Spin up the server side rendering. If debug is false, this will use PM2 for
  * managing multiple instances.
  *
- * @param {Boolean} debug whether or not to use node-inspector for debugging
+ * @param {Boolean} debug whether to debug server with built-in node inspector
+ * @param {Number} debugPort custom port for inspector
  */
 module.exports = function startServer (debug = false, debugPort) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
