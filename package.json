@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.10.21",
+  "version": "0.10.22",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
@@ -112,7 +112,7 @@
     "enzyme": "2.7.0",
     "eslint": "3.3.1",
     "eslint-plugin-react": "6.1.1",
-    "gluestick-shared": "0.4.21",
+    "gluestick-shared": "0.4.22",
     "oy-vey": "0.7.0",
     "radium": "0.18.1",
     "react": "15.4.2",
