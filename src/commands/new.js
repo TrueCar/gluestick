@@ -29,8 +29,8 @@ function copyTo (destination) {
 module.exports = function (projectName) {
   const currentlyInProjectFolder = isGluestickProject();
 
-  // No project name, or ran from inside an existing project install in current directory if approved
-  if (!projectName || currentlyInProjectFolder) {
+  // Ran from inside an existing project, install in current directory if approved
+  if (currentlyInProjectFolder) {
     logger.info(`You are about to initialize a new gluestick project at ${filename(process.cwd())}`);
     const question = {
       type: "confirm",
@@ -40,6 +40,7 @@ module.exports = function (projectName) {
     inquirer.prompt([question]).then(function (answers) {
       if (!answers.confirm) { return; }
       copyTo(process.cwd());
+      _printInstructions(projectName);
       return false;
     });
 
@@ -54,6 +55,13 @@ module.exports = function (projectName) {
 
   // Project name set, install in current working directory
   copyTo(path.join(process.cwd(), projectName));
+  _printInstructions(projectName);
   return true;
 };
 
+function _printInstructions(projectName) {
+  logger.info(`${highlight("New GlueStick project created")} at ${filename(process.cwd())}`);
+  logger.info("To run your app and start developing");
+  logger.info(`    cd ${projectName}`);
+  logger.info("    Point the browser to http://localhost:8888");
+}

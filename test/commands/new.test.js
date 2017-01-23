@@ -9,7 +9,9 @@ import path from "path";
 import newApp from "../../src/commands/new";
 import npmDependencies from "../../src/lib/npmDependencies";
 import logger from "../../src/lib/cliLogger";
+const cliColorScheme = require("../../src/lib/cliColorScheme");
 
+const { highlight, filename } = cliColorScheme;
 const newFilesTemplate = glob.sync("**", {
   cwd: path.resolve("./templates/new"),
   dot: true
@@ -81,4 +83,13 @@ describe("cli: gluestick new", function () {
     });
   });
 
+  it("logs a successful message if everything ran correctly", () => {
+    newApp("gs-new-test");
+
+    expect(logger.info.callCount).to.equal(4);
+    expect(logger.info.calledWithMatch(`${highlight("New GlueStick project created")} at ${filename(process.cwd())}`)).to.equal(true);
+    expect(logger.info.calledWithMatch("To run your app and start developing")).to.equal(true);
+    expect(logger.info.calledWithMatch("    cd gs-new-test")).to.equal(true);
+    expect(logger.info.calledWithMatch("    Point the browser to http://localhost:8888")).to.equal(true);
+  });
 });
