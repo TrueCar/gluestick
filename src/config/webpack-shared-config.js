@@ -16,7 +16,7 @@ const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require(".
 
 module.exports = {
   resolve: {
-    extensions: ["", ".js", ".css", ".json"],
+    extensions: [".js", ".css", ".json"],
     alias: {
       "assets": path.join(process.cwd(), "assets"),
       "actions": path.join(process.cwd(), "src", "actions"),
@@ -26,11 +26,11 @@ module.exports = {
       ...additionalAliases
     }
   },
-  loaders: [
+  rules: [
     {
       test: /\.js$/,
       loader: "babel-loader",
-      query: {
+      options: {
         plugins: [
           "transform-decorators-legacy"
         ],
@@ -62,14 +62,9 @@ module.exports = {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
       loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
     },
-    {
-      test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-      loader: "json"
-    }
   ],
   plugins: [
     new ExtractTextPlugin("[name]-[chunkhash].css"),
     new OptimizeCSSAssetsPlugin()
   ],
-  preLoaders: []
 };

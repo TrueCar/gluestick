@@ -83,7 +83,7 @@ export default function (isomorphic=false) {
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
       additionalWebpackNodeConfig: additionalWebpackNodeConfig || {},
-      vendor: vendor || [],
+      vendor: vendor.length > 0 ? vendor : void 0,
       plugins: plugins || [],
       entryPoints: entryPoints || {}
     };
