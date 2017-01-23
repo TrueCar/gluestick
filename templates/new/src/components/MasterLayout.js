@@ -1,7 +1,7 @@
 /* @flow */
 import React, { Component } from "react";
 import Helmet from "react-helmet";
-import config from "../config/application";
+import config from "config/application";
 
 export default class MasterLayout extends Component {
   props: {

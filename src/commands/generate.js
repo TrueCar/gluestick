@@ -142,7 +142,7 @@ module.exports = function (command, name, options, cb) {
   }
 
   try {
-    const generatedComponentPath = destinationPath.replace(srcRoot, "").replace(".js", "").slice(1);
+    const generatedComponentPath = path.posix.join(availableCommands[command], dirname, generatedFileName);
     fs.writeFileSync(testPath, replaceName(testTemplate, generatedFileName, generatedComponentPath));
   }
   catch (e) {
