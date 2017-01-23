@@ -1,4 +1,3 @@
-/*global afterEach beforeEach describe it*/
 import fs from "fs";
 import temp from "temp";
 import rimraf from "rimraf";
@@ -6,6 +5,7 @@ import glob from "glob";
 import path from "path";
 import newApp from "../../src/commands/new";
 import logger from "../../src/lib/cliLogger";
+import inquirer from "inquirer";
 
 const newFilesTemplate = glob.sync("**", {
   cwd: path.resolve("./templates/new"),
@@ -17,6 +17,7 @@ describe("cli: gluestick new", function () {
   let originalCwd, tmpDir;
   logger.info = jest.fn();
   logger.warn = jest.fn();
+  inquirer.prompt = () => Promise.resolve({confirm: false});
 
   beforeEach(() => {
     originalCwd = process.cwd();
