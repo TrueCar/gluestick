@@ -66,6 +66,7 @@ module.exports = {
     "components": path.join(process.cwd(), "src", "components"),
     "containers": path.join(process.cwd(), "src", "containers"),
     "reducers": path.join(process.cwd(), "src", "reducers"),
+    "config": path.join(process.cwd(), "src", "config"),
     ...additionalAliases
   },
   patch_require: true
