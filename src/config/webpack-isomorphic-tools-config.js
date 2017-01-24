@@ -14,10 +14,10 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 // call this method with `true` as the first and only argument because that is
 // how we tell the method we are requiring for the purpose of the isomorphic
 // tools, not the webpack config file.
-const { additionalLoaders, additionalPreLoaders, additionalAliases } = require("../lib/getWebpackAdditions").default(true);
+const { additionalLoaders, additionalAliases } = require("../lib/getWebpackAdditions").default(true);
 
 const userExtensions = [];
-[...additionalLoaders, ...additionalPreLoaders].forEach((loader) => {
+[...additionalLoaders].forEach((loader) => {
   // Bail out when a test regexp has been supplied.
   if (loader.test && toString.call(loader.test) === "[object RegExp]") { return; }
 

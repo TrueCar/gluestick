@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const webpackSharedConfig = require("./webpack-shared-config");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
-const { additionalLoaders, additionalPreLoaders } = getWebpackAdditions();
+const { additionalLoaders } = getWebpackAdditions();
 
 const PORT = 9876;
 const CWD = process.cwd();
@@ -42,9 +42,6 @@ export default {
           include: path.resolve(CWD, "src")
         }
       ).concat(additionalLoaders),
-      preLoaders: [
-        // only place test specific preLoaders here
-      ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
     },
     node: {
       fs: "empty"
