@@ -55,7 +55,7 @@ export default function (isomorphic=false) {
     additionalExternals: {},
     additionalLoaders: [],
     additionalWebpackConfig: {},
-    vendor: [],
+    vendor: null,
     entryPoints: {},
     plugins: [],
   };
@@ -80,7 +80,7 @@ export default function (isomorphic=false) {
       additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalWebpackConfig: additionalWebpackConfig || {},
-      vendor: vendor.length > 0 ? vendor : void 0,
+      vendor: vendor && vendor.length > 0 ? vendor : null,
       plugins: plugins || [],
       entryPoints: entryPoints || {}
     };
