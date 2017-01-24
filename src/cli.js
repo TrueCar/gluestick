@@ -86,6 +86,7 @@ commander
   .command("start")
   .alias("s")
   .description("start everything")
+  .option("-M, --entrypoints <entrypoints>", "Enter specific")
   .option("-T, --run-tests", "run test hook")
   .option("-L, --log-level <level>", "set the logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
@@ -118,7 +119,9 @@ commander
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
+  .option("-M, --entrypoints <entrypoints>", "Enter specific")
   .action(checkGluestickProject)
+  .action((options) => startClient(false, options))
   .action(() => startClient(false))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
@@ -254,7 +257,7 @@ async function startAll(options) {
   // true.  We only want to start the client in development mode or if
   // skipBuild is not specified
   if (!(isProduction && options.skipBuild)) {
-    spawnProcess("client");
+    spawnProcess("client", options.entrypoints);
   }
 
   spawnProcess("server", commander.rawArgs.slice(3));
