@@ -17,14 +17,27 @@ const CWD = process.cwd();
  * Spin up the server side rendering. If debug is false, this will use PM2 for
  * managing multiple instances.
  *
- * @param {Boolean} debug whether or not to use node-inspector for debugging
+ * @param {Boolean} debug whether to debug server with built-in node inspector
+ * @param {Number} debugPort custom port for inspector
  */
-module.exports = function startServer (debug=false) {
+module.exports = function startServer (debug = false, debugPort) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
   if (debug) {
-    const debugSpawn = spawn(path.join(CWD, "node_modules", ".bin", "node-debug"), [serverEntrypointPath], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: "development-server"})});
+    const debugSpawn = spawn(
+      "node",
+      [
+        "--",
+        `--inspect${debugPort ? `=${debugPort}` : ""}`,
+        "--debug-brk",
+        serverEntrypointPath
+      ],
+      {
+        stdio: "inherit",
+        env: Object.assign({}, process.env, { NODE_ENV: "development-server" })
+      }
+    );
     debugSpawn.on("error", (e) => {
       logger.error(e);
     });

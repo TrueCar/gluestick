@@ -156,3 +156,13 @@ Finally, you need to update your application config file
 ### Port Overriding
 If you need to override the port in production, just set the environment variable `PORT` to whatever you need it to be.
 
+## Contribution to GlueStick
+### Debugging GlueStick test
+Run the following command and specify path to test you want to debug:
+```
+npm run debug <path-to-test>
+```
+Example:
+```
+npm run debug ./test/lib/server/addProxies.test.js
+```
