@@ -39,6 +39,37 @@ module.exports = exports = options => ({
     var: JSON.stringify(options)
   },
   /**
+   * Define modificator to alter existing files or create new one.
+   * It can be single modificator or array of modificators:
+   * modify: [{
+   *   ...
+   * }, {
+   *   ...
+   * }]
+   * Type: Object | Array<Object>
+   */
+  modify: {
+    /**
+     * File to modify or create (relative to GlueStick project isnside of which command is
+     * executed). If extension is ommited, \`.js\` will be assumed.
+     * Type: string
+     */
+    file: "example/fileToModify",
+    /**
+     * Modificator function that takes content of existing file and absolute path to file
+     * and optionally returns string with modified content to overwrite file.
+     * If function returns nothing, file will not be overwriten nor created.
+     * Type: (content: String, file: String) => void | String
+     */
+    modificator: (content, file) => {
+      console.log(file);
+      if (content) {
+        console.log(content);
+      }
+      return "// some comment\\n";
+    }
+  },
+  /**
    * Define single entry.
    * Type: Object
    *
