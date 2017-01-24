@@ -56,7 +56,7 @@ module.exports = exports = options => ({
     },
     {
       path: "test/components",
-      filename: `${options.name}.test`,
+      filename: `${options.name}.test.js`,
       template: testTemplate,
       args: {
         path: `../src/components/${options.name}`
