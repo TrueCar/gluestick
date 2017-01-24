@@ -3,10 +3,10 @@ const createTemplate = require("../../src/generator/createTemplate");
 
 describe("generator/parseConfig", () => {
   it("should merge args properly", () => {
-    const config = parseConfig({
-      args: options => ({
+    const config = parseConfig(options => ({
+      args: {
         name: options.name
-      }),
+      },
       entry: {
         path: "path/to/directory",
         filename: "Test",
@@ -15,7 +15,7 @@ describe("generator/parseConfig", () => {
           name: "TestNameOverride"
         }
       }
-    }, {
+    }), {
       name: "TestName"
     });
     expect(config).toEqual({
@@ -33,19 +33,17 @@ describe("generator/parseConfig", () => {
     });
   });
 
-  it("should parse config with object entry", () => {
+  it("should parse config with object config", () => {
     const config = parseConfig({
-      args: options => ({
-        name: options.name
-      }),
+      args: {
+        name: "TestName"
+      },
       entry: {
         path: "path/to/directory",
         filename: "Test",
         template: createTemplate`${args => args.name}`
       }
-    }, {
-      name: "TestName"
-    });
+    }, {});
     expect(config).toEqual({
       args: {
         name: "TestName"
@@ -58,17 +56,17 @@ describe("generator/parseConfig", () => {
     });
   });
 
-  it("should parse config with functional entry", () => {
-    const config = parseConfig({
-      args: options => ({
+  it("should parse config with functional config", () => {
+    const config = parseConfig(options => ({
+      args: {
         name: options.name
-      }),
-      entry: options => ({
+      },
+      entry: {
         path: "path/to/directory",
         filename: options.filename,
         template: createTemplate`${args => args.name}`
-      })
-    }, {
+      }
+    }), {
       name: "TestName",
       filename: "Test"
     });
@@ -84,8 +82,8 @@ describe("generator/parseConfig", () => {
     });
   });
 
-  it("should parse config with multiple mixed type entries", () => {
-    const config = parseConfig({
+  it("should parse config with multiple entries", () => {
+    const config = parseConfig(options => ({
       entries: [
         {
           path: "path/to/directory",
@@ -95,16 +93,16 @@ describe("generator/parseConfig", () => {
             name: "TestName1"
           }
         },
-        options => ({
+        {
           path: "path/to/directory",
           filename: options.name,
           template: createTemplate`${args => args.name}`,
           args: {
             name: options.name
           }
-        })
+        }
       ]
-    }, {
+    }), {
       name: "TestName2"
     });
     expect(config).toEqual({
@@ -131,11 +129,11 @@ describe("generator/parseConfig", () => {
 
   it("should throw error if entry is not valid", () => {
     expect(() => {
-      parseConfig({
-        args: options => ({
+      parseConfig(options => ({
+        args: {
           name: options.name
-        }),
-      }, {
+        },
+      }), {
         name: "TestName",
         generator: "TestGenerator"
       });

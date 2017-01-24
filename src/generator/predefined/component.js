@@ -44,23 +44,23 @@ describe("${args => args.name}", () => {
 });
 `;
 
-module.exports = exports = {
-  args: options => ({
+module.exports = exports = options => ({
+  args: {
     name: options.name
-  }),
+  },
   entries: [
-    options => ({
+    {
       path: "src/components",
       filename: options.name,
       template: options.functional ? functionalComponentTemplate : classComponentTemplate,
-    }),
-    options => ({
+    },
+    {
       path: "test/components",
       filename: `${options.name}.test`,
       template: testTemplate,
       args: {
         path: `../src/components/${options.name}`
       }
-    })
+    }
   ]
-};
+});

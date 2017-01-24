@@ -20,28 +20,27 @@ const template = createTemplate\`
 
 
 /**
- * For every property that is a function (\`args\`, \`entry\` or entry in \`entries\`)
- * \`options\` argument will be passed:
+ * Generator must export object with configuration or function that returns
+ * object with configuration.
+ * If export is a function, it will receive the following object as first argument:
  * {
  *   name: string; // name of entity specified on generate command execution
  *   generator: string; // generator name eg: component, reducer, container
  * }
  */
-module.exports = exports = {
+module.exports = exports = options => ({
   /**
    * Define shared arguments.
    * Those arguments that are passed down to every entry.
-   * It can be an object or function that returns object.
    * Those arguments can be overwritten by entry-specific arguments.
-   * Type: Object | (options?: Object) => Arguments
+   * Type: Object
    */
-  args: options => ({
+  args: {
     var: JSON.stringify(options)
-  }),
+  },
   /**
    * Define single entry.
-   * It can be an object or function that returns object.
-   * Type: Object | (options?: Object) => Entry
+   * Type: Object
    *
    * Every entry can define it's own arguments that can extend and/or overwrite shared arguments:
    * args: { ... }
@@ -52,14 +51,14 @@ module.exports = exports = {
    *   path: ...,
    *   filename: ...,
    *   template: ...,
-   * }, options => ({
+   * }, {
    *   path: ...,
    *   filename: ...,
    *   template: ...,
-   * })]
-   * Type: Array<Object | (options?: Object) => Entry>
+   * }]
+   * Type: Array<Object>
    */
-  entry: options => ({
+  entry: {
     /**
      * Path to destination directory (relative to GlueStick project isnside of which command is
      * executed) where template will be written to file.
@@ -76,14 +75,14 @@ module.exports = exports = {
      * Template returned by createTemplate function.
      */
     template
-  })
-};
+  }
+});
 `;
 
-module.exports = exports = {
-  entry: options => ({
+module.exports = exports = options => ({
+  entry: {
     path: "generators",
     filename: options.name,
     template: generatorTemplate
-  })
-};
+  }
+});

@@ -1,3 +1,5 @@
+const path = require("path");
+
 /**
  * Parses single entry.
  *
@@ -8,12 +10,7 @@
  * @returns {Object}
  */
 const parseEntry = (entry, commonArgs, options) => {
-  let parsedEntry = {};
-  if (typeof entry === "function") {
-    parsedEntry = entry(options);
-  } else {
-    Object.assign(parsedEntry, entry);
-  }
+  const parsedEntry = Object.assign({}, parsedEntry, entry);
   if (
     !parsedEntry
     || typeof parsedEntry.path !== "string"
@@ -22,7 +19,7 @@ const parseEntry = (entry, commonArgs, options) => {
   ) {
     throw new Error(`Entry in generator ${options.generator} is not valid`);
   }
-  if (!parsedEntry.filename.endsWith(".js")) {
+  if (!path.extname(parsedEntry.filename).length) {
     parsedEntry.filename += ".js";
   }
   const args = Object.assign({}, commonArgs, parsedEntry.args);
@@ -38,10 +35,7 @@ const parseEntry = (entry, commonArgs, options) => {
  * @returns {Object}
  */
 const parseConfig = (config, options) => {
-  const parsedConfig = Object.assign({}, config);
-  if (typeof parsedConfig.args === "function") {
-    parsedConfig.args = parsedConfig.args(options);
-  }
+  const parsedConfig = typeof config === "function" ? config(options) : Object.assign({}, config);
   if (!parsedConfig.entries && !parsedConfig.entry) {
     throw new Error(`No entry defined for generator ${options.generator}`);
   }
