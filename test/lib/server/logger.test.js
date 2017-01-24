@@ -1,6 +1,3 @@
-/*global beforeEach describe it*/
-import { expect } from "chai";
-import sinon from "sinon";
 import {
   parseLogOptions,
   pinoBaseConfig,
@@ -16,7 +13,7 @@ describe("lib/server/logger", () => {
     describe("when no custom configuration is provided", () => {
       it("sets up logging with proper defaults even when no config is provided", () => {
         const result = getLogConfig(undefined); // eslint-disable-line no-undefined
-        expect(result).to.deep.equal({
+        expect(result).toEqual({
           logConfig: {
             ...defaultConfig
           },
@@ -26,7 +23,7 @@ describe("lib/server/logger", () => {
 
       it("sets up logging with proper defaults when an empty config is provided", () => {
         const result = getLogConfig({});
-        expect(result).to.deep.equal({
+        expect(result).toEqual({
           logConfig: {
             ...defaultConfig
           },
@@ -38,7 +35,7 @@ describe("lib/server/logger", () => {
     describe("when a custom configuration is provided", () => {
       it("overrides the default level with the level provided", () => {
         const result = getLogConfig({level: "info"});
-        expect(result).to.deep.equal({
+        expect(result).toEqual({
           logConfig: {
             ...defaultConfig,
             level: "info"
@@ -49,17 +46,17 @@ describe("lib/server/logger", () => {
 
       it("overrides the pretty configuration with the one provided", () => {
         const result = getLogConfig({pretty: true});
-        expect(result.prettyConfig).to.not.be.null;
+        expect(result.prettyConfig).not.toBeNull();
       });
 
       it("overrides serializers with the ones provided", () => {
         const serializers = {
-          req: sinon.spy(),
-          res: sinon.spy(),
-          error: sinon.spy()
+          req: jest.fn(),
+          res: jest.fn(),
+          error: jest.fn()
         };
         const result = getLogConfig({serializers});
-        expect(result).to.deep.equal({
+        expect(result).toEqual({
           logConfig: {
             ...defaultConfig,
             serializers
@@ -80,7 +77,7 @@ describe("lib/server/logger", () => {
             level: "debug"
           },
           prettyConfig: null
-        }).to.deep.equal(result);
+        }).toEqual(result);
         delete process.env.GS_COMMAND_OPTIONS;
       });
 
@@ -94,21 +91,21 @@ describe("lib/server/logger", () => {
             level: "debug"
           },
           prettyConfig: null
-        }).to.deep.equal(result);
+        }).toEqual(result);
         delete process.env.GS_COMMAND_OPTIONS;
       });
 
       it("overrides the pretty option with the option provided", () => {
         process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: true});
         const result = getLogConfig({});
-        expect(result.prettyConfig).to.not.be.null;
+        expect(result.prettyConfig).not.toBeNull();
         delete process.env.GS_COMMAND_OPTIONS;
       });
 
       it("overrides the app config pretty option with the option provided", () => {
         process.env.GS_COMMAND_OPTIONS = JSON.stringify({logPretty: false});
         const result = getLogConfig({pretty: true});
-        expect(result.prettyConfig).to.be.null;
+        expect(result.prettyConfig).toBeNull();
         delete process.env.GS_COMMAND_OPTIONS;
       });
     });
@@ -117,7 +114,7 @@ describe("lib/server/logger", () => {
   describe("parseLogOptions()", () => {
     it("handles no params", () => {
       const params = JSON.stringify({});
-      expect(parseLogOptions(params)).to.deep.equal({});
+      expect(parseLogOptions(params)).toEqual({});
     });
 
     it("properly converts params", () => {
@@ -125,7 +122,7 @@ describe("lib/server/logger", () => {
         logLevel: "info",
         logPretty: true,
       });
-      expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: true});
+      expect(parseLogOptions(params)).toEqual({level: "info", pretty: true});
     });
 
     it("properly converts falsey params", () => {
@@ -133,7 +130,7 @@ describe("lib/server/logger", () => {
         logLevel: "info",
         logPretty: false,
       });
-      expect(parseLogOptions(params)).to.deep.equal({level: "info", pretty: false});
+      expect(parseLogOptions(params)).toEqual({level: "info", pretty: false});
     });
 
     it("excludes null options", () => {
@@ -141,7 +138,7 @@ describe("lib/server/logger", () => {
         logLevel: null,
         logPretty: false,
       });
-      expect(parseLogOptions(params)).to.deep.equal({pretty: false});
+      expect(parseLogOptions(params)).toEqual({pretty: false});
     });
 
     it("excludes undefined options", () => {
@@ -149,7 +146,7 @@ describe("lib/server/logger", () => {
         logLevel: undefined, // eslint-disable-line no-undefined
         logPretty: false,
       });
-      expect(parseLogOptions(params)).to.deep.equal({pretty: false});
+      expect(parseLogOptions(params)).toEqual({pretty: false});
     });
   });
 });

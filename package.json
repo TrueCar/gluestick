@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.10.21",
+  "version": "0.10.22",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/cli-harmony.js",
   "bin": "src/cli-harmony.js",
@@ -9,8 +9,10 @@
   "license": "MIT",
   "scripts": {
     "lint": "./node_modules/.bin/eslint src test templates",
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
-    "test-coverage": "NODE_ENV=test babel-node ./node_modules/.bin/babel-istanbul cover --include-all-sources --report html --dir coverage/html ./node_modules/.bin/_mocha -- --recursive",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage",
+    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
     "prepublish": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js",
     "update-version": "npm version",
@@ -19,8 +21,7 @@
   "keywords": [
     "react",
     "redux",
-    "karma",
-    "mocha",
+    "jest",
     "es6",
     "es2015",
     "universal",
@@ -80,10 +81,9 @@
     "match-media": "0.2.0",
     "mkdirp": "0.5.1",
     "mocha": "3.1.2",
-    "node-inspector": "0.12.8",
     "optimize-css-assets-webpack-plugin": "1.3.0",
     "pino": "2.8.3",
-    "pm2": "2.0.12",
+    "pm2": "2.3.0",
     "react-hot-loader": "1.3.0",
     "react-loader": "2.4.0",
     "react-transform-catch-errors": "1.0.2",
@@ -112,7 +112,8 @@
     "enzyme": "2.7.0",
     "eslint": "3.3.1",
     "eslint-plugin-react": "6.1.1",
-    "gluestick-shared": "0.4.21",
+    "gluestick-shared": "0.4.22",
+    "jest": "18.1.0",
     "oy-vey": "0.7.0",
     "radium": "0.18.1",
     "react": "15.4.2",
@@ -123,5 +124,8 @@
     "redux": "3.6.0",
     "stream-to-string": "1.1.0",
     "temp": "0.8.3"
+  },
+  "jest": {
+    "testPathDirs": ["test"]
   }
 }

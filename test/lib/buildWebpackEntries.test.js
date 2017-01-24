@@ -1,8 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
-import { expect } from "chai";
-import { stub } from "sinon";
 
 import newApp from "../../src/commands/new";
 import npmDependencies from "../../src/lib/npmDependencies";
@@ -15,7 +13,8 @@ describe("src/lib/buildWebpackEntries", () => {
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    fakeNpm = stub(npmDependencies, "install");
+    npmDependencies.install = jest.fn();
+    fakeNpm = npmDependencies.install;
     process.chdir(tmpDir);
 
     newApp("test-app");
@@ -29,9 +28,9 @@ describe("src/lib/buildWebpackEntries", () => {
   });
 
   afterEach((done) => {
+    fakeNpm.mockClear();
     process.chdir(originalCwd);
     fs.remove(tmpDir, done);
-    fakeNpm.restore();
   });
 
   describe("getWebpackEntries", () => {
@@ -48,7 +47,7 @@ describe("src/lib/buildWebpackEntries", () => {
         }
       };
 
-      expect(entries).to.deep.equal(expectedResult);
+      expect(entries).toEqual(expectedResult);
     });
 
     it("should return entries for entryPoints added through the webpack additions file", () => {
@@ -74,7 +73,7 @@ describe("src/lib/buildWebpackEntries", () => {
         }
       };
 
-      expect(entries).to.deep.equal(expectedResult);
+      expect(entries).toEqual(expectedResult);
     });
 
     it("should allow you to override routes, reducers and index path in an entry point", () => {
@@ -94,7 +93,7 @@ describe("src/lib/buildWebpackEntries", () => {
         routes: routesPath
       };
 
-      expect(entries["/used-cars-for-sale"]).to.deep.equal(expectedResult);
+      expect(entries["/used-cars-for-sale"]).toEqual(expectedResult);
     });
   });
 
@@ -105,11 +104,11 @@ describe("src/lib/buildWebpackEntries", () => {
       const mainEntryPath = path.join(entriesFolder, "main-[chunkhash].js");
       const usedEntryPath = path.join(entriesFolder, "used-[chunkhash].js");
       fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
-      expect(() => fs.statSync(mainEntryPath)).to.throw("ENOENT");
-      expect(() => fs.statSync(usedEntryPath)).to.throw("ENOENT");
+      expect(() => fs.statSync(mainEntryPath)).toThrow("ENOENT");
+      expect(() => fs.statSync(usedEntryPath)).toThrow("ENOENT");
       buildWebpackEntries();
-      expect(() => fs.statSync(mainEntryPath)).to.not.throw("ENOENT");
-      expect(() => fs.statSync(usedEntryPath)).to.not.throw("ENOENT");
+      expect(() => fs.statSync(mainEntryPath)).not.toThrow("ENOENT");
+      expect(() => fs.statSync(usedEntryPath)).not.toThrow("ENOENT");
     });
 
     it("should return a webpack compatible entry object with hot module middleware and our base client code for each entry in dev mode", () => {
@@ -132,7 +131,7 @@ describe("src/lib/buildWebpackEntries", () => {
           path.join(cwd, "/src/config/.entries/used-[chunkhash].js")
         ]
       };
-      expect(output).to.deep.equal(expectedResult);
+      expect(output).toEqual(expectedResult);
     });
 
     it("should not include the hot module middleware in production mode", () => {
@@ -150,7 +149,7 @@ describe("src/lib/buildWebpackEntries", () => {
           path.join(cwd, "/src/config/.entries/used-[chunkhash].js")
         ]
       };
-      expect(output).to.deep.equal(expectedResult);
+      expect(output).toEqual(expectedResult);
     });
   });
 });

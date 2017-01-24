@@ -1,61 +1,58 @@
-import { expect } from "chai";
-import { spy, stub } from "sinon";
-
 import serveAssets, { DEFAULT_ASSETS_CONFIG } from "../../../src/lib/server/serveAssets";
 
 describe("lib/server/serveAssets", () => {
   let mockStaticMiddleware, app, mockLoadServerConfig;
 
   beforeEach(() => {
-    mockStaticMiddleware = spy();
-    mockLoadServerConfig = stub().returns({});
+    mockStaticMiddleware = jest.fn();
+    mockLoadServerConfig = jest.fn().mockImplementation(() => {});
     app = {
-      use: stub()
+      use: jest.fn(),
     };
   });
 
-  context("when no asset configuration has been set", () => {
+  describe("when no asset configuration has been set", () => {
     it("should use the default configuration", () => {
-      serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
-      expect(mockStaticMiddleware.calledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options)).to.equal(true);
-      expect(app.use.calledWith(DEFAULT_ASSETS_CONFIG.path));
+      serveAssets(app, mockLoadServerConfig(), mockStaticMiddleware);
+      expect(mockStaticMiddleware).toBeCalledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options);
+      expect(app.use.mock.calls[0][0]).toEqual(DEFAULT_ASSETS_CONFIG.path);
     });
   });
 
-  context("when asset configuration has been set", () => {
+  describe("when asset configuration has been set", () => {
     it("should merge custom options", () => {
-      mockLoadServerConfig.returns({
+      mockLoadServerConfig = jest.fn().mockImplementationOnce(() => ({
         assets: {
           options: {
             test: "best"
           }
         }
-      });
+      }));
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
-      expect(mockStaticMiddleware.lastCall.args[1]).to.deep.equal({
+      expect(mockStaticMiddleware.mock.calls[0][1]).toEqual({
         ...DEFAULT_ASSETS_CONFIG.options,
         test: "best",
       });
     });
 
     it("should pass the custom asset path", () => {
-      mockLoadServerConfig.returns({
+      mockLoadServerConfig = jest.fn().mockImplementationOnce(() => ({
         assets: {
           path: "/files"
         }
-      });
+      }));
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
-      expect(app.use.lastCall.args[0]).to.equal("/files");
+      expect(app.use.mock.calls[0][0]).toEqual("/files");
     });
 
     it("should pass the custom build folder", () => {
-      mockLoadServerConfig.returns({
+      mockLoadServerConfig = jest.fn().mockImplementationOnce(() => ({
         assets: {
           buildFolder: "public-files"
         }
-      });
+      }));
       serveAssets(app, mockLoadServerConfig, mockStaticMiddleware);
-      expect(mockStaticMiddleware.lastCall.args[0]).to.equal("public-files");
+      expect(mockStaticMiddleware.mock.calls[0][0]).toEqual("public-files");
     });
   });
 });
