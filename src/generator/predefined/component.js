@@ -1,4 +1,4 @@
-const createTemplate = require('../createTemplate');
+const createTemplate = module.parent.createTemplate;
 
 const classComponentTemplate = createTemplate`
 /* @flow */
@@ -45,7 +45,6 @@ describe("${args => args.name}", () => {
 `;
 
 module.exports = exports = {
-  name: "component",
   args: options => ({
     name: options.name
   }),
