@@ -1,5 +1,3 @@
-/*global describe it*/
-import { expect } from "chai";
 import { Writable } from "stream";
 import DoctypeStream from "../../../src/lib/server/DoctypeStream";
 import fs from "fs";
@@ -23,8 +21,8 @@ describe("lib/server/DoctypeStream", function () {
     const writeStream = new WriteStream();
 
     writeStream.on("finish", function () {
-      expect(this.data[0].toString("utf8")).to.equal("<!DOCTYPE html>");
-      expect(this.data.join("")).to.contain("<!DOCTYPE html>");
+      expect(this.data[0].toString("utf8")).toEqual("<!DOCTYPE html>");
+      expect(this.data.join("")).toContain("<!DOCTYPE html>");
       done();
     });
 

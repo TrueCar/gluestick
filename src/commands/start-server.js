@@ -4,6 +4,7 @@ import { spawn } from "cross-spawn";
 import pm2 from "pm2";
 import sha1 from "sha1";
 import { getLogger } from "../lib/server/logger";
+import chokidar from "chokidar";
 const logger = getLogger();
 
 // The number of server side rendering instances to run. This can be set with
@@ -17,17 +18,25 @@ const CWD = process.cwd();
  * Spin up the server side rendering. If debug is false, this will use PM2 for
  * managing multiple instances.
  *
- * @param {Boolean} debug whether or not to use node-inspector for debugging
+ * @param {Boolean} debug whether to debug server with built-in node inspector
+ * @param {Number} debugPort custom port for inspector
  */
-module.exports = function startServer (debug=false) {
+module.exports = function startServer (debug = false, debugPort) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering
   if (debug) {
-    const debugSpawn = spawn(path.join(CWD, "node_modules", ".bin", "node-debug"), [serverEntrypointPath], {stdio: "inherit", env: Object.assign({}, process.env, {NODE_ENV: "development-server"})});
-    debugSpawn.on("error", (e) => {
-      logger.error(e);
+    let debugSpawn;
+    watchSources(() => {
+      debugSpawn.kill();
+
+      // killing a child process isn't immediate… we need to wait for it to
+      // have a chance to complete before restarting
+      setTimeout(() => {
+        debugSpawn = startDebugServer(serverEntrypointPath, debugPort);
+      }, 500);
     });
+    debugSpawn = startDebugServer(serverEntrypointPath);
     return;
   }
 
@@ -62,7 +71,6 @@ module.exports = function startServer (debug=false) {
 };
 
 function startPM2 (scriptPath, name) {
-
   const pm2Config = {
     script: scriptPath,
     name: name,
@@ -122,6 +130,39 @@ function checkIfPM2ProcessExists (name, callback) {
       }
       return exists;
     }).length > 0);
+  });
+}
+
+function startDebugServer (serverEntrypointPath, debugPort) {
+  const debugSpawn = spawn(
+    "node",
+    [
+      "--",
+      `--inspect${debugPort ? `=${debugPort}` : ""}`,
+      serverEntrypointPath
+    ],
+    {
+      stdio: "inherit",
+      env: Object.assign({}, process.env, { NODE_ENV: "development-server" })
+    }
+  );
+  debugSpawn.on("error", (e) => {
+    logger.error(e);
+  });
+  return debugSpawn;
+}
+
+function watchSources(callback) {
+  // Debounce file watches
+  let timeout;
+  chokidar.watch([path.join(CWD, "src/**/*.js"), path.join(CWD, "test/**/*.js")], {
+    ignored: /[\/\\]\./,
+    persistent: true
+  }).on("all", function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      callback();
+    }, 250);
   });
 }
 
