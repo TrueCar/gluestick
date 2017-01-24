@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const merge = require("webpack-merge");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const getAssetPath = require("../lib/getAssetPath").default;
 
@@ -10,7 +11,7 @@ const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const {
   additionalLoaders,
   additionalExternals,
-  additionalWebpackNodeConfig,
+  additionalWebpackConfig,
   vendor,
   plugins
 } = getWebpackAdditions();
@@ -68,7 +69,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
   const devtool = process.env.DEVTOOL || "inline-source-map";
   const vendors = vendor ? { vendor } : {};
 
-  return {
+  const baseWebpackConfig = {
     context: appRoot,
     devtool: isProduction ? "source-map" : devtool,
     entry: {
@@ -98,7 +99,6 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     },
     node: {
       fs: "empty",
-      ...additionalWebpackNodeConfig
     },
     output: {
       path: path.join(appRoot, "build"),
@@ -130,4 +130,5 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     }
   };
 
+  return merge(baseWebpackConfig, additionalWebpackConfig);
 }

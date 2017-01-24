@@ -85,7 +85,7 @@ commander
   .command("start")
   .alias("s")
   .description("start everything")
-  .option("-T, --skip-tests", "ignore test hook")
+  .option("-T, --run-tests", "run test hook")
   .option("-L, --log-level <level>", "set the logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
   .option(...debugServerOption)
@@ -256,9 +256,9 @@ async function startAll(options) {
 
   spawnProcess("server", (options.debugServer ? ["--debug-server"] : []));
 
-  // Start tests unless they asked us not to or we are in production mode
-  if (!isProduction && !options.skipTests) {
-    spawnProcess("test", commander.rawArgs.slice(3));
+  // Start tests only they asked us to or we are in production mode
+  if (!isProduction && options.runTests) {
+    spawnProcess("test", commander.rawArgs.slice(4));
   }
 }
 

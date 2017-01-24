@@ -55,10 +55,10 @@ export default function (isomorphic=false) {
     additionalExternals: {},
     additionalLoaders: [],
     additionalPreLoaders: [],
-    additionalWebpackNodeConfig: {},
+    additionalWebpackConfig: {},
     vendor: [],
     entryPoints: {},
-    plugins: []
+    plugins: [],
   };
 
   // Babel will try to resolve require statements ahead of time which will cause an error
@@ -72,7 +72,7 @@ export default function (isomorphic=false) {
       additionalExternals,
       additionalLoaders,
       additionalPreLoaders,
-      additionalWebpackNodeConfig,
+      additionalWebpackConfig,
       vendor,
       plugins,
       entryPoints
@@ -82,7 +82,7 @@ export default function (isomorphic=false) {
       additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
       additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
-      additionalWebpackNodeConfig: additionalWebpackNodeConfig || {},
+      additionalWebpackConfig: additionalWebpackConfig || {},
       vendor: vendor.length > 0 ? vendor : void 0,
       plugins: plugins || [],
       entryPoints: entryPoints || {}
