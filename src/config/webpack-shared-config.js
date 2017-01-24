@@ -4,8 +4,8 @@ import process from "process";
 import { GLUESTICK_ADDON_DIR_REGEX } from "./vars";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
@@ -13,8 +13,6 @@ const { additionalAliases } = getWebpackAdditions();
 
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
 .development(process.env.NODE_ENV !== "production");
-
-const ExtractCSSPlugin = new ExtractTextPlugin("[name]-[chunkhash].css")
 
 module.exports = {
   resolve: {
@@ -63,27 +61,21 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      use:
-        isProduction ?
-        ExtractCSSPlugin.extract({
-          fallbackLoader: "style-loader",
-          loader: [
-            {
-              loader: "css-loader"
-            },
-            {
-              loader: "sass-loader"
-            }
-          ],
-        }) : [
-          "style-loader",
+      loader: isProduction ? ExtractTextPlugin.extract({
+        fallbackLoader: "style-loader",
+        loader: [
           "css-loader",
-          "sass-loader"
-        ]
+          "sass-loader?sourceMap",
+        ],
+      }) : [
+        "style-loader",
+        "css-loader",
+        "sass-loader"
+      ],
     },
   ],
   plugins: [
-    ExtractCSSPlugin,
+    new ExtractTextPlugin("[name]-[chunkhash].css"),
     new OptimizeCSSAssetsPlugin()
   ],
 };

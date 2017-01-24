@@ -26,8 +26,15 @@ module.exports = function() {
 
   compiler.run((error, stats) => {
     const statsJson = stats.toJson();
+    const dir = "build";
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+
     fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(statsJson));
     fs.writeFileSync("build/asset-path.json", JSON.stringify({assetPath: getAssetPath()}));
+
     const errors = statsJson.errors;
     if (errors.length) {
       errors.forEach((e) => {
