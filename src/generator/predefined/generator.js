@@ -44,9 +44,8 @@ module.exports = exports = {
    * Type: Object | (options?: Object) => Entry
    *
    * Every entry can define it's own arguments that can extend and/or overwrite shared arguments:
-   * args: option => ({ ... })
-   * It can be an object or function that returns object.
-   * Type: Object | (options?: Object) => Arguments
+   * args: { ... }
+   * Type: Object
    *
    * To define multiple entries pass array of entries to \`entires\` property:
    * entries: [{

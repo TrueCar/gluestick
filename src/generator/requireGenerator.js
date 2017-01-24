@@ -26,7 +26,6 @@ const getPossiblePaths = generatorName => {
 
 /**
  * TODO: make API for modifying already existing file
- * TODO: pass options from CLI to generator
  */
 
 /**
