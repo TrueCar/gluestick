@@ -12,7 +12,8 @@ const convertToCamelCase = value => {
 };
 
 const convertToKebabCase = value => {
-  return value.replace(/([A-Z])/g, match => `-${match[0].toLowerCase()}`);
+  value = value.replace(/([A-Z])/g, match => `-${match[0].toLowerCase()}`);
+  return value[0] === "-" ? value.substring(1) : value;
 };
 
 const getPossiblePaths = generatorName => {
@@ -23,10 +24,6 @@ const getPossiblePaths = generatorName => {
     path.join(process.cwd(), `generators/${convertToKebabCase(generatorName)}.js`)
   ];
 };
-
-/**
- * TODO: make API for modifying already existing file
- */
 
 /**
  * Requires generator from predefined generators or from GlueStick project.
@@ -40,8 +37,10 @@ const requireGeneratorConfig = generatorName => {
     return fs.existsSync(pathToGenerator);
   });
   if (!pathToGenerator) {
-    throw new Error(`Generator ${generatorName} was not found at paths:
-  ${paths.join("\n  ")}`);
+    throw new Error(
+      `Generator ${generatorName} was not found at paths:\n`
+      + `  ${paths.join("\n  ")}`
+    );
   }
   return {
     name: path.basename(pathToGenerator, ".js"),

@@ -27,7 +27,7 @@ const applyModification = modification => {
   if (!path.extname(absolutePath).length) {
     absolutePath += ".js";
   }
-  mkdir(path.dirname(absolutePath));
+  mkdir.sync(path.dirname(absolutePath));
   const modifiedContent = modification.modificator(
     fs.existsSync(absolutePath) ? fs.readFileSync(absolutePath, "utf-8") : null,
     absolutePath
