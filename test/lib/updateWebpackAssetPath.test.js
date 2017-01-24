@@ -5,7 +5,6 @@ import path from "path";
 import { mkdir } from "shelljs";
 
 import updateWebpackAssetPath from "../../src/lib/updateWebpackAssetPath";
-import { expect } from "chai";
 
 const ASSETS_STRING = JSON.stringify({
   "assets" : {
@@ -40,9 +39,9 @@ describe("lib/updateWebpackAssetPath", () => {
     fs.writeFileSync(path.join(process.cwd(), "webpack-assets.json"), ASSETS_STRING);
 
     const originalFilePath = path.join(process.cwd(), "_webpack-assets.json");
-    expect(() => fs.statSync(originalFilePath)).to.throw("ENOENT");
+    expect(() => fs.statSync(originalFilePath)).toThrow("ENOENT");
     updateWebpackAssetPath("http://www.assetsformybaskets.com/assets");
-    expect(() => fs.statSync(originalFilePath)).to.not.throw("ENOENT");
+    expect(() => fs.statSync(originalFilePath)).not.toThrow("ENOENT");
   });
 
   it("should read from and not update the underscored backup if it does exist", () => {
@@ -54,8 +53,8 @@ describe("lib/updateWebpackAssetPath", () => {
 
     updateWebpackAssetPath("http://www.assetsformybaskets.com/assets");
 
-    expect(fs.readFileSync(originalFilePath, "utf8")).to.equal("{\"test\": \"__GS_ASSET_URL__/test.jpg\"}");
-    expect(fs.readFileSync(filePath, "utf8")).to.equal("{\"test\": \"http://www.assetsformybaskets.com/assets/test.jpg\"}");
+    expect(fs.readFileSync(originalFilePath, "utf8")).toEqual("{\"test\": \"__GS_ASSET_URL__/test.jpg\"}");
+    expect(fs.readFileSync(filePath, "utf8")).toEqual("{\"test\": \"http://www.assetsformybaskets.com/assets/test.jpg\"}");
   });
 
   it("should replace `__GS_ASSET_URL__` with new assetUrl", () => {
@@ -66,7 +65,7 @@ describe("lib/updateWebpackAssetPath", () => {
     updateWebpackAssetPath("http://www.assetsformybaskets.com/assets");
 
     const result = fs.readFileSync(filePath, "utf8");
-    expect(result).to.equal("{\"assets\":{\"http://www.assetsformybaskets.com/assets/assets/css/normalize.css\":\"body { background: #f0f; }\"},\"javascript\":{\"main\":\"http://www.assetsformybaskets.com/assets/main-app-c03464f0dd92831dad2e.bundle.js\",\"vendor\":\"http://www.assetsformybaskets.com/assets/vendor-d716f60633c7f6c46235.bundle.js\"},\"styles\":{\"main\":\"http://www.assetsformybaskets.com/assets/main-c03464f0dd92831dad2e.css\"}}");
+    expect(result).toEqual("{\"assets\":{\"http://www.assetsformybaskets.com/assets/assets/css/normalize.css\":\"body { background: #f0f; }\"},\"javascript\":{\"main\":\"http://www.assetsformybaskets.com/assets/main-app-c03464f0dd92831dad2e.bundle.js\",\"vendor\":\"http://www.assetsformybaskets.com/assets/vendor-d716f60633c7f6c46235.bundle.js\"},\"styles\":{\"main\":\"http://www.assetsformybaskets.com/assets/main-c03464f0dd92831dad2e.css\"}}");
   });
 
   it("should replace `__GS_ASSET_URL__` in the build folder", () => {
@@ -78,7 +77,7 @@ describe("lib/updateWebpackAssetPath", () => {
     updateWebpackAssetPath("http://www.assetsformybaskets.com/assets");
 
     const result = fs.readFileSync(filePath, "utf8");
-    expect(result).to.equal("body { background: url(http://www.assetsformybaskets.com/assets/tacos.jpg); }");
+    expect(result).toEqual("body { background: url(http://www.assetsformybaskets.com/assets/tacos.jpg); }");
   });
 });
 

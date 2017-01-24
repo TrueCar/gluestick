@@ -14,7 +14,6 @@ const MOCHA_COVERAGE_PATH = path.join(NODE_MODULES_PATH, ".bin", "_mocha");
 const MOCHA_TEST_PATH = `${CWD}/test/**/*.test.js`;
 const MOCHA_HELPER_PATH = path.join(__dirname, "..", "lib", "testHelperMocha.js");
 const BABEL_ISTANBUL_PATH = path.join(NODE_MODULES_PATH, ".bin", "babel-istanbul");
-const INSPECTOR_PATH = path.join(NODE_MODULES_PATH, ".bin", "node-inspector");
 const MOCHA_ENV = { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }};
 
 function watchSources(callback) {
@@ -39,7 +38,8 @@ function createMochaArgs(options, coverage) {
   }
   args.push(MOCHA_TEST_PATH);
   if (options.debugTest) {
-    args.push("--debug");
+    args.push("--inspect");
+    args.push("--debug-brk");
   }
   if (!options.single && !options.debugTest) {
     args.push("--watch");
@@ -110,58 +110,36 @@ function useMocha(options) {
     ]
   };
 
-  if (options.debugTest) {
-    debug();
-  } else if (options.single) {
+  if (options.single) {
     spawn(...spawnOpts.single).on("exit", function(exitCode) {
       process.exit(exitCode);
     });
   } else {
-    watch();
+    watch(options.debugTest);
   }
 
-  function debug() {
-    // Start up the inspector and open it in a browser window.
-    spawn(INSPECTOR_PATH, [], { stdio: "inherit" });
-    spawn("open", ["http://127.0.0.1:8080/debug?port=5858"], { stdio: "inherit" });
-
-    // Node segfaults when using debug with Mocha's built-in watch. Booooo!
-    // Instead, we'll use Chokidar to watch - it's slower since it rebuilds each time, but it works, and isn't too
-    // bad since debugging tests is expected to be a slower process than "save/see results".
-    let running = false;
-    watchSources(function() {
-      if (running) {
-        return;
-      }
-      running = true;
-      const child = spawn(...spawnOpts.mocha);
-
-      child.on("exit", function() {
-        running = false;
-      });
-    });
-  }
-
-  function watch() {
+  function watch(debug = false) {
     // If not debugging, start up mocha in watch mode.
     spawn(...spawnOpts.mocha);
 
-    // Set up a watcher to create coverage reports in the background, only messaging on success/failure.
-    // To ensure only the latest version is available, kill/restart the process on each change.
-    let child;
-    watchSources(function() {
-      if (child) {
-        child.kill();
-      }
-      child = spawn(...spawnOpts.coverage);
-      child.on("exit", function(exitCode) {
-        if (exitCode === 0) {
-          logger.success("Coverage report generated.");
-        } else if (exitCode === 1) {
-          logger.error("Coverage report generated, but with test errors.");
+    if (!debug) {
+      // Set up a watcher to create coverage reports in the background, only messaging on success/failure.
+      // To ensure only the latest version is available, kill/restart the process on each change.
+      let child;
+      watchSources(function() {
+        if (child) {
+          child.kill();
         }
+        child = spawn(...spawnOpts.coverage);
+        child.on("exit", function(exitCode) {
+          if (exitCode === 0) {
+            logger.success("Coverage report generated.");
+          } else if (exitCode === 1) {
+            logger.error("Coverage report generated, but with test errors.");
+          }
+        });
       });
-    });
+    }
   }
 }
 
