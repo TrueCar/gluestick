@@ -81,10 +81,16 @@ describe("cli: gluestick new", function () {
   it("logs a successful message if everything ran correctly", () => {
     newApp("gs-new-test");
 
-    expect(logger.info.callCount).to.equal(4);
-    expect(logger.info.calledWithMatch(`${highlight("New GlueStick project created")} at ${filename(process.cwd())}`)).to.equal(true);
-    expect(logger.info.calledWithMatch("To run your app and start developing")).to.equal(true);
-    expect(logger.info.calledWithMatch("    cd gs-new-test")).to.equal(true);
-    expect(logger.info.calledWithMatch("    Point the browser to http://localhost:8888")).to.equal(true);
+    expect(logger.info).toHaveBeenCalledTimes(5);
+
+    const path = filename(process.cwd() + "/gs-new-test");
+
+    expect(logger.info.mock.calls[0][0]).toContain(
+      `${highlight("New GlueStick project created")} at ${path}`
+    );
+    expect(logger.info.mock.calls[1][0]).toEqual("To run your app and start developing");
+    expect(logger.info.mock.calls[2][0]).toEqual("    cd gs-new-test");
+    expect(logger.info.mock.calls[3][0]).toEqual("    gluestick start");
+    expect(logger.info.mock.calls[4][0]).toEqual("    Point the browser to http://localhost:8888");
   });
 });
