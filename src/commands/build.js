@@ -33,7 +33,7 @@ module.exports = function() {
     }
 
     fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(statsJson));
-    fs.writeFileSync("build/asset-path.json", JSON.stringify({assetPath: getAssetPath()}));
+    fs.writeFileSync(`${dir}/asset-path.json`, JSON.stringify({assetPath: getAssetPath()}));
 
     const errors = statsJson.errors;
     if (errors.length) {
