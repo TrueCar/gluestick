@@ -27,21 +27,48 @@ describe("${args => args.name}", () => {
 });
 `;
 
-module.exports = exports = {
+const newReducersIndexFactory = (name, path) => `
+import { combineReducers } from "redux";
+import ${name} from "${path}";
+
+export default combineReducers({
+  ${name}
+});
+`;
+
+module.exports = exports = options => ({
+  modify: {
+    file: "src/reducers/index",
+    modificator: content => {
+      if (content) {
+        const lines = content.split("\n");
+        let lastImportIndex = -1;
+        lines.forEach((line, index) => {
+          if (line.startsWith("import")) {
+            lastImportIndex = index;
+          }
+        });
+        lines[lastImportIndex] += "\n" + `import ${options.name} from "./${options.name}";`;
+        lines[lines.length - 3] += ",\n" + `  ${options.name}`;
+        return lines.join("\n");
+      }
+      return newReducersIndexFactory(options.name, `./${options.name}`);
+    }
+  },
   entries: [
-    options => ({
+    {
       path: "src/reducers",
       filename: options.name,
       template: reducerTemplate
-    }),
-    options => ({
+    },
+    {
       path: "test/reducers",
-      filename: `${options.name}.test`,
+      filename: `${options.name}.test.js`,
       template: testTemplate,
       args: {
         name: options.name,
         path: `../../src/reducers/${options.name}`
       }
-    })
+    }
   ]
-};
+});
