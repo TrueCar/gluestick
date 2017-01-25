@@ -77,12 +77,17 @@ describe("lib/server/RequestHandler", () => {
   });
 
   describe("matchRoute", () => {
-    let req, getRoutes, store;
+    let req, res, getRoutes, store, config;
 
     beforeEach(() => {
       req = {
-        url: "/abc123"
+        url: "/abc123",
+        headers: {
+          host: "localhost"
+        }
       };
+      res = {};
+      config = {};
 
       getRoutes = jest.fn().mockImplementation(() =>
         <Route>
@@ -100,7 +105,7 @@ describe("lib/server/RequestHandler", () => {
 
     describe("when a matching route (not a redirect) exists", () => {
       it("should return the renderProps", (done) => {
-        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({redirectLocation, renderProps}) => {
           expect(redirectLocation).toBeNull();
           expect(renderProps).toBeDefined();
           done();
@@ -111,12 +116,15 @@ describe("lib/server/RequestHandler", () => {
     describe("when a matching redirect exists", () => {
       beforeEach(() => {
         req = {
-          url: "a"
+          url: "a",
+          headers: {
+            host: "localhost"
+          }
         };
       });
 
       it("should return the redirectLocation", (done) => {
-        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({redirectLocation, renderProps}) => {
           expect(redirectLocation).not.toBeNull();
           expect(redirectLocation.pathname).toEqual("/b");
           expect(renderProps).toBeUndefined();
@@ -128,12 +136,15 @@ describe("lib/server/RequestHandler", () => {
     describe("when no matching route exists", () => {
       beforeEach(() => {
         req = {
-          url: "zzzz"
+          url: "zzzz",
+          headers: {
+            host: "localhost"
+          }
         };
       });
 
       it("should forward to the promise `catch` with an error", (done) => {
-        RequestHandler.matchRoute(req, getRoutes, store).then(({redirectLocation, renderProps}) => {
+        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({redirectLocation, renderProps}) => {
           expect(redirectLocation).toBeUndefined();
           expect(renderProps).toBeUndefined();
           done();
@@ -184,7 +195,10 @@ describe("lib/server/RequestHandler", () => {
   describe("runPreRenderHooks", () => {
     it("forwards arguments to runBeforeRoutes", () => {
       const req = {
-        url: "/abc"
+        url: "/abc",
+        headers: {
+          host: "localhost"
+        }
       };
       const renderProps = {};
       const store = {};

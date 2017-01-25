@@ -7,7 +7,7 @@ import MasterLayout from "components/MasterLayout";
 import HomeApp from "containers/HomeApp";
 import NoMatchApp from "containers/NoMatchApp";
 
-export default function routes (/*store:Object*/) {
+export default function routes (/*store: Object, httpClient: Object*/) {
   return (
     <Route name="app" component={MasterLayout} path="/">
       <IndexRoute name="home" component={HomeApp} />

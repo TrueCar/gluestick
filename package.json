@@ -126,6 +126,9 @@
     "temp": "0.8.3"
   },
   "jest": {
-    "testPathDirs": ["test"]
+    "testPathDirs": ["test"],
+    "setupFiles": [
+      "./test/setup.js"
+    ]
   }
 }
