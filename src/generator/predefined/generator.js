@@ -25,8 +25,12 @@ const template = createTemplate\`
  * If export is a function, it will receive the following object as first argument:
  * {
  *   name: string; // name of entity specified on generate command execution
+ *   dir: string; // additional directory specified on generate command execution
  *   generator: string; // generator name eg: component, reducer, container
  * }
+ * Note: \`dir\` field will be appended to every entries' \`path\`.
+ * \`dir\` will not be appended to \`file\` field in \`modify\` object, you will
+ * need to do it yourself.
  */
 module.exports = exports = options => ({
   /**

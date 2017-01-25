@@ -22,6 +22,9 @@ const parseEntry = (entry, commonArgs, options) => {
   if (!path.extname(parsedEntry.filename).length) {
     parsedEntry.filename += ".js";
   }
+  if (options.dir) {
+    parsedEntry.path = `${parsedEntry.path}/${options.dir}`.replace(/\/\//, "/");
+  }
   const args = Object.assign({}, commonArgs, parsedEntry.args);
   parsedEntry.template = parsedEntry.template(args);
   return parsedEntry;

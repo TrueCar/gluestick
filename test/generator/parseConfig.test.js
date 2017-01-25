@@ -184,5 +184,30 @@ describe("generator/parseConfig", () => {
       });
     }).toThrowError("Entry in generator TestGenerator is not valid");
   });
+
+  it("should parse config with additional direcotry in name filed", () => {
+    const config = parseConfig({
+      args: {
+        name: "TestName"
+      },
+      entry: {
+        path: "path/to/directory",
+        filename: "Test",
+        template: createTemplate`${args => args.name}`
+      }
+    }, {
+      dir: "additionalDir"
+    });
+    expect(config).toEqual({
+      args: {
+        name: "TestName"
+      },
+      entry: {
+        path: "path/to/directory/additionalDir",
+        filename: "Test.js",
+        template: "TestName"
+      }
+    });
+  });
 });
 

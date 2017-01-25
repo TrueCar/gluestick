@@ -1,3 +1,4 @@
+const path = require("path");
 const requireGenerator = require("./requireGenerator");
 const parseConfig = require("./parseConfig");
 const writeTemplate = require("./writeTemplate");
@@ -12,7 +13,11 @@ module.exports = exports = ({ generatorName, entityName, options }, logger) => {
   const generator = requireGenerator(generatorName);
   const generatorConfig = parseConfig(
     generator.config,
-    Object.assign({}, options, { generator: generator.name, name: entityName })
+    Object.assign({}, options, {
+      generator: generator.name,
+      name: path.basename(entityName),
+      dir: path.dirname(entityName)
+    })
   );
   writeTemplate(generatorConfig);
   logger.success(`${generator.name} ${entityName} generated successfully`);
