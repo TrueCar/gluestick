@@ -44,6 +44,7 @@
   "devDependencies": {
     "babel-eslint": "6.0.4",
     "babel-istanbul-loader": "0.1.0",
+    "babel-jest": "18.0.0",
     "babel-plugin-react-transform": "2.0.2",
     "enzyme": "2.7.0",
     "eslint": "3.3.1",
