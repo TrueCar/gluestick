@@ -1,21 +1,9 @@
-# GlueStick
+# GlueStick - Beyond the Boilerplate
+[![npm](https://img.shields.io/npm/v/gluestick.svg)](https://www.npmjs.com/package/gluestick)
 [![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
 
-Create and deploy enterprise-grade React and Redux apps right from your command line. Gluestick is a combination of
-`create-react-app` and `next.js` that is maintained and used by TrueCar in production.
-
-- [Getting started](docs/GettingStarted.md) - How to create a new app
-- [User guide](docs/Readme.md) - How to develop apps bootstraped with Gluestick
-
-### tl;dr
-
-```
-npm install gluestick -g
-
-gluestick new newapp
-cd newapp
-gluestick start
-```
+GlueStick is a command line interface for quickly developing universal web
+applications using React and Redux.
 
 ## Why your project or boilerplate isn't enough?
 1. **You need integrated updates.** Without integrated updates, you are forced to manually merge in new features/fixes.
@@ -25,6 +13,7 @@ gluestick start
 5. **Automatic test framework setup.** Preloaded with `Mocha`, `Chai`, `Sinon`, `Enzyme`, and `React.TestUtils` right out of the box
 6. **Built in common practices.** Things like code splitting, hot module replacement, react-router, etc
 7. **Rails like generators** for common needs like components/reducers/containers/etc, with all necessary hooks and tests
+
 
 ## Why GlueStick?
 GlueStick allows users to quickly create new applications with its bootstrap
@@ -48,6 +37,9 @@ GlueStick works best with v6.x.x of node. Versions prior to v6 are not currently
 ```
 npm install gluestick -g
 ```
+
+## Getting Started
+You can view a complete getting started guide on our blog https://www.drivenbycode.com/getting-started-with-gluestick/
 
 ## Overview
 GlueStick comes with several generators to help you get started. To create a
