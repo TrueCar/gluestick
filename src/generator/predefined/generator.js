@@ -39,7 +39,7 @@ module.exports = exports = options => ({
     var: JSON.stringify(options)
   },
   /**
-   * Define modificator to alter existing files or create new one.
+   * Define modifier to alter existing files or create new one.
    * It can be single modificator or array of modificators:
    * modify: [{
    *   ...
@@ -56,12 +56,12 @@ module.exports = exports = options => ({
      */
     file: "example/fileToModify",
     /**
-     * Modificator function that takes content of existing file and absolute path to file
+     * Modifier function that takes content of existing file and absolute path to file
      * and optionally returns string with modified content to overwrite file.
      * If function returns nothing, file will not be overwriten nor created.
      * Type: (content: String, file: String) => void | String
      */
-    modificator: (content, file) => {
+    modifier: (content, file) => {
       console.log(file);
       if (content) {
         console.log(content);

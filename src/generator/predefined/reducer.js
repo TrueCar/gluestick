@@ -32,7 +32,7 @@ const getReducerExport = name => `export { default as ${name} } from "./${name}"
 module.exports = exports = options => ({
   modify: {
     file: "src/reducers/index",
-    modificator: content => {
+    modifier: content => {
       if (content) {
         const lines = content.split("\n");
         lines[lines.length - 1] = getReducerExport(options.name);
