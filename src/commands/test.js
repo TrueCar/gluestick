@@ -22,12 +22,30 @@ function getJestDefaultConfig() {
 
   const argv = [];
   argv.push("--config", JSON.stringify(config));
+  argv.push("-i");
   return argv;
+}
+
+function createArgs(options) {
+  const { debug, coverage, watch, pattern } = options;
+  if (debug) {
+    // @TODO handle --debug-test option
+  }
+  if (coverage) {
+    argv.push("--coverage");
+  }
+  if (watch) {
+    argv.push("--watch");
+  }
+  if (pattern) {
+    argv.push(pattern);
+  }
 }
 
 const argv = getJestDefaultConfig();
 
-module.exports = function(/*options*/) {
+module.exports = function(options) {
+  createArgs(options);
   spawn.sync(JEST_PATH, argv, {
     stdio: "inherit",
     env: { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }}

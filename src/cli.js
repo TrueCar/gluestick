@@ -38,11 +38,14 @@ const debugServerOption = ["-D, --debug-server", "debug server side rendering wi
 const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
 const debugTestOption = ["-B, --debug-test", "debug tests with built-in node inspector"];
 const karmaTestOption = ["-k, --karma", "run tests in Karma"];
-const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
+
+const testReportCoverage = ["-C --coverage", "Create test coverage"];
+const testWatch = ["-W --watch", "Watch tests"];
+const testPattern = ["-R --pattern [pattern]", "Run specific test regex pattern name"];
 
 commander
   .version(currentGluestickVersion);
@@ -92,7 +95,7 @@ commander
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testReportCoverage)
   .option(...karmaTestOption)
   .option(...skipBuildOption)
   .action(checkGluestickProject)
@@ -128,7 +131,7 @@ commander
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testReportCoverage)
   .action(checkGluestickProject)
   .action((options) => startServer(options.debugServer, options.debugPort, options.noBreak))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
@@ -139,7 +142,9 @@ commander
   .option(...singleRunOption)
   .option(...karmaTestOption)
   .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testReportCoverage)
+  .option(...testWatch)
+  .option(...testPattern)
   .description("start test")
   .action(checkGluestickProject)
   .action(startTest)
@@ -151,7 +156,9 @@ commander
   .option(...singleRunOption)
   .option(...karmaTestOption)
   .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testReportCoverage)
+  .option(...testWatch)
+  .option(...testPattern)
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
