@@ -35,7 +35,7 @@ const testTemplate = createTemplate`
 import ${args => args.name} from "${args => args.path}";
 import { shallow } from "enzyme";
 
-describe("${args => args.name}", () => {
+describe("${args => args.path}", () => {
   it("renders without an issue", () => {
     const subject = <${args => args.name} />;
     const wrapper = shallow(subject);
@@ -59,7 +59,7 @@ module.exports = exports = options => ({
       filename: `${options.name}.test.js`,
       template: testTemplate,
       args: {
-        path: `../../src/components/${options.name}`
+        path: `components/${options.name}`
       }
     }
   ]

@@ -17,7 +17,7 @@ const testTemplate = createTemplate`
 /*global expect*/
 import reducer from "${args => args.path}";
 
-describe("${args => args.name}", () => {
+describe("${args => args.path}", () => {
   it("returns the initial state", () => {
     const state = void 0;
     expect(
@@ -52,8 +52,7 @@ module.exports = exports = options => ({
       filename: `${options.name}.test.js`,
       template: testTemplate,
       args: {
-        name: options.name,
-        path: `../../src/reducers/${options.name}`
+        path: `reducers/${options.name}`
       }
     }
   ]
