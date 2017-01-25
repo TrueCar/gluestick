@@ -23,8 +23,7 @@ describe("generator/createTemplate tag function", () => {
     }).toThrowError("No arguments for for template were passed");
   });
   it("should interpolate template", () => {
-    const expectedTemplate = `
-      Some text
+    const expectedTemplate = `      Some text
       4
       Some text 2
       10

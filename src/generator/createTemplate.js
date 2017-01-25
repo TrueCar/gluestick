@@ -24,7 +24,7 @@ module.exports = exports = (strings, ...interpolations) => {
       }
       return "";
     };
-    const entries = interpolations.reduce((previous, current, index) => {
+    let entries = interpolations.reduce((previous, current, index) => {
       const interpolatedCurrentValue = interpolate(current);
       return previous.concat(
         index < strings.length - 1
@@ -33,6 +33,7 @@ module.exports = exports = (strings, ...interpolations) => {
       );
     }, [strings[0]]);
 
-    return entries.join("");
+    entries = entries.join("");
+    return entries[0] === "\n" ? entries.substring(1) : entries;
   };
 };

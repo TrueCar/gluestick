@@ -62,7 +62,7 @@ describe("generator/writeTemplate", () => {
     writeTemplate({
       modify: {
         file: "example/index.js",
-        modificator: content => `new ${content}`
+        modifier: content => `new ${content}`
       },
       entry: entryFixture
     });
@@ -77,10 +77,10 @@ describe("generator/writeTemplate", () => {
     writeTemplate({
       modify: [{
         file: "example/index0.js",
-        modificator: content => `new 0 ${content}`
+        modifier: content => `new 0 ${content}`
       }, {
         file: "example/index1.js",
-        modificator: content => `new 1 ${content}`
+        modifier: content => `new 1 ${content}`
       }],
       entry: entryFixture
     });
@@ -93,7 +93,7 @@ describe("generator/writeTemplate", () => {
     writeTemplate({
       modify: {
         file: "example/index.js",
-        modificator: content => `new ${content}`
+        modifier: content => `new ${content}`
       },
       entry: entryFixture
     });
@@ -106,7 +106,7 @@ describe("generator/writeTemplate", () => {
       writeTemplate({
         modify: {
           file: "example/index.js",
-          modificator: () => 1
+          modifier: () => 1
         },
         entry: entryFixture
       });
