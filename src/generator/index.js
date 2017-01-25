@@ -10,6 +10,9 @@ const writeTemplate = require("./writeTemplate");
  * @param {Object} logger Logger instance
  */
 module.exports = exports = ({ generatorName, entityName, options }, logger) => {
+  if (!/^[a-zA-Z0-9]+$/.test(entityName)) {
+    throw new Error("Invalid name specified");
+  }
   const generator = requireGenerator(generatorName);
   const generatorConfig = parseConfig(
     generator.config,
