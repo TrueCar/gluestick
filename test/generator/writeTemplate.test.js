@@ -53,7 +53,7 @@ describe("generator/writeTemplate", () => {
       writeTemplate({
         entry: entryFixture
       });
-    }).toThrowError("File /Users/paweltrysla/Documents/gluestick/example/example.js alredy exists");
+    }).toThrowError(`File ${pathFixture} alredy exists`);
   });
 
   it("should apply single modification", () => {
