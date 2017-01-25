@@ -19,7 +19,13 @@ module.exports = exports = ({ generatorName, entityName, options }, logger) => {
       dir: path.dirname(entityName)
     })
   );
-  writeTemplate(generatorConfig);
-  logger.success(`${generator.name} ${entityName} generated successfully`);
+  const results = writeTemplate(generatorConfig);
+  logger.success(
+    `${generator.name} ${entityName} generated successfully\n`
+    + "Files written: \n"
+    + `  ${results.written.length ? results.written.join("\n  ") : "--"}`
+    + "\nFiles modified: \n"
+    + `  ${results.modified.length ? results.modified.join("\n  ") : "--"}`
+  );
   process.exit(0);
 };

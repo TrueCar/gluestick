@@ -4,8 +4,10 @@ const mkdir = require("mkdirp");
 
 /**
  * Writes template from single entry to file.
+ * Returns path of written file.
  *
  * @param {Object} entryConfig Parsed entry config
+ * @returns {String}
  */
 const writeEntry = entryConfig => {
   const destinationDirectory = path.join(process.cwd(), entryConfig.path);
@@ -15,12 +17,15 @@ const writeEntry = entryConfig => {
   }
   mkdir.sync(destinationDirectory);
   fs.writeFileSync(outputPath, entryConfig.template, "utf-8");
+  return outputPath;
 };
 
 /**
  * Apply modifications to file specified in modify filed of generator config.
+ * Path of modified file.
  *
  * @param {{ file: string, modificator: Function }} modification Single modification.
+ * @returns {String}
  */
 const applyModification = modification => {
   let absolutePath = path.join(process.cwd(), modification.file);
@@ -37,6 +42,7 @@ const applyModification = modification => {
   } else if (modifiedContent) {
     throw new Error(`Modified content for ${absolutePath} must be a string`);
   }
+  return absolutePath;
 };
 
 /**
@@ -45,14 +51,20 @@ const applyModification = modification => {
  * @param {Object} generatorConfig Parsed generator config
  */
 module.exports = exports = generatorConfig => {
+  let writtenEntries = [];
+  let modifiedFiles = [];
   if (Array.isArray(generatorConfig.entries)) {
-    generatorConfig.entries.forEach(writeEntry);
+    writtenEntries = generatorConfig.entries.map(writeEntry);
   } else {
-    writeEntry(generatorConfig.entry);
+    writtenEntries = [writeEntry(generatorConfig.entry)];
   }
   if (generatorConfig.modify && Array.isArray(generatorConfig.modify)) {
-    generatorConfig.modify.forEach(applyModification);
+    modifiedFiles = generatorConfig.modify.map(applyModification);
   } else if (generatorConfig.modify) {
-    applyModification(generatorConfig.modify);
+    modifiedFiles = [applyModification(generatorConfig.modify)];
   }
+  return {
+    written: writtenEntries,
+    modified: modifiedFiles
+  };
 };
