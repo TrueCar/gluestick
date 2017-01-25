@@ -43,7 +43,8 @@ describe("src/lib/buildWebpackEntries", () => {
             reducers: `${cwd}/src/reducers`,
             fileName: "main",
             filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
-            index: `${cwd}/Index`
+            index: `${cwd}/Index`,
+            group: null
         }
       };
 
@@ -61,7 +62,8 @@ describe("src/lib/buildWebpackEntries", () => {
           index: `${cwd}/Index`,
           name: "main",
           reducers: `${cwd}/src/reducers`,
-          routes: `${cwd}/src/config/routes`
+          routes: `${cwd}/src/config/routes`,
+          group: null
         },
         "/used-cars-for-sale": {
           fileName: "used",
@@ -69,7 +71,8 @@ describe("src/lib/buildWebpackEntries", () => {
           index: `${cwd}/Index`,
           name: "used",
           reducers: `${cwd}/src/reducers/used`,
-          routes: `${cwd}/src/config/routes/used`
+          routes: `${cwd}/src/config/routes/used`,
+          group: null
         }
       };
 
@@ -90,7 +93,8 @@ describe("src/lib/buildWebpackEntries", () => {
         index: indexPath,
         name: "used",
         reducers: reducersPath,
-        routes: routesPath
+        routes: routesPath,
+        group: null
       };
 
       expect(entries["/used-cars-for-sale"]).toEqual(expectedResult);

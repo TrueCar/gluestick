@@ -135,7 +135,7 @@ commander
   .option(...mochaReporterOption)
   .action(checkGluestickProject)
   .action((options) => {
-    startServer(options.debugServer, options.debugPort, options.noBreak)
+    startServer(options.debugServer, options.debugPort);
   })
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
