@@ -6,6 +6,20 @@ function getBasePath () {
   return path.join(process.cwd(), "src", "config", ".entries");
 }
 
+const normalizeEntryPoints = entryPoints => {
+  return Object.keys(entryPoints).reduce((prev, curr) => {
+    // normal entrypoint
+    if (curr[0] === "/") {
+      return Object.assign({}, prev, { [curr]: entryPoints[curr] });
+    }
+    // group
+    Object.keys(entryPoints[curr]).forEach(key => {
+      entryPoints[curr][key].group = curr;
+    });
+    return Object.assign({}, prev, { ...entryPoints[curr] });
+  }, {});
+};
+
 /**
  * This method is a information preparer/gatherer. This information is used by
  * `buildWebpackEntries` and the server request handler. It sets up the default
@@ -24,7 +38,7 @@ export function getWebpackEntries () {
       routes: path.join(cwd, "src", "config", "routes"),
       reducers: path.join(cwd, "src", "reducers")
     },
-    ...getWebpackAdditions().entryPoints
+    ...normalizeEntryPoints(getWebpackAdditions().entryPoints)
   };
 
   Object.keys(entryPoints).forEach((key) => {
@@ -36,13 +50,31 @@ export function getWebpackEntries () {
       filePath: `${path.join(basePath, fileName)}-[chunkhash].js`,
       routes: entry.routes || path.join(cwd, "src", "config", "routes", fileName),
       reducers: entry.reducers || path.join(cwd, "src", "reducers", fileName),
-      index: entry.index || path.join(cwd, "Index")
+      index: entry.index || path.join(cwd, "Index"),
+      group: entry.group || null
     };
   });
 
   return output;
 }
 
+const parseWebpackEntry = (entry, isProduction) => {
+  const { filePath, fileName } = entry;
+  fs.outputFileSync(filePath, getEntryPointContent(entry));
+  const content = isProduction ? [] : [
+    // eventsource-polyfill added here because it needs to go before
+    // webpack-hot-middleware pointing to local node_modules so it pulls from
+    // gluestick project and not from the app. This is needed to support HMR in
+    // browsers like IE11
+    path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill"),
+    // Include hot middleware in development mode only
+    "webpack-hot-middleware/client"
+  ];
+  return {
+    fileName,
+    conent: content.concat([path.join(__dirname, "..", "entrypoints", "client.js"), filePath])
+  };
+};
 
 /**
  * This method will wipe out the `config/.entries` hidden folder and rebuild it
@@ -55,7 +87,7 @@ export function getWebpackEntries () {
  * includes the generated entry point. Finally, if we are in development mode
  * it will start the array off with the webpack hot middleware client.
  */
-export default function buildWebpackEntries (isProduction) {
+export default function buildWebpackEntries (isProduction, entrypointToBuild) {
   const output = {};
   const basePath = getBasePath();
 
@@ -64,24 +96,24 @@ export default function buildWebpackEntries (isProduction) {
   fs.ensureDirSync(basePath);
 
   const entries = getWebpackEntries();
-  for (const key in entries) {
-    const entry = entries[key];
-    const { filePath, fileName } = entry;
-    fs.outputFileSync(filePath, getEntryPointContent(entry));
-    output[fileName] = [path.join(__dirname, "..", "entrypoints", "client.js"), filePath];
-
-    // Include hot middleware in development mode only
-    if (!isProduction) {
-      output[fileName].unshift("webpack-hot-middleware/client");
-
-      // eventsource-polyfill added here because it needs to go before
-      // webpack-hot-middleware pointing to local node_modules so it pulls from
-      // gluestick project and not from the app. This is needed to support HMR in
-      // browsers like IE11
-      output[fileName].unshift(path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill"));
+  if (entrypointToBuild && entrypointToBuild[0] === "/") {
+    const entry = parseWebpackEntry(entries[entrypointToBuild], isProduction);
+    output[entry.fileName] = entry.conent;
+    return output;
+  } else if (entrypointToBuild) {
+    const filtredEntries = Object.keys(entries)
+      .filter(key => entries[key].group && entries[key].group === entrypointToBuild)
+      .reduce((prev, curr) => Object.assign({}, prev, { [curr]: entries[curr] }), {});
+    for (const key in filtredEntries) {
+      const entry = parseWebpackEntry(filtredEntries[key], isProduction);
+      output[entry.fileName] = entry.conent;
     }
+    return output;
   }
-
+  for (const key in entries) {
+    const entry = parseWebpackEntry(entries[key], isProduction);
+    output[entry.fileName] = entry.conent;
+  }
   return output;
 }
 

@@ -43,6 +43,7 @@ const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
+const entrypointsOption = ["-E, --entrypoints <entrypoints>", "Enter specific entrypoint or a group"];
 
 commander
   .version(currentGluestickVersion);
@@ -89,6 +90,7 @@ commander
   .option("-T, --run-tests", "run test hook")
   .option("-L, --log-level <level>", "set the logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
+  .option(...entrypointsOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...debugTestOption)
@@ -118,8 +120,9 @@ commander
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
+  .option(...entrypointsOption)
   .action(checkGluestickProject)
-  .action(() => startClient(false))
+  .action(startClient)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -130,7 +133,9 @@ commander
   .option(...debugTestOption)
   .option(...mochaReporterOption)
   .action(checkGluestickProject)
-  .action((options) => startServer(options.debugServer, options.debugPort, options.noBreak))
+  .action((options) => {
+    startServer(options.debugServer, options.debugPort, options.noBreak)
+  })
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -254,10 +259,23 @@ async function startAll(options) {
   // true.  We only want to start the client in development mode or if
   // skipBuild is not specified
   if (!(isProduction && options.skipBuild)) {
-    spawnProcess("client");
+    spawnProcess("client", commander.rawArgs.slice(3));
   }
 
-  spawnProcess("server", commander.rawArgs.slice(3));
+  // Remove -E, --entrypoints argument and it's value from server arguments
+  let valueIndex = -1;
+  const args = commander.rawArgs.slice(3);
+  const srvArgs = args.filter((arg, index) => {
+    if (arg === "-E" || arg === "--entrypoints") {
+      valueIndex = index;
+      return false;
+    }
+    return true;
+  });
+  if (valueIndex < srvArgs.length) {
+    srvArgs.splice(valueIndex, 1);
+  }
+  spawnProcess("server", srvArgs);
 
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {

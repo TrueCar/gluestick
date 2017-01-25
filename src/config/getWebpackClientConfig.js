@@ -65,14 +65,14 @@ export function getEnvironmentPlugins(isProduction) {
   return environmentPlugins;
 }
 
-export default function (appRoot, appConfigFilePath, isProduction) {
+export default function (appRoot, appConfigFilePath, isProduction, options) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
   const devtool = process.env.DEVTOOL || "inline-source-map";
   const baseWebpackConfig = {
     context: appRoot,
     devtool: isProduction ? "source-map" : devtool,
     entry: {
-      ...buildWebpackEntries(isProduction),
+      ...buildWebpackEntries(isProduction, options),
       vendor: vendor
     },
     module: {
