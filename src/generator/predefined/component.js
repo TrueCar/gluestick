@@ -44,23 +44,26 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = exports = options => ({
-  args: {
-    name: options.name
-  },
-  entries: [
-    {
-      path: "src/components",
-      filename: options.name,
-      template: options.functional ? functionalComponentTemplate : classComponentTemplate,
+module.exports = exports = options => {
+  const rewrittenName = `${options.name[0].toUpperCase()}${options.name.slice(1)}`;
+  return {
+    args: {
+      name: rewrittenName
     },
-    {
-      path: "test/components",
-      filename: `${options.name}.test.js`,
-      template: testTemplate,
-      args: {
-        path: `components/${options.name}`
+    entries: [
+      {
+        path: "src/components",
+        filename: rewrittenName,
+        template: options.functional ? functionalComponentTemplate : classComponentTemplate,
+      },
+      {
+        path: "test/components",
+        filename: `${rewrittenName}.test.js`,
+        template: testTemplate,
+        args: {
+          path: `components/${rewrittenName}`
+        }
       }
-    }
-  ]
-});
+    ]
+  };
+};

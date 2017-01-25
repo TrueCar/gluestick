@@ -29,31 +29,34 @@ describe("${args => args.path}", () => {
 
 const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
 
-module.exports = exports = options => ({
-  modify: {
-    file: "src/reducers/index",
-    modifier: content => {
-      if (content) {
-        const lines = content.split("\n");
-        lines[lines.length - 1] = getReducerExport(options.name);
-        return lines.join("\n");
+module.exports = exports = options => {
+  const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
+  return {
+    modify: {
+      file: "src/reducers/index",
+      modifier: content => {
+        if (content) {
+          const lines = content.split("\n");
+          lines[lines.length - 1] = getReducerExport(rewrittenName);
+          return lines.join("\n");
+        }
+        return getReducerExport(rewrittenName);
       }
-      return getReducerExport(options.name);
-    }
-  },
-  entries: [
-    {
-      path: "src/reducers",
-      filename: options.name,
-      template: reducerTemplate
     },
-    {
-      path: "test/reducers",
-      filename: `${options.name}.test.js`,
-      template: testTemplate,
-      args: {
-        path: `reducers/${options.name}`
+    entries: [
+      {
+        path: "src/reducers",
+        filename: rewrittenName,
+        template: reducerTemplate
+      },
+      {
+        path: "test/reducers",
+        filename: `${rewrittenName}.test.js`,
+        template: testTemplate,
+        args: {
+          path: `reducers/${rewrittenName}`
+        }
       }
-    }
-  ]
-});
+    ]
+  };
+};
