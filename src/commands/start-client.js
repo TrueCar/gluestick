@@ -24,20 +24,17 @@ const PUBLIC_PATH = ASSET_PATH;
 
 process.env.NODE_PATH = path.join(__dirname, "../..");
 
-module.exports = function (_, options) {
+module.exports = function (options) {
   // clean the slate by removing `webpack-asset.json` before building a new one
   fs.removeSync(path.join(process.cwd(), "webpack-assets.json"));
-  const config = getWebpackConfig(APP_ROOT, APP_CONFIG_PATH, IS_PRODUCTION);
-  if (options.entrypoints) {
-    options.entrypoints = options.entrypoints.split(",");
-    config.entry = options.entrypoints.reduce((entrypoints, entrypointName) => {
-      return {
-        ...entrypoints,
-        [entrypointName]: config.entry[entrypointName]
-      };
-    }, {});
-  }
-  const compiler = webpack(config);
+
+  const compiler = webpack(getWebpackConfig(
+    APP_ROOT,
+    APP_CONFIG_PATH,
+    IS_PRODUCTION,
+    options.entrypoints
+  ));
+
   const appServerConfig = loadServerConfig();
   const server = Object.assign({protocol: "http", host: "0.0.0.0", port: 8888}, appServerConfig);
   const assetPort = appServerConfig.assetPort || 8880;
