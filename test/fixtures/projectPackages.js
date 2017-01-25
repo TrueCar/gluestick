@@ -9,32 +9,32 @@ export const validProjectPackage = {
   },
   "dependencies": {
     "axios": "0.12.0",
-    "babel-core": "6.14.0",
+    "babel-core": "6.22.1",
     "babel-loader": "6.2.4",
     "babel-plugin-gluestick": "0.0.1",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
-    "babel-preset-es2015": "6.9.0",
-    "babel-preset-react": "6.5.0",
-    "babel-preset-stage-0": "6.5.0",
-    "babel-register": "6.14.0",
+    "babel-preset-es2015": "6.22.0",
+    "babel-preset-react": "6.22.0",
+    "babel-preset-stage-0": "6.22.0",
+    "babel-register": "6.22.0",
     "babel-runtime": "6.9.2",
     "babel-traverse": "6.21.0",
     "css-loader": "0.23.1",
-    "electrode-react-ssr-caching": "0.1.3",
+    "electrode-react-ssr-caching": "0.1.5",
     "file-loader": "0.8.5",
-    "gluestick-shared": "0.4.20",
+    "gluestick-shared": "0.4.22",
     "history": "3.0.0",
     "image-webpack-loader": "2.0.0",
     "json-loader": "0.5.4",
     "node-sass": "3.7.0",
-    "oy-vey": "0.7.0",
-    "radium": "0.17.1",
-    "react": "15.1.0",
-    "react-dom": "15.1.0",
+    "oy-vey": "0.8.0",
+    "radium": "0.18.1",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
     "react-helmet": "3.1.0",
-    "react-redux": "4.4.5",
-    "react-router": "2.4.1",
-    "redux": "3.5.2",
+    "react-redux": "5.0.2",
+    "react-router": "3.0.2",
+    "redux": "3.6.0",
     "sass-loader": "3.2.0",
     "style-loader": "0.13.1",
     "webpack": "1.13.2"
@@ -42,18 +42,18 @@ export const validProjectPackage = {
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-eslint": "6.0.4",
+    "babel-eslint": "7.1.1",
     "babel-istanbul-loader": "0.1.0",
     "babel-plugin-react-transform": "2.0.2",
-    "enzyme": "2.3.0",
-    "eslint": "3.3.1",
-    "eslint-plugin-react": "6.1.1",
-    "react-addons-test-utils": "15.0.2",
-    "react-hot-loader": "1.3.0",
+    "enzyme": "2.7.1",
+    "eslint": "3.14.0",
+    "eslint-plugin-react": "6.9.0",
+    "react-addons-test-utils": "15.4.2",
+    "react-hot-loader": "1.3.1",
     "react-transform-catch-errors": "1.0.2",
     "react-transform-hmr": "1.0.4",
-    "redbox-react": "1.2.4",
-    "webpack-hot-middleware": "2.12.2"
+    "redbox-react": "1.3.3",
+    "webpack-hot-middleware": "2.15.0"
   }
 };
 
@@ -81,4 +81,3 @@ const missingProjectPackage = {
 };
 delete missingProjectPackage.dependencies.axios;
 export { missingProjectPackage };
-
