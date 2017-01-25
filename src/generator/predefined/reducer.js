@@ -27,14 +27,7 @@ describe("${args => args.name}", () => {
 });
 `;
 
-const newReducersIndexFactory = (name, path) => `
-import { combineReducers } from "redux";
-import ${name} from "${path}";
-
-export default combineReducers({
-  ${name}
-});
-`;
+const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
 
 module.exports = exports = options => ({
   modify: {
@@ -42,17 +35,10 @@ module.exports = exports = options => ({
     modificator: content => {
       if (content) {
         const lines = content.split("\n");
-        let lastImportIndex = -1;
-        lines.forEach((line, index) => {
-          if (line.startsWith("import")) {
-            lastImportIndex = index;
-          }
-        });
-        lines[lastImportIndex] += "\n" + `import ${options.name} from "./${options.name}";`;
-        lines[lines.length - 3] += ",\n" + `  ${options.name}`;
+        lines[lines.length - 1] = getReducerExport(options.name);
         return lines.join("\n");
       }
-      return newReducersIndexFactory(options.name, `./${options.name}`);
+      return getReducerExport(options.name);
     }
   },
   entries: [
