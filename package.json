@@ -14,7 +14,12 @@
     "prepublish": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js",
     "update-version": "npm version",
-    "postupdate-version": "./docker/generate-dockerfile.js"
+    "postupdate-version": "./docker/generate-dockerfile.js",
+    "docs:clean": "rm -rf _book",
+    "docs:prepare": "gitbook install",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'Update Book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'Update Book' && git push git@github.com:TrueCar/gluestick gh-pages --force",
+    "docs:build": "npm run docs:prepare && gitbook build -g TrueCar/gluestick"
   },
   "keywords": [
     "react",
@@ -61,6 +66,11 @@
     "express-pino-logger": "1.0.0",
     "extract-text-webpack-plugin": "1.0.1",
     "fs-extra": "0.30.0",
+    "gitbook-cli": "2.3.0",
+    "gitbook-plugin-anchorjs": "1.1.1",
+    "gitbook-plugin-edit-link": "2.0.2",
+    "gitbook-plugin-github": "2.0.0",
+    "gitbook-plugin-prism": "2.0.2",
     "handlebars": "4.0.5",
     "http-proxy-middleware": "0.17.1",
     "inquirer": "1.0.3",
@@ -121,6 +131,7 @@
     "react-router": "3.0.1",
     "redux": "3.6.0",
     "stream-to-string": "1.1.0",
-    "temp": "0.8.3"
+    "temp": "0.8.3",
+    "gitbook-cli": "^2.3.0"
   }
 }
