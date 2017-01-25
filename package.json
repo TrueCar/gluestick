@@ -66,11 +66,6 @@
     "express-pino-logger": "1.0.0",
     "extract-text-webpack-plugin": "1.0.1",
     "fs-extra": "0.30.0",
-    "gitbook-cli": "2.3.0",
-    "gitbook-plugin-anchorjs": "1.1.1",
-    "gitbook-plugin-edit-link": "2.0.2",
-    "gitbook-plugin-github": "2.0.0",
-    "gitbook-plugin-prism": "2.0.2",
     "handlebars": "4.0.5",
     "http-proxy-middleware": "0.17.1",
     "inquirer": "1.0.3",
@@ -132,6 +127,10 @@
     "redux": "3.6.0",
     "stream-to-string": "1.1.0",
     "temp": "0.8.3",
-    "gitbook-cli": "^2.3.0"
+    "gitbook-cli": "2.3.0",
+    "gitbook-plugin-anchorjs": "1.1.1",
+    "gitbook-plugin-edit-link": "2.0.2",
+    "gitbook-plugin-github": "2.0.0",
+    "gitbook-plugin-prism": "2.0.2"
   }
 }
