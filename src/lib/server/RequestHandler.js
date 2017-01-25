@@ -7,9 +7,10 @@ import Oy from "oy-vey";
 import { renderToString, renderToStaticMarkup } from "react-dom/server";
 import { match, RouterContext } from "react-router";
 import {
-    runBeforeRoutes as _runBeforeRoutes,
-    prepareRoutesWithTransitionHooks,
-    ROUTE_NAME_404_NOT_FOUND
+  runBeforeRoutes as _runBeforeRoutes,
+  prepareRoutesWithTransitionHooks,
+  ROUTE_NAME_404_NOT_FOUND,
+  getHttpClient
 } from "gluestick-shared";
 
 import _streamResponse from "./streamResponse";
@@ -54,9 +55,10 @@ export function renderCachedResponse (req, res, cache=_cache, streamResponse=_st
   return false;
 }
 
-export function  matchRoute (req, getRoutes, store) {
+export function matchRoute (req, res, getRoutes, store, config) {
   return new Promise((resolve, reject) => {
-    const routes = prepareRoutesWithTransitionHooks(getRoutes(store));
+    const httpClient = getHttpClient(config.httpClient, req, res);
+    const routes = prepareRoutesWithTransitionHooks(getRoutes(store, httpClient));
     match({routes: routes, location: req.url}, (error, redirectLocation, renderProps) => {
       if (error) {
         reject(error);

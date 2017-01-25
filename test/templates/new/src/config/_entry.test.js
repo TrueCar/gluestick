@@ -1,9 +1,11 @@
 import React from "react";
 import { Route } from "react-router";
 import { shallow } from "enzyme";
+import { getHttpClient } from "gluestick-shared";
 
 import Entry from "../../../../../templates/new/src/config/.entry";
 
+const httpClient = getHttpClient();
 const STORE = {};
 const HISTORY = {};
 const ROUTES = (
@@ -35,7 +37,7 @@ describe("templates/new/src/config/.entry", () => {
 
   it("should build a store and the proper routes when calling Entry.start", () => {
     Entry.start(getRoutes, getStore, match, history);
-    expect(getRoutes).toBeCalledWith(getStore());
+    expect(getRoutes).toBeCalledWith(getStore(), httpClient);
   });
 });
 
