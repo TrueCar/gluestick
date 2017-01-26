@@ -70,6 +70,7 @@
     "http-proxy-middleware": "0.17.3",
     "inquirer": "3.0.1",
     "lru-cache": "4.0.2",
+    "gitbook": "3.2.2",
     "gitbook-cli": "2.3.0",
     "gitbook-plugin-anchorjs": "1.1.1",
     "gitbook-plugin-edit-link": "2.0.2",

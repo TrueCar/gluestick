@@ -4,8 +4,6 @@ GlueStick
 Create and deploy enterprise-grade React and Redux application right from your command line. Gluestick is a combination
 of `create-react-app` and `next.js` that is backed and used in production by TrueCar.
 
-### tl;dr
-
 ```bash
 $ npm install gluestick -g
 
