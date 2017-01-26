@@ -30,7 +30,7 @@ describe("cli: gluestick bin", function () {
     const dependencyOptions = ["test", "-T", "--test"];
     const commanderObject = {};
 
-    bin(dependencyName, ...[...dependencyOptions, commanderObject]);
+    bin(dependencyName, ...dependencyOptions, commanderObject);
     expect(crossSpawn.spawn).toBeCalledWith(
       getDependencyPath(dependencyName), dependencyOptions, spawnOptions
     );
