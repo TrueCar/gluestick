@@ -18,10 +18,10 @@ const convertToKebabCase = value => {
 
 const getPossiblePaths = generatorName => {
   return [
-    path.join(__dirname, `${PREDEFINED}/${convertToCamelCase(generatorName)}.js`),
-    path.join(__dirname, `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
     path.join(process.cwd(), `generators/${convertToCamelCase(generatorName)}.js`),
-    path.join(process.cwd(), `generators/${convertToKebabCase(generatorName)}.js`)
+    path.join(process.cwd(), `generators/${convertToKebabCase(generatorName)}.js`),
+    path.join(__dirname, `${PREDEFINED}/${convertToCamelCase(generatorName)}.js`),
+    path.join(__dirname, `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`)
   ];
 };
 
