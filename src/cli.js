@@ -110,9 +110,8 @@ commander
 
 commander
   .command("bin")
+  .allowUnknownOption(true)
   .description("access dependencies bin directory")
-  .arguments("<dependency_name> [dependency_commands...]")
-  .option("-O, --options <opts>", "specify dependency options")
   .action(bin);
 
 commander
