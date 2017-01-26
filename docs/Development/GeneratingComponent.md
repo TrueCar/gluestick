@@ -1,3 +1,6 @@
+
+#Generating a Component
+
 React applications are made up of lots of components. They almost all start with the same few lines of code, so we made a generator to speed things up. We want to encourage developers to write unit tests for their components so we didn’t stop there. Whenever you use the generator to create a new component, it will also create a test file for that component, along with a very basic test to verify that it is rendering without any issues. To generate a new component, simply enter: gluestick generate component TodoList
 
 This will generate two files: ```src/components/TodoList.js```

@@ -1,4 +1,4 @@
-Installation
+Contributing
 =====
 
 This documentation is automatically generated and updated with `GitBook`, when any PR gets merged into master.

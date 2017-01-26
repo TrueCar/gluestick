@@ -1,5 +1,8 @@
+# Hooking up your data
+
 Now that you have a reducer that is responsible for handling the todos part of your application-state, you can expose that state to the rest of your application through the container.
 In order to do so, update your todo container to the following:
+
 src/containers/Todos.js
 
 ```bash
@@ -55,5 +58,7 @@ export default class TodoList extends Component {
 
 The renderTodos method will return an array of elements containing the todo list text. You’ll assign this array to a variable and expose it in your render function.
 
-You will need to refresh the browser for this update to work because our reducer was original set up with an initial state that wasn’t an array. Hot module loading will not replace an existing state. Once you refresh the browser, you should now see both of your todo list items on the page.
+You will need to refresh the browser for this update to work because our reducer was original set up with an initial state that wasn’t an array. Hot module loading will not replace an existing state. 
+
+Once you refresh the browser, you should now see both of your todo list items on the page.
 
