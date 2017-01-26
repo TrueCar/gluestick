@@ -2,9 +2,9 @@ const spawn = require("cross-spawn").spawn;
 const path = require("path");
 const configTools = require("../config/webpack-isomorphic-tools-config");
 
-const CWD = process.cwd();
 const NODE_MODULES_PATH = path.join(__dirname, "..", "..", "node_modules");
 const JEST_PATH = path.join(NODE_MODULES_PATH, ".bin", "jest");
+const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, "..", "..", "test")}/jestEnvironmentNodeDebug.js`;
 
 function getJestDefaultConfig() {
   const alias = configTools.alias;
@@ -26,11 +26,22 @@ function getJestDefaultConfig() {
   return argv;
 }
 
-function createArgs(options) {
-  const { debug, coverage, watch, pattern } = options;
-  if (debug) {
-    // @TODO handle --debug-test option
-  }
+function getDebugDefaultConfig() {
+  const nodeArgs = [];
+  nodeArgs.push("--inspect");
+  nodeArgs.push("--debug-brk");
+  nodeArgs.push(JEST_PATH);
+  nodeArgs.push("--env");
+  nodeArgs.push(JEST_DEBUG_CONFIG_PATH);
+  nodeArgs.push(...getJestDefaultConfig());
+  nodeArgs.push("--watch");
+  return nodeArgs;
+}
+
+function createArgs(defaultArgs, options) {
+  const argv = [].concat(defaultArgs);
+  const { coverage, watch, pattern } = options;
+
   if (coverage) {
     argv.push("--coverage");
   }
@@ -40,14 +51,20 @@ function createArgs(options) {
   if (pattern) {
     argv.push(pattern);
   }
+
+  return argv;
 }
 
-const argv = getJestDefaultConfig();
-
 module.exports = function(options) {
-  createArgs(options);
-  spawn.sync(JEST_PATH, argv, {
+  const spawnOptions = {
     stdio: "inherit",
-    env: { ...process.env, ...{ NODE_PATH: CWD, NODE_ENV: "test" }}
-  });
+  };
+
+  if (options.debugTest) {
+    const argvDebug = getDebugDefaultConfig();
+    spawn.sync("node", argvDebug, spawnOptions);
+  } else {
+    const argv = createArgs(getJestDefaultConfig(), options);
+    spawn.sync(JEST_PATH, argv, spawnOptions);
+  }
 };
