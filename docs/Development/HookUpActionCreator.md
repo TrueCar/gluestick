@@ -1,6 +1,9 @@
-Redux sends actions to the reducers through a dispatch method that is provided for you through the @connect decorator that GlueStick automatically sets up for you. Redux gives you the ability to bind your action creators to the dispatcher with its bindActionCreators method. GlueStick also sets most of this up for you so that you only need to pass your action creators in the place where the code says ```/** _INSERT_ACTION_CREATORS_ **/.``
+# Hook up your action creator
+
+Redux sends actions to the reducers through a dispatch method that is provided for you through the ```@connect``` decorator that GlueStick automatically sets up for you. Redux gives you the ability to bind your action creators to the dispatcher with its bindActionCreators method. GlueStick also sets most of this up for you so that you only need to pass your action creators in the place where the code says ```/** _INSERT_ACTION_CREATORS_ **/.```
 
 Update your Todos container so that you can pass your bound addTodo action creator to the AddTodo component.
+
 src/containers/Todos.js
 
 ```bash
@@ -29,12 +32,12 @@ export default class Todos extends Component {
     }
 }
 ```
-## 
-```bash
+
+
 Now that TodoList has been given the addTodo method, you can continue to pass it to your AddTodo form. Edit the TodoList component like the following:
 src/components/TodoList.js
 
-
+```bash
 import React, { Component, PropTypes } from "react";
 import AddTodo from "./AddTodo";
 
@@ -58,9 +61,10 @@ export default class TodoList extends Component {
     }
 }
 ```
-## 
+The only line we changed was that we changed ```<AddToo />``` to ```<AddTodo addTodo={this.props.addTodo} /> ```.
+
 ```bash
-The only line we changed was that we changed ```<AddToo />``` to ```<AddTodo addTodo={this.props.addTodo}`` />.
+
 
 Now, you can finish the AddTodo component by using the addTodo method. Edit the file and replace your ```// @TODO… ```comment with ```this.props.addTodo(newItem)```;
 

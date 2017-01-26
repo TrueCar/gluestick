@@ -1,3 +1,5 @@
+# Asynchronous action creators
+
 If you made it this far, you just built a todo list application using GlueStick and the array of frameworks it glues together for you! Hip Hip Hooray! You’ll notice that refreshing the web browser resets the list to the initial state. That is because you haven’t done anything to persist the data yet. You could keep things in the browser by using LocalStorage or hitting a server API in your action creators.
 
 GlueStick gives you a couple middleware functions for your Redux store: Redux Thunk and our own Promise middleware.
