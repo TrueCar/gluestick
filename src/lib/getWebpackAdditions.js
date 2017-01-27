@@ -58,6 +58,7 @@ export default function (isomorphic=false) {
     additionalWebpackConfig: {},
     vendor: [],
     entryPoints: {},
+    mapEntryToGroup: {},
     plugins: [],
 
   };
@@ -77,6 +78,7 @@ export default function (isomorphic=false) {
       vendor,
       plugins,
       entryPoints,
+      mapEntryToGroup,
     } = require(webpackAdditionsPath);
     userAdditions = {
       additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
@@ -87,6 +89,7 @@ export default function (isomorphic=false) {
       vendor: vendor || [],
       plugins: plugins || [],
       entryPoints: entryPoints || {},
+      mapEntryToGroup: mapEntryToGroup || {},
     };
   }
   catch (e) {

@@ -11,6 +11,8 @@ const filterEntries = (entries, groupOfEntries) => {
     return groupOfEntries.reduce((prev, curr) => {
       return Object.assign({}, prev, { [curr]: entries[curr] });
     }, {});
+  } else {
+    throw Error("No group of entries");
   }
 };
 
@@ -34,7 +36,6 @@ export function getWebpackEntries () {
     },
     ...webpackAdditions.entryPoints
   };
-
   Object.keys(entryPoints).forEach((key) => {
     const entry = entryPoints[key];
     const fileName = entry.name.replace(/\W/, "-");
@@ -48,11 +49,11 @@ export function getWebpackEntries () {
       entryPoints: entry.entryPoints || null
     };
   });
-
   return {
     mapEntryToGroup: webpackAdditions.mapEntryToGroup,
     entries: output
   };
+
 }
 
 const parseWebpackEntry = (entry, isProduction) => {
@@ -91,7 +92,6 @@ export default function buildWebpackEntries (isProduction, entrypointToBuild) {
   // Clean slate
   fs.removeSync(basePath);
   fs.ensureDirSync(basePath);
-
   const { mapEntryToGroup, entries } = getWebpackEntries();
   if (entrypointToBuild && entrypointToBuild[0] === "/") {
     const entry = parseWebpackEntry(entries[entrypointToBuild], isProduction);

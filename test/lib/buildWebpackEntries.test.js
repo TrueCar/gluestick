@@ -48,6 +48,7 @@ describe("src/lib/buildWebpackEntries", () => {
               entryPoints: null,
           },
         },
+        mapEntryToGroup: {},
       };
 
       expect(entries).toEqual(expectedResult);
@@ -78,6 +79,7 @@ describe("src/lib/buildWebpackEntries", () => {
             entryPoints: null,
           },
         },
+        mapEntryToGroup: {},
       };
 
       expect(entries).toEqual(expectedResult);

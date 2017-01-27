@@ -35,6 +35,7 @@ describe("src/lib/getWebpackAdditions", () => {
       additionalPreLoaders: [],
       additionalWebpackConfig: {},
       entryPoints: {},
+      mapEntryToGroup: {},
       plugins: [],
       vendor: []
     };
