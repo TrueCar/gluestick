@@ -11,11 +11,18 @@ const filterEntries = (entries, groupOfEntries) => {
     return groupOfEntries.reduce((prev, curr) => {
       return Object.assign({}, prev, { [curr]: entries[curr] });
     }, {});
-  } else {
-    throw Error("No group of entries");
   }
+  throw Error("No group of entries");
 };
 
+function buildEntries(entries, isProduction) {
+  const output = {};
+  for (const key in entries) {
+    const entry = parseWebpackEntry(entries[key], isProduction);
+    output[entry.fileName] = entry.conent;
+  }
+  return output;
+}
 /**
  * This method is a information preparer/gatherer. This information is used by
  * `buildWebpackEntries` and the server request handler. It sets up the default
@@ -99,17 +106,9 @@ export default function buildWebpackEntries (isProduction, entrypointToBuild) {
     return output;
   } else if (entrypointToBuild) {
     const filtredEntries = filterEntries(entries, mapEntryToGroup[entrypointToBuild]);
-    for (const key in filtredEntries) {
-      const entry = parseWebpackEntry(filtredEntries[key], isProduction);
-      output[entry.fileName] = entry.conent;
-    }
-    return output;
+    return buildEntries(filtredEntries, isProduction);
   }
-  for (const key in entries) {
-    const entry = parseWebpackEntry(entries[key], isProduction);
-    output[entry.fileName] = entry.conent;
-  }
-  return output;
+  return  buildEntries(entries, isProduction);
 }
 
 function getEntryPointContent (entry) {
