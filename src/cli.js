@@ -69,6 +69,7 @@ commander
   .description("generate a new entity from given template")
   .arguments("<name>")
   .option(...statelessFunctionalOption)
+  .option("-O, --gen-options <value>", "options to pass to the generator")
   .action(checkGluestickProject)
   .action(generate)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
