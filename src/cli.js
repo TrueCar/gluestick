@@ -64,14 +64,12 @@ commander
   });
 
 commander
-  .command("generate <container|component|reducer>")
-  .description("generate a new container")
+  .command("generate <container|component|reducer|generator>")
+  .description("generate a new entity from given template")
   .arguments("<name>")
   .option(...statelessFunctionalOption)
   .action(checkGluestickProject)
-  .action((type, name, options) => generate(type, name, options, (err) => {
-    if (err) { logger.error(err); }
-  }))
+  .action(generate)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
