@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
+const bin = lazyMethodRequire("./commands/bin");
 const build = lazyMethodRequire("./commands/build");
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");
@@ -65,14 +66,12 @@ commander
   });
 
 commander
-  .command("generate <container|component|reducer>")
-  .description("generate a new container")
+  .command("generate <container|component|reducer|generator>")
+  .description("generate a new entity from given template")
   .arguments("<name>")
   .option(...statelessFunctionalOption)
   .action(checkGluestickProject)
-  .action((type, name, options) => generate(type, name, options, (err) => {
-    if (err) { logger.error(err); }
-  }))
+  .action(generate)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -108,6 +107,12 @@ commander
   .action(checkGluestickProject)
   .action(() => build())
   .action(() => updateLastVersionUsed(currentGluestickVersion));
+
+commander
+  .command("bin")
+  .allowUnknownOption(true)
+  .description("access dependencies bin directory")
+  .action(bin);
 
 commander
   .command("dockerize")

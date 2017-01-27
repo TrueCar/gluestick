@@ -1,10 +1,13 @@
+const createTemplate = module.parent.createTemplate;
+
+const containerTemplate = createTemplate`
 /* @flow */
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Helmet from "react-helmet";
 
-export class __$NAME__ extends Component {
+export class ${args => args.name} extends Component {
   /**
    * Called by ReactRouter before loading the container. Called prior to the
    * React life cycle so doesn't have access to component's props or state.
@@ -24,8 +27,8 @@ export class __$NAME__ extends Component {
   render () {
     return (
       <div>
-        <Helmet title="__$NAME__"/>
-        __$NAME__
+        <Helmet title="${args => args.name}"/>
+        ${args => args.name}
       </div>
     );
   }
@@ -34,4 +37,42 @@ export class __$NAME__ extends Component {
 export default connect(
   (/* state */) => ({/** _INSERT_STATE_  **/}),
   (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
-)(__$NAME__);
+)(${args => args.name});
+`;
+
+const testTemplate = createTemplate`
+/*global React*/
+/*global describe it*/
+/*global expect*/
+import { ${args => args.name} } from "${args => args.path}";
+import { shallow } from "enzyme";
+
+describe("${args => args.path}", () => {
+  it("renders without an issue", () => {
+    const subject = <${args => args.name} />;
+    const wrapper = shallow(subject);
+    expect(wrapper).to.exist;
+  });
+});
+`;
+
+module.exports = exports = options => ({
+  args: {
+    name: options.name
+  },
+  entries: [
+    {
+      path: "src/containers",
+      filename: options.name,
+      template: containerTemplate
+    },
+    {
+      path: "test/containers",
+      filename: `${options.name}.test.js`,
+      template: testTemplate,
+      args: {
+        path: `containers/${options.name}`
+      }
+    }
+  ]
+});
