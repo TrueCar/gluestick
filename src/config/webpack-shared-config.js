@@ -1,6 +1,7 @@
 // Webpack configuration that is shared between the client and tests
 import path from "path";
 import process from "process";
+import HappyPack from "happypack";
 import { GLUESTICK_ADDON_DIR_REGEX } from "./vars";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
@@ -24,16 +25,9 @@ module.exports = {
   loaders: [
     {
       test: /\.js$/,
-      loader: "babel-loader",
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
       query: {
-        plugins: [
-          "transform-decorators-legacy"
-        ],
-        presets: [
-          "react",
-          "es2015",
-          "stage-0"
-        ]
+        id: "babel",
       },
       include: [
         path.join(process.cwd(), "Index.js"),
@@ -51,7 +45,10 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("fonts"),
-      loader: "file-loader?name=[name]-[hash].[ext]"
+      loader: path.resolve(__dirname, "../../node_modules/happypack/loader.js"),
+      query: {
+        id: "fonts",
+      },
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
@@ -64,7 +61,12 @@ module.exports = {
   ],
   plugins: [
     new ExtractTextPlugin("[name]-[chunkhash].css"),
-    new OptimizeCSSAssetsPlugin()
+    new OptimizeCSSAssetsPlugin(),
+    new HappyPack({
+      id: "babel",
+      loaders: ["babel-loader?presets[]=react&presets[]=es2015&presets[]=stage-0&plugins[]=transform-decorators-legacy"],
+      threads: 4,
+    }),
   ],
   preLoaders: []
 };
