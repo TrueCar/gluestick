@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
+const bin = lazyMethodRequire("./commands/bin");
 const build = lazyMethodRequire("./commands/build");
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");
@@ -104,6 +105,12 @@ commander
   .action(checkGluestickProject)
   .action(() => build())
   .action(() => updateLastVersionUsed(currentGluestickVersion));
+
+commander
+  .command("bin")
+  .allowUnknownOption(true)
+  .description("access dependencies bin directory")
+  .action(bin);
 
 commander
   .command("dockerize")
