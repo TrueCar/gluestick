@@ -13,7 +13,7 @@ const cachedEntryPoints = getWebpackEntries();
  * while finally falling back to the default index parameter.
  */
 const getSortedEntries = function () {
-  return Object.keys(getWebpackEntries()).sort((a, b) => {
+  return Object.keys(getWebpackEntries().entries).sort((a, b) => {
     const bSplitLength = b.split("/").length;
     const aSplitLength = a.split("/").length;
     if (bSplitLength === aSplitLength) {
@@ -43,7 +43,7 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
   }
   else {
     sortedEntries = getSortedEntries();
-    entryPoints = getWebpackEntries();
+    entryPoints = getWebpackEntries().entries;
   }
 
   logger.debug("Getting webpack entries");

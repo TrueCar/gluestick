@@ -64,7 +64,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
     const request = { ...MOCK_REQUEST, url: "http://kook.com/used-cars-for-sale" };
     const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
-    const result = getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
+    const result = getRenderRequirementsFromEntrypoints(request, mockServerResponse, {}, mockRequire);
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: "used",

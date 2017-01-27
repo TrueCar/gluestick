@@ -6,18 +6,12 @@ function getBasePath () {
   return path.join(process.cwd(), "src", "config", ".entries");
 }
 
-const normalizeEntryPoints = entryPoints => {
-  return Object.keys(entryPoints).reduce((prev, curr) => {
-    // normal entrypoint
-    if (curr[0] === "/") {
-      return Object.assign({}, prev, { [curr]: entryPoints[curr] });
-    }
-    // group
-    Object.keys(entryPoints[curr]).forEach(key => {
-      entryPoints[curr][key].group = curr;
-    });
-    return Object.assign({}, prev, { ...entryPoints[curr] });
-  }, {});
+const filterEntries = (entries, groupOfEntries) => {
+  if(groupOfEntries){
+    return groupOfEntries.reduce((prev, curr) => {
+      return Object.assign({}, prev, { [curr]: entries[curr] });
+    }, {});
+  }
 };
 
 /**
@@ -30,7 +24,7 @@ export function getWebpackEntries () {
   const output = {};
   const cwd = process.cwd();
   const basePath = getBasePath();
-
+  const webpackAdditions = getWebpackAdditions();
   // setup default
   const entryPoints = {
     "/": {
@@ -38,7 +32,7 @@ export function getWebpackEntries () {
       routes: path.join(cwd, "src", "config", "routes"),
       reducers: path.join(cwd, "src", "reducers")
     },
-    ...normalizeEntryPoints(getWebpackAdditions().entryPoints)
+    ...webpackAdditions.entryPoints
   };
 
   Object.keys(entryPoints).forEach((key) => {
@@ -51,11 +45,14 @@ export function getWebpackEntries () {
       routes: entry.routes || path.join(cwd, "src", "config", "routes", fileName),
       reducers: entry.reducers || path.join(cwd, "src", "reducers", fileName),
       index: entry.index || path.join(cwd, "Index"),
-      group: entry.group || null
+      entryPoints: entry.entryPoints || null
     };
   });
 
-  return output;
+  return {
+    mapEntryToGroup: webpackAdditions.mapEntryToGroup,
+    entries: output
+  };
 }
 
 const parseWebpackEntry = (entry, isProduction) => {
@@ -95,15 +92,13 @@ export default function buildWebpackEntries (isProduction, entrypointToBuild) {
   fs.removeSync(basePath);
   fs.ensureDirSync(basePath);
 
-  const entries = getWebpackEntries();
+  const { mapEntryToGroup, entries } = getWebpackEntries();
   if (entrypointToBuild && entrypointToBuild[0] === "/") {
     const entry = parseWebpackEntry(entries[entrypointToBuild], isProduction);
     output[entry.fileName] = entry.conent;
     return output;
   } else if (entrypointToBuild) {
-    const filtredEntries = Object.keys(entries)
-      .filter(key => entries[key].group && entries[key].group === entrypointToBuild)
-      .reduce((prev, curr) => Object.assign({}, prev, { [curr]: entries[curr] }), {});
+    const filtredEntries = filterEntries(entries, mapEntryToGroup[entrypointToBuild]);
     for (const key in filtredEntries) {
       const entry = parseWebpackEntry(filtredEntries[key], isProduction);
       output[entry.fileName] = entry.conent;
