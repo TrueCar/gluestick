@@ -36,7 +36,6 @@ const currentGluestickVersion = getVersion();
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
 const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
-const karmaTestOption = ["-k, --karma", "run tests in Karma"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
@@ -95,7 +94,6 @@ commander
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...testReportCoverageOption)
-  .option(...karmaTestOption)
   .option(...skipBuildOption)
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
@@ -137,7 +135,6 @@ commander
   .command("start-test", null, {noHelp: true})
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...karmaTestOption)
   .option(...testDebugOption)
   .option(...testReportCoverageOption)
   .option(...testWatchOption)
@@ -151,7 +148,6 @@ commander
   .command("test")
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...karmaTestOption)
   .option(...testDebugOption)
   .option(...testReportCoverageOption)
   .option(...testWatchOption)
