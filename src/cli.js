@@ -6,15 +6,18 @@ const execWithConfig = require("./execWithConfig");
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
 const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
-const debugTestOption = ["-B, --debug-test", "debug tests with built-in node inspector"];
-const karmaTestOption = ["-k, --karma", "run tests in Karma"];
-const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
 
-commander.version(cliHelpers.getVersion());
+const testDebugOption = ["-D, --debug-test", "debug tests with built-in node inspector"];
+const testReportCoverageOption = ["-C --coverage", "Create test coverage"];
+const testWatchOption = ["-W --watch", "Watch tests"];
+const testPatternOption = ["-R --pattern [pattern]", "Run specific test regex pattern name"];
+
+commander
+  .version(currentGluestickVersion);
 
 commander
   .command("new")
@@ -33,6 +36,7 @@ commander
   .description("generate a new entity from given template")
   .arguments("<name>")
   .option(...statelessFunctionalOption)
+  .option("-O, --gen-options <value>", "options to pass to the generator")
   .action((...commandArguments) => {
     execWithConfig(
       require("./commands/generate"),
@@ -60,9 +64,7 @@ commander
   .option("-E, --log-pretty [true|false]", "set pretty printing for logging", cliHelpers.parseBooleanFlag)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
-  .option(...karmaTestOption)
+  .option(...testReportCoverageOption)
   .option(...skipBuildOption)
   .action((...commandArguments) => {
     execWithConfig(
@@ -138,9 +140,10 @@ commander
   .command("test")
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...karmaTestOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testDebugOption)
+  .option(...testReportCoverageOption)
+  .option(...testWatchOption)
+  .option(...testPatternOption)
   .description("start tests")
   .action(() => {
     execWithConfig(

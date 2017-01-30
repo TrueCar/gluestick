@@ -35,7 +35,6 @@
  */
 module.exports = {
   additionalLoaders: [],
-  additionalPreLoaders: [],
   additionalAliases: {},
   plugins: [],
   vendor: []

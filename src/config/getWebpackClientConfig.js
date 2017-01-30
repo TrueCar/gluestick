@@ -10,7 +10,6 @@ const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const {
   additionalLoaders,
-  additionalPreLoaders,
   additionalExternals,
   additionalWebpackConfig,
   vendor,
@@ -68,19 +67,21 @@ export function getEnvironmentPlugins(isProduction) {
 export default function (appRoot, appConfigFilePath, isProduction) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
   const devtool = process.env.DEVTOOL || "inline-source-map";
+  const vendors = vendor ? { vendor } : {};
+
   const baseWebpackConfig = {
     context: appRoot,
     devtool: isProduction ? "source-map" : devtool,
     entry: {
       ...buildWebpackEntries(isProduction),
-      vendor: vendor
+      ...vendors,
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           loader: "babel-loader",
-          query: {
+          options: {
             plugins: [
               "babel-plugin-gluestick"
             ],
@@ -94,10 +95,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
             path.join(appRoot, "src/config/application.js"),
           ]
         }
-      ].concat(webpackSharedConfig.loaders, additionalLoaders),
-      preLoaders: [
-      // only place client specific preLoaders here
-      ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
+      ].concat(webpackSharedConfig.rules, additionalLoaders),
     },
     node: {
       fs: "empty",
@@ -109,9 +107,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       publicPath: ASSET_PATH,
     },
     plugins: [
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.NoErrorsPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         "process.env": getExposedEnvironmentVariables(appConfigFilePath)
       }),
@@ -119,7 +115,12 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       // Make it so *.server.js files return null in client
       new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, "./serverFileMock.js")),
 
-      new webpack.optimize.CommonsChunkPlugin("vendor", `vendor${isProduction ? "-[hash]" : ""}.bundle.js`),
+      new webpack.optimize.CommonsChunkPlugin(
+        {
+          name: "vendor",
+          filename: `vendor${isProduction ? "-[hash]" : ""}.bundle.js`,
+        }
+      )
     ].concat(getEnvironmentPlugins(isProduction), webpackSharedConfig.plugins, plugins),
     resolve: {
       ...webpackSharedConfig.resolve
