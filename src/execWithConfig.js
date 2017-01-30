@@ -3,8 +3,15 @@ const preparePlugins = require("./config/preparePlugins");
 const compileGlueStickConfig = require("./config/compileGlueStickConfig");
 const compileWebpackConfig = require("./config/compileWebpackConfig");
 
-module.exports = exports = (func, commandArguments, { useGSConfig, useWebpackConfig } = {}, preExec) => {
-  const projectConfig = require(path.join(process.cwd(), "package.json")).gluestick;
+module.exports = exports = (
+  func,
+  commandArguments,
+  { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
+  preExec
+) => {
+  const projectConfig = skipProjectConfig
+    ? {}
+    : require(path.join(process.cwd(), "package.json")).gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins) : null;
   const webpackConfig = useWebpackConfig ? compileWebpackConfig(plugins) : null;
@@ -17,7 +24,7 @@ module.exports = exports = (func, commandArguments, { useGSConfig, useWebpackCon
   const logger = {}; // temp
   if (Array.isArray(preExec)) {
     preExec.forEach(fn => fn(config, logger));
-  } else {
+  } else if (typeof preExec === "function") {
     preExec(config, logger);
   }
   func(config, logger, commandArguments);

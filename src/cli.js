@@ -19,12 +19,12 @@ commander.version(cliHelpers.getVersion());
 commander
   .command("new")
   .description("generate a new application")
-  .arguments("<app_name>")
+  .arguments("<appName>")
   .action((...commandArguments) => {
     execWithConfig(
       require("./commands/new"),
       commandArguments,
-      { useGSConfig: true }
+      { useGSConfig: true, skipProjectConfig: true }
     );
   });
 
@@ -157,11 +157,14 @@ commander
     if (err) { logger.error(err); }
   }));*/
 
+commander.command("check")
+  .action((opt) => { console.log("CHECK", opt); });
+
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
   .command("*", null, {noHelp: true})
   .action(function(cmd){
-    process.stdout.error(`Command '${highlight(cmd)}' not recognized`);
+    process.stderr.write(`Command '${highlight(cmd)}' not recognized`);
     commander.help();
   });
 
