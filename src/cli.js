@@ -17,7 +17,7 @@ const testWatchOption = ["-W --watch", "Watch tests"];
 const testPatternOption = ["-R --pattern [pattern]", "Run specific test regex pattern name"];
 
 commander
-  .version(currentGluestickVersion);
+  .version(cliHelpers.getVersion());
 
 commander
   .command("new")
@@ -124,8 +124,6 @@ commander
   .description("start server")
   .option(...debugServerOption)
   .option(...debugServerPortOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
   .action((...commandArguments) => {
     execWithConfig(
       require("./commands/start-server"),
@@ -145,10 +143,10 @@ commander
   .option(...testWatchOption)
   .option(...testPatternOption)
   .description("start tests")
-  .action(() => {
+  .action((...commandArguments) => {
     execWithConfig(
       require("./commands/test"),
-      commander.rawArgs.slice(3),
+      commandArguments,
       { useGSConfig: true, useWebpackConfig: true }
     );
   });
@@ -159,9 +157,6 @@ commander
   .action((scriptPath) => run(scriptPath, (err) => {
     if (err) { logger.error(err); }
   }));*/
-
-commander.command("check")
-  .action((opt) => { console.log("CHECK", opt); });
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander

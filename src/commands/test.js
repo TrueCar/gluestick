@@ -55,16 +55,16 @@ function createArgs(defaultArgs, options) {
   return argv;
 }
 
-module.exports = function(options) {
+module.exports = function(config, logger, options) {
   const spawnOptions = {
     stdio: "inherit",
   };
 
-  if (options.debugTest) {
+  if (options[0].debugTest) {
     const argvDebug = getDebugDefaultConfig();
     spawn.sync("node", argvDebug, spawnOptions);
   } else {
-    const argv = createArgs(getJestDefaultConfig(), options);
+    const argv = createArgs(getJestDefaultConfig(), options[0]);
     spawn.sync(JEST_PATH, argv, spawnOptions);
   }
 };
