@@ -38,12 +38,12 @@ describe("src/lib/buildWebpackEntries", () => {
       const entries = getWebpackEntries();
       const expectedResult = {
         "/":
-          { name: "main",
-            routes: `${cwd}/src/config/routes`,
-            reducers: `${cwd}/src/reducers`,
-            fileName: "main",
-            filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
-            index: `${cwd}/Index`
+        { name: "main",
+          routes: `${cwd}/src/config/routes`,
+          reducers: `${cwd}/src/reducers`,
+          fileName: "main",
+          filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
+          index: `${cwd}/Index`
         }
       };
 
@@ -153,4 +153,3 @@ describe("src/lib/buildWebpackEntries", () => {
     });
   });
 });
-
