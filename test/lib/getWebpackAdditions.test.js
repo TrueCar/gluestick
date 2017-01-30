@@ -32,11 +32,10 @@ describe("src/lib/getWebpackAdditions", () => {
       additionalAliases: {},
       additionalExternals: {},
       additionalLoaders: [],
-      additionalPreLoaders: [],
       additionalWebpackConfig: {},
       entryPoints: {},
       plugins: [],
-      vendor: []
+      vendor: null
     };
   });
 
@@ -54,7 +53,7 @@ describe("src/lib/getWebpackAdditions", () => {
     expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return additionalLoaders and additionalPreLoaders when they are specified in webpack-additions", () => {
+  it("should return additionalLoaders when they are specified in webpack-additions", () => {
     const additions = {
       additionalLoaders: [
         {
@@ -66,12 +65,6 @@ describe("src/lib/getWebpackAdditions", () => {
           loader: "todd-loader"
         }
       ],
-      additionalPreLoaders: [
-        {
-          extensions: ["json"],
-          loader: "json-loader"
-        }
-      ]
     };
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
@@ -88,17 +81,11 @@ describe("src/lib/getWebpackAdditions", () => {
           test: /\.(todd|odd|surf|turf)$/
         }
       ],
-      additionalPreLoaders: [
-        {
-          loader: "json-loader",
-          test: /\.json$/
-        }
-      ]
     });
   });
 
   it("should return entryPoints when they are specified in webpack-additions", () => {
-    const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
+    const webpackAdditionsContent = "module.exports = { additionalLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
     expect(result).toEqual({
@@ -107,7 +94,7 @@ describe("src/lib/getWebpackAdditions", () => {
         "/used-cars-for-sale": {
           "name": "used"
         }
-      }
+      },
     });
   });
 

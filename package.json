@@ -60,7 +60,7 @@
     "eventsource-polyfill": "0.9.6",
     "express": "4.14.0",
     "express-pino-logger": "1.0.0",
-    "extract-text-webpack-plugin": "1.0.1",
+    "extract-text-webpack-plugin": "2.0.0-beta.5",
     "fs-extra": "0.30.0",
     "handlebars": "4.0.5",
     "http-proxy-middleware": "0.17.1",
