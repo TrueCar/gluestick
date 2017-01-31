@@ -58,21 +58,21 @@ describe("${args => args.path}", () => {
 
 module.exports = exports = options => ({
   args: {
-    name: options.name
+    name: options.name,
   },
   entries: [
     {
-      path: "src/containers",
+      path: 'src/containers',
       filename: options.name,
-      template: containerTemplate
+      template: containerTemplate,
     },
     {
-      path: "test/containers",
+      path: 'test/containers',
       filename: `${options.name}.test.js`,
       template: testTemplate,
       args: {
-        path: `containers/${options.name}`
-      }
-    }
-  ]
+        path: `containers/${options.name}`,
+      },
+    },
+  ],
 });

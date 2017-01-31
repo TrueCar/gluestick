@@ -1,9 +1,10 @@
-import httpProxyMiddleware from "http-proxy-middleware";
-import { getLogger } from "./logger";
+import httpProxyMiddleware from 'http-proxy-middleware';
+import { getLogger } from './logger';
+
 const logger = getLogger();
 
-const onError = ("error", (err, req, res) => {
-  res.log.error(err, "Proxy error:");
+const onError = ('error', (err, req, res) => {
+  res.log.error(err, 'Proxy error:');
 });
 
 /**
@@ -26,30 +27,26 @@ const onError = ("error", (err, req, res) => {
  * @param {httpProxyMiddleware} [proxy] optional proxy object (mostly for testing)
  *
  */
-export default function addProxies (app, proxyConfigs=[], proxy=httpProxyMiddleware) {
+export default function addProxies(app, proxyConfigs = [], proxy = httpProxyMiddleware) {
   proxyConfigs.forEach((proxyConfig) => {
     const { filter, path, destination, options } = proxyConfig;
     const actualConfig = {
       logLevel: logger.level,
-      logProvider: () => {
-        return logger;
-      },
+      logProvider: () => logger,
       target: destination,
       pathRewrite: {
-        [`^${path}`]: ""
+        [`^${path}`]: '',
       },
-      onError: onError,
-      ...options
+      onError,
+      ...options,
     };
 
     let proxyObj;
-    if (typeof(filter) === "function") {
+    if (typeof (filter) === 'function') {
       proxyObj = proxy(filter, actualConfig);
-    }
-    else {
+    } else {
       proxyObj = proxy(actualConfig);
     }
     app.use(path, proxyObj);
   });
 }
-

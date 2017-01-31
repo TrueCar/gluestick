@@ -1,212 +1,212 @@
-const parseConfig = require("../../src/generator/parseConfig");
-const createTemplate = require("../../src/generator/createTemplate");
+const parseConfig = require('../../src/generator/parseConfig');
+const createTemplate = require('../../src/generator/createTemplate');
 
-describe("generator/parseConfig", () => {
-  it("should merge args properly", () => {
+describe('generator/parseConfig', () => {
+  it('should merge args properly', () => {
     const config = parseConfig(options => ({
       args: {
-        name: options.name
+        name: options.name,
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test",
+        path: 'path/to/directory',
+        filename: 'Test',
         template: createTemplate`${args => args.name}`,
         args: {
-          name: "TestNameOverride"
-        }
-      }
+          name: 'TestNameOverride',
+        },
+      },
     }), {
-      name: "TestName"
+      name: 'TestName',
     });
     expect(config).toEqual({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test.js",
-        template: "TestNameOverride",
+        path: 'path/to/directory',
+        filename: 'Test.js',
+        template: 'TestNameOverride',
         args: {
-          name: "TestNameOverride"
-        }
-      }
+          name: 'TestNameOverride',
+        },
+      },
     });
   });
 
-  it("should parse config with object config", () => {
+  it('should parse config with object config', () => {
     const config = parseConfig({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test",
-        template: createTemplate`${args => args.name}`
-      }
+        path: 'path/to/directory',
+        filename: 'Test',
+        template: createTemplate`${args => args.name}`,
+      },
     }, {});
     expect(config).toEqual({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test.js",
-        template: "TestName"
-      }
+        path: 'path/to/directory',
+        filename: 'Test.js',
+        template: 'TestName',
+      },
     });
   });
 
-  it("should parse config with functional config", () => {
+  it('should parse config with functional config', () => {
     const config = parseConfig(options => ({
       args: {
-        name: options.name
+        name: options.name,
       },
       entry: {
-        path: "path/to/directory",
+        path: 'path/to/directory',
         filename: options.filename,
-        template: createTemplate`${args => args.name}`
-      }
+        template: createTemplate`${args => args.name}`,
+      },
     }), {
-      name: "TestName",
-      filename: "Test"
+      name: 'TestName',
+      filename: 'Test',
     });
     expect(config).toEqual({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test.js",
-        template: "TestName"
-      }
+        path: 'path/to/directory',
+        filename: 'Test.js',
+        template: 'TestName',
+      },
     });
   });
 
-  it("should parse config with multiple entries", () => {
+  it('should parse config with multiple entries', () => {
     const config = parseConfig(options => ({
       entries: [
         {
-          path: "path/to/directory",
-          filename: "Test1",
+          path: 'path/to/directory',
+          filename: 'Test1',
           template: createTemplate`${args => args.name}`,
           args: {
-            name: "TestName1"
-          }
+            name: 'TestName1',
+          },
         },
         {
-          path: "path/to/directory",
+          path: 'path/to/directory',
           filename: options.name,
           template: createTemplate`${args => args.name}`,
           args: {
-            name: options.name
-          }
-        }
-      ]
+            name: options.name,
+          },
+        },
+      ],
     }), {
-      name: "TestName2"
+      name: 'TestName2',
     });
     expect(config).toEqual({
       entries: [
         {
-          path: "path/to/directory",
-          filename: "Test1.js",
-          template: "TestName1",
+          path: 'path/to/directory',
+          filename: 'Test1.js',
+          template: 'TestName1',
           args: {
-            name: "TestName1"
-          }
+            name: 'TestName1',
+          },
         },
         {
-          path: "path/to/directory",
-          filename: "TestName2.js",
-          template: "TestName2",
+          path: 'path/to/directory',
+          filename: 'TestName2.js',
+          template: 'TestName2',
           args: {
-            name: "TestName2"
-          }
-        }
-      ]
+            name: 'TestName2',
+          },
+        },
+      ],
     });
   });
 
-  it("should throw error if entry is not valid", () => {
+  it('should throw error if entry is not valid', () => {
     expect(() => {
       parseConfig(options => ({
         args: {
-          name: options.name
+          name: options.name,
         },
       }), {
-        name: "TestName",
-        generator: "TestGenerator"
+        name: 'TestName',
+        generator: 'TestGenerator',
       });
-    }).toThrowError("No entry defined for generator TestGenerator");
+    }).toThrowError('No entry defined for generator TestGenerator');
   });
 
-  it("should throw error if no entry was defined", () => {
+  it('should throw error if no entry was defined', () => {
     expect(() => {
       parseConfig({
         entry: {
-          path: 1
-        }
+          path: 1,
+        },
       }, {
-        name: "TestName",
-        generator: "TestGenerator"
+        name: 'TestName',
+        generator: 'TestGenerator',
       });
-    }).toThrowError("Entry in generator TestGenerator is not valid");
+    }).toThrowError('Entry in generator TestGenerator is not valid');
     expect(() => {
       parseConfig({
         entry: {
-          path: 1
-        }
+          path: 1,
+        },
       }, {
-        name: "TestName",
-        generator: "TestGenerator"
+        name: 'TestName',
+        generator: 'TestGenerator',
       });
-    }).toThrowError("Entry in generator TestGenerator is not valid");
+    }).toThrowError('Entry in generator TestGenerator is not valid');
     expect(() => {
       parseConfig({
         entry: {
-          path: "",
-        }
+          path: '',
+        },
       }, {
-        name: "TestName",
-        generator: "TestGenerator"
+        name: 'TestName',
+        generator: 'TestGenerator',
       });
-    }).toThrowError("Entry in generator TestGenerator is not valid");
+    }).toThrowError('Entry in generator TestGenerator is not valid');
     expect(() => {
       parseConfig({
         entry: {
-          path: "",
-          filename: "",
-          template: null
-        }
+          path: '',
+          filename: '',
+          template: null,
+        },
       }, {
-        name: "TestName",
-        generator: "TestGenerator"
+        name: 'TestName',
+        generator: 'TestGenerator',
       });
-    }).toThrowError("Entry in generator TestGenerator is not valid");
+    }).toThrowError('Entry in generator TestGenerator is not valid');
   });
 
-  it("should parse config with additional direcotry in name filed", () => {
+  it('should parse config with additional direcotry in name filed', () => {
     const config = parseConfig({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory",
-        filename: "Test",
-        template: createTemplate`${args => args.name}`
-      }
+        path: 'path/to/directory',
+        filename: 'Test',
+        template: createTemplate`${args => args.name}`,
+      },
     }, {
-      dir: "additionalDir"
+      dir: 'additionalDir',
     });
     expect(config).toEqual({
       args: {
-        name: "TestName"
+        name: 'TestName',
       },
       entry: {
-        path: "path/to/directory/additionalDir",
-        filename: "Test.js",
-        template: "TestName"
-      }
+        path: 'path/to/directory/additionalDir',
+        filename: 'Test.js',
+        template: 'TestName',
+      },
     });
   });
 });

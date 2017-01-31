@@ -116,8 +116,8 @@ module.exports = exports = options => ({
 
 module.exports = exports = options => ({
   entry: {
-    path: "generators",
+    path: 'generators',
     filename: options.name,
-    template: generatorTemplate
-  }
+    template: generatorTemplate,
+  },
 });
