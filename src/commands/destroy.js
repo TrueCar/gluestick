@@ -60,20 +60,16 @@ module.exports = async function (command, name) {
   if (fileExists) {
     // If they typed a name that would normally be mutated, check with the user first before deleting the files
     if (originalName !== generatedFileName) {
+      const question = {
+        type: "confirm",
+        name: "confirm",
+        message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(generatedFileName)}.\nWould you like to continue with destroying ${filename(generatedFileName)}?`
+      };
       // @NOTE: We are using await so that we can wait for the result of the promise before moving on
-      const continueDestroying = await new Promise((resolve) => {
-        const question = {
-          type: "confirm",
-          name: "confirm",
-          message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(generatedFileName)}.\nWould you like to continue with destroying ${filename(generatedFileName)}?`
-        };
-        inquirer.prompt([question]).then(function (answers) {
-          resolve(!!answers.confirm);
-        });
-      });
-
-      // Since we used await, this code will not be executed until the promise above resolves
-      if (!continueDestroying) { process.exit(); }
+      const answers = await inquirer.prompt([question]);
+      if (!answers.confirm) {
+        process.exit();
+      }
     }
 
     fs.unlinkSync(destinationPath);
