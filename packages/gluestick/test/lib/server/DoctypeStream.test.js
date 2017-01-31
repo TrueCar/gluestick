@@ -4,14 +4,10 @@ import path from 'path';
 import DoctypeStream from '../../../src/lib/server/DoctypeStream';
 
 class WriteStream extends Writable {
-  constructor() {
-    super();
-    this.data = [];
-  }
+  data = [];
 
-  _write(chunk, enc, cb) {
-    this.data.push(chunk);
-    cb();
+  async _write(chunk) {
+    await this.data.push(chunk);
   }
 }
 
