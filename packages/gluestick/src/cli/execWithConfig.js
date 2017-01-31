@@ -16,7 +16,7 @@ module.exports = exports = (
   func,
   commandArguments,
   { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
-  { pre, post },
+  { pre, post } = {},
 ) => {
   const projectConfig = skipProjectConfig
     ? {}
