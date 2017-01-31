@@ -80,16 +80,13 @@ describe("cli: gluestick destroy", function () {
         expect(logger.error.mock.calls[0][0]).toContain("does not exist");
       });
 
-      it("should ask whether to continue if the name does not match (case sensitive)", done => {
-        inquirer.prompt = jest.fn().mockImplementation((questions, cb) => {
-          setTimeout(() => {
-            cb({confirm: true});
-          }, 0);
+      it("should ask whether to continue if the name does not match (case sensitive)", async () => {
+        inquirer.prompt = jest.fn().mockImplementation(() => {
+          return Promise.resolve({confirm: true});
         });
 
-        destroy("component", "testComponent");
+        await destroy("component", "testComponent");
         expect(inquirer.prompt).toHaveBeenCalledTimes(1);
-        done();
       });
     });
 
