@@ -3,11 +3,9 @@ const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const path = require("path");
 const npmDependencies = require("../lib/npmDependencies");
-const utils = require("../lib/utils");
-const { isGluestickProject } = utils;
-const logger = require("../lib/cliLogger");
-const cliColorScheme = require("../lib/cliColorScheme");
-const { highlight, filename } = cliColorScheme;
+//const logger = require("../lib/cliLogger");
+//const cliColorScheme = require("../lib/cliColorScheme");
+//const { highlight, filename } = cliColorScheme;
 
 function copyTo (destination) {
   fs.copySync(path.join(__dirname, "../../templates/new"), destination);
@@ -26,8 +24,13 @@ function copyTo (destination) {
   fs.renameSync(path.join(destination, "_gitignore"), path.join(destination, ".gitignore"));
 }
 
-module.exports = function (cofnig, logger, projectName) {
-  const currentlyInProjectFolder = isGluestickProject();
+module.exports = function ({ config, logger }, projectName, options) {
+  console.log(projectName);
+  console.log(options);
+  // if options.dev is set instead of setting gluestick dependency to "x.x.x"
+  // set it to file:<options.dev>  
+  
+  /*const currentlyInProjectFolder = isGluestickProject();
 
   // Ran from inside an existing project, install in current directory if approved
   if (currentlyInProjectFolder) {
@@ -45,10 +48,10 @@ module.exports = function (cofnig, logger, projectName) {
     });
 
     return false;
-  }
+  }*/
 
   // Anything other than alphanumeric and dashes is invalid
-  if (!/^(\w|-)*$/.test(projectName)) {
+  /*if (!/^(\w|-)*$/.test(projectName)) {
     logger.warn(`Invalid name: ${highlight(projectName)}`);
     return false;
   }
@@ -56,13 +59,13 @@ module.exports = function (cofnig, logger, projectName) {
   // Project name set, install in current working directory
   copyTo(path.join(process.cwd(), projectName));
   _printInstructions(projectName);
-  return true;
+  return true;*/
 };
 
-function _printInstructions(projectName) {
+/*function _printInstructions(projectName) {
   logger.info(`${highlight("New GlueStick project created")} at ${filename(process.cwd())}`);
   logger.info("To run your app and start developing");
   logger.info(`    cd ${projectName}`);
   logger.info("    gluestick start");
   logger.info("    Point the browser to http://localhost:8888");
-}
+}*/
