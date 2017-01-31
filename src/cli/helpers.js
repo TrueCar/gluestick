@@ -18,5 +18,5 @@ https://github.com/TrueCar/gluestick/blob/develop/templates/new/Index.js
       `);
     }
   },
-  getVersion: () => require(path.join(__dirname, "..", "package.json")).version
+  getVersion: () => require(path.join(__dirname, "../../", "package.json")).version
 };

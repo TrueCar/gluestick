@@ -60,11 +60,11 @@ module.exports = function(config, logger, options) {
     stdio: "inherit",
   };
 
-  if (options[0].debugTest) {
+  if (options.debugTest) {
     const argvDebug = getDebugDefaultConfig();
     spawn.sync("node", argvDebug, spawnOptions);
   } else {
-    const argv = createArgs(getJestDefaultConfig(), options[0]);
+    const argv = createArgs(getJestDefaultConfig(), options);
     spawn.sync(JEST_PATH, argv, spawnOptions);
   }
 };

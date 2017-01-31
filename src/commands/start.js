@@ -18,7 +18,7 @@ module.exports = exports = async function start(config, logger, options) {
 
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {
-    spawn("gluestick", ["test", ...options[0].parent.rawArgs.slice(4)], {
+    spawn("gluestick", ["test", ...options.parent.rawArgs.slice(4)], {
       stdio: "inherit",
       env: Object.assign({}, process.env, {
         NODE_ENV: isProduction ? "production" : "development-test"
@@ -37,7 +37,7 @@ module.exports = exports = async function start(config, logger, options) {
     });
   }
 
-  spawn("gluestick", ["start-server", ...options[0].parent.rawArgs.slice(3)], {
+  spawn("gluestick", ["start-server", ...options.parent.rawArgs.slice(3)], {
     stdio: "inherit",
     env: Object.assign({}, process.env, {
       NODE_ENV: isProduction ? "production" : "development-server"

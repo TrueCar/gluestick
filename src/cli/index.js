@@ -1,7 +1,7 @@
 const commander = require("commander");
 const process = require("process");
-const { highlight } = require("./lib/cliColorScheme");
-const cliHelpers = require("./cliHelpers");
+const { highlight } = require("./colorScheme");
+const cliHelpers = require("./helpers");
 const execWithConfig = require("./execWithConfig");
 
 const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
@@ -25,7 +25,7 @@ commander
   .arguments("<appName>")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/new"),
+      require("../commands/new"),
       commandArguments,
       { useGSConfig: true, skipProjectConfig: true }
     );
@@ -39,7 +39,7 @@ commander
   .option("-O, --gen-options <value>", "options to pass to the generator")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/generate"),
+      require("../commands/generate"),
       commandArguments
     );
   });
@@ -50,7 +50,7 @@ commander
   .arguments("<name>")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/destroy"),
+      require("../commands/destroy"),
       commandArguments
     );
   });
@@ -68,10 +68,10 @@ commander
   .option(...skipBuildOption)
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/start"),
+      require("../commands/start"),
       commandArguments,
       { useGSConfig: true, useWebpackConfig: true },
-      cliHelpers.notifyUpdate
+      { pre: cliHelpers.notifyUpdate }
     );
   });
 
@@ -80,7 +80,7 @@ commander
   .description("create production asset build")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/build"),
+      require("../commands/build"),
       commandArguments,
       { useGSConfig: true, useWebpackConfig: true }
     );
@@ -92,7 +92,7 @@ commander
   .description("access dependencies bin directory")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/bin"),
+      require("../commands/bin"),
       commandArguments,
     );
   });
@@ -103,7 +103,7 @@ commander
   .arguments("<name>")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/dockerize"),
+      require("../commands/dockerize"),
       commandArguments
     );
   });
@@ -113,7 +113,7 @@ commander
   .description("start client")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/start-client"),
+      require("../commands/start-client"),
       commandArguments,
       { useGSConfig: true, useWebpackConfig: true}
     );
@@ -126,11 +126,8 @@ commander
   .option(...debugServerPortOption)
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/start-server"),
-      {
-        debugServer: commandArguments[0].debugServer,
-        debugPort: commandArguments[0].debugPort
-      },
+      require("../commands/start-server"),
+      commandArguments,
       { useGSConfig: true, useWebpackConfig: true });
   });
 
@@ -145,7 +142,7 @@ commander
   .description("start tests")
   .action((...commandArguments) => {
     execWithConfig(
-      require("./commands/test"),
+      require("../commands/test"),
       commandArguments,
       { useGSConfig: true, useWebpackConfig: true }
     );
