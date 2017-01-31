@@ -2,7 +2,9 @@
   "name": "gluestick-packages",
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "test": "cd ./packages/gluestick && npm test",
+    "lint": "cd ./packages/gluestick && npm run lint"
   },
   "dependencies": {
     "lerna": "2.0.0-beta.34"

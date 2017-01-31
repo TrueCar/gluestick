@@ -1,24 +1,24 @@
-/*global webpackIsomorphicTools*/
-import path from "path";
-import _SSRCaching from "electrode-react-ssr-caching";
-import React from "react";
-import LRU from "lru-cache";
-import Oy from "oy-vey";
-import { renderToString, renderToStaticMarkup } from "react-dom/server";
-import { match, RouterContext } from "react-router";
+/* global webpackIsomorphicTools*/
+import path from 'path';
+import _SSRCaching from 'electrode-react-ssr-caching';
+import React from 'react';
+import LRU from 'lru-cache';
+import Oy from 'oy-vey';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
 import {
   runBeforeRoutes as _runBeforeRoutes,
   prepareRoutesWithTransitionHooks,
   ROUTE_NAME_404_NOT_FOUND,
-  getHttpClient
-} from "gluestick-shared";
+  getHttpClient,
+} from 'gluestick-shared';
 
-import _streamResponse from "./streamResponse";
-import _showHelpText, { MISSING_404_TEXT } from "./helpText";
-import getHeaders from "./getHeaders";
-import _getHead from "./getHead";
-import Body from "./Body";
-import { getLogger } from "./logger";
+import _streamResponse from './streamResponse';
+import _showHelpText, { MISSING_404_TEXT } from './helpText';
+import getHeaders from './getHeaders';
+import _getHead from './getHead';
+import Body from './Body';
+import { getLogger } from './logger';
 
 const _logger = getLogger();
 
@@ -28,23 +28,23 @@ let _Entry;
  * because the tests move around in folders and it wont exist when this file
  * is initialized but instead when the method is run.
  */
-if (process.env.NODE_ENV !== "test") {
-  _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
+if (process.env.NODE_ENV !== 'test') {
+  _Entry = require(path.join(process.cwd(), 'src/config/.entry')).default;
 }
 
-const HTML5 = "<!DOCTYPE html>";
+const HTML5 = '<!DOCTYPE html>';
 
 const DEFAULT_CACHE_TTL = 5 * 1000;
 const _cache = LRU({
   max: 50,
-  maxAge: DEFAULT_CACHE_TTL
+  maxAge: DEFAULT_CACHE_TTL,
 });
 
-export function getCacheKey ({hostname, url}) {
+export function getCacheKey({ hostname, url }) {
   return `h:${hostname} u:${url}`;
 }
 
-export function renderCachedResponse (req, res, cache=_cache, streamResponse=_streamResponse) {
+export function renderCachedResponse(req, res, cache = _cache, streamResponse = _streamResponse) {
   const key = getCacheKey(req);
   const result = cache.get(key);
   if (result) {
@@ -55,90 +55,95 @@ export function renderCachedResponse (req, res, cache=_cache, streamResponse=_st
   return false;
 }
 
-export function matchRoute (req, res, getRoutes, store, config) {
+export function matchRoute(req, res, getRoutes, store, config) {
   return new Promise((resolve, reject) => {
     const httpClient = getHttpClient(config.httpClient, req, res);
     const routes = prepareRoutesWithTransitionHooks(getRoutes(store, httpClient));
-    match({routes: routes, location: req.url}, (error, redirectLocation, renderProps) => {
+    match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
       if (error) {
         reject(error);
         return;
       }
 
-      resolve({redirectLocation, renderProps});
+      resolve({ redirectLocation, renderProps });
     });
   });
 }
 
-export function redirect (res, redirectLocation) {
+export function redirect(res, redirectLocation) {
   res.redirect(301, redirectLocation.pathname + redirectLocation.search);
 }
 
-export function renderNotFound (res, showHelpText=_showHelpText) {
+export function renderNotFound(res, showHelpText = _showHelpText) {
   // This is only hit if there is no 404 handler in the react routes. A
   // not found handler is included by default in new projects.
   showHelpText(MISSING_404_TEXT);
-  res.status(404).end("Not Found");
+  res.status(404).end('Not Found');
 }
 
-export function runPreRenderHooks (req, renderProps, store, runBeforeRoutes=_runBeforeRoutes) {
-  return runBeforeRoutes(store, renderProps || {}, {isServer: true, request: req});
+export function runPreRenderHooks(req, renderProps, store, runBeforeRoutes = _runBeforeRoutes) {
+  return runBeforeRoutes(store, renderProps || {}, { isServer: true, request: req });
 }
 
-export function getCurrentRoute (renderProps) {
+export function getCurrentRoute(renderProps) {
   return renderProps.routes[renderProps.routes.length - 1];
 }
 
-export function getStatusCode (state, currentRoute) {
+export function getStatusCode(state, currentRoute) {
   let status = 200;
 
-  // Check if status code was set in redux
-  if (state._gluestick.hasOwnProperty("statusCode") && typeof(state._gluestick.statusCode) !== "undefined") {
+  const isStatusSetInRedux =
+    {}.hasOwnProperty.call(state._gluestick, 'statusCode')
+    && typeof (state._gluestick.statusCode) !== 'undefined';
+
+  if (isStatusSetInRedux) {
     status = state._gluestick.statusCode;
-  }
-
-  // Check if this is the 404 route
-  // @deprecate in favor of route level status
-  else if (currentRoute.name === ROUTE_NAME_404_NOT_FOUND) {
+    // Check if this is the 404 route
+    // @deprecate in favor of route level status
+  } else if (currentRoute.name === ROUTE_NAME_404_NOT_FOUND) {
     status = 404;
-  }
-
-  // Check for something like <Route status={404} />
-  else if (currentRoute.status) {
+    // Check for something like <Route status={404} />
+  } else if (currentRoute.status) {
     status = currentRoute.status;
   }
 
   return status;
 }
 
-export function setHeaders (res, currentRoute) {
+export function setHeaders(res, currentRoute) {
   const headers = getHeaders(currentRoute);
   if (headers) {
     res.set(headers);
   }
 }
 
-export function enableComponentCaching (componentCacheConfig, isProduction, SSRCaching=_SSRCaching) {
+export function enableComponentCaching(
+  componentCacheConfig, isProduction, SSRCaching = _SSRCaching,
+) {
   if (!isProduction) {
     return;
   }
 
   // only enable caching if componentCacheConfig has an object
   SSRCaching.enableCaching(!!componentCacheConfig);
-  if (!!componentCacheConfig) {
+  if (componentCacheConfig) {
     SSRCaching.setCachingConfig(componentCacheConfig);
   }
 }
 
-export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
-  // this should only happen in tests
-  if (!Entry) {
-    Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
-  }
-
+export async function prepareOutput(
+  req,
+  { Index, store, getRoutes, fileName },
+  renderProps,
+  config,
+  envVariables,
+  getHead = _getHead,
+  Entry = _Entry || require(path.join(process.cwd(), 'src/config/.entry')).default,
+  _webpackIsomorphicTools = webpackIsomorphicTools,
+) {
   const routerContext = <RouterContext {...renderProps} />;
 
-  const radiumConfig = { userAgent: req.headers["user-agent"] };
+  const radiumConfig = { userAgent: req.headers['user-agent'] };
 
   const main = (
     <Entry
@@ -155,25 +160,25 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const currentRoute = getCurrentRoute(renderProps);
   const routeAttrs = getEmailAttributes(currentRoute);
   const isEmail = routeAttrs.email;
-  const reactRenderFunc = isEmail ? renderToStaticMarkup: renderToString;
+  const reactRenderFunc = isEmail ? renderToStaticMarkup : renderToString;
 
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
   const currentState = store.getState();
 
-  let headContent, bodyContent;
+  let headContent;
+  let bodyContent;
   const renderMethod = config.server && config.server.renderMethod;
+
   if (renderMethod) {
     try {
-      const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
+      const renderOutput = await Promise.resolve(renderMethod(reactRenderFunc, main));
       headContent = renderOutput.head;
       bodyContent = renderOutput.body;
-    }
-    catch (e) {
+    } catch (e) {
       throw e;
     }
-  }
-  else {
+  } else {
     bodyContent = reactRenderFunc(main);
   }
 
@@ -185,7 +190,10 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
+
+  const head =
+    isEmail
+      ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -197,10 +205,9 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
 
   let responseString;
   if (isEmail) {
-    const generateCustomTemplate = ({bodyContent}) => { return `${bodyContent}`; };
+    const generateCustomTemplate = ({ bodyContent: content }) => `${content}`;
     responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
-  }
-  else {
+  } else {
     responseString = renderToStaticMarkup(rootElement);
   }
 
@@ -208,11 +215,20 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
     responseString,
 
     // The following is returned for testing
-    rootElement
+    rootElement,
   };
 }
 
-export function cacheAndRender (req, res, currentRoute, status, output, cache=_cache, streamResponse=_streamResponse, logger=_logger, enableCache=true) {
+export function cacheAndRender(
+  req,
+  res,
+  currentRoute,
+  status,
+  output,
+  cache = _cache,
+  streamResponse = _streamResponse,
+  logger = _logger, enableCache = true,
+) {
   const { responseString } = output;
   const cacheKey = getCacheKey(req);
 
@@ -224,20 +240,19 @@ export function cacheAndRender (req, res, currentRoute, status, output, cache=_c
     cache.set(cacheKey, {
       status,
       responseString,
-      docType: routeAttrs.docType
+      docType: routeAttrs.docType,
     }, cacheTTL);
   }
 
   streamResponse(req, res, {
     status,
     docType: routeAttrs.docType,
-    responseString
+    responseString,
   });
 }
 
-export function getEmailAttributes (currentRoute) {
+export function getEmailAttributes(currentRoute) {
   const email = currentRoute.email || false;
   const docType = currentRoute.docType || HTML5;
   return { email, docType };
 }
-

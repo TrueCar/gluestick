@@ -1,15 +1,14 @@
 export default (route) => {
-  if (!route.hasOwnProperty("headers")) {
+  if (!{}.hasOwnProperty.call(route, 'headers')) {
     return null;
   }
 
   const headersHashOrFunc = route.headers;
   let headers;
 
-  if (typeof headersHashOrFunc === "function") {
+  if (typeof headersHashOrFunc === 'function') {
     headers = headersHashOrFunc();
-  }
-  else if (typeof headersHashOrFunc === "object") {
+  } else if (typeof headersHashOrFunc === 'object') {
     headers = headersHashOrFunc;
   }
 

@@ -1,13 +1,13 @@
-const path = require("path");
-const preparePlugins = require("../config/preparePlugins");
-const compileGlueStickConfig = require("../config/compileGlueStickConfig");
-const compileWebpackConfig = require("../config/compileWebpackConfig");
-const logger = require("./logger");
+const path = require('path');
+const preparePlugins = require('../config/preparePlugins');
+const compileGlueStickConfig = require('../config/compileGlueStickConfig');
+const compileWebpackConfig = require('../config/compileWebpackConfig');
+const logger = require('./logger');
 
 const execHooks = (context, hooks) => {
   if (Array.isArray(hooks)) {
     hooks.forEach(fn => fn(context));
-  } else if (typeof hooks === "function") {
+  } else if (typeof hooks === 'function') {
     hooks(context);
   }
 };
@@ -16,11 +16,11 @@ module.exports = exports = (
   func,
   commandArguments,
   { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
-  { pre, post } = {}
+  { pre, post } = {},
 ) => {
   const projectConfig = skipProjectConfig
     ? {}
-    : require(path.join(process.cwd(), "package.json")).gluestick;
+    : require(path.join(process.cwd(), 'package.json')).gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   const webpackConfig = useWebpackConfig ? compileWebpackConfig(plugins, projectConfig) : null;
@@ -29,9 +29,9 @@ module.exports = exports = (
       projectConfig,
       GSConfig,
       webpackConfig,
-      plugins
+      plugins,
     },
-    logger
+    logger,
   };
   execHooks(context, pre);
   execHooks(context, post);

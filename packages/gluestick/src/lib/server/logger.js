@@ -1,26 +1,26 @@
-import fs from "fs-extra";
-import path from "path";
-import pino from "pino";
-import expressPinoLogger from "express-pino-logger";
+import fs from 'fs-extra';
+import path from 'path';
+import pino from 'pino';
+import expressPinoLogger from 'express-pino-logger';
 
 export const pinoBaseConfig = {
-  name: "GlueStick",
+  name: 'GlueStick',
   safe: true,
-  level: "warn"
+  level: 'warn',
 };
 
 const CLI_PARAM_MAP = {
-  "logLevel": "level",
-  "logPretty": "pretty"
+  logLevel: 'level',
+  logPretty: 'pretty',
 };
 
 export function parseLogOptions(options) {
   const object = JSON.parse(options);
   const result = {};
 
-  Object.entries(CLI_PARAM_MAP).forEach(e => {
+  Object.entries(CLI_PARAM_MAP).forEach((e) => {
     const [key, value] = e;
-    if (object.hasOwnProperty(key) && object[key] !== null) {
+    if ({}.hasOwnProperty.call(object, key) && object[key] !== null) {
       result[value] = object[key];
     }
   });
@@ -28,7 +28,7 @@ export function parseLogOptions(options) {
   return result;
 }
 
-export function getLogConfig(config={}) {
+export function getLogConfig(config = {}) {
   let pretty = null;
   let cliOptions = {};
 
@@ -36,29 +36,27 @@ export function getLogConfig(config={}) {
     cliOptions = parseLogOptions(process.env.GS_COMMAND_OPTIONS);
   }
 
-  if (cliOptions.hasOwnProperty("pretty") && cliOptions.pretty !== true) {
+  if ({}.hasOwnProperty.call(cliOptions, 'pretty') && cliOptions.pretty !== true) {
     pretty = null;
-  }
-  else if (!!config.pretty || cliOptions.pretty === true) {
+  } else if (!!config.pretty || cliOptions.pretty === true) {
     pretty = pino.pretty();
     pretty.pipe(process.stdout);
   }
 
   return {
-    logConfig: {...pinoBaseConfig, ...config, ...cliOptions},
-    prettyConfig: pretty
+    logConfig: { ...pinoBaseConfig, ...config, ...cliOptions },
+    prettyConfig: pretty,
   };
 }
 
-const appConfigPath = path.join(process.cwd(), "src", "config", "application");
+const appConfigPath = path.join(process.cwd(), 'src', 'config', 'application');
 
-export function getLogger(middleware=false) {
+export function getLogger(middleware = false) {
   let appLogConfig = null;
   try {
     fs.statSync(`${appConfigPath}.js`);
     appLogConfig = require(appConfigPath).default.logger;
-  }
-  catch(e) {
+  } catch (e) {
     // no application config file yet
     appLogConfig = {};
   }

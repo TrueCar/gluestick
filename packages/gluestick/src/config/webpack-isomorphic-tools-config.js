@@ -1,9 +1,9 @@
-import logger from "../lib/cliLogger";
-import { highlight } from "../lib/cliColorScheme";
+// import logger from '../lib/cliLogger';
+// import { highlight } from '../cli/colorScheme';
 
-const path = require("path");
-const process = require("process");
-const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
+const path = require('path');
+const process = require('process');
+const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 
 // We use `getWebpackAdditions` to get the data back because it will first
 // check if the file exists before trying to include it, falling back to empty
@@ -14,19 +14,23 @@ const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 // call this method with `true` as the first and only argument because that is
 // how we tell the method we are requiring for the purpose of the isomorphic
 // tools, not the webpack config file.
-const { additionalLoaders, additionalAliases } = require("../lib/getWebpackAdditions").default(true);
+const { additionalLoaders, additionalAliases } = require('../lib/getWebpackAdditions').default(true);
 
 const userExtensions = [];
 [...additionalLoaders].forEach((loader) => {
   // Bail out when a test regexp has been supplied.
-  if (loader.test && toString.call(loader.test) === "[object RegExp]") { return; }
+  if (loader.test && toString.call(loader.test) === '[object RegExp]') { return; }
 
-  // If someone wants to include a custom .js loader, we do not want the isomorphic tools to treat it as an asset
-  // because .js imports are a native part of how node works. We do want webpack to receive the loader though.
-  if (loader.extensions.includes("js")) { return; }
+  // If someone wants to include a custom .js loader,
+  // we do not want the isomorphic tools to treat it as an asset
+  // because .js imports are a native part of how node works.
+  // We do want webpack to receive the loader though.
+  if (loader.extensions.includes('js')) { return; }
 
   if (!loader.extensions || loader.extensions.length === 0) {
-    logger.info(`An additional loader is missing the ${highlight("extensions")} property and is being ignored!`);
+    // TODO: Replace logger. Remove disable
+    // eslint-disable-next-line
+    // logger.info(`An additional loader is missing the ${highlight('extensions')} property and is being ignored!`);
     return;
   }
 
@@ -36,38 +40,38 @@ const userExtensions = [];
 module.exports = {
   assets: {
     images: {
-      extensions: ["png", "jpg", "gif", "ico", "svg"],
-      regular_expression: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/
+      extensions: ['png', 'jpg', 'gif', 'ico', 'svg'],
+      regular_expression: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
     },
     styles: {
-      extensions: ["css", "scss", "sass"],
-      filter: function(module, regex, options, log) {
+      extensions: ['css', 'scss', 'sass'],
+      filter(module, regex, options, log) {
         return WebpackIsomorphicToolsPlugin.style_loader_filter(module, regex, options, log);
       },
       path: WebpackIsomorphicToolsPlugin.style_loader_path_extractor,
-      parser: WebpackIsomorphicToolsPlugin.css_loader_parser
+      parser: WebpackIsomorphicToolsPlugin.css_loader_parser,
     },
     fonts: {
-      extensions: ["woff", "woff2", "ttf", "eot"],
+      extensions: ['woff', 'woff2', 'ttf', 'eot'],
       regular_expression: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-      parser: WebpackIsomorphicToolsPlugin.url_loader_parser
+      parser: WebpackIsomorphicToolsPlugin.url_loader_parser,
     },
     json: {
-      extensions: ["json"],
-      include: [process.cwd()]
+      extensions: ['json'],
+      include: [process.cwd()],
     },
     other: {
-      extensions: userExtensions
-    }
+      extensions: userExtensions,
+    },
   },
   alias: {
-    "assets": path.join(process.cwd(), "assets"),
-    "actions": path.join(process.cwd(), "src", "actions"),
-    "components": path.join(process.cwd(), "src", "components"),
-    "containers": path.join(process.cwd(), "src", "containers"),
-    "reducers": path.join(process.cwd(), "src", "reducers"),
-    "config": path.join(process.cwd(), "src", "config"),
-    ...additionalAliases
+    assets: path.join(process.cwd(), 'assets'),
+    actions: path.join(process.cwd(), 'src', 'actions'),
+    components: path.join(process.cwd(), 'src', 'components'),
+    containers: path.join(process.cwd(), 'src', 'containers'),
+    reducers: path.join(process.cwd(), 'src', 'reducers'),
+    config: path.join(process.cwd(), 'src', 'config'),
+    ...additionalAliases,
   },
-  patch_require: true
+  patch_require: true,
 };
