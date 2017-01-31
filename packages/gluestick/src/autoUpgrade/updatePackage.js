@@ -1,14 +1,17 @@
-import fs from "fs";
-import path from "path";
-import chalk from "chalk";
-import inquirer from "inquirer";
-import semver from "semver";
-import { getLogger } from "../lib/server/logger";
-import { install as installDeps, cleanSync as cleanDeps } from "../lib/npmDependencies";
-const logger = getLogger();
-import sO from "sorted-object";
+/* eslint-disable no-shadow */
+import fs from 'fs';
+import path from 'path';
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+import semver from 'semver';
+import sO from 'sorted-object';
 
-const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), "package.json");
+import { getLogger } from '../lib/server/logger';
+import { install as installDeps, cleanSync as cleanDeps } from '../lib/npmDependencies';
+
+const logger = getLogger();
+
+const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), 'package.json');
 
 // When we load the project package file, we will cache the result so that we
 // don't have to do file I/O more than once
@@ -20,7 +23,7 @@ export const FIX_VERSION_MISMATCH_OVERRIDES = {
   loadCLIPackage,
   loadNewProjectPackage,
   promptModulesUpdate,
-  rejectOnFailure: false
+  rejectOnFailure: false,
 };
 
 /**
@@ -46,35 +49,48 @@ export const FIX_VERSION_MISMATCH_OVERRIDES = {
  *
  * @return {Promise}
  */
-export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage, loadNewProjectPackage, promptModulesUpdate, rejectOnFailure} = FIX_VERSION_MISMATCH_OVERRIDES) {
+export default function fixVersionMismatch({
+  loadProjectPackage,
+  loadCLIPackage,
+  loadNewProjectPackage,
+  promptModulesUpdate,
+  rejectOnFailure,
+} = FIX_VERSION_MISMATCH_OVERRIDES) {
   return new Promise((resolve, reject) => {
     const projectPackageData = loadProjectPackage();
-    const { dependencies: projectDependencies, devDependencies: projectDevDependencies } = projectPackageData;
+    const {
+      dependencies: projectDependencies,
+      devDependencies: projectDevDependencies,
+    } = projectPackageData;
+
     const { dependencies: cliDependencies } = loadCLIPackage();
-    const { dependencies: newProjectDependencies, devDependencies: newProjectDevDependencies } = loadNewProjectPackage();
+    const {
+      dependencies: newProjectDependencies,
+      devDependencies: newProjectDevDependencies,
+    } = loadNewProjectPackage();
     const mismatchedModules = {};
 
     // Compare the new project dependencies, mark any module that is missing in
     // the generated project's dependencies
-    for(const key in newProjectDependencies) {
+    for (const key in newProjectDependencies) {
       if (!isValidVersion(projectDependencies[key], newProjectDependencies[key])) {
-        mismatchedModules[key] = { required: newProjectDependencies[key], project: projectDependencies[key] || "missing", type: "dependencies" };
+        mismatchedModules[key] = { required: newProjectDependencies[key], project: projectDependencies[key] || 'missing', type: 'dependencies' };
       }
     }
 
     // Compare the new project development dependencies, mark any module that
     // is missing in the generated project's development dependencies
-    for(const key in newProjectDevDependencies) {
+    for (const key in newProjectDevDependencies) {
       if (!isValidVersion(projectDevDependencies[key], newProjectDevDependencies[key])) {
-        mismatchedModules[key] = { required: newProjectDevDependencies[key], project: projectDevDependencies[key] || "missing", type: "devDependencies" };
+        mismatchedModules[key] = { required: newProjectDevDependencies[key], project: projectDevDependencies[key] || 'missing', type: 'devDependencies' };
       }
     }
 
     // Compare the CLI dependencies, only mark a module as mismatched if it is
     // included in both and the version do not match
-    for(const key in cliDependencies) {
+    for (const key in cliDependencies) {
       if (projectDependencies[key] && cliDependencies[key] !== projectDependencies[key]) {
-        mismatchedModules[key] = { required: cliDependencies[key], project: projectDependencies[key], type: "dependencies" };
+        mismatchedModules[key] = { required: cliDependencies[key], project: projectDependencies[key], type: 'dependencies' };
       }
     }
 
@@ -86,8 +102,7 @@ export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage,
       if (rejectOnFailure) {
         reject();
       }
-    }
-    else {
+    } else {
       resolve();
     }
   });
@@ -100,7 +115,7 @@ export default function fixVersionMismatch ({loadProjectPackage, loadCLIPackage,
  *
  * @return {Object}
  */
-function loadProjectPackage () {
+function loadProjectPackage() {
   // Cache the result so we don't have to load the file more than once
   if (!_projectPackageData) {
     _projectPackageData = loadPackage(PROJECT_PACKAGE_LOCATION);
@@ -115,8 +130,8 @@ function loadProjectPackage () {
  *
  * @return {Object}
  */
-function loadCLIPackage () {
-  return loadPackage(path.join(__dirname, "../../package.json"));
+function loadCLIPackage() {
+  return loadPackage(path.join(__dirname, '../../package.json'));
 }
 
 /**
@@ -125,8 +140,8 @@ function loadCLIPackage () {
  *
  * @return {Object}
  */
-function loadNewProjectPackage () {
-  return loadPackage(path.join(__dirname, "../../templates/new/package.json"));
+function loadNewProjectPackage() {
+  return loadPackage(path.join(__dirname, '../../templates/new/package.json'));
 }
 
 /**
@@ -137,8 +152,8 @@ function loadNewProjectPackage () {
  *
  * @return {Object}
  */
-function loadPackage (location) {
-  const packageString = fs.readFileSync(location, "utf8");
+function loadPackage(location) {
+  const packageString = fs.readFileSync(location, 'utf8');
   return JSON.parse(packageString);
 }
 
@@ -152,19 +167,23 @@ function loadPackage (location) {
  * @param {Function} done the callback to call when the user says no or the
  * update completes
  */
-function promptModulesUpdate (mismatchedModules, done) {
-  const mismatchedModuleOutput = JSON.stringify(mismatchedModules, null, " ");
+function promptModulesUpdate(mismatchedModules, done) {
+  const mismatchedModuleOutput = JSON.stringify(mismatchedModules, null, ' ');
 
   const question = {
-    type: "confirm",
-    name: "confirm",
-    message: `${chalk.red("The \`gluestick\` CLI and your project have mismatching versions of the following modules:")}
+    type: 'confirm',
+    name: 'confirm',
+    message: `${chalk.red('The `gluestick` CLI and your project have mismatching versions of the following modules:')}
 ${chalk.yellow(mismatchedModuleOutput)}
-Would you like to automatically update your project's dependencies to match the CLI?`
+Would you like to automatically update your project's dependencies to match the CLI?`,
   };
-  inquirer.prompt([question]).then(function (answers) {
-    if (!answers.confirm) { return done(); }
+  inquirer.prompt([question]).then((answers) => {
+    if (!answers.confirm) {
+      return done();
+    }
+
     performModulesUpdate(mismatchedModules, done);
+    return null;
   });
 }
 
@@ -178,9 +197,10 @@ Would you like to automatically update your project's dependencies to match the 
  * @param {Function} done the callback to call when the user says no or the
  * update completes
  */
-function performModulesUpdate (mismatchedModules, done) {
+function performModulesUpdate(mismatchedModules, done) {
   const projectPackageData = loadProjectPackage();
   let module;
+
   for (const moduleName in mismatchedModules) {
     module = mismatchedModules[moduleName];
     projectPackageData[module.type][moduleName] = module.required;
@@ -189,12 +209,12 @@ function performModulesUpdate (mismatchedModules, done) {
   projectPackageData.dependencies = sO(projectPackageData.dependencies);
   projectPackageData.devDependencies = sO(projectPackageData.devDependencies);
 
-  fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, "  "), "utf8");
+  fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, '  '), 'utf8');
 
   cleanDeps();
   const installProcess = installDeps();
-  installProcess.on("close", () => {
-    logger.info("node_modules have been updated.");
+  installProcess.on('close', () => {
+    logger.info('node_modules have been updated.');
     done();
   });
 }
@@ -207,17 +227,20 @@ function performModulesUpdate (mismatchedModules, done) {
  *
  * @return {Boolean}
  */
-export function isValidVersion (version, requiredVersion) {
+export function isValidVersion(version, requiredVersion) {
   if (!version) {
     return false;
   }
 
   // Trim off carrot or other things on the version like `^3.0.1` or `>3.0.1`
-  const trimmedVersion = version.replace(/^\D*/, "");
-  if (!semver.valid(trimmedVersion)){
+  const trimmedVersion = version.replace(/^\D*/, '');
+  if (!semver.valid(trimmedVersion)) {
     return false;
   }
 
-  return semver.satisfies(trimmedVersion, requiredVersion) || semver.gte(trimmedVersion, requiredVersion);
-}
+  const result =
+    semver.satisfies(trimmedVersion, requiredVersion)
+    || semver.gte(trimmedVersion, requiredVersion);
 
+  return result;
+}

@@ -1,50 +1,55 @@
 {
   "parser": "babel-eslint",
-  "rules": {
-    "comma-dangle": 0,
-    "no-cond-assign": [2, "always"],
-    "no-extra-boolean-cast": 0,
-
-    "curly": 2,
-    "default-case": 2,
-    "eqeqeq": 2,
-    "no-case-declarations": 2,
-    "no-else-return": 2,
-    "no-fallthrough": 2,
-    "no-redeclare": 2,
-    "no-warning-comments": [1, { "terms": ["todo"], "location": "start" }],
-
-    "no-undef": 2,
-    "no-undef-init": 2,
-    "no-undefined": 2,
-    "no-unused-vars": 2,
-
-    "eol-last": 2,
-    "indent": [2, 2, {"SwitchCase": 1, "VariableDeclarator": { "var": 2, "let": 2, "const": 3}}],
-    "jsx-quotes": [2, "prefer-double"],
-    "linebreak-style": [2, "unix"],
-    "no-trailing-spaces": 1,
-    "quotes": [2, "double"],
-    "semi": [2, "always"],
-
-    "no-var": 2,
-    "prefer-const": 2,
-
-    "react/display-name": 0,
-    "react/wrap-multilines": 2
-  },
+  "extends": "airbnb",
   "env": {
-    "es6": true,
-    "node": true,
     "browser": true,
-    "jest": true
+    "node": true,
+    "jest": true,
+    "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "ecmaFeatures": {
-    "jsx": true,
-    "experimentalObjectRestSpread": true
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
-  "plugins": [
-    "react"
-  ]
+  "globals": {
+    "__DEV__": true
+  },
+  "rules": {
+    "strict": 0,
+
+    "arrow-body-style": 0,
+    "arrow-parens": 0,
+    "class-methods-use-this": 0,
+    "default-case": 0,
+    "generator-star-spacing": 0,
+    "global-require": 0,
+    "guard-for-in": 0,
+    "new-cap": 0,
+    "no-alert": 0,
+    "no-confusing-arrow": 0,
+    "no-console": 0,
+    "no-constant-condition": 0,
+    "no-duplicate-imports": 0,
+    "no-plusplus": 0,
+    "no-restricted-syntax": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-duplicates": 0,
+    "import/no-unresolved": 0,
+    "import/no-dynamic-require": 0,
+    "import/prefer-default-export": 0,
+
+    "react/jsx-no-bind": 0,
+    "react/jsx-filename-extension": 0,
+    "react/forbid-prop-types": 0,
+    "react/prefer-stateless-function": 0,
+    "react/sort-comp": 0,
+    "react/prop-types": 0 // We use FLOW instead
+  }
 }

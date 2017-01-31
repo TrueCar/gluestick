@@ -6,7 +6,7 @@
  * import LazyMethodRequire from "./lib/LazyMethodRequire";
  * const lazyMethodRequire = LazyMethodRequire(__dirname);
  */
-import path from "path";
+import path from 'path';
 
 /**
  * This method is used when you want to import a method that shouldn't be
@@ -20,10 +20,8 @@ import path from "path";
  *
  * @return {Function}
  */
-function lazyMethodRequire (dirname, requirePath) {
-  return (...args) => {
-    return require(path.join(dirname, requirePath))(...args);
-  };
+function lazyMethodRequire(dirname, requirePath) {
+  return (...args) => require(path.join(dirname, requirePath))(...args);
 }
 
 /**
@@ -32,9 +30,7 @@ function lazyMethodRequire (dirname, requirePath) {
  * folders, we need a way to pass in the __dirname argument so that these calls
  * can be relative to the location they were called from.
  */
-export default function LazyMethodRequire (dirname="") {
-  return (requirePath) => {
-    return lazyMethodRequire(dirname, requirePath);
-  };
+export default function LazyMethodRequire(dirname = '') {
+  return requirePath => lazyMethodRequire(dirname, requirePath);
 }
 

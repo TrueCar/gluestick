@@ -11,7 +11,7 @@ export default class MasterLayout extends Component {
   render () {
     return (
       <div>
-        <Helmet {...config.head}/>
+        <Helmet {...config.head} />
         {this.props.children}
       </div>
     );

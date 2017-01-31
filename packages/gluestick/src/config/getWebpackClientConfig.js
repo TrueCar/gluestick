@@ -1,22 +1,23 @@
-const path = require("path");
-const webpack = require("webpack");
-const merge = require("webpack-merge");
-const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-const getAssetPath = require("../lib/getAssetPath").default;
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
+const getAssetPath = require('../lib/getAssetPath').default;
 
-const buildWebpackEntries = require("../lib/buildWebpackEntries").default;
-const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
+const buildWebpackEntries = require('../lib/buildWebpackEntries').default;
+const detectEnvironmentVariables = require('../lib/detectEnvironmentVariables');
 
-const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
+const getWebpackAdditions = require('../lib/getWebpackAdditions').default;
+
 const {
   additionalLoaders,
   additionalExternals,
   additionalWebpackConfig,
   vendor,
-  plugins
+  plugins,
 } = getWebpackAdditions();
 
-const webpackSharedConfig = require("./webpack-shared-config");
+const webpackSharedConfig = require('./webpack-shared-config');
 
 const ASSET_PATH = getAssetPath();
 
@@ -30,7 +31,7 @@ export function getExposedEnvironmentVariables(config) {
   // file to determine all of the environment variables that are used in that
   // file and make sure that webpack makes those available in the application.
   const configEnvVariables = detectEnvironmentVariables(config);
-  configEnvVariables.push("NODE_ENV");
+  configEnvVariables.push('NODE_ENV');
   configEnvVariables.forEach((v) => {
     exposedEnvironmentVariables[v] = JSON.stringify(process.env[v]);
   });
@@ -39,7 +40,7 @@ export function getExposedEnvironmentVariables(config) {
 }
 
 export function getEnvironmentPlugins(isProduction) {
-  const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
+  const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('../config/webpack-isomorphic-tools-config'))
   .development(!isProduction);
 
   let environmentPlugins = [];
@@ -49,12 +50,11 @@ export function getEnvironmentPlugins(isProduction) {
       webpackIsomorphicToolsPlugin,
       new webpack.optimize.UglifyJsPlugin({
         compress: {
-          warnings: false
-        }
-      })
+          warnings: false,
+        },
+      }),
     ]);
-  }
-  else {
+  } else {
     environmentPlugins = environmentPlugins.concat([
       webpackIsomorphicToolsPlugin,
       new webpack.HotModuleReplacementPlugin(),
@@ -65,13 +65,13 @@ export function getEnvironmentPlugins(isProduction) {
 }
 
 export default function (appRoot, appConfigFilePath, isProduction) {
-  const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
-  const devtool = process.env.DEVTOOL || "inline-source-map";
+  const OUTPUT_FILE = `app${isProduction ? '-[chunkhash]' : ''}.bundle.js`;
+  const devtool = process.env.DEVTOOL || 'inline-source-map';
   const vendors = vendor ? { vendor } : {};
 
   const baseWebpackConfig = {
     context: appRoot,
-    devtool: isProduction ? "source-map" : devtool,
+    devtool: isProduction ? 'source-map' : devtool,
     entry: {
       ...buildWebpackEntries(isProduction),
       ...vendors,
@@ -80,28 +80,28 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       rules: [
         {
           test: /\.js$/,
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
             plugins: [
-              "babel-plugin-gluestick"
+              'babel-plugin-gluestick',
             ],
             presets: [
-              "react",
-              "es2015",
-              "stage-0"
-            ]
+              'react',
+              'es2015',
+              'stage-0',
+            ],
           },
           include: [
-            path.join(appRoot, "src/config/application.js"),
-          ]
-        }
+            path.join(appRoot, 'src/config/application.js'),
+          ],
+        },
       ].concat(webpackSharedConfig.rules, additionalLoaders),
     },
     node: {
-      fs: "empty",
+      fs: 'empty',
     },
     output: {
-      path: path.join(appRoot, "build"),
+      path: path.join(appRoot, 'build'),
       filename: `[name]-${OUTPUT_FILE}`,
       chunkFilename: `[name]-chunk-${OUTPUT_FILE}`,
       publicPath: ASSET_PATH,
@@ -109,25 +109,25 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     plugins: [
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        "process.env": getExposedEnvironmentVariables(appConfigFilePath)
+        'process.env': getExposedEnvironmentVariables(appConfigFilePath),
       }),
 
       // Make it so *.server.js files return null in client
-      new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, "./serverFileMock.js")),
+      new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './serverFileMock.js')),
 
       new webpack.optimize.CommonsChunkPlugin(
         {
-          name: "vendor",
-          filename: `vendor${isProduction ? "-[hash]" : ""}.bundle.js`,
-        }
-      )
+          name: 'vendor',
+          filename: `vendor${isProduction ? '-[hash]' : ''}.bundle.js`,
+        },
+      ),
     ].concat(getEnvironmentPlugins(isProduction), webpackSharedConfig.plugins, plugins),
     resolve: {
-      ...webpackSharedConfig.resolve
+      ...webpackSharedConfig.resolve,
     },
     externals: {
-      ...additionalExternals
-    }
+      ...additionalExternals,
+    },
   };
 
   return merge(baseWebpackConfig, additionalWebpackConfig);

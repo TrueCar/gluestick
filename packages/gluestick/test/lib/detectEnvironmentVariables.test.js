@@ -1,18 +1,20 @@
 /* eslint-disable */
 // @TODO enable eslint when file is refactored
 
-// import fs from "fs-extra";
-// import path from "path";
-// import temp from "temp";
-// import detectEnvironmentVariables from "../../src/lib/detectEnvironmentVariables";
+import fs from 'fs-extra';
+import path from 'path';
+import temp from 'temp';
+import detectEnvironmentVariables from '../../src/lib/detectEnvironmentVariables';
 
 // @TODO detectEnvironmentVariables needs refactor
-describe.skip("src/lib/detectEnvironmentVariables", () => {
+describe.skip('src/lib/detectEnvironmentVariables', () => {
+  let tmpDir;
+  let originalCwd;
+  let cwd;
 
-  let tmpDir, originalCwd, cwd;
   beforeEach(() => {
     originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync("gluestick-new");
+    tmpDir = temp.mkdirSync('gluestick-new');
     process.chdir(tmpDir);
     cwd = process.cwd();
   });
@@ -22,7 +24,7 @@ describe.skip("src/lib/detectEnvironmentVariables", () => {
     fs.removeSync(tmpDir);
   });
 
-  it("should detect all process.env variables in a file", () => {
+  it('should detect all process.env variables in a file', () => {
     const data = `export default {
       option: {
         pretty: true,
@@ -33,12 +35,12 @@ describe.skip("src/lib/detectEnvironmentVariables", () => {
       bar: process.env.BAR,
       baz: "test"
     };`;
-    const filePath = path.join(cwd, "config.js");
+    const filePath = path.join(cwd, 'config.js');
     fs.writeFileSync(filePath, data);
-    expect(detectEnvironmentVariables(filePath)).toEqual(["NODE_ENV", "FOO", "BAR"]);
+    expect(detectEnvironmentVariables(filePath)).toEqual(['NODE_ENV', 'FOO', 'BAR']);
   });
 
-  it("should not duplicate any process.env variables found in a file", () => {
+  it('should not duplicate any process.env variables found in a file', () => {
     const data = `export default {
       option: {
         pretty: true,
@@ -50,8 +52,8 @@ describe.skip("src/lib/detectEnvironmentVariables", () => {
       baz: "test",
       somethingelse: process.env.NODE_ENV
     };`;
-    const filePath = path.join(cwd, "config.js");
+    const filePath = path.join(cwd, 'config.js');
     fs.writeFileSync(filePath, data);
-    expect(detectEnvironmentVariables(filePath)).toEqual(["NODE_ENV", "FOO", "BAR"]);
+    expect(detectEnvironmentVariables(filePath)).toEqual(['NODE_ENV', 'FOO', 'BAR']);
   });
 });

@@ -1,3 +1,1 @@
-module.exports = exports = {
-
-};
+module.exports = exports = {};
