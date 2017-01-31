@@ -10,9 +10,8 @@ import "assets/css/normalize.css";
  */
 export default class Index extends Component {
   static propTypes = {
-    head: PropTypes.any,
-    body: PropTypes.any,
-    req: PropTypes.object
+    head: PropTypes.any.isRequired,
+    body: PropTypes.any.isRequired,
   };
 
   render () {
@@ -25,7 +24,7 @@ export default class Index extends Component {
     const bodyAttributes = BodyAttributes.rewind();
 
     return (
-      <html lang="en-us">
+      <html lang="en-US">
         <head>
           {helmet.base.toComponent()}
           {helmet.title.toComponent()}
@@ -42,4 +41,3 @@ export default class Index extends Component {
     );
   }
 }
-

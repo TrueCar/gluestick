@@ -8,11 +8,11 @@ import updateLastVersionUsed from '../../src/lib/updateVersion';
 
 
 describe('cli: gluestick touch', () => {
-  let originalCwd,
-    tmpDir,
-    dotFile;
+  let originalCwd;
+  let tmpDir;
+  let dotFile;
 
-  const newDotFileContents = function (contents) {
+  const newDotFileContents = (contents) => {
     fs.writeFileSync(dotFile, contents);
   };
 

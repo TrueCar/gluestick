@@ -1,7 +1,7 @@
 import { Writable } from 'stream';
-import DoctypeStream from '../../../src/lib/server/DoctypeStream';
 import fs from 'fs';
 import path from 'path';
+import DoctypeStream from '../../../src/lib/server/DoctypeStream';
 
 class WriteStream extends Writable {
   constructor() {
@@ -20,7 +20,7 @@ describe('lib/server/DoctypeStream', () => {
     const readStream = fs.createReadStream(path.join(__dirname, '/DoctypeStream.sample.txt'));
     const writeStream = new WriteStream();
 
-    writeStream.on('finish', function () {
+    writeStream.on('finish', () => {
       expect(this.data[0].toString('utf8')).toEqual('<!DOCTYPE html>');
       expect(this.data.join('')).toContain('<!DOCTYPE html>');
       done();
@@ -31,4 +31,3 @@ describe('lib/server/DoctypeStream', () => {
     readStream.pipe(doctypeStream).pipe(writeStream, { end: true });
   });
 });
-

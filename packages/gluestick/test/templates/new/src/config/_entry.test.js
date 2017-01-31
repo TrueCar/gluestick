@@ -15,12 +15,12 @@ const ROUTES = (
 );
 
 describe('templates/new/src/config/.entry', () => {
-  let props,
-    getRoutes,
-    getStore,
-    match,
-    history,
-    store;
+  let props;
+  let getRoutes;
+  let getStore;
+  let match;
+  let history;
+  let store;
 
   beforeEach(() => {
     store = STORE;
@@ -45,4 +45,3 @@ describe('templates/new/src/config/.entry', () => {
     expect(getRoutes).toBeCalledWith(getStore(), httpClient);
   });
 });
-

@@ -20,9 +20,9 @@ const ASSETS_STRING = JSON.stringify({
 });
 
 describe('lib/updateWebpackAssetPath', () => {
-  let originalCwd,
-    tmpDir,
-    buildFolder;
+  let originalCwd;
+  let tmpDir;
+  let buildFolder;
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -82,4 +82,3 @@ describe('lib/updateWebpackAssetPath', () => {
     expect(result).toEqual('body { background: url(http://www.assetsformybaskets.com/assets/tacos.jpg); }');
   });
 });
-

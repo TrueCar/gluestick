@@ -6,8 +6,8 @@ import rimraf from 'rimraf';
 import loadServerConfig from '../../../src/lib/server/loadServerConfig';
 
 describe('lib/server/loadServerConfig', () => {
-  let originalCwd,
-    tmpDir;
+  let originalCwd;
+  let tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -54,4 +54,3 @@ describe('lib/server/loadServerConfig', () => {
     });
   });
 });
-

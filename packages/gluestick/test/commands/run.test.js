@@ -14,8 +14,8 @@ function getDoStuffScript() {
 }
 
 describe('cli: gluestick run', () => {
-  let originalCwd,
-    tmpDir;
+  let originalCwd;
+  let tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();

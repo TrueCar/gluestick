@@ -4,9 +4,10 @@ import temp from 'temp';
 import detectEnvironmentVariables from '../../src/lib/detectEnvironmentVariables';
 
 describe('src/lib/detectEnvironmentVariables', () => {
-  let tmpDir,
-    originalCwd,
-    cwd;
+  let tmpDir;
+  let originalCwd;
+  let cwd;
+
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync('gluestick-new');

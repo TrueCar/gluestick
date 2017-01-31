@@ -1,9 +1,9 @@
 import serveAssets, { DEFAULT_ASSETS_CONFIG } from '../../../src/lib/server/serveAssets';
 
 describe('lib/server/serveAssets', () => {
-  let mockStaticMiddleware,
-    app,
-    mockLoadServerConfig;
+  let mockStaticMiddleware;
+  let app;
+  let mockLoadServerConfig;
 
   beforeEach(() => {
     mockStaticMiddleware = jest.fn();
@@ -16,7 +16,8 @@ describe('lib/server/serveAssets', () => {
   describe('when no asset configuration has been set', () => {
     it('should use the default configuration', () => {
       serveAssets(app, mockLoadServerConfig(), mockStaticMiddleware);
-      expect(mockStaticMiddleware).toBeCalledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options);
+      expect(mockStaticMiddleware)
+        .toBeCalledWith(DEFAULT_ASSETS_CONFIG.buildFolder, DEFAULT_ASSETS_CONFIG.options);
       expect(app.use.mock.calls[0][0]).toEqual(DEFAULT_ASSETS_CONFIG.path);
     });
   });
@@ -58,4 +59,3 @@ describe('lib/server/serveAssets', () => {
     });
   });
 });
-

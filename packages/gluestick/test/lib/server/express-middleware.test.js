@@ -3,13 +3,14 @@ import { Writable, Readable } from 'stream';
 import gluestickExpressMiddleware from '../../../src/lib/server/express-middleware';
 
 describe('lib/server/express-middleware', () => {
-  let redirectLocation,
-    renderProps,
-    mockReq,
-    mockRes,
-    overrides,
-    getErrorMessage,
-    mockStore;
+  let redirectLocation;
+  let renderProps;
+  let mockReq;
+  let mockRes;
+  let overrides;
+  let getErrorMessage;
+  let mockStore;
+
   beforeEach(() => {
     mockReq = new Readable();
     mockReq.host = 'www.test.com';
@@ -34,7 +35,9 @@ describe('lib/server/express-middleware', () => {
       },
       RequestHandler: {
         renderCachedResponse: jest.fn().mockImplementation(() => false),
-        matchRoute: jest.fn().mockImplementation(() => new Promise(r => r({ redirectLocation, renderProps }))),
+        matchRoute: jest.fn().mockImplementation(
+          () => new Promise(r => r({ redirectLocation, renderProps })),
+        ),
         redirect: jest.fn(),
         renderNotFound: jest.fn(),
         runPreRenderHooks: jest.fn().mockImplementation(() => new Promise(r => r())),
@@ -236,4 +239,3 @@ describe('lib/server/express-middleware', () => {
     });
   });
 });
-

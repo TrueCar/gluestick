@@ -5,8 +5,8 @@ import logger from '../../src/lib/cliLogger';
 import { isGluestickProject, quitUnlessGluestickProject, compareVersions } from '../../src/lib/utils';
 
 describe('utils', () => {
-  let originalCwd,
-    tmpDir;
+  let originalCwd;
+  let tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();

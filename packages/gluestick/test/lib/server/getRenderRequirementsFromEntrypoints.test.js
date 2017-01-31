@@ -13,11 +13,11 @@ const MOCK_REQUEST = {
 };
 
 describe('src/lib/server/getRenderRequirementsFromEntrypoints', () => {
-  let originalCwd,
-    tmpDir,
-    cwd,
-    webpackAdditionsPath,
-    mockServerResponse;
+  let originalCwd;
+  let tmpDir;
+  let cwd;
+  let webpackAdditionsPath;
+  let mockServerResponse;
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -45,12 +45,14 @@ describe('src/lib/server/getRenderRequirementsFromEntrypoints', () => {
   });
 
   it('return the default data if no entry points are defined no matter what the path', () => {
-    const mockRequire = path => ({
-      getStore: () => `getStore: ${path}`,
-      default: `Contents of ${path}`,
+    const mockRequire = (filePath) => ({
+      getStore: () => `getStore: ${filePath}`,
+      default: `Contents of ${filePath}`,
     });
+
     const request = { ...MOCK_REQUEST, url: 'http://kook.com/todd' };
-    const result = getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
+    const result =
+      getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: 'main',
@@ -61,14 +63,15 @@ describe('src/lib/server/getRenderRequirementsFromEntrypoints', () => {
   });
 
   it('return the default data if no entry points are defined no matter what the path', () => {
-    const mockRequire = path => ({
-      getStore: () => `getStore: ${path}`,
-      default: `Contents of ${path}`,
+    const mockRequire = (filePath) => ({
+      getStore: () => `getStore: ${filePath}`,
+      default: `Contents of ${filePath}`,
     });
     const request = { ...MOCK_REQUEST, url: 'http://kook.com/used-cars-for-sale' };
     const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
-    const result = getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
+    const result =
+      getRenderRequirementsFromEntrypoints(request, {}, mockServerResponse, mockRequire);
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: 'used',
@@ -78,4 +81,3 @@ describe('src/lib/server/getRenderRequirementsFromEntrypoints', () => {
     expect(result).toEqual(expectedResult);
   });
 });
-

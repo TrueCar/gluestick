@@ -4,26 +4,26 @@ import path from 'path';
 import temp from 'temp';
 import rimraf from 'rimraf';
 import mkdirp from 'mkdirp';
+import chalk from 'chalk';
 import logger from '../../src/lib/cliLogger';
 import destroy from '../../src/commands/destroy';
-import chalk from 'chalk';
 
 function createFiles(...filePaths) {
-  filePaths.map((path) => {
-    fs.closeSync(fs.openSync(path, 'w'));
+  filePaths.forEach((pathToFile) => {
+    fs.closeSync(fs.openSync(pathToFile, 'w'));
   });
 }
 
 function createDirectories(rootDir, ...directories) {
-  directories.map((directory) => {
+  directories.forEach((directory) => {
     mkdirp.sync(path.join(rootDir, 'src', directory));
     mkdirp.sync(path.join(rootDir, 'test', directory));
   });
 }
 
 describe('cli: gluestick destroy', () => {
-  let originalCwd,
-    tmpDir;
+  let originalCwd;
+  let tmpDir;
 
   const fileExists = filePath => fs.existsSync(path.join(tmpDir, filePath));
 
@@ -54,7 +54,14 @@ describe('cli: gluestick destroy', () => {
       const containerTestPath = path.join(tmpDir, 'test/containers/TestContainer.test.js');
       const reducerPath = path.join(tmpDir, 'src/reducers/testReducer.js');
       const reducerTestPath = path.join(tmpDir, 'test/reducers/testReducer.test.js');
-      createFiles(componentPath, componentTestPath, containerPath, containerTestPath, reducerPath, reducerTestPath);
+      createFiles(
+        componentPath,
+        componentTestPath,
+        containerPath,
+        containerTestPath,
+        reducerPath,
+        reducerTestPath,
+      );
     });
 
     describe('when invalid arguments are provided', () => {

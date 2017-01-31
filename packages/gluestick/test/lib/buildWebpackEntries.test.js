@@ -8,11 +8,11 @@ import npmDependencies from '../../src/lib/npmDependencies';
 import buildWebpackEntries, { getWebpackEntries } from '../../src/lib/buildWebpackEntries';
 
 describe('src/lib/buildWebpackEntries', () => {
-  let originalCwd,
-    tmpDir,
-    fakeNpm,
-    cwd,
-    webpackAdditionsPath;
+  let originalCwd;
+  let tmpDir;
+  let fakeNpm;
+  let cwd;
+  let webpackAdditionsPath;
 
   beforeEach(() => {
     originalCwd = process.cwd();

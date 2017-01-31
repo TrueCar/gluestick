@@ -32,7 +32,7 @@ describe('generator/createTemplate tag function', () => {
 
     const bakedTemplate = createTemplate`
       Some text
-      ${Math.pow(2, 2)}
+      ${2 ** 2}
       Some text 2
       ${args => args.someVar}
       Some text 3

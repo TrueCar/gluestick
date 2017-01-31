@@ -7,10 +7,10 @@ import newApp from '../../src/commands/new';
 import getWebpackAdditions from '../../src/lib/getWebpackAdditions';
 
 describe('src/lib/getWebpackAdditions', () => {
-  let originalCwd,
-    tmpDir,
-    cwd,
-    webpackAdditionsPath;
+  let originalCwd;
+  let tmpDir;
+  let cwd;
+  let webpackAdditionsPath;
   let defaultAdditions;
 
   beforeEach(() => {

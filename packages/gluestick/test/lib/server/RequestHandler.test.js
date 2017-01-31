@@ -1,11 +1,12 @@
 import React from 'react';
-import * as RequestHandler from '../../../src/lib/server/RequestHandler';
 import { Route, Redirect } from 'react-router';
-import { MISSING_404_TEXT } from '../../../src/lib/server/helpText';
 import { Writable } from 'stream';
 import {
     ROUTE_NAME_404_NOT_FOUND,
 } from 'gluestick-shared';
+
+import * as RequestHandler from '../../../src/lib/server/RequestHandler';
+import { MISSING_404_TEXT } from '../../../src/lib/server/helpText';
 
 describe('lib/server/RequestHandler', () => {
   describe('getCacheKey', () => {
@@ -20,10 +21,11 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('renderCachedResponse', () => {
-    let req,
-      res,
-      mockCache,
-      streamResponse;
+    let req;
+    let res;
+    let mockCache;
+    let streamResponse;
+
     beforeEach(() => {
       req = {
         hostname: 'www.example.com',
@@ -80,11 +82,11 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('matchRoute', () => {
-    let req,
-      res,
-      getRoutes,
-      store,
-      config;
+    let req;
+    let res;
+    let getRoutes;
+    let store;
+    let config;
 
     beforeEach(() => {
       req = {
@@ -112,7 +114,9 @@ describe('lib/server/RequestHandler', () => {
 
     describe('when a matching route (not a redirect) exists', () => {
       it('should return the renderProps', (done) => {
-        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({ redirectLocation, renderProps }) => {
+        RequestHandler.matchRoute(
+          req, res, getRoutes, store, config,
+        ).then(({ redirectLocation, renderProps }) => {
           expect(redirectLocation).toBeNull();
           expect(renderProps).toBeDefined();
           done();
@@ -131,7 +135,9 @@ describe('lib/server/RequestHandler', () => {
       });
 
       it('should return the redirectLocation', (done) => {
-        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({ redirectLocation, renderProps }) => {
+        RequestHandler.matchRoute(
+          req, res, getRoutes, store, config,
+        ).then(({ redirectLocation, renderProps }) => {
           expect(redirectLocation).not.toBeNull();
           expect(redirectLocation.pathname).toEqual('/b');
           expect(renderProps).toBeUndefined();
@@ -151,7 +157,9 @@ describe('lib/server/RequestHandler', () => {
       });
 
       it('should forward to the promise `catch` with an error', (done) => {
-        RequestHandler.matchRoute(req, res, getRoutes, store, config).then(({ redirectLocation, renderProps }) => {
+        RequestHandler.matchRoute(
+          req, res, getRoutes, store, config,
+        ).then(({ redirectLocation, renderProps }) => {
           expect(redirectLocation).toBeUndefined();
           expect(renderProps).toBeUndefined();
           done();
@@ -175,10 +183,11 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('renderNotFound', () => {
-    let res,
-      showHelpText,
-      end,
-      status;
+    let res;
+    let showHelpText;
+    let end;
+    let status;
+
     beforeEach(() => {
       end = jest.fn();
       status = jest.fn();
@@ -233,8 +242,9 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('getStatusCode', () => {
-    let state,
-      currentRoute;
+    let state;
+    let currentRoute;
+
     beforeEach(() => {
       state = {
         _gluestick: {},
@@ -285,8 +295,9 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('setHeaders', () => {
-    let res,
-      currentRoute;
+    let res;
+    let currentRoute;
+
     beforeEach(() => {
       res = {
         set: jest.fn(),
@@ -312,14 +323,14 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('prepareOutput', () => {
-    let req,
-      renderRequirements,
-      renderProps,
-      config,
-      envVariables,
-      getHead,
-      Entry,
-      webpackIsomorphicTools;
+    let req;
+    let renderRequirements;
+    let renderProps;
+    let config;
+    let envVariables;
+    let getHead;
+    let Entry;
+    let webpackIsomorphicTools;
 
     class Index extends React.Component {
       render() {
@@ -354,6 +365,7 @@ describe('lib/server/RequestHandler', () => {
       config = {};
       envVariables = { bestFood: 'burritos' };
       getHead = jest.fn().mockImplementation(() => <div />);
+      // eslint-disable-next-line react/no-multi-comp
       Entry = class extends React.Component {
         render() {
           return (
@@ -413,9 +425,9 @@ describe('lib/server/RequestHandler', () => {
     });
 
     describe('with a custom render method', () => {
-      let updatedConfig,
-        result,
-        headJSX;
+      let updatedConfig;
+      let result;
+      let headJSX;
       beforeEach(async () => {
         headJSX = <meta name="hi" value="hola" />;
         updatedConfig = {
@@ -466,14 +478,15 @@ describe('lib/server/RequestHandler', () => {
   });
 
   describe('cacheAndRender', () => {
-    let req,
-      res,
-      currentRoute,
-      status,
-      output,
-      cache,
-      streamResponse,
-      logger;
+    let req;
+    let res;
+    let currentRoute;
+    let status;
+    let output;
+    let cache;
+    let streamResponse;
+    let logger;
+
     beforeEach(() => {
       req = {
         hostname: 'www.example.com',
@@ -499,7 +512,9 @@ describe('lib/server/RequestHandler', () => {
 
     it('should pass along the status and route Attrs', () => {
       streamResponse = jest.fn();
-      RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+      RequestHandler.cacheAndRender(
+        req, res, currentRoute, status, output, cache, streamResponse, logger, true,
+      );
       const streamArgs = streamResponse.mock.calls[0][2];
       expect(streamResponse.mock.calls[0][0]).toEqual(expect.objectContaining(req, res));
       expect(streamArgs.status).toEqual(status);
@@ -512,7 +527,9 @@ describe('lib/server/RequestHandler', () => {
       });
 
       it('should set the status, string and docType to the cache on the cacheKey', (done) => {
-        RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+        RequestHandler.cacheAndRender(
+          req, res, currentRoute, status, output, cache, streamResponse, logger, true,
+        );
         // wait for next tick since so streams have time to be piped
         setTimeout(() => {
           expect(cache.set).toHaveBeenCalledTimes(1);
@@ -525,7 +542,9 @@ describe('lib/server/RequestHandler', () => {
       describe('when cacheTTL is set on the current route', () => {
         beforeEach(() => {
           currentRoute.cacheTTL = 5;
-          RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+          RequestHandler.cacheAndRender(
+            req, res, currentRoute, status, output, cache, streamResponse, logger, true,
+          );
         });
 
         it('should set cache converting cacheTTL to miliseconds', (done) => {
@@ -544,7 +563,9 @@ describe('lib/server/RequestHandler', () => {
       });
 
       it('should not call cache.set', (done) => {
-        RequestHandler.cacheAndRender(req, res, currentRoute, status, output, cache, streamResponse, logger, true);
+        RequestHandler.cacheAndRender(
+          req, res, currentRoute, status, output, cache, streamResponse, logger, true,
+        );
         // wait for next tick since so streams have time to be piped
         setTimeout(() => {
           expect(cache.set).not.toBeCalled();
@@ -599,7 +620,9 @@ describe('lib/server/RequestHandler', () => {
 
       describe('when no config is set', () => {
         it('should pass `false` to enableComponentCaching', () => {
-          RequestHandler.enableComponentCaching(undefined, true, mockCache); // eslint-disable-line no-undefined
+          RequestHandler.enableComponentCaching(
+            undefined, true, mockCache,
+          );
           expect(mockCache.enableCaching).toBeCalledWith(false);
         });
       });
@@ -619,4 +642,3 @@ describe('lib/server/RequestHandler', () => {
     });
   });
 });
-

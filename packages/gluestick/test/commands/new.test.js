@@ -3,9 +3,10 @@ import temp from 'temp';
 import rimraf from 'rimraf';
 import glob from 'glob';
 import path from 'path';
+import inquirer from 'inquirer';
 import newApp from '../../src/commands/new';
 import logger from '../../src/lib/cliLogger';
-import inquirer from 'inquirer';
+
 const cliColorScheme = require('../../src/lib/cliColorScheme');
 
 const { highlight, filename } = cliColorScheme;
@@ -15,8 +16,9 @@ const newFilesTemplate = glob.sync('**', {
 });
 
 describe('cli: gluestick new', () => {
-  let originalCwd,
-    tmpDir;
+  let originalCwd;
+  let tmpDir;
+
   logger.info = jest.fn();
   logger.warn = jest.fn();
   inquirer.prompt = () => Promise.resolve({ confirm: false });
@@ -72,7 +74,7 @@ describe('cli: gluestick new', () => {
     // container but we do not add a test.
     generatedFiles.forEach((file) => {
       if (/^src\/(components|containers).*\.js$/.test(file)) {
-        const testFilename = file.replace(/^src\/(.*)\.js$/, 'test/$1\.test\.js');
+        const testFilename = file.replace(/^src\/(.*)\.js$/, 'test/$1.test.js');
         expect(index[testFilename]).toEqual(true);
       }
     });
@@ -83,10 +85,10 @@ describe('cli: gluestick new', () => {
 
     expect(logger.info).toHaveBeenCalledTimes(5);
 
-    const path = filename(`${process.cwd()}/gs-new-test`);
+    const pathToFile = filename(`${process.cwd()}/gs-new-test`);
 
     expect(logger.info.mock.calls[0][0]).toContain(
-      `${highlight('New GlueStick project created')} at ${path}`,
+      `${highlight('New GlueStick project created')} at ${pathToFile}`,
     );
     expect(logger.info.mock.calls[1][0]).toEqual('To run your app and start developing');
     expect(logger.info.mock.calls[2][0]).toEqual('    cd gs-new-test');
