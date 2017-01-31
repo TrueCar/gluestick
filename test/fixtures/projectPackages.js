@@ -43,7 +43,6 @@ export const validProjectPackage = {
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "7.1.1",
-    "babel-istanbul-loader": "0.1.0",
     "babel-plugin-react-transform": "2.0.2",
     "enzyme": "2.7.1",
     "eslint": "3.14.0",

@@ -54,9 +54,8 @@ export default function (isomorphic=false) {
     additionalAliases: {},
     additionalExternals: {},
     additionalLoaders: [],
-    additionalPreLoaders: [],
     additionalWebpackConfig: {},
-    vendor: [],
+    vendor: null,
     entryPoints: {},
     plugins: [],
   };
@@ -71,7 +70,6 @@ export default function (isomorphic=false) {
       additionalAliases,
       additionalExternals,
       additionalLoaders,
-      additionalPreLoaders,
       additionalWebpackConfig,
       vendor,
       plugins,
@@ -81,9 +79,8 @@ export default function (isomorphic=false) {
       additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
       additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
-      additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
       additionalWebpackConfig: additionalWebpackConfig || {},
-      vendor: vendor || [],
+      vendor: vendor && vendor.length > 0 ? vendor : null,
       plugins: plugins || [],
       entryPoints: entryPoints || {}
     };
