@@ -1,21 +1,21 @@
-import getAssetPath from "../../src/lib/getAssetPath";
+import getAssetPath from '../../src/lib/getAssetPath';
 
-describe("lib/getAssetPath", () => {
+describe('lib/getAssetPath', () => {
   const MOCK_CONFIG_NO_TRAILING_SLASH = {
-    assetPath: "assets"
+    assetPath: 'assets',
   };
 
   const MOCK_CONFIG_WITH_TRAILING_SLASH = {
-    assetPath: "assets/"
+    assetPath: 'assets/',
   };
 
-  it("should return the assetPath from a config object", () => {
+  it('should return the assetPath from a config object', () => {
     const assetPath = getAssetPath(MOCK_CONFIG_WITH_TRAILING_SLASH);
-    expect(assetPath).toEqual("assets/");
+    expect(assetPath).toEqual('assets/');
   });
 
   it("should add a slash if assetPath doesn't have one", () => {
     const assetPath = getAssetPath(MOCK_CONFIG_NO_TRAILING_SLASH);
-    expect(assetPath).toEqual("assets/");
+    expect(assetPath).toEqual('assets/');
   });
 });

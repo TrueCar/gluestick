@@ -24,7 +24,7 @@ export class NoMatchApp extends Component {
   render () {
     return (
       <div>
-        <Helmet title="Not Found"/>
+        <Helmet title="Not Found" />
         <h2>404 - Not Found</h2>
       </div>
     );

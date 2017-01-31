@@ -1,16 +1,20 @@
-import { spawn } from "cross-spawn";
-import path from "path";
-import process from "process";
-import logger from "../lib/cliLogger.js";
-import { which } from "shelljs";
-const autoUpgrade = require("../autoUpgrade");
+import { spawn } from 'cross-spawn';
+import path from 'path';
+import process from 'process';
+import { which } from 'shelljs';
+import autoUpgrade from '../autoUpgrade';
 
-module.exports = async function (name) {
+module.exports = async (name) => {
   await autoUpgrade();
   // Check if docker is installed first
-  if( which("docker") !== null ) {
-    spawn("docker", ["build", "-t", name, "-f", path.join(process.cwd(), "src", "config", ".Dockerfile"), process.cwd()], {stdio: "inherit"});
+  if (which('docker') !== null) {
+    spawn(
+      'docker',
+      ['build', '-t', name, '-f', path.join(process.cwd(), 'src', 'config', '.Dockerfile'), process.cwd()],
+      { stdio: 'inherit' },
+    );
   } else {
-    logger.warn("You must install docker before continuing");
+    // TODO: Use logger from context
+    // logger.warn('You must install docker before continuing');
   }
 };

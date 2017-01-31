@@ -1,11 +1,11 @@
-const generator = require("../../src/generator");
+const generator = require('../../src/generator');
 
-describe("generatro/index", () => {
-  it("should throw error if name is not alphanumberical", () => {
+describe('generatro/index', () => {
+  it('should throw error if name is not alphanumberical', () => {
     expect(() => {
       generator({
-        entityName: "@",
+        entityName: '@',
       });
-    }).toThrowError("Invalid name specified");
+    }).toThrowError('Invalid name specified');
   });
 });

@@ -1,11 +1,11 @@
-import fs from "fs";
-import path from "path";
-import temp from "temp";
-import rimraf from "rimraf";
-import mkdirp from "mkdirp";
-import run from "../../src/commands/run";
+import fs from 'fs';
+import path from 'path';
+import temp from 'temp';
+import rimraf from 'rimraf';
+import mkdirp from 'mkdirp';
+import run from '../../src/commands/run';
 
-function getDoStuffScript () {
+function getDoStuffScript() {
   return `
     var fs = require("fs");
     var path = require("path");
@@ -13,40 +13,40 @@ function getDoStuffScript () {
   `;
 }
 
-describe("cli: gluestick run", function () {
-
-  let originalCwd, tmpDir;
+describe('cli: gluestick run', () => {
+  let originalCwd,
+    tmpDir;
 
   beforeEach(() => {
     originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync("gluestick-run");
+    tmpDir = temp.mkdirSync('gluestick-run');
     process.chdir(tmpDir);
 
-    fs.closeSync(fs.openSync(".gluestick", "w"));
+    fs.closeSync(fs.openSync('.gluestick', 'w'));
   });
 
-  afterEach(done => {
+  afterEach((done) => {
     process.chdir(originalCwd);
     rimraf(tmpDir, done);
   });
 
-  it("runs the provided script", (done) => {
-    mkdirp.sync(path.join(tmpDir, "scripts"));
-    const filePath = path.join(tmpDir, "scripts", "doStuff.js");
-    fs.closeSync(fs.openSync(path.join(tmpDir, "webpack-assets.json"), "w"));
+  it('runs the provided script', (done) => {
+    mkdirp.sync(path.join(tmpDir, 'scripts'));
+    const filePath = path.join(tmpDir, 'scripts', 'doStuff.js');
+    fs.closeSync(fs.openSync(path.join(tmpDir, 'webpack-assets.json'), 'w'));
     fs.writeFileSync(filePath, getDoStuffScript());
-    run("scripts/doStuff", (error) => {
-      const output = fs.readFileSync(path.join(tmpDir, "test.txt"), "utf8");
-      expect(output).toEqual("written from runner");
+    run('scripts/doStuff', (error) => {
+      const output = fs.readFileSync(path.join(tmpDir, 'test.txt'), 'utf8');
+      expect(output).toEqual('written from runner');
       expect(error).toBeUndefined();
       done();
     });
   });
 
-  it("throws error if the provided script does not exist", (done) => {
-    mkdirp.sync(path.join(tmpDir, "scripts"));
-    fs.closeSync(fs.openSync(path.join(tmpDir, "webpack-assets.json"), "w"));
-    run("scripts/hi", (error) => {
+  it('throws error if the provided script does not exist', (done) => {
+    mkdirp.sync(path.join(tmpDir, 'scripts'));
+    fs.closeSync(fs.openSync(path.join(tmpDir, 'webpack-assets.json'), 'w'));
+    run('scripts/hi', (error) => {
       expect(error).toBeDefined();
       done();
     });

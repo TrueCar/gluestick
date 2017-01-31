@@ -1,9 +1,9 @@
-import React from "react";
-import { Route } from "react-router";
-import { shallow } from "enzyme";
-import { getHttpClient } from "gluestick-shared";
+import React from 'react';
+import { Route } from 'react-router';
+import { shallow } from 'enzyme';
+import { getHttpClient } from 'gluestick-shared';
 
-import Entry from "../../../../../templates/new/src/config/.entry";
+import Entry from '../../../../../templates/new/src/config/.entry';
 
 const httpClient = getHttpClient();
 const STORE = {};
@@ -14,8 +14,13 @@ const ROUTES = (
   </Route>
 );
 
-describe("templates/new/src/config/.entry", () => {
-  let props, getRoutes, getStore, match, history, store;
+describe('templates/new/src/config/.entry', () => {
+  let props,
+    getRoutes,
+    getStore,
+    match,
+    history,
+    store;
 
   beforeEach(() => {
     store = STORE;
@@ -25,17 +30,17 @@ describe("templates/new/src/config/.entry", () => {
     match = jest.fn();
     props = {
       getRoutes,
-      store: STORE
+      store: STORE,
     };
   });
 
-  it("render without issues", () => {
+  it('render without issues', () => {
     const subject = <Entry {...props} />;
     const wrapper = shallow(subject);
     expect(wrapper).toBeDefined();
   });
 
-  it("should build a store and the proper routes when calling Entry.start", () => {
+  it('should build a store and the proper routes when calling Entry.start', () => {
     Entry.start(getRoutes, getStore, match, history);
     expect(getRoutes).toBeCalledWith(getStore(), httpClient);
   });

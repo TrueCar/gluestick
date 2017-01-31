@@ -1,18 +1,20 @@
-import fs from "fs";
-import path from "path";
-import logger from "./cliLogger";
-import { highlight } from "./cliColorScheme";
+import fs from 'fs';
+import path from 'path';
+// import logger from './cliLogger';
+// import { highlight } from '../cli/colorScheme';
 
-export function quitUnlessGluestickProject(command) {
+export function quitUnlessGluestickProject(/* command */) {
   if (!isGluestickProject()) {
-    logger.error(`${highlight(command)} commands must be run from the root of a gluestick project.`);
+    // TODO: Replace logger, remove disable
+    // eslint-disable-next-line
+    // logger.error(`${highlight(command)} commands must be run from the root of a gluestick project.`);
     process.exit();
   }
 }
 
-export function isGluestickProject(dir=process.cwd()) {
+export function isGluestickProject(dir = process.cwd()) {
   try {
-    fs.statSync(path.join(dir, ".gluestick"));
+    fs.statSync(path.join(dir, '.gluestick'));
   } catch (err) {
     return false;
   }
@@ -20,8 +22,8 @@ export function isGluestickProject(dir=process.cwd()) {
 }
 
 export function compareVersions(versionA, versionB) {
-  const numbersA = versionA.split(".");
-  const numbersB = versionB.split(".");
+  const numbersA = versionA.split('.');
+  const numbersB = versionB.split('.');
   for (let i = 0; i < 3; i++) {
     const numberA = Number(numbersA[i]);
     const numberB = Number(numbersB[i]);

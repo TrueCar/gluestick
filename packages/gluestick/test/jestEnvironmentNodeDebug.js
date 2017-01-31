@@ -2,17 +2,16 @@
  * Source: https://www.npmjs.com/package/jest-environment-node-debug
  */
 
-"use strict";
 
-const FakeTimers = require("jest-util").FakeTimers;
-const ModuleMocker = require("jest-mock");
+const FakeTimers = require('jest-util').FakeTimers;
+const ModuleMocker = require('jest-mock');
 
 function deepCopy(obj) {
   const newObj = {};
   let value;
   for (const key in obj) {
     value = obj[key];
-    if (typeof value === "object" && value !== null) {
+    if (typeof value === 'object' && value !== null) {
       value = deepCopy(value);
     }
     newObj[key] = value;

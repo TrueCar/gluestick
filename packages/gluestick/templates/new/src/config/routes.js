@@ -11,7 +11,7 @@ export default function routes (/*store: Object, httpClient: Object*/) {
   return (
     <Route name="app" component={MasterLayout} path="/">
       <IndexRoute name="home" component={HomeApp} />
-      <Route name={ROUTE_NAME_404_NOT_FOUND} path="*" component={NoMatchApp}/>
+      <Route name={ROUTE_NAME_404_NOT_FOUND} path="*" component={NoMatchApp} />
     </Route>
   );
 }

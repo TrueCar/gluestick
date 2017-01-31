@@ -1,16 +1,17 @@
-const process = require("process");
-const inquirer = require("inquirer");
-const fs = require("fs-extra");
-const path = require("path");
-const npmDependencies = require("../lib/npmDependencies");
-const utils = require("../lib/utils");
-const { isGluestickProject } = utils;
-const logger = require("../lib/cliLogger");
-const cliColorScheme = require("../lib/cliColorScheme");
-const { highlight, filename } = cliColorScheme;
+const process = require('process');
+const inquirer = require('inquirer');
+const fs = require('fs-extra');
+const path = require('path');
+const npmDependencies = require('../lib/npmDependencies');
+const utils = require('../lib/utils');
+// const logger = require('../lib/cliLogger');
+const cliColorScheme = require('../lib/cliColorScheme');
 
-function copyTo (destination) {
-  fs.copySync(path.join(__dirname, "../../templates/new"), destination);
+const { highlight, filename } = cliColorScheme;
+const { isGluestickProject } = utils;
+
+function copyTo(destination) {
+  fs.copySync(path.join(__dirname, '../../templates/new'), destination);
   process.chdir(destination);
   npmDependencies.install();
 
@@ -23,25 +24,24 @@ function copyTo (destination) {
   // Relevant Issues:
   // https://github.com/npm/npm/issues/1862
   // https://github.com/npm/npm/issues/7252
-  fs.renameSync(path.join(destination, "_gitignore"), path.join(destination, ".gitignore"));
+  fs.renameSync(path.join(destination, '_gitignore'), path.join(destination, '.gitignore'));
 }
 
-module.exports = function (cofnig, logger, projectName) {
+module.exports = (cofnig, logger, projectName) => {
   const currentlyInProjectFolder = isGluestickProject();
 
   // Ran from inside an existing project, install in current directory if approved
   if (currentlyInProjectFolder) {
     logger.info(`You are about to initialize a new gluestick project at ${filename(process.cwd())}`);
     const question = {
-      type: "confirm",
-      name: "confirm",
-      message: "Do you wish to continue?"
+      type: 'confirm',
+      name: 'confirm',
+      message: 'Do you wish to continue?',
     };
-    inquirer.prompt([question]).then(function (answers) {
+    inquirer.prompt([question]).then((answers) => {
       if (!answers.confirm) { return; }
       copyTo(process.cwd());
       _printInstructions(projectName);
-      return false;
     });
 
     return false;
@@ -59,10 +59,11 @@ module.exports = function (cofnig, logger, projectName) {
   return true;
 };
 
-function _printInstructions(projectName) {
-  logger.info(`${highlight("New GlueStick project created")} at ${filename(process.cwd())}`);
-  logger.info("To run your app and start developing");
-  logger.info(`    cd ${projectName}`);
-  logger.info("    gluestick start");
-  logger.info("    Point the browser to http://localhost:8888");
+function _printInstructions(/* projectName */) {
+  // TODO: Replace logger.
+  // logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+  // logger.info('To run your app and start developing');
+  // logger.info(`    cd ${projectName}`);
+  // logger.info('    gluestick start');
+  // logger.info('    Point the browser to http://localhost:8888');
 }
