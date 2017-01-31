@@ -16,14 +16,13 @@ class WriteStream extends Writable {
 }
 
 describe('lib/server/DoctypeStream', () => {
-  it('should prepend the doctype in a stream', (done) => {
+  it('should prepend the doctype in a stream', async () => {
     const readStream = fs.createReadStream(path.join(__dirname, '/DoctypeStream.sample.txt'));
     const writeStream = new WriteStream();
 
-    writeStream.on('finish', () => {
+    await writeStream.on('finish', () => {
       expect(this.data[0].toString('utf8')).toEqual('<!DOCTYPE html>');
       expect(this.data.join('')).toContain('<!DOCTYPE html>');
-      done();
     });
 
     const doctypeStream = new DoctypeStream('<!DOCTYPE html>');
@@ -31,3 +30,4 @@ describe('lib/server/DoctypeStream', () => {
     readStream.pipe(doctypeStream).pipe(writeStream, { end: true });
   });
 });
+

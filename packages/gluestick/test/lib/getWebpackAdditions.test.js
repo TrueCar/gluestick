@@ -1,13 +1,13 @@
 /* eslint-disable */
 // @TODO enable eslint when file is refactored
 
-import fs from 'fs-extra';
-import path from 'path';
-import temp from 'temp';
-import logger from '../../src/lib/cliLogger';
-
-import newApp from '../../src/commands/new';
-import getWebpackAdditions from '../../src/lib/getWebpackAdditions';
+// import fs from 'fs-extra';
+// import path from 'path';
+// import temp from 'temp';
+// import logger from '../../src/lib/cliLogger';
+//
+// import newApp from '../../src/commands/new';
+// import getWebpackAdditions from '../../src/lib/getWebpackAdditions';
 
 // @TODO getWebpackAdditions needs refactor
 describe.skip('src/lib/getWebpackAdditions', () => {

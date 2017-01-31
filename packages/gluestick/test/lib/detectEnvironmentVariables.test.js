@@ -1,10 +1,10 @@
 /* eslint-disable */
 // @TODO enable eslint when file is refactored
 
-import fs from 'fs-extra';
-import path from 'path';
-import temp from 'temp';
-import detectEnvironmentVariables from '../../src/lib/detectEnvironmentVariables';
+// import fs from 'fs-extra';
+// import path from 'path';
+// import temp from 'temp';
+// import detectEnvironmentVariables from '../../src/lib/detectEnvironmentVariables';
 
 // @TODO detectEnvironmentVariables needs refactor
 describe.skip('src/lib/detectEnvironmentVariables', () => {
