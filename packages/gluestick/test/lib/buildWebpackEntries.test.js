@@ -1,13 +1,17 @@
-import fs from 'fs-extra';
-import path from 'path';
-import temp from 'temp';
+/* eslint-disable */
+// @TODO enable eslint when file is refactored
 
-import newApp from '../../src/commands/new';
-import npmDependencies from '../../src/lib/npmDependencies';
+// import fs from 'fs-extra';
+// import path from 'path';
+// import temp from 'temp';
+//
+// import newApp from '../../src/commands/new';
+// import npmDependencies from '../../src/lib/npmDependencies';
+//
+// import buildWebpackEntries, { getWebpackEntries } from '../../src/lib/buildWebpackEntries';
 
-import buildWebpackEntries, { getWebpackEntries } from '../../src/lib/buildWebpackEntries';
-
-describe('src/lib/buildWebpackEntries', () => {
+//@TODO buildWebpackEntries needs refactor
+describe.skip('src/lib/buildWebpackEntries', () => {
   let originalCwd;
   let tmpDir;
   let fakeNpm;
@@ -42,13 +46,13 @@ describe('src/lib/buildWebpackEntries', () => {
       const entries = getWebpackEntries();
       const expectedResult = {
         '/':
-        { name: 'main',
-          routes: `${cwd}/src/config/routes`,
-          reducers: `${cwd}/src/reducers`,
-          fileName: 'main',
-          filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
-          index: `${cwd}/Index`,
-        },
+          { name: 'main',
+            routes: `${cwd}/src/config/routes`,
+            reducers: `${cwd}/src/reducers`,
+            fileName: 'main',
+            filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
+            index: `${cwd}/Index`,
+          },
       };
 
       expect(entries).toEqual(expectedResult);
