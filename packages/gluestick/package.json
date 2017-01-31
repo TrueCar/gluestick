@@ -147,9 +147,8 @@
     "temp": "0.8.3"
   },
   "jest": {
-    "testRegex": ".*\\.test\\.js$",
     "testPathDirs": [
-      "src"
+      "test"
     ],
     "setupFiles": [
       "./test/setup.js"
