@@ -1,13 +1,13 @@
-const generator = require("../generator");
+const generator = require('../generator');
 
-module.exports = exports = ({ config, logger }, generatorName, entityName, options) => {
+module.exports = ({ config, logger }, generatorName, entityName, options) => {
   const filteredOptions = {
     functional: options.functional,
-    ...JSON.parse(options.genOptions ? options.genOptions : "{}")
+    ...JSON.parse(options.genOptions ? options.genOptions : '{}'),
   };
   generator({
     generatorName,
     entityName,
-    options: filteredOptions
+    options: filteredOptions,
   }, logger);
 };

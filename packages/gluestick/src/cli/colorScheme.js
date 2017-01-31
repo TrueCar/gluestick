@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
 const success = chalk.green;
 const info = chalk.yellow;
@@ -13,5 +13,5 @@ module.exports = {
   warn,
   debug,
   filename,
-  highlight
+  highlight,
 };

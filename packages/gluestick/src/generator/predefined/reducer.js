@@ -29,34 +29,34 @@ describe("${args => args.path}", () => {
 
 const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
 
-module.exports = exports = options => {
+module.exports = exports = (options) => {
   const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
   return {
     modify: {
-      file: "src/reducers/index",
-      modifier: content => {
+      file: 'src/reducers/index',
+      modifier: (content) => {
         if (content) {
-          const lines = content.split("\n");
+          const lines = content.split('\n');
           lines[lines.length - 1] = getReducerExport(rewrittenName);
-          return lines.join("\n");
+          return lines.join('\n');
         }
         return getReducerExport(rewrittenName);
-      }
+      },
     },
     entries: [
       {
-        path: "src/reducers",
+        path: 'src/reducers',
         filename: rewrittenName,
-        template: reducerTemplate
+        template: reducerTemplate,
       },
       {
-        path: "test/reducers",
+        path: 'test/reducers',
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `reducers/${rewrittenName}`
-        }
-      }
-    ]
+          path: `reducers/${rewrittenName}`,
+        },
+      },
+    ],
   };
 };

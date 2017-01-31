@@ -26,7 +26,7 @@ export class HomeApp extends Component {
   render () {
     return (
       <div>
-        <Helmet title="Home"/>
+        <Helmet title="Home" />
         <Home />
       </div>
     );

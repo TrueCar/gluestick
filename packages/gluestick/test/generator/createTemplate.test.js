@@ -1,28 +1,28 @@
-const createTemplate = require("../../src/generator/createTemplate");
+const createTemplate = require('../../src/generator/createTemplate');
 
-describe("generator/createTemplate tag function", () => {
-  it("should render string", () => {
-    const bakedTemplate = createTemplate`${"string"}`();
-    expect(bakedTemplate).toEqual("string");
+describe('generator/createTemplate tag function', () => {
+  it('should render string', () => {
+    const bakedTemplate = createTemplate`${'string'}`();
+    expect(bakedTemplate).toEqual('string');
   });
-  it("should render number", () => {
+  it('should render number', () => {
     const bakedTemplate = createTemplate`${10}`();
-    expect(bakedTemplate).toEqual("10");
+    expect(bakedTemplate).toEqual('10');
   });
-  it("should render results of function", () => {
+  it('should render results of function', () => {
     const bakedTemplate = createTemplate`${
       args => args.someNumber
     }`({
-      someNumber: 10
+      someNumber: 10,
     });
-    expect(bakedTemplate).toEqual("10");
+    expect(bakedTemplate).toEqual('10');
   });
-  it("should throw missing args error", () => {
+  it('should throw missing args error', () => {
     expect(() => {
       createTemplate`${args => args.someVar}`();
-    }).toThrowError("No arguments for for template were passed");
+    }).toThrowError('No arguments for for template were passed');
   });
-  it("should interpolate template", () => {
+  it('should interpolate template', () => {
     const expectedTemplate = `      Some text
       4
       Some text 2
@@ -32,7 +32,7 @@ describe("generator/createTemplate tag function", () => {
 
     const bakedTemplate = createTemplate`
       Some text
-      ${Math.pow(2, 2)}
+      ${2 ** 2}
       Some text 2
       ${args => args.someVar}
       Some text 3
