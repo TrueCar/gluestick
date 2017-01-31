@@ -72,7 +72,6 @@
     "http-proxy-middleware": "0.17.3",
     "inquirer": "3.0.1",
     "jest": "18.1.0",
-    "jsdom": "9.3.0",
     "lru-cache": "4.0.2",
     "match-media": "0.2.0",
     "mkdirp": "0.5.1",
