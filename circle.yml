@@ -10,13 +10,10 @@ general:
     - ./coverage
 dependencies:
   pre:
-    # Repo for Yarn
-    - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
-    - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    - sudo apt-get update -qq
-    - sudo apt-get install -y -qq yarn=0.16.1-1
-    - export PATH="/usr/share/yarn/bin:$PATH"
-    - $HOME/.yarn-cache
+    # Installing Yarn
+    -curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    -echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    -sudo apt-get update && sudo apt-get install yarn
   override:
     - npm install -y
 test:
