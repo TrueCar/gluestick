@@ -5,10 +5,12 @@
 GlueStick is a command line interface for quickly developing universal web
 applications using React and Redux.
 
+Create and deploy enterprise-grade React and Redux application right from your command line. Gluestick is a combination of create-react-app and next.js that is backed and used in production by TrueCar.
+
 ## Why your project or boilerplate isn't enough?
 1. **You need integrated updates.** Without integrated updates, you are forced to manually merge in new features/fixes.
 2. **Isomorphic rendering.** Server-side and client-side rendering are identical. No more worries about SEO, pesky “loading” spinners, or users with javascript disabled
-3. **Integrated dockerization.** Go from development to production as simple as `gluestick dockerize MyApp` 
+3. **Integrated dockerization.** Go from development to production as simple as `gluestick dockerize MyApp`
 4. **Automatic babel and webpack loader support.** Cause writing ES5 is so boring
 5. **Automatic test framework setup.** Preloaded with `Mocha`, `Chai`, `Sinon`, `Enzyme`, and `React.TestUtils` right out of the box
 6. **Built in common practices.** Things like code splitting, hot module replacement, react-router, etc
@@ -95,13 +97,13 @@ will be executed through the test runner.
 
 ## Styles
 The preferred way to style components in the GlueStick environment is to use
-[Radium](https://github.com/FormidableLabs/radium), but we also actively use 
+[Radium](https://github.com/FormidableLabs/radium), but we also actively use
 and support css and sass.
 
 #### CSS and SASS
 If you want to include a base stylesheet (like bootstrap css), you can import
 your stylesheet at the top of any file and it will be included when the page
-loads. Any updates to your styles will also be hot loaded. You can use plain 
+loads. Any updates to your styles will also be hot loaded. You can use plain
 css or sass.
 
 Example:
