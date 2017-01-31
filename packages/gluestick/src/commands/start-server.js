@@ -21,7 +21,7 @@ const CWD = process.cwd();
  * @param {Boolean} debug whether to debug server with built-in node inspector
  * @param {Number} debugPort custom port for inspector
  */
-module.exports = function startServer (debug = false, debugPort) {
+module.exports = function startServer (config, logger_, { debug = false, debugPort }) {
   const serverEntrypointPath = path.join(__dirname, "../entrypoints/", "server.js");
 
   // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug` for the server side rendering

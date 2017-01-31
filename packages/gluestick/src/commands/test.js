@@ -55,7 +55,7 @@ function createArgs(defaultArgs, options) {
   return argv;
 }
 
-module.exports = function(options) {
+module.exports = function(config, logger, options) {
   const spawnOptions = {
     stdio: "inherit",
   };

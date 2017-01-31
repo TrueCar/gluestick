@@ -26,7 +26,7 @@ function copyTo (destination) {
   fs.renameSync(path.join(destination, "_gitignore"), path.join(destination, ".gitignore"));
 }
 
-module.exports = function (projectName) {
+module.exports = function (cofnig, logger, projectName) {
   const currentlyInProjectFolder = isGluestickProject();
 
   // Ran from inside an existing project, install in current directory if approved
