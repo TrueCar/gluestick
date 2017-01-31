@@ -127,6 +127,7 @@
     "enzyme": "2.7.1",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
+    "flow-bin": "^0.38.0",
     "gluestick-shared": "0.4.22",
     "jest": "18.1.0",
     "oy-vey": "0.8.0",
