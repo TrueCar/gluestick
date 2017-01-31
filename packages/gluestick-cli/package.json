@@ -1,0 +1,51 @@
+{
+  "name": "gluestick",
+  "version": "0.10.22",
+  "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
+  "main": "bin/index.js",
+  "bin": {
+    "gluestick": "bin/index.js"
+  },
+  "homepage": "https://github.com/TrueCar/gluestick",
+  "bugs": "https://github.com/TrueCar/gluestick/issues",
+  "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage",
+    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "jest",
+    "es6",
+    "es2015",
+    "universal",
+    "isomorphic",
+    "generator",
+    "boilerplate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:TrueCar/gluestick.git"
+  },
+  "author": "Todd Williams <toddsurfs@icloud.com>",
+  "dependencies": {
+    "chalk": "1.1.3",
+    "commander": "2.9.0",
+    "cross-spawn": "5.0.1",
+    "mkdirp": "0.5.1"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "eslint": "3.14.1",
+    "jest": "18.1.0"
+  },
+  "jest": {
+    "testPathDirs": [
+      "src"
+    ]
+  }
+}
