@@ -20,7 +20,8 @@ function mockLoadProjectPackage (fixture) {
   }
 }
 
-describe("autoUpgrade/updatePackage", () => {
+// @TODO need refactor https://github.com/TrueCar/gluestick/issues/490
+describe.skip("autoUpgrade/updatePackage", () => {
   describe("fixVersionMismatch", () => {
     const prompt = jest.fn();
     const overrides = {

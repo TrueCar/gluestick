@@ -18,17 +18,3 @@ export function isGluestickProject(dir=process.cwd()) {
   }
   return true;
 }
-
-export function compareVersions(versionA, versionB) {
-  const numbersA = versionA.split(".");
-  const numbersB = versionB.split(".");
-  for (let i = 0; i < 3; i++) {
-    const numberA = Number(numbersA[i]);
-    const numberB = Number(numbersB[i]);
-    if (numberA > numberB) { return 1; }
-    if (numberB > numberA) { return -1; }
-    if (!Number.isNaN(numberA) && Number.isNaN(numberB)) { return 1; }
-    if (Number.isNaN(numberA) && !Number.isNaN(numberB)) { return -1; }
-  }
-  return 0;
-}
