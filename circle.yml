@@ -1,0 +1,5 @@
+machine:
+  environment:
+    NODE_ENV: test
+  node:
+    version: 6.3.0
