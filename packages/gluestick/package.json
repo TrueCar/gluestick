@@ -3,7 +3,7 @@
   "version": "0.10.22",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/index.js",
-  "bin": "src/gluestick.js",
+  "bin": "bin/gluestick.js",
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
