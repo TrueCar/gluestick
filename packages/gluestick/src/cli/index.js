@@ -23,6 +23,7 @@ commander
   .command("new")
   .description("generate a new application")
   .arguments("<appName>")
+  .option('-d, --dev <path>', 'path to dev version of gluestick')
   .action((...commandArguments) => {
     execWithConfig(
       require("../commands/new"),
@@ -93,7 +94,7 @@ commander
   .action((...commandArguments) => {
     execWithConfig(
       require("../commands/bin"),
-      commandArguments,
+      commandArguments
     );
   });
 
