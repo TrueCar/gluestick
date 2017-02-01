@@ -1,8 +1,9 @@
-const spawnMock = jest.fn();
-jest.setMock('cross-spawn', spawnMock);
+jest.mock('cross-spawn');
 
-const path =  require('path');
+const path = require('path');
 const bin = require('../../src/commands/bin');
+const spawnMock = require('cross-spawn');
+
 const spawnOptions = { stdio: 'inherit' };
 
 const getDependencyPath = name =>
@@ -11,7 +12,7 @@ const getDependencyPath = name =>
 describe('cli: gluestick bin', () => {
   it('runs the dependency without any options', () => {
     const dependencyName = 'fakeDep';
-    
+
     bin({}, dependencyName, { parent: { rawArgs: [] }});
     expect(spawnMock).toBeCalledWith(getDependencyPath(dependencyName), [], spawnOptions);
   });
