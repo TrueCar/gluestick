@@ -57,7 +57,9 @@ export default function (isomorphic=false) {
     additionalWebpackConfig: {},
     vendor: null,
     entryPoints: {},
+    mapEntryToGroup: {},
     plugins: [],
+
   };
 
   // Babel will try to resolve require statements ahead of time which will cause an error
@@ -73,7 +75,8 @@ export default function (isomorphic=false) {
       additionalWebpackConfig,
       vendor,
       plugins,
-      entryPoints
+      entryPoints,
+      mapEntryToGroup,
     } = require(webpackAdditionsPath);
     userAdditions = {
       additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
@@ -82,7 +85,8 @@ export default function (isomorphic=false) {
       additionalWebpackConfig: additionalWebpackConfig || {},
       vendor: vendor && vendor.length > 0 ? vendor : null,
       plugins: plugins || [],
-      entryPoints: entryPoints || {}
+      entryPoints: entryPoints || {},
+      mapEntryToGroup: mapEntryToGroup || {},
     };
   }
   catch (e) {

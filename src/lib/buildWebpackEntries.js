@@ -6,6 +6,23 @@ function getBasePath () {
   return path.join(process.cwd(), "src", "config", ".entries");
 }
 
+const filterEntries = (entries, groupOfEntries) => {
+  if(groupOfEntries){
+    return groupOfEntries.reduce((prev, curr) => {
+      return Object.assign({}, prev, { [curr]: entries[curr] });
+    }, {});
+  }
+  throw Error("No group of entries");
+};
+
+function buildEntries(entries, isProduction) {
+  const output = {};
+  for (const key in entries) {
+    const entry = parseWebpackEntry(entries[key], isProduction);
+    output[entry.fileName] = entry.conent;
+  }
+  return output;
+}
 /**
  * This method is a information preparer/gatherer. This information is used by
  * `buildWebpackEntries` and the server request handler. It sets up the default
@@ -16,7 +33,7 @@ export function getWebpackEntries () {
   const output = {};
   const cwd = process.cwd();
   const basePath = getBasePath();
-
+  const webpackAdditions = getWebpackAdditions();
   // setup default
   const entryPoints = {
     "/": {
@@ -24,9 +41,8 @@ export function getWebpackEntries () {
       routes: path.join(cwd, "src", "config", "routes"),
       reducers: path.join(cwd, "src", "reducers")
     },
-    ...getWebpackAdditions().entryPoints
+    ...webpackAdditions.entryPoints
   };
-
   Object.keys(entryPoints).forEach((key) => {
     const entry = entryPoints[key];
     const fileName = entry.name.replace(/\W/, "-");
@@ -36,13 +52,34 @@ export function getWebpackEntries () {
       filePath: `${path.join(basePath, fileName)}-[chunkhash].js`,
       routes: entry.routes || path.join(cwd, "src", "config", "routes", fileName),
       reducers: entry.reducers || path.join(cwd, "src", "reducers", fileName),
-      index: entry.index || path.join(cwd, "Index")
+      index: entry.index || path.join(cwd, "Index"),
+      entryPoints: entry.entryPoints || null
     };
   });
+  return {
+    mapEntryToGroup: webpackAdditions.mapEntryToGroup,
+    entries: output
+  };
 
-  return output;
 }
 
+const parseWebpackEntry = (entry, isProduction) => {
+  const { filePath, fileName } = entry;
+  fs.outputFileSync(filePath, getEntryPointContent(entry));
+  const content = isProduction ? [] : [
+    // eventsource-polyfill added here because it needs to go before
+    // webpack-hot-middleware pointing to local node_modules so it pulls from
+    // gluestick project and not from the app. This is needed to support HMR in
+    // browsers like IE11
+    path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill"),
+    // Include hot middleware in development mode only
+    "webpack-hot-middleware/client"
+  ];
+  return {
+    fileName,
+    conent: content.concat([path.join(__dirname, "..", "entrypoints", "client.js"), filePath])
+  };
+};
 
 /**
  * This method will wipe out the `config/.entries` hidden folder and rebuild it
@@ -55,34 +92,23 @@ export function getWebpackEntries () {
  * includes the generated entry point. Finally, if we are in development mode
  * it will start the array off with the webpack hot middleware client.
  */
-export default function buildWebpackEntries (isProduction) {
+export default function buildWebpackEntries (isProduction, entrypointToBuild) {
   const output = {};
   const basePath = getBasePath();
 
   // Clean slate
   fs.removeSync(basePath);
   fs.ensureDirSync(basePath);
-
-  const entries = getWebpackEntries();
-  for (const key in entries) {
-    const entry = entries[key];
-    const { filePath, fileName } = entry;
-    fs.outputFileSync(filePath, getEntryPointContent(entry));
-    output[fileName] = [path.join(__dirname, "..", "entrypoints", "client.js"), filePath];
-
-    // Include hot middleware in development mode only
-    if (!isProduction) {
-      output[fileName].unshift("webpack-hot-middleware/client");
-
-      // eventsource-polyfill added here because it needs to go before
-      // webpack-hot-middleware pointing to local node_modules so it pulls from
-      // gluestick project and not from the app. This is needed to support HMR in
-      // browsers like IE11
-      output[fileName].unshift(path.join(__dirname, "..", "..", "node_modules", "eventsource-polyfill"));
-    }
+  const { mapEntryToGroup, entries } = getWebpackEntries();
+  if (entrypointToBuild && entrypointToBuild[0] === "/") {
+    const entry = parseWebpackEntry(entries[entrypointToBuild], isProduction);
+    output[entry.fileName] = entry.conent;
+    return output;
+  } else if (entrypointToBuild) {
+    const filtredEntries = filterEntries(entries, mapEntryToGroup[entrypointToBuild]);
+    return buildEntries(filtredEntries, isProduction);
   }
-
-  return output;
+  return  buildEntries(entries, isProduction);
 }
 
 function getEntryPointContent (entry) {

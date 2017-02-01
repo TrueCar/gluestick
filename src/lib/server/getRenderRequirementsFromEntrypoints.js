@@ -1,3 +1,4 @@
+const nodePath = require("path");
 import { parse as parseURL } from "url";
 import { getWebpackEntries } from "../buildWebpackEntries";
 import isChildPath from "../isChildPath";
@@ -13,7 +14,7 @@ const cachedEntryPoints = getWebpackEntries();
  * while finally falling back to the default index parameter.
  */
 const getSortedEntries = function () {
-  return Object.keys(getWebpackEntries()).sort((a, b) => {
+  return Object.keys(getWebpackEntries().entries).sort((a, b) => {
     const bSplitLength = b.split("/").length;
     const aSplitLength = a.split("/").length;
     if (bSplitLength === aSplitLength) {
@@ -43,7 +44,7 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
   }
   else {
     sortedEntries = getSortedEntries();
-    entryPoints = getWebpackEntries();
+    entryPoints = getWebpackEntries().entries;
   }
 
   logger.debug("Getting webpack entries");
@@ -58,12 +59,18 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
       const { routes, index, fileName, filePath } = entryPoints[path];
       logger.debug("Found entrypoint and performing requires for", index, filePath, routes);
       return {
-        Index: customRequire(index + ".js").default,
+        Index: customRequire(resolvePath(index + ".js", filePath)).default,
         store: customRequire(filePath).getStore(httpClient),
-        getRoutes: customRequire(routes).default,
+        getRoutes: customRequire(resolvePath(routes + ".js", filePath)).default,
         fileName
       };
     }
   }
 }
 
+const resolvePath = (path, base) => {
+  if (path[0] === "/") {
+    return path;
+  }
+  return nodePath.join(nodePath.dirname(base), path);
+};
