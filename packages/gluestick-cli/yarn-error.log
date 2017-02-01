@@ -1,0 +1,70 @@
+Arguments: 
+  /usr/local/Cellar/node/7.4.0/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/paweltrysla/Documents/gluestick/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  0.19.1
+
+Node version: 
+  7.4.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "gluestick-cli",
+    "version": "0.10.22",
+    "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
+    "main": "./index.js",
+    "bin": {
+      "gluestick": "./index.js"
+    },
+    "homepage": "https://github.com/TrueCar/gluestick",
+    "bugs": "https://github.com/TrueCar/gluestick/issues",
+    "license": "MIT",
+    "scripts": {
+      "lint": "./node_modules/.bin/eslint ./"
+    },
+    "keywords": [
+      "react",
+      "redux",
+      "jest",
+      "es6",
+      "es2015",
+      "universal",
+      "isomorphic",
+      "generator",
+      "boilerplate"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "git@github.com:TrueCar/gluestick.git"
+    },
+    "author": "Todd Williams <toddsurfs@icloud.com>",
+    "dependencies": {
+      "babel-eslint": "7.1.1",
+      "commander": "2.9.0",
+      "cross-spawn": "5.0.1",
+      "mkdirp": "0.5.1"
+    },
+    "devDependencies": {
+      "eslint": "3.14.1",
+      "babel-eslint": "7.1.1",
+      "eslint-config-airbnb": "^14.0.0",
+      "eslint-plugin-import": "^2.2.0",
+      "eslint-plugin-jsx-a11y": "^3.0.2",
+      "eslint-plugin-react": "6.9.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: ENOTEMPTY: directory not empty, rmdir '/Users/paweltrysla/Library/Caches/Yarn/npm-eslint-plugin-import-2.2.0-72ba306fad305d67c4816348a4699a4229ac8b4e/lib/rules'
