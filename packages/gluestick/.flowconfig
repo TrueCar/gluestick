@@ -12,10 +12,7 @@
 flow/
 
 [options]
-suppress_type=$FlowIssue
 suppress_type=$FlowFixMe
-suppress_type=$FlowIgnore
-suppress_type=$FixMe
 
 [version]
 ^0.38.0
