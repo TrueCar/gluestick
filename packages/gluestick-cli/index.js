@@ -59,19 +59,16 @@ commander
       ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick'), '-y'],
       { stdio: 'inherit' }
     );
-    console.log(1);
     spawn.sync(
       'watchman',
       ['watch', srcPath],
       { stdio: 'inherit' }
     );
-    console.log(2);
     spawn.sync(
       wmlBin,
       ['start'],
       { stdio: 'inherit' }
     );
-    console.log(3);
   });
 
 commander
