@@ -1,4 +1,10 @@
 [ignore]
+# Ignore templates with `@flow` in the header
+.*/templates/new/.*\.js
+# fbjs lib problems
+.*/node_modules/fbjs/.*
+# radium lib problems
+.*/node_modules/radium/.*
 
 [include]
 
@@ -6,6 +12,10 @@
 flow/
 
 [options]
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+suppress_type=$FlowIgnore
+suppress_type=$FixMe
 
 [version]
 ^0.38.0
