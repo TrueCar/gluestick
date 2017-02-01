@@ -29,7 +29,6 @@
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "dependencies": {
-    "babel-eslint": "7.1.1",
     "commander": "2.9.0",
     "cross-spawn": "5.0.1",
     "mkdirp": "0.5.1",

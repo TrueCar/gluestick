@@ -57,17 +57,17 @@ commander
     spawn.sync(
       wmlBin,
       ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick'), '-y'],
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
     spawn.sync(
       'watchman',
       ['watch', srcPath],
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
     spawn.sync(
       wmlBin,
       ['start'],
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
   });
 
