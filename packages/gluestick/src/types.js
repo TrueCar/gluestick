@@ -8,13 +8,19 @@ export type Context = {
    plugins: Array<Object>;
  },
  logger: {
-   success: Function; // Function: (...args: string) => void
-   info: Function; // Function: (...args: string) => void
-   warn: Function; // Function: (...args: string) => void
-   debug: Function; // Function: (...args: string) => void
-   error: Function; // Function: (...args: string) => void
+   success: (type: LoggerTypes) => Function; // (...args: string[]) => void;
+   info: (type: LoggerTypes) => Function; // (...args: string[]) => void;
+   warn: (type: LoggerTypes) => Function; // (...args: string[]) => void;
+   debug: (type: LoggerTypes) => Function; // (...args: string[]) => void;
+   error: (type: LoggerTypes) => Function; // (...args: string[]) => void;
  },
 };
+
+export type LoggerTypes = 'success'
+  | 'info'
+  | 'warn'
+  | 'debug'
+  | 'error';
 
 export type ProjectConfig = {
 
