@@ -1,5 +1,4 @@
 const nodePath = require("path");
-const fs = require('fs');
 import { parse as parseURL } from "url";
 import { getWebpackEntries } from "../buildWebpackEntries";
 import isChildPath from "../isChildPath";
@@ -70,7 +69,7 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
 }
 
 const resolvePath = (path, base) => {
-  if (path[0] === "/" && fs.existsSync(path)) {
+  if (path[0] === "/") {
     return path;
   }
   return nodePath.join(nodePath.dirname(base), path);

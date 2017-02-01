@@ -38,14 +38,14 @@ describe("src/lib/buildWebpackEntries", () => {
       const entries = getWebpackEntries();
       const expectedResult = {
         entries: {
-          "/":
-            { name: "main",
-              routes: `${cwd}/src/config/routes`,
-              reducers: `${cwd}/src/reducers`,
-              fileName: "main",
-              filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
-              index: `${cwd}/Index`,
-              entryPoints: null,
+          "/": {
+            name: "main",
+            routes: `${cwd}/src/config/routes`,
+            reducers: `${cwd}/src/reducers`,
+            fileName: "main",
+            filePath: `${cwd}/src/config/.entries/main-[chunkhash].js`,
+            index: `${cwd}/Index`,
+            entryPoints: null,
           },
         },
         mapEntryToGroup: {},

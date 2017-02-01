@@ -50,7 +50,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: "main",
-      getRoutes: `Contents of ${cwd}/src/config/routes`,
+      getRoutes: `Contents of ${cwd}/src/config/routes.js`,
       store: `getStore: ${cwd}/src/config/.entries/main-[chunkhash].js`
     };
     expect(result).toEqual(expectedResult);
@@ -68,7 +68,7 @@ describe("src/lib/server/getRenderRequirementsFromEntrypoints", () => {
     const expectedResult = {
       Index: `Contents of ${cwd}/Index.js`,
       fileName: "used",
-      getRoutes: `Contents of ${cwd}/src/config/routes/used`,
+      getRoutes: `Contents of ${cwd}/src/config/routes/used.js`,
       store: `getStore: ${cwd}/src/config/.entries/used-[chunkhash].js`
     };
     expect(result).toEqual(expectedResult);
