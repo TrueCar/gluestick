@@ -43,13 +43,9 @@ We are using GitHub Issues for our public bugs. We keep a close eye on this and 
 
 * We are using extended `eslint-config-airbnb` - make sure your code doesn't result in any lint errors.
 * We are also using [FlowType](https://flowtype.org/) for static type checking - make sure your code doesn't produce any flow errors.
-* No `Object` or `Function` types are allowed (except for edge cases) - make sure all types have detailed description.
-* When writing CLI we use `CommonJS` to handle import/export - please do not mix them with ES6 imports (only exception is importing types).
+* No `Object`, `Function` and `any | *` types are allowed (except for edge cases) - make sure all types have detailed description.
+* When writing CLI we use `CommonJS` to handle import/export - please do not mix them with ES6 imports. The only exception are Flow types where we use ES6 imports.
 
 ### Documentation
 
 * Do not wrap lines at 80 characters - configure your editor to soft-wrap when editing documentation.
-
-## License
-
-TODO: @toddw
