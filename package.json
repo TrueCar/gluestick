@@ -1,12 +1,16 @@
 {
   "name": "gluestick-packages",
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "install:npm": "npm install && lerna bootstrap",
+    "install:yarn": "npm install && npm run yarn:install && npm run link",
     "lerna": "lerna",
+    "yarn:install": "lerna exec --concurrency=1 -- yarn install",
+    "link": "lerna exec --concurrency=99 -- linklocal",
     "test": "cd ./packages/gluestick && npm run test-coverage",
     "lint": "lerna run lint"
   },
   "dependencies": {
-    "lerna": "2.0.0-beta.34"
+    "lerna": "2.0.0-beta.34",
+    "linklocal": "2.8.0"
   }
 }
