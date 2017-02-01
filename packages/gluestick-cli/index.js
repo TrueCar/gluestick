@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const path = require('path');
 const commander = require('commander');
 const mkdir = require('mkdirp');
@@ -42,6 +44,34 @@ commander
       ['install', gsPath],
       { stdio: 'inherit' }
     );
+  });
+
+commander
+  .command('watch')
+  .description('applying changes in gluestick folder')
+  .action(() => {
+    let srcPath = require(path.join(process.cwd(), 'package.json')).dependencies.gluestick;
+    srcPath = srcPath.replace('file:', '');
+    srcPath = path.join(process.cwd(), srcPath);
+    const wmlBin = path.join(__dirname, './node_modules/.bin/wml');
+    spawn.sync(
+      wmlBin,
+      ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick'), '-y'],
+      { stdio: 'inherit' }
+    );
+    console.log(1);
+    spawn.sync(
+      'watchman',
+      ['watch', srcPath],
+      { stdio: 'inherit' }
+    );
+    console.log(2);
+    spawn.sync(
+      wmlBin,
+      ['start'],
+      { stdio: 'inherit' }
+    );
+    console.log(3);
   });
 
 commander
