@@ -1,5 +1,5 @@
 exports.NODE_MODULES_DIR = "node_modules";
-exports.GLUESTICK_ADDON_DIR_REGEX = /node_modules\/gluestick-addon-.*\/src/;
+exports.GLUESTICK_ADDON_DIR_REGEX = /node_modules\/gluestick-addon-.*(\/src|index\.js)/;
 
 // We don't use path.join because the filename slashes use the Unix style
 // forward slashes on unix and on windows but path.join will give us the
