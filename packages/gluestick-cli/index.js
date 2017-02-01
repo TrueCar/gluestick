@@ -1,10 +1,12 @@
+#!/usr/bin/env node
+
 const path = require('path');
 const commander = require('commander');
 const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 
 commander.version(
-  require(path.join(__dirname, 'package.json')).version
+  require(path.join(__dirname, 'package.json')).version,
 );
 
 commander
@@ -19,16 +21,16 @@ commander
       ['install', options.dev ? options.dev : 'gluestick'],
       {
         cwd: path.join(process.cwd(), appName),
-        stdio: 'inherit'
-      }
+        stdio: 'inherit',
+      },
     );
     spawn.sync(
       './node_modules/.bin/gluestick',
       commander.rawArgs.slice(2),
       {
         cwd: path.join(process.cwd(), appName),
-        stdio: 'inherit'
-      }
+        stdio: 'inherit',
+      },
     );
   });
 
@@ -40,17 +42,17 @@ commander
     spawn(
       'npm',
       ['install', gsPath],
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
   });
 
 commander
-  .command("*", null, { noHelp: true })
+  .command('*', null, { noHelp: true })
   .action(() => {
     spawn(
       './node_modules/.bin/gluestick',
       commander.rawArgs.slice(2),
-      { stdio: 'inherit' }
+      { stdio: 'inherit' },
     );
   });
 

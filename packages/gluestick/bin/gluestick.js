@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
-require("./compile");
-require("../src/cli");
+require('./compile');
+require('../src/cli');
