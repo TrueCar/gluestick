@@ -18,5 +18,5 @@ dependencies:
     - npm run install:yarn
 test:
   override:
-    - npm run lerna run lint
-    - npm run lerna run test-coverage #run full tests and coverage
+    - npm run lint
+    - npm run test
