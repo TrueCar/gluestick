@@ -3,3 +3,20 @@ machine:
     NODE_ENV: test
   node:
     version: 6.3.0
+  services:
+    - docker
+general:
+  artifacts:
+    - ./coverage
+dependencies:
+  pre:
+    # Installing Yarn
+    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - sudo apt-get update && sudo apt-get install yarn
+  override:
+    - npm install -y
+test:
+  override:
+    - npm run lerna run lint
+    - npm run lerna run test-coverage #run full tests and coverage
