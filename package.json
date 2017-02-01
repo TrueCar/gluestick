@@ -3,7 +3,7 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "lerna": "lerna",
-    "test": "cd ./packages/gluestick && npm test-coverage",
+    "test": "cd ./packages/gluestick && npm run test-coverage",
     "lint": "lerna run lint"
   },
   "dependencies": {
