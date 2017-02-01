@@ -1,7 +1,7 @@
 import { Writable } from 'stream';
 import fs from 'fs';
 import path from 'path';
-import DoctypeStream from '../../../src/lib/server/DoctypeStream';
+import DoctypeStream from '../DoctypeStream';
 
 class WriteStream extends Writable {
   data = [];

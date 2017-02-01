@@ -1,5 +1,5 @@
-const parseConfig = require('../../src/generator/parseConfig');
-const createTemplate = require('../../src/generator/createTemplate');
+const parseConfig = require('../parseConfig');
+const createTemplate = require('../createTemplate');
 
 describe('generator/parseConfig', () => {
   it('should merge args properly', () => {

@@ -1,4 +1,4 @@
-import serveAssets, { DEFAULT_ASSETS_CONFIG } from '../../../src/lib/server/serveAssets';
+import serveAssets, { DEFAULT_ASSETS_CONFIG } from '../serveAssets';
 
 describe('lib/server/serveAssets', () => {
   let mockStaticMiddleware;

@@ -1,4 +1,4 @@
-import isChildPath from '../../src/lib/isChildPath';
+import isChildPath from '../isChildPath';
 
 describe('src/lib/isChildPath', () => {
   it('should return true if `child` is a child of `parent`', () => {

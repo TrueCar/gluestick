@@ -1,4 +1,4 @@
-import streamResponse from '../../../src/lib/server/streamResponse';
+import streamResponse from '../streamResponse';
 
 describe('test/lib/server/streamResponse', () => {
   const mockZlib = {

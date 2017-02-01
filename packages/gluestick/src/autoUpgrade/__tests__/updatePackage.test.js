@@ -1,10 +1,10 @@
-import fixVersionMismatch, { isValidVersion, FIX_VERSION_MISMATCH_OVERRIDES } from '../../src/autoUpgrade/updatePackage';
+import fixVersionMismatch, { isValidVersion, FIX_VERSION_MISMATCH_OVERRIDES } from '../updatePackage';
 import {
   missingProjectPackage,
   invalidProjectPackage,
   validProjectPackage,
   validLargerProjectPackage,
-} from '../fixtures/projectPackages';
+} from '../../../jest/utils/projectPackages';
 
 function mockLoadProjectPackage(fixture) {
   switch (fixture) {
