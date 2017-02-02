@@ -1,9 +1,12 @@
 const logger = require("../lib/cliLogger");
 const generator = require("../generator");
 
-module.exports = exports = (generatorName, entityName, options) => {
+module.exports = (generatorName, entityName, options) => {
   try {
-    const filteredOptions = { functional: options.functional, ...JSON.parse(options.genOptions) };
+    const filteredOptions = {
+      functional: options.functional,
+      ...JSON.parse(options.genOptions ? options.genOptions : "{}"),
+    };
     generator({
       generatorName,
       entityName,
