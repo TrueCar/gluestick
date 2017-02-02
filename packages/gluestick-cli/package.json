@@ -10,7 +10,9 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint ./"
+    "lint": "./node_modules/.bin/eslint ./",
+    "test-coverage": "echo \"No test specified\" && exit 0",
+    "flow": "echo \"No flowconfig specified\" && exit 0"
   },
   "keywords": [
     "react",
@@ -36,6 +38,10 @@
     "commander": "2.9.0",
     "cross-spawn": "5.0.1",
     "eslint": "3.14.1",
+    "eslint-config-airbnb": "14.0.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "3.0.2",
+    "eslint-plugin-react": "6.9.0",
     "mkdirp": "0.5.1"
   },
   "devDependencies": {

@@ -8,10 +8,11 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src test templates",
+    "lint": "eslint src test templates",
     "test": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
+    "flow": "flow",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
     "prepublish": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js",
