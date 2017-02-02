@@ -1,10 +1,8 @@
 # Contributing to GlueStick
 
-GlueStick is one of TrueCar's open source projects that is build to speed up the development process internally in [truecar.com](https://truecar.com) and also help a larger audience reduce the time needed to build apps. It allows the developer to create and deploy enterprise-grade React and Redux application right from your command line.
+GlueStick is an open source project sponsored by TrueCar that uses it to speed up the development process internally in [truecar.com](https://truecar.com) and also help a larger audience reduce the time needed to build apps. It allows the developer to create and deploy enterprise-grade React and Redux application right from your command line.
 
 ### Pull Requests
-
-TrueCar team will be monitoring for pull requests.
 
 **You can submit your pull request on the `develop` branch**.
 
