@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const sha1 = require('sha1');
 
-const updatePackage = require('./updatePackage');
+const updatePackage = require('./updatePackage').default;
 const { getLogger } = require('../lib/server/logger');
 
 const logger: Logger = getLogger();

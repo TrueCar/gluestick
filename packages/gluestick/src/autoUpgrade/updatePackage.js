@@ -36,7 +36,7 @@ type MismatchedModules = {
 }
 
 // Used for testing purposes so we can override methods used in fixVersionMismatch
-export const FIX_VERSION_MISMATCH_OVERRIDES: MismatchedModules = {
+const FIX_VERSION_MISMATCH_OVERRIDES: MismatchedModules = {
   loadProjectPackage,
   loadCLIPackage,
   loadNewProjectPackage,
@@ -68,13 +68,13 @@ export const FIX_VERSION_MISMATCH_OVERRIDES: MismatchedModules = {
  * @return {Promise}
  */
  /* eslint-disable no-shadow */
-export default function fixVersionMismatch({
+function fixVersionMismatch({
   loadProjectPackage,
   loadCLIPackage,
   loadNewProjectPackage,
   promptModulesUpdate,
   rejectOnFailure,
-}: MismatchedModules = FIX_VERSION_MISMATCH_OVERRIDES) {
+}: MismatchedModules = FIX_VERSION_MISMATCH_OVERRIDES): Promise<void> {
   return new Promise((resolve: VoidFunction, reject: VoidFunction) => {
     const projectPackageData: ProjectPackage = loadProjectPackage();
     const {
@@ -250,7 +250,7 @@ function performModulesUpdate(mismatchedModules, done) {
  *
  * @return {Boolean}
  */
-export function isValidVersion(version: string, requiredVersion: string): boolean {
+function isValidVersion(version: string, requiredVersion: string): boolean {
   if (!version) {
     return false;
   }
@@ -267,3 +267,9 @@ export function isValidVersion(version: string, requiredVersion: string): boolea
 
   return result;
 }
+
+module.exports = {
+  FIX_VERSION_MISMATCH_OVERRIDES,
+  isValidVersion,
+  default: fixVersionMismatch,
+};
