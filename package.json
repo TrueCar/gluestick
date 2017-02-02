@@ -6,8 +6,9 @@
     "lerna": "lerna",
     "yarn:install": "lerna exec --concurrency=1 -- yarn install",
     "link": "lerna exec --concurrency=99 -- linklocal",
-    "test": "cd ./packages/gluestick && npm run test-coverage",
-    "lint": "lerna run lint"
+    "test": "lerna exec npm run test-coverage",
+    "lint": "lerna run lint",
+    "flow": "lerna exec npm run flow"
   },
   "dependencies": {
     "lerna": "2.0.0-beta.34",
