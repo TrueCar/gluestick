@@ -13,8 +13,6 @@ export default (state = INITIAL_STATE, action) => {
 `;
 
 const testTemplate = createTemplate`
-/*global describe it*/
-/*global expect*/
 import reducer from "${args => args.path}";
 
 describe("${args => args.path}", () => {
@@ -22,7 +20,7 @@ describe("${args => args.path}", () => {
     const state = void 0;
     expect(
       reducer(state, {})
-    ).to.equal(null);
+    ).toBeNull();
   });
 });
 `;
