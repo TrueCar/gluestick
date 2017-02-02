@@ -1,4 +1,7 @@
-module.exports = (createTemplate) => {
+/* @flow */
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
   // WARNING: The contents of this file _including process.env variables_ will be
   // exposed in the client code.

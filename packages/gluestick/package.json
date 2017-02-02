@@ -15,7 +15,6 @@
     "test-coverage": "jest --coverage",
     "flow": "flow",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
-    "prepublish1": "./docker/generate-dockerfile.js",
     "postpublish": "./docker/create-base-image.js",
     "update-version": "npm version",
     "postupdate-version": "./docker/generate-dockerfile.js"

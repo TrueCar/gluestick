@@ -35,3 +35,8 @@ export type WebpackConfig = {
 export type GSConfig = {
 
 };
+
+export type CreateTemplate = (
+  strings: Array<string>,
+  interpolations: Array<*>
+) => (args: Object) => string;

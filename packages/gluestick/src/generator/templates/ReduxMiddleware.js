@@ -1,4 +1,7 @@
-module.exports = (createTemplate) => {
+/* @flow */
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
     // Gluestick has already included thunk and a custom Promise middleware; any
     // middleware added here will be added after those.

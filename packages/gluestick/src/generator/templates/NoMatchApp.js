@@ -1,6 +1,8 @@
-module.exports = (createTemplate) => {
+/* @flow */
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
-    /* @flow */
     import React, { Component } from "react";
     import Helmet from "react-helmet";
     import { bindActionCreators } from "redux";

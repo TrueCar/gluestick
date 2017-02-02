@@ -1,3 +1,7 @@
+/* @flow */
+
+import type { Logger } from '../types';
+
 const inquirer = require('inquirer');
 const { highlight, filename } = require('../cli/colorScheme');
 const generate = require('../generator');
@@ -8,9 +12,14 @@ const generateTemplate = (generatorName, entityName, logger) => {
     generatorName,
     entityName,
   }, logger);
+  logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+  logger.info('To run your app and start developing');
+  logger.info(`cd ${entityName}`);
+  logger.info('gluestick start');
+  logger.info('Point the browser to http://localhost:8888');
 };
 
-module.exports = ({ logger }) => {
+module.exports = (logger: Logger) => {
   const currentlyInProjectFolder = (folderPath) => {
     const fileName = path.join(folderPath, 'package.json');
     let data = null;
@@ -42,11 +51,3 @@ module.exports = ({ logger }) => {
 
   generateTemplate('new', 'new', logger);
 };
-
-// function _printInstructions(/* projectName */) {
-//   logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
-//   logger.info('To run your app and start developing');
-//   logger.info(`cd ${projectName}`);
-//   logger.info('gluestick start');
-//   logger.info('Point the browser to http://localhost:8888');
-// }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        color: #7F8588;
+        font-family: sans-serif; 
+        padding: 2em; 
+        background: #ECF3F7;
+      }
+      .loader {
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 1.1em solid rgba(127, 133, 136, 0.2);
+        border-right: 1.1em solid rgba(127, 133, 136, 0.2);
+        border-bottom: 1.1em solid rgba(127, 133, 136, 0.2);
+        border-left: 1.1em solid #7F8588;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 1.1s infinite linear;
+        animation: load8 1.1s infinite linear;
+      }
+      .loader,
+      .loader:after {
+        border-radius: 50%;
+        width: 10em;
+        height: 10em;
+      }
+      @-webkit-keyframes load8 {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes load8 {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      var httpRequest;
+  
+      function queryServer() {
+        httpRequest = new XMLHttpRequest();
+        if (!httpRequest) return;
+  
+        httpRequest.onreadystatechange = reload;
+        httpRequest.open("GET", "http://localhost:8880/gluestick-proxy-poll");
+        httpRequest.send();
+      }
+  
+      function reload() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) { 
+            window.location.reload();
+          } 
+          else { 
+            // server is still restarting, poll again
+            setTimeout(queryServer, 250);
+          }
+        }
+      }
+  
+      setTimeout(queryServer, 250);
+    </script>
+  </head>
+  <body>
+    <h1 style="text-align: center">Restarting dev server...</h1>
+    <div class="loader">
+      Loading...
+    </div>
+  </body>
+</html>

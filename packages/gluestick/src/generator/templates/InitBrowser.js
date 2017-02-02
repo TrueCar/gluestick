@@ -1,4 +1,7 @@
-module.exports = (createTemplate) => {
+/* @flow */
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
    // Code in this file will be executed when the app has loaded in the browser
    // but before calling the React render method. This is a good place to do

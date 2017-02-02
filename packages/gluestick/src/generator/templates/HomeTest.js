@@ -1,4 +1,7 @@
-module.exports = (createTemplate) => {
+/* @flow */
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
     import Home from "components/Home";
     import { shallow } from "enzyme";

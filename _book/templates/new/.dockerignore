@@ -1,0 +1,4 @@
+node_modules #required for gluestick dockerizing, DO NOT REMOVE
+
+.git
+.gitignore

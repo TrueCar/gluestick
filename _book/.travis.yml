@@ -1,0 +1,48 @@
+sudo: required
+
+language: node_js
+
+node_js:
+- '6.9'
+
+branches:
+  only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
+    - develop 
+    - /^v[\d]+(\.[\d]+\.[\d]+)?$/
+
+services:
+- docker
+
+before_install:
+- for var in ${!TRAVIS_@}; do echo ${var}=${!var}; done #show travis env vars
+# Repo for Yarn
+- sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+- echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+- sudo apt-get update -qq
+- sudo apt-get install -y -qq yarn=0.16.1-1
+- export PATH="/usr/share/yarn/bin:$PATH"
+
+cache:
+  directories:
+    - $HOME/.yarn-cache
+
+before_deploy:
+#- sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew install docker-engine
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+script:
+- npm run lint
+- npm run test-coverage #run full tests and coverage
+
+deploy:
+  provider: npm
+  email: toddsurfs@icloud.com
+  api_key:
+    secure: d6NkFa4UDdMkJpIN+xkUazJsqERu4RrODQ7/AVzal/KJAWvy0ihXIx1HWOIPCqwYwril+62WwGjqbUAnRAo1FHpip+gUt222A08mOLsEnOW+rbpKZl7A6HErXD1tYxW9tHzPfZ2daSWSo1EDL5c0N0iB3gmnFreBhBE7RDN63nMkvikCGj7UmQUAeDpRKyXuO2AXEUZacPPC68rmXX41WXuXNBSPCdBUF3AxAWRlwBlTnQ8yVntFfD2DL8emqUvdflAbhpZOUmD7003t/klVGhbrfWU49O6kGKOIXMy7Of8+bh+OQKKTXvWqMHX8BhKPMhfXPujfyAhHBNGl1e3ZiNP8zuWA1hEiGwkSK41I6yHA7Hc0ZXDN2nn/kPSp9BcDHvIpwQiooEfi46EW99RRp2Fw766AItDiI8CNu8nX1Hv4J9L+EDpSu/8ISu+fVH6CxHcCDJcRXfJYu0Rzru+GlKjDaPot3NqUer68yIVmsrm0IOBfzcFuJBYuzf3G84/bDTYAkZhZBs1nBJDJtgSxVJxFo49HcWlsWn9yfOJtE4MRno1uY/Gk5Q5HMFcrLqANRZ/xxO/O6hmQzYQEl22dQv/0SnE6eo+di1y3hwk+uzqFVOnJJnILD6tE/JF398AtGnF346vTRxIUpMObzVG7JyEk6RP/6+ZBmKDaJfUACFo=
+  on:
+    tags: true #only deploy tagged commits
+    repo: TrueCar/gluestick #only deploy from official repo
+
+notifications:
+  slack:
+    secure: ovO9bfPdbpdD4BEjRFixhVz6cuCoyo2GcDf2dvHKGbCO6tj3vD4Jl0a4fDGO3cz9wMO9RABvbIWbzwJyGPXYMbBW5haSN2WRkkfqyoOfKU1ljpZBIt/HH8MdXqct0LD2wkvbUuqGj8hYOH+zxMVOKJ3dapyJDMJbCLNsvChOPcR8f9l9EGenEozAVFjfQIOWFRnk+LOkGavimWQY2WQM2HuO1KuS0Xu+yniZ+NSC8Pxj+32LUgJAoiiSHBbwlLwABCVQ9Uvu1zoZxHGeie6mscZ4vezVo+YXY3f0ByWLlntoHkLzLfwj/hLPkaiLiO0L3gpQLOZh8xSY3r8e23mtII5IeH3VLY4MEU3fwQpmw2dkv5deH2UY4ueIeQpMBdG1DoXUUl02ScmkwiSeqGgqlJNL3UUJsaPBmmd6PezC3wTrz9dgL4Gj36uPVLJ9eQo998y5vaEZuFgXp8dxA8A260nKmwrBP9Yq3TObUNORh8TXQzMam6KVL+OmAtKiJNaDJePNB8vBpDvak+niTZjKNXNzwUiTU8cuIWEKl+F4ISWJ+b/9odGr5nyNZAh7V08UDlHkbM6IF0JYD4X+bzzt/Mc0zBAjI2GLpYxRV83xvWOhg6o/ZLN0vmrlosugqji53lUAcsB7dwqTZRRr0dpAgO23QoUDTnf/pn1RgK4y6ak=

@@ -1,3 +1,4 @@
+/* @flow */
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
@@ -17,7 +18,8 @@ const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(createTemp
 const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
-const templateDockerfile = require('../templates/Dockerfile')(createTemplate);
+const tag = require('../../../package.json').version;
+const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
 const templateEntry = require('../templates/Entry')(createTemplate);
 const templateApp = require('../templates/App')(createTemplate);
 const templateAppServer = require('../templates/AppServer')(createTemplate);
