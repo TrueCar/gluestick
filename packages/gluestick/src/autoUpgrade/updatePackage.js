@@ -1,24 +1,42 @@
-/* eslint-disable no-shadow */
-import fs from 'fs';
-import path from 'path';
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import semver from 'semver';
-import sO from 'sorted-object';
+/* @flow */
+import type { Logger, Question } from '../types';
 
-import { getLogger } from '../lib/server/logger';
-import { install as installDeps, cleanSync as cleanDeps } from '../lib/npmDependencies';
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const inquirer = require('inquirer');
+const semver = require('semver');
+const sO = require('sorted-object');
 
-const logger = getLogger();
+const { getLogger } = require('../lib/server/logger');
+const { install: installDeps, cleanSync: cleanDeps } = require('../lib/npmDependencies');
 
-const PROJECT_PACKAGE_LOCATION = path.join(process.cwd(), 'package.json');
+const logger: Logger = getLogger();
+
+const PROJECT_PACKAGE_LOCATION: string = path.join(process.cwd(), 'package.json');
 
 // When we load the project package file, we will cache the result so that we
 // don't have to do file I/O more than once
 let _projectPackageData;
 
+type VoidFunction = () => void;
+
+type ProjectPackage = {
+  dependencies: Object,
+  devDependencies: Object,
+}
+
+type MismatchedModules = {
+  loadProjectPackage: () => ProjectPackage,
+  loadCLIPackage: () => ProjectPackage,
+  loadNewProjectPackage: () => ProjectPackage,
+  // (mismatchedModules: MismatchedModules, done: VoidFunction) => void
+  promptModulesUpdate: Function,
+  rejectOnFailure: boolean,
+}
+
 // Used for testing purposes so we can override methods used in fixVersionMismatch
-export const FIX_VERSION_MISMATCH_OVERRIDES = {
+export const FIX_VERSION_MISMATCH_OVERRIDES: MismatchedModules = {
   loadProjectPackage,
   loadCLIPackage,
   loadNewProjectPackage,
@@ -49,26 +67,27 @@ export const FIX_VERSION_MISMATCH_OVERRIDES = {
  *
  * @return {Promise}
  */
+ /* eslint-disable no-shadow */
 export default function fixVersionMismatch({
   loadProjectPackage,
   loadCLIPackage,
   loadNewProjectPackage,
   promptModulesUpdate,
   rejectOnFailure,
-} = FIX_VERSION_MISMATCH_OVERRIDES) {
-  return new Promise((resolve, reject) => {
-    const projectPackageData = loadProjectPackage();
+}: MismatchedModules = FIX_VERSION_MISMATCH_OVERRIDES) {
+  return new Promise((resolve: VoidFunction, reject: VoidFunction) => {
+    const projectPackageData: ProjectPackage = loadProjectPackage();
     const {
       dependencies: projectDependencies,
       devDependencies: projectDevDependencies,
-    } = projectPackageData;
+    }: ProjectPackage = projectPackageData;
 
-    const { dependencies: cliDependencies } = loadCLIPackage();
+    const { dependencies: cliDependencies }: ProjectPackage = loadCLIPackage();
     const {
       dependencies: newProjectDependencies,
       devDependencies: newProjectDevDependencies,
-    } = loadNewProjectPackage();
-    const mismatchedModules = {};
+    }: ProjectPackage = loadNewProjectPackage();
+    const mismatchedModules: Object = {};
 
     // Compare the new project dependencies, mark any module that is missing in
     // the generated project's dependencies
@@ -107,6 +126,7 @@ export default function fixVersionMismatch({
     }
   });
 }
+ /* eslint-enable no-shadow */
 
 /**
  * This will open up the project's package file and cache the result. If a
@@ -115,7 +135,7 @@ export default function fixVersionMismatch({
  *
  * @return {Object}
  */
-function loadProjectPackage() {
+function loadProjectPackage(): ProjectPackage {
   // Cache the result so we don't have to load the file more than once
   if (!_projectPackageData) {
     _projectPackageData = loadPackage(PROJECT_PACKAGE_LOCATION);
@@ -130,7 +150,7 @@ function loadProjectPackage() {
  *
  * @return {Object}
  */
-function loadCLIPackage() {
+function loadCLIPackage(): ProjectPackage {
   return loadPackage(path.join(__dirname, '../../package.json'));
 }
 
@@ -140,7 +160,7 @@ function loadCLIPackage() {
  *
  * @return {Object}
  */
-function loadNewProjectPackage() {
+function loadNewProjectPackage(): ProjectPackage {
   return loadPackage(path.join(__dirname, '../../templates/new/package.json'));
 }
 
@@ -152,8 +172,8 @@ function loadNewProjectPackage() {
  *
  * @return {Object}
  */
-function loadPackage(location) {
-  const packageString = fs.readFileSync(location, 'utf8');
+function loadPackage(location: string): Object {
+  const packageString: string = fs.readFileSync(location, 'utf8');
   return JSON.parse(packageString);
 }
 
@@ -167,10 +187,13 @@ function loadPackage(location) {
  * @param {Function} done the callback to call when the user says no or the
  * update completes
  */
-function promptModulesUpdate(mismatchedModules, done) {
-  const mismatchedModuleOutput = JSON.stringify(mismatchedModules, null, ' ');
+function promptModulesUpdate(
+  mismatchedModules: MismatchedModules,
+  done: VoidFunction,
+): ?VoidFunction {
+  const mismatchedModuleOutput: string = JSON.stringify(mismatchedModules, null, ' ');
 
-  const question = {
+  const question: Question = {
     type: 'confirm',
     name: 'confirm',
     message: `${chalk.red('The `gluestick` CLI and your project have mismatching versions of the following modules:')}
@@ -227,18 +250,18 @@ function performModulesUpdate(mismatchedModules, done) {
  *
  * @return {Boolean}
  */
-export function isValidVersion(version, requiredVersion) {
+export function isValidVersion(version: string, requiredVersion: string): boolean {
   if (!version) {
     return false;
   }
 
   // Trim off carrot or other things on the version like `^3.0.1` or `>3.0.1`
-  const trimmedVersion = version.replace(/^\D*/, '');
+  const trimmedVersion: string = version.replace(/^\D*/, '');
   if (!semver.valid(trimmedVersion)) {
     return false;
   }
 
-  const result =
+  const result: boolean =
     semver.satisfies(trimmedVersion, requiredVersion)
     || semver.gte(trimmedVersion, requiredVersion);
 
