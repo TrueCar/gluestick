@@ -1,13 +1,13 @@
-require("babel-polyfill");
-require("babel-core/register")({
+require('babel-polyfill');
+require('babel-core/register')({
   only: /gluestick.*/,
   presets: [
-    "react",
-    "es2015",
-    "stage-0"
+    require.resolve('babel-preset-react'),
+    require.resolve('babel-preset-es2015'),
+    require.resolve('babel-preset-stage-0'),
   ],
   plugins: [
-    "transform-decorators-legacy"
-  ]
+    require.resolve('babel-plugin-transform-decorators-legacy'),
+  ],
 });
 

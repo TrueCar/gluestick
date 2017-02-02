@@ -1,13 +1,28 @@
 {
   "name": "gluestick-packages",
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "install:npm": "npm install && lerna bootstrap",
+    "install:yarn": "npm install && npm run yarn:install && npm run link",
     "lerna": "lerna",
-    "test": "cd ./packages/gluestick && npm test",
-    "lint": "cd ./packages/gluestick && npm run lint"
+    "yarn:install": "lerna exec --concurrency=1 -- yarn install",
+    "link": "lerna exec --concurrency=99 -- linklocal",
+    "test": "lerna exec npm run test-coverage",
+    "lint": "lerna run lint",
+    "flow": "lerna exec npm run flow",
+    "docs:clean": "rm -rf _book",
+    "docs:prepare": "gitbook install",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'Update Book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'Update Book' && git push git@github.com:TrueCar/gluestick gh-pages --force",
+    "docs:build": "npm run docs:prepare && gitbook build -g TrueCar/gluestick"
   },
   "dependencies": {
-    "gluestick": "file:packages/gluestick",
-    "lerna": "2.0.0-beta.34"
+    "lerna": "2.0.0-beta.34",
+    "linklocal": "2.8.0",
+    "gitbook": "3.2.2",
+    "gitbook-cli": "2.3.0",
+    "gitbook-plugin-anchorjs": "1.1.1",
+    "gitbook-plugin-edit-link": "2.0.2",
+    "gitbook-plugin-github": "2.0.0",
+    "gitbook-plugin-prism": "2.0.2"
   }
 }

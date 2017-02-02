@@ -43,10 +43,10 @@ module.exports = ({ logger }) => {
   generateTemplate('new', 'new', logger);
 };
 
-function _printInstructions(/* projectName */) {
-  logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
-  logger.info('To run your app and start developing');
-  logger.info(`cd ${projectName}`);
-  logger.info('gluestick start');
-  logger.info('Point the browser to http://localhost:8888');
-}
+// function _printInstructions(/* projectName */) {
+//   logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+//   logger.info('To run your app and start developing');
+//   logger.info(`cd ${projectName}`);
+//   logger.info('gluestick start');
+//   logger.info('Point the browser to http://localhost:8888');
+// }
