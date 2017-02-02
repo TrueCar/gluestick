@@ -3,6 +3,7 @@ const commander = require('commander');
 const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
+const fs = require('fs');
 
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
@@ -23,7 +24,7 @@ commander
     let pathToGluestick = null;
     let gluestickPackage = {};
     try {
-      pathToGluestick = path.join(process.cwd(), appName, options.dev);
+      pathToGluestick = path.join(process.cwd(), appName, options.dev ? options.dev : '/');
       gluestickPackage = require(path.join(pathToGluestick, 'package.json'));
     } catch (error) {
       exitWithError(
@@ -33,6 +34,12 @@ commander
     if (gluestickPackage.name !== 'gluestick') {
       exitWithError(
         `${pathToGluestick} is not a path to GlueStick`,
+      );
+    }
+    const pathToApp = path.join(process.cwd(), appName);
+    if (fs.existsSync(pathToApp)) {
+      exitWithError(
+        `Directory ${pathToApp} already exists`,
       );
     }
     mkdir.sync(path.join(process.cwd(), appName));
