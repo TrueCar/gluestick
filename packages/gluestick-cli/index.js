@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const path = require('path');
 const commander = require('commander');
 const mkdir = require('mkdirp');

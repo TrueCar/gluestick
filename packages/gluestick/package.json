@@ -10,6 +10,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint src test templates",
     "test": "jest",
+    "jest": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
