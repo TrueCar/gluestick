@@ -61,10 +61,6 @@ module.exports = function (options) {
       }
     }));
 
-    if (typeof appServerConfig.expressConfigurator === "function") {
-      appServerConfig.expressConfigurator(app);
-    }
-
     app.listen(server.port, server.host, function (error) {
       if (error) {
         LOGGER.error(error);
@@ -78,3 +74,4 @@ module.exports = function (options) {
     build();
   }
 };
+
