@@ -40,3 +40,9 @@ export type CreateTemplate = (
   strings: Array<string>,
   interpolations: Array<*>
 ) => (args: Object) => string;
+
+
+export type Logger = {
+  [key: LoggerTypes]: Function; // (...args: string[]) => void;
+  level?: string
+};

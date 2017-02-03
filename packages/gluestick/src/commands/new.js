@@ -21,8 +21,8 @@ const generateTemplate = (generatorName, entityName, logger) => {
 
 module.exports = (logger: Logger) => {
   const currentlyInProjectFolder = (folderPath) => {
-    const fileName = path.join(folderPath, 'package.json');
-    let data = null;
+    const fileName: string = path.join(folderPath, 'package.json');
+    let data: ?Object = null;
     try {
       data = require(fileName);
       return !!data.dependencies && !!data.dependencies.gluestick;

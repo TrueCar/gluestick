@@ -1,4 +1,5 @@
 /* @flow */
+
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
