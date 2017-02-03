@@ -1,20 +1,27 @@
 /* @flow */
 
 export type Context = {
- config: {
-   projectConfig?: ProjectConfig;
-   GSConfig?: GSConfig;
-   webpackConfig?: WebpackConfig;
-   plugins: Array<Object>;
- },
- logger: {
-   success: (type: LoggerTypes) => Function; // (...args: string[]) => void;
-   info: (type: LoggerTypes) => Function; // (...args: string[]) => void;
-   warn: (type: LoggerTypes) => Function; // (...args: string[]) => void;
-   debug: (type: LoggerTypes) => Function; // (...args: string[]) => void;
-   error: (type: LoggerTypes) => Function; // (...args: string[]) => void;
- },
+ config: Config,
+ logger: Logger,
 };
+
+export type Config = {
+  projectConfig?: ProjectConfig;
+  GSConfig?: GSConfig;
+  webpackConfig?: WebpackConfig;
+  plugins: Object[];
+};
+
+export type Logger = {
+  [key: LoggerTypes]: Function; // (...args: string[]) => void;
+  level?: string
+};
+
+export type Question = {
+  type: string,
+  name: string,
+  message: string,
+}
 
 export type LoggerTypes = 'success'
   | 'info'

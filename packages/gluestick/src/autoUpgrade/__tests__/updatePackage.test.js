@@ -1,10 +1,15 @@
-import fixVersionMismatch, { isValidVersion, FIX_VERSION_MISMATCH_OVERRIDES } from '../updatePackage';
-import {
+const {
+  default: fixVersionMismatch,
+  isValidVersion,
+  FIX_VERSION_MISMATCH_OVERRIDES,
+} = require('../updatePackage');
+
+const {
   missingProjectPackage,
   invalidProjectPackage,
   validProjectPackage,
   validLargerProjectPackage,
-} from '../../../jest/utils/projectPackages';
+} = require('../../../jest/utils/projectPackages');
 
 function mockLoadProjectPackage(fixture) {
   switch (fixture) {
@@ -21,7 +26,7 @@ function mockLoadProjectPackage(fixture) {
 }
 
 // @TODO need refactor https://github.com/TrueCar/gluestick/issues/490
-describe.skip('autoUpgrade/updatePackage', () => {
+describe('autoUpgrade/updatePackage', () => {
   describe('fixVersionMismatch', () => {
     const prompt = jest.fn();
     const overrides = {
@@ -76,7 +81,7 @@ describe.skip('autoUpgrade/updatePackage', () => {
       expect(prompt).not.toHaveBeenCalled();
     });
 
-    it('should not prompt when module version is larger', async () => {
+    it('should prompt when module version is larger', async () => {
       try {
         await fixVersionMismatch({
           ...overrides,
@@ -86,7 +91,7 @@ describe.skip('autoUpgrade/updatePackage', () => {
         // NOOP
       }
 
-      expect(prompt).not.toHaveBeenCalled();
+      expect(prompt).toHaveBeenCalled();
     });
   });
 
@@ -124,4 +129,3 @@ describe.skip('autoUpgrade/updatePackage', () => {
     });
   });
 });
-
