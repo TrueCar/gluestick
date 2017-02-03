@@ -110,7 +110,11 @@
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.15.0",
     "webpack-isomorphic-tools": "2.5.8",
-    "webpack-merge": "2.4.0"
+    "webpack-merge": "2.4.0",
+    "universal-webpack": "0.3.1",
+    "postcss-calc": "^5.3.1",
+    "postcss-custom-properties": "^5.0.1",
+    "postcss-loader": "^1.2.1"
   },
   "peerDependencies": {},
   "devDependencies": {
