@@ -9,13 +9,15 @@ module.exports = (appName, options, exitWithError) => {
   let gluestickPackage = {};
   try {
     pathToGluestick = path.join(process.cwd(), appName, options.dev ? options.dev : '/');
-    gluestickPackage = require(path.join(pathToGluestick, 'package.json'));
+    if (options.dev) {
+      gluestickPackage = require(path.join(pathToGluestick, 'package.json'));
+    }
   } catch (error) {
     exitWithError(
       `Development GlueStick path ${pathToGluestick} is not valid`,
     );
   }
-  if (gluestickPackage.name !== 'gluestick') {
+  if (options.dev && gluestickPackage.name !== 'gluestick') {
     exitWithError(
       `${pathToGluestick} is not a path to GlueStick`,
     );
@@ -29,7 +31,7 @@ module.exports = (appName, options, exitWithError) => {
   mkdir.sync(path.join(process.cwd(), appName));
   const packageDeps = {
     dependencies: {
-      gluestick: options.dev ? `file:${options.dev}` : '^0.0.0',
+      gluestick: options.dev ? `file:${options.dev}` : '^1.0.0',
     },
   };
   fs.writeFileSync(path.join(
