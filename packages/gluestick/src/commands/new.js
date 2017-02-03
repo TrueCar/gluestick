@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Logger } from '../types';
+import type { Context } from '../types';
 
 const inquirer = require('inquirer');
 const { highlight, filename } = require('../cli/colorScheme');
@@ -19,18 +19,19 @@ const generateTemplate = (generatorName, entityName, logger) => {
   logger.info('Point the browser to http://localhost:8888');
 };
 
-module.exports = (logger: Logger) => {
-  const currentlyInProjectFolder = (folderPath) => {
-    const fileName: string = path.join(folderPath, 'package.json');
-    let data: ?Object = null;
-    try {
-      data = require(fileName);
-      return !!data.dependencies && !!data.dependencies.gluestick;
-    } catch (e) {
-      return false;
-    }
-  };
+const currentlyInProjectFolder = (folderPath) => {
+  const fileName: string = path.join(folderPath, 'package.json');
+  let data: ?Object = null;
+  try {
+    data = require(fileName);
+    return !!data.dependencies && !!data.dependencies.gluestick;
+  } catch (e) {
+    return false;
+  }
+};
 
+module.exports = (context: Context) => {
+  const { logger } = context;
   console.log(`${filename(process.cwd())}`);
     // Run from inside an existing project, install in current directory if approved
   if (currentlyInProjectFolder(process.cwd())) {
