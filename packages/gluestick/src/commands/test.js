@@ -8,7 +8,7 @@ const configTools = require('../config/webpack-isomorphic-tools-config');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
-const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'test')}/jestEnvironmentNodeDebug.js`;
+const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
 
 function getJestDefaultConfig() {
   const alias = configTools.alias;

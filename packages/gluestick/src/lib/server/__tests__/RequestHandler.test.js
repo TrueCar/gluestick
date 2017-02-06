@@ -5,8 +5,8 @@ import {
     ROUTE_NAME_404_NOT_FOUND,
 } from 'gluestick-shared';
 
-import * as RequestHandler from '../../../src/lib/server/RequestHandler';
-import { MISSING_404_TEXT } from '../../../src/lib/server/helpText';
+import * as RequestHandler from '../RequestHandler';
+import { MISSING_404_TEXT } from '../helpText';
 
 describe('lib/server/RequestHandler', () => {
   describe('getCacheKey', () => {

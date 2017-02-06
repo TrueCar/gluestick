@@ -1,4 +1,4 @@
-import getAssetPathForFile from '../../src/lib/getAssetPathForFile.js';
+import getAssetPathForFile from '../getAssetPathForFile.js';
 
 describe('lib/getAssetPathForFile', () => {
   const WEBPACK_ASSETS = {

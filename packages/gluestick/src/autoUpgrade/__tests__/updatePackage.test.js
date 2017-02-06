@@ -2,14 +2,14 @@ const {
   default: fixVersionMismatch,
   isValidVersion,
   FIX_VERSION_MISMATCH_OVERRIDES,
-} = require('../../src/autoUpgrade/updatePackage');
+} = require('../updatePackage');
 
 const {
   missingProjectPackage,
   invalidProjectPackage,
   validProjectPackage,
   validLargerProjectPackage,
-} = require('../fixtures/projectPackages');
+} = require('../../../jest/utils/projectPackages');
 
 function mockLoadProjectPackage(fixture) {
   switch (fixture) {

@@ -2,7 +2,7 @@ import {
   parseLogOptions,
   pinoBaseConfig,
   getLogConfig,
-} from '../../../src/lib/server/logger';
+} from '../logger';
 
 describe('lib/server/logger', () => {
   const defaultConfig = { ...pinoBaseConfig };

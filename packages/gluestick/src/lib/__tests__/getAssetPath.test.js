@@ -1,4 +1,4 @@
-import getAssetPath from '../../src/lib/getAssetPath';
+import getAssetPath from '../getAssetPath';
 
 describe('lib/getAssetPath', () => {
   const MOCK_CONFIG_NO_TRAILING_SLASH = {
