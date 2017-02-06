@@ -265,12 +265,12 @@ async function startAll(options) {
   // true.  We only want to start the client in development mode or if
   // skipBuild is not specified
   if (!(isProduction && options.skipBuild)) {
-    spawnProcess("client", commander.rawArgs.slice(3));
+    spawnProcess("client", commander.rawArgs.slice(3).filter(arg => !arg.includes("server")));
   }
 
   // Remove -E, --entrypoints argument and it's value from server arguments
-  let valueIndex = -1;
   const args = commander.rawArgs.slice(3);
+  let valueIndex = args.length;
   const srvArgs = args.filter((arg, index) => {
     if (arg === "-E" || arg === "--entrypoints") {
       valueIndex = index;
