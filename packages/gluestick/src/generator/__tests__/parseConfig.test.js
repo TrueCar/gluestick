@@ -185,7 +185,7 @@ describe('generator/parseConfig', () => {
     }).toThrowError('Entry in generator TestGenerator is not valid');
   });
 
-  it('should parse config with additional direcotry in name filed', () => {
+  it('should parse config with additional directory in name filed', () => {
     const config = parseConfig({
       args: {
         name: 'TestName',
@@ -209,5 +209,27 @@ describe('generator/parseConfig', () => {
       },
     });
   });
-});
 
+  it('should not parse filename begins from "."', () => {
+    const config = parseConfig({
+      args: {
+        name: 'TestName',
+      },
+      entry: {
+        path: 'path/to/directory',
+        filename: '.Test',
+        template: createTemplate`${args => args.name}`,
+      },
+    }, {});
+    expect(config).toEqual({
+      args: {
+        name: 'TestName',
+      },
+      entry: {
+        path: 'path/to/directory',
+        filename: '.Test',
+        template: 'TestName',
+      },
+    });
+  });
+});
