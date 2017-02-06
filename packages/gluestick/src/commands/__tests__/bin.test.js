@@ -1,13 +1,13 @@
 jest.mock('cross-spawn');
 
 const path = require('path');
-const bin = require('../../src/commands/bin');
+const bin = require('../bin');
 const spawnMock = require('cross-spawn');
 
 const spawnOptions = { stdio: 'inherit' };
 
 const getDependencyPath = name =>
-  path.join(__dirname, '..', '..', 'node_modules', '.bin', name);
+  path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', name);
 
 describe('cli: gluestick bin', () => {
   it('runs the dependency without any options', () => {

@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { mkdir } from 'shelljs';
 
-import updateWebpackAssetPath from '../../src/lib/updateWebpackAssetPath';
+import updateWebpackAssetPath from '../updateWebpackAssetPath';
 
 const ASSETS_STRING = JSON.stringify({
   assets: {

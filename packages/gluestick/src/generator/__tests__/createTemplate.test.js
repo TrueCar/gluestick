@@ -1,4 +1,4 @@
-const createTemplate = require('../../src/generator/createTemplate');
+const createTemplate = require('../createTemplate');
 
 describe('generator/createTemplate tag function', () => {
   it('should render string', () => {

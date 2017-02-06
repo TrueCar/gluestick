@@ -4,7 +4,7 @@ const configTools = require('../config/webpack-isomorphic-tools-config');
 
 const NODE_MODULES_PATH = path.join(__dirname, '..', '..', 'node_modules');
 const JEST_PATH = path.join(NODE_MODULES_PATH, '.bin', 'jest');
-const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'test')}/jestEnvironmentNodeDebug.js`;
+const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
 
 function getJestDefaultConfig() {
   const alias = configTools.alias;

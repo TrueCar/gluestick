@@ -11,7 +11,7 @@ jest.setMock('mkdirp', {
 });
 
 const path = require('path');
-const writeTemplate = require('../../src/generator/writeTemplate.js');
+const writeTemplate = require('../writeTemplate.js');
 
 const entryFixture = {
   path: 'example',
