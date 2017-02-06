@@ -13,8 +13,9 @@ const tag = (
 ): TemplateCreator => {
   /**
    * Creates template populated with given arguments.
+   *
    * @param {object} args Arguments to pass to template
-   * @returns {string}
+   * @returns {string} finalString
    */
 
   return (args: Object): string => {
@@ -54,9 +55,9 @@ const tag = (
 /**
  * Creates factory function that returns string from given template.
  *
- * @param {Array<any>} strings Strings from template
+ * @param {Array<string>} strings Strings from template
  * @param {Array<any>} interpolations Interpolations from template
- * @returns {TemplateCreator} returns string
+ * @returns {Function} TemplateCreator returns string
  */
 
 module.exports = exports = (...params: Array<any>): TemplateCreator | TemplateCreatorFactory => {
