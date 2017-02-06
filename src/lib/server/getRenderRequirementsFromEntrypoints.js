@@ -56,7 +56,10 @@ export default function getRenderRequirementsFromEntrypoints (req, res, config={
   logger.debug("Looping through sorted entry points");
   for (const path of sortedEntries) {
     if (isChildPath(path, urlPath)) {
-      const { routes, index, fileName, filePath } = entryPoints[path];
+      let entryPoint = entryPoints.entries ?
+        entryPoints.entries[path] :
+        entryPoints[path];
+      const { routes, index, fileName, filePath } = entryPoint;
       logger.debug("Found entrypoint and performing requires for", index, filePath, routes);
       return {
         Index: customRequire(resolvePath(index + ".js", filePath)).default,
