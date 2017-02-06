@@ -301,7 +301,7 @@ describe("lib/server/RequestHandler", () => {
 
   describe("prepareOutput", () => {
     let req, renderRequirements, renderProps, config, envVariables, staticBuild, getHead,
-        Entry;
+        Entry, webpackIsomorphicTools;
 
     class Index extends React.Component {
       render () {
@@ -354,7 +354,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, staticBuild, getHead, Entry);
+            renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
         it("should return a responseString", () => {
           expect(result.responseString).toBeDefined();
@@ -374,7 +374,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, staticBuild, getHead, Entry);
+            renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should return a responseString", () => {
@@ -419,7 +419,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should pass headContent to getHead", () => {
@@ -431,7 +431,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should pass headContent to getHead", async () => {
@@ -440,24 +440,24 @@ describe("lib/server/RequestHandler", () => {
       });
     });
 
-    context("with the static build option", () => {
+    describe("with the static build option", () => {
       let result;
       beforeEach(async () => {
         staticBuild = true;
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-          renderProps, config, envVariables, staticBuild, getHead, Entry);
+          renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
       });
 
       it("should pass blank html to body", () => {
-        expect(result.rootElement.props.body.props.html).to.equal("");
+        expect(result.rootElement.props.body.props.html).toEqual("");
       });
 
       it("should pass isEmail false to body", () => {
-        expect(result.rootElement.props.body.props.isEmail).to.equal.false;
+        expect(result.rootElement.props.body.props.isEmail).toBeUndefined();
       });
 
       it("should pass empty initialState to body", () => {
-        expect(result.rootElement.props.body.props.initialState).to.be.empty;
+        expect(result.rootElement.props.body.props.initialState).toEqual({});
       });
     });
   });
