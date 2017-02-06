@@ -10,7 +10,7 @@ const configTools = require('../config/webpack-isomorphic-tools-config');
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
 const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
 
-function getJestDefaultConfig() {
+const getJestDefaultConfig = () => {
   const alias = configTools.alias;
   const moduleNameMapper = {};
 
@@ -28,9 +28,9 @@ function getJestDefaultConfig() {
   const argv = [];
   argv.push('--config', JSON.stringify(config));
   return argv;
-}
+};
 
-function getDebugDefaultConfig() {
+const getDebugDefaultConfig = () => {
   const argv = [];
   argv.push('--inspect');
   argv.push('--debug-brk');
@@ -41,9 +41,9 @@ function getDebugDefaultConfig() {
   argv.push('-i');
   argv.push('--watch');
   return argv;
-}
+};
 
-function createArgs(defaultArgs, options) {
+const createArgs = (defaultArgs, options) => {
   const argv = [].concat(defaultArgs);
   const { coverage, watch, pattern } = options;
 
@@ -58,7 +58,7 @@ function createArgs(defaultArgs, options) {
   }
 
   return argv;
-}
+};
 
 module.exports = (context: Context, options: { [key: string]: string }) => {
   const spawnOptions = {
