@@ -8,8 +8,7 @@ node_js:
 branches:
   only: #limit push building to develop branch and version tags to avoid double building on PRs and version tags
     - develop 
-    - v1
-    - /^v[\d]+\.[\d]+\.[\d]+$/
+    - /^v[\d]+(\.[\d]+\.[\d]+)?$/
 
 services:
 - docker
@@ -43,7 +42,6 @@ deploy:
   on:
     tags: true #only deploy tagged commits
     repo: TrueCar/gluestick #only deploy from official repo
-  skip_cleanup: true
 
 notifications:
   slack:

@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const merge = require("webpack-merge");
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
 const getAssetPath = require("../lib/getAssetPath").default;
 
@@ -9,9 +10,8 @@ const detectEnvironmentVariables = require("../lib/detectEnvironmentVariables");
 const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
 const {
   additionalLoaders,
-  additionalPreLoaders,
   additionalExternals,
-  additionalWebpackNodeConfig,
+  additionalWebpackConfig,
   vendor,
   plugins
 } = getWebpackAdditions();
@@ -64,22 +64,24 @@ export function getEnvironmentPlugins(isProduction) {
   return environmentPlugins;
 }
 
-export default function (appRoot, appConfigFilePath, isProduction) {
+export default function (appRoot, appConfigFilePath, isProduction, options) {
   const OUTPUT_FILE = `app${isProduction ? "-[chunkhash]" : ""}.bundle.js`;
   const devtool = process.env.DEVTOOL || "inline-source-map";
-  return {
+  const entry = buildWebpackEntries(isProduction, options);
+  if (vendor) {
+    entry.vendor = vendor;
+  }
+
+  const baseWebpackConfig = {
     context: appRoot,
     devtool: isProduction ? "source-map" : devtool,
-    entry: {
-      ...buildWebpackEntries(isProduction),
-      vendor: vendor
-    },
+    entry,
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           loader: "babel-loader",
-          query: {
+          options: {
             plugins: [
               "babel-plugin-gluestick"
             ],
@@ -93,14 +95,10 @@ export default function (appRoot, appConfigFilePath, isProduction) {
             path.join(appRoot, "src/config/application.js"),
           ]
         }
-      ].concat(webpackSharedConfig.loaders, additionalLoaders),
-      preLoaders: [
-      // only place client specific preLoaders here
-      ].concat(webpackSharedConfig.preLoaders, additionalPreLoaders),
+      ].concat(webpackSharedConfig.rules, additionalLoaders),
     },
     node: {
       fs: "empty",
-      ...additionalWebpackNodeConfig
     },
     output: {
       path: path.join(appRoot, "build"),
@@ -109,9 +107,7 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       publicPath: ASSET_PATH,
     },
     plugins: [
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.NoErrorsPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         "process.env": getExposedEnvironmentVariables(appConfigFilePath)
       }),
@@ -119,7 +115,12 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       // Make it so *.server.js files return null in client
       new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, "./serverFileMock.js")),
 
-      new webpack.optimize.CommonsChunkPlugin("vendor", `vendor${isProduction ? "-[hash]" : ""}.bundle.js`),
+      new webpack.optimize.CommonsChunkPlugin(
+        {
+          name: "vendor",
+          filename: `vendor${isProduction ? "-[hash]" : ""}.bundle.js`,
+        }
+      )
     ].concat(getEnvironmentPlugins(isProduction), webpackSharedConfig.plugins, plugins),
     resolve: {
       ...webpackSharedConfig.resolve
@@ -129,4 +130,5 @@ export default function (appRoot, appConfigFilePath, isProduction) {
     }
   };
 
+  return merge(baseWebpackConfig, additionalWebpackConfig);
 }

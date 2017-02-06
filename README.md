@@ -90,9 +90,8 @@ gluestick generate reducer todos
 ```
 
 ## Tests
-GlueStick sets up a testing environment using Karma, Mocha, Chai and Sinon and enzyme.
-React's TestUtils are also available globally in your test files. You simply
-need to create files in the `test` folder with the extension .test.js and they
+GlueStick sets up a testing environment using [Jest](https://facebook.github.io/jest/) and [Enzyme](https://github.com/airbnb/enzyme).
+You simply need to create files in the `test` folder with the extension .test.js and they
 will be executed through the test runner.
 
 ## Styles
@@ -158,3 +157,13 @@ Finally, you need to update your application config file
 ### Port Overriding
 If you need to override the port in production, just set the environment variable `PORT` to whatever you need it to be.
 
+## Contribution to GlueStick
+### Debugging GlueStick test
+Run the following command and specify path to test you want to debug:
+```
+npm run debug <path-to-test>
+```
+Example:
+```
+npm run debug ./test/lib/server/addProxies.test.js
+```
