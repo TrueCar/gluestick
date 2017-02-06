@@ -1,9 +1,8 @@
 const path = require('path');
 const commander = require('commander');
-const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
-const fs = require('fs');
+const newCmd = require('./new');
 
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
@@ -21,12 +20,14 @@ commander
   .option('-d, --dev <path>', 'relative path to development version of gluestick')
   .option('-y, --yarn', 'use yarn instead of npm')
   .action((appName, options) => {
+    newCmd(appName, options, exitWithError);
     let pathToGluestick = null;
     let gluestickPackage = {};
     try {
       pathToGluestick = path.join(process.cwd(), appName, options.dev ? options.dev : '/');
       gluestickPackage = require(path.join(pathToGluestick, 'package.json'));
     } catch (error) {
+      console.log(error);
       exitWithError(
         `Development GlueStick path ${pathToGluestick} is not valid`,
       );
@@ -65,6 +66,7 @@ commander
         stdio: 'inherit',
       },
     );
+>>>>>>> Stashed changes
   });
 
 commander

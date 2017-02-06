@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./",
+    "test": "echo \"No test specified\" && exit 0",
     "test-coverage": "echo \"No test specified\" && exit 0",
     "flow": "echo \"No flowconfig specified\" && exit 0"
   },

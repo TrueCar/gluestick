@@ -138,11 +138,14 @@
     "temp": "0.8.3"
   },
   "jest": {
+    "notify": true,
+    "testRegex": ".*/__tests__/.*$",
     "testPathDirs": [
-      "test"
+      "src",
+      "templates/new/src/config"
     ],
     "setupFiles": [
-      "./test/setup.js"
+      "./jest/setup.js"
     ]
   }
 }

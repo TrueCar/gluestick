@@ -1,4 +1,4 @@
-import addProxies from '../../../src/lib/server/addProxies';
+import addProxies from '../addProxies';
 
 describe('lib/server/addProxies', () => {
   let mockApp;

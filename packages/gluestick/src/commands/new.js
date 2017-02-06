@@ -14,9 +14,9 @@ const generateTemplate = (generatorName, entityName, logger) => {
   }, logger);
   logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
   logger.info('To run your app and start developing');
-  logger.info(`cd ${entityName}`);
-  logger.info('gluestick start');
-  logger.info('Point the browser to http://localhost:8888');
+  logger.info(`    cd ${entityName}`);
+  logger.info('    gluestick start');
+  logger.info('    Point the browser to http://localhost:8888');
 };
 
 const currentlyInProjectFolder = (folderPath) => {
@@ -30,10 +30,8 @@ const currentlyInProjectFolder = (folderPath) => {
   }
 };
 
-module.exports = (context: Context) => {
+module.exports = (context: Context, appName: string, ...opts: Array<*>) => {
   const { logger } = context;
-  console.log(`${filename(process.cwd())}`);
-    // Run from inside an existing project, install in current directory if approved
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(
       `You are about to initialize a new gluestick project at ${filename(process.cwd())}`,
@@ -45,10 +43,9 @@ module.exports = (context: Context) => {
     };
     inquirer.prompt([question]).then((answers) => {
       if (!answers.confirm) { return; }
-      generateTemplate('new', 'new', logger);
+      generateTemplate('new', appName, logger);
     });
     return;
   }
-
-  generateTemplate('new', 'new', logger);
+  generateTemplate('new', appName, logger);
 };

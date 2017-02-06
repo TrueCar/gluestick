@@ -80,7 +80,7 @@ module.exports = exports = () => ({
        * If extension is ommited, `.js` extension is assumed.
        * Type: string
        */
-      filename: 'package1.json',
+      filename: 'package.json',
       /**
        * Template returned by createTemplate function.
        */
