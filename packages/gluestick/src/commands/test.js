@@ -1,12 +1,16 @@
+/* @flow */
+
+import type { Context } from '../types.js';
+
 const spawn = require('cross-spawn').spawn;
 const path = require('path');
 const configTools = require('../config/webpack-isomorphic-tools-config');
 
-const NODE_MODULES_PATH = path.join(__dirname, '..', '..', 'node_modules');
-const JEST_PATH = path.join(NODE_MODULES_PATH, '.bin', 'jest');
+// This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
+const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
 const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
 
-function getJestDefaultConfig() {
+const getJestDefaultConfig = () => {
   const alias = configTools.alias;
   const moduleNameMapper = {};
 
@@ -23,23 +27,23 @@ function getJestDefaultConfig() {
 
   const argv = [];
   argv.push('--config', JSON.stringify(config));
-  argv.push('-i');
   return argv;
-}
+};
 
-function getDebugDefaultConfig() {
-  const nodeArgs = [];
-  nodeArgs.push('--inspect');
-  nodeArgs.push('--debug-brk');
-  nodeArgs.push(JEST_PATH);
-  nodeArgs.push('--env');
-  nodeArgs.push(JEST_DEBUG_CONFIG_PATH);
-  nodeArgs.push(...getJestDefaultConfig());
-  nodeArgs.push('--watch');
-  return nodeArgs;
-}
+const getDebugDefaultConfig = () => {
+  const argv = [];
+  argv.push('--inspect');
+  argv.push('--debug-brk');
+  argv.push(JEST_PATH);
+  argv.push('--env');
+  argv.push(JEST_DEBUG_CONFIG_PATH);
+  argv.push(...getJestDefaultConfig());
+  argv.push('-i');
+  argv.push('--watch');
+  return argv;
+};
 
-function createArgs(defaultArgs, options) {
+const createArgs = (defaultArgs, options) => {
   const argv = [].concat(defaultArgs);
   const { coverage, watch, pattern } = options;
 
@@ -54,9 +58,9 @@ function createArgs(defaultArgs, options) {
   }
 
   return argv;
-}
+};
 
-module.exports = (config, logger, options) => {
+module.exports = (context: Context, options: { [key: string]: string }) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
@@ -65,7 +69,11 @@ module.exports = (config, logger, options) => {
     const argvDebug = getDebugDefaultConfig();
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
+    const jest = require('jest');
     const argv = createArgs(getJestDefaultConfig(), options);
-    spawn.sync(JEST_PATH, argv, spawnOptions);
+    // Since we require Jest programmatically, we need to make sure
+    // to set NODE_ENV='test' when running it
+    process.env.NODE_ENV = 'test';
+    jest.run(argv);
   }
 };
