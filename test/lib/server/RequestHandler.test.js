@@ -338,7 +338,7 @@ describe("lib/server/RequestHandler", () => {
       };
 
       config = {};
-      envVariables = {bestFood: "burritos"};
+      envVariables = Array.from({bestFood: "burritos"});
       getHead = jest.fn().mockImplementation(() => <div />);
       Entry = class extends React.Component {
         render () {
@@ -457,7 +457,7 @@ describe("lib/server/RequestHandler", () => {
       });
 
       it("should pass isEmail false to body", () => {
-        expect(result.rootElement.props.body.props.isEmail).toBeUndefined();
+        expect(result.rootElement.props.body.props.isEmail).toEqual(false);
       });
 
       it("should pass empty initialState to body", () => {

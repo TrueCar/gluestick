@@ -167,6 +167,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const renderMethod = config.server && config.server.renderMethod;
   if (staticBuild) {
     bodyContent = "";
+    isEmail = false;
   }
   else if (renderMethod) {
     try {
@@ -185,7 +186,7 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const body = (
     <Body
       html={bodyContent}
-      initialState={currentState}
+      initialState={currentState || {}}
       isEmail={isEmail}
       envVariables={envVariables}
     />
