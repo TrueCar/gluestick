@@ -330,7 +330,11 @@ describe("lib/server/RequestHandler", () => {
       };
 
       renderProps = {
-        routes
+        routes,
+        router: {},
+        location: {},
+        params: {},
+        components: []
       };
 
       config = {};
