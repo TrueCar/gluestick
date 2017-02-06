@@ -3,7 +3,7 @@ import temp from 'temp';
 import { join } from 'path';
 import rimraf from 'rimraf';
 
-import loadServerConfig from '../../../src/lib/server/loadServerConfig';
+import loadServerConfig from '../loadServerConfig';
 
 describe('lib/server/loadServerConfig', () => {
   let originalCwd;

@@ -1,4 +1,4 @@
-import getHeaders from '../../../src/lib/server/getHeaders';
+import getHeaders from '../getHeaders';
 
 describe('lib/server/getHeaders', () => {
   it('returns null if no headers provided', () => {
