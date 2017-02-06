@@ -1,5 +1,4 @@
 import isChildPath from "../../src/lib/isChildPath";
-import { expect } from "chai";
 
 describe("src/lib/isChildPath", () => {
   it("should return true if `child` is a child of `parent`", () => {
@@ -12,7 +11,7 @@ describe("src/lib/isChildPath", () => {
       ["/this/one/is/really/long", "/this/one/is/really/long/too"]
     ];
     shouldBeTrue.forEach((pair) => {
-      expect(isChildPath(pair[0], pair[1])).to.equal(true);
+      expect(isChildPath(pair[0], pair[1])).toEqual(true);
     });
   });
 
@@ -25,7 +24,7 @@ describe("src/lib/isChildPath", () => {
       ["/this/shouldnotmatch", "/this/shouldnot"]
     ];
     shouldBeFalse.forEach((pair) => {
-      expect(isChildPath(pair[0], pair[1])).to.equal(false);
+      expect(isChildPath(pair[0], pair[1])).toEqual(false);
     });
   });
 });

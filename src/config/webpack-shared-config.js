@@ -4,33 +4,28 @@ import process from "process";
 import { GLUESTICK_ADDON_DIR_REGEX } from "./vars";
 
 const WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
-const getWebpackAdditions = require("../lib/getWebpackAdditions").default;
-const { additionalAliases } = getWebpackAdditions();
+const webpackIsomorphicToolsConfig = require("../config/webpack-isomorphic-tools-config");
 
-const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require("../config/webpack-isomorphic-tools-config"))
-.development(process.env.NODE_ENV !== "production");
+const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(webpackIsomorphicToolsConfig)
+  .development(process.env.NODE_ENV !== "production");
 
 module.exports = {
   resolve: {
-    extensions: ["", ".js", ".css", ".json"],
+    extensions: [".js", ".css", ".json"],
     alias: {
-      "assets": path.join(process.cwd(), "assets"),
-      "actions": path.join(process.cwd(), "src", "actions"),
-      "components": path.join(process.cwd(), "src", "components"),
-      "containers": path.join(process.cwd(), "src", "containers"),
-      "reducers": path.join(process.cwd(), "src", "reducers"),
-      ...additionalAliases
+      // default alias are defined in src/config/webpack-isomorphic-tools-config.js
+      ...webpackIsomorphicToolsConfig.alias
     }
   },
-  loaders: [
+  rules: [
     {
       test: /\.js$/,
       loader: "babel-loader",
-      query: {
+      options: {
         plugins: [
           "transform-decorators-legacy"
         ],
@@ -51,7 +46,7 @@ module.exports = {
       test: webpackIsomorphicToolsPlugin.regular_expression("images"),
       loaders: [
         "file-loader?name=[name]-[hash].[ext]",
-        "image-webpack"
+        "image-webpack-loader"
       ]
     },
     {
@@ -60,16 +55,21 @@ module.exports = {
     },
     {
       test: webpackIsomorphicToolsPlugin.regular_expression("styles"),
-      loader: isProduction ? ExtractTextPlugin.extract("style", "css!sass") : "style!css!sass"
+      loader: isProduction ? ExtractTextPlugin.extract({
+        fallbackLoader: "style-loader",
+        loader: [
+          "css-loader",
+          "sass-loader?sourceMap",
+        ],
+      }) : [
+        "style-loader",
+        "css-loader",
+        "sass-loader"
+      ],
     },
-    {
-      test: webpackIsomorphicToolsPlugin.regular_expression("json"),
-      loader: "json"
-    }
   ],
   plugins: [
     new ExtractTextPlugin("[name]-[chunkhash].css"),
     new OptimizeCSSAssetsPlugin()
   ],
-  preLoaders: []
 };

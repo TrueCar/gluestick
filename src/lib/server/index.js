@@ -6,6 +6,9 @@ import gluestickExpressMiddleware from "./express-middleware";
 import addProxies from "./addProxies";
 import path from "path";
 import serveAssets from "./serveAssets";
+import loadServerConfig from "./loadServerConfig";
+
+const appServerConfig = loadServerConfig();
 
 // Imported using `require` so that we can use `process.cwd()`
 const config = require(path.join(process.cwd(), "src", "config", "application")).default;
@@ -17,6 +20,10 @@ const port = process.env.PORT || (isProduction? 8888 : 8880);
 const app = express();
 app.use(getLoggerMiddleware());
 app.use(compression());
+
+if (typeof appServerConfig.expressConfigurator === "function") {
+  appServerConfig.expressConfigurator(app);
+}
 
 // Hook up all of the API proxies
 addProxies(app, config.proxies);

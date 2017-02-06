@@ -27,8 +27,14 @@ module.exports = function(staticBuild=false) {
 
   compiler.run((error, stats) => {
     const statsJson = stats.toJson();
+    const dir = "build";
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+
     fs.writeFileSync("webpack-bundle-stats.json", JSON.stringify(statsJson));
-    fs.writeFileSync("build/asset-path.json", JSON.stringify({assetPath: getAssetPath()}));
+    fs.writeFileSync(`${dir}/asset-path.json`, JSON.stringify({assetPath: getAssetPath()}));
 
     if (staticBuild) {
       generateStaticHTMLFile();

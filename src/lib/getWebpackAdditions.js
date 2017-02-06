@@ -54,11 +54,12 @@ export default function (isomorphic=false) {
     additionalAliases: {},
     additionalExternals: {},
     additionalLoaders: [],
-    additionalPreLoaders: [],
-    additionalWebpackNodeConfig: {},
-    vendor: [],
+    additionalWebpackConfig: {},
+    vendor: null,
     entryPoints: {},
-    plugins: []
+    mapEntryToGroup: {},
+    plugins: [],
+
   };
 
   // Babel will try to resolve require statements ahead of time which will cause an error
@@ -71,21 +72,21 @@ export default function (isomorphic=false) {
       additionalAliases,
       additionalExternals,
       additionalLoaders,
-      additionalPreLoaders,
-      additionalWebpackNodeConfig,
+      additionalWebpackConfig,
       vendor,
       plugins,
-      entryPoints
+      entryPoints,
+      mapEntryToGroup,
     } = require(webpackAdditionsPath);
     userAdditions = {
       additionalAliases: makeUserAdditionalAliases(additionalAliases) || {},
       additionalExternals: additionalExternals || {},
       additionalLoaders: isomorphic ? additionalLoaders : prepareUserAdditionsForWebpack(additionalLoaders),
-      additionalPreLoaders: isomorphic ? additionalPreLoaders : prepareUserAdditionsForWebpack(additionalPreLoaders),
-      additionalWebpackNodeConfig: additionalWebpackNodeConfig || {},
-      vendor: vendor || [],
+      additionalWebpackConfig: additionalWebpackConfig || {},
+      vendor: vendor && vendor.length > 0 ? vendor : null,
       plugins: plugins || [],
-      entryPoints: entryPoints || {}
+      entryPoints: entryPoints || {},
+      mapEntryToGroup: mapEntryToGroup || {},
     };
   }
   catch (e) {

@@ -59,7 +59,7 @@ export default async (req, res, overrides) => {
     const {
       redirectLocation,
       renderProps
-    } = await RequestHandler.matchRoute(req, getRoutes, store);
+    } = await RequestHandler.matchRoute(req, res, getRoutes, store, config);
 
     if (redirectLocation) {
       RequestHandler.redirect(res, redirectLocation);

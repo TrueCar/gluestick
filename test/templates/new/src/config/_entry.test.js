@@ -1,11 +1,11 @@
 import React from "react";
-import { stub, spy } from "sinon";
 import { Route } from "react-router";
-import { expect } from "chai";
 import { shallow } from "enzyme";
+import { getHttpClient } from "gluestick-shared";
 
 import Entry from "../../../../../templates/new/src/config/.entry";
 
+const httpClient = getHttpClient();
 const STORE = {};
 const HISTORY = {};
 const ROUTES = (
@@ -19,10 +19,10 @@ describe("templates/new/src/config/.entry", () => {
 
   beforeEach(() => {
     store = STORE;
-    getRoutes = stub().returns(ROUTES);
-    getStore = stub().returns(store);
+    getRoutes = jest.fn().mockImplementation(() => ROUTES);
+    getStore = jest.fn().mockImplementation(() => store);
     history = HISTORY;
-    match = spy();
+    match = jest.fn();
     props = {
       getRoutes,
       store: STORE
@@ -32,12 +32,12 @@ describe("templates/new/src/config/.entry", () => {
   it("render without issues", () => {
     const subject = <Entry {...props} />;
     const wrapper = shallow(subject);
-    expect(wrapper).to.exist;
+    expect(wrapper).toBeDefined();
   });
 
   it("should build a store and the proper routes when calling Entry.start", () => {
     Entry.start(getRoutes, getStore, match, history);
-    expect(getRoutes.calledWith(getStore())).to.equal(true);
+    expect(getRoutes).toBeCalledWith(getStore(), httpClient);
   });
 });
 

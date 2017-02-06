@@ -21,7 +21,7 @@ export default class Entry extends Component {
 
     return (
       <StyleRoot radiumConfig={radiumConfig}>
-        <Root routerContext={routerContext} routes={getRoutes(store)} store={store} />
+        <Root routerContext={routerContext} routes={getRoutes(store, httpClient)} store={store} />
       </StyleRoot>
     );
   }
@@ -33,7 +33,7 @@ Entry.start = function (getRoutes, getStore, match=originalMatch, history=browse
   require("./init.browser");
 
   const newStore = getStore(httpClient);
-  match({ history, routes: getRoutes(newStore)}, (error, redirectLocation, renderProps) => {
+  match({ history, routes: getRoutes(newStore, httpClient)}, (error, redirectLocation, renderProps) => {
     const entry = (
       <Entry
         radiumConfig={{userAgent: window.navigator.userAgent}}

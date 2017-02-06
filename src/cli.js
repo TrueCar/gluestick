@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const lazyMethodRequire = require("./lib/LazyMethodRequire").default(__dirname);
 
+const bin = lazyMethodRequire("./commands/bin");
 const build = lazyMethodRequire("./commands/build");
 const newApp = lazyMethodRequire("./commands/new");
 const startClient = lazyMethodRequire("./commands/start-client");
@@ -34,15 +35,19 @@ const IS_WINDOWS = process.platform === "win32";
 
 const currentGluestickVersion = getVersion();
 
-const debugServerOption = ["-D, --debug-server", "debug server side rendering with node-inspector"];
-const debugTestOption = ["-B, --debug-test", "debug tests with node-inspector"];
-const karmaTestOption = ["-k, --karma", "run tests in Karma"];
-const mochaReporterOption = ["-r, --reporter [type]", "run tests in Node.js"];
+const debugServerOption = ["-D, --debug-server", "debug server side rendering with built-in node inspector"];
+const debugServerPortOption = ["-p, --debug-port <n>", "port on which to run node inspector"];
 const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
 const prepareStaticOption = ["-Z, --static", "prepare html file for static hosting in the build"];
+const entrypointsOption = ["-E, --entrypoints <entrypoints>", "Enter specific entrypoint or a group"];
+
+const testDebugOption = ["-D, --debug-test", "debug tests with built-in node inspector"];
+const testReportCoverageOption = ["-C --coverage", "Create test coverage"];
+const testWatchOption = ["-W --watch", "Watch tests"];
+const testPatternOption = ["-R --pattern [pattern]", "Run specific test regex pattern name"];
 
 commander
   .version(currentGluestickVersion);
@@ -64,14 +69,13 @@ commander
   });
 
 commander
-  .command("generate <container|component|reducer>")
-  .description("generate a new container")
+  .command("generate <container|component|reducer|generator>")
+  .description("generate a new entity from given template")
   .arguments("<name>")
   .option(...statelessFunctionalOption)
+  .option("-O, --gen-options <value>", "options to pass to the generator")
   .action(checkGluestickProject)
-  .action((type, name, options) => generate(type, name, options, (err) => {
-    if (err) { logger.error(err); }
-  }))
+  .action(generate)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
@@ -86,13 +90,13 @@ commander
   .command("start")
   .alias("s")
   .description("start everything")
-  .option("-T, --skip-tests", "ignore test hook")
+  .option("-T, --run-tests", "run test hook")
   .option("-L, --log-level <level>", "set the logging level", /^(fatal|error|warn|info|debug|trace|silent)$/, null)
-  .option("-E, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
+  .option("-Z, --log-pretty [true|false]", "set pretty printing for logging", parseFlag)
+  .option(...entrypointsOption)
   .option(...debugServerOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
-  .option(...karmaTestOption)
+  .option(...debugServerPortOption)
+  .option(...testReportCoverageOption)
   .option(...skipBuildOption)
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
@@ -108,6 +112,12 @@ commander
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
+  .command("bin")
+  .allowUnknownOption(true)
+  .description("access dependencies bin directory")
+  .action(bin);
+
+commander
   .command("dockerize")
   .description("create docker image")
   .arguments("<name>")
@@ -118,27 +128,30 @@ commander
 commander
   .command("start-client", null, {noHelp: true})
   .description("start client")
+  .option(...entrypointsOption)
   .action(checkGluestickProject)
-  .action(() => startClient(false))
+  .action(startClient)
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("start-server", null, {noHelp: true})
   .description("start server")
   .option(...debugServerOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...debugServerPortOption)
   .action(checkGluestickProject)
-  .action((options) => startServer(options.debugServer))
+  .action((options) => {
+    startServer(options.debugServer, options.debugPort);
+  })
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander
   .command("start-test", null, {noHelp: true})
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...karmaTestOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testDebugOption)
+  .option(...testReportCoverageOption)
+  .option(...testWatchOption)
+  .option(...testPatternOption)
   .description("start test")
   .action(checkGluestickProject)
   .action(startTest)
@@ -148,9 +161,10 @@ commander
   .command("test")
   .option(...firefoxOption)
   .option(...singleRunOption)
-  .option(...karmaTestOption)
-  .option(...debugTestOption)
-  .option(...mochaReporterOption)
+  .option(...testDebugOption)
+  .option(...testReportCoverageOption)
+  .option(...testWatchOption)
+  .option(...testPatternOption)
   .description("start tests")
   .action(checkGluestickProject)
   .action(() => updateLastVersionUsed(currentGluestickVersion))
@@ -253,14 +267,27 @@ async function startAll(options) {
   // true.  We only want to start the client in development mode or if
   // skipBuild is not specified
   if (!(isProduction && options.skipBuild)) {
-    spawnProcess("client");
+    spawnProcess("client", commander.rawArgs.slice(3));
   }
 
-  spawnProcess("server", (options.debugServer ? ["--debug-server"] : []));
+  // Remove -E, --entrypoints argument and it's value from server arguments
+  let valueIndex = -1;
+  const args = commander.rawArgs.slice(3);
+  const srvArgs = args.filter((arg, index) => {
+    if (arg === "-E" || arg === "--entrypoints") {
+      valueIndex = index;
+      return false;
+    }
+    return true;
+  });
+  if (valueIndex < srvArgs.length) {
+    srvArgs.splice(valueIndex, 1);
+  }
+  spawnProcess("server", srvArgs);
 
-  // Start tests unless they asked us not to or we are in production mode
-  if (!isProduction && !options.skipTests) {
-    spawnProcess("test", commander.rawArgs.slice(3));
+  // Start tests only they asked us to or we are in production mode
+  if (!isProduction && options.runTests) {
+    spawnProcess("test", commander.rawArgs.slice(4));
   }
 }
 

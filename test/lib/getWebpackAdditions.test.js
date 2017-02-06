@@ -1,22 +1,18 @@
 import fs from "fs-extra";
 import path from "path";
 import temp from "temp";
-import { expect } from "chai";
-import sinon, { stub } from "sinon";
 import logger from "../../src/lib/cliLogger";
 
 import newApp from "../../src/commands/new";
-import npmDependencies from "../../src/lib/npmDependencies";
 import getWebpackAdditions from "../../src/lib/getWebpackAdditions";
 
 describe("src/lib/getWebpackAdditions", () => {
-  let originalCwd, tmpDir, fakeNpm, cwd, webpackAdditionsPath, sandbox;
+  let originalCwd, tmpDir, cwd, webpackAdditionsPath;
   let defaultAdditions;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync("gluestick-new");
-    fakeNpm = stub(npmDependencies, "install");
     process.chdir(tmpDir);
 
     newApp("test-app");
@@ -28,39 +24,37 @@ describe("src/lib/getWebpackAdditions", () => {
     // Remove .babelrc so it wont complain about missing react preset
     fs.unlinkSync(path.join(cwd, ".babelrc"));
 
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(logger, "error");
-    sandbox.stub(logger, "info");
-    sandbox.stub(logger, "warn");
+    logger.error = jest.fn();
+    logger.info = jest.fn();
+    logger.warn = jest.fn();
 
     defaultAdditions = {
       additionalAliases: {},
       additionalExternals: {},
       additionalLoaders: [],
-      additionalPreLoaders: [],
-      additionalWebpackNodeConfig: {},
+      additionalWebpackConfig: {},
       entryPoints: {},
+      mapEntryToGroup: {},
       plugins: [],
-      vendor: []
+      vendor: null
     };
   });
 
   afterEach(() => {
     process.chdir(originalCwd);
     fs.removeSync(tmpDir);
-    fakeNpm.restore();
-    sandbox.restore();
+    jest.resetAllMocks();
   });
 
   it("logger.warn an error and return default empty additions when there is an error parsing the additions file", () => {
     fs.outputFileSync(webpackAdditionsPath, "PaRSE ErRor");
-    expect(logger.warn.called).to.equal(false);
+    expect(logger.warn).toHaveBeenCalledTimes(0);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal(defaultAdditions);
-    expect(logger.warn.called).to.equal(true);
+    expect(result).toEqual(defaultAdditions);
+    expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return additionalLoaders and additionalPreLoaders when they are specified in webpack-additions", () => {
+  it("should return additionalLoaders when they are specified in webpack-additions", () => {
     const additions = {
       additionalLoaders: [
         {
@@ -72,17 +66,11 @@ describe("src/lib/getWebpackAdditions", () => {
           loader: "todd-loader"
         }
       ],
-      additionalPreLoaders: [
-        {
-          extensions: ["json"],
-          loader: "json-loader"
-        }
-      ]
     };
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       additionalLoaders: [
         {
@@ -94,26 +82,20 @@ describe("src/lib/getWebpackAdditions", () => {
           test: /\.(todd|odd|surf|turf)$/
         }
       ],
-      additionalPreLoaders: [
-        {
-          loader: "json-loader",
-          test: /\.json$/
-        }
-      ]
     });
   });
 
   it("should return entryPoints when they are specified in webpack-additions", () => {
-    const webpackAdditionsContent = "module.exports = { additionalLoaders: [], additionalPreLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
+    const webpackAdditionsContent = "module.exports = { additionalLoaders: [], entryPoints: {'/used-cars-for-sale': { name: 'used'}}};";
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       entryPoints: {
         "/used-cars-for-sale": {
           "name": "used"
         }
-      }
+      },
     });
   });
 
@@ -127,23 +109,23 @@ describe("src/lib/getWebpackAdditions", () => {
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       ...additions
     });
   });
 
-  it("should return additionalWebpackNodeConfig when they are specified in webpack-additions", () => {
+  it("should return additionalWebpackConfig when they are specified in webpack-additions", () => {
     const additions = {
       ...defaultAdditions,
-      additionalWebpackNodeConfig: {
+      additionalWebpackConfig: {
         mish: "kin"
       }
     };
     const webpackAdditionsContent = `module.exports = ${JSON.stringify(additions)}`;
     fs.outputFileSync(webpackAdditionsPath, webpackAdditionsContent);
     const result = getWebpackAdditions();
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       ...defaultAdditions,
       ...additions
     });
