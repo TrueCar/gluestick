@@ -300,7 +300,7 @@ describe("lib/server/RequestHandler", () => {
   });
 
   describe("prepareOutput", () => {
-    let req, renderRequirements, renderProps, config, envVariables, getHead,
+    let req, renderRequirements, renderProps, config, envVariables, staticBuild, getHead,
         Entry, webpackIsomorphicTools;
 
     class Index extends React.Component {
@@ -330,11 +330,15 @@ describe("lib/server/RequestHandler", () => {
       };
 
       renderProps = {
-        routes
+        routes,
+        router: {},
+        location: {},
+        params: {},
+        components: []
       };
 
       config = {};
-      envVariables = {bestFood: "burritos"};
+      envVariables = Array.from({bestFood: "burritos"});
       getHead = jest.fn().mockImplementation(() => <div />);
       Entry = class extends React.Component {
         render () {
@@ -354,8 +358,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
         it("should return a responseString", () => {
           expect(result.responseString).toBeDefined();
@@ -375,8 +378,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, config, envVariables, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should return a responseString", () => {
@@ -412,8 +414,8 @@ describe("lib/server/RequestHandler", () => {
 
       it("should pass bodyContent to html prop", async () => {
         result = await RequestHandler.prepareOutput(req, renderRequirements,
-        renderProps, updatedConfig, envVariables, getHead, Entry,
-        webpackIsomorphicTools);
+          renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry,
+          webpackIsomorphicTools);
         expect(result.rootElement.props.body.props.html).toEqual("<div>That body!</div>");
       });
 
@@ -421,8 +423,7 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           delete renderProps.routes[0].email;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should pass headContent to getHead", () => {
@@ -434,13 +435,33 @@ describe("lib/server/RequestHandler", () => {
         beforeEach(async () => {
           renderProps.routes[0].email = true;
           result = await RequestHandler.prepareOutput(req, renderRequirements,
-            renderProps, updatedConfig, envVariables, getHead, Entry,
-            webpackIsomorphicTools);
+            renderProps, updatedConfig, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
         });
 
         it("should pass headContent to getHead", async () => {
           expect(result.rootElement.props.head).toEqual(headJSX);
         });
+      });
+    });
+
+    describe("with the static build option", () => {
+      let result;
+      beforeEach(async () => {
+        staticBuild = true;
+        result = await RequestHandler.prepareOutput(req, renderRequirements,
+          renderProps, config, envVariables, staticBuild, getHead, Entry, webpackIsomorphicTools);
+      });
+
+      it("should pass blank html to body", () => {
+        expect(result.rootElement.props.body.props.html).toEqual("");
+      });
+
+      it("should pass isEmail false to body", () => {
+        expect(result.rootElement.props.body.props.isEmail).toEqual(false);
+      });
+
+      it("should pass empty initialState to body", () => {
+        expect(result.rootElement.props.body.props.initialState).toEqual({});
       });
     });
   });
@@ -592,4 +613,3 @@ describe("lib/server/RequestHandler", () => {
     });
   });
 });
-

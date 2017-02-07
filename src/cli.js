@@ -41,6 +41,7 @@ const firefoxOption = ["-F, --firefox", "Use Firefox with test runner"];
 const singleRunOption = ["-S, --single", "Run test suite only once"];
 const skipBuildOption = ["-P, --skip-build", "skip build when running in production mode"];
 const statelessFunctionalOption = ["-F, --functional", "(generate component) stateless functional component"];
+const prepareStaticOption = ["-Z, --static", "prepare html file for static hosting in the build"];
 const entrypointsOption = ["-E, --entrypoints <entrypoints>", "Enter specific entrypoint or a group"];
 
 const testDebugOption = ["-D, --debug-test", "debug tests with built-in node inspector"];
@@ -105,8 +106,9 @@ commander
 commander
   .command("build")
   .description("create production asset build")
+  .option(...prepareStaticOption)
   .action(checkGluestickProject)
-  .action(() => build())
+  .action((options) => build(options.static))
   .action(() => updateLastVersionUsed(currentGluestickVersion));
 
 commander

@@ -1,4 +1,3 @@
-/*global webpackIsomorphicTools*/
 import path from "path";
 import _SSRCaching from "electrode-react-ssr-caching";
 import React from "react";
@@ -28,7 +27,7 @@ let _Entry;
  * because the tests move around in folders and it wont exist when this file
  * is initialized but instead when the method is run.
  */
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV === "production") {
   _Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
 }
 
@@ -130,7 +129,7 @@ export function enableComponentCaching (componentCacheConfig, isProduction, SSRC
   }
 }
 
-export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, getHead=_getHead, Entry=_Entry, _webpackIsomorphicTools=webpackIsomorphicTools) {
+export async function prepareOutput(req, {Index, store, getRoutes, fileName}, renderProps, config, envVariables, staticBuild=false, getHead=_getHead, Entry=_Entry) {
   // this should only happen in tests
   if (!Entry) {
     Entry = require(path.join(process.cwd(), "src/config/.entry")).default;
@@ -152,18 +151,25 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
 
   // gather attributes that were included on the route in order to
   // determine whether to render as an e-mail or not
-  const currentRoute = getCurrentRoute(renderProps);
-  const routeAttrs = getEmailAttributes(currentRoute);
-  const isEmail = routeAttrs.email;
-  const reactRenderFunc = isEmail ? renderToStaticMarkup: renderToString;
+  let currentRoute, routeAttrs, isEmail, reactRenderFunc, currentState = {};
+  if (!staticBuild) {
+    currentRoute = getCurrentRoute(renderProps);
+    routeAttrs = getEmailAttributes(currentRoute);
+    isEmail = routeAttrs.email;
+    reactRenderFunc = isEmail ? renderToStaticMarkup: renderToString;
+    currentState = store.getState();
+  }
 
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
-  const currentState = store.getState();
 
   let headContent, bodyContent;
   const renderMethod = config.server && config.server.renderMethod;
-  if (renderMethod) {
+  if (staticBuild) {
+    bodyContent = "";
+    isEmail = false;
+  }
+  else if (renderMethod) {
     try {
       const renderOutput  = await Promise.resolve(renderMethod(reactRenderFunc, main));
       headContent = renderOutput.head;
@@ -180,12 +186,13 @@ export async function prepareOutput(req, {Index, store, getRoutes, fileName}, re
   const body = (
     <Body
       html={bodyContent}
-      initialState={currentState}
+      initialState={currentState || {}}
       isEmail={isEmail}
       envVariables={envVariables}
     />
   );
-  const head = isEmail ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
+
+  const head = isEmail ? headContent : getHead(config, fileName, headContent);
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -240,4 +247,3 @@ export function getEmailAttributes (currentRoute) {
   const docType = currentRoute.docType || HTML5;
   return { email, docType };
 }
-
