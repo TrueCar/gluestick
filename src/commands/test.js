@@ -10,12 +10,13 @@ const TEST_MOCKS_PATH = `${path.join(__dirname, "..", "..", "test", "__mocks__")
 function getJestDefaultConfig() {
   const alias = configTools.alias;
   const images = configTools.assets.images.extensions;
+  const other = configTools.assets.other.extensions;
   const styles = configTools.assets.styles.extensions;
 
   const moduleNameMapper = {};
 
   // Handling Static Assets = mock them out
-  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join("|")})$`] =`${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join("|")}|${other.join("|")})$`] =`${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join("|")})$`] =`${TEST_MOCKS_PATH}/styleMock.js`;
 
   // !Important: Aliases should be added at the end, see https://github.com/facebook/jest/issues/2818
