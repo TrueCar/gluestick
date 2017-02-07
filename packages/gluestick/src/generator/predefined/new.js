@@ -85,6 +85,7 @@ module.exports = exports = () => ({
        * Template returned by createTemplate function.
        */
       template: templatePackage,
+      overwrite: true,
     },
     {
       path: '/',

@@ -30,7 +30,9 @@ const currentlyInProjectFolder = (folderPath) => {
   }
 };
 
+/*eslint-disable */
 module.exports = (context: Context, appName: string, ...opts: Array<*>) => {
+/*eslint-enable */
   const { logger } = context;
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(
