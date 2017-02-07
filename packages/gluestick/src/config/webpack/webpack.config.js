@@ -6,9 +6,9 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
 
-module.exports = () => {
+module.exports = assetsPath => {
   const appRoot = process.cwd(); // not sure about that
-  const outputPath = path.resolve(appRoot, 'build/assets');
+  const outputPath = path.resolve(appRoot, assetsPath);
 
   const configuration = {
     // resolve all relative paths from the project root folder
@@ -61,15 +61,14 @@ module.exports = () => {
               'stage-0',
             ],
           },
-          /*include: [
+          include: [
             path.join(process.cwd(), 'Index.js'),
             path.join(process.cwd(), 'src'),
             path.join(process.cwd(), 'test'),
-          ],*/
+          ],
         }],
-      }],
-    },
-      /*{
+      },
+      {
         test: /\.(scss)$/,
         use: [
           'style-loader',
@@ -105,9 +104,9 @@ module.exports = () => {
           'svg-react-loader',
         ],
       }],
-    },*/
+    },
 
-    /*plugins: [
+    plugins: [
       new ExtractTextPlugin('[name]-[chunkhash].css'),
       new OptimizeCSSAssetsPlugin(),
       new webpack.LoaderOptionsPlugin({
@@ -131,7 +130,7 @@ module.exports = () => {
           context: appRoot,
         },
       }),
-    ],*/
+    ],
   };
 
   return configuration;

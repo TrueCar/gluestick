@@ -21,32 +21,31 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // const PUBLIC_PATH = ASSET_PATH;
 process.env.NODE_PATH = path.join(__dirname, '../..');
 
-const configuration = require('../config/webpack.config.client.dev').default;
-
-const developmentServerOptions = {
-  quiet: true, // don’t output anything to the console
-  noInfo: true, // suppress boring information
-  hot: true, // adds the HotModuleReplacementPlugin and switch the server to hot mode. Note: make sure you don’t add HotModuleReplacementPlugin twice
-  inline: true, // also adds the webpack/hot/dev-server entry
-
-  // You can use it in two modes:
-  // watch mode (default): The compiler recompiles on file change.
-  // lazy mode: The compiler compiles on every request to the entry point.
-  lazy: false,
-
-  // network path for static files: fetch all statics from webpack development server
-  publicPath: configuration.output.publicPath,
-
-  headers: { 'Access-Control-Allow-Origin': '*' },
-  stats: { colors: true },
-};
-
 module.exports = ({ config, logger }) => {
-  console.log(1);
+  const { GSConfig } = config;
+  const configuration = config.webpackConfig.client.dev;
+  console.log(configuration);
+  const developmentServerOptions = {
+    quiet: true, // don’t output anything to the console
+    noInfo: true, // suppress boring information
+    hot: true, // adds the HotModuleReplacementPlugin and switch the server to hot mode. Note: make sure you don’t add HotModuleReplacementPlugin twice
+    inline: true, // also adds the webpack/hot/dev-server entry
+
+    // You can use it in two modes:
+    // watch mode (default): The compiler recompiles on file change.
+    // lazy mode: The compiler compiles on every request to the entry point.
+    lazy: false,
+
+    // network path for static files: fetch all statics from webpack development server
+    publicPath: configuration.output.publicPath,
+
+    headers: { 'Access-Control-Allow-Origin': '*' },
+    stats: { colors: true },
+  };
+
   const compiler = webpack(configuration);
 
   // const appServerConfig = loadServerConfig();
-  const server = Object.assign({ protocol: 'http', host: '0.0.0.0', port: 3001 } /* appServerConfig*/);
   const assetPort = /* appServerConfig.assetPort ||*/ 8880;
   console.log(2);
   if (!IS_PRODUCTION) {
@@ -70,7 +69,7 @@ module.exports = ({ config, logger }) => {
       appServerConfig.expressConfigurator(app);
     }*/
     console.log(4);
-    app.listen(server.port, server.host, (error) => {
+    app.listen(GSConfig.ports.client, GSConfig.host, error => {
       if (error) {
         console.log(error);
         // TODO: Replace logger.

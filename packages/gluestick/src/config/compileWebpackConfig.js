@@ -12,7 +12,7 @@ module.exports = (plugins, projectConfig, GSConfig) => {
       output: path.join(process.cwd(), './build/server/server1.js'),
     },
   };
-  const sharedConfig = getSharedConfig();
+  const sharedConfig = getSharedConfig(GSConfig.assetsPath);
   const clientConfig = getClientConfig(sharedConfig, universalWebpackSettings);
   const clientDevConfig = getClientDevConfig(clientConfig, GSConfig.ports.client);
   const serverConfig = getServerConfig(sharedConfig, universalWebpackSettings);

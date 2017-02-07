@@ -1,104 +1,107 @@
-import path from 'path';
-import process from 'process';
-import { spawn } from 'cross-spawn';
-import pm2 from 'pm2';
-import sha1 from 'sha1';
-import chokidar from 'chokidar';
-// import { getLogger } from '../lib/server/logger';
-// const logger = getLogger();
-
-// The number of server side rendering instances to run. This can be set with
-// an environment variable or it will default to 0 for production and 1 for
-// non-production. 0 means it will automatically detect the instance number
-// based on the CPUs
-const MAX_INSTANCES = process.env.MAX_INSTANCES || (process.env.NODE_ENV === 'production' ? 0 : 1);
-const CWD = process.cwd();
+const path = require('path');
+const { spawn } = require('cross-spawn');
+const pm2 = require('pm2');
+const sha1 = require('sha1');
+const chokidar = require('chokidar');
+const webpack = require('webpack');
 
 /**
- * Spin up the server side rendering. If debug is false, this will use PM2 for
- * managing multiple instances.
+ * Spawns new process with rendering server,
  *
- * @param {Boolean} debug whether to debug server with built-in node inspector
- * @param {Number} debugPort custom port for inspector
+ * @param {any} { config, logger } Context
  */
-module.exports = function startServer(config, logger_, { debug = false, debugPort }) {
-  const serverEntrypointPath = path.join(__dirname, '../entrypoints/', 'server.js');
-
-  // If debug mode is enabled, we do not use PM2, instead we spawn `node-debug`
-  // for the server side rendering
-  if (debug) {
-    let debugSpawn;
-    watchSources(() => {
-      debugSpawn.kill();
-
-      // killing a child process isn't immediate… we need to wait for it to
-      // have a chance to complete before restarting
-      setTimeout(() => {
-        debugSpawn = startDebugServer(serverEntrypointPath, debugPort);
-      }, 500);
-    });
-    debugSpawn = startDebugServer(serverEntrypointPath);
-    return;
-  }
-
-  // Generate a unique name based on the cwd, this way pm2 wont be an issue running
-  // multiple instances of GlueStick on the same machine
-  const name = `gluestick-server-${sha1(CWD).substr(0, 7)}`;
-
-  // TODO: Replace logger.
-  // logger.info('Server rendering server started with PM2');
-  // logger.debug('Connecting to PM2 with pm2.connect');
-
-  pm2.connect((error) => {
-    if (error) {
-      // TODO: Replace logger.
-      // logger.error(error);
-      pm2.disconnect();
-      process.exit(2);
+const spawnServer = ({ config, logger }) => {
+  const child = spawn(
+    'node',
+    [
+      path.join(__dirname, '../renderer/index.js'),
+      `assetsPath=${config.GSConfig.assetsPath}`,
+    ],
+    { stdio: ['ipc', 'inherit', 'inherit'] },
+  );
+  child.on('message', msg => {
+    switch (msg.type) {
+      default:
+      case 'info':
+        logger.info(msg.value);
+        break;
+      case 'warn':
+        logger.warn(msg.value);
+        break;
+      case 'error':
+        logger.error(msg.value);
+        break;
+      case 'success':
+        logger.success(msg.value);
+        break;
     }
-
-    // Stop any previous processes with the same name before starting new
-    // instances. If no instances with that name are found then we just
-    // fall back to starting normally
-    checkIfPM2ProcessExists(name, (exists) => {
-      if (exists) {
-        // TODO: Replace logger.
-        // logger.debug(`PM2 process ${name} already running, stopping the process`);
-        pm2.stop(name, () => {
-          startPM2(serverEntrypointPath, name);
-        });
-      } else {
-        startPM2(serverEntrypointPath, name);
-      }
-    });
   });
 };
 
-function startPM2(scriptPath, name) {
+/**
+ * Builds rendering server bundle and runs it.
+ *
+ * @param {any} { config, logger } Context
+ */
+const runWithWebpack = ({ config, logger }) => {
+  const webpackConfig = config.webpackConfig.server.dev;
+  const watcher = webpack(webpackConfig).watch({
+    poll: 1000,
+  }, error => {
+    if (error) {
+      throw new Error(error.message);
+    }
+    logger.info('Building server entry.');
+    spawnServer({ config, logger });
+  });
+  const closeWatcher = () => {
+    watcher.close(() => {
+      logger.info('Stopping watcher.');
+    });
+  };
+  process.on('SIGINT', closeWatcher);
+};
+
+const watchSource = callback => {
+  let timeout;
+  chokidar.watch([
+    path.join(process.cwd(), 'src/**/*.js'),
+    path.join(process.cwd(), 'test/**/*.js'),
+  ], {
+    ignored: /[/\\]\./,
+    persistent: true,
+  }).on('all', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      callback();
+    }, 250);
+  });
+};
+
+const runWithPM2 = ({ config, logger }, name) => {
   const pm2Config = {
-    script: scriptPath,
+    script: config.webpackConfig.universalSettings.server.input,
     name,
-    cwd: CWD,
+    cwd: process.cwd(),
     exec_mode: 'cluster',
-    instances: MAX_INSTANCES, // 0 = auto detect based on CPUs
+    instances: process.env.MAX_INSTANCES || (process.env.NODE_ENV === 'production' ? 1 : 1),
     max_memory_restart: process.env.MAX_MEMORY_RESTART || '200M',
     environment_name: process.env.NODE_ENV,
     no_autorestart: false,
     merge_logs: true,
-    watch: process.env.NODE_ENV !== 'production' ? ['assets', 'src', 'Index.js'] : false,
+    watch: false,
   };
-
-  // TODO: Replace logger.
-  // logger.debug(pm2Config, 'Starting PM2 server with config');
-
-  pm2.start(pm2Config, (error) => {
+  pm2.start(pm2Config, (error, a) => {
     if (error) {
-      // TODO: Replace logger.
-      // logger.error(error);
+      logger.error(error);
       pm2.disconnect();
     }
-    // start showing the logs
-    spawn(path.join(__dirname, '..', '..', 'node_modules', '.bin', 'pm2'), ['logs', name, '--raw', '--lines', 0], { stdio: 'inherit' });
+    console.log(a);
+    /*console.log(spawn(
+      `${require.resolve('pm2').split('pm2')[0]}.bin/pm2`,
+      ['logs', name, '--raw', '--lines', 0],
+      { stdio: 'inherit' },
+    ));*/
   });
 
   /**
@@ -126,24 +129,15 @@ function startPM2(scriptPath, name) {
       }
     });
   });
-}
+};
 
-function checkIfPM2ProcessExists(name, callback) {
-  // TODO: Replace logger.
-  // logger.debug(`Checking for process with name ${name}`);
+const checkIfPM2ProcessExists = (name, callback) => {
   pm2.list((error, result) => {
-    callback(result.map((i) => {
-      const exists = i.name === name;
-      if (exists) {
-        // TODO: Replace logger.
-        // logger.debug(`Process ${i.name} was found running`);
-      }
-      return exists;
-    }).length > 0);
+    callback(result.filter(i => i.name === name).length > 0);
   });
-}
+};
 
-function startDebugServer(serverEntrypointPath, debugPort) {
+const runWithDebug = ({ config, logger }, serverEntrypointPath, debugPort) => {
   const debugSpawn = spawn(
     'node',
     [
@@ -156,23 +150,56 @@ function startDebugServer(serverEntrypointPath, debugPort) {
       env: Object.assign({}, process.env, { NODE_ENV: 'development-server' }),
     },
   );
-  debugSpawn.on('error', (/* e */) => {
-    // TODO: Replace logger.
-    // logger.error(e);
+  debugSpawn.on('error', error => {
+    logger.error(error);
   });
   return debugSpawn;
-}
+};
 
-function watchSources(callback) {
-  // Debounce file watches
-  let timeout;
-  chokidar.watch([path.join(CWD, 'src/**/*.js'), path.join(CWD, 'test/**/*.js')], {
-    ignored: /[/\\]\./,
-    persistent: true,
-  }).on('all', () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      callback();
-    }, 250);
-  });
-}
+/**
+ * Starts server side rendering. If debug is false, this will use PM2 in production for
+ * managing multiple instances.
+ *
+ * @param {any} { config, logger } Context
+ * @param {any} { debug = false, debugPort }
+ */
+module.exports = ({ config, logger }, { debug = false, debugPort }) => {
+  if (debug) {
+    /*let debugSpawn;
+    watchSource(() => {
+      debugSpawn.kill();
+
+      // killing a child process isn't immediate… we need to wait for it to
+      // have a chance to complete before restarting
+      setTimeout(() => {
+        debugSpawn = runWithDebug({ config, logger }, serverEntrypointPath, debugPort);
+      }, 500); // check if this can be replaced with process.nextTick
+    });
+    debugSpawn = runWithDebug({ config, logger }, serverEntrypointPath, debugPort);*/
+  } else if (process.env.NODE_ENV === 'production') {
+    console.log(0);
+    const instanceName = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
+    pm2.connect(error => {
+      if (error) {
+        logger.error(error);
+        pm2.disconnect();
+        process.exit(1);
+      }
+
+      checkIfPM2ProcessExists(instanceName, exists => {
+        console.log(exists);
+        if (exists) {
+          logger.info(`PM2 process ${instanceName} already running, stopping the process`);
+          pm2.stop(instanceName, () => {
+            runWithPM2({ config, logger }, instanceName, logger);
+          });
+        } else {
+          runWithPM2({ config, logger }, instanceName, logger);
+        }
+      });
+    });
+    console.log(10);
+  } else {
+    runWithWebpack({ config, logger });
+  }
+};

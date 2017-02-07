@@ -4,4 +4,5 @@ module.exports = exports = {
     client: 8888,
     server: 8880,
   },
+  assetsPath: 'build/assets',
 };
