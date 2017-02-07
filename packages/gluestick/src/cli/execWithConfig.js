@@ -23,7 +23,9 @@ module.exports = exports = (
     : require(path.join(process.cwd(), 'package.json')).gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
-  const webpackConfig = useWebpackConfig ? compileWebpackConfig(plugins, projectConfig) : null;
+  const webpackConfig = useWebpackConfig ? compileWebpackConfig(
+    plugins, projectConfig, GSConfig,
+  ) : null;
   const context = {
     config: {
       projectConfig,
