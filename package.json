@@ -110,7 +110,7 @@
     "eslint-plugin-react": "6.9.0",
     "gluestick-shared": "0.4.22",
     "gitbook-cli": "^2.3.0",
-    "jest": "18.1.0",
+    "jest": "^18.1.0",
     "oy-vey": "0.8.0",
     "radium": "0.18.1",
     "react": "15.4.2",
@@ -128,7 +128,9 @@
     "gitbook-plugin-prism": "2.0.2"
   },
   "jest": {
-    "testPathDirs": ["test"],
+    "testPathDirs": [
+      "test"
+    ],
     "setupFiles": [
       "./test/setup.js"
     ]

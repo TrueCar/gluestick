@@ -5,11 +5,20 @@ const configTools = require("../config/webpack-isomorphic-tools-config");
 const NODE_MODULES_PATH = path.join(__dirname, "..", "..", "node_modules");
 const JEST_PATH = path.join(NODE_MODULES_PATH, ".bin", "jest");
 const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, "..", "..", "test")}/jestEnvironmentNodeDebug.js`;
+const TEST_MOCKS_PATH = `${path.join(__dirname, "..", "..", "test", "__mocks__")}`;
 
 function getJestDefaultConfig() {
   const alias = configTools.alias;
+  const images = configTools.assets.images.extensions;
+  const styles = configTools.assets.styles.extensions;
+
   const moduleNameMapper = {};
 
+  // Handling Static Assets = mock them out
+  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${images.join("|")})$`] =`${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${styles.join("|")})$`] =`${TEST_MOCKS_PATH}/styleMock.js`;
+
+  // !Important: Aliases should be added at the end, see https://github.com/facebook/jest/issues/2818
   // We map webpack aliases from webpack-isomorphic-tools-config file so Jest can detect them in tests too
   Object.keys(alias).forEach((key) => {
     moduleNameMapper[`^${key}(.*)$`] = `${alias[key]}$1`;
@@ -17,7 +26,7 @@ function getJestDefaultConfig() {
 
   const config = {
     "moduleNameMapper": moduleNameMapper,
-    "testPathDirs": ["test"]
+    "testPathDirs": ["test"],
   };
 
   const argv = [];
