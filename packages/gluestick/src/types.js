@@ -12,11 +12,6 @@ export type Config = {
   plugins: Object[];
 };
 
-export type Logger = {
-  [key: LoggerTypes]: Function; // (...args: string[]) => void;
-  level?: string
-};
-
 export type Question = {
   type: string,
   name: string,
@@ -41,4 +36,15 @@ export type WebpackConfig = {
 
 export type GSConfig = {
 
+};
+
+export type CreateTemplate = (
+  strings: Array<string>,
+  interpolations: Array<*>
+) => (args: Object) => string;
+
+
+export type Logger = {
+  [key: LoggerTypes]: Function; // (...args: string[]) => void;
+  level?: string
 };
