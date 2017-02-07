@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./",
+    "test": "echo \"No test specified\" && exit 0",
     "test-coverage": "echo \"No test specified\" && exit 0",
     "flow": "echo \"No flowconfig specified\" && exit 0"
   },
@@ -31,18 +32,13 @@
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "dependencies": {
-    "babel-eslint": "7.1.1",
     "babel-preset-es2015": "6.22.0",
     "babel-register": "6.22.0",
     "chalk": "1.1.3",
     "commander": "2.9.0",
     "cross-spawn": "5.0.1",
-    "eslint": "3.14.1",
-    "eslint-config-airbnb": "14.0.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-jsx-a11y": "3.0.2",
-    "eslint-plugin-react": "6.9.0",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "wml": "0.0.82"
   },
   "devDependencies": {
     "eslint": "3.14.1",

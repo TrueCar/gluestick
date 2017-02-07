@@ -19,7 +19,7 @@ const parseEntry = (entry, commonArgs, options) => {
   ) {
     throw new Error(`Entry in generator ${options.generator} is not valid`);
   }
-  if (!path.extname(parsedEntry.filename).length) {
+  if (!path.extname(parsedEntry.filename).length && parsedEntry.filename[0] !== '.') {
     parsedEntry.filename += '.js';
   }
   if (options.dir) {
