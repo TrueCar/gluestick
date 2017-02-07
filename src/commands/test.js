@@ -28,6 +28,9 @@ function getJestDefaultConfig() {
   const config = {
     "moduleNameMapper": moduleNameMapper,
     "testPathDirs": ["test"],
+    "transformIgnorePatterns": [
+      "\/node_modules\/(?!gluestick-addon-)"
+    ]
   };
 
   const argv = [];
