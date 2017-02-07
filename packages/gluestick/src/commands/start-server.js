@@ -16,6 +16,7 @@ const spawnServer = ({ config, logger }) => {
     [
       path.join(__dirname, '../renderer/index.js'),
       `assetsPath=${config.GSConfig.assetsPath}`,
+      `port=${config.GSConfig.ports.server}`,
     ],
     { stdio: ['ipc', 'inherit', 'inherit'] },
   );
@@ -36,6 +37,7 @@ const spawnServer = ({ config, logger }) => {
         break;
     }
   });
+  return child;
 };
 
 /**
@@ -45,6 +47,7 @@ const spawnServer = ({ config, logger }) => {
  */
 const runWithWebpack = ({ config, logger }) => {
   const webpackConfig = config.webpackConfig.server.dev;
+  let child = null;
   const watcher = webpack(webpackConfig).watch({
     poll: 1000,
   }, error => {
@@ -52,7 +55,10 @@ const runWithWebpack = ({ config, logger }) => {
       throw new Error(error.message);
     }
     logger.info('Building server entry.');
-    spawnServer({ config, logger });
+    if (child) {
+      child.kill();
+    }
+    child = spawnServer({ config, logger });
   });
   const closeWatcher = () => {
     watcher.close(() => {

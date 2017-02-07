@@ -35,10 +35,10 @@ module.exports = exports = (
     },
     logger,
   };
-  execHooks(context, pre);
-  execHooks(context, post);
   try {
+    execHooks(context, pre);
     func(context, ...commandArguments);
+    execHooks(context, post);
   } catch (error) {
     process.stderr.write(error.message);
     process.exit(1);
