@@ -30,6 +30,7 @@ const getPossiblePaths = generatorName => [
 const requireGeneratorConfig = (generatorName) => {
   const paths = getPossiblePaths(generatorName);
   const pathToGenerator = paths.find(generatorPath => fs.existsSync(generatorPath));
+  
   if (!pathToGenerator) {
     throw new Error(
       `Generator ${generatorName} was not found at paths:\n`
@@ -42,4 +43,4 @@ const requireGeneratorConfig = (generatorName) => {
   };
 };
 
-module.exports = exports = requireGeneratorConfig;
+module.exports = requireGeneratorConfig;

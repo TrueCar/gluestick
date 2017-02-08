@@ -2,7 +2,6 @@
 
 import type { Context } from '../types';
 
-const inquirer = require('inquirer');
 const { highlight, filename } = require('../cli/colorScheme');
 const generate = require('../generator');
 const path = require('path');
@@ -30,22 +29,10 @@ const currentlyInProjectFolder = (folderPath) => {
   }
 };
 
-module.exports = (context: Context, appName: string, ...opts: Array<*>) => {
+module.exports = (context: Context, appName: string) => {
   const { logger } = context;
   if (currentlyInProjectFolder(process.cwd())) {
-    logger.info(
-      `You are about to initialize a new gluestick project at ${filename(process.cwd())}`,
-    );
-    const question = {
-      type: 'confirm',
-      name: 'confirm',
-      message: 'Do you wish to continue?',
-    };
-    inquirer.prompt([question]).then((answers) => {
-      if (!answers.confirm) { return; }
-      generateTemplate('new', appName, logger);
-    });
-    return;
+    logger.info(`${filename(process.cwd())} is being generated...`);
+    generateTemplate('new', appName, logger);
   }
-  generateTemplate('new', appName, logger);
 };

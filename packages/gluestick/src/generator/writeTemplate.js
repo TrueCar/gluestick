@@ -12,7 +12,7 @@ const mkdir = require('mkdirp');
 const writeEntry = (entryConfig) => {
   const destinationDirectory = path.join(process.cwd(), entryConfig.path);
   const outputPath = path.join(destinationDirectory, entryConfig.filename);
-  if (fs.existsSync(outputPath)) {
+  if (!entryConfig.overwrite && fs.existsSync(outputPath)) {
     throw new Error(`File ${outputPath} alredy exists`);
   }
   mkdir.sync(destinationDirectory);
@@ -50,7 +50,7 @@ const applyModification = (modification) => {
  *
  * @param {Object} generatorConfig Parsed generator config
  */
-module.exports = exports = (generatorConfig) => {
+module.exports = (generatorConfig) => {
   let writtenEntries = [];
   let modifiedFiles = [];
   if (Array.isArray(generatorConfig.entries)) {

@@ -9,7 +9,7 @@ const writeTemplate = require('./writeTemplate');
  * @param {Object} { generatorName, entityName, options } Command object
  * @param {Object} logger Logger instance
  */
-module.exports = exports = ({ generatorName, entityName, options }, logger) => {
+module.exports = ({ generatorName, entityName, options }, logger) => {
   if (!/^[a-zA-Z0-9]+$/.test(entityName)) {
     throw new Error('Invalid name specified');
   }

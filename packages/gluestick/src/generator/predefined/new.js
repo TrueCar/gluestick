@@ -46,7 +46,7 @@ const templateRecuder = require('../templates/Reducer')(createTemplate);
  * `dir` will not be appended to `file` field in `modify` object, you will
  * need to do it yourself.
  */
-module.exports = exports = () => ({
+module.exports = () => ({
   /**
    * Define single entry.
    * Type: Object
@@ -69,22 +69,10 @@ module.exports = exports = () => ({
    */
   entries: [
     {
-      /**
-       * Path to destination directory (relative to GlueStick project isnside of which command is
-       * executed) where template will be written to file.
-       * Type: string
-       */
       path: '/',
-      /**
-       * Name of file where conent of template will be written to.
-       * If extension is ommited, `.js` extension is assumed.
-       * Type: string
-       */
       filename: 'package.json',
-      /**
-       * Template returned by createTemplate function.
-       */
       template: templatePackage,
+      overwrite: true,
     },
     {
       path: '/',
@@ -103,7 +91,7 @@ module.exports = exports = () => ({
     },
     {
       path: '/',
-      filename: '_gitignore',
+      filename: '.gitignore',
       template: templateGitignore,
     },
     {
