@@ -33,6 +33,47 @@ commander
   });
 
 commander
+  .command('watch')
+  .description('watch and apply changes from gluestick to project')
+  .action(() => {
+    const packagePath = path.join(process.cwd(), 'package.json');
+    let packageContent = null;
+    try {
+      packageContent = require(packagePath);
+    } catch (error) {
+      exitWithError(`Cannot find package.json in ${packagePath}`);
+    }
+    let srcPath = null;
+    try {
+      if (!/file:.*/.test(packageContent.dependencies.gluestick)) {
+        exitWithError('Gluestick dependency does not contain valid path');
+      }
+      srcPath = path.join(
+        process.cwd(),
+        packageContent.dependencies.gluestick.replace('file:', ''),
+      );
+    } catch (error) {
+      exitWithError('Invalid package.json');
+    }
+    const wmlBin = path.join(__dirname, './node_modules/.bin/wml');
+    spawn.sync(
+      wmlBin,
+      ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick')],
+      { stdio: 'inherit' },
+    );
+    spawn.sync(
+      'watchman',
+      ['watch', srcPath],
+      { stdio: 'inherit' },
+    );
+    spawn.sync(
+      wmlBin,
+      ['start'],
+      { stdio: 'inherit' },
+    );
+  });
+
+commander
   .command('*', null, { noHelp: true })
   .action(() => {
     spawn(

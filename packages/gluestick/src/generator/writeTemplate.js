@@ -1,3 +1,5 @@
+import { WrittenTemplate } from '../types';
+
 const fs = require('fs');
 const path = require('path');
 const mkdir = require('mkdirp');
@@ -9,9 +11,9 @@ const mkdir = require('mkdirp');
  * @param {Object} entryConfig Parsed entry config
  * @returns {String}
  */
-const writeEntry = (entryConfig) => {
-  const destinationDirectory = path.join(process.cwd(), entryConfig.path);
-  const outputPath = path.join(destinationDirectory, entryConfig.filename);
+const writeEntry = (entryConfig: Object): string => {
+  const destinationDirectory: string = path.join(process.cwd(), entryConfig.path);
+  const outputPath: string = path.join(destinationDirectory, entryConfig.filename);
   if (!entryConfig.overwrite && fs.existsSync(outputPath)) {
     throw new Error(`File ${outputPath} alredy exists`);
   }
@@ -27,21 +29,26 @@ const writeEntry = (entryConfig) => {
  * @param {{ file: string, modificator: Function }} modification Single modification.
  * @returns {String}
  */
-const applyModification = (modification) => {
-  let absolutePath = path.join(process.cwd(), modification.file);
+const applyModification = (modification: Function): string => {
+  let absolutePath: string = path.join(process.cwd(), modification.file);
+
   if (!path.extname(absolutePath).length) {
     absolutePath += '.js';
   }
+
   mkdir.sync(path.dirname(absolutePath));
-  const modifiedContent = modification.modifier(
+
+  const modifiedContent: string = modification.modifier(
     fs.existsSync(absolutePath) ? fs.readFileSync(absolutePath, 'utf-8') : null,
     absolutePath,
   );
+
   if (typeof modifiedContent === 'string') {
     fs.writeFileSync(absolutePath, modifiedContent, 'utf-8');
   } else if (modifiedContent) {
     throw new Error(`Modified content for ${absolutePath} must be a string`);
   }
+
   return absolutePath;
 };
 
@@ -50,7 +57,7 @@ const applyModification = (modification) => {
  *
  * @param {Object} generatorConfig Parsed generator config
  */
-module.exports = (generatorConfig) => {
+module.exports = (generatorConfig: Object): WrittenTemplate => {
   let writtenEntries = [];
   let modifiedFiles = [];
   if (Array.isArray(generatorConfig.entries)) {

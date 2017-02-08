@@ -1,7 +1,15 @@
+import type { Logger, Generator, WrittenTemplate } from '../types';
+
 const path = require('path');
 const requireGenerator = require('./requireGenerator');
 const parseConfig = require('./parseConfig');
 const writeTemplate = require('./writeTemplate');
+
+type Command = {
+  generatorName: string,
+  entityName: string,
+  options: Object,
+}
 
 /**
  * Starts generator routine.
@@ -9,12 +17,12 @@ const writeTemplate = require('./writeTemplate');
  * @param {Object} { generatorName, entityName, options } Command object
  * @param {Object} logger Logger instance
  */
-module.exports = ({ generatorName, entityName, options }, logger) => {
+module.exports = ({ generatorName, entityName, options }: Command, logger: Logger): void => {
   if (!/^[a-zA-Z0-9]+$/.test(entityName)) {
     throw new Error('Invalid name specified');
   }
-  const generator = requireGenerator(generatorName);
-  const generatorConfig = parseConfig(
+  const generator: Generator = requireGenerator(generatorName);
+  const generatorConfig: Object = parseConfig(
     generator.config,
     Object.assign({}, options, {
       generator: generator.name,
@@ -22,7 +30,7 @@ module.exports = ({ generatorName, entityName, options }, logger) => {
       dir: path.dirname(entityName),
     }),
   );
-  const results = writeTemplate(generatorConfig);
+  const results: WrittenTemplate = writeTemplate(generatorConfig);
   logger.success(
     `${generator.name} ${entityName} generated successfully\n`
     + 'Files written: \n'

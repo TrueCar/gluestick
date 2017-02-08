@@ -6,12 +6,14 @@ const warn = chalk.red;
 const filename = chalk.cyan;
 const highlight = chalk.bold;
 const debug = chalk.blue;
+const error = chalk.red;
 
 module.exports = {
   success,
   info,
   warn,
   debug,
+  error,
   filename,
   highlight,
 };

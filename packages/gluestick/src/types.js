@@ -47,3 +47,13 @@ export type CreateTemplate = (
   strings: Array<string>,
   interpolations: Array<*>
 ) => (args: Object) => string;
+
+export type Generator = {
+  name: string,
+  config: any,
+}
+
+export type WrittenTemplate = {
+  name: string,
+  config: any,
+}
