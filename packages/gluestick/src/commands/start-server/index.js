@@ -21,9 +21,9 @@ const getServerEntry = config => {
  * @param {any} { config, logger } Context
  * @param {any} { debug = false, debugPort }
  */
-module.exports = ({ config, logger }, { debug = false, debugPort }) => {
+module.exports = ({ config, logger }, { debugServer = false, debugPort }) => {
   const entry = getServerEntry(config);
-  if (debug) {
+  if (debugServer) {
     runWithDebug({ config, logger }, entry.path, entry.args, debugPort);
   } else if (process.env.NODE_ENV === 'production') {
     runWithPM2({ config, logger }, entry.path, entry.args);

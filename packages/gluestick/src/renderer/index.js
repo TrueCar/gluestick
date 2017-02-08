@@ -16,6 +16,9 @@ require('babel-register')(Object.assign({
     'es2015',
     'stage-0',
   ],
+  plugins: [
+    'transform-flow-strip-types',
+  ],
 }, babelAdditions));
 
 // Prepare logger.

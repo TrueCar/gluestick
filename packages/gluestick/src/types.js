@@ -13,6 +13,7 @@ export type GSConfig = {
   },
   assetsPath: string,
   proxyLogLevel: string,
+  debugWatchDirectories: string[],
   [key: string]: any,
 };
 

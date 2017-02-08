@@ -2,6 +2,8 @@
 
 import type { GSConfig } from '../../types';
 
+const path = require('path');
+
 const config: GSConfig = {
   protocol: 'http',
   host: '0.0.0.0',
@@ -11,6 +13,10 @@ const config: GSConfig = {
   },
   assetsPath: 'build/assets',
   proxyLogLevel: 'info',
+  debugWatchDirectories: [
+    path.join(process.cwd(), 'src/**/*.js'),
+    path.join(process.cwd(), 'node_modules/gluestick/**/*'),
+  ],
 };
 
 module.exports = config;

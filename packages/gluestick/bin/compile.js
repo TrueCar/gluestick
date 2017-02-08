@@ -9,6 +9,7 @@ require('babel-core/register')({
   ],
   plugins: [
     require.resolve('babel-plugin-transform-decorators-legacy'),
+    require.resolve('babel-plugin-transform-flow-strip-types'),
   ],
 });
 
