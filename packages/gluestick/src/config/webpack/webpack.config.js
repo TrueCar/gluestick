@@ -111,7 +111,6 @@ module.exports = assetsPath => {
       new OptimizeCSSAssetsPlugin(),
       new webpack.LoaderOptionsPlugin({
         test: /\.(scss|css)$/,
-        debug: true,
         options: {
           // A temporary workaround for `scss-loader`
           // https://github.com/jtangelder/sass-loader/issues/298
@@ -129,6 +128,10 @@ module.exports = assetsPath => {
           // Can also supply `query.context` parameter.
           context: appRoot,
         },
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
     ],
   };
