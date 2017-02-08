@@ -7,7 +7,7 @@ const autoUpgrade = require('../autoUpgrade');
  *
  * @param {object} options        Command-line options object directly from Commander
  */
-module.exports = exports = async (config, logger, options) => {
+module.exports = async (config, logger, options) => {
   await autoUpgrade();
   const isProduction = process.env.NODE_ENV === 'production';
 
