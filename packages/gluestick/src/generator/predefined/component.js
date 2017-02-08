@@ -44,7 +44,7 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = exports = (options) => {
+module.exports = (options) => {
   const rewrittenName = `${options.name[0].toUpperCase()}${options.name.slice(1)}`;
   return {
     args: {

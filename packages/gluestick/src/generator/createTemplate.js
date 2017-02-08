@@ -60,7 +60,7 @@ const tag = (
  * @returns {Function} TemplateCreator returns string
  */
 
-module.exports = exports = (...params: Array<any>): TemplateCreator | TemplateCreatorFactory => {
+module.exports = (...params: Array<any>): TemplateCreator | TemplateCreatorFactory => {
   if (typeof params[0] === 'number') {
     return (strings: string[], ...interpolations: Array<any>): TemplateCreator =>
       tag(params[0], strings, ...interpolations);

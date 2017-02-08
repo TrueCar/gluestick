@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-module.exports = exports = {
+module.exports = {
   parseBooleanFlag: value => ['false', '0', 'no'].includes(value),
   notifyUpdate: (config, logger) => {
     const indexFilePath = path.join(process.cwd(), 'Index.js');
