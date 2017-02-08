@@ -42,4 +42,4 @@ const requireGeneratorConfig = (generatorName) => {
   };
 };
 
-module.exports = exports = requireGeneratorConfig;
+module.exports = requireGeneratorConfig;

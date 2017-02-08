@@ -12,7 +12,7 @@ const execHooks = (context, hooks) => {
   }
 };
 
-module.exports = exports = (
+module.exports = (
   func,
   commandArguments,
   { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
