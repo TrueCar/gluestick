@@ -9,17 +9,11 @@
     "test": "lerna exec npm run test",
     "test-coverage": "lerna exec npm run test-coverage",
     "lint": "lerna run lint",
-    "flow": "lerna exec npm run flow",
-    "docs:clean": "rm -rf _book",
-    "docs:prepare": "gitbook install",
-    "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'Update Book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'Update Book' && git push git@github.com:TrueCar/gluestick gh-pages --force",
-    "docs:build": "npm run docs:prepare && gitbook build -g TrueCar/gluestick"
+    "flow": "lerna exec npm run flow"
   },
   "dependencies": {
     "gluestick": "file:packages/gluestick",
     "lerna": "2.0.0-beta.34",
-    "linklocal": "2.8.0",
-    "transform-runtime": "0.0.0"
+    "linklocal": "2.8.0"
   }
 }
