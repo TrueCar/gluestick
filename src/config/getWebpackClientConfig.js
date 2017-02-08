@@ -86,9 +86,9 @@ export default function (appRoot, appConfigFilePath, isProduction, options) {
               "babel-plugin-gluestick"
             ],
             presets: [
-              "react",
-              "es2015",
-              "stage-0"
+              ["es2015", { "modules": false }],
+              "stage-0",
+              "react"
             ]
           },
           include: [

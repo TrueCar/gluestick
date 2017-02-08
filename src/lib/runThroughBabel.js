@@ -3,9 +3,9 @@ const configVars = require("../config/vars");
 require("babel-polyfill");
 require("babel-core/register")({
   presets: [
-    "react",
     "es2015",
-    "stage-0"
+    "stage-0",
+    "react"
   ],
   plugins: [
     "transform-decorators-legacy"
