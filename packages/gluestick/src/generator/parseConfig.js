@@ -11,7 +11,7 @@ const path = require('path');
  */
 const parseEntry = (entry, commonArgs, options) => {
   const parsedEntry = Object.assign({}, parsedEntry, entry);
-  console.log('111111', parsedEntry.template);
+
   if (
     !parsedEntry
     || typeof parsedEntry.path !== 'string'
