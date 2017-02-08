@@ -1,8 +1,10 @@
+/* @flow */
+import type { Context } from '../types.js';
+
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
-const logger = require('../lib/cliLogger');
-const cliColorScheme = require('../lib/cliColorScheme');
+const cliColorScheme = require('../cli/colorScheme');
 
 const { highlight, filename } = cliColorScheme;
 
@@ -12,8 +14,10 @@ const availableCommands = {
   reducer: 'reducers',
 };
 
-// @NOTE, we use async here because we use await later in the function
-module.exports = async (command, name) => {
+type Command = 'container' | 'component' | 'reducer';
+
+module.exports = async (context: Context, command: Command, name: string) => {
+  const { logger } = context;
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.error(`${highlight(command)} is not a valid destroy command.`);
@@ -23,12 +27,6 @@ module.exports = async (command, name) => {
 
   const dirname = path.dirname(name);
   const basename = path.basename(name);
-
-  // Validate the name by stripping out unwanted characters
-  if (!basename || basename.length === 0) {
-    logger.error('invalid arguments. You must specify a name.');
-    return;
-  }
 
   if (/\W/.test(basename)) {
     logger.error(`${highlight(basename)} is not a valid name.`);
