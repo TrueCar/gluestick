@@ -1,16 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
-const process = require('process');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 
-// TODO: use logger
-
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-
 module.exports = ({ config, logger }) => {
   const { GSConfig } = config;
-  const configuration = config.webpackConfig.client.dev;
+  const configuration = config.webpackConfig.client;
   const developmentServerOptions = {
     quiet: true, // don’t output anything to the console
     noInfo: true, // suppress boring information
@@ -32,7 +27,7 @@ module.exports = ({ config, logger }) => {
 
   const compiler = webpack(configuration);
 
-  if (!IS_PRODUCTION) {
+  if (process.env.NODE_ENV !== 'production') {
     const app = express();
     app.use(require('webpack-dev-middleware')(compiler, developmentServerOptions));
     app.use(require('webpack-hot-middleware')(compiler));
@@ -54,9 +49,14 @@ module.exports = ({ config, logger }) => {
         logger.error(error);
         return; // eslint-disable-line
       }
-      logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}`);
+      logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
     });
-  }/* else {
-    build();
-  }*/
+  } else {
+    compiler.run(error => {
+      if (error) {
+        throw error;
+      }
+      logger.success('Client bundle successfully built.');
+    });
+  }
 };

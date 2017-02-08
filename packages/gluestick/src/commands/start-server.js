@@ -46,13 +46,13 @@ const spawnServer = ({ config, logger }) => {
  * @param {any} { config, logger } Context
  */
 const runWithWebpack = ({ config, logger }) => {
-  const webpackConfig = config.webpackConfig.server.dev;
+  const webpackConfig = config.webpackConfig.server;
   let child = null;
   const watcher = webpack(webpackConfig).watch({
     poll: 1000,
   }, error => {
     if (error) {
-      throw new Error(error.message);
+      throw error;
     }
     logger.info('Building server entry.');
     if (child) {
