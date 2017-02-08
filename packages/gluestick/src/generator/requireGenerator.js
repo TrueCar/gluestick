@@ -4,7 +4,7 @@ import type { Generator } from '../types';
 const fs = require('fs');
 const path = require('path');
 const createTemplate = require('./createTemplate');
-// Provide createTemplate function for generators
+// $FlowFixMe
 module.createTemplate = createTemplate;
 
 const PREDEFINED: string = 'predefined';
@@ -33,7 +33,7 @@ const getPossiblePaths = (generatorName: string): string[] => [
  */
 const requireGeneratorConfig = (generatorName: string): Generator => {
   const paths: string[] = getPossiblePaths(generatorName);
-  const pathToGenerator: string = paths.find(generatorPath => fs.existsSync(generatorPath));
+  const pathToGenerator: ?string = paths.find(generatorPath => fs.existsSync(generatorPath));
 
   if (!pathToGenerator) {
     throw new Error(
