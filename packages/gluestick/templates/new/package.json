@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gluestick start",
     "test": "gluestick test",
-    "flow": "./node_modules/.bin/flow"
+    "flow": "flow"
   },
   "dependencies": {
     "gluestick": "0.10.23",
