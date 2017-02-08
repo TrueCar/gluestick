@@ -17,6 +17,7 @@ type Command = {
  * @param {Object} { generatorName, entityName, options } Command object
  * @param {Object} logger Logger instance
  */
+
 module.exports = ({ generatorName, entityName, options }: Command, logger: Logger): void => {
   if (!/^[a-zA-Z0-9]+$/.test(entityName)) {
     throw new Error('Invalid name specified');

@@ -57,6 +57,7 @@ const applyModification = (modification: Function): string => {
  *
  * @param {Object} generatorConfig Parsed generator config
  */
+
 module.exports = (generatorConfig: Object): WrittenTemplate => {
   let writtenEntries = [];
   let modifiedFiles = [];
