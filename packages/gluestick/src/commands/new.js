@@ -1,12 +1,18 @@
 /* @flow */
 
-import type { Context } from '../types';
+import type { Context, Logger } from '../types';
 
 const { highlight, filename } = require('../cli/colorScheme');
 const generate = require('../generator');
 const path = require('path');
 
-const generateTemplate = (generatorName, entityName, logger) => {
+type ProjectData = {
+  dependencies: {
+    gluestick: string,
+  }
+}
+
+const generateTemplate = (generatorName: string, entityName: string, logger: Logger) => {
   generate({
     generatorName,
     entityName,
@@ -18,9 +24,9 @@ const generateTemplate = (generatorName, entityName, logger) => {
   logger.info('    Point the browser to http://localhost:8888');
 };
 
-const currentlyInProjectFolder = (folderPath) => {
+const currentlyInProjectFolder = (folderPath: string) => {
   const fileName: string = path.join(folderPath, 'package.json');
-  let data: ?Object = null;
+  let data: ?ProjectData = null;
   try {
     data = require(fileName);
     return !!data.dependencies && !!data.dependencies.gluestick;
@@ -29,8 +35,7 @@ const currentlyInProjectFolder = (folderPath) => {
   }
 };
 
-module.exports = (context: Context, appName: string) => {
-  const { logger } = context;
+module.exports = ({ logger }: Context, appName: string) => {
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(process.cwd())} is being generated...`);
     generateTemplate('new', appName, logger);

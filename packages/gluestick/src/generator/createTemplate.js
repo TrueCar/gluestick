@@ -1,3 +1,5 @@
+/* @flow */
+
 /**
  * Creates factory function that returs string from given template.
  *
@@ -5,14 +7,14 @@
  * @param {Array<any>} interpolations Interpolations from template
  * @returns {Function}
  */
-module.exports = exports = (strings, ...interpolations) =>
+module.exports = (strings: string[], ...interpolations: any[]): Function =>
   /**
    * Creates template populated with given arguments.
    *
    * @param {any} args Arguments to pass to template
    * @returns {String}
    */
-   (args) => {
+   (args: any): string => {
      const interpolate = (interpolation) => {
        if (typeof interpolation === 'function') {
          if (!args) {
