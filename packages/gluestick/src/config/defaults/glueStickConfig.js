@@ -1,4 +1,8 @@
-module.exports = exports = {
+/* @flow */
+
+import type { GSConfig } from '../../types';
+
+const config: GSConfig = {
   protocol: 'http',
   host: '0.0.0.0',
   ports: {
@@ -8,3 +12,5 @@ module.exports = exports = {
   assetsPath: 'build/assets',
   proxyLogLevel: 'info',
 };
+
+module.exports = config;

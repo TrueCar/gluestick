@@ -1,7 +1,12 @@
+/* @flow */
+
+import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+
+
 const webpack = require('webpack');
 
-module.exports = clientConfig => {
-  const configuration = clientConfig({ development: false });
+module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => {
+  const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'source-map';
   configuration.plugins.push(
     new webpack.DefinePlugin({

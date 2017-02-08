@@ -35,6 +35,7 @@ module.exports = ({ config, logger }) => {
     app.use(proxy({
       changeOrigin: false,
       target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
+      // TODO: make that work
       // logLevel: GSConfig.proxyLogLevel,
       // logProvider: () => logger,
       onError: (err, req, res) => {

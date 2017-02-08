@@ -1,3 +1,7 @@
+/* @flow */
+
+import type { WebpackConfig } from '../../types';
+
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
@@ -6,11 +10,11 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
 
-module.exports = assetsPath => {
-  const appRoot = process.cwd(); // not sure about that
-  const outputPath = path.resolve(appRoot, assetsPath);
+module.exports = (assetsPath: string): WebpackConfig => {
+  const appRoot: string = process.cwd(); // not sure about that
+  const outputPath: string = path.resolve(appRoot, assetsPath);
 
-  const configuration = {
+  const configuration: WebpackConfig = {
     // resolve all relative paths from the project root folder
     context: appRoot,
     resolve: {

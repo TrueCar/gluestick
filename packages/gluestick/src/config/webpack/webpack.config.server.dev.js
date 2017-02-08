@@ -1,7 +1,11 @@
-const deepClone = obj => {
-  const output = {};
+/* @flow */
+
+import type { WebpackConfig } from '../../types';
+
+const deepClone = (obj: Object) => {
+  const output: Object = {};
   for (const key in obj) {
-    const value = obj[key];
+    const value: any = obj[key];
     if (Array.isArray(value)) {
       output[key] = value.slice();
     } else {
@@ -11,8 +15,8 @@ const deepClone = obj => {
   return output;
 };
 
-module.exports = (serverConfig, devServerPort) => {
-  const configuration = deepClone(serverConfig);
+module.exports = (serverConfig: WebpackConfig, devServerPort: number): WebpackConfig => {
+  const configuration: Object = deepClone(serverConfig);
   configuration.output.publicPath = `http://localhost:${devServerPort}${
     configuration.output.publicPath}`;
   return configuration;

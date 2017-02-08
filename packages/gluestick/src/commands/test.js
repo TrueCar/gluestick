@@ -63,13 +63,14 @@ module.exports = (context: Context, options: { [key: string]: string }) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
-
+  // $FlowFixMe
+  const aliases: Object = context.config.webpackConfig.resolve.alias;
   if (options.debugTest) {
-    const argvDebug = getDebugDefaultConfig(context.config.webpackConfig.resolve.alias);
+    const argvDebug = getDebugDefaultConfig(aliases);
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
     const jest = require('jest');
-    const argv = createArgs(getJestDefaultConfig(), options);
+    const argv = createArgs(getJestDefaultConfig(aliases), options);
     // Since we require Jest programmatically, we need to make sure
     // to set NODE_ENV='test' when running it
     process.env.NODE_ENV = 'test';

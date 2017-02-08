@@ -1,7 +1,13 @@
+/* @flow */
+
+import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+
 const webpack = require('webpack');
 
-module.exports = (clientConfig, devServerPort) => {
-  const configuration = clientConfig({ development: true, css_bundle: true });
+module.exports = (
+  clientConfig: UniversalWebpackConfigurator, devServerPort: number,
+): WebpackConfig => {
+  const configuration: Object = clientConfig({ development: true, css_bundle: true });
   configuration.plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
