@@ -55,23 +55,26 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = exports = options => ({
-  args: {
-    name: options.name
-  },
-  entries: [
-    {
-      path: "src/containers",
-      filename: options.name,
-      template: containerTemplate
+module.exports = exports = options => {
+  const directoryPrefix = options.dir !== "." ? `${options.dir}/` : "";
+  return {
+    args: {
+      name: options.name
     },
-    {
-      path: "test/containers",
-      filename: `${options.name}.test.js`,
-      template: testTemplate,
-      args: {
-        path: `containers/${options.name}`
+    entries: [
+      {
+        path: "src/containers",
+        filename: options.name,
+        template: containerTemplate
+      },
+      {
+        path: "test/containers",
+        filename: `${options.name}.test.js`,
+        template: testTemplate,
+        args: {
+          path: `containers/${directoryPrefix}${options.name}`
+        }
       }
-    }
-  ]
-});
+    ]
+  };
+};
