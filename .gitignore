@@ -4,5 +4,4 @@ npm-debug.log
 coverage
 new/src/config/.Dockerfile
 .vscode
-.watchmanconfig
 lerna-debug.log
