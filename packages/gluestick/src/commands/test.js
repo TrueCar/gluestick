@@ -4,20 +4,18 @@ import type { Context } from '../types.js';
 
 const spawn = require('cross-spawn').spawn;
 const path = require('path');
-const configTools = require('../config/webpack-isomorphic-tools-config');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
 const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
 
-const getJestDefaultConfig = () => {
-  const alias = configTools.alias;
+const getJestDefaultConfig = aliases => {
   const moduleNameMapper = {};
 
   // We map webpack aliases from webpack-isomorphic-tools-config file
   // so Jest can detect them in tests too
-  Object.keys(alias).forEach((key) => {
-    moduleNameMapper[`^${key}(.*)$`] = `${alias[key]}$1`;
+  Object.keys(aliases).forEach((key) => {
+    moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
 
   const config = {
@@ -30,14 +28,15 @@ const getJestDefaultConfig = () => {
   return argv;
 };
 
-const getDebugDefaultConfig = () => {
+const getDebugDefaultConfig = aliases => {
+  console.log(aliases);
   const argv = [];
   argv.push('--inspect');
   argv.push('--debug-brk');
   argv.push(JEST_PATH);
   argv.push('--env');
   argv.push(JEST_DEBUG_CONFIG_PATH);
-  argv.push(...getJestDefaultConfig());
+  argv.push(...getJestDefaultConfig(aliases));
   argv.push('-i');
   argv.push('--watch');
   return argv;
@@ -66,7 +65,7 @@ module.exports = (context: Context, options: { [key: string]: string }) => {
   };
 
   if (options.debugTest) {
-    const argvDebug = getDebugDefaultConfig();
+    const argvDebug = getDebugDefaultConfig(context.config.webpackConfig.resolve.alias);
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
     const jest = require('jest');
