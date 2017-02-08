@@ -53,7 +53,7 @@ module.exports = exports = options => {
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `reducers/${prefixName}${rewrittenName}`
+          path: `reducers/${directoryPrefix}${rewrittenName}`
         }
       }
     ]
