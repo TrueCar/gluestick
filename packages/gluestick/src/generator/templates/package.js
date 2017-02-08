@@ -13,7 +13,7 @@ module.exports = (createTemplate: CreateTemplate) => {
         "test": "gluestick test"
       },
       "dependencies": {
-        "gluestick": "0.10.23",
+        "gluestick": "../gluestick/packages/gluestick",
         "axios": "0.12.0",
         "babel-core": "6.22.1",
         "babel-loader": "6.2.10",
