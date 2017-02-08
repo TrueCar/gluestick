@@ -56,14 +56,22 @@ commander
       if (!/file:.*/.test(packageContent.dependencies.gluestick)) {
         exitWithError('Gluestick dependency does not contain valid path');
       }
-      srcPath = path.join(
-        process.cwd(),
-        packageContent.dependencies.gluestick.replace('file:', ''),
-      );
+      const pathFromDependency = packageContent.dependencies.gluestick.replace('file://', '').replace('file:', '')
+      srcPath = pathFromDependency[0] !== '/'
+        ? path.join(
+            process.cwd(),
+            pathFromDependency
+          )
+        : pathFromDependency
     } catch (error) {
       exitWithError('Invalid package.json');
     }
     const wmlBin = path.join(__dirname, './node_modules/.bin/wml');
+    spawn.sync(
+      wmlBin,
+      ['rm', 'all'],
+      { stdio: 'inherit' },
+    );
     spawn.sync(
       wmlBin,
       ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick')],
