@@ -56,7 +56,7 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = exports = options => ({
+module.exports = options => ({
   args: {
     name: options.name,
   },

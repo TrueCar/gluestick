@@ -29,7 +29,7 @@ describe("${args => args.path}", () => {
 
 const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
 
-module.exports = exports = (options) => {
+module.exports = (options) => {
   const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
   return {
     modify: {

@@ -50,7 +50,7 @@ const applyModification = (modification) => {
  *
  * @param {Object} generatorConfig Parsed generator config
  */
-module.exports = exports = (generatorConfig) => {
+module.exports = (generatorConfig) => {
   let writtenEntries = [];
   let modifiedFiles = [];
   if (Array.isArray(generatorConfig.entries)) {

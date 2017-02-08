@@ -52,4 +52,4 @@ const parseConfig = (config, options) => {
   return parsedConfig;
 };
 
-module.exports = exports = parseConfig;
+module.exports = parseConfig;
