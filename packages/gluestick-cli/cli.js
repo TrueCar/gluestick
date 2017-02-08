@@ -56,13 +56,13 @@ commander
       if (!/file:.*/.test(packageContent.dependencies.gluestick)) {
         exitWithError('Gluestick dependency does not contain valid path');
       }
-      const pathFromDependency = packageContent.dependencies.gluestick.replace('file://', '').replace('file:', '')
+      const pathFromDependency = packageContent.dependencies.gluestick.replace('file://', '').replace('file:', '');
       srcPath = pathFromDependency[0] !== '/'
         ? path.join(
             process.cwd(),
-            pathFromDependency
+            pathFromDependency,
           )
-        : pathFromDependency
+        : pathFromDependency;
     } catch (error) {
       exitWithError('Invalid package.json');
     }
