@@ -31,16 +31,17 @@ const getReducerExport = name => `export { default as ${name} } from "./${name}"
 
 module.exports = (options) => {
   const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
+  const directoryPrefix = options.dir !== '.' ? `${options.dir}/` : '';
   return {
     modify: {
       file: 'src/reducers/index',
-      modifier: (content) => {
+      modifier: content => {
         if (content) {
           const lines = content.split('\n');
-          lines[lines.length - 1] = getReducerExport(rewrittenName);
+          lines[lines.length - 1] = getReducerExport(`${directoryPrefix}${rewrittenName}`);
           return lines.join('\n');
         }
-        return getReducerExport(rewrittenName);
+        return getReducerExport(`${directoryPrefix}${rewrittenName}`);
       },
     },
     entries: [
@@ -54,7 +55,7 @@ module.exports = (options) => {
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `reducers/${rewrittenName}`,
+          path: `reducers/${directoryPrefix}${rewrittenName}`,
         },
       },
     ],
