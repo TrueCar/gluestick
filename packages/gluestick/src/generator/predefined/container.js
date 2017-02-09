@@ -41,17 +41,16 @@ export default connect(
 `;
 
 const testTemplate = createTemplate`
-/*global React*/
-/*global describe it*/
-/*global expect*/
-import { ${args => args.name} } from "${args => args.path}";
+import React from "react";
 import { shallow } from "enzyme";
+
+import { ${args => args.name} } from "${args => args.path}";
 
 describe("${args => args.path}", () => {
   it("renders without an issue", () => {
     const subject = <${args => args.name} />;
     const wrapper = shallow(subject);
-    expect(wrapper).to.exist;
+    expect(wrapper).toBeDefined();
   });
 });
 `;
