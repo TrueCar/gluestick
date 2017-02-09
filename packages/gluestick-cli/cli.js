@@ -3,6 +3,8 @@ const commander = require('commander');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
 const newCmd = require('./new');
+const chokidar = require('chokidar');
+const fs = require('fs-extra');
 
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
@@ -66,27 +68,68 @@ commander
     } catch (error) {
       exitWithError('Invalid package.json');
     }
-    const wmlBin = path.join(__dirname, './node_modules/.bin/wml');
-    spawn.sync(
-      wmlBin,
-      ['rm', 'all'],
-      { stdio: 'inherit' },
-    );
-    spawn.sync(
-      wmlBin,
-      ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick')],
-      { stdio: 'inherit' },
-    );
-    spawn.sync(
-      'watchman',
-      ['watch', srcPath],
-      { stdio: 'inherit' },
-    );
-    spawn.sync(
-      wmlBin,
-      ['start'],
-      { stdio: 'inherit' },
-    );
+    const convertFilePath = filePath => filePath.replace(srcPath, path.join(process.cwd(), 'node_modules/gluestick'));
+    const watcher = chokidar.watch(`${srcPath}/**/*`, {
+      ignored: [
+        /(^|[/\\])\../,
+        /.*node_modules.*/,
+      ],
+      persistent: true,
+    });
+    watcher
+      .on('ready', () => {
+        console.log(chalk.blue('Watching for changes...'));
+        watcher.on('add', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.copy(filePath, destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log((chalk.green(`${filePath} -> ${destPath} [added]`)));
+            }
+          });
+        });
+        watcher.on('change', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.copy(filePath, destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log((chalk.green(`${filePath} -> ${destPath} [changed]`)));
+            }
+          });
+        });
+        watcher.on('unlink', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.remove(destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${destPath} [removed]`));
+            }
+          });
+        });
+        watcher.on('addDir', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.ensureDir(destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${destPath} [added dir]`));
+            }
+          });
+        });
+        watcher.on('unlinkDir', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.remove(destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${destPath} [removed dir]`));
+            }
+          });
+        });
+      });
   });
 
 commander
