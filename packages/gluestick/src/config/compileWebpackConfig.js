@@ -19,8 +19,8 @@ module.exports = (
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings = {
     server: {
-      input: path.join(__dirname, '../renderer/index.js'),
-      output: path.join(process.cwd(), './build/server/server1.js'),
+      input: path.join(__dirname, '../renderer/entry.js'),
+      output: path.join(process.cwd(), './build/server/renderer.js'),
     },
   };
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig.assetsPath);

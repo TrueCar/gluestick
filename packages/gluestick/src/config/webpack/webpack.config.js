@@ -11,16 +11,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
 
 module.exports = (assetsPath: string): WebpackConfig => {
-  const appRoot: string = process.cwd(); // not sure about that
+  const appRoot: string = process.cwd();
   const outputPath: string = path.resolve(appRoot, assetsPath);
 
   const configuration: WebpackConfig = {
-    // resolve all relative paths from the project root folder
     context: appRoot,
     resolve: {
       extensions: ['.js', '.css', '.json'],
       alias: {
-        // default aliases
+        root: process.cwd(),
+        src: path.join(process.cwd(), 'src'),
         assets: path.join(process.cwd(), 'assets'),
         actions: path.join(process.cwd(), 'src', 'actions'),
         components: path.join(process.cwd(), 'src', 'components'),
@@ -52,12 +52,13 @@ module.exports = (assetsPath: string): WebpackConfig => {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /node_modules/, // not sure about it
+        exclude: /node_modules\/(?!gluestick).*/gi,
         use: [{
           loader: 'babel-loader',
           options: {
             plugins: [
               'transform-decorators-legacy',
+              //'transform-flow-strip-type',
             ],
             presets: [
               'react',
@@ -65,11 +66,6 @@ module.exports = (assetsPath: string): WebpackConfig => {
               'stage-0',
             ],
           },
-          include: [
-            path.join(process.cwd(), 'Index.js'),
-            path.join(process.cwd(), 'src'),
-            path.join(process.cwd(), 'test'),
-          ],
         }],
       },
       {

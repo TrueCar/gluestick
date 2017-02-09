@@ -1,10 +1,15 @@
+/**
+ * To import/require file from project use aliases:
+ *   root, src, actions, assets, components, containers, reducers, config
+ * To import/require renderer server file use relative paths.
+ */
+
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
 
 module.exports = ({ config, logger }) => {
   const app = express();
-
   app.use(compression());
   app.use(express.static(
     path.join(process.cwd(), config.GSConfig.assetsPath),

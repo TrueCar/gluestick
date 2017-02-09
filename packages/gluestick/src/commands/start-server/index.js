@@ -1,11 +1,10 @@
-const path = require('path');
 const runWithWebpack = require('./runWithWebpack');
 const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
 
 const getServerEntry = config => {
   return {
-    path: path.join(__dirname, '../../renderer/index.js'),
+    path: config.webpackConfig.universalSettings.server.output,
     args: [
       JSON.stringify(config),
     ],

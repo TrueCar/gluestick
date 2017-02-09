@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
 
 /**
- * Spawns new process with rendering server,
+ * Spawns new process with rendering server.
  *
  * @param {any} { config, logger } Context
  * @param {string} entryPointPath Path to renderer server entry file
