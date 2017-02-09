@@ -12,8 +12,7 @@ export type Config = {
   plugins: Object[];
 };
 
-export type Logger = {
-  [key: LoggerTypes]: Function; // (...args: string[]) => void;
+export type Logger = LoggerTypes & {
   level?: string
 };
 
@@ -23,11 +22,13 @@ export type Question = {
   message: string,
 }
 
-export type LoggerTypes = 'success'
-  | 'info'
-  | 'warn'
-  | 'debug'
-  | 'error';
+export type LoggerTypes = {
+  success: Function;
+  info: Function;
+  warn: Function;
+  debug: Function;
+  error: Function;
+}
 
 export type ProjectConfig = {
 
