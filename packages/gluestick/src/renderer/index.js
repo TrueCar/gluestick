@@ -1,10 +1,7 @@
 const path = require('path');
 
 // Read config from command line arguments.
-const config = process.argv.slice(2).reduce((prev, curr) => {
-  const arg = curr.split('=');
-  return Object.assign(prev, { [arg[0]]: arg[1] });
-}, {});
+const config = JSON.parse(process.argv[2]);
 
 // Read babel additional settings.
 const babelAdditions = config.babel ? require(path.join(process.cwd(), config.babel)) : {};

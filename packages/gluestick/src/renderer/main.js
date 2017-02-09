@@ -7,7 +7,7 @@ module.exports = ({ config, logger }) => {
 
   app.use(compression());
   app.use(express.static(
-    path.join(process.cwd(), config.assetsPath),
+    path.join(process.cwd(), config.GSConfig.assetsPath),
   ));
 
   if (process.env.NODE_ENV !== 'production') {
@@ -24,8 +24,8 @@ module.exports = ({ config, logger }) => {
     res.status(501).send('There should be a SSR middleware.');
   });
 
-  const server = app.listen(config.port);
-  logger.success(`Renderer listening on port ${config.port}.`);
+  const server = app.listen(config.GSConfig.ports.server);
+  logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
     server.close();
   });

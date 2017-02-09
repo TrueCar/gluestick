@@ -7,8 +7,7 @@ const getServerEntry = config => {
   return {
     path: path.join(__dirname, '../../renderer/index.js'),
     args: [
-      `assetsPath=${config.GSConfig.assetsPath}`,
-      `port=${config.GSConfig.ports.server}`,
+      JSON.stringify(config),
     ],
   };
 };
