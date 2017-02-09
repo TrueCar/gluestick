@@ -37,7 +37,7 @@ const currentlyInProjectFolder = (folderPath: string) => {
 
 module.exports = ({ logger }: Context, appName: string) => {
   if (currentlyInProjectFolder(process.cwd())) {
-    logger.info(`${filename(process.cwd())} is being generated...`);
+    logger.info(`${filename(appName)} is being generated...`);
     generateTemplate('new', appName, logger);
   }
 };

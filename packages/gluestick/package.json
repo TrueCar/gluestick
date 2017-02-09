@@ -8,7 +8,7 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src test templates",
+    "lint": "eslint src",
     "test": "jest",
     "jest": "jest",
     "test-watch": "jest --watch",
@@ -139,7 +139,7 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/__tests__/.*$",
+    "testRegex": ".*/__tests__/.*.test.js$",
     "testPathDirs": [
       "src",
       "templates/new/src/config"
