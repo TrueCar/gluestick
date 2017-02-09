@@ -8,18 +8,30 @@ const path = require('path');
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
 const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
+// const TEST_MOCKS_PATH = `${path.join(__dirname, '..', '..', 'jest', '__mocks__')}`;
 
 const getJestDefaultConfig = aliases => {
   const moduleNameMapper = {};
+  /*
+  const images = configTools.assets.images.extensions;
+  const styles = configTools.assets.styles.extensions;
+
+  // Handling Static Assets = mock them out
+  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${images.join('|')})$`]
+    = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${styles.join('|')})$`]
+    = `${TEST_MOCKS_PATH}/styleMock.js`;
+  */
 
   // We map webpack aliases from webpack-isomorphic-tools-config file
   // so Jest can detect them in tests too
   Object.keys(aliases).forEach((key) => {
     moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
+  
 
   const config = {
-    moduleNameMapper,
+    // moduleNameMapper,
     testPathDirs: ['test'],
   };
 
@@ -29,7 +41,6 @@ const getJestDefaultConfig = aliases => {
 };
 
 const getDebugDefaultConfig = aliases => {
-  console.log(aliases);
   const argv = [];
   argv.push('--inspect');
   argv.push('--debug-brk');
@@ -63,7 +74,6 @@ module.exports = (context: Context, options: { [key: string]: string }) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
-  // $FlowFixMe
   const aliases: Object = context.config.webpackConfig.resolve.alias;
   if (options.debugTest) {
     const argvDebug = getDebugDefaultConfig(aliases);
