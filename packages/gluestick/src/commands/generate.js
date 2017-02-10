@@ -4,17 +4,12 @@ import type { Context } from '../types';
 
 const generator = require('../generator');
 
-type GeneratorName = 'conatiner'
-  | 'component'
-  | 'reducer'
-  | 'generator';
-
 type Options = {
   functional?: boolean;
   genOptions?: string;
 }
 
-const generate = ({ config, logger }: Context, generatorName: GeneratorName, entityName: string,
+const generate = ({ config, logger }: Context, generatorName: string, entityName: string,
   options: Options) => {
   const filteredOptions = {
     functional: options.functional,
