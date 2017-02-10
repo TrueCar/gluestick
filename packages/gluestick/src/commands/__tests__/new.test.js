@@ -11,6 +11,28 @@ const spawn = require('cross-spawn');
 const { highlight, filename } = require('../../cli/colorScheme');
 const generate = require('../../generator');
 
+const mockPackageJson = (mockPath) => {
+  jest.doMock(mockPath, () => {
+    if (mockPath.includes('validPackage')) {
+      return {
+        dependencies: {
+          gluestick: '*',
+        },
+      };
+    }
+    if (mockPath.includes('noGluestick')) {
+      return {
+        dependencies: {},
+      };
+    }
+    return {};
+  }, { virtual: true });
+};
+
+mockPackageJson(path.join(__dirname, 'new', 'validPackage', 'package.json'));
+mockPackageJson(path.join(__dirname, 'new', 'noGluestick', 'package.json'));
+mockPackageJson(path.join(__dirname, 'new', 'noDependencies', 'package.json'));
+
 describe('cli: gluestick new', () => {
   let originalCwd;
   let tmpDir;
