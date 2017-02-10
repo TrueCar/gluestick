@@ -10,4 +10,5 @@ module.exports = ({ config, logger }, generatorName, entityName, options) => {
     entityName,
     options: filteredOptions,
   }, logger);
+  process.exit(0);
 };

@@ -39,5 +39,4 @@ module.exports = ({ generatorName, entityName, options }: Command, logger: Logge
     + '\nFiles modified: \n'
     + `  ${results.modified.length ? results.modified.join('\n  ') : '--'}`,
   );
-  process.exit(0);
 };

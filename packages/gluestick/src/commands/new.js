@@ -2,9 +2,11 @@
 
 import type { Context, Logger } from '../types';
 
+const path = require('path');
+const spawn = require('cross-spawn');
+
 const { highlight, filename } = require('../cli/colorScheme');
 const generate = require('../generator');
-const path = require('path');
 
 type ProjectData = {
   dependencies: {
@@ -17,11 +19,6 @@ const generateTemplate = (generatorName: string, entityName: string, logger: Log
     generatorName,
     entityName,
   }, logger);
-  logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
-  logger.info('To run your app and start developing');
-  logger.info(`    cd ${entityName}`);
-  logger.info('    gluestick start');
-  logger.info('    Point the browser to http://localhost:8888');
 };
 
 const currentlyInProjectFolder = (folderPath: string) => {
@@ -38,6 +35,16 @@ const currentlyInProjectFolder = (folderPath: string) => {
 module.exports = ({ logger }: Context, appName: string) => {
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(appName)} is being generated...`);
+
     generateTemplate('new', appName, logger);
+    spawn.sync('npm', ['install'], { stdio: 'inherit' });
+
+    logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+    logger.info('To run your app and start developing');
+    logger.info(`    cd ${appName}`);
+    logger.info('    gluestick start');
+    logger.info('    Point the browser to http://localhost:8888');
+
+    process.exit(0);
   }
 };

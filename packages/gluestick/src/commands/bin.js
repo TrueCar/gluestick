@@ -9,7 +9,7 @@ const getDependencyPath = name =>
   path.join(__dirname, '..', '..', 'node_modules', '.bin', name);
 
 // `opts` is array of options with Command object attached as last element
-module.exports = (context: Context, dependencyName: string, ...opts: Array<*>) => {
+module.exports = (context: Context, dependencyName: string, ...opts: any[]) => {
   spawn(
     getDependencyPath(dependencyName),
     opts[opts.length - 1].parent.rawArgs.slice(4),
