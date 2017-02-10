@@ -2,6 +2,8 @@ const path = require('path');
 const commander = require('commander');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
+const chokidar = require('chokidar');
+const fs = require('fs-extra');
 
 const newApp = require('./new');
 const reinstallDev = require('./reinstallDev');
@@ -48,29 +50,64 @@ commander
       if (!/file:.*/.test(packageContent.dependencies.gluestick)) {
         exitWithError('Gluestick dependency does not contain valid path');
       }
-      srcPath = path.join(
-        process.cwd(),
-        packageContent.dependencies.gluestick.replace('file:', ''),
-      );
+      const pathFromDependency = packageContent.dependencies.gluestick.replace('file://', '').replace('file:', '');
+      srcPath = pathFromDependency[0] !== '/'
+        ? path.join(
+            process.cwd(),
+            pathFromDependency,
+          )
+        : pathFromDependency;
     } catch (error) {
       exitWithError('Invalid package.json');
     }
-    const wmlBin = path.join(__dirname, './node_modules/.bin/wml');
-    spawn.sync(
-      wmlBin,
-      ['add', srcPath, path.join(process.cwd(), 'node_modules/gluestick')],
-      { stdio: 'inherit' },
-    );
-    spawn.sync(
-      'watchman',
-      ['watch', srcPath],
-      { stdio: 'inherit' },
-    );
-    spawn.sync(
-      wmlBin,
-      ['start'],
-      { stdio: 'inherit' },
-    );
+    const convertFilePath = filePath => filePath.replace(srcPath, path.join(process.cwd(), 'node_modules/gluestick'));
+    const watcher = chokidar.watch(`${srcPath}/**/*`, {
+      ignored: [
+        /(^|[/\\])\../,
+        /.*node_modules.*/,
+      ],
+      persistent: true,
+    });
+    watcher
+      .on('ready', () => {
+        const copy = (filePath, type) => {
+          const destPath = convertFilePath(filePath);
+          fs.copy(filePath, destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${filePath} -> ${destPath} [${type}]`));
+            }
+          });
+        };
+
+        const remove = (filePath, type) => {
+          const destPath = convertFilePath(filePath);
+          fs.remove(destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${destPath} [${type}]`));
+            }
+          });
+        };
+
+        console.log(chalk.blue('Watching for changes...'));
+        watcher.on('add', filePath => copy(filePath, 'added'));
+        watcher.on('change', filePath => copy(filePath, 'changed'));
+        watcher.on('unlink', filePath => remove(filePath, 'removed'));
+        watcher.on('unlinkDir', filePath => remove(filePath, 'removed dir'));
+        watcher.on('addDir', filePath => {
+          const destPath = convertFilePath(filePath);
+          fs.ensureDir(destPath, (err) => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(chalk.green(`${destPath} [added dir]`));
+            }
+          });
+        });
+      });
   });
 
 commander
