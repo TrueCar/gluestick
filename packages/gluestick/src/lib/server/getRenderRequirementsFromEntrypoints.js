@@ -1,30 +1,23 @@
 import { parse as parseURL } from 'url';
-import { getHttpClient } from 'gluestick-shared';
-import { getWebpackEntries } from '../buildWebpackEntries';
+// import { getHttpClient } from 'gluestick-shared';
 import isChildPath from '../isChildPath';
 
-
-const cachedEntryPoints = getWebpackEntries();
-
+const entries = require('config/entries').default;
 /**
  * Sort through all of the entry points based on the number of `/` characters
  * found in the url. It will test the most deeply nested entry points first
  * while finally falling back to the default index parameter.
  */
 const getSortedEntries = () => {
-  return Object.keys(getWebpackEntries()).sort((a, b) => {
+  return Object.keys(entries).sort((a, b) => {
     const bSplitLength = b.split('/').length;
     const aSplitLength = a.split('/').length;
     if (bSplitLength === aSplitLength) {
       return b.length - a.length;
     }
-
     return bSplitLength - aSplitLength;
   });
 };
-
-// Cache this result so it only runs once in production
-const cachedSortedEntries = getSortedEntries();
 
 /**
  * This method takes the server request object, determines which entry point
@@ -33,19 +26,9 @@ const cachedSortedEntries = getSortedEntries();
  * store, getRoutes and fileName.
  */
 export default (req, res, config = {}, logger) => {
-  logger.warn(process.env.COMPILATION_TIMESTAMP);
-  const httpClient = getHttpClient(config.httpClient, req, res);
+  // const httpClient = getHttpClient(config.httpClient, req, res);
   const { path: urlPath } = parseURL(req.url);
-  let sortedEntries;
-  let entryPoints;
-  if (process.env.NODE_ENV === 'production') {
-    sortedEntries = cachedSortedEntries;
-    entryPoints = cachedEntryPoints;
-  } else {
-    sortedEntries = getSortedEntries();
-    entryPoints = getWebpackEntries();
-  }
-
+  const sortedEntries = getSortedEntries();
   logger.debug('Getting webpack entries');
 
   /**
@@ -55,15 +38,11 @@ export default (req, res, config = {}, logger) => {
   logger.debug('Looping through sorted entry points');
   for (const path of sortedEntries) {
     if (isChildPath(path, urlPath)) {
-      const { routes, index, fileName, filePath } = entryPoints[path];
-
-      logger.debug('Found entrypoint and performing requires for', fileName, index, filePath, routes);
-      logger.warn(index);
+      logger.debug(`Found entrypoint and performing requires for path "${path}"`);
       return {
-        Index: require(req.query.import).default,
-        // store: require(filePath).getStore(httpClient),
-        // getRoutes: require(routes).default,
-        fileName,
+        Component: entries[path].component,
+        reducer: entries[path].reducer,
+        routes: entries[path].routes,
       };
     }
   }
