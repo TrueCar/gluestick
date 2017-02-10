@@ -25,6 +25,7 @@ describe('cli: gluestick new', () => {
     originalCwd = process.cwd();
     tmpDir = temp.mkdirSync('gluestick-new');
     process.chdir(tmpDir);
+    process.exit = jest.fn();
   });
 
   afterEach((done) => {
