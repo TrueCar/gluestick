@@ -1,4 +1,3 @@
-//jest.mock('testPlugin');
 const path = require('path');
 const preparePlugins = require('../preparePlugins');
 
