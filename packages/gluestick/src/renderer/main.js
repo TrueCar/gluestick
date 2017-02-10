@@ -3,7 +3,6 @@
  *   root, src, actions, assets, components, containers, reducers, config
  * To import/require renderer server file use relative paths.
  */
-
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
