@@ -78,37 +78,33 @@ commander
     });
     watcher
       .on('ready', () => {
-        console.log(chalk.blue('Watching for changes...'));
-        watcher.on('add', filePath => {
+        const copy = (filePath, type) => {
           const destPath = convertFilePath(filePath);
           fs.copy(filePath, destPath, (err) => {
             if (err) {
               console.error(chalk.red(err));
             } else {
-              console.log((chalk.green(`${filePath} -> ${destPath} [added]`)));
+              console.log(chalk.green(`${filePath} -> ${destPath} [${type}]`));
             }
           });
-        });
-        watcher.on('change', filePath => {
-          const destPath = convertFilePath(filePath);
-          fs.copy(filePath, destPath, (err) => {
-            if (err) {
-              console.error(chalk.red(err));
-            } else {
-              console.log((chalk.green(`${filePath} -> ${destPath} [changed]`)));
-            }
-          });
-        });
-        watcher.on('unlink', filePath => {
+        };
+
+        const remove = (filePath, type) => {
           const destPath = convertFilePath(filePath);
           fs.remove(destPath, (err) => {
             if (err) {
               console.error(chalk.red(err));
             } else {
-              console.log(chalk.green(`${destPath} [removed]`));
+              console.log(chalk.green(`${destPath} [${type}]`));
             }
           });
-        });
+        };
+
+        console.log(chalk.blue('Watching for changes...'));
+        watcher.on('add', filePath => copy(filePath, 'added'));
+        watcher.on('change', filePath => copy(filePath, 'changed'));
+        watcher.on('unlink', filePath => remove(filePath, 'removed'));
+        watcher.on('unlinkDir', filePath => remove(filePath, 'removed dir'));
         watcher.on('addDir', filePath => {
           const destPath = convertFilePath(filePath);
           fs.ensureDir(destPath, (err) => {
@@ -116,16 +112,6 @@ commander
               console.error(chalk.red(err));
             } else {
               console.log(chalk.green(`${destPath} [added dir]`));
-            }
-          });
-        });
-        watcher.on('unlinkDir', filePath => {
-          const destPath = convertFilePath(filePath);
-          fs.remove(destPath, (err) => {
-            if (err) {
-              console.error(chalk.red(err));
-            } else {
-              console.log(chalk.green(`${destPath} [removed dir]`));
             }
           });
         });
