@@ -4,8 +4,8 @@ const config = JSON.parse(process.argv[2]);
 // Prepare logger.
 const loggerFactory = type => {
   if (process.env.NODE_ENV === 'production') {
-    return value => {
-      const log = `${type.toUpperCase()}: ${value}`;
+    return (...values) => {
+      const log = `${type.toUpperCase()}: ${values.reduce((p, c) => p.concat(c), '')}`;
       if (type === 'error') {
         process.stderr.write(log);
       } else {
@@ -13,7 +13,7 @@ const loggerFactory = type => {
       }
     };
   }
-  return value => {
+  return (...value) => {
     process.send({ type, value });
   };
 };
