@@ -45,6 +45,7 @@ describe("${args => args.path}", () => {
 
 module.exports = (options) => {
   const rewrittenName = `${options.name[0].toUpperCase()}${options.name.slice(1)}`;
+  const directoryPrefix = options.dir !== '.' ? `${options.dir}/` : '';
   return {
     args: {
       name: rewrittenName,
@@ -60,7 +61,7 @@ module.exports = (options) => {
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `components/${rewrittenName}`,
+          path: `components/${directoryPrefix}${rewrittenName}`,
         },
       },
     ],
