@@ -110,62 +110,17 @@ module.exports = () => ({
       template: templateBabelrc,
     },
     {
-      path: '/test/components/',
-      filename: 'Home.test.js',
-      template: templateHomeTest,
-    },
-    {
-      path: '/test/components/',
-      filename: 'MasterLayout.test.js',
-      template: templateMasterLayoutTest,
-    },
-    {
-      path: '/test/containers/',
-      filename: 'ContaineHome.test.js',
-      template: templateContainerHomeTest,
-    },
-    {
-      path: '/test/containers/',
-      filename: 'NoMatchApp.test.js',
-      template: templateNoMatchAppTest,
-    },
-    {
-      path: '/test/containers/',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/entryPoints/',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/mapEntryToGroup/',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/reducers/',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/src/actions',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/src/components',
+      path: '/src/components',
       filename: 'Home.js',
       template: templateHome,
     },
     {
-      path: '/test/src/components',
+      path: '/src/components',
       filename: 'MasterLayout.js',
       template: templateMasterLayout,
     },
     {
-      path: '/test/src/config',
+      path: '/src/config',
       filename: '.Dockerfile',
       template: templateDockerfile,
     },
@@ -218,6 +173,56 @@ module.exports = () => ({
       path: '/src/reducers',
       filename: 'index.js',
       template: templateRecuder,
+    },
+    {
+      path: '/src/entryPoints/',
+      filename: '.empty',
+      template: templateEmpty,
+    },
+    {
+      path: '/src/mapEntryToGroup/',
+      filename: '.empty',
+      template: templateEmpty,
+    },
+    {
+      path: '/test/components/',
+      filename: 'Home.test.js',
+      template: templateHomeTest,
+    },
+    {
+      path: '/test/components/',
+      filename: 'MasterLayout.test.js',
+      template: templateMasterLayoutTest,
+    },
+    {
+      path: '/test/containers/',
+      filename: 'ContaineHome.test.js',
+      template: templateContainerHomeTest,
+    },
+    {
+      path: '/test/containers/',
+      filename: 'NoMatchApp.test.js',
+      template: templateNoMatchAppTest,
+    },
+    {
+      path: '/test/entryPoints/',
+      filename: '.empty',
+      template: templateEmpty,
+    },
+    {
+      path: '/test/mapEntryToGroup/',
+      filename: '.empty',
+      template: templateEmpty,
+    },
+    {
+      path: '/test/reducers/',
+      filename: '.empty',
+      template: templateEmpty,
+    },
+    {
+      path: '/test/actions',
+      filename: '.empty',
+      template: templateEmpty,
     },
   ],
 });
