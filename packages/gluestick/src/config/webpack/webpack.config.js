@@ -58,13 +58,14 @@ module.exports = (assetsPath: string): WebpackConfig => {
           options: {
             plugins: [
               'transform-decorators-legacy',
-              //'transform-flow-strip-type',
+              'transform-flow-strip-type',
             ],
             presets: [
               'react',
               'es2015',
               'stage-0',
             ],
+            babelrc: false,
           },
         }],
       },

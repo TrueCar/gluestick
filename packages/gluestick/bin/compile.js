@@ -11,5 +11,6 @@ require('babel-core/register')({
     require.resolve('babel-plugin-transform-decorators-legacy'),
     require.resolve('babel-plugin-transform-flow-strip-types'),
   ],
+  babelrc: false,
 });
 
