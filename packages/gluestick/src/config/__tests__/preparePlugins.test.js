@@ -1,4 +1,3 @@
-//jest.mock('testPlugin');
 const path = require('path');
 const preparePlugins = require('../preparePlugins');
 
@@ -6,7 +5,9 @@ const originalPath = path.join.bind({});
 
 describe('config/preparePlugins', () => {
   beforeEach(() => {
-    path.join = jest.fn().mockImplementation(() => './__tests__/testPlugin.js');
+    path.join = jest.fn().mockImplementation(
+      () => originalPath(__dirname, '../__mocks__/testPlugin.js'),
+    );
   });
 
   afterEach(() => {
