@@ -6,6 +6,7 @@
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
+const middleware = require('./middleware');
 
 module.exports = ({ config, logger }) => {
   const app = express();
@@ -25,7 +26,8 @@ module.exports = ({ config, logger }) => {
 
   // TODO: replace with actuall SSR middleware.
   app.use((req, res) => {
-    res.status(501).send('There should be a SSR middleware.');
+    middleware(req, res, config, logger);
+    // res.status(501).send('There should be a SSR middleware.');
   });
 
   const server = app.listen(config.GSConfig.ports.server);

@@ -2,9 +2,7 @@ import { parse as parseURL } from 'url';
 import { getHttpClient } from 'gluestick-shared';
 import { getWebpackEntries } from '../buildWebpackEntries';
 import isChildPath from '../isChildPath';
-import { getLogger } from './logger';
 
-const logger = getLogger();
 
 const cachedEntryPoints = getWebpackEntries();
 
@@ -34,7 +32,8 @@ const cachedSortedEntries = getSortedEntries();
  * variables that the server needs to render. These variables include Index,
  * store, getRoutes and fileName.
  */
-export default (req, res, config = {}, customRequire = require) => {
+export default (req, res, config = {}, logger) => {
+  logger.warn(process.env.COMPILATION_TIMESTAMP);
   const httpClient = getHttpClient(config.httpClient, req, res);
   const { path: urlPath } = parseURL(req.url);
   let sortedEntries;
@@ -58,11 +57,12 @@ export default (req, res, config = {}, customRequire = require) => {
     if (isChildPath(path, urlPath)) {
       const { routes, index, fileName, filePath } = entryPoints[path];
 
-      logger.debug('Found entrypoint and performing requires for', index, filePath, routes);
+      logger.debug('Found entrypoint and performing requires for', fileName, index, filePath, routes);
+      logger.warn(index);
       return {
-        Index: customRequire(`${index}.js`).default,
-        store: customRequire(filePath).getStore(httpClient),
-        getRoutes: customRequire(routes).default,
+        Index: require(req.query.import).default,
+        // store: require(filePath).getStore(httpClient),
+        // getRoutes: require(routes).default,
         fileName,
       };
     }
