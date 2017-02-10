@@ -39,12 +39,6 @@ export type Logger = LoggerTypes & {
   level?: string
 };
 
-export type Question = {
-  type: string,
-  name: string,
-  message: string,
-}
-
 export type LoggerTypes = {
   success: Function;
   info: Function;
@@ -52,11 +46,6 @@ export type LoggerTypes = {
   debug: Function;
   error: Function;
 }
-
-export type Logger = {
-  [key: LoggerTypes]: Function; // (...args: string[]) => void;
-  level?: string
-};
 
 export type Context = {
  config: Config,

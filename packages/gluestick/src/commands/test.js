@@ -74,6 +74,7 @@ module.exports = (context: Context, options: { [key: string]: string }) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
+  // $FlowFixMe
   const aliases: Object = context.config.webpackConfig.resolve.alias;
   if (options.debugTest) {
     const argvDebug = getDebugDefaultConfig(aliases);
