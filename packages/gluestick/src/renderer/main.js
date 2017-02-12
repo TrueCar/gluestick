@@ -8,6 +8,10 @@ const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
 
+const entries = require('root/entries').default;
+const EntryWrapper = require('config/.entry').default;
+const BodyWrapper = require('./components/Body').default;
+
 module.exports = ({ config, logger }) => {
   const app = express();
   app.use(compression());
@@ -24,10 +28,13 @@ module.exports = ({ config, logger }) => {
     });
   }
 
-  // TODO: replace with actuall SSR middleware.
   app.use((req, res) => {
-    middleware(req, res, config, logger);
-    // res.status(501).send('There should be a SSR middleware.');
+    middleware(
+      req, res,
+      { config, logger },
+      entries,
+      { EntryWrapper, BodyWrapper },
+    );
   });
 
   const server = app.listen(config.GSConfig.ports.server);
