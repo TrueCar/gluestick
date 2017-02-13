@@ -30,7 +30,7 @@ const getJestDefaultConfig = () => {
 
   const config = {
     moduleNameMapper,
-    testPathDirs: ['test'],
+    testPathDirs: ['src', 'test'],
   };
 
   const argv = [];

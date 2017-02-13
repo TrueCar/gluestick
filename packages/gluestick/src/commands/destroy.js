@@ -98,7 +98,7 @@ module.exports = async (context: Context, command: Command, name: string) => {
   }
 
   // Remove the test file
-  const testFolder = path.resolve(path.join(CWD, 'test', availableCommands[command]), dirname);
+  const testFolder = path.resolve(path.join(CWD, 'src', availableCommands[command]), dirname, '__tests__');
   const testPath = path.join(testFolder, `${generatedFileName}.test.js`);
   let testFileExists = true;
   try {
