@@ -41,40 +41,40 @@ module.exports = () => {
   });
   watcher
     .on('ready', () => {
-      const copy = (filePath, type) => {
+      const copy = (filePath, type, typeColorFactory) => {
         const destPath = convertFilePath(filePath);
         fs.copy(filePath, destPath, (err) => {
           if (err) {
             console.error(chalk.red(err));
           } else {
-            console.log(chalk.green(`${filePath} -> ${destPath} [${type}]`));
+            console.log(`${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(`[${type}]`)}`);
           }
         });
       };
 
-      const remove = (filePath, type) => {
+      const remove = (filePath, type, typeColorFactory) => {
         const destPath = convertFilePath(filePath);
         fs.remove(destPath, (err) => {
           if (err) {
             console.error(chalk.red(err));
           } else {
-            console.log(chalk.green(`${destPath} [${type}]`));
+            console.log(`${chalk.gray(destPath)} ${typeColorFactory(`[${type}]`)}`);
           }
         });
       };
 
       console.log(chalk.blue('Watching for changes...'));
-      watcher.on('add', filePath => copy(filePath, 'added'));
-      watcher.on('change', filePath => copy(filePath, 'changed'));
-      watcher.on('unlink', filePath => remove(filePath, 'removed'));
-      watcher.on('unlinkDir', filePath => remove(filePath, 'removed dir'));
+      watcher.on('add', filePath => copy(filePath, 'added', chalk.green));
+      watcher.on('change', filePath => copy(filePath, 'changed', chalk.yellow));
+      watcher.on('unlink', filePath => remove(filePath, 'removed', chalk.red));
+      watcher.on('unlinkDir', filePath => remove(filePath, 'removed dir', chalk.magenta));
       watcher.on('addDir', filePath => {
         const destPath = convertFilePath(filePath);
         fs.ensureDir(destPath, (err) => {
           if (err) {
             console.error(chalk.red(err));
           } else {
-            console.log(chalk.green(`${destPath} [added dir]`));
+            console.log(`${chalk.gray(destPath)} ${chalk.cyan('[added dir]')}`);
           }
         });
       });
