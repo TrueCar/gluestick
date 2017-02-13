@@ -33,7 +33,7 @@ const getJestDefaultConfig = () => {
     moduleNameMapper,
     testPathDirs: ['test'],
     transformIgnorePatterns: [
-      '\/node_modules\/(?!gluestick-addon-)',
+      '/node_modules/(?!gluestick-addon-)',
     ],
   };
 
