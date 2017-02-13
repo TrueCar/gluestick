@@ -8,10 +8,10 @@ const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
 
-const entries = require('root/entries').default;
-const EntryWrapper = require('config/.entry').default;
+const entries = require('project-entries').default;
+const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
-const assets = require('root/build/assets/webpack-chunks');
+const assets = require('webpack-chunks');
 
 module.exports = ({ config, logger }) => {
   const app = express();

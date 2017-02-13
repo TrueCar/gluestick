@@ -21,6 +21,9 @@ export type GSConfig = {
   reducersPath: string;
   routesPath: string;
   configPath: string;
+  entryWrapperPath: string;
+  entriesPath: string;
+  webpackChunks: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];
   [key: string]: any;

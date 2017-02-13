@@ -23,6 +23,7 @@ module.exports = async (
       routerContext={routerContext}
       config={entryWrapperConfig}
       getRoutes={routes}
+      httpClient={httpClient}
     />
   );
 

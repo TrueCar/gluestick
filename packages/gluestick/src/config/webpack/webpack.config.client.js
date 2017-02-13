@@ -3,7 +3,8 @@
 import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
 const { clientConfiguration } = require('universal-webpack');
+const deepClone = require('./deepCopy');
 
 module.exports = (configuration: WebpackConfig, settings: Object): UniversalWebpackConfigurator => {
-  return options => clientConfiguration(configuration, settings, options);
+  return options => clientConfiguration(deepClone(configuration), settings, options);
 };
