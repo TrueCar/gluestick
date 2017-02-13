@@ -23,7 +23,7 @@ module.exports = (
       output: path.join(process.cwd(), './build/server/renderer.js'),
     },
   };
-  const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig.assetsPath);
+  const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
     sharedConfig, universalWebpackSettings,
   );
