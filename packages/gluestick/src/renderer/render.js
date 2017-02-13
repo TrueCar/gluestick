@@ -16,7 +16,6 @@ module.exports = async (
 ) => {
   const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
 
-
   const routerContext = <RouterContext {...renderProps} />;
   const entryWrapper = (
     <EntryWrapper
@@ -54,7 +53,7 @@ module.exports = async (
   // always add inside the <head> tag.
   //
   // Bundle it all up into a string, add the doctype and deliver
-  const rootElement = <EntryPoint body={bodyWrapper} head={null} req={req} />;
+  const rootElement = <EntryPoint body={bodyWrapper} head={styleTags} req={req} />;
 
   const responseString = renderToStaticMarkup(rootElement);
   return {
