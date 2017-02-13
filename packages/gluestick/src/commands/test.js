@@ -19,8 +19,8 @@ const getJestDefaultConfig = () => {
   const moduleNameMapper = {};
 
   // Handling Static Assets = mock them out
-  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${images.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
-  moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${styles.join('|')})$`] = `${TEST_MOCKS_PATH}/styleMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join('|')})$`] = `${TEST_MOCKS_PATH}/styleMock.js`;
 
   // We map webpack aliases from webpack-isomorphic-tools-config file
   // so Jest can detect them in tests too
