@@ -1,0 +1,19 @@
+[ignore]
+# fbjs lib problems
+.*/node_modules/fbjs/.*
+# radium lib problems
+.*/node_modules/radium/.*
+
+[include]
+
+[libs]
+flow/
+
+[options]
+suppress_type=$FlowFixMe
+module.name_mapper='^components/\(.*\)'->'<PROJECT_ROOT>/src/components/\1'
+module.name_mapper='^containers/\(.*\)'->'<PROJECT_ROOT>/src/containers/\1'
+module.name_mapper='^config/\(.*\)'->'<PROJECT_ROOT>/src/config/\1'
+
+[version]
+^0.38.0
