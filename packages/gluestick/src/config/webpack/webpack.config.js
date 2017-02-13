@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { WebpackConfig } from '../../types';
+import type { WebpackConfig, GSConfig } from '../../types';
 
 const path = require('path');
 const webpack = require('webpack');
@@ -10,9 +10,20 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
 
-module.exports = (assetsPath: string): WebpackConfig => {
+module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
   const appRoot: string = process.cwd();
-  const outputPath: string = path.resolve(appRoot, assetsPath);
+  const {
+    buildAssetsPath,
+    assetsPath,
+    sourcePath,
+    actionsPath,
+    componentsPath,
+    containersPath,
+    reducersPath,
+    routesPath,
+    configPath,
+  } = gluestickConfig;
+  const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
   const configuration: WebpackConfig = {
     context: appRoot,
@@ -20,19 +31,20 @@ module.exports = (assetsPath: string): WebpackConfig => {
       extensions: ['.js', '.css', '.json'],
       alias: {
         root: process.cwd(),
-        src: path.join(process.cwd(), 'src'),
-        assets: path.join(process.cwd(), 'assets'),
-        actions: path.join(process.cwd(), 'src', 'actions'),
-        components: path.join(process.cwd(), 'src', 'components'),
-        containers: path.join(process.cwd(), 'src', 'containers'),
-        reducers: path.join(process.cwd(), 'src', 'reducers'),
-        config: path.join(process.cwd(), 'src', 'config'),
+        src: path.join(process.cwd(), sourcePath),
+        assets: path.join(process.cwd(), assetsPath),
+        actions: path.join(process.cwd(), sourcePath, actionsPath),
+        components: path.join(process.cwd(), sourcePath, componentsPath),
+        containers: path.join(process.cwd(), sourcePath, containersPath),
+        reducers: path.join(process.cwd(), sourcePath, reducersPath),
+        routes: path.join(process.cwd(), sourcePath, routesPath),
+        config: path.join(process.cwd(), sourcePath, configPath),
       },
     },
 
     // https://webpack.github.io/docs/multiple-entry-points.html
     entry: {
-      main: './src/config/.entry.js',
+      main: './Index2.js',
     },
 
     output: {
