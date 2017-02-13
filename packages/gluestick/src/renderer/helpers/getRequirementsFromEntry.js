@@ -42,5 +42,6 @@ module.exports = ({ config, logger }, req, entries) => {
     Component: entries[entryName].component,
     reducers: entries[entryName].reducer,
     routes: entries[entryName].routes,
+    name: entries[entryName].name || entryName,
   } : null;
 };

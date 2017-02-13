@@ -6,7 +6,14 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 // const getStatusCode = require('./helpers/getStatusCode');
 
-module.exports = async (req, res, { config, logger }, entries, { EntryWrapper, BodyWrapper }) => {
+module.exports = async (
+  req,
+  res,
+  { config, logger },
+  entries,
+  { EntryWrapper, BodyWrapper },
+  assets,
+) => {
   /**
    * TODO: cache, memoization
    * TODO: add hooks
@@ -66,11 +73,12 @@ module.exports = async (req, res, { config, logger }, entries, { EntryWrapper, B
   const output = await render(
     { config, logger },
     req,
-    { EntryPoint: requirements.Component, store, routes: requirements.routes },
+    { EntryPoint: requirements.Component, entryName: requirements.name, store, routes: requirements.routes },
     renderProps,
     unknowConfig,
     [],
     { EntryWrapper, BodyWrapper },
+    assets,
   );
   res.send(output.responseString);
 };

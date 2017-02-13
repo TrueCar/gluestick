@@ -30,17 +30,15 @@ module.exports = (config, entryPoint, assets) => {
     }
   }
 
+  const vendorScriptsHref = getAssetPathForFile('vendor', 'javascript', assets);
+  scriptTags.push(
+    <script key={key++} type="text/javascript" href={vendorScriptsHref} />,
+  );
   const scriptsHref = getAssetPathForFile(entryPoint, 'javascript', assets);
   scriptTags.push(
     <script key={key++} type="text/javascript" href={scriptsHref} />,
   );
-  const vendorScriptsHref = getAssetPathForFile('vendor', 'javascripts', assets);
-  scriptTags.push(
-    <script key={key++} type="text/javascript" href={vendorScriptsHref} />,
-  );
 
-
-  // tags.push(headContent);
 
   return { styleTags, scriptTags };
 };

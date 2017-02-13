@@ -1,16 +1,21 @@
 const React = require('react');
 const { RouterContext } = require('react-router');
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
+const linkAssets = require('./helpers/linkAssets');
 
 module.exports = async (
   { config, logger },
   req,
-  { EntryPoint, store, routes },
+  { EntryPoint, entryName, store, routes },
   renderProps,
   entryWrapperConfig,
   envVariables,
   { EntryWrapper, BodyWrapper },
+  assets,
 ) => {
+  const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
+
+
   const routerContext = <RouterContext {...renderProps} />;
   const entryWrapper = (
     <EntryWrapper
@@ -33,6 +38,7 @@ module.exports = async (
       initialState={currentState}
       isEmail={false}
       envVariables={envVariables}
+      scriptTags={scriptTags}
     />
   );
 

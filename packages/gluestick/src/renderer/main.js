@@ -11,6 +11,7 @@ const middleware = require('./middleware');
 const entries = require('root/entries').default;
 const EntryWrapper = require('config/.entry').default;
 const BodyWrapper = require('./components/Body').default;
+const assets = require('root/build/assets/webpack-chunks');
 
 module.exports = ({ config, logger }) => {
   const app = express();
@@ -34,6 +35,7 @@ module.exports = ({ config, logger }) => {
       { config, logger },
       entries,
       { EntryWrapper, BodyWrapper },
+      assets,
     );
   });
 
