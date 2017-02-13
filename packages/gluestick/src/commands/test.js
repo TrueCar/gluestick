@@ -14,12 +14,13 @@ const TEST_MOCKS_PATH = `${path.join(__dirname, '..', '..', 'jest', '__mocks__')
 const getJestDefaultConfig = () => {
   const alias = configTools.alias;
   const images = configTools.assets.images.extensions;
+  const other = configTools.assets.other.extensions;
   const styles = configTools.assets.styles.extensions;
 
   const moduleNameMapper = {};
 
   // Handling Static Assets = mock them out
-  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')}|${other.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join('|')})$`] = `${TEST_MOCKS_PATH}/styleMock.js`;
 
   // We map webpack aliases from webpack-isomorphic-tools-config file
@@ -31,6 +32,9 @@ const getJestDefaultConfig = () => {
   const config = {
     moduleNameMapper,
     testPathDirs: ['test'],
+    transformIgnorePatterns: [
+      '\/node_modules\/(?!gluestick-addon-)',
+    ],
   };
 
   const argv = [];
