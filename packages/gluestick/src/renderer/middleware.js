@@ -3,7 +3,7 @@ const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
 const matchRoute = require('./helpers/matchRoute');
 const { getHttpClient, createStore } = require('gluestick-shared');
 const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
-const setHeaders = require('./helpers/setHeaders');
+const setHeaders = require('./response/setHeaders');
 // const getStatusCode = require('./helpers/getStatusCode');
 
 module.exports = async (req, res, { config, logger }, entries, { EntryWrapper, BodyWrapper }) => {
