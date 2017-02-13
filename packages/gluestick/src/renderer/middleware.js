@@ -72,7 +72,11 @@ module.exports = async (
   const output = await render(
     { config, logger },
     req,
-    { EntryPoint: requirements.Component, entryName: requirements.name, store, routes: requirements.routes },
+    { EntryPoint: requirements.Component,
+      entryName: requirements.name,
+      store,
+      routes: requirements.routes,
+    },
     renderProps,
     unknowConfig,
     [],
