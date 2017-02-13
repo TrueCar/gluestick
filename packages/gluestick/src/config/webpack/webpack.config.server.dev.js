@@ -1,6 +1,7 @@
 /* @flow */
 
 import type { WebpackConfig } from '../../types';
+
 const webpack = require('webpack');
 
 const deepClone = (obj: Object) => {
