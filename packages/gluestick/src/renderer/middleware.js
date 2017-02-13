@@ -39,7 +39,6 @@ module.exports = async (
     (cb) => module.hot && module.hot.accept('/Users/paweltrysla/Documents/testApp_v1/src/reducers', cb),
     !!module.hot,
   );
-
   const {
     redirectLocation,
     renderProps,
@@ -79,6 +78,7 @@ module.exports = async (
     [],
     { EntryWrapper, BodyWrapper },
     assets,
+    httpClient,
   );
   res.send(output.responseString);
 };

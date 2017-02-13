@@ -12,6 +12,7 @@ module.exports = async (
   envVariables,
   { EntryWrapper, BodyWrapper },
   assets,
+  httpClient,
 ) => {
   const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
 
