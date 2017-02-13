@@ -1,4 +1,5 @@
 /* @flow */
+import type { GeneratorOptions } from '../../types';
 
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
@@ -32,7 +33,6 @@ const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateRecuder = require('../templates/Reducer')(createTemplate);
 
-
 /**
  * Generator must export object with configuration or function that returns
  * object with configuration.
@@ -46,7 +46,7 @@ const templateRecuder = require('../templates/Reducer')(createTemplate);
  * `dir` will not be appended to `file` field in `modify` object, you will
  * need to do it yourself.
  */
-module.exports = () => ({
+module.exports = (options: GeneratorOptions) => ({
   /**
    * Define single entry.
    * Type: Object
@@ -73,6 +73,10 @@ module.exports = () => ({
       filename: 'package.json',
       template: templatePackage,
       overwrite: true,
+      args: {
+        dev: options.dev,
+        appName: options.appName,
+      },
     },
     {
       path: '/',

@@ -58,3 +58,7 @@ export type WrittenTemplate = {
   name: string,
   config: any,
 }
+
+export type GeneratorOptions = {
+  [key: string]: ?string,
+}

@@ -4,7 +4,7 @@ import type { CreateTemplate } from '../../types';
 module.exports = (createTemplate: CreateTemplate) => {
   const template = createTemplate`
    {
-      "name": "AppName",
+      "name": "${(args) => args.appName}",
       "version": "1.0.0",
       "description": "",
       "main": "index.js",
@@ -13,7 +13,9 @@ module.exports = (createTemplate: CreateTemplate) => {
         "test": "gluestick test"
       },
       "dependencies": {
-        "gluestick": "../gluestick/packages/gluestick",
+        "gluestick": "${
+          (args) => args.dev ? args.dev : '1.0.0' // TODO: replace with real version
+        }",
         "axios": "0.12.0",
         "babel-core": "6.22.1",
         "babel-loader": "6.2.10",
