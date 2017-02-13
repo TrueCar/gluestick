@@ -5,16 +5,25 @@ export type ProjectConfig = {
 };
 
 export type GSConfig = {
-  protocol: string,
-  host: string,
+  protocol: string;
+  host: string;
   ports: {
-    client: number,
-    server: number,
-  },
-  assetsPath: string,
-  proxyLogLevel: string,
-  debugWatchDirectories: string[],
-  [key: string]: any,
+    client: number;
+    server: number;
+  };
+  buildAssetsPath: string;
+  assetsPath: string;
+  sourcePath: string;
+  assetsPath: string;
+  actionsPath: string;
+  componentsPath: string;
+  containersPath: string;
+  reducersPath: string;
+  routesPath: string;
+  configPath: string;
+  proxyLogLevel: string;
+  debugWatchDirectories: string[];
+  [key: string]: any;
 };
 
 type WebpackConfigEntry = string | Object | any[];
