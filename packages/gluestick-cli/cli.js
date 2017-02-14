@@ -45,7 +45,7 @@ commander
   .command('watch')
   .description('watch and apply changes from gluestick to project')
   .action(() => {
-    watchCmd();
+    watchCmd(exitWithError);
   });
 
 commander

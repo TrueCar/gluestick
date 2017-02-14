@@ -3,12 +3,7 @@ const chalk = require('chalk');
 const chokidar = require('chokidar');
 const fs = require('fs-extra');
 
-const exitWithError = message => {
-  console.error(chalk.red(`ERROR: ${message}`));
-  process.exit(1);
-};
-
-module.exports = () => {
+module.exports = (exitWithError) => {
   const packagePath = path.join(process.cwd(), 'package.json');
   let packageContent = null;
   try {
