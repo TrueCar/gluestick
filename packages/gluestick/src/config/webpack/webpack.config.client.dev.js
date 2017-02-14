@@ -23,11 +23,15 @@ module.exports = (
       debug: true,
     }),
   );
-  configuration.entry.main = [
-    `webpack-hot-middleware/client?path=http://localhost:${devServerPort}/__webpack_hmr`,
-    'webpack/hot/only-dev-server',
-    configuration.entry.main,
-  ];
+  configuration.entry = Object.keys(configuration.entry).reduce((prev, curr) => {
+    return Object.assign(prev, {
+      [curr]: [
+        `webpack-hot-middleware/client?path=http://localhost:${devServerPort}/__webpack_hmr`,
+        'webpack/hot/only-dev-server',
+        configuration.entry[curr],
+      ],
+    });
+  }, {});
   configuration.module.rules[0].use.unshift({
     loader: 'react-hot-loader',
   });

@@ -22,6 +22,8 @@ export type GSConfig = {
   routesPath: string;
   configPath: string;
   entryWrapperPath: string;
+  clientEntryInitPath: string;
+  serverEntriesPath: string;
   entriesPath: string;
   webpackChunks: string;
   proxyLogLevel: string;

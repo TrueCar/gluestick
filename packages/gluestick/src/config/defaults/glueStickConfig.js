@@ -21,7 +21,9 @@ const config: GSConfig = {
   routesPath: 'routes',
   configPath: 'config',
   entryWrapperPath: 'gluestick/EntryWrapper',
-  entriesPath: 'src/entries',
+  clientEntryInitPath: 'gluestick/clientEntryInit',
+  serverEntriesPath: 'gluestick/entries',
+  entriesPath: 'src/entries.json',
   webpackChunks: 'webpack-chunks.json',
   proxyLogLevel: 'info',
   debugWatchDirectories: [
