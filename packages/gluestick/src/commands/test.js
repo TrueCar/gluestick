@@ -14,9 +14,12 @@ const getJestDefaultConfig = aliases => {
   const moduleNameMapper = {};
   /*
   const images = configTools.assets.images.extensions;
+  const other = configTools.assets.other.extensions;
   const styles = configTools.assets.styles.extensions;
 
   // Handling Static Assets = mock them out
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')}|${other.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join('|')})$`] = `${TEST_MOCKS_PATH}/styleMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${images.join('|')})$`]
     = `${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${styles.join('|')})$`]
@@ -33,6 +36,9 @@ const getJestDefaultConfig = aliases => {
   const config = {
     // moduleNameMapper,
     testPathDirs: ['test'],
+    transformIgnorePatterns: [
+      '/node_modules/(?!gluestick-addon-)',
+    ],
   };
 
   const argv = [];

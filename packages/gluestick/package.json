@@ -8,13 +8,13 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src test templates",
+    "lint": "eslint src",
     "test": "jest",
+    "jest": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
     "flow": "flow",
-    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./jest/jestEnvironmentNodeDebug.js",
-    "prepublish": "./docker/generate-dockerfile.js",
+    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
     "postpublish": "./docker/create-base-image.js",
     "update-version": "npm version",
     "postupdate-version": "./docker/generate-dockerfile.js"
@@ -80,6 +80,7 @@
     "lru-cache": "4.0.2",
     "match-media": "0.2.0",
     "mkdirp": "0.5.1",
+    "node-glob": "1.2.0",
     "optimize-css-assets-webpack-plugin": "1.3.0",
     "oy-vey": "0.8.0",
     "pino": "3.2.0",
@@ -144,7 +145,7 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/__tests__/.*$",
+    "testRegex": ".*/__tests__/.*.test.js$",
     "testPathDirs": [
       "src",
       "templates/new/src/config"

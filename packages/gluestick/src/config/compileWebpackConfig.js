@@ -6,6 +6,7 @@ import type {
   ProjectConfig,
   WebpackConfig,
   UniversalWebpackConfigurator,
+  Logger,
 } from '../types';
 
 const path = require('path');
@@ -14,7 +15,7 @@ const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
 
 module.exports = (
-  plugins: Plugin[], projectConfig: ProjectConfig, gluestickConfig: GSConfig,
+  logger: Logger, plugins: Plugin[], projectConfig: ProjectConfig, gluestickConfig: GSConfig,
 ): WebpackConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings = {
@@ -25,14 +26,14 @@ module.exports = (
   };
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    sharedConfig, universalWebpackSettings,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
   );
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
     clientConfig,
     gluestickConfig.ports.client,
   );
   const serverConfig: WebpackConfig = getServerConfig(
-    sharedConfig, universalWebpackSettings, gluestickConfig,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
   );
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(
     serverConfig,

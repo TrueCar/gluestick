@@ -1,5 +1,19 @@
 const path = require('path');
 
+type Entry = {
+  path: string,
+  filename: string,
+  template: Function,
+}
+
+type Config = {
+  entry?: Entry,
+  entries?: Entry[],
+  args: Object,
+}
+
+type UserConfig = Config | (options: Object) => Config;
+
 /**
  * Parses single entry.
  *
@@ -9,8 +23,9 @@ const path = require('path');
  * @param {Object} options Options to pass to functional entry
  * @returns {Object}
  */
-const parseEntry = (entry, commonArgs, options) => {
-  const parsedEntry = Object.assign({}, parsedEntry, entry);
+const parseEntry = (entry: Entry, commonArgs: Object, options: Object): Entry => {
+  const parsedEntry: Entry = { ...entry };
+
   if (
     !parsedEntry
     || typeof parsedEntry.path !== 'string'
@@ -25,7 +40,7 @@ const parseEntry = (entry, commonArgs, options) => {
   if (options.dir) {
     parsedEntry.path = `${parsedEntry.path}/${options.dir}`.replace(/\/\//, '/');
   }
-  const args = Object.assign({}, commonArgs, parsedEntry.args);
+  const args = { ...commonArgs, ...parsedEntry.args };
   parsedEntry.template = parsedEntry.template(args);
   return parsedEntry;
 };
@@ -37,8 +52,8 @@ const parseEntry = (entry, commonArgs, options) => {
  * @param {Object} options Options to pass to functional entry
  * @returns {Object}
  */
-const parseConfig = (config, options) => {
-  const parsedConfig = typeof config === 'function' ? config(options) : Object.assign({}, config);
+const parseConfig = (config: UserConfig, options: Object): Config => {
+  const parsedConfig: Config = typeof config === 'function' ? config(options) : { ...config };
   if (!parsedConfig.entries && !parsedConfig.entry) {
     throw new Error(`No entry defined for generator ${options.generator}`);
   }

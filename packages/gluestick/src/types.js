@@ -22,6 +22,8 @@ export type GSConfig = {
   routesPath: string;
   configPath: string;
   entryWrapperPath: string;
+  clientEntryInitPath: string;
+  serverEntriesPath: string;
   entriesPath: string;
   webpackChunks: string;
   proxyLogLevel: string;
@@ -70,4 +72,23 @@ export type Question = {
   type: string,
   name: string,
   message: string,
+}
+
+export type CreateTemplate = (
+  strings: Array<string>,
+  interpolations: Array<*>
+) => (args: Object) => string;
+
+export type Generator = {
+  name: string,
+  config: any,
+}
+
+export type WrittenTemplate = {
+  name: string,
+  config: any,
+}
+
+export type GeneratorOptions = {
+  [key: string]: ?string,
 }
