@@ -15,7 +15,7 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
 
   // Handling Static Assets = mock them out
   const fileRegex = new RegExp(
-    `${webpackRules[3].source}|${webpackRules[4].source}|${webpackRules[5].source}`
+    `${webpackRules[3].source}|${webpackRules[4].source}|${webpackRules[5].source}`,
   );
   moduleNameMapper[fileRegex.source] = `${TEST_MOCKS_PATH}/fileMock.js`;
   const stylesRegex = new RegExp(`${webpackRules[1].source}|${webpackRules[2].source}`);
