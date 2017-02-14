@@ -1,4 +1,4 @@
-import type { Logger, Generator, WrittenTemplate } from '../types';
+import type { Logger, Generator, WrittenTemplate, GeneratorOptions } from '../types';
 
 const path = require('path');
 const requireGenerator = require('./requireGenerator');
@@ -8,7 +8,7 @@ const writeTemplate = require('./writeTemplate');
 type Command = {
   generatorName: string,
   entityName: string,
-  options: Object,
+  options: GeneratorOptions,
 }
 
 /**
@@ -25,13 +25,15 @@ module.exports = ({ generatorName, entityName, options }: Command, logger: Logge
   const generator: Generator = requireGenerator(generatorName);
   const generatorConfig: Object = parseConfig(
     generator.config,
-    Object.assign({}, options, {
+    {
+      ...options,
       generator: generator.name,
       name: path.basename(entityName),
       dir: path.dirname(entityName),
-    }),
+    },
   );
-  const results: WrittenTemplate = writeTemplate(generatorConfig);
+
+  const results: WrittenTemplate = writeTemplate({ ...generatorConfig, options });
   logger.success(
     `${generator.name} ${entityName} generated successfully\n`
     + 'Files written: \n'
