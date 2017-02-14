@@ -14,6 +14,7 @@ flow-typed/
 
 [options]
 suppress_type=$FlowFixMe
+module.ignore_non_literal_requires=true
 
 [version]
 ^0.38.0

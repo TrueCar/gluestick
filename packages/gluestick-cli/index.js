@@ -2,4 +2,5 @@
 require('babel-register')({
   only: /gluestick.*/,
 });
+
 require('./cli');

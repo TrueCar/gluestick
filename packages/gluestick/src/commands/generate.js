@@ -20,6 +20,7 @@ const generate = ({ config, logger }: Context, generatorName: string, entityName
     entityName,
     options: filteredOptions,
   }, logger);
+  process.exit(0);
 };
 
 module.exports = generate;
