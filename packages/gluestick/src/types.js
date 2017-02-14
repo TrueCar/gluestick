@@ -73,3 +73,22 @@ export type Question = {
   name: string,
   message: string,
 }
+
+export type CreateTemplate = (
+  interpolations: Array<*>
+  strings: Array<string>,
+) => (args: Object) => string;
+
+export type Generator = {
+  name: string,
+  config: any,
+}
+
+export type WrittenTemplate = {
+  name: string,
+  config: any,
+}
+
+export type GeneratorOptions = {
+  [key: string]: ?string,
+}
