@@ -1,5 +1,8 @@
 const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
+const chokidar = require('chokidar');
+const path = require('path');
+const { filename } = require('../../cli/colorScheme');
 
 /**
  * Spawns new process with rendering server.
@@ -44,24 +47,34 @@ const spawnServer = ({ config, logger }, entryPointPath, args) => {
 const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
   const webpackConfig = config.webpackConfig.server;
   let child = null;
-  const watcher = webpack(webpackConfig).watch({
-    poll: 1000,
-  }, error => {
-    if (error) {
-      throw error;
-    }
-    logger.info('Building server entry.');
-    if (child) {
-      child.kill();
-    }
-    child = spawnServer({ config, logger }, entryPointPath, args);
-  });
-  const closeWatcher = () => {
-    watcher.close(() => {
-      logger.info('Stopping watcher.');
+  const compile = () => {
+    webpack(webpackConfig).run(error => {
+      if (error) {
+        throw error;
+      }
+      logger.info('Building server entry.');
+      if (child) {
+        child.kill();
+      }
+      child = spawnServer({ config, logger }, entryPointPath, args);
     });
   };
-  process.on('SIGINT', closeWatcher);
+  logger.debug('Initial compilation');
+  compile();
+  const watcher = chokidar.watch([
+    path.join(process.cwd(), '**/*'),
+  ], {
+    ignored: [
+      /build/,
+      /node_modules\/(?!gluestick\/src).*/gi,
+    ],
+  }).on('ready', () => {
+    logger.info('Started watching...');
+    watcher.on('all', (stat, file) => {
+      logger.info(`File ${filename(file)} changed [${stat}]`);
+      compile();
+    });
+  });
 };
 
 module.exports = runWithWebpack;

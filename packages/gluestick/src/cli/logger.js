@@ -12,7 +12,9 @@ const loggerFactory = type => (...args) => {
   console.log(
       PREFIX,
       ...(type === 'error' ? ['ERROR: '] : []).concat(
-        args.map(arg => colorScheme[type](util.inspect(arg, { colors: true, depth: 4 }))),
+        args.map(arg => colorScheme[type](
+          typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 }),
+        )),
       ),
     );
 };
