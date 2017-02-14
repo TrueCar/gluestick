@@ -20,6 +20,9 @@ const config: GSConfig = {
   reducersPath: 'reducers',
   routesPath: 'routes',
   configPath: 'config',
+  entryWrapperPath: 'gluestick/EntryWrapper',
+  entriesPath: 'src/entries',
+  webpackChunks: 'webpack-chunks.json',
   proxyLogLevel: 'info',
   debugWatchDirectories: [
     path.join(process.cwd(), 'src/**/*.js'),

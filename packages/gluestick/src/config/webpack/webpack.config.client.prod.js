@@ -11,7 +11,7 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
   configuration.plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development'),
+        NODE_ENV: JSON.stringify('production'),
       },
       REDUX_DEVTOOLS: false,
     }),

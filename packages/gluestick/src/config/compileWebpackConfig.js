@@ -31,7 +31,9 @@ module.exports = (
     clientConfig,
     gluestickConfig.ports.client,
   );
-  const serverConfig: WebpackConfig = getServerConfig(sharedConfig, universalWebpackSettings);
+  const serverConfig: WebpackConfig = getServerConfig(
+    sharedConfig, universalWebpackSettings, gluestickConfig,
+  );
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(
     serverConfig,
     gluestickConfig.ports.client,
