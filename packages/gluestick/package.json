@@ -145,7 +145,7 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/__tests__/.*.test.js$",
+    "testRegex": ".*\/__tests__\/.*\\.test\\.js$",
     "testPathDirs": [
       "src",
       "templates/new/src/config"
