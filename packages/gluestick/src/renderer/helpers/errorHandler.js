@@ -11,31 +11,33 @@ Handlebars.registerHelper('notForProduction', (options) => {
   return process.env.NODE_ENV === 'production' ? '' : options.fn(this);
 });
 
-// It is a helper function which check if file exist
-const isFile = (filePath) => fs.stat(filePath, (err, stats) => !err && stats.isFile());
-// It is a helepr function which read and fill our template
-const getFilledTemplate = (filePath, req, res, error) =>
-  fs.readFile(filePath, 'utf8', (readFileError, data) =>
-    readFileError ? undefined : Handlebars.compile(data)({ req, res, error }));
-
 module.exports = (req, res, error) => {
   res.status(error.satus || 500);
   let output;
-
   // Check if we have a custom 505 error page
-  if (isFile(custom505FilePath)) {
-    // If we do have a custom 505 page, use it
-    output = getFilledTemplate(custom505FilePath, req, res, error);
-    // If we don't have a custom 505 error page but have gluestick error page
-    // we use gluestick one
-  } else if (isFile(gluestick505FilePath)) {
-    output = getFilledTemplate(gluestick505FilePath, req, res, error);
-  }
-  // If we have filled template, render it
-  if (output) {
-    res.send(output);
-    return;
-  }
-  // If we don't have a custom 505 error page then just throw the stack trace
-  res.sendStatus(501);
+  fs.stat(custom505FilePath, (customErr, customStats) => {
+    if (!customErr && customStats.isFile()) {
+      // If we do have a custom 505 page, use it
+      fs.readFile(custom505FilePath, 'utf8', (customReadFileError, customTemplate) => {
+        output = customReadFileError ?
+          undefined : Handlebars.compile(customTemplate)({ req, res, error });
+        res.send(output);
+      });
+    } else {
+      // If we don't have a custom 505 error page but have gluestick error page
+      // we use gluestick one
+      fs.stat(gluestick505FilePath, (gluestickErr, gluestickStats) => {
+        if (!gluestickErr && gluestickStats.isFile()) {
+          fs.readFile(gluestick505FilePath, 'utf8', (gluestickReadFileError, gluestickTemplate) => {
+            output = gluestickReadFileError ?
+              undefined : Handlebars.compile(gluestickTemplate)({ req, res, error });
+            res.send(output);
+          });
+        } else {
+          // If we don't have a custom or gluestick 505 error page then just return 501
+          res.sendStatus(501);
+        }
+      });
+    }
+  });
 };
