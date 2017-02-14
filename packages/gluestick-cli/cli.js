@@ -2,7 +2,9 @@ const path = require('path');
 const commander = require('commander');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
-const newCmd = require('./new');
+
+const newApp = require('./new');
+const reinstallDev = require('./reinstallDev');
 const watchCmd = require('./watch');
 
 const exitWithError = message => {
@@ -21,24 +23,14 @@ commander
   .option('-d, --dev <path>', 'relative path to development version of gluestick')
   .option('-y, --yarn', 'use yarn instead of npm')
   .action((appName, options) => {
-    newCmd(appName, options, exitWithError);
+    newApp(appName, options, exitWithError);
   });
 
 commander
   .command('reinstall-dev')
   .description('reinstall gluestick dependency')
   .action(() => {
-    let gsPath = null;
-    try {
-      gsPath = require(path.join(process.cwd(), 'package.json')).dependencies.gluestick;
-    } catch (error) {
-      exitWithError(error.message);
-    }
-    spawn(
-      'npm',
-      ['install', gsPath],
-      { stdio: 'inherit' },
-    );
+    reinstallDev(exitWithError);
   });
 
 commander

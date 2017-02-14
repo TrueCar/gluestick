@@ -235,11 +235,10 @@ function performModulesUpdate(mismatchedModules, done) {
   fs.writeFileSync(PROJECT_PACKAGE_LOCATION, JSON.stringify(projectPackageData, null, '  '), 'utf8');
 
   cleanDeps();
-  const installProcess = installDeps();
-  installProcess.on('close', () => {
-    logger.info('node_modules have been updated.');
-    done();
-  });
+  installDeps();
+
+  logger.info('node_modules have been updated.');
+  done();
 }
 
 /**
