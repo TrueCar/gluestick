@@ -42,11 +42,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       },
     },
 
-    // https://webpack.github.io/docs/multiple-entry-points.html
-    entry: {
-      main: './Index2.js',
-    },
-
     output: {
       // filesystem path for static files
       path: outputPath,

@@ -24,7 +24,7 @@ module.exports = (
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   const webpackConfig = useWebpackConfig ? compileWebpackConfig(
-    plugins, projectConfig, GSConfig,
+    logger, plugins, projectConfig, GSConfig,
   ) : null;
   const context = {
     config: {
