@@ -8,11 +8,11 @@ const IS_WINDOWS = process.platform === 'win32';
 
 function install() {
   if (which('yarn') !== null) {
-    return spawn.sync('yarn', { stdio: 'inherit' });
+    spawn.sync('yarn', { stdio: 'inherit' });
   }
 
   const postFix = IS_WINDOWS ? '.cmd' : '';
-  return spawn.sync(`npm${postFix}`, ['install'], { stdio: 'inherit' });
+  spawn.sync(`npm${postFix}`, ['install'], { stdio: 'inherit' });
 }
 
 function cleanSync() {
