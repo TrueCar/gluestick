@@ -1,7 +1,6 @@
 /* eslint-disable react/no-danger*/
 const React = require('react');
-
-const isProduction = process.env.NODE_ENV === 'production';
+const getAssetsLoader = require('./getAssetsLoader');
 
 const getAssetPathForFile = (filename, section, webpackAssets) => {
   const assets = webpackAssets[section] || {};
@@ -9,14 +8,14 @@ const getAssetPathForFile = (filename, section, webpackAssets) => {
   return webpackPath;
 };
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (config, entryPoint, assets) => {
+module.exports = ({ config, logger }, entryPoint, assets) => {
   const styleTags = [];
   const scriptTags = [];
   let key = 0;
+  const entryPointName = entryPoint === '/' ? 'main' : entryPoint;
 
-  if (isProduction) {
-    const stylesHref = getAssetPathForFile(entryPoint, 'styles', assets);
+  if (process.env.NODE_ENV === 'production') {
+    const stylesHref = getAssetPathForFile(entryPointName, 'styles', assets);
     styleTags.push(
       <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
     );
@@ -29,15 +28,16 @@ module.exports = (config, entryPoint, assets) => {
     }
   }
 
-  const vendorScriptsHref = getAssetPathForFile('vendor', 'javascript', assets);
+  const vendorBundleHref = getAssetPathForFile('vendor', 'javascript', assets);
+  const entryPointBundleHref = getAssetPathForFile(entryPointName, 'javascript', assets);
+  const assetsLoader = getAssetsLoader({}, entryPointBundleHref, vendorBundleHref);
   scriptTags.push(
-    <script key={key++} type="text/javascript" href={vendorScriptsHref} />,
+    <script
+      key="script-loader"
+      type="text/javascript"
+      dangerouslySetInnerHTML={{ __html: assetsLoader }}
+    />,
   );
-  const scriptsHref = getAssetPathForFile(entryPoint, 'javascript', assets);
-  scriptTags.push(
-    <script key={key++} type="text/javascript" href={scriptsHref} />,
-  );
-
 
   return { styleTags, scriptTags };
 };
