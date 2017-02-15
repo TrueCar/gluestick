@@ -1,12 +1,11 @@
 /* @flow */
 import type { CreateTemplate } from '../../types';
 
-module.exports = (createTemplate: CreateTemplate) => {
-  const template = createTemplate`
+module.exports = (createTemplate: CreateTemplate) => createTemplate`
 import React from "react";
 import { shallow } from "enzyme";
 
-import Home from "components/Home";
+import Home from "../Home";
 
 describe("components/Home", () => {
   it("renders without an issue", () => {
@@ -16,5 +15,3 @@ describe("components/Home", () => {
   });
 });
 `;
-  return template;
-};

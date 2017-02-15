@@ -19,7 +19,7 @@ type Command = {
  */
 
 module.exports = ({ generatorName, entityName, options }: Command, logger: Logger): void => {
-  if (!/^[a-zA-Z0-9]+$/.test(entityName)) {
+  if (!/^[a-zA-Z0-9/_-]+$/.test(entityName)) {
     throw new Error('Invalid name specified');
   }
   const generator: Generator = requireGenerator(generatorName);

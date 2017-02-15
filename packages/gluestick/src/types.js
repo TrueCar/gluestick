@@ -1,26 +1,54 @@
 /* @flow */
 
-export type Context = {
- config: Config,
- logger: Logger,
+export type ProjectConfig = {
+  [key: string]: any;
+};
+
+export type GSConfig = {
+  protocol: string;
+  host: string;
+  ports: {
+    client: number;
+    server: number;
+  };
+  buildAssetsPath: string;
+  assetsPath: string;
+  sourcePath: string;
+  assetsPath: string;
+  sharedPath: string;
+  appsPath: string;
+  configPath: string;
+  entryWrapperPath: string;
+  clientEntryInitPath: string;
+  serverEntriesPath: string;
+  entriesPath: string;
+  webpackChunks: string;
+  proxyLogLevel: string;
+  debugWatchDirectories: string[];
+  [key: string]: any;
+};
+
+type WebpackConfigEntry = string | Object | any[];
+
+export type WebpackConfig = {
+  [key: string]: WebpackConfigEntry;
+};
+
+export type Plugin = {
+  name: string;
+  body: any;
 };
 
 export type Config = {
   projectConfig?: ProjectConfig;
   GSConfig?: GSConfig;
   webpackConfig?: WebpackConfig;
-  plugins: Object[];
+  plugins: Plugin[];
 };
 
 export type Logger = LoggerTypes & {
-  level?: string
+  level?: string;
 };
-
-export type Question = {
-  type: string,
-  name: string,
-  message: string,
-}
 
 export type LoggerTypes = {
   success: Function;
@@ -30,35 +58,34 @@ export type LoggerTypes = {
   error: Function;
 }
 
-export type ProjectConfig = {
-
+export type Context = {
+ config: Config;
+ logger: Logger;
 };
 
-type WebpackConfigEntry = string | string[] | Object;
+export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
 
-export type WebpackConfig = {
-  [key: string]: WebpackConfigEntry,
-};
-
-export type GSConfig = {
-
-};
+export type Question = {
+  type: string;
+  name: string;
+  message: string;
+}
 
 export type CreateTemplate = (
+  interpolations: Array<*>,
   strings: Array<string>,
-  interpolations: Array<*>
 ) => (args: Object) => string;
 
 export type Generator = {
-  name: string,
-  config: any,
+  name: string;
+  config: any;
 }
 
 export type WrittenTemplate = {
-  name: string,
-  config: any,
+  name: string;
+  config: any;
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string,
+  [key: string]: ?string;
 }

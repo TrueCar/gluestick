@@ -1,27 +1,21 @@
 const spawn = require('cross-spawn');
-const updateWebpackAssetPath = require('../lib/updateWebpackAssetPath');
 const autoUpgrade = require('../autoUpgrade');
 
 /*
  * Start server and (optionally) tests in different processes.
  *
- * @param {object} options        Command-line options object directly from Commander
+ * @param {object} options Command-line options object directly from Commander
  */
-module.exports = async (config, logger, options) => {
+module.exports = async ({ config, logger }, options) => {
   await autoUpgrade();
   const isProduction = process.env.NODE_ENV === 'production';
-
-  // Update the ASSET_PATH in webpack-assets.json in production environments
-  if (isProduction) {
-    updateWebpackAssetPath();
-  }
 
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {
     spawn('gluestick', ['test', ...options.parent.rawArgs.slice(4)], {
       stdio: 'inherit',
       env: Object.assign({}, process.env, {
-        NODE_ENV: isProduction ? 'production' : 'development-test',
+        NODE_ENV: 'test',
       }),
     });
   }
@@ -40,7 +34,7 @@ module.exports = async (config, logger, options) => {
   spawn('gluestick', ['start-server', ...options.parent.rawArgs.slice(3)], {
     stdio: 'inherit',
     env: Object.assign({}, process.env, {
-      NODE_ENV: isProduction ? 'production' : 'development-server',
+      NODE_ENV: isProduction ? 'production' : 'development',
     }),
   });
 };
