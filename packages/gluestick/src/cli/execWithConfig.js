@@ -12,12 +12,27 @@ const execHooks = (context, hooks) => {
   }
 };
 
+type ExecWithConfigArguments = {
+  func: Function;
+  commandArguments: Array<*>;
+  options: {
+    useGSConfig: boolean;
+    useWebpackConfig: boolean;
+    skipProjectConfig: boolean;
+    skipEntryGeneration: boolean;
+  };
+  hooks: {
+    pre: Function;
+    post: Function;
+  }
+};
+
 module.exports = (
   func,
   commandArguments,
   { useGSConfig, useWebpackConfig, skipProjectConfig, skipEntryGeneration } = {},
   { pre, post } = {},
-) => {
+): ExecWithConfigArguments => {
   const projectConfig = skipProjectConfig
     ? {}
     : require(path.join(process.cwd(), 'package.json')).gluestick;
