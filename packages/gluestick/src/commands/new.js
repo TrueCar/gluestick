@@ -2,7 +2,6 @@
 import type { Context, Logger, GeneratorOptions } from '../types';
 
 const path = require('path');
-const spawn = require('cross-spawn');
 
 const { highlight, filename } = require('../cli/colorScheme');
 const generate = require('../generator');
