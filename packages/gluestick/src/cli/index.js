@@ -145,7 +145,7 @@ commander
     execWithConfig(
       require('../commands/test'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      { useGSConfig: true, useWebpackConfig: true, skipEntryGeneration: true },
     );
   });
 

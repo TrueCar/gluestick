@@ -15,7 +15,7 @@ const execHooks = (context, hooks) => {
 module.exports = (
   func,
   commandArguments,
-  { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
+  { useGSConfig, useWebpackConfig, skipProjectConfig, skipEntryGeneration } = {},
   { pre, post } = {},
 ) => {
   const projectConfig = skipProjectConfig
@@ -24,7 +24,7 @@ module.exports = (
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   const webpackConfig = useWebpackConfig ? compileWebpackConfig(
-    logger, plugins, projectConfig, GSConfig,
+    logger, plugins, projectConfig, GSConfig, { skipEntryGeneration },
   ) : null;
   const context = {
     config: {

@@ -8,9 +8,15 @@ const deepClone = require('./deepCopy');
 const buildServerEntries = require('./buildServerEntries');
 
 module.exports = (
-  logger: Logger, configuration: WebpackConfig, settings: Object, gluestickConfig: GSConfig,
+  logger: Logger,
+  configuration: WebpackConfig,
+  settings: Object,
+  gluestickConfig: GSConfig,
+  { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
 ): WebpackConfig => {
-  buildServerEntries(gluestickConfig, logger);
+  if (!skipEntryGeneration) {
+    buildServerEntries(gluestickConfig, logger);
+  }
   const config = deepClone(configuration);
   config.resolve.alias['project-entries'] = path.join(
     process.cwd(), gluestickConfig.serverEntriesPath,

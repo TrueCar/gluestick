@@ -26,11 +26,10 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
   Object.keys(aliases).forEach((key) => {
     moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
-  console.log(moduleNameMapper);
 
   const config = {
     moduleNameMapper,
-    testPathDirs: ['test'],
+    testPathDirs: ['src'],
     transformIgnorePatterns: [
       '/node_modules/(?!gluestick-addon-)',
     ],
