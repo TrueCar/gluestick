@@ -7,7 +7,6 @@ const generator = require('../../generator');
 const logger = require('../../cli/logger');
 
 describe('cli: gluestick generate', () => {
-
   // Needed for test not to finish when calling generate
   process.exit = jest.fn();
 

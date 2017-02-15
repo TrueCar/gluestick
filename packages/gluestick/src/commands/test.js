@@ -18,8 +18,10 @@ const getJestDefaultConfig = aliases => {
   const styles = configTools.assets.styles.extensions;
 
   // Handling Static Assets = mock them out
-  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')}|${other.join('|')})$`] = `${TEST_MOCKS_PATH}/fileMock.js`;
-  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join('|')})$`] = `${TEST_MOCKS_PATH}/styleMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${images.join('|')}|${other.join('|')})$`]
+    = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper[`^[./a-zA-Z0-9@$_-]+\\.(${styles.join('|')})$`]
+    = `${TEST_MOCKS_PATH}/styleMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${images.join('|')})$`]
     = `${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper[`^[./a-zA-Z0-9$_-]+\\.(${styles.join('|')})$`]
@@ -31,7 +33,7 @@ const getJestDefaultConfig = aliases => {
   Object.keys(aliases).forEach((key) => {
     moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
-  
+
 
   const config = {
     // moduleNameMapper,
