@@ -31,6 +31,7 @@ const templateWebpackAdditions = require('../templates/WebpackAdditions')(create
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateRecuder = require('../templates/Reducer')(createTemplate);
+const templateEntries = require('../templates/entries')(createTemplate);
 
 module.exports = (options: GeneratorOptions) => ({
   entries: [
@@ -64,6 +65,11 @@ module.exports = (options: GeneratorOptions) => ({
       path: '/',
       filename: '.babelrc',
       template: templateBabelrc,
+    },
+    {
+      path: 'src',
+      filename: 'entries.json',
+      template: templateEntries,
     },
     // Gluestick directory
     {
