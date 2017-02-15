@@ -1,4 +1,5 @@
 /* @flow */
+
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
@@ -9,11 +10,13 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
   "main": "index.js",
   "scripts": {
     "start": "gluestick start",
-    "test": "gluestick test"
+    "test": "gluestick test",
+    "flow": "flow",
+    "lint": "eslint src"
   },
   "dependencies": {
     "gluestick": "${
-      (args) => args.dev ? args.dev : '1.0.0' // TODO: replace with real version
+      (args) => args.dev || '1.0.0' // TODO: replace with real version
     }",
     "axios": "0.12.0",
     "babel-core": "6.22.1",
@@ -55,6 +58,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "enzyme": "2.7.1",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
+    "flow-bin": "${(args) => args.flowVersion}",
     "react-addons-test-utils": "15.4.2",
     "react-hot-loader": "1.3.1",
     "react-transform-catch-errors": "1.0.2",

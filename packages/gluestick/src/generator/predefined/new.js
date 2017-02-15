@@ -10,6 +10,7 @@ const template505hbs = require('../templates/505hbs')(createTemplate);
 const templateIndex = require('../templates/Index')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
 const templateEslintrc = require('../templates/eslintrc')(createTemplate);
+const templateFlowConfig = require('../templates/_flowconfig')(createTemplate);
 const templateDockerignore = require('../templates/dockerignore')(createTemplate);
 const templateBabelrc = require('../templates/babelrc')(createTemplate);
 const templateHomeTest = require('../templates/HomeTest')(createTemplate);
@@ -30,7 +31,12 @@ const templateRoutes = require('../templates/Routes')(createTemplate);
 const templateWebpackAdditions = require('../templates/WebpackAdditions')(createTemplate);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
-const templateRecuder = require('../templates/Reducer')(createTemplate);
+const templateReducer = require('../templates/Reducer')(createTemplate);
+
+const { flowVersion } = require('../constants');
+// @TODO use config in new command when PR #571 is merged
+const glueStickConfig = require('../../config/defaults/glueStickConfig');
+const webpackConfig = require('../../config/webpack/webpack.config');
 
 module.exports = (options: GeneratorOptions) => ({
   entries: [
@@ -43,6 +49,7 @@ module.exports = (options: GeneratorOptions) => ({
       args: {
         dev: options.dev,
         appName: options.appName,
+        flowVersion,
       },
     },
     {
@@ -54,6 +61,17 @@ module.exports = (options: GeneratorOptions) => ({
       path: '/',
       filename: '.eslintrc',
       template: templateEslintrc,
+    },
+    {
+      path: '/',
+      filename: '.flowconfig',
+      template: templateFlowConfig,
+      args: {
+        appName: options.appName,
+        version: flowVersion,
+        // $FlowFixMe review this after resolving the TODO mentioned above
+        mapper: webpackConfig(glueStickConfig).resolve.alias,
+      },
     },
     {
       path: '/',
@@ -162,7 +180,7 @@ module.exports = (options: GeneratorOptions) => ({
     {
       path: 'src/apps/main/reducers',
       filename: 'index.js',
-      template: templateRecuder,
+      template: templateReducer,
     },
     {
       path: 'src/apps/main/components/__tests__',
