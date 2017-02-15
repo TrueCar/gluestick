@@ -44,7 +44,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       publicPath: '/assets/',
 
       // file name pattern for entry scripts
-      filename: '[name].bundle.js',
+      filename: '[name].[chunkhash].js',
 
       // file name pattern for chunk scripts
       chunkFilename: '[name].js',

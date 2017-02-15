@@ -65,8 +65,9 @@ const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
     path.join(process.cwd(), '**/*'),
   ], {
     ignored: [
-      /build/,
-      /node_modules\/(?!gluestick\/src).*/gi,
+      /build\/server/,
+      /gluestick\/clientEntryInit/,
+      /node_modules\/(?!gluestick\/src)/,
     ],
   }).on('ready', () => {
     logger.info('Started watching...');
