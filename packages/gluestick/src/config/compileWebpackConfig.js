@@ -19,7 +19,9 @@ module.exports = (
   plugins: Plugin[],
   projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
-  { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
+  { skipClientEntryGeneration, skipServerEntryGeneration }: {
+    skipClientEntryGeneration: boolean; skipServerEntryGeneration: boolean;
+  } = {},
 ): WebpackConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings = {
@@ -30,14 +32,16 @@ module.exports = (
   };
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig, { skipEntryGeneration },
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
+    { skipEntryGeneration: skipClientEntryGeneration },
   );
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
     clientConfig,
     gluestickConfig.ports.client,
   );
   const serverConfig: WebpackConfig = getServerConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig, { skipEntryGeneration },
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
+    { skipEntryGeneration: skipServerEntryGeneration },
   );
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(
     serverConfig,

@@ -18,12 +18,3 @@ module.exports = (
   config.entry = skipEntryGeneration ? {} : buildEntries(gluestickConfig, logger);
   return options => clientConfiguration(config, settings, options);
 };
-
-module.exports = (
-  logger: Logger, configuration: WebpackConfig, settings: Object, gluestickConfig: GSConfig,
-): UniversalWebpackConfigurator => {
-  const config = deepClone(configuration);
-  // https://webpack.github.io/docs/multiple-entry-points.html
-  config.entry = buildEntries(gluestickConfig, logger);
-  return options => clientConfiguration(config, settings, options);
-};

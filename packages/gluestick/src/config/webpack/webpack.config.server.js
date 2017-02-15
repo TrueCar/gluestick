@@ -29,20 +29,3 @@ module.exports = (
   );
   return serverConfiguration(config, settings);
 };
-
-module.exports = (
-  logger: Logger, configuration: WebpackConfig, settings: Object, gluestickConfig: GSConfig,
-): WebpackConfig => {
-  buildServerEntries(gluestickConfig, logger);
-  const config = deepClone(configuration);
-  config.resolve.alias['project-entries'] = path.join(
-    process.cwd(), gluestickConfig.serverEntriesPath,
-  );
-  config.resolve.alias['entry-wrapper'] = path.join(
-    process.cwd(), gluestickConfig.entryWrapperPath,
-  );
-  config.resolve.alias['webpack-chunks'] = path.join(
-    process.cwd(), gluestickConfig.buildAssetsPath, gluestickConfig.webpackChunks,
-  );
-  return serverConfiguration(config, settings);
-};
