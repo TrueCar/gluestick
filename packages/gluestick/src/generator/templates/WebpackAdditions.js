@@ -23,7 +23,6 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
  * Loaders also support \`include\`, \`exclude\` and \`query\`.
  * Additionally, you can provide a \`test\` regex instead of \`extensions\`
  * in order to bypass webpack-isomorphic-tools when needed.
- * 
  *
  * When adding additionalAliases, follow this pattern:
  * additionalAliases: {
@@ -44,4 +43,3 @@ module.exports = {
   vendor: []
 };
 `;
-
