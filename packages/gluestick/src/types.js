@@ -34,7 +34,7 @@ export type GSConfig = {
 type WebpackConfigEntry = string | Object | any[];
 
 export type WebpackConfig = {
-  [key: string]: WebpackConfigEntry,
+  [key: string]: WebpackConfigEntry;
 };
 
 export type Plugin = {
@@ -50,7 +50,7 @@ export type Config = {
 };
 
 export type Logger = LoggerTypes & {
-  level?: string
+  level?: string;
 };
 
 export type LoggerTypes = {
@@ -62,33 +62,33 @@ export type LoggerTypes = {
 }
 
 export type Context = {
- config: Config,
- logger: Logger,
+ config: Config;
+ logger: Logger;
 };
 
 export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
 
 export type Question = {
-  type: string,
-  name: string,
-  message: string,
+  type: string;
+  name: string;
+  message: string;
 }
 
 export type CreateTemplate = (
+  interpolations: Array<*>,
   strings: Array<string>,
-  interpolations: Array<*>
 ) => (args: Object) => string;
 
 export type Generator = {
-  name: string,
-  config: any,
+  name: string;
+  config: any;
 }
 
 export type WrittenTemplate = {
-  name: string,
-  config: any,
+  name: string;
+  config: any;
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string,
+  [key: string]: ?string;
 }
