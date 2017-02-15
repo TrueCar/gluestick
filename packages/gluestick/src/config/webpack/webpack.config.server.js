@@ -4,7 +4,7 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
 const { serverConfiguration } = require('universal-webpack');
 const path = require('path');
-const deepClone = require('./deepCopy');
+const deepClone = require('clone');
 const buildServerEntries = require('./buildServerEntries');
 
 module.exports = (

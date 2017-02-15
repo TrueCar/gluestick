@@ -24,7 +24,7 @@ const start = ({ config, logger }, name, entryPointPath, args) => {
     args,
     cwd: process.cwd(),
     exec_mode: 'cluster',
-    instances: process.env.MAX_INSTANCES || (process.env.NODE_ENV === 'production' ? 1 : 1),
+    instances: process.env.MAX_INSTANCES || (process.env.NODE_ENV === 'production' ? 0 : 1),
     max_memory_restart: process.env.MAX_MEMORY_RESTART || '200M',
     environment_name: process.env.NODE_ENV,
     no_autorestart: false,

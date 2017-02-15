@@ -15,11 +15,8 @@ export type GSConfig = {
   assetsPath: string;
   sourcePath: string;
   assetsPath: string;
-  actionsPath: string;
-  componentsPath: string;
-  containersPath: string;
-  reducersPath: string;
-  routesPath: string;
+  sharedPath: string;
+  appsPath: string;
   configPath: string;
   entryWrapperPath: string;
   clientEntryInitPath: string;

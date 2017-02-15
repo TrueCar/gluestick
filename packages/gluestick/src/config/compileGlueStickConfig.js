@@ -4,7 +4,7 @@ import type { Plugin, GSConfig } from '../types';
 
 const defaultConfig = require('./defaults/glueStickConfig');
 
-module.exports = exports = (plugins: Plugin[]): GSConfig => {
+module.exports = (plugins: Plugin[]): GSConfig => {
   if (!Array.isArray(plugins)) {
     throw new Error('Invalid plugins argument');
   }
