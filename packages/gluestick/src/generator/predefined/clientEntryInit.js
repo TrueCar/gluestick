@@ -9,9 +9,9 @@ import middleware from "config/redux-middleware";
 export const getStore = (httpClient) => {
   return createStore(
     httpClient,
-    () => require('reducers/index'),
+    () => require('apps/main/reducers/index'),
     middleware,
-    (cb) => module.hot && module.hot.accept('../../src/reducers', cb),
+    (cb) => module.hot && module.hot.accept('../../src/apps/main/reducers', cb),
     !!module.hot
   );
 };
