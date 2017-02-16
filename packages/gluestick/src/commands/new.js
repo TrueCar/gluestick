@@ -42,6 +42,7 @@ module.exports = ({ logger }: Context, appName: string, options: Object = {}) =>
     logger.info(`${filename(appName)} is being generated...`);
 
     generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
+    // @TODO we need to figure out a better way
     spawn.sync('npm', ['install'], { stdio: 'inherit' });
 
     logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);

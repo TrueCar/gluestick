@@ -29,7 +29,7 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
 
   const config = {
     moduleNameMapper,
-    testPathDirs: ['src'],
+    testPathDirs: ['src', 'test'],
     transformIgnorePatterns: [
       '/node_modules/(?!gluestick-addon-)',
     ],
