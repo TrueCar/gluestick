@@ -5,24 +5,30 @@ const { getHttpClient, createStore } = require('gluestick-shared');
 const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
+const getCacheManager = require('./helpers/cacheManager');
 // const getStatusCode = require('./helpers/getStatusCode');
-
+const isProduction = process.env.NODE_ENV === 'production';
 module.exports = async (
   req,
   res,
   { config, logger },
-  entries,
+  { entries, entriesConfig },
   { EntryWrapper, BodyWrapper },
   assets,
 ) => {
   /**
-   * TODO: cache, memoization
    * TODO: add hooks
-   * TODO: rendering email?
-   * TODO: check this hot reloading with redux
    * TODO: better logging
    */
+  const cacheManager = getCacheManager(logger, isProduction);
   try {
+    // If we have cached item then render it.
+    const cached = cacheManager.getCachedIfProd(req);
+    if (cached) {
+      res.send(cached);
+      return null;
+    }
+
     // Some config is passed when creating output, but don't know what it is exactly.
     const unknowConfig = {};
     const requirements = getRequirementsFromEntry(
@@ -36,7 +42,7 @@ module.exports = async (
       () => requirements.reducers,
       [],
       // What is that for?
-      (cb) => module.hot && module.hot.accept('/Users/paweltrysla/Documents/testApp_v1/src/reducers', cb),
+      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
       !!module.hot,
     );
     const {
@@ -52,7 +58,7 @@ module.exports = async (
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return;
+      return null;
     }
 
     if (!renderProps) {
@@ -60,7 +66,7 @@ module.exports = async (
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT);
       res.sendStatus(404, logger);
-      return;
+      return null;
     }
 
     const currentRoute = renderProps.routes[renderProps.routes.length - 1];
@@ -83,9 +89,13 @@ module.exports = async (
       { EntryWrapper, BodyWrapper },
       assets,
       httpClient,
+      cacheManager,
+      currentRoute,
     );
     res.send(output.responseString);
+    return null;
   } catch (error) {
     errorHandler(req, res, error, config);
   }
+  return null;
 };
