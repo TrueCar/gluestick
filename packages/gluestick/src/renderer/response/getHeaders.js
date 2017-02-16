@@ -1,16 +1,9 @@
-module.exports = (route) => {
+/* @flow */
+
+module.exports = (route: { headers: Object | Function }): Object | null => {
   if (!{}.hasOwnProperty.call(route, 'headers')) {
     return null;
   }
 
-  const headersHashOrFunc = route.headers;
-  let headers;
-
-  if (typeof headersHashOrFunc === 'function') {
-    headers = headersHashOrFunc();
-  } else if (typeof headersHashOrFunc === 'object') {
-    headers = headersHashOrFunc;
-  }
-
-  return headers;
+  return typeof route.headers === 'function' ? route.headers() : route.headers;
 };
