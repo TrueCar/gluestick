@@ -3,6 +3,7 @@ const { RouterContext } = require('react-router');
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
+
 module.exports = async (
   { config, logger },
   req,
@@ -13,6 +14,7 @@ module.exports = async (
   { EntryWrapper, BodyWrapper },
   assets,
   httpClient,
+  cacheManager,
 ) => {
   const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
 
@@ -56,6 +58,7 @@ module.exports = async (
   const rootElement = <EntryPoint body={bodyWrapper} head={styleTags} req={req} />;
 
   const responseString = renderToStaticMarkup(rootElement);
+  cacheManager.setCacheIfProd(req, responseString);
   return {
     responseString,
 
