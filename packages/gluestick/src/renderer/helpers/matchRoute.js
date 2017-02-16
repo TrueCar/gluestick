@@ -1,20 +1,30 @@
+/* @flow */
+import type { Context, Request } from '../../types';
+
 const { match } = require('react-router');
 const {
-  // runBeforeRoutes as _runBeforeRoutes,
   prepareRoutesWithTransitionHooks,
-  // ROUTE_NAME_404_NOT_FOUND,
 } = require('gluestick-shared');
 
-module.exports = ({ config, logger }, req, getRoutes, store, httpClient) => {
+module.exports = (
+  { config, logger }: Context,
+  req: Request,
+  getRoutes: (store: Object, httpClient: Object) => Object,
+  store: Object,
+  httpClient: Object,
+) => {
   return new Promise((resolve, reject) => {
-    const routes = prepareRoutesWithTransitionHooks(getRoutes(store, httpClient));
-    match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+    const routes: Object = prepareRoutesWithTransitionHooks(getRoutes(store, httpClient));
+    match(
+      { routes, location: req.url },
+      (error: any, redirectLocation: Object, renderProps: Object) => {
+        if (error) {
+          reject(error);
+          return;
+        }
 
-      resolve({ redirectLocation, renderProps });
-    });
+        resolve({ redirectLocation, renderProps });
+      },
+    );
   });
 };

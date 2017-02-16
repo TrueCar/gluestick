@@ -1,11 +1,13 @@
+/* @flow */
+
 const path = require('path');
 
-const cache = {};
+const cache: { [key: string]: boolean } = {};
 
-module.exports = (parent, child) => {
-  const childWithoutQuery = child.split('?')[0];
-  const key = `${parent}-${childWithoutQuery}`;
-  const cacheResult = cache[key];
+module.exports = (parent: string, child: string): boolean => {
+  const childWithoutQuery: string = child.split('?')[0];
+  const key: string = `${parent}-${childWithoutQuery}`;
+  const cacheResult: boolean = cache[key];
 
   if (cacheResult) {
     return cacheResult;

@@ -40,8 +40,8 @@ module.exports = ({ config, logger }, req, entries) => {
   }
   return entryName ? {
     Component: entries[entryName].component,
-    reducers: entries[entryName].reducer,
+    reducers: entries[entryName].reducers,
     routes: entries[entryName].routes,
-    name: entries[entryName].name || entryName,
+    name: entries[entryName].name || entryName[0] === '/' ? entryName.substr(1) : entryName,
   } : null;
 };

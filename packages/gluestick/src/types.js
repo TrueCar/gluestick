@@ -96,3 +96,7 @@ export type Response = {
   send: (value: string | Object | Buffer) => void;
   set: (header: { [key: string]: string }) => void;
 }
+
+export type Request = {
+  url: string;
+}
