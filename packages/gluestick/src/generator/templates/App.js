@@ -2,16 +2,44 @@
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
 // WARNING: The contents of this file _including process.env variables_ will be
 // exposed in the client code.
-const headContent = {
+
+type HeadContent = {
+  title: string;
+  titleTemplate: string;
+  meta: {name: string, content: string}[];
+}
+
+type Logger = {
+  pretty: boolean;
+  level: string;
+}
+
+type Config = {
+  development: {
+    assetPath: string;
+    head: HeadContent;
+    logger: Logger;
+  },
+  production: {
+    assetPath: string;
+    head: HeadContent,
+    logger: Logger;
+  }
+}
+
+const headContent: HeadContent = {
   title: "My Gluestick App",
   titleTemplate: "%s | Gluestick Application",
   meta: [
     {name: "description", content: "Gluestick application"}
   ]
 };
-const config = {
+
+const config: Config = {
   development: {
     assetPath: "/assets",
     head: headContent,
@@ -30,6 +58,6 @@ const config = {
     }
   }
 };
-export default (config[process.env.NODE_ENV] || config["development"]);
-`;
 
+export default config[process.env.NODE_ENV === "production" ? "production" : "development"];
+`;

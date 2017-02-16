@@ -2,15 +2,17 @@
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { Root, getHttpClient } from "gluestick-shared";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
-import config from "config/application";
 
 export default class EntryWrapper extends Component {
+  static start = start;
   render () {
     const {
       routerContext,
@@ -31,12 +33,12 @@ export default class EntryWrapper extends Component {
 }
 
 // This function is called only on client.
-EntryWrapper.start = (getRoutes, getStore, match = originalMatch, history = browserHistory) => {
+const start = (getRoutes, getStore, match = originalMatch, history = browserHistory) => {
   // Allow developers to include code that will be executed before the app is
   // set up in the browser.
   require("config/init.browser");
 
-  const httpClient = getHttpClient(config.httpClient);
+  const httpClient = getHttpClient();
   const store = getStore(httpClient);
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
     const entry = (

@@ -2,6 +2,8 @@
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
 import React, { Component } from "react";
 import Helmet from "react-helmet";
 import { bindActionCreators } from "redux";
