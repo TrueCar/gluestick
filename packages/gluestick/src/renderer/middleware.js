@@ -17,10 +17,7 @@ module.exports = async (
   assets,
 ) => {
   /**
-   * TODO: cache, memoization
    * TODO: add hooks
-   * TODO: rendering email?
-   * TODO: check this hot reloading with redux
    * TODO: better logging
    */
   const cacheManager = getCacheManager(logger, isProduction);
@@ -93,6 +90,7 @@ module.exports = async (
       assets,
       httpClient,
       cacheManager,
+      currentRoute,
     );
     res.send(output.responseString);
     return null;
