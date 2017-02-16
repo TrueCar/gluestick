@@ -9,6 +9,7 @@ const compression = require('compression');
 const middleware = require('./middleware');
 
 const entries = require('project-entries').default;
+const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const assets = require('webpack-chunks');
@@ -33,7 +34,7 @@ module.exports = ({ config, logger }) => {
     middleware(
       req, res,
       { config, logger },
-      entries,
+      { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
     );

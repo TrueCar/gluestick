@@ -12,7 +12,7 @@ module.exports = async (
   req,
   res,
   { config, logger },
-  entries,
+  { entries, entriesConfig },
   { EntryWrapper, BodyWrapper },
   assets,
 ) => {
@@ -45,7 +45,7 @@ module.exports = async (
       () => requirements.reducers,
       [],
       // What is that for?
-      (cb) => module.hot && module.hot.accept('/Users/paweltrysla/Documents/testApp_v1/src/reducers', cb),
+      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
       !!module.hot,
     );
     const {

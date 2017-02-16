@@ -1,4 +1,3 @@
-// const SSRCaching = require('electrode-react-ssr-caching');
 const LRU = require('lru-cache');
 
 // Creatin cache
