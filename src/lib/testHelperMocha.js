@@ -1,21 +1,30 @@
 /* global global */
+require("./runThroughBabel");
 
-const CWD = process.cwd();
-const IS_WINDOWS = process.platform === "win32";
+const path = require("path");
+const requireHacker = require("require-hacker");
+const configTools = require("../config/webpack-isomorphic-tools-config");
+const alias = configTools.alias;
+const images = configTools.assets.images.extensions;
+const other = configTools.assets.other.extensions;
+const styles = configTools.assets.styles.extensions;
 
-// Because we have multiple resolves and an alias set up in Webpack, we need to modify require.main.paths at runtime to
-// deal with that without the use of a bundler. Unlike require.paths, this is documented and should be safe. However,
-// modifying it after anything has been require()d causes cache issues.
-//
-// Therefore:
-// **ACHTUNG** THIS SHOULD ALWAYS BE RUN BEFORE ANY OTHER REQUIRE()s.
-//
-// Cannot use path.join here since it would take a require()!
-const addPath = require("app-module-path").addPath;
-addPath(CWD + (IS_WINDOWS ? "'" : "/") + "assets");
-addPath(CWD + (IS_WINDOWS ? "'" : "/") + "src");
+// Hook up webpack alias and ignore file extensions that only work with webpack
+requireHacker.resolver((input, module) => {
+  const parts = input.split("/");
+  const pathName = parts[0];
+  const aliasMatch = alias[pathName];
+  if (aliasMatch) {
+    return requireHacker.resolve(path.join(aliasMatch, parts.slice(1).join("/")), module);
+  }
 
-require("babel-register");
+  const mock = RegExp(`^[./a-zA-Z0-9@$_-]+\\.(${images.join("|")}|${other.join("|")}|${styles.join("|")})$`);
+  if (mock.test(input)) {
+    return requireHacker.resolve(path.join(__dirname, "fileMock.js"));
+  }
+
+  return;
+});
 
 // Set up jsdom for component rendering through Enzyme.
 // This code is directly from Enzyme's docs.
