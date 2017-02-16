@@ -1,18 +1,18 @@
-import getHeaders from '../getHeaders';
+const getHeaders = require('../getHeaders');
 
-describe('lib/server/getHeaders', () => {
-  it('returns null if no headers provided', () => {
+describe('renderer/response/getHeaders', () => {
+  it('should return null if no headers are provided', () => {
     expect(getHeaders({})).toBeNull();
   });
 
-  it('returns the headers object provided to the route', () => {
+  it('should return headers from object', () => {
     const headers = {
       'cache-control': 'public, max-age: 50000',
     };
     expect(getHeaders({ headers })).toEqual(headers);
   });
 
-  it('returns headers provided via a callback on the route', () => {
+  it('should return headers from function', () => {
     const headers = {
       'cache-control': 'public, max-age: 50000',
     };

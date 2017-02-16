@@ -1,3 +1,5 @@
+/* @flow */
+
 import type { Logger, GSConfig } from '../types';
 
 const util = require('util');
@@ -22,6 +24,7 @@ const loggerFactory = (type: string): (values: Array<*>) => void => {
     };
   }
   return (...values) => {
+    // $FlowFixMe
     process.send({ type, value: values });
   };
 };
