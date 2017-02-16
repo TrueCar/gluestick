@@ -2,7 +2,7 @@
 const LRU = require('lru-cache');
 
 // Creatin cache
-const DEFAULT_TTL = 5 * 10000;
+const DEFAULT_TTL = 60 * 60 * 1000;
 const lruOptions = {
   maxAge: DEFAULT_TTL,
   max: 50,
