@@ -1,9 +1,7 @@
 /* @flow */
 import type { CreateTemplate } from '../../types';
 
-module.exports = (createTemplate: CreateTemplate) => {
-  const template = createTemplate`
+module.exports = (createTemplate: CreateTemplate) => createTemplate`
 
-  `;
-  return template;
-};
+`;
+

@@ -12,18 +12,35 @@ const execHooks = (context, hooks) => {
   }
 };
 
+type ExecWithConfigArguments = {
+  func: Function;
+  commandArguments: Array<*>;
+  options: {
+    useGSConfig: boolean;
+    useWebpackConfig: boolean;
+    skipProjectConfig: boolean;
+    skipEntryGeneration: boolean;
+  };
+  hooks: {
+    pre: Function;
+    post: Function;
+  }
+};
+
 module.exports = (
   func,
   commandArguments,
-  { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
+  { useGSConfig, useWebpackConfig, skipProjectConfig, skipEntryGeneration } = {},
   { pre, post } = {},
-) => {
+): ExecWithConfigArguments => {
   const projectConfig = skipProjectConfig
     ? {}
     : require(path.join(process.cwd(), 'package.json')).gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
-  const webpackConfig = useWebpackConfig ? compileWebpackConfig(plugins, projectConfig) : null;
+  const webpackConfig = useWebpackConfig ? compileWebpackConfig(
+    logger, plugins, projectConfig, GSConfig, { skipEntryGeneration },
+  ) : null;
   const context = {
     config: {
       projectConfig,
@@ -33,10 +50,10 @@ module.exports = (
     },
     logger,
   };
-  execHooks(context, pre);
-  execHooks(context, post);
   try {
+    execHooks(context, pre);
     func(context, ...commandArguments);
+    execHooks(context, post);
   } catch (error) {
     process.stderr.write(error.message);
     process.exit(1);

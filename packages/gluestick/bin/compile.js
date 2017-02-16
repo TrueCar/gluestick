@@ -1,6 +1,7 @@
 require('babel-polyfill');
 require('babel-core/register')({
   only: /gluestick.*/,
+  ignore: /(webpack|build).*/,
   presets: [
     require.resolve('babel-preset-react'),
     require.resolve('babel-preset-es2015'),
@@ -8,6 +9,8 @@ require('babel-core/register')({
   ],
   plugins: [
     require.resolve('babel-plugin-transform-decorators-legacy'),
+    require.resolve('babel-plugin-transform-flow-strip-types'),
   ],
+  babelrc: false,
 });
 
