@@ -68,7 +68,7 @@ module.exports = options => {
         template: containerTemplate,
       },
       {
-        path: 'test/containers',
+        path: 'src/containers/__tests__',
         filename: `${options.name}.test.js`,
         template: testTemplate,
         args: {

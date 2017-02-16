@@ -57,7 +57,7 @@ module.exports = (options) => {
         template: options.functional ? functionalComponentTemplate : classComponentTemplate,
       },
       {
-        path: 'test/components',
+        path: 'src/components/__tests__',
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
