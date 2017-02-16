@@ -15,7 +15,7 @@ const buildEntries = (gluestickConfig: GSConfig, logger: Logger) => {
       generatorName: 'clientEntryInit',
       entityName: name,
       options: {
-        component: `${gluestickConfig.appsPath}/${name}`,
+        component: entries[entry].component,
         routes: entries[entry].routes,
         clientEntryInitPath: gluestickConfig.clientEntryInitPath,
       },
