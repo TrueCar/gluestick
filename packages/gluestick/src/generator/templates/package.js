@@ -22,19 +22,21 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "babel-preset-es2015": "6.22.0",
     "babel-preset-react": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
-    "babel-register": "6.22.0",
-    "babel-runtime": "6.22.0",
-    "babel-traverse": "6.22.1",
+    "css-loader": "0.26.1",
+    "file-loader": "0.9.0",
     "gluestick": "${
       (args) => args.dev || '1.0.0' // TODO: replace with real version
     }",
     "gluestick-shared": "0.4.22",
+    "image-webpack-loader": "3.1.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-helmet": "4.0.0",
     "react-redux": "5.0.2",
     "react-router": "3.0.2",
-    "redux": "3.6.0"
+    "redux": "3.6.0",
+    "sass-loader": "4.1.1",
+    "style-loader": "0.13.1"
   },
   "author": "",
   "license": "ISC",
