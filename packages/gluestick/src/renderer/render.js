@@ -1,24 +1,27 @@
 const React = require('react');
 const { RouterContext } = require('react-router');
-const Oy = require('oy-vey');
+const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
+const getRenderer = (isEmail, renderMethod) => {
+  if (renderMethod) {
+    return renderMethod;
+  }
+  return isEmail ? renderToStaticMarkup : renderToString;
+};
+
 module.exports = async (
-  { config, logger },
+  context,
   req,
-  { EntryPoint, entryName, store, routes },
-  renderProps,
-  entryWrapperConfig,
-  envVariables,
-  { EntryWrapper, BodyWrapper },
-  assets,
-  httpClient,
-  cacheManager,
-  currentRoute,
+  { EntryPoint, entryName, store, routes, httpClient },
+  { renderProps, currentRoute },
+  { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables, getHead },
+  { assets, cacheManager },
+  { renderMethod },
 ) => {
-  const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
-  const isEmail = currentRoute.email || false;
+  const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
+  const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const entryWrapper = (
     <EntryWrapper
@@ -34,9 +37,8 @@ module.exports = async (
   // script tag that hooks up the client side react code.
   const currentState = store.getState();
 
-  const bodyWrapperContent = isEmail ?
-    renderToStaticMarkup(entryWrapper) : renderToString(entryWrapper);
-
+  const renderResults = getRenderer(isEmail, renderMethod)(entryWrapper, styleTags);
+  const bodyWrapperContent = renderMethod ? renderResults.body : renderResults;
   const bodyWrapper = (
     <BodyWrapper
       html={bodyWrapperContent}
@@ -47,9 +49,6 @@ module.exports = async (
     />
   );
 
-  // const head =
-  //   isEmail
-  //     ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -57,7 +56,13 @@ module.exports = async (
   // always add inside the <head> tag.
   //
   // Bundle it all up into a string, add the doctype and deliver
-  const rootElement = <EntryPoint body={bodyWrapper} head={styleTags} req={req} />;
+  const rootElement = (
+    <EntryPoint
+      body={bodyWrapper}
+      head={isEmail ? null : renderResults.head || styleTags}
+      req={req}
+    />
+  );
 
   let responseString;
   if (isEmail) {
