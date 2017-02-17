@@ -6,12 +6,13 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
-// const getStatusCode = require('./helpers/getStatusCode');
+
 const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = async (
+  { config, logger },
   req,
   res,
-  { config, logger },
   { entries, entriesConfig },
   { EntryWrapper, BodyWrapper },
   assets,
@@ -92,8 +93,12 @@ module.exports = async (
     res.send(output.responseString);
     return null;
   } catch (error) {
-    console.log(error);
-    errorHandler(req, res, error, config);
+    errorHandler(
+      { config, logger },
+      req,
+      res,
+      error,
+    );
   }
   return null;
 };

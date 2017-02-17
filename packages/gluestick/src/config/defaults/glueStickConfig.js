@@ -27,6 +27,8 @@ const config: GSConfig = {
     path.join(process.cwd(), 'src/**/*.js'),
     path.join(process.cwd(), 'node_modules/gluestick/**/*'),
   ],
+  customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
+  defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
 };
 
 module.exports = config;

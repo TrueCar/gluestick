@@ -25,6 +25,8 @@ export type GSConfig = {
   webpackChunks: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];
+  defaultErrorTemplatePath: string;
+  customErrorTemplatePath: string;
   [key: string]: any;
 };
 
