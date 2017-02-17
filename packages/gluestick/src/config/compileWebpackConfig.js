@@ -14,14 +14,17 @@ const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
 
+type CompilationOptions = {
+  skipClientEntryGeneration: boolean;
+  skipServerEntryGeneration: boolean;
+};
+
 module.exports = (
   logger: Logger,
   plugins: Plugin[],
   projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
-  { skipClientEntryGeneration, skipServerEntryGeneration }: {
-    skipClientEntryGeneration: boolean; skipServerEntryGeneration: boolean;
-  } = {},
+  { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
 ): WebpackConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings = {

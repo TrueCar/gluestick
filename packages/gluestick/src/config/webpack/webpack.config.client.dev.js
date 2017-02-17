@@ -32,6 +32,7 @@ module.exports = (
       ],
     });
   }, {});
+  // Add react transformation to babel-loader plugins.
   configuration.module.rules[0].use[0].options.plugins.push([
     'react-transform',
     {

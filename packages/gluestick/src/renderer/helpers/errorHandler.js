@@ -11,9 +11,11 @@ Handlebars.registerHelper('notForProduction', (options) => {
 });
 
 const tryReadFile = (filePath: string): Promise<string | boolean> =>
-  new Promise((resolve, reject) => {
-    console.log(filePath);
-    fs.readFile(filePath, 'utf8', (error, data) => {
+  new Promise((
+    resolve: (value: string | boolean) => void,
+    reject: (value: Object) => void,
+  ): void => {
+    fs.readFile(filePath, 'utf8', (error: any, data: string): void => {
       if (error) {
         if (error.code === 'ENOENT') resolve(false);
         reject(error);
