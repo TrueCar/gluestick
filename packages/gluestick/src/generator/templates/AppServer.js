@@ -9,14 +9,14 @@ type ApplicationServer = {
   protocol: string;
   host: string;
   port: number;
-  ssetPort: number;
+  assetPort: number;
 }
 
 const applicationServer: ApplicationServer = {
   protocol: "http",
   host: "0.0.0.0",
   port: 8888,
-  ssetPort: 8880
+  assetPort: 8880
 };
 
 export default applicationServer;
