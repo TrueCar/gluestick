@@ -99,4 +99,5 @@ export type Response = {
 
 export type Request = {
   url: string;
+  hostname: string;
 }
