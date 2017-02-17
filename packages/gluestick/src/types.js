@@ -89,3 +89,7 @@ export type WrittenTemplate = {
 export type GeneratorOptions = {
   [key: string]: ?string;
 }
+
+export type Compiler = {
+  run: Function,
+}

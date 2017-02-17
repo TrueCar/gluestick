@@ -1,11 +1,7 @@
 /* @flow */
-import type { Context, WebpackConfigEntry } from '../types.js';
+import type { Context, WebpackConfigEntry, Compiler } from '../types.js';
 
 const webpack = require('webpack');
-
-type Compiler = {
-  run: Function,
-}
 
 module.exports = ({ logger, config }: Context): void => {
   if (config.webpackConfig) {
