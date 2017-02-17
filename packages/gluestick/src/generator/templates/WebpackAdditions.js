@@ -2,6 +2,8 @@
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
 /**
  * GlueStick uses webpack-isomorphic-tools to support server side rendering.
  * The syntax for this is slightly different than the webpack config file.
@@ -23,7 +25,6 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
  * Loaders also support \`include\`, \`exclude\` and \`query\`.
  * Additionally, you can provide a \`test\` regex instead of \`extensions\`
  * in order to bypass webpack-isomorphic-tools when needed.
- * 
  *
  * When adding additionalAliases, follow this pattern:
  * additionalAliases: {
@@ -37,11 +38,20 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
  * }
  *
  */
-module.exports = {
+
+type WebpackAdditions = {
+  additionalLoaders: string[];
+  additionalAliases: {[key: string]: string};
+  plugins: string[];
+  vendor: string[];
+}
+
+const webpackAdditions: WebpackAdditions = {
   additionalLoaders: [],
   additionalAliases: {},
   plugins: [],
   vendor: []
 };
-`;
 
+module.exports = webpackAdditions;
+`;

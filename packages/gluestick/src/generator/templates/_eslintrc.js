@@ -40,7 +40,8 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
   "env": {
     "es6": true,
     "node": true,
-    "browser": true
+    "browser": true,
+    "jest": true
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "ecmaFeatures": {
@@ -49,21 +50,6 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
   },
   "plugins": [
     "react"
-  ],
-  "globals": {
-    "document": true,
-    "React": true,
-    "ReactDOM": true,
-    "window": true,
-    "describe": true,
-    "expect": true,
-    "it": true,
-    "TestUtils": true,
-    "sinon": true,
-    "beforeEach": true,
-    "afterEach": true,
-    "before": true,
-    "after": true
-  }
+  ]
 }
 `;

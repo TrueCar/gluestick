@@ -1,6 +1,4 @@
 [ignore]
-# Ignore templates with `@flow` in the header
-.*/templates/new/.*\.js
 # fbjs lib problems
 .*/node_modules/fbjs/.*
 # radium lib problems

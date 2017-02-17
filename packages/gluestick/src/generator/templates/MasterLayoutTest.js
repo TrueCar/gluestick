@@ -2,6 +2,8 @@
 import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
 import React from "react";
 import { shallow } from "enzyme";
 
