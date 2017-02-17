@@ -46,6 +46,7 @@ export function getEnvironmentPlugins(isProduction) {
 
   if (isProduction) {
     environmentPlugins = environmentPlugins.concat([
+      new webpack.optimize.DedupePlugin(),
       webpackIsomorphicToolsPlugin,
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -109,7 +110,6 @@ export default function (appRoot, appConfigFilePath, isProduction) {
       publicPath: ASSET_PATH,
     },
     plugins: [
-      new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({
