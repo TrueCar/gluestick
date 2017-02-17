@@ -9,7 +9,8 @@ const templatePackage = require('../templates/package')(createTemplate);
 const template505hbs = require('../templates/505hbs')(createTemplate);
 const templateIndex = require('../templates/Index')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
-const templateEslintrc = require('../templates/eslintrc')(createTemplate);
+const templateEslintrc = require('../templates/_eslintrc')(createTemplate);
+const templateFlowConfig = require('../templates/_flowconfig')(createTemplate);
 const templateDockerignore = require('../templates/dockerignore')(createTemplate);
 const templateBabelrc = require('../templates/babelrc')(createTemplate);
 const templateHomeTest = require('../templates/HomeTest')(createTemplate);
@@ -30,7 +31,13 @@ const templateRoutes = require('../templates/Routes')(createTemplate);
 const templateWebpackAdditions = require('../templates/WebpackAdditions')(createTemplate);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
-const templateRecuder = require('../templates/Reducer')(createTemplate);
+const templateReducer = require('../templates/Reducer')(createTemplate);
+const templateEntries = require('../templates/entries')(createTemplate);
+
+const { flowVersion } = require('../constants');
+// @TODO use config in new command when PR #571 is merged
+const glueStickConfig = require('../../config/defaults/glueStickConfig');
+const webpackConfig = require('../../config/webpack/webpack.config');
 
 module.exports = (options: GeneratorOptions) => ({
   entries: [
@@ -43,6 +50,7 @@ module.exports = (options: GeneratorOptions) => ({
       args: {
         dev: options.dev,
         appName: options.appName,
+        flowVersion,
       },
     },
     {
@@ -57,6 +65,17 @@ module.exports = (options: GeneratorOptions) => ({
     },
     {
       path: '/',
+      filename: '.flowconfig',
+      template: templateFlowConfig,
+      args: {
+        appName: options.appName,
+        version: flowVersion,
+        // $FlowFixMe review this after resolving the TODO mentioned above
+        mapper: webpackConfig(glueStickConfig).resolve.alias,
+      },
+    },
+    {
+      path: '/',
       filename: '.dockerignore',
       template: templateDockerignore,
     },
@@ -64,6 +83,11 @@ module.exports = (options: GeneratorOptions) => ({
       path: '/',
       filename: '.babelrc',
       template: templateBabelrc,
+    },
+    {
+      path: 'src',
+      filename: 'entries.json',
+      template: templateEntries,
     },
     // Gluestick directory
     {
@@ -110,22 +134,22 @@ module.exports = (options: GeneratorOptions) => ({
     // Shared
     {
       path: 'src/shared/actions',
-      filename: '.empty',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
       path: 'src/shared/components',
-      filename: '.empty',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
       path: 'src/shared/containers',
-      filename: '.empty',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
       path: 'src/shared/reducers',
-      filename: '.empty',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     // Main app
@@ -160,9 +184,14 @@ module.exports = (options: GeneratorOptions) => ({
       template: templateNoMatchApp,
     },
     {
+      path: 'src/apps/main/actions',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
       path: 'src/apps/main/reducers',
       filename: 'index.js',
-      template: templateRecuder,
+      template: templateReducer,
     },
     {
       path: 'src/apps/main/components/__tests__',
@@ -186,12 +215,32 @@ module.exports = (options: GeneratorOptions) => ({
     },
     {
       path: 'src/apps/main/reducers/__tests__',
-      filename: '.empty',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
       path: 'src/apps/main/actions/__tests__',
-      filename: '.empty',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/actions/__tests__',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/containers/__tests__',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/components/__tests__',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/reducers/__tests__',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
   ],

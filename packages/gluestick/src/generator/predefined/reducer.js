@@ -49,7 +49,7 @@ module.exports = (options) => {
         template: reducerTemplate,
       },
       {
-        path: 'test/reducers',
+        path: 'src/reducers/__tests__',
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {

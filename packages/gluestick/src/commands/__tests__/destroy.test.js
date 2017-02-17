@@ -16,7 +16,7 @@ function createFiles(...filePaths) {
 function createDirectories(rootDir, ...directories) {
   directories.forEach((directory) => {
     mkdirp.sync(path.join(rootDir, 'src', directory));
-    mkdirp.sync(path.join(rootDir, 'test', directory));
+    mkdirp.sync(path.join(rootDir, 'src', directory, '__tests__'));
   });
 }
 
@@ -51,11 +51,11 @@ describe('cli: gluestick destroy', () => {
   describe('when files are generated without sub-directories', () => {
     beforeEach(() => {
       const componentPath = path.join(tmpDir, 'src/components/TestComponent.js');
-      const componentTestPath = path.join(tmpDir, 'test/components/TestComponent.test.js');
+      const componentTestPath = path.join(tmpDir, 'src/components/__tests__/TestComponent.test.js');
       const containerPath = path.join(tmpDir, 'src/containers/TestContainer.js');
-      const containerTestPath = path.join(tmpDir, 'test/containers/TestContainer.test.js');
+      const containerTestPath = path.join(tmpDir, 'src/containers/__tests__/TestContainer.test.js');
       const reducerPath = path.join(tmpDir, 'src/reducers/testReducer.js');
-      const reducerTestPath = path.join(tmpDir, 'test/reducers/testReducer.test.js');
+      const reducerTestPath = path.join(tmpDir, 'src/reducers/__tests__/testReducer.test.js');
       createFiles(
         componentPath,
         componentTestPath,
@@ -93,18 +93,18 @@ describe('cli: gluestick destroy', () => {
     describe('when removing files', () => {
       it('removes the specified component and its associated test', () => {
         expect(fileExists('src/components/TestComponent.js')).toEqual(true);
-        expect(fileExists('test/components/TestComponent.test.js')).toEqual(true);
+        expect(fileExists('src/components/__tests__/TestComponent.test.js')).toEqual(true);
         destroy(context, 'component', 'TestComponent');
         expect(fileExists('src/components/TestComponent.js')).toEqual(false);
-        expect(fileExists('test/components/TestComponent.test.js')).toEqual(false);
+        expect(fileExists('src/components/__tests__/TestComponent.test.js')).toEqual(false);
       });
 
       it('removes the specified reducer and its associated test', () => {
         expect(fileExists('src/reducers/testReducer.js')).toEqual(true);
-        expect(fileExists('test/reducers/testReducer.test.js')).toEqual(true);
+        expect(fileExists('src/reducers/__tests__/testReducer.test.js')).toEqual(true);
         destroy(context, 'reducer', 'testReducer');
         expect(fileExists('src/reducers/testReducer.js')).toEqual(false);
-        expect(fileExists('test/reducers/testReducer.test.js')).toEqual(false);
+        expect(fileExists('src/reducers/__tests__/testReducer.test.js')).toEqual(false);
       });
 
       it.skip('it removes reducer from reducers/index.js when removing a specified reducer', () => {
@@ -113,10 +113,10 @@ describe('cli: gluestick destroy', () => {
 
       it('removes the specified container and its associated test', () => {
         expect(fileExists('src/containers/TestContainer.js')).toEqual(true);
-        expect(fileExists('test/containers/TestContainer.test.js')).toEqual(true);
+        expect(fileExists('src/containers/__tests__/TestContainer.test.js')).toEqual(true);
         destroy(context, 'container', 'TestContainer');
         expect(fileExists('src/containers/TestContainer.js')).toEqual(false);
-        expect(fileExists('test/containers/TestContainer.test.js')).toEqual(false);
+        expect(fileExists('src/containers/__tests__/TestContainer.test.js')).toEqual(false);
       });
     });
   });
@@ -125,17 +125,17 @@ describe('cli: gluestick destroy', () => {
     beforeEach(() => {
       createDirectories(tmpDir, path.join('components', 'mydirectory'));
       const componentPath = path.join(tmpDir, 'src/components/mydirectory/TestComponent.js');
-      const componentTestPath = path.join(tmpDir, 'test/components/mydirectory/TestComponent.test.js');
+      const componentTestPath = path.join(tmpDir, 'src/components/mydirectory/__tests__/TestComponent.test.js');
       createFiles(componentPath, componentTestPath);
     });
 
     it('removes the files under the directory', () => {
       expect(fileExists('src/components/mydirectory/TestComponent.js')).toEqual(true);
-      expect(fileExists('test/components/mydirectory/TestComponent.test.js')).toEqual(true);
+      expect(fileExists('src/components/mydirectory/__tests__/TestComponent.test.js')).toEqual(true);
       destroy(context, 'component', 'mydirectory/TestComponent');
       expect(logger.error).not.toHaveBeenCalled();
       expect(fileExists('src/components/mydirectory/TestComponent.js')).toEqual(false);
-      expect(fileExists('test/components/mydirectory/TestComponent.test.js')).toEqual(false);
+      expect(fileExists('src/components/mydirectory/__tests__/TestComponent.test.js')).toEqual(false);
     });
   });
 });

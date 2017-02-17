@@ -36,7 +36,7 @@
     "no-restricted-syntax": 0,
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
-    "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+    "no-trailing-spaces": ["error"],
 
     "import/extensions": 0,
     "import/no-extraneous-dependencies": 0,

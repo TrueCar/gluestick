@@ -1,3 +1,4 @@
+jest.mock('testPlugin.js', () => () => 'body of testPlugin', { virtual: true });
 const path = require('path');
 const preparePlugins = require('../preparePlugins');
 
@@ -5,9 +6,7 @@ const originalPath = path.join.bind({});
 
 describe('config/preparePlugins', () => {
   beforeEach(() => {
-    path.join = jest.fn().mockImplementation(
-      () => originalPath(__dirname, '../__mocks__/testPlugin.js'),
-    );
+    path.join = jest.fn(() => 'testPlugin.js');
   });
 
   afterEach(() => {
