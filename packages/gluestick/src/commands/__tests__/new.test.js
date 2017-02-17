@@ -6,6 +6,8 @@ import newApp from '../new';
 jest.mock('cross-spawn');
 jest.mock('../../generator');
 
+const spawn = require('cross-spawn');
+
 const { highlight, filename } = require('../../cli/colorScheme');
 const generate = require('../../generator');
 
@@ -78,6 +80,12 @@ describe('cli: gluestick new', () => {
         dev: null,
       },
     }, logger);
+  });
+
+  it('calls spawn.sync install with correct parameters', () => {
+    mockProcessCwdCallOnce();
+    newApp(context, validProjectName);
+    expect(spawn.sync).toBeCalledWith('npm', ['install'], { stdio: 'inherit' });
   });
 
   it('logs a successful message if everything ran correctly', () => {

@@ -28,7 +28,7 @@ export type GSConfig = {
   [key: string]: any;
 };
 
-type WebpackConfigEntry = string | Object | any[];
+export type WebpackConfigEntry = string | Object | any[];
 
 export type WebpackConfig = {
   [key: string]: WebpackConfigEntry;
