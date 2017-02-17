@@ -75,26 +75,24 @@ module.exports = async (
     // This will be used when streaming generated response or from cache.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
-    const output = await render(
+    const output = render(
       { config, logger },
       req,
       { EntryPoint: requirements.Component,
         entryName: requirements.name,
         store,
         routes: requirements.routes,
+        httpClient,
       },
-      renderProps,
-      unknowConfig,
-      [],
-      { EntryWrapper, BodyWrapper },
-      assets,
-      httpClient,
-      cacheManager,
-      currentRoute,
+      { renderProps, currentRoute },
+      { EntryWrapper, BodyWrapper, unknowConfig, envVariables: [] },
+      { assets, cacheManager },
+      {},
     );
     res.send(output.responseString);
     return null;
   } catch (error) {
+    console.log(error);
     errorHandler(req, res, error, config);
   }
   return null;

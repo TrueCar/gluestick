@@ -1,25 +1,45 @@
+/* @flow */
+import type { Context, Request } from '../types';
+
 const React = require('react');
 const { RouterContext } = require('react-router');
 const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
-const getRenderer = (isEmail, renderMethod) => {
+type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
+const getRenderer = (
+  isEmail: boolean,
+  renderMethod?: RenderMethod,
+): Function => {
   if (renderMethod) {
     return renderMethod;
   }
   return isEmail ? renderToStaticMarkup : renderToString;
 };
 
-module.exports = async (
-  context,
-  req,
-  { EntryPoint, entryName, store, routes, httpClient },
-  { renderProps, currentRoute },
-  { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables, getHead },
-  { assets, cacheManager },
-  { renderMethod },
-) => {
+type EntryRequirements = {
+  EntryPoint: Object;
+  entryName: string;
+  store: Object;
+  routes: Function;
+  httpClient: Object;
+};
+type WrappersRequirements = {
+  EntryWrapper: Object;
+  BodyWrapper: Object;
+  entryWrapperConfig: Object;
+  envVariables: any[];
+};
+module.exports = (
+  context: Context,
+  req: Request,
+  { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
+  { renderProps, currentRoute }: { renderProps: Object; currentRoute: Object },
+  { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables }: WrappersRequirements,
+  { assets, cacheManager }: { assets: Object; cacheManager: Object },
+  { renderMethod }: { renderMethod: RenderMethod },
+): { responseString: string, rootElement: Object } => {
   const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
@@ -35,10 +55,10 @@ module.exports = async (
 
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
-  const currentState = store.getState();
+  const currentState: Object = store.getState();
 
-  const renderResults = getRenderer(isEmail, renderMethod)(entryWrapper, styleTags);
-  const bodyWrapperContent = renderMethod ? renderResults.body : renderResults;
+  const renderResults: Object = getRenderer(isEmail, renderMethod)(entryWrapper, styleTags);
+  const bodyWrapperContent: String = renderMethod ? renderResults.body : renderResults;
   const bodyWrapper = (
     <BodyWrapper
       html={bodyWrapperContent}
@@ -64,7 +84,7 @@ module.exports = async (
     />
   );
 
-  let responseString;
+  let responseString: string;
   if (isEmail) {
     const generateCustomTemplate = ({ bodyContent }) => { return `${bodyContent}`; };
     responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
@@ -75,8 +95,6 @@ module.exports = async (
   cacheManager.setCacheIfProd(req, responseString);
   return {
     responseString,
-
-    // The following is returned for testing
-    rootElement,
+    rootElement, // only for testing
   };
 };

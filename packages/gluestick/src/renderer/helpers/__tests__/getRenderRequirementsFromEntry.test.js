@@ -34,7 +34,7 @@ describe('renderer/helpers/getRequirementsFromEntry', () => {
       Component: 'component',
       reducers: 'reducers',
       routes: 'routes',
-      name: 'home/abc',
+      name: '/home/abc',
     });
   });
 });
