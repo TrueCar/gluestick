@@ -16,6 +16,7 @@ module.exports = async (
   { entries, entriesConfig },
   { EntryWrapper, BodyWrapper },
   assets,
+  options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
 ) => {
   /**
    * TODO: add hooks
@@ -30,19 +31,16 @@ module.exports = async (
       return null;
     }
 
-    // Some config is passed when creating output, but don't know what it is exactly.
-    const unknowConfig = {};
     const requirements = getRequirementsFromEntry(
       { config, logger },
       req, entries,
     );
 
-    const httpClient = getHttpClient(unknowConfig, req, res);
+    const httpClient = getHttpClient(options.httpClient, req, res);
     const store = createStore(
       httpClient,
       () => requirements.reducers,
       [],
-      // What is that for?
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
       !!module.hot,
     );
@@ -51,7 +49,7 @@ module.exports = async (
       renderProps,
     } = await matchRoute(
       { config, logger },
-      req, requirements.routes, store, unknowConfig, httpClient,
+      req, requirements.routes, store, httpClient,
     );
 
     if (redirectLocation) {
@@ -86,7 +84,12 @@ module.exports = async (
         httpClient,
       },
       { renderProps, currentRoute },
-      { EntryWrapper, BodyWrapper, unknowConfig, envVariables: [] },
+      {
+        EntryWrapper,
+        BodyWrapper,
+        entryWrapperConfig: options.entryWrapperConfig,
+        envVariables: options.envVariables,
+      },
       { assets, cacheManager },
       {},
     );
