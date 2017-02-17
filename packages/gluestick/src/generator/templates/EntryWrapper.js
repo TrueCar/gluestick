@@ -38,7 +38,7 @@ const start = (getRoutes, getStore, match = originalMatch, history = browserHist
   // set up in the browser.
   require("config/init.browser");
 
-  const httpClient = getHttpClient();
+  const httpClient = getHttpClient(/*config.httpClient*/);
   const store = getStore(httpClient);
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
     const entry = (

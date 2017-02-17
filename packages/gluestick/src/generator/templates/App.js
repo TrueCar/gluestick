@@ -18,17 +18,16 @@ type Logger = {
   level: string;
 }
 
+type EnvConfig = {
+  assetPath: string;
+  head: HeadContent;
+  logger: Logger;
+  httpClient?: Object;
+}
+
 type Config = {
-  development: {
-    assetPath: string;
-    head: HeadContent;
-    logger: Logger;
-  },
-  production: {
-    assetPath: string;
-    head: HeadContent,
-    logger: Logger;
-  }
+  development: EnvConfig;
+  production: EnvConfig;
 }
 
 const headContent: HeadContent = {
