@@ -1,11 +1,17 @@
-import fs from 'fs';
-import inquirer from 'inquirer';
-import path from 'path';
-import temp from 'temp';
-import rimraf from 'rimraf';
-import mkdirp from 'mkdirp';
-import chalk from 'chalk';
-import destroy from '../destroy';
+/* @flow */
+
+jest.mock('../../cli/logger');
+
+const fs = require('fs');
+const inquirer = require('inquirer');
+const path = require('path');
+const temp = require('temp');
+const rimraf = require('rimraf');
+const mkdirp = require('mkdirp');
+const chalk = require('chalk');
+
+const destroy = require('../destroy');
+const logger = require('../../cli/logger');
 
 function createFiles(...filePaths) {
   filePaths.forEach((pathToFile) => {
@@ -25,13 +31,7 @@ describe('cli: gluestick destroy', () => {
   let tmpDir;
 
   const fileExists = filePath => fs.existsSync(path.join(tmpDir, filePath));
-
-  const logger = jest.fn();
-  logger.error = jest.fn();
-  logger.info = jest.fn();
-  logger.success = jest.fn();
-
-  const context = { logger };
+  const context = { config: { plugins: [] }, logger };
 
   beforeEach(() => {
     originalCwd = process.cwd();
@@ -68,6 +68,7 @@ describe('cli: gluestick destroy', () => {
 
     describe('when invalid arguments are provided', () => {
       it('reports an error when (container|component|reducer) is not specified', () => {
+        // $FlowIgnore flow detects this case but nothing prevents the user to type it
         destroy(context, 'blah', '');
         expect(logger.error).toBeCalledWith(`${chalk.bold('blah')} is not a valid destroy command.`);
       });
