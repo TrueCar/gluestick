@@ -21,16 +21,16 @@ const spawnServer = ({ config, logger }, entryPointPath, args) => {
     switch (msg.type) {
       default:
       case 'info':
-        logger.info(msg.value);
+        logger.info(...msg.value);
         break;
       case 'warn':
-        logger.warn(msg.value);
+        logger.warn(...msg.value);
         break;
       case 'error':
-        logger.error(msg.value);
+        logger.error(...msg.value);
         break;
       case 'success':
-        logger.success(msg.value);
+        logger.success(...msg.value);
         break;
     }
   });
@@ -65,8 +65,9 @@ const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
     path.join(process.cwd(), '**/*'),
   ], {
     ignored: [
-      /build/,
-      /node_modules\/(?!gluestick\/src).*/gi,
+      /build\/server/,
+      /gluestick\/clientEntryInit/,
+      /node_modules\/(?!gluestick\/src)/,
     ],
   }).on('ready', () => {
     logger.info('Started watching...');
