@@ -16,15 +16,15 @@ type ExecWithConfig = (
   func: Function,
   commandArguments: Array<*>,
   options: {
-    useGSConfig: boolean,
-    useWebpackConfig: boolean,
-    skipProjectConfig: boolean,
-    skipClientEntryGeneration: boolean,
-    skipServerEntryGeneration: boolean,
+    useGSConfig: boolean;
+    useWebpackConfig: boolean;
+    skipProjectConfig: boolean;
+    skipClientEntryGeneration: boolean;
+    skipServerEntryGeneration: boolean;
   },
   hooks: {
-    pre: Function,
-    post: Function,
+    pre: Function;
+    post: Function;
   }
 ) => void;
 

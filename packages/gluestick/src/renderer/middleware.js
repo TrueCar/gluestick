@@ -117,7 +117,7 @@ module.exports = async (
     res.send(output.responseString);
     return null;
   } catch (error) {
-    logger.error(error);
+    logger.error(error instanceof Error ? error.stack : error);
     errorHandler(
       { config, logger },
       req,
