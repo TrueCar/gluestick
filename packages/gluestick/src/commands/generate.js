@@ -4,7 +4,8 @@ import type { Context } from '../types';
 
 const generator = require('../generator');
 
-type Options = {
+export type Options = {
+  entryPoint?: string;
   functional?: boolean;
   genOptions?: string;
 }
@@ -12,8 +13,9 @@ type Options = {
 const generate = ({ config, logger }: Context, generatorName: string, entityName: string,
   options: Options) => {
   const filteredOptions = {
-    functional: options.functional,
     ...JSON.parse(options.genOptions ? options.genOptions : '{}'),
+    functional: options.functional,
+    entryPoint: options.entryPoint,
   };
   generator({
     generatorName,

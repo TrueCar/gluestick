@@ -36,6 +36,7 @@ commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .option(...statelessFunctionalOption)
   .option('-O, --gen-options <value>', 'options to pass to the generator')
   .action((...commandArguments) => {
