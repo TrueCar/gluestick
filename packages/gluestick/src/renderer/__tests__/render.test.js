@@ -46,6 +46,7 @@ describe('renderer/render', () => {
   describe('without a custom render method', () => {
     describe('when the route is an email route', () => {
       it('should render output', async () => {
+        cacheManager.setCacheIfProd.mockReset();
         const currentRouteWithEmail = clone(renderProps);
         currentRouteWithEmail.email = true;
         const results = await render(
@@ -61,11 +62,13 @@ describe('renderer/render', () => {
         expect(results.rootElement.props.head).toBeNull();
         expect(results.rootElement.props.body.props.html).toBeDefined();
         expect(results.rootElement.props.body.props.html).not.toContain('data-reactid');
+        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
+        cacheManager.setCacheIfProd.mockReset();
         const results = await render(
           context,
           request,
@@ -78,6 +81,7 @@ describe('renderer/render', () => {
         expect(results.responseString).toBeDefined();
         expect(results.rootElement.props.head).not.toBeNull();
         expect(results.rootElement.props.body.props.html).toContain('data-reactid');
+        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
       });
     });
   });
@@ -94,6 +98,7 @@ describe('renderer/render', () => {
 
     describe('when the route is an email route', () => {
       it('should render output', async () => {
+        cacheManager.setCacheIfProd.mockReset();
         const currentRouteWithEmail = clone(renderProps);
         currentRouteWithEmail.email = true;
         const results = await render(
@@ -108,11 +113,13 @@ describe('renderer/render', () => {
         expect(results.responseString).toBeDefined();
         expect(results.rootElement.props.head).toBeNull();
         expect(results.rootElement.props.body.props.html).toBeDefined();
+        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
+        cacheManager.setCacheIfProd.mockReset();
         const results = await render(
           context,
           request,
@@ -124,6 +131,7 @@ describe('renderer/render', () => {
         );
         expect(results.responseString).toBeDefined();
         expect(results.rootElement.props.head).not.toBeNull();
+        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
       });
     });
   });

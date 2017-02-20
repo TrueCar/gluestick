@@ -63,8 +63,8 @@ module.exports = async (
     if (!renderProps) {
       // This is only hit if there is no 404 handler in the react routes. A
       // not found handler is included by default in new projects.
-      showHelpText(MISSING_404_TEXT);
-      res.sendStatus(404, logger);
+      showHelpText(MISSING_404_TEXT, logger);
+      res.sendStatus(404);
       return null;
     }
 
@@ -96,6 +96,7 @@ module.exports = async (
     res.send(output.responseString);
     return null;
   } catch (error) {
+    logger.error(error);
     errorHandler(
       { config, logger },
       req,
