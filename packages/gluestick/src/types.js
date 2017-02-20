@@ -43,8 +43,8 @@ export type Plugin = {
 
 export type Config = {
   projectConfig?: ProjectConfig;
-  GSConfig?: GSConfig;
-  webpackConfig?: WebpackConfig;
+  GSConfig: GSConfig;
+  webpackConfig: WebpackConfig;
   plugins: Plugin[];
 };
 

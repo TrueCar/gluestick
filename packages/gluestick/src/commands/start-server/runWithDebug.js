@@ -1,9 +1,17 @@
+/* @flow */
+import type { Context } from '../../types';
+
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
 
-const watchSource = (watchDirectories, callback) => {
-  let timeout = -1;
-  const watcher = chokidar.watch(watchDirectories, {
+type Process = {
+  kill: Function,
+  on: Function,
+};
+
+const watchSource = (watchDirectories: string[], callback: Function): void => {
+  let timeout: number = -1;
+  const watcher: Object = chokidar.watch(watchDirectories, {
     ignored: /[/\\]\./,
     persistent: true,
   }).on('ready', () => {
@@ -16,8 +24,13 @@ const watchSource = (watchDirectories, callback) => {
   });
 };
 
-const debug = ({ config, logger }, serverEntrypointPath, args, debugPort) => {
-  const debugSpawn = spawn(
+const debug = (
+  { config, logger }: Context,
+  serverEntrypointPath: string,
+  args: string[],
+  debugPort: number,
+): Process => {
+  const debugSpawn: Process = spawn(
     'node',
     [
       `--inspect${debugPort ? `=${debugPort}` : ''}`,
@@ -35,10 +48,17 @@ const debug = ({ config, logger }, serverEntrypointPath, args, debugPort) => {
   return debugSpawn;
 };
 
-module.exports = ({ config, logger }, serverEntrypointPath, args, debugPort) => {
-  let debugProcess = null;
+module.exports = (
+  { config, logger }: Context,
+  serverEntrypointPath: string,
+  args: string[],
+  debugPort: number,
+) => {
+  let debugProcess: ?Process = null;
   watchSource(config.GSConfig.debugWatchDirectories, () => {
-    debugProcess.kill();
+    if (debugProcess) {
+      debugProcess.kill();
+    }
 
     process.nextTick(() => {
       debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
