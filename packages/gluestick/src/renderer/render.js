@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, Request } from '../types';
+import type { Context, Request, RenderOutput } from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
@@ -38,8 +38,8 @@ module.exports = (
   { renderProps, currentRoute }: { renderProps: Object; currentRoute: Object },
   { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables }: WrappersRequirements,
   { assets, cacheManager }: { assets: Object; cacheManager: Object },
-  { renderMethod }: { renderMethod: RenderMethod },
-): { responseString: string, rootElement: Object } => {
+  { renderMethod }: { renderMethod?: RenderMethod } = {},
+): RenderOutput => {
   const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;

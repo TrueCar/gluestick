@@ -1,3 +1,16 @@
+/* @flow */
+
+import type {
+  Context,
+  Request,
+  Response,
+  Entries,
+  EntriesConfig,
+  RenderRequirements,
+  RenderOutput,
+  CacheManager,
+} from '../types';
+
 const render = require('./render');
 const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
 const matchRoute = require('./helpers/matchRoute');
@@ -9,45 +22,53 @@ const getCacheManager = require('./helpers/cacheManager');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+type Options = {
+  envVariables: string[];
+  httpClient: Object;
+  entryWrapperConfig: Object;
+};
+
 module.exports = async (
-  { config, logger },
-  req,
-  res,
-  { entries, entriesConfig },
-  { EntryWrapper, BodyWrapper },
-  assets,
-  options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
+  { config, logger }: Context,
+  req: Request,
+  res: Response,
+  { entries, entriesConfig }: { entries: Entries, entriesConfig: EntriesConfig },
+  { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
+  assets: Object,
+  options: Options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
 ) => {
   /**
    * TODO: add hooks
    * TODO: better logging
    */
-  const cacheManager = getCacheManager(logger, isProduction);
+  const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
     // If we have cached item then render it.
-    const cached = cacheManager.getCachedIfProd(req);
+    const cached: string | null = cacheManager.getCachedIfProd(req);
     if (cached) {
       res.send(cached);
       return null;
     }
 
-    const requirements = getRequirementsFromEntry(
+    const requirements: RenderRequirements = getRequirementsFromEntry(
       { config, logger },
       req, entries,
     );
 
-    const httpClient = getHttpClient(options.httpClient, req, res);
-    const store = createStore(
+    const httpClient: Function = getHttpClient(options.httpClient, req, res);
+    const store: Object = createStore(
       httpClient,
       () => requirements.reducers,
       [],
+      // $FlowFixMe
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
+      // $FlowFixMe
       !!module.hot,
     );
     const {
       redirectLocation,
       renderProps,
-    } = await matchRoute(
+    }: { redirectLocation: Object, renderProps: Object } = await matchRoute(
       { config, logger },
       req, requirements.routes, store, httpClient,
     );
@@ -68,13 +89,13 @@ module.exports = async (
       return null;
     }
 
-    const currentRoute = renderProps.routes[renderProps.routes.length - 1];
+    const currentRoute: Object = renderProps.routes[renderProps.routes.length - 1];
     setHeaders(res, currentRoute);
 
     // This will be used when streaming generated response or from cache.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
-    const output = render(
+    const output: RenderOutput = render(
       { config, logger },
       req,
       { EntryPoint: requirements.Component,

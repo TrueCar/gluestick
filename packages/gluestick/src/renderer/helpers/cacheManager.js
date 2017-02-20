@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Logger, Request } from '../../types';
+import type { Logger, CacheManager, GetCachedIfProd, SetCacheIfProd } from '../../types';
 
 const LRU = require('lru-cache');
 
@@ -16,8 +16,8 @@ const getCacheKey = ({ hostname, url }: { hostname: string, url: string}): strin
   return `${hostname}${url}`;
 };
 
-module.exports = (logger: Logger, isProduction: boolean) => ({
-  getCachedIfProd: (req: Request, cache: Object = _cache): string | null => {
+module.exports = (logger: Logger, isProduction: boolean): CacheManager => {
+  const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
     if (isProduction) {
       const key: string = getCacheKey(req);
       const value: string = cache.get(key);
@@ -27,17 +27,18 @@ module.exports = (logger: Logger, isProduction: boolean) => ({
       }
     }
     return null;
-  },
-  setCacheIfProd: (
-    req: Request,
-    value: string,
-    maxAge: number = DEFAULT_TTL,
-    cache: Object = _cache,
+  };
+  const setCacheIfProd: SetCacheIfProd = (
+    req, value, maxAge = DEFAULT_TTL, cache = _cache,
   ) => {
     if (isProduction) {
       const key: string = getCacheKey(req);
       logger.debug(`Set cache: ${key}`);
       cache.set(key, value, maxAge);
     }
-  },
-});
+  };
+  return {
+    getCachedIfProd,
+    setCacheIfProd,
+  };
+};

@@ -21,10 +21,12 @@ const entries = {
 };
 
 describe('renderer/helpers/getRequirementsFromEntry', () => {
-  it('should return null if request url is invalid', () => {
-    expect(getRequirementsFromEntry(
-      context, { url: '/' }, entries,
-    )).toBeNull();
+  it('should throw error if entry definition was not found', () => {
+    expect(() => {
+      getRequirementsFromEntry(
+        context, { url: '/' }, entries,
+      );
+    }).toThrowError('No matching entry definition found');
   });
 
   it('should return entry', () => {
