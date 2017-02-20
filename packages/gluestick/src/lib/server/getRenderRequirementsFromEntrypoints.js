@@ -1,23 +1,32 @@
 import { parse as parseURL } from 'url';
-// import { getHttpClient } from 'gluestick-shared';
+import { getHttpClient } from 'gluestick-shared';
+import { getWebpackEntries } from '../buildWebpackEntries';
 import isChildPath from '../isChildPath';
+import { getLogger } from './logger';
 
-const entries = require('config/entries').default;
+const logger = getLogger();
+
+const cachedEntryPoints = getWebpackEntries();
+
 /**
  * Sort through all of the entry points based on the number of `/` characters
  * found in the url. It will test the most deeply nested entry points first
  * while finally falling back to the default index parameter.
  */
 const getSortedEntries = () => {
-  return Object.keys(entries).sort((a, b) => {
+  return Object.keys(getWebpackEntries()).sort((a, b) => {
     const bSplitLength = b.split('/').length;
     const aSplitLength = a.split('/').length;
     if (bSplitLength === aSplitLength) {
       return b.length - a.length;
     }
+
     return bSplitLength - aSplitLength;
   });
 };
+
+// Cache this result so it only runs once in production
+const cachedSortedEntries = getSortedEntries();
 
 /**
  * This method takes the server request object, determines which entry point
@@ -25,10 +34,19 @@ const getSortedEntries = () => {
  * variables that the server needs to render. These variables include Index,
  * store, getRoutes and fileName.
  */
-export default (req, res, config = {}, logger) => {
-  // const httpClient = getHttpClient(config.httpClient, req, res);
+export default (req, res, config = {}, customRequire = require) => {
+  const httpClient = getHttpClient(config.httpClient, req, res);
   const { path: urlPath } = parseURL(req.url);
-  const sortedEntries = getSortedEntries();
+  let sortedEntries;
+  let entryPoints;
+  if (process.env.NODE_ENV === 'production') {
+    sortedEntries = cachedSortedEntries;
+    entryPoints = cachedEntryPoints;
+  } else {
+    sortedEntries = getSortedEntries();
+    entryPoints = getWebpackEntries();
+  }
+
   logger.debug('Getting webpack entries');
 
   /**
@@ -38,11 +56,14 @@ export default (req, res, config = {}, logger) => {
   logger.debug('Looping through sorted entry points');
   for (const path of sortedEntries) {
     if (isChildPath(path, urlPath)) {
-      logger.debug(`Found entrypoint and performing requires for path "${path}"`);
+      const { routes, index, fileName, filePath } = entryPoints[path];
+
+      logger.debug('Found entrypoint and performing requires for', index, filePath, routes);
       return {
-        Component: entries[path].component,
-        reducer: entries[path].reducer,
-        routes: entries[path].routes,
+        Index: customRequire(`${index}.js`).default,
+        store: customRequire(filePath).getStore(httpClient),
+        getRoutes: customRequire(routes).default,
+        fileName,
       };
     }
   }

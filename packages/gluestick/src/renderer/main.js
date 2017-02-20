@@ -32,8 +32,8 @@ module.exports = ({ config, logger }) => {
 
   app.use((req, res) => {
     middleware(
-      req, res,
       { config, logger },
+      req, res,
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,

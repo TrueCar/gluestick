@@ -6,15 +6,17 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
-// const getStatusCode = require('./helpers/getStatusCode');
+
 const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = async (
+  { config, logger },
   req,
   res,
-  { config, logger },
   { entries, entriesConfig },
   { EntryWrapper, BodyWrapper },
   assets,
+  options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
 ) => {
   /**
    * TODO: add hooks
@@ -29,19 +31,16 @@ module.exports = async (
       return null;
     }
 
-    // Some config is passed when creating output, but don't know what it is exactly.
-    const unknowConfig = {};
     const requirements = getRequirementsFromEntry(
       { config, logger },
       req, entries,
     );
 
-    const httpClient = getHttpClient(unknowConfig, req, res);
+    const httpClient = getHttpClient(options.httpClient, req, res);
     const store = createStore(
       httpClient,
       () => requirements.reducers,
       [],
-      // What is that for?
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
       !!module.hot,
     );
@@ -50,7 +49,7 @@ module.exports = async (
       renderProps,
     } = await matchRoute(
       { config, logger },
-      req, requirements.routes, store, unknowConfig, httpClient,
+      req, requirements.routes, store, httpClient,
     );
 
     if (redirectLocation) {
@@ -64,8 +63,8 @@ module.exports = async (
     if (!renderProps) {
       // This is only hit if there is no 404 handler in the react routes. A
       // not found handler is included by default in new projects.
-      showHelpText(MISSING_404_TEXT);
-      res.sendStatus(404, logger);
+      showHelpText(MISSING_404_TEXT, logger);
+      res.sendStatus(404);
       return null;
     }
 
@@ -75,27 +74,35 @@ module.exports = async (
     // This will be used when streaming generated response or from cache.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
-    const output = await render(
+    const output = render(
       { config, logger },
       req,
       { EntryPoint: requirements.Component,
         entryName: requirements.name,
         store,
         routes: requirements.routes,
+        httpClient,
       },
-      renderProps,
-      unknowConfig,
-      [],
-      { EntryWrapper, BodyWrapper },
-      assets,
-      httpClient,
-      cacheManager,
-      currentRoute,
+      { renderProps, currentRoute },
+      {
+        EntryWrapper,
+        BodyWrapper,
+        entryWrapperConfig: options.entryWrapperConfig,
+        envVariables: options.envVariables,
+      },
+      { assets, cacheManager },
+      {},
     );
     res.send(output.responseString);
     return null;
   } catch (error) {
-    errorHandler(req, res, error, config);
+    logger.error(error);
+    errorHandler(
+      { config, logger },
+      req,
+      res,
+      error,
+    );
   }
   return null;
 };

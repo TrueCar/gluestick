@@ -1,9 +1,9 @@
-const MISSING_404_TEXT = 'MISSING_404_TEXT';
-const helpTextHandlers = {
-  MISSING_404_TEXT: showMissing404Text,
-};
+/* @flow */
+import type { Logger } from '../../types';
 
-const showMissing404Text = (logger) => {
+const MISSING_404_TEXT: string = 'MISSING_404_TEXT';
+
+const showMissing404Text = (logger: Logger): void => {
   logger.info(`
 #########################################################################################
 Rendered a 404 Error but no custom 404 route detected.
@@ -20,7 +20,11 @@ You can create a custom 404 handler with the following steps:
 `);
 };
 
-const showHelpText = (key, logger) => {
+const helpTextHandlers: { [key: string]: (logger: Logger) => void } = {
+  MISSING_404_TEXT: showMissing404Text,
+};
+
+const showHelpText = (key: string, logger: Logger): void => {
   helpTextHandlers[key](logger);
 };
 

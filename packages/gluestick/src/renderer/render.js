@@ -1,24 +1,47 @@
+/* @flow */
+import type { Context, Request } from '../types';
+
 const React = require('react');
 const { RouterContext } = require('react-router');
-const Oy = require('oy-vey');
+const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
-module.exports = async (
-  { config, logger },
-  req,
-  { EntryPoint, entryName, store, routes },
-  renderProps,
-  entryWrapperConfig,
-  envVariables,
-  { EntryWrapper, BodyWrapper },
-  assets,
-  httpClient,
-  cacheManager,
-  currentRoute,
-) => {
-  const { styleTags, scriptTags } = linkAssets(config, entryName, assets);
-  const isEmail = currentRoute.email || false;
+type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
+const getRenderer = (
+  isEmail: boolean,
+  renderMethod?: RenderMethod,
+): Function => {
+  if (renderMethod) {
+    return renderMethod;
+  }
+  return isEmail ? renderToStaticMarkup : renderToString;
+};
+
+type EntryRequirements = {
+  EntryPoint: Object;
+  entryName: string;
+  store: Object;
+  routes: Function;
+  httpClient: Object;
+};
+type WrappersRequirements = {
+  EntryWrapper: Object;
+  BodyWrapper: Object;
+  entryWrapperConfig: Object;
+  envVariables: any[];
+};
+module.exports = (
+  context: Context,
+  req: Request,
+  { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
+  { renderProps, currentRoute }: { renderProps: Object; currentRoute: Object },
+  { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables }: WrappersRequirements,
+  { assets, cacheManager }: { assets: Object; cacheManager: Object },
+  { renderMethod }: { renderMethod: RenderMethod },
+): { responseString: string, rootElement: Object } => {
+  const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
+  const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const entryWrapper = (
     <EntryWrapper
@@ -32,11 +55,10 @@ module.exports = async (
 
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
-  const currentState = store.getState();
+  const currentState: Object = store.getState();
 
-  const bodyWrapperContent = isEmail ?
-    renderToStaticMarkup(entryWrapper) : renderToString(entryWrapper);
-
+  const renderResults: Object = getRenderer(isEmail, renderMethod)(entryWrapper, styleTags);
+  const bodyWrapperContent: String = renderMethod ? renderResults.body : renderResults;
   const bodyWrapper = (
     <BodyWrapper
       html={bodyWrapperContent}
@@ -47,9 +69,6 @@ module.exports = async (
     />
   );
 
-  // const head =
-  //   isEmail
-  //     ? headContent : getHead(config, fileName, headContent, _webpackIsomorphicTools.assets());
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -57,9 +76,15 @@ module.exports = async (
   // always add inside the <head> tag.
   //
   // Bundle it all up into a string, add the doctype and deliver
-  const rootElement = <EntryPoint body={bodyWrapper} head={styleTags} req={req} />;
+  const rootElement = (
+    <EntryPoint
+      body={bodyWrapper}
+      head={isEmail ? null : renderResults.head || styleTags}
+      req={req}
+    />
+  );
 
-  let responseString;
+  let responseString: string;
   if (isEmail) {
     const generateCustomTemplate = ({ bodyContent }) => { return `${bodyContent}`; };
     responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
@@ -70,8 +95,6 @@ module.exports = async (
   cacheManager.setCacheIfProd(req, responseString);
   return {
     responseString,
-
-    // The following is returned for testing
-    rootElement,
+    rootElement, // only for testing
   };
 };

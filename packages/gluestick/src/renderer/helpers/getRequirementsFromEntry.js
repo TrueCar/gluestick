@@ -42,6 +42,6 @@ module.exports = ({ config, logger }, req, entries) => {
     Component: entries[entryName].component,
     reducers: entries[entryName].reducers,
     routes: entries[entryName].routes,
-    name: entries[entryName].name || entryName[0] === '/' ? entryName.substr(1) : entryName,
+    name: entries[entryName].name || entryName,
   } : null;
 };
