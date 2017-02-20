@@ -6,6 +6,8 @@ import EntryWeapper from "../EntryWrapper";
 import { createStore } from "gluestick-shared";
 import middleware from "config/redux-middleware";
 
+import '${args => args.component}';
+
 export const getStore = (httpClient) => {
   return createStore(
     httpClient,
@@ -24,6 +26,7 @@ if (typeof window === "object") {
 module.exports = (options) => {
   return {
     args: {
+      component: options.component,
       routes: options.routes,
     },
     entry: {

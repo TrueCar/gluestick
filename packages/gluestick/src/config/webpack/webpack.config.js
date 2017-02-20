@@ -44,16 +44,16 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       publicPath: '/assets/',
 
       // file name pattern for entry scripts
-      filename: '[name].[hash].js',
+      filename: '[name].[chunkhash].js',
 
       // file name pattern for chunk scripts
-      chunkFilename: '[name].[hash].js',
+      chunkFilename: '[name].js',
     },
 
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /node_modules\/(?!gluestick).*/gi,
+        exclude: 'node_modules',
         use: [{
           loader: 'babel-loader',
           options: {

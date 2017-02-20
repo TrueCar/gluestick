@@ -25,6 +25,8 @@ export type GSConfig = {
   webpackChunks: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];
+  defaultErrorTemplatePath: string;
+  customErrorTemplatePath: string;
   [key: string]: any;
 };
 
@@ -88,4 +90,16 @@ export type WrittenTemplate = {
 
 export type GeneratorOptions = {
   [key: string]: ?string;
+}
+
+export type Response = {
+  status: (code: number) => void;
+  sendStatus: (code: number) => void;
+  send: (value: string | Object | Buffer) => void;
+  set: (header: { [key: string]: string }) => void;
+}
+
+export type Request = {
+  url: string;
+  hostname: string;
 }

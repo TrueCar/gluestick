@@ -21,6 +21,9 @@ module.exports = (
   config.resolve.alias['project-entries'] = path.join(
     process.cwd(), gluestickConfig.serverEntriesPath,
   );
+  config.resolve.alias['project-entries-config'] = path.join(
+    process.cwd(), gluestickConfig.entriesPath,
+  );
   config.resolve.alias['entry-wrapper'] = path.join(
     process.cwd(), gluestickConfig.entryWrapperPath,
   );
