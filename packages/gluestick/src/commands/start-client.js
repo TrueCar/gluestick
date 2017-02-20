@@ -24,13 +24,11 @@ type DevelopmentServerOptions = {
 
 module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): void => {
   if (!webpackConfig) {
-    logger.error('Webpack config not specified');
-    return;
+    throw new Error('Webpack config not specified');
   }
 
   if (!GSConfig) {
-    logger.error('Gluestick config not specified');
-    return;
+    throw new Error('Gluestick config not specified');
   }
 
   const configuration: WebpackConfigEntry = webpackConfig.client;
