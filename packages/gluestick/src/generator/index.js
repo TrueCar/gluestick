@@ -1,3 +1,4 @@
+/* @flow */
 import type { Logger, Generator, WrittenTemplate, GeneratorOptions } from '../types';
 
 const path = require('path');
@@ -33,7 +34,7 @@ module.exports = ({ generatorName, entityName, options }: Command, logger: Logge
     },
   );
 
-  const results: WrittenTemplate = writeTemplate({ ...generatorConfig, options });
+  const results: WrittenTemplate = writeTemplate(generatorConfig);
   logger.success(
     `${generator.name} ${entityName} generated successfully\n`
     + 'Files written: \n'

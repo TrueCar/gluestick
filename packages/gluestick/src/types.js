@@ -84,8 +84,8 @@ export type Generator = {
 }
 
 export type WrittenTemplate = {
-  name: string;
-  config: any;
+  written: string[];
+  modified: string[];
 }
 
 export type GeneratorOptions = {
