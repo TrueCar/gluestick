@@ -89,7 +89,7 @@ export type WrittenTemplate = {
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string;
+  [key: string]: any;
 }
 
 export type Response = {

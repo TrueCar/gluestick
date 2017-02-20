@@ -1,5 +1,5 @@
 /* @flow */
-import { WrittenTemplate } from '../types';
+import type { WrittenTemplate } from '../types';
 
 const fs = require('fs');
 const path = require('path');
