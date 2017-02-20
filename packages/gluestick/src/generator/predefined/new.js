@@ -6,7 +6,7 @@ const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
 
 const templatePackage = require('../templates/package')(createTemplate);
-const template505hbs = require('../templates/505hbs')(createTemplate);
+const template500hbs = require('../templates/500hbs')(createTemplate);
 const templateIndex = require('../templates/Index')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
 const templateEslintrc = require('../templates/_eslintrc')(createTemplate);
@@ -92,8 +92,8 @@ module.exports = (options: GeneratorOptions) => ({
     // Gluestick directory
     {
       path: 'gluestick',
-      filename: '505.hbs',
-      template: template505hbs,
+      filename: '500.hbs',
+      template: template500hbs,
     },
     {
       path: 'gluestick',

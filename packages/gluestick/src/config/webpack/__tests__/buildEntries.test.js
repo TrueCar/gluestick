@@ -31,6 +31,7 @@ describe('config/webpack/buildEntries', () => {
       generatorName: 'clientEntryInit',
       entityName: 'main',
       options: {
+        component: 'path/to/main/component',
         routes: 'path/to/main/routes',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
       },
@@ -39,6 +40,7 @@ describe('config/webpack/buildEntries', () => {
       generatorName: 'clientEntryInit',
       entityName: 'home',
       options: {
+        component: 'path/to/home/component',
         routes: 'path/to/home/routes',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
       },

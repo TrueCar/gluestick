@@ -32,9 +32,17 @@ module.exports = (
       ],
     });
   }, {});
-  configuration.module.rules[0].use.unshift({
-    loader: 'react-hot-loader',
-  });
+  // Add react transformation to babel-loader plugins.
+  configuration.module.rules[0].use[0].options.plugins.push([
+    'react-transform',
+    {
+      transforms: [{
+        transform: 'react-transform-hmr',
+        imports: ['react'],
+        locals: ['module'],
+      }],
+    },
+  ]);
   configuration.output.publicPath = `http://localhost:${devServerPort}${configuration.output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };

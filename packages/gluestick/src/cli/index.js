@@ -72,8 +72,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
-      { pre: cliHelpers.notifyUpdate },
+      { useGSConfig: false, useWebpackConfig: false },
     );
   });
 
@@ -117,7 +116,7 @@ commander
     execWithConfig(
       require('../commands/start-client'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      { useGSConfig: true, useWebpackConfig: true, skipServerEntryGeneration: true },
     );
   });
 
@@ -130,7 +129,7 @@ commander
     execWithConfig(
       require('../commands/start-server'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true });
+      { useGSConfig: true, useWebpackConfig: true, skipClientEntryGeneration: true });
   });
 
 commander
@@ -146,7 +145,12 @@ commander
     execWithConfig(
       require('../commands/test'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true, skipEntryGeneration: true },
+      {
+        useGSConfig: true,
+        useWebpackConfig: true,
+        skipClientEntryGeneration: true,
+        skipServerEntryGeneration: true,
+      },
     );
   });
 
