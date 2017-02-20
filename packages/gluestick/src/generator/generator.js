@@ -7,9 +7,9 @@ import type {
   GeneratorOptions,
 } from '../types';
 
-const fs = require('fs');
 const path = require('path');
 
+const { isValidEntryPoint } = require('../generator/utils');
 const requireGenerator = require('./requireGenerator');
 const parseConfig = require('./parseConfig');
 const writeTemplate = require('./writeTemplate');
@@ -33,7 +33,7 @@ module.exports = (command: Command, logger: Logger): void => {
     options = {},
   } = command;
   const {
-    entryPoint,
+    entryPoint = '',
   } = options;
 
   const predefinedGenerators = [
@@ -43,14 +43,7 @@ module.exports = (command: Command, logger: Logger): void => {
   ];
 
   if (predefinedGenerators.find((element) => element === generatorName)) {
-    if (!/^(shared|apps\/.+)$/.test(entryPoint)) {
-      logger.error(entryPoint ? `${entryPoint} is not a valid entry point` : 'You did not specify an entry point');
-      logger.info('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
-      return;
-    }
-    const entryPath = path.join('src', entryPoint);
-    if (!fs.existsSync(entryPath)) {
-      logger.error(`Path ${entryPath} does not exist`);
+    if (!isValidEntryPoint(entryPoint, logger)) {
       return;
     }
   }
