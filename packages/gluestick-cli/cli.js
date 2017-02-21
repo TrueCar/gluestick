@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const newApp = require('./new');
 const reinstallDev = require('./reinstallDev');
 const watchCmd = require('./watch');
+const resetHardCmd = require('./reset');
 
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
@@ -38,6 +39,13 @@ commander
   .description('watch and apply changes from gluestick to project')
   .action(() => {
     watchCmd(exitWithError);
+  });
+
+commander
+  .command('reset-hard')
+  .description('remove gluestick and build, cache clean and reinstall-dev')
+  .action(() => {
+    resetHardCmd();
   });
 
 commander
