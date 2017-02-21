@@ -1,5 +1,5 @@
 const spawn = require('cross-spawn');
-const autoUpgrade = require('../autoUpgrade');
+// const autoUpgrade = require('../autoUpgrade');
 
 /*
  * Start server and (optionally) tests in different processes.
@@ -7,7 +7,7 @@ const autoUpgrade = require('../autoUpgrade');
  * @param {object} options Command-line options object directly from Commander
  */
 module.exports = async ({ config, logger }, options) => {
-  await autoUpgrade();
+  // await autoUpgrade();
   const isProduction = process.env.NODE_ENV === 'production';
 
   // Start tests only they asked us to or we are in production mode
