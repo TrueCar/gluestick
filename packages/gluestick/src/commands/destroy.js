@@ -1,10 +1,13 @@
 /* @flow */
+
 import type { Context } from '../types.js';
 
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
+
 const cliColorScheme = require('../cli/colorScheme');
+const { isValidEntryPoint } = require('../generator/utils');
 
 const { highlight, filename } = cliColorScheme;
 
@@ -16,12 +19,21 @@ const availableCommands = {
 
 type Command = 'container' | 'component' | 'reducer';
 
-module.exports = async (context: Context, command: Command, name: string) => {
+type Options = {
+  entryPoint?: string;
+}
+
+module.exports = async (context: Context, command: Command, name: string, options: Options) => {
   const { logger } = context;
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.error(`${highlight(command)} is not a valid destroy command.`);
     logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => highlight(c)).join(', ')}`);
+    return;
+  }
+
+  const { entryPoint = '' } = options;
+  if (!isValidEntryPoint(entryPoint, logger)) {
     return;
   }
 
@@ -46,7 +58,7 @@ module.exports = async (context: Context, command: Command, name: string) => {
 
   // Remove the file
   const CWD = process.cwd();
-  const generateRoot = path.join(CWD, 'src', availableCommands[command]);
+  const generateRoot = path.join(CWD, 'src', entryPoint, availableCommands[command]);
   const destinationRoot = path.resolve(generateRoot, dirname);
   const destinationPath = path.join(destinationRoot, `${generatedFileName}.js`);
   let fileExists = true;
@@ -82,7 +94,7 @@ module.exports = async (context: Context, command: Command, name: string) => {
 
   // If we destroyed a reducer, remove it from the reducers index
   if (command === 'reducer') {
-    const reducerIndexPath = path.resolve(process.cwd(), 'src/reducers/index.js');
+    const reducerIndexPath = path.join(CWD, 'src', entryPoint, 'reducers', 'index.js');
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
       const reducerLine = `export { default as ${generatedFileName} } from "./${generatedFileName}"`;
@@ -98,7 +110,7 @@ module.exports = async (context: Context, command: Command, name: string) => {
   }
 
   // Remove the test file
-  const testFolder = path.resolve(path.join(CWD, 'src', availableCommands[command]), dirname, '__tests__');
+  const testFolder = path.resolve(path.join(CWD, 'src', entryPoint, availableCommands[command]), dirname, '__tests__');
   const testPath = path.join(testFolder, `${generatedFileName}.test.js`);
   let testFileExists = true;
   try {

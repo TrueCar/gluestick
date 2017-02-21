@@ -50,6 +50,7 @@ commander
   .command('destroy <container|component|reducer>')
   .description('destroy a generated container')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/destroy'),
