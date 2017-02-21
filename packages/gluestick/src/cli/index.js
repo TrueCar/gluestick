@@ -153,13 +153,6 @@ commander
     );
   });
 
-/* commander
-  .command("run")
-  .arguments("<script_path>")
-  .action((scriptPath) => run(scriptPath, (err) => {
-    if (err) { logger.error(err); }
-  }));*/
-
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
   .command('*', null, { noHelp: true })
