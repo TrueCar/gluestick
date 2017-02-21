@@ -28,8 +28,7 @@ module.exports = (
       [curr]: [
         `webpack-hot-middleware/client?path=http://localhost:${devServerPort}/__webpack_hmr`,
         'webpack/hot/only-dev-server',
-        configuration.entry[curr],
-      ],
+      ].concat(configuration.entry[curr]),
     });
   }, {});
   // Add react transformation to babel-loader plugins.
