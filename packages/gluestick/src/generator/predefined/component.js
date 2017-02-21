@@ -1,7 +1,14 @@
+/* @flow */
+
+import type { PredefinedGeneratorOptions } from '../../types';
+
+const path = require('path');
+
 const createTemplate = module.parent.createTemplate;
 
 const classComponentTemplate = createTemplate`
 /* @flow */
+
 import React, { Component } from "react";
 
 export default class ${args => args.name} extends Component {
@@ -17,6 +24,7 @@ export default class ${args => args.name} extends Component {
 
 const functionalComponentTemplate = createTemplate`
 /* @flow */
+
 import React from "react";
 
 export default function ${args => args.name} () {
@@ -43,25 +51,26 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = (options) => {
+module.exports = (options: PredefinedGeneratorOptions) => {
   const rewrittenName = `${options.name[0].toUpperCase()}${options.name.slice(1)}`;
-  const directoryPrefix = options.dir !== '.' ? `${options.dir}/` : '';
+  const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
+
   return {
     args: {
       name: rewrittenName,
     },
     entries: [
       {
-        path: 'src/components',
+        path: path.join('src', options.entryPoint, 'components'),
         filename: rewrittenName,
         template: options.functional ? functionalComponentTemplate : classComponentTemplate,
       },
       {
-        path: 'src/components/__tests__',
+        path: path.join('src', options.entryPoint, 'components', '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `components/${directoryPrefix}${rewrittenName}`,
+          path: path.join(options.entryPoint, 'components', directoryPrefix, rewrittenName),
         },
       },
     ],

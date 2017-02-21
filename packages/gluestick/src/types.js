@@ -97,13 +97,19 @@ export type Generator = {
 }
 
 export type WrittenTemplate = {
-  name: string;
-  config: any;
+  written: string[];
+  modified: string[];
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string;
-}
+  [key: string]: any;
+};
+
+export type PredefinedGeneratorOptions = {
+  name: string;
+  dir?: string;
+  entryPoint: string;
+};
 
 export type Compiler = {
   run: (error: any) => void;

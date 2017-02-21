@@ -1,7 +1,14 @@
+/* @flow */
+
+import type { PredefinedGeneratorOptions } from '../../types';
+
+const path = require('path');
+
 const createTemplate = module.parent.createTemplate;
 
 const reducerTemplate = createTemplate`
 /* @flow */
+
 const INITIAL_STATE = null;
 
 export default (state = INITIAL_STATE, action) => {
@@ -13,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
 `;
 
 const testTemplate = createTemplate`
+/* @flow */
+
 import reducer from "${args => args.path}";
 
 describe("${args => args.path}", () => {
@@ -27,13 +36,13 @@ describe("${args => args.path}", () => {
 
 const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
 
-module.exports = (options) => {
+module.exports = (options: PredefinedGeneratorOptions) => {
   const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
-  const directoryPrefix = options.dir !== '.' ? `${options.dir}/` : '';
+  const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
     modify: {
-      file: 'src/reducers/index',
-      modifier: content => {
+      file: path.join('src', options.entryPoint, 'reducers', 'index'),
+      modifier: (content: string) => {
         if (content) {
           const lines = content.split('\n');
           lines[lines.length - 1] = getReducerExport(`${directoryPrefix}${rewrittenName}`);
@@ -44,16 +53,16 @@ module.exports = (options) => {
     },
     entries: [
       {
-        path: 'src/reducers',
+        path: path.join('src', options.entryPoint, 'reducers'),
         filename: rewrittenName,
         template: reducerTemplate,
       },
       {
-        path: 'src/reducers/__tests__',
+        path: path.join('src', options.entryPoint, 'reducers', '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: `reducers/${directoryPrefix}${rewrittenName}`,
+          path: path.join(options.entryPoint, 'reducers', directoryPrefix, rewrittenName),
         },
       },
     ],
