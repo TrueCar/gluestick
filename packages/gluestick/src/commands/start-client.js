@@ -32,9 +32,9 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
   }
 
   const configuration: WebpackConfigEntry = webpackConfig.client;
-  const publicPath: string =
-    (typeof configuration === 'object' && !Array.isArray(configuration)) ?
-      configuration.output.publicPath : '/';
+  const publicPath: string = configuration.output.publicPath;
+    // (typeof configuration === 'object' && !Array.isArray(configuration)) ?
+    //   configuration.output.publicPath : '/';
 
   const developmentServerOptions: DevelopmentServerOptions = {
     quiet: true,
@@ -72,13 +72,13 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
         logger.error(error);
         return; // eslint-disable-line
       }
-      /* $FlowFixMe */
+
       logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
     });
   } else {
     compiler.run((error: string) => {
       if (error) {
-        throw error;
+        throw new Error(error);
       }
       logger.success('Client bundle successfully built.');
     });

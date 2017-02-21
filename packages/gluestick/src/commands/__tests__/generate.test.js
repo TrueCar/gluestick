@@ -1,5 +1,3 @@
-/* @flow */
-
 jest.mock('../../generator');
 
 const generate = require('../generate');

@@ -1,0 +1,30 @@
+/* @flow */
+
+import type { CreateTemplate } from '../../types';
+
+module.exports = (createTemplate: CreateTemplate) => createTemplate`
+[ignore]
+# fbjs lib problems
+.*/node_modules/fbjs/.*
+# radium lib problems
+.*/node_modules/radium/.*
+
+[include]
+
+[libs]
+flow/
+node_modules/gluestick/flow-typed
+
+[options]
+suppress_type=$FlowFixMe
+
+module.ignore_non_literal_requires=true
+
+${(args) => Object.entries(args.mapper).reduce((prev, [key, value]) => {
+  // $FlowFixMe check problems with Object.entries
+  const curr = `module.name_mapper='^${key}/\\(.*\\)'->'${value.replace(process.cwd(), '<PROJECT_ROOT>')}/\\1'\n`;
+  return prev.concat(curr);
+}, '')}
+[version]
+^${(args) => args.version}
+`;

@@ -27,6 +27,7 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
     moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
 
+
   const config = {
     moduleNameMapper,
     testPathDirs: ['src', 'test'],
