@@ -32,9 +32,9 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
   }
 
   const configuration: WebpackConfig = webpackConfig.client;
-  const publicPath: string = (typeof configuration.output === 'object' && !Array.isArray(configuration.output)) ?
-    configuration.output.publicPath : '/';
-
+  const publicPath: string =
+    (typeof configuration.output === 'object' && !Array.isArray(configuration.output)) ?
+      configuration.output.publicPath : '/';
 
   const developmentServerOptions: DevelopmentServerOptions = {
     quiet: true,
