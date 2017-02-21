@@ -1,5 +1,5 @@
 /* @flow */
-import type { Logger, Question, MismatchedModules } from '../types';
+import type { Logger, Question, MismatchedModules, UpdateDepsPromptResults } from '../types';
 
 const path = require('path');
 const fs = require('fs');
@@ -56,7 +56,9 @@ const isValidVersion = (version: string, requiredVersion: string): boolean => {
  * top to see what the object looks like
  * @returns {Promise<boolean>}
  */
-const promptModulesUpdate = (mismatchedModules: MismatchedModules): Promise<boolean> => {
+const promptModulesUpdate = (
+  mismatchedModules: MismatchedModules,
+): Promise<UpdateDepsPromptResults> => {
   const mismatchedModuleOutput: string = JSON.stringify(mismatchedModules, null, ' ');
 
   const question: Question = {
@@ -64,10 +66,13 @@ const promptModulesUpdate = (mismatchedModules: MismatchedModules): Promise<bool
     name: 'confirm',
     message: `${chalk.red('The `gluestick` project template and your project have mismatching')} `
       + `${chalk.red('versions of the following modules: ')}`
-      + `${chalk.yellow(mismatchedModuleOutput)}`
+      + `${chalk.yellow(mismatchedModuleOutput)}\n`
       + 'Would you like to automatically update your project\'s dependencies to match the template?',
   };
-  return inquirer.prompt([question]).then((answers) => Promise.resolve(!!answers.confirm));
+  return inquirer.prompt([question]).then((answers) => Promise.resolve({
+    shouldFix: !!answers.confirm,
+    mismatchedModules,
+  }));
 };
 
 module.exports = {

@@ -158,3 +158,8 @@ export type ProjectPackage = {
     [key: string]: string;
   };
 }
+
+export type UpdateDepsPromptResults = {
+  shouldFix: boolean;
+  mismatchedModules: MismatchedModules;
+}
