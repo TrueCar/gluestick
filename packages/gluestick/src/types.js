@@ -141,3 +141,20 @@ export type CacheManager = {
   getCachedIfProd: GetCachedIfProd;
   setCacheIfProd: SetCacheIfProd;
 }
+
+export type MismatchedModules = {
+  [key: string]: {
+    required: string;
+    project: string;
+    type: string;
+  }
+}
+
+export type ProjectPackage = {
+  dependencies: {
+    [key: string]: string;
+  };
+  devDependencies: {
+    [key: string]: string;
+  };
+}
