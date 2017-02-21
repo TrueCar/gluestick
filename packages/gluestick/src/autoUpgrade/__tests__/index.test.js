@@ -1,15 +1,20 @@
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
   existsSync: jest.fn((file) => file.includes('0')),
-  readFileSync: val => val, // using jest.fn() was failing second `it`
+  readFileSync: jest.fn(val => val),
 }));
+jest.mock('mkdirp', () => ({ sync: jest.fn() }));
 jest.mock('file-0', () => '', { virtual: true });
 jest.mock('file-1', () => '', { virtual: true });
-jest.mock('../checkForMismatch.js', () => () => Promise.resolve({ shouldFix: false }));
+jest.mock('../checkForMismatch.js', () => jest.fn(
+  () => Promise.resolve({ shouldFix: false }),
+));
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
-jest.mock('../../generator/parseConfig.js', () => () => ({
-  entry: { template: 'file-0' },
-}));
+jest.mock('../../generator/parseConfig.js', () => jest.fn(
+  () => ({
+    entry: { template: 'file-0' },
+  }),
+));
 const fs = require('fs');
 const path = require('path');
 const autoUpgrade = require('../');
@@ -27,7 +32,13 @@ const getContext = (config) => ({
 });
 
 describe('autoUpgrade/index', () => {
-  afterEach(() => {
+  beforeEach(() => {
+    fs.writeFileSync.mockClear();
+    fs.existsSync.mockClear();
+    fs.readFileSync.mockClear();
+  });
+
+  afterAll(() => {
     jest.resetAllMocks();
     path.join = originalPathJoin;
   });

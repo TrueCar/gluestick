@@ -4,6 +4,7 @@ import type { Context, UpdateDepsPromptResults, ProjectPackage } from '../types'
 const fs = require('fs');
 const path = require('path');
 const sha1 = require('sha1');
+const mkdirp = require('mkdirp');
 
 const checkForMismatch = require('./checkForMismatch');
 const updateDependencies = require('./updateDependencies');
@@ -22,6 +23,7 @@ module.exports = ({ config, logger }: Context) => {
     if (currentHash !== templateHash) {
       const absolutePath: string = path.join(process.cwd(), filePath);
       logger.success(`${filePath} file is out of date. Updating at path ${absolutePath}...`);
+      mkdirp.sync(path.dirname(filePath));
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
@@ -34,6 +36,7 @@ module.exports = ({ config, logger }: Context) => {
       const entryConfig = parseConfig({
         entry: generatorEntry,
       }, {});
+      mkdirp.sync(path.dirname(filePath));
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
