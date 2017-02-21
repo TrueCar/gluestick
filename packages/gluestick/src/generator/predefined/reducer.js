@@ -9,9 +9,13 @@ const createTemplate = module.parent.createTemplate;
 const reducerTemplate = createTemplate`
 /* @flow */
 
-const INITIAL_STATE = null;
+type State = {
+  // State handle by your reducer goes here
+}
 
-export default (state = INITIAL_STATE, action) => {
+const INITIAL_STATE: State = {};
+
+export default (state: State = INITIAL_STATE, action: { type: string, payload?: any }) => {
   switch (action.type) {
     default:
       return state;
@@ -28,8 +32,10 @@ describe("${args => args.path}", () => {
   it("returns the initial state", () => {
     const state = void 0;
     expect(
-      reducer(state, {})
-    ).toBeNull();
+      reducer({}, {
+        type: '_TEST_ACTION'
+      })
+    ).toEqual({});
   });
 });
 `;
