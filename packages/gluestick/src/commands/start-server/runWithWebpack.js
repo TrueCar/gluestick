@@ -24,7 +24,7 @@ const spawnServer = (
     [entryPointPath].concat(args),
     { stdio: ['ipc', 'inherit', 'inherit'] },
   );
-  child.on('message', (msg: { type: string, value: string }): void => {
+  child.on('message', (msg: { type: string, value: any[] }): void => {
     switch (msg.type) {
       default:
       case 'info':
