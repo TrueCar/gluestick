@@ -16,5 +16,14 @@ module.exports = (
   const config = deepClone(configuration);
   // https://webpack.github.io/docs/multiple-entry-points.html
   config.entry = skipEntryGeneration ? {} : buildEntries(gluestickConfig, logger);
+  config.entry = Object.keys(config.entry).reduce((prev, curr) => {
+    return Object.assign(prev, {
+      [curr]: [
+        'babel-polyfill',
+        'eventsource-polyfill',
+        config.entry[curr],
+      ],
+    });
+  }, {});
   return options => clientConfiguration(config, settings, options);
 };

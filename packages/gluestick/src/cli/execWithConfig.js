@@ -40,9 +40,19 @@ module.exports = (
   } = {},
   { pre, post } = {},
 ): ExecWithConfig => {
+  let packageJson = null;
+  try {
+    packageJson = require(path.join(process.cwd(), 'package.json'));
+    if (!packageJson.dependencies.gluestick) {
+      throw new Error('Command need to be run in gluestick project.');
+    }
+  } catch (error) {
+    logger.error(error.message);
+    process.exit(1);
+  }
   const projectConfig = skipProjectConfig
     ? {}
-    : require(path.join(process.cwd(), 'package.json')).gluestick;
+    : packageJson.gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   const webpackConfig = useWebpackConfig ? compileWebpackConfig(

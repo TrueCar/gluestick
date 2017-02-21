@@ -40,6 +40,19 @@ export type WebpackConfig = {
   [key: string]: WebpackConfigEntry;
 };
 
+export type UniversalSettings = {
+  server: {
+    input: string;
+    output: string;
+  };
+}
+
+export type CompiledConfig = {
+  universalSettings: UniversalSettings;
+  client: WebpackConfig;
+  server: WebpackConfig;
+}
+
 export type Plugin = {
   name: string;
   body: any;
@@ -48,7 +61,7 @@ export type Plugin = {
 export type Config = {
   projectConfig?: ProjectConfig;
   GSConfig: GSConfig;
-  webpackConfig: WebpackConfig;
+  webpackConfig: CompiledConfig;
   plugins: Plugin[];
 };
 
@@ -88,12 +101,22 @@ export type Generator = {
 }
 
 export type WrittenTemplate = {
-  name: string;
-  config: any;
+  written: string[];
+  modified: string[];
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string;
+  [key: string]: any;
+};
+
+export type PredefinedGeneratorOptions = {
+  name: string;
+  dir?: string;
+  entryPoint: string;
+};
+
+export type Compiler = {
+  run: (error: any) => void;
 }
 
 export type Response = {

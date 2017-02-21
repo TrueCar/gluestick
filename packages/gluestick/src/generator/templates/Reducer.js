@@ -5,4 +5,3 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 /* @flow */
 
 `;
-
