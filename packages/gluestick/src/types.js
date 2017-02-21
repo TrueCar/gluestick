@@ -91,5 +91,5 @@ export type GeneratorOptions = {
 }
 
 export type Compiler = {
-  run: Function,
+  run: (error: string) => void;
 }
