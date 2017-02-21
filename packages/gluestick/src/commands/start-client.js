@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, WebpackConfigEntry, Compiler } from '../types.js';
+import type { Context, WebpackConfig, Compiler } from '../types.js';
 
 const path = require('path');
 const webpack = require('webpack');
@@ -31,10 +31,10 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
     throw new Error('Gluestick config not specified');
   }
 
-  const configuration: WebpackConfigEntry = webpackConfig.client;
-  const publicPath: string = configuration.output.publicPath;
-    // (typeof configuration === 'object' && !Array.isArray(configuration)) ?
-    //   configuration.output.publicPath : '/';
+  const configuration: WebpackConfig = webpackConfig.client;
+  const publicPath: string = (typeof configuration.output === 'object' && !Array.isArray(configuration.output)) ?
+    configuration.output.publicPath : '/';
+
 
   const developmentServerOptions: DevelopmentServerOptions = {
     quiet: true,
