@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, Logger, GeneratorOptions } from '../types';
+import type { Context, Logger } from '../types';
 
 const path = require('path');
 const spawn = require('cross-spawn');
@@ -17,7 +17,7 @@ const generateTemplate = (
   generatorName: string,
   entityName: string,
   logger: Logger,
-  options: GeneratorOptions,
+  options: Object,
 ) => {
   generate({
     generatorName,

@@ -1,3 +1,6 @@
+/* @flow */
+import type { Context, WebpackConfigEntry } from '../../types';
+
 const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
@@ -11,13 +14,17 @@ const { filename } = require('../../cli/colorScheme');
  * @param {string} entryPointPath Path to renderer server entry file
  * @param {Array<string>} args Arguments to pass to entry
  */
-const spawnServer = ({ config, logger }, entryPointPath, args) => {
-  const child = spawn(
+const spawnServer = (
+  { config, logger }: Context,
+  entryPointPath: string,
+  args: string[],
+): Object => {
+  const child: Object = spawn(
     'node',
     [entryPointPath].concat(args),
     { stdio: ['ipc', 'inherit', 'inherit'] },
   );
-  child.on('message', msg => {
+  child.on('message', (msg: { type: string, value: any[] }): void => {
     switch (msg.type) {
       default:
       case 'info':
@@ -44,10 +51,10 @@ const spawnServer = ({ config, logger }, entryPointPath, args) => {
  * @param {string} entryPointPath Path to renderer server entry file
  * @param {Array<string>} args Arguments to pass to entry
  */
-const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
-  const webpackConfig = config.webpackConfig.server;
-  let child = null;
-  const compile = () => {
+module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
+  const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
+  let child: ?Object = null;
+  const compile = (): void => {
     webpack(webpackConfig).run(error => {
       if (error) {
         throw error;
@@ -61,7 +68,7 @@ const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
   };
   logger.debug('Initial compilation');
   compile();
-  const watcher = chokidar.watch([
+  const watcher: Object = chokidar.watch([
     path.join(process.cwd(), '**/*'),
   ], {
     ignored: [
@@ -77,5 +84,3 @@ const runWithWebpack = ({ config, logger }, entryPointPath, args) => {
     });
   });
 };
-
-module.exports = runWithWebpack;

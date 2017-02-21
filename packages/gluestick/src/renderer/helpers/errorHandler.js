@@ -33,9 +33,7 @@ module.exports = async (
 ): Promise<void> => {
   res.status(error.status || 500);
   try {
-    // $FlowFixMe
     const customTemplate = await tryReadFile(config.GSConfig.customErrorTemplatePath);
-    // $FlowFixMe
     const output = customTemplate || await tryReadFile(config.GSConfig.defaultErrorTemplatePath);
     if (output) {
       res.send(Handlebars.compile(output)({ req, res, error }));
