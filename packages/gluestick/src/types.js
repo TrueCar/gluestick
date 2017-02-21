@@ -27,6 +27,10 @@ export type GSConfig = {
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;
   customErrorTemplatePath: string;
+  autoUpgrade: {
+    added: string[],
+    changed: string[],
+  };
   [key: string]: any;
 };
 

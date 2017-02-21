@@ -71,7 +71,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: false, useWebpackConfig: false },
+      { useGSConfig: true, useWebpackConfig: false },
     );
   });
 
