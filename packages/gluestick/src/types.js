@@ -27,6 +27,10 @@ export type GSConfig = {
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;
   customErrorTemplatePath: string;
+  autoUpgrade: {
+    added: string[],
+    changed: string[],
+  };
   [key: string]: any;
 };
 
@@ -167,4 +171,26 @@ export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cach
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd;
   setCacheIfProd: SetCacheIfProd;
+}
+
+export type MismatchedModules = {
+  [key: string]: {
+    required: string;
+    project: string;
+    type: string;
+  }
+}
+
+export type ProjectPackage = {
+  dependencies: {
+    [key: string]: string;
+  };
+  devDependencies: {
+    [key: string]: string;
+  };
+}
+
+export type UpdateDepsPromptResults = {
+  shouldFix: boolean;
+  mismatchedModules: MismatchedModules;
 }
