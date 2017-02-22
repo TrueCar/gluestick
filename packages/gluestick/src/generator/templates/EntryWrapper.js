@@ -11,27 +11,6 @@ import { Root, getHttpClient } from "gluestick-shared";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
-export default class EntryWrapper extends Component {
-  static start = start;
-  render () {
-    const {
-      routerContext,
-      getRoutes,
-      radiumConfig,
-      store,
-      httpClient,
-    } = this.props;
-
-    return (
-      <Root
-        routerContext={routerContext}
-        routes={getRoutes(store, httpClient)}
-        store={store}
-      />
-    );
-  }
-}
-
 // This function is called only on client.
 const start = (getRoutes, getStore, match = originalMatch, history = browserHistory) => {
   // Allow developers to include code that will be executed before the app is
@@ -53,4 +32,25 @@ const start = (getRoutes, getStore, match = originalMatch, history = browserHist
     render(entry, document.getElementById("main"));
   });
 };
+
+export default class EntryWrapper extends Component {
+  static start = start;
+  render () {
+    const {
+      routerContext,
+      getRoutes,
+      radiumConfig,
+      store,
+      httpClient,
+    } = this.props;
+
+    return (
+      <Root
+        routerContext={routerContext}
+        routes={getRoutes(store, httpClient)}
+        store={store}
+      />
+    );
+  }
+}
 `;
