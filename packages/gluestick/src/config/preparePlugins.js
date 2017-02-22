@@ -6,11 +6,11 @@ const path = require('path');
 
 module.exports = (logger: Logger): Plugin[] => {
   try {
-    const pluginsRequiredConfig = require(path.join(process.cwd(), 'src/gluestick.plugins.js'));
+    const pluginsRequiredConfig: Object = require(path.join(process.cwd(), 'src/gluestick.plugins.js'));
     const pluginsConfig = pluginsRequiredConfig.default || pluginsRequiredConfig;
 
     if (!Array.isArray(pluginsConfig)) {
-      throw new Error('Invalid plugins configuration');
+      throw new Error('Invalid plugins configuration: must be an array');
     }
 
     if (pluginsConfig.length) {
@@ -44,6 +44,7 @@ module.exports = (logger: Logger): Plugin[] => {
 
     return compiledPlugins;
   } catch (error) {
+    console.log(error);
     logger.warn(error);
     return [];
   }

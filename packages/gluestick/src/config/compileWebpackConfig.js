@@ -57,12 +57,18 @@ module.exports = (
   const clientEnvConfigOverides: Object = plugins
     .filter((plugin: Plugin): boolean => !!plugin.body.overwriteClientWebpackConfig)
     .reduce((prev: Object, plugin: Plugin) => {
-      return Object.assign(prev, plugin.body.overwriteClientWebpackConfig(clientEnvConfig));
+      return Object.assign(
+        prev,
+        plugin.body.overwriteClientWebpackConfig(clone(clientEnvConfig)),
+      );
     }, {});
   const serverEnvConfigOverides: Object = plugins
     .filter((plugin: Plugin): boolean => !!plugin.body.overwriteServerWebpackConfig)
     .reduce((prev: Object, plugin: Plugin) => {
-      return Object.assign(prev, plugin.body.overwriteServerWebpackConfig(serverEnvConfig));
+      return Object.assign(
+        prev,
+        plugin.body.overwriteServerWebpackConfig(clone(serverEnvConfig)),
+      );
     }, {});
 
   return {

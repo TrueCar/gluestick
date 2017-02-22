@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 
@@ -12,6 +13,7 @@ const loggerMock = {
 
 describe('config/compileWebpackConfig', () => {
   it('should return webpack config', () => {
+    // $FlowIgnore
     const webpackConfig = compileWebpackConfig(loggerMock, [], {}, defaultGSConfig);
     expect(webpackConfig.universalSettings).not.toBeNull();
     expect(webpackConfig.client).not.toBeNull();

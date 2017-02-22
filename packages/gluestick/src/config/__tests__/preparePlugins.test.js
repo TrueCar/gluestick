@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('gluestick.plugins.js', () => [
   'testPlugin0',
   {
@@ -8,10 +9,10 @@ jest.mock('gluestick.plugins.js', () => [
   },
 ], { virtual: true });
 jest.mock('testPlugin0', () => () => {
-  return 'testPlugin0';
+  return () => 'testPlugin0';
 }, { virtual: true });
 jest.mock('testPlugin1', () => (options) => {
-  return `testPlugin1${options.prop}`;
+  return () => `testPlugin1${options.prop}`;
 }, { virtual: true });
 const path = require('path');
 const preparePlugins = require('../preparePlugins');
@@ -32,6 +33,8 @@ describe('config/preparePlugins', () => {
 
   const logger = {
     warn: jest.fn(),
+    info: jest.fn(),
+    success: jest.fn(),
   };
 
   afterEach(() => {
@@ -40,12 +43,13 @@ describe('config/preparePlugins', () => {
   });
 
   it('should return plugins array', () => {
-    expect(preparePlugins(logger)).toEqual([{
-      name: 'testPlugin0',
-      body: 'testPlugin0',
-    }, {
-      name: 'testPlugin1',
-      body: 'testPlugin1true',
-    }]);
+    // $FlowIgnore
+    const plugins = preparePlugins(logger);
+    expect(plugins[0].name).toEqual('testPlugin0');
+    expect(plugins[1].name).toEqual('testPlugin1');
+    // $FlowIgnore
+    expect(plugins[0].body()).toEqual('testPlugin0');
+    // $FlowIgnore
+    expect(plugins[1].body()).toEqual('testPlugin1true');
   });
 });
