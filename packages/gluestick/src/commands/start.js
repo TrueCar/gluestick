@@ -2,7 +2,7 @@
 import type { Context } from '../types.js';
 
 const spawn = require('cross-spawn');
-// const autoUpgrade = require('../autoUpgrade');
+const autoUpgrade = require('../autoUpgrade');
 
 type StartOptions = {
   runTests: boolean;
@@ -11,7 +11,7 @@ type StartOptions = {
 };
 
 module.exports = async ({ config, logger }: Context, options: StartOptions) => {
-  // await autoUpgrade();
+  await autoUpgrade();
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   // Start tests only they asked us to or we are in production mode
