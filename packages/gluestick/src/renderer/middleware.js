@@ -36,6 +36,7 @@ module.exports = async (
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
   assets: Object,
   options: Options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
+  hooks: Object,
 ) => {
   /**
    * TODO: add hooks

@@ -21,6 +21,8 @@ const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const assets = require('webpack-chunks');
+// $FlowIgnore
+const hooks = require('gluestick-hooks');
 const BodyWrapper = require('./components/Body').default;
 
 
@@ -47,6 +49,8 @@ module.exports = ({ config, logger }: Context) => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
+      hooks,
     );
   });
 
