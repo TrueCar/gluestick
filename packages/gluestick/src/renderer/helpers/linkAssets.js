@@ -11,7 +11,7 @@ const getAssetPathForFile = (filename: string, section: string, webpackAssets: O
   return webpackPath;
 };
 
-const filterEntryName = (name: string) => {
+const filterEntryName = (name: string): string => {
   if (name === '/') {
     return 'main';
   }

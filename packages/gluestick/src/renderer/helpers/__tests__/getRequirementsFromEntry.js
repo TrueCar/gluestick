@@ -1,3 +1,4 @@
+const clone = require('clone');
 const getRequirementsFromEntry = require('../getRequirementsFromEntry');
 
 const context = {
@@ -37,6 +38,21 @@ describe('renderer/helpers/getRequirementsFromEntry', () => {
       reducers: 'reducers',
       routes: 'routes',
       name: '/home/abc',
+      key: '/home/abc',
+    });
+  });
+
+  it('should return entry with custom name', () => {
+    const entriesWithCustomName = clone(entries);
+    entriesWithCustomName['/home/abc'].name = 'custom';
+    expect(getRequirementsFromEntry(
+      context, { url: '/home/abc' }, entriesWithCustomName,
+    )).toEqual({
+      Component: 'component',
+      reducers: 'reducers',
+      routes: 'routes',
+      name: 'custom',
+      key: '/home/abc',
     });
   });
 });
