@@ -1,15 +1,21 @@
-import { WrittenTemplate } from '../types';
+/* @flow */
+import type { WrittenTemplate } from '../types';
 
 const fs = require('fs');
 const path = require('path');
 const mkdir = require('mkdirp');
+
+type Modification = {
+  file: string;
+  modifier: (content: string | null, file: string) => string;
+};
 
 /**
  * Writes template from single entry to file.
  * Returns path of written file.
  *
  * @param {Object} entryConfig Parsed entry config
- * @returns {String}
+ * @returns {string}
  */
 const writeEntry = (entryConfig: Object): string => {
   const destinationDirectory: string = path.join(process.cwd(), entryConfig.path);
@@ -26,10 +32,10 @@ const writeEntry = (entryConfig: Object): string => {
  * Apply modifications to file specified in modify filed of generator config.
  * Path of modified file.
  *
- * @param {{ file: string, modificator: Function }} modification Single modification.
- * @returns {String}
+ * @param {Modification} modification Single modification.
+ * @returns {string}
  */
-const applyModification = (modification: Function): string => {
+const applyModification = (modification: Modification): string => {
   let absolutePath: string = path.join(process.cwd(), modification.file);
 
   if (!path.extname(absolutePath).length) {
@@ -56,6 +62,7 @@ const applyModification = (modification: Function): string => {
  * Writes template from entries to file.
  *
  * @param {Object} generatorConfig Parsed generator config
+ * @returns {WrittenTemplate}
  */
 
 module.exports = (generatorConfig: Object): WrittenTemplate => {

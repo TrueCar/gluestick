@@ -1,5 +1,4 @@
 /* @flow */
-
 import type { Context, Logger } from '../types';
 
 const path = require('path');
@@ -14,10 +13,16 @@ type ProjectData = {
   }
 }
 
-const generateTemplate = (generatorName: string, entityName: string, logger: Logger) => {
+const generateTemplate = (
+  generatorName: string,
+  entityName: string,
+  logger: Logger,
+  options: Object,
+) => {
   generate({
     generatorName,
     entityName,
+    options,
   }, logger);
 };
 
@@ -32,11 +37,12 @@ const currentlyInProjectFolder = (folderPath: string) => {
   }
 };
 
-module.exports = ({ logger }: Context, appName: string) => {
+module.exports = ({ logger }: Context, appName: string, options: Object = {}) => {
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(appName)} is being generated...`);
 
-    generateTemplate('new', appName, logger);
+    generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
+    // @TODO we need to figure out a better way
     spawn.sync('npm', ['install'], { stdio: 'inherit' });
 
     logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);

@@ -1,49 +1,20 @@
-import { rm, ls } from 'shelljs';
-import fs from 'fs-extra';
-import path from 'path';
-import webpack from 'webpack';
-import getWebpackConfig from '../config/getWebpackClientConfig';
+/* @flow */
+import type { Context, WebpackConfig, Compiler } from '../types.js';
 
-import { getLogger } from '../lib/server/logger';
-import getAssetPath from '../lib/getAssetPath';
+const webpack = require('webpack');
 
-const LOGGER = getLogger();
+module.exports = ({ logger, config }: Context): void => {
+  if (config.webpackConfig) {
+    const configuration: WebpackConfig = config.webpackConfig.client;
+    const compiler: Compiler = webpack(configuration);
 
-module.exports = () => {
-  const appRoot = process.cwd();
-  const appConfigFilePath = path.join(appRoot, 'src', 'config', 'application.js');
-  const isProduction = process.env.NODE_ENV === 'production';
-  const compiler = webpack(getWebpackConfig(appRoot, appConfigFilePath, isProduction));
-  LOGGER.info('Bundling assets…');
-
-  // clean the slate, `shelljs.rm` throws a warning if you try to remove a
-  // folder or file that doesn't exist. To get around that warning we combine
-  // `ls` and `filter` to only remove the target files if the exist.
-  const removeableTargets = ['build', '_build', 'webpack-assets.json', '_webpack-assets.json'];
-  const removable = ls(appRoot).filter(f => removeableTargets.includes(f));
-  if (removable.length) {
-    rm('-R', removable);
+    compiler.run((error: string) => {
+      if (error) {
+        throw new Error(error);
+      }
+      logger.success('Assets have been prepared for production.');
+    });
+  } else {
+    logger.error('Webpack config not specified');
   }
-
-  compiler.run((error, stats) => {
-    const statsJson = stats.toJson();
-    const dir = 'build';
-
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
-
-    fs.writeFileSync('webpack-bundle-stats.json', JSON.stringify(statsJson));
-    fs.writeFileSync(`${dir}/asset-path.json`, JSON.stringify({ assetPath: getAssetPath() }));
-
-    const errors = statsJson.errors;
-    if (errors.length) {
-      errors.forEach((e) => {
-        LOGGER.error(e);
-      });
-      return;
-    }
-    LOGGER.info('Assets have been prepared for production.');
-    LOGGER.info('Assets can be served from the "/assets" route but it is recommended that you serve the generated "build" folder from a Content Delivery Network');
-  });
 };

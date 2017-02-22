@@ -36,6 +36,7 @@ commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .option(...statelessFunctionalOption)
   .option('-O, --gen-options <value>', 'options to pass to the generator')
   .action((...commandArguments) => {
@@ -49,6 +50,7 @@ commander
   .command('destroy <container|component|reducer>')
   .description('destroy a generated container')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/destroy'),
@@ -71,8 +73,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
-      { pre: cliHelpers.notifyUpdate },
+      { useGSConfig: true, useWebpackConfig: false },
     );
   });
 
@@ -116,7 +117,7 @@ commander
     execWithConfig(
       require('../commands/start-client'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      { useGSConfig: true, useWebpackConfig: true, skipServerEntryGeneration: true },
     );
   });
 
@@ -129,7 +130,7 @@ commander
     execWithConfig(
       require('../commands/start-server'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true });
+      { useGSConfig: true, useWebpackConfig: true, skipClientEntryGeneration: true });
   });
 
 commander
@@ -145,16 +146,14 @@ commander
     execWithConfig(
       require('../commands/test'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      {
+        useGSConfig: true,
+        useWebpackConfig: true,
+        skipClientEntryGeneration: true,
+        skipServerEntryGeneration: true,
+      },
     );
   });
-
-/* commander
-  .command("run")
-  .arguments("<script_path>")
-  .action((scriptPath) => run(scriptPath, (err) => {
-    if (err) { logger.error(err); }
-  }));*/
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander

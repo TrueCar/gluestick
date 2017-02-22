@@ -1,9 +1,21 @@
+/* @flow */
+
+import type { Context } from '../types';
+
 const generator = require('../generator');
 
-module.exports = ({ config, logger }, generatorName, entityName, options) => {
+export type Options = {
+  entryPoint?: string;
+  functional?: boolean;
+  genOptions?: string;
+}
+
+const generate = ({ config, logger }: Context, generatorName: string, entityName: string,
+  options: Options) => {
   const filteredOptions = {
-    functional: options.functional,
     ...JSON.parse(options.genOptions ? options.genOptions : '{}'),
+    functional: options.functional,
+    entryPoint: options.entryPoint,
   };
   generator({
     generatorName,
@@ -12,3 +24,5 @@ module.exports = ({ config, logger }, generatorName, entityName, options) => {
   }, logger);
   process.exit(0);
 };
+
+module.exports = generate;

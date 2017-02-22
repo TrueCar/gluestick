@@ -1,26 +1,25 @@
 /* @flow */
 import type { CreateTemplate } from '../../types';
 
-module.exports = (createTemplate: CreateTemplate) => {
-  const template = createTemplate`
-    import React, { Component, PropTypes } from "react";
-    import Helmet from "react-helmet";
-    import config from "../config/application";
+module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
 
-    export default class MasterLayout extends Component {
-      static propTypes = {
-        children: PropTypes.any
-      };
+import React, { Component, PropTypes } from "react";
+import Helmet from "react-helmet";
+import config from "config/application";
 
-      render () {
-        return (
-          <div>
-            <Helmet {...config.head}/>
-            {this.props.children}
-          </div>
-        );
-      }
-    }
-  `;
-  return template;
-};
+export default class MasterLayout extends Component {
+  static propTypes = {
+    children: PropTypes.any
+  };
+
+  render () {
+    return (
+      <div>
+        <Helmet {...config.head}/>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+`;

@@ -1,7 +1,14 @@
+/* @flow */
+
+import type { PredefinedGeneratorOptions } from '../../types';
+
+const path = require('path');
+
 const createTemplate = module.parent.createTemplate;
 
 const containerTemplate = createTemplate`
 /* @flow */
+
 import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -41,6 +48,8 @@ export default connect(
 `;
 
 const testTemplate = createTemplate`
+/* @flow */
+
 import React from "react";
 import { shallow } from "enzyme";
 
@@ -55,24 +64,24 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = options => {
-  const directoryPrefix = options.dir !== '.' ? `${options.dir}/` : '';
+module.exports = (options: PredefinedGeneratorOptions) => {
+  const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
     args: {
       name: options.name,
     },
     entries: [
       {
-        path: 'src/containers',
+        path: path.join('src', options.entryPoint, 'containers'),
         filename: options.name,
         template: containerTemplate,
       },
       {
-        path: 'test/containers',
+        path: path.join('src', options.entryPoint, 'containers', '__tests__'),
         filename: `${options.name}.test.js`,
         template: testTemplate,
         args: {
-          path: `containers/${directoryPrefix}${options.name}`,
+          path: path.join(options.entryPoint, 'containers', directoryPrefix, options.name),
         },
       },
     ],

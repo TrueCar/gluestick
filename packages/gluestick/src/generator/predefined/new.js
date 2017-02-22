@@ -1,15 +1,16 @@
 /* @flow */
+import type { GeneratorOptions } from '../../types';
 
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
 
 const templatePackage = require('../templates/package')(createTemplate);
-const template505hbs = require('../templates/505hbs')(createTemplate);
+const template500hbs = require('../templates/500hbs')(createTemplate);
 const templateIndex = require('../templates/Index')(createTemplate);
-const templateGluestick = require('../templates/gluestick')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
-const templateEslintrc = require('../templates/eslintrc')(createTemplate);
+const templateEslintrc = require('../templates/_eslintrc')(createTemplate);
+const templateFlowConfig = require('../templates/_flowconfig')(createTemplate);
 const templateDockerignore = require('../templates/dockerignore')(createTemplate);
 const templateBabelrc = require('../templates/babelrc')(createTemplate);
 const templateHomeTest = require('../templates/HomeTest')(createTemplate);
@@ -21,7 +22,7 @@ const templateHome = require('../templates/Home')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
 const tag = require('../../../package.json').version;
 const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
-const templateEntry = require('../templates/Entry')(createTemplate);
+const templateEntryWrapper = require('../templates/EntryWrapper')(createTemplate);
 const templateApp = require('../templates/App')(createTemplate);
 const templateAppServer = require('../templates/AppServer')(createTemplate);
 const templateInitBrowser = require('../templates/InitBrowser')(createTemplate);
@@ -30,64 +31,27 @@ const templateRoutes = require('../templates/Routes')(createTemplate);
 const templateWebpackAdditions = require('../templates/WebpackAdditions')(createTemplate);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
-const templateRecuder = require('../templates/Reducer')(createTemplate);
+const templateReducer = require('../templates/Reducer')(createTemplate);
+const templateEntries = require('../templates/entries')(createTemplate);
 
+const { flowVersion } = require('../constants');
+// @TODO use config in new command when PR #571 is merged
+const glueStickConfig = require('../../config/defaults/glueStickConfig');
+const webpackConfig = require('../../config/webpack/webpack.config');
 
-/**
- * Generator must export object with configuration or function that returns
- * object with configuration.
- * If export is a function, it will receive the following object as first argument:
- * {
- *   name: string; // name of entity specified on generate command execution
- *   dir: string; // additional directory specified on generate command execution
- *   generator: string; // generator name eg: component, reducer, container
- * }
- * Note: `dir` field will be appended to every entries' `path`.
- * `dir` will not be appended to `file` field in `modify` object, you will
- * need to do it yourself.
- */
-module.exports = () => ({
-  /**
-   * Define single entry.
-   * Type: Object
-   *
-   * Every entry can define it's own arguments that can extend and/or overwrite shared arguments:
-   * args: { ... }
-   * Type: Object
-   *
-   * To define multiple entries pass array of entries to `entires` property:
-   * entries: [{
-   *   path: ...,
-   *   filename: ...,
-   *   template: ...,
-   * }, {
-   *   path: ...,
-   *   filename: ...,
-   *   template: ...,
-   * }]
-   * Type: Array<Object>
-   */
+module.exports = (options: GeneratorOptions) => ({
   entries: [
+    // Root directory files
     {
       path: '/',
       filename: 'package.json',
       template: templatePackage,
       overwrite: true,
-    },
-    {
-      path: '/',
-      filename: '505.hbs',
-      template: template505hbs,
-    },
-    {
-      path: '/',
-      filename: 'Index.js',
-      template: templateIndex,
-    },
-    {
-      path: '/',
-      filename: '.gluestick',
-      template: templateGluestick,
+      args: {
+        dev: options.dev,
+        appName: options.appName,
+        flowVersion,
+      },
     },
     {
       path: '/',
@@ -101,6 +65,17 @@ module.exports = () => ({
     },
     {
       path: '/',
+      filename: '.flowconfig',
+      template: templateFlowConfig,
+      args: {
+        appName: options.appName,
+        version: flowVersion,
+        // $FlowFixMe review this after resolving the TODO mentioned above
+        mapper: webpackConfig(glueStickConfig).resolve.alias,
+      },
+    },
+    {
+      path: '/',
       filename: '.dockerignore',
       template: templateDockerignore,
     },
@@ -110,118 +85,167 @@ module.exports = () => ({
       template: templateBabelrc,
     },
     {
-      path: '/src/components',
-      filename: 'Home.js',
-      template: templateHome,
+      path: 'src',
+      filename: 'entries.json',
+      template: templateEntries,
+    },
+    // Gluestick directory
+    {
+      path: 'gluestick',
+      filename: '500.hbs',
+      template: template500hbs,
     },
     {
-      path: '/src/components',
-      filename: 'MasterLayout.js',
-      template: templateMasterLayout,
+      path: 'gluestick',
+      filename: 'EntryWrapper',
+      template: templateEntryWrapper,
     },
+    // Config
     {
-      path: '/src/config',
+      path: 'src/config',
       filename: '.Dockerfile',
       template: templateDockerfile,
     },
     {
-      path: '/src/config',
-      filename: '.entry.js',
-      template: templateEntry,
-    },
-    {
-      path: '/src/config',
+      path: 'src/config',
       filename: 'application.js',
       template: templateApp,
     },
     {
-      path: '/src/config',
+      path: 'src/config',
       filename: 'application.server.js',
       template: templateAppServer,
     },
     {
-      path: '/src/config',
+      path: 'src/config',
       filename: 'init.browser.js',
       template: templateInitBrowser,
     },
     {
-      path: '/src/config',
+      path: 'src/config',
       filename: 'redux-middleware.js',
       template: templateReduxMiddleware,
     },
     {
-      path: '/src/config',
+      path: 'src/config',
+      filename: 'webpack-additions.js',
+      template: templateWebpackAdditions,
+    },
+    // Shared
+    {
+      path: 'src/shared/actions',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/components',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/containers',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/reducers',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    // Main app
+    {
+      path: 'src/apps/main',
       filename: 'routes.js',
       template: templateRoutes,
     },
     {
-      path: '/src/config',
-      filename: 'webpack-additions.js',
-      template: templateWebpackAdditions,
+      path: 'src/apps/main',
+      filename: 'Index.js',
+      template: templateIndex,
     },
     {
-      path: '/src/containers',
+      path: 'src/apps/main/components',
+      filename: 'Home.js',
+      template: templateHome,
+    },
+    {
+      path: 'src/apps/main/components',
+      filename: 'MasterLayout.js',
+      template: templateMasterLayout,
+    },
+    {
+      path: 'src/apps/main/containers',
       filename: 'HomeApp.js',
       template: templateHomeApp,
     },
     {
-      path: '/src/containers',
+      path: 'src/apps/main/containers',
       filename: 'NoMatchApp.js',
       template: templateNoMatchApp,
     },
     {
-      path: '/src/reducers',
+      path: 'src/apps/main/actions',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/apps/main/reducers',
       filename: 'index.js',
-      template: templateRecuder,
+      template: templateReducer,
     },
     {
-      path: '/src/entryPoints/',
-      filename: '.empty',
-      template: templateEmpty,
+      path: 'src/shared/reducers',
+      filename: 'index.js',
+      template: templateReducer,
     },
     {
-      path: '/src/mapEntryToGroup/',
-      filename: '.empty',
-      template: templateEmpty,
-    },
-    {
-      path: '/test/components/',
+      path: 'src/apps/main/components/__tests__',
       filename: 'Home.test.js',
       template: templateHomeTest,
     },
     {
-      path: '/test/components/',
+      path: 'src/apps/main/components/__tests__',
       filename: 'MasterLayout.test.js',
       template: templateMasterLayoutTest,
     },
     {
-      path: '/test/containers/',
-      filename: 'ContaineHome.test.js',
+      path: 'src/apps/main/containers/__tests__',
+      filename: 'HomeApp.test.js',
       template: templateContainerHomeTest,
     },
     {
-      path: '/test/containers/',
+      path: 'src/apps/main/containers/__tests__',
       filename: 'NoMatchApp.test.js',
       template: templateNoMatchAppTest,
     },
     {
-      path: '/test/entryPoints/',
-      filename: '.empty',
+      path: 'src/apps/main/reducers/__tests__',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
-      path: '/test/mapEntryToGroup/',
-      filename: '.empty',
+      path: 'src/apps/main/actions/__tests__',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
-      path: '/test/reducers/',
-      filename: '.empty',
+      path: 'src/shared/actions/__tests__',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
     {
-      path: '/test/actions',
-      filename: '.empty',
+      path: 'src/shared/containers/__tests__',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/components/__tests__',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
+      path: 'src/shared/reducers/__tests__',
+      filename: '.gitkeep',
       template: templateEmpty,
     },
   ],

@@ -1,26 +1,73 @@
 /* @flow */
 
-export type Context = {
- config: Config,
- logger: Logger,
+export type ProjectConfig = {
+  [key: string]: any;
+};
+
+export type GSConfig = {
+  protocol: string;
+  host: string;
+  ports: {
+    client: number;
+    server: number;
+  };
+  buildAssetsPath: string;
+  assetsPath: string;
+  sourcePath: string;
+  assetsPath: string;
+  sharedPath: string;
+  appsPath: string;
+  configPath: string;
+  entryWrapperPath: string;
+  clientEntryInitPath: string;
+  serverEntriesPath: string;
+  entriesPath: string;
+  webpackChunks: string;
+  proxyLogLevel: string;
+  debugWatchDirectories: string[];
+  defaultErrorTemplatePath: string;
+  customErrorTemplatePath: string;
+  autoUpgrade: {
+    added: string[],
+    changed: string[],
+  };
+  [key: string]: any;
+};
+
+export type WebpackConfigEntry = string | Object | any[];
+
+export type WebpackConfig = {
+  [key: string]: WebpackConfigEntry;
+};
+
+export type UniversalSettings = {
+  server: {
+    input: string;
+    output: string;
+  };
+}
+
+export type CompiledConfig = {
+  universalSettings: UniversalSettings;
+  client: WebpackConfig;
+  server: WebpackConfig;
+}
+
+export type Plugin = {
+  name: string;
+  body: any;
 };
 
 export type Config = {
   projectConfig?: ProjectConfig;
-  GSConfig?: GSConfig;
-  webpackConfig?: WebpackConfig;
-  plugins: Object[];
+  GSConfig: GSConfig;
+  webpackConfig: CompiledConfig;
+  plugins: Plugin[];
 };
 
 export type Logger = LoggerTypes & {
-  level?: string
+  level?: string;
 };
-
-export type Question = {
-  type: string,
-  name: string,
-  message: string,
-}
 
 export type LoggerTypes = {
   success: Function;
@@ -30,31 +77,116 @@ export type LoggerTypes = {
   error: Function;
 }
 
-export type ProjectConfig = {
-
+export type Context = {
+ config: Config;
+ logger: Logger;
 };
 
-type WebpackConfigEntry = string | string[] | Object;
+export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
 
-export type WebpackConfig = {
-  [key: string]: WebpackConfigEntry,
-};
-
-export type GSConfig = {
-
-};
+export type Question = {
+  type: string;
+  name: string;
+  message: string;
+}
 
 export type CreateTemplate = (
+  interpolations: Array<*>,
   strings: Array<string>,
-  interpolations: Array<*>
 ) => (args: Object) => string;
 
 export type Generator = {
-  name: string,
-  config: any,
+  name: string;
+  config: any;
 }
 
 export type WrittenTemplate = {
-  name: string,
-  config: any,
+  written: string[];
+  modified: string[];
+}
+
+export type GeneratorOptions = {
+  [key: string]: any;
+};
+
+export type PredefinedGeneratorOptions = {
+  name: string;
+  dir?: string;
+  entryPoint: string;
+};
+
+export type Compiler = {
+  run: (error: any) => void;
+}
+
+export type Response = {
+  status: (code: number) => void;
+  sendStatus: (code: number) => void;
+  send: (value: string | Object | Buffer) => void;
+  set: (header: { [key: string]: string }) => void;
+  redirect: (code: number, location: string) => void;
+}
+
+export type Request = {
+  url: string;
+  hostname: string;
+}
+
+export type Entries = {
+  [key: string]: {
+    component: Function;
+    routes: Function;
+    reducers: Object;
+    name?: string;
+  }
+}
+
+export type EntriesConfig = {
+  [key: string]: {
+    component: string;
+    routes: string;
+    reducers: string;
+    name?: string;
+  }
+}
+
+export type RenderRequirements = {
+  Component: Function;
+  routes: Function;
+  reducers: Object;
+  name: string;
+}
+
+export type RenderOutput = {
+  responseString: string;
+  rootElement: Object;
+}
+
+export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
+export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cache?: Object) => void;
+export type CacheManager = {
+  getCachedIfProd: GetCachedIfProd;
+  setCacheIfProd: SetCacheIfProd;
+}
+
+export type MismatchedModules = {
+  [key: string]: {
+    required: string;
+    project: string;
+    type: string;
+  }
+}
+
+export type ProjectPackage = {
+  dependencies: {
+    [key: string]: string;
+  };
+  devDependencies: {
+    [key: string]: string;
+  };
+}
+
+export type UpdateDepsPromptResults = {
+  shouldFix: boolean;
+  mismatchedModules: MismatchedModules;
 }

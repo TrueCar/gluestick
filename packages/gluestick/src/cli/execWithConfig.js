@@ -12,18 +12,53 @@ const execHooks = (context, hooks) => {
   }
 };
 
+type ExecWithConfig = (
+  func: Function,
+  commandArguments: Array<*>,
+  options: {
+    useGSConfig: boolean;
+    useWebpackConfig: boolean;
+    skipProjectConfig: boolean;
+    skipClientEntryGeneration: boolean;
+    skipServerEntryGeneration: boolean;
+  },
+  hooks: {
+    pre: Function;
+    post: Function;
+  }
+) => void;
+
 module.exports = (
   func,
   commandArguments,
-  { useGSConfig, useWebpackConfig, skipProjectConfig } = {},
+  {
+    useGSConfig,
+    useWebpackConfig,
+    skipProjectConfig,
+    skipClientEntryGeneration,
+    skipServerEntryGeneration,
+  } = {},
   { pre, post } = {},
-) => {
+): ExecWithConfig => {
+  let packageJson = null;
+  try {
+    packageJson = require(path.join(process.cwd(), 'package.json'));
+    if (!packageJson.dependencies.gluestick) {
+      throw new Error('Command need to be run in gluestick project.');
+    }
+  } catch (error) {
+    logger.error(error.message);
+    process.exit(1);
+  }
   const projectConfig = skipProjectConfig
     ? {}
-    : require(path.join(process.cwd(), 'package.json')).gluestick;
+    : packageJson.gluestick;
   const plugins = preparePlugins(projectConfig);
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
-  const webpackConfig = useWebpackConfig ? compileWebpackConfig(plugins, projectConfig) : null;
+  const webpackConfig = useWebpackConfig ? compileWebpackConfig(
+    logger, plugins, projectConfig, GSConfig,
+    { skipClientEntryGeneration, skipServerEntryGeneration },
+  ) : null;
   const context = {
     config: {
       projectConfig,
@@ -33,10 +68,10 @@ module.exports = (
     },
     logger,
   };
-  execHooks(context, pre);
-  execHooks(context, post);
   try {
+    execHooks(context, pre);
     func(context, ...commandArguments);
+    execHooks(context, post);
   } catch (error) {
     process.stderr.write(error.message);
     process.exit(1);

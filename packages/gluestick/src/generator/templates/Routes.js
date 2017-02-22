@@ -1,24 +1,23 @@
 /* @flow */
 import type { CreateTemplate } from '../../types';
 
-module.exports = (createTemplate: CreateTemplate) => {
-  const template = createTemplate`
-   import React from "react";
-   import { Route, IndexRoute } from "react-router";
-   import { ROUTE_NAME_404_NOT_FOUND } from "gluestick-shared";
+module.exports = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
 
-   import MasterLayout from "components/MasterLayout";
-   import HomeApp from "containers/HomeApp";
-   import NoMatchApp from "containers/NoMatchApp";
+import React from "react";
+import { Route, IndexRoute } from "react-router";
+import { ROUTE_NAME_404_NOT_FOUND } from "gluestick-shared";
 
-   export default function routes (/*store: Object, httpClient: Object*/) {
-    return (
-      <Route name="app" component={MasterLayout} path="/">
-        <IndexRoute name="home" component={HomeApp} />
-        <Route name={ROUTE_NAME_404_NOT_FOUND} path="*" component={NoMatchApp} />
-      </Route>
-    );
-  }
-  `;
-  return template;
-};
+import MasterLayout from "./components/MasterLayout";
+import HomeApp from "./containers/HomeApp";
+import NoMatchApp from "./containers/NoMatchApp";
+
+export default function routes (/*store: Object, httpClient: Object*/) {
+  return (
+    <Route name="app" component={MasterLayout} path="/">
+      <IndexRoute name="home" component={HomeApp} />
+      <Route name={ROUTE_NAME_404_NOT_FOUND} path="*" component={NoMatchApp} />
+    </Route>
+  );
+}
+`;

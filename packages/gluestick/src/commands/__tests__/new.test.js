@@ -97,6 +97,10 @@ describe('cli: gluestick new', () => {
     expect(generate).toBeCalledWith({
       entityName: validProjectName,
       generatorName: 'new',
+      options: {
+        appName: validProjectName,
+        dev: null,
+      },
     }, logger);
   });
 
