@@ -36,7 +36,7 @@ describe('renderer/render', () => {
   const renderProps = {
     routes: getRoutes(),
   };
-  const currentRoute = {};
+
   const httpClient = {};
   const entryWrapperConfig = {};
   const envVariables = [];
@@ -49,6 +49,7 @@ describe('renderer/render', () => {
         cacheManager.setCacheIfProd.mockReset();
         const currentRouteWithEmail = clone(renderProps);
         currentRouteWithEmail.email = true;
+        currentRouteWithEmail.cache = true;
         const results = await render(
           context,
           request,
@@ -69,11 +70,13 @@ describe('renderer/render', () => {
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
         cacheManager.setCacheIfProd.mockReset();
+        const currentRouteWithCache = clone(renderProps);
+        currentRouteWithCache.cache = true;
         const results = await render(
           context,
           request,
           { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute },
+          { renderProps, currentRoute: currentRouteWithCache },
           { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
           { assets, cacheManager },
           {},
@@ -101,6 +104,7 @@ describe('renderer/render', () => {
         cacheManager.setCacheIfProd.mockReset();
         const currentRouteWithEmail = clone(renderProps);
         currentRouteWithEmail.email = true;
+        currentRouteWithEmail.cache = true;
         const results = await render(
           context,
           request,
@@ -120,11 +124,13 @@ describe('renderer/render', () => {
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
         cacheManager.setCacheIfProd.mockReset();
+        const currentRouteWithCache = clone(renderProps);
+        currentRouteWithCache.cache = true;
         const results = await render(
           context,
           request,
           { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute },
+          { renderProps, currentRoute: currentRouteWithCache },
           { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
           { assets, cacheManager },
           { renderMethod },
