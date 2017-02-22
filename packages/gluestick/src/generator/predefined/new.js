@@ -210,7 +210,7 @@ module.exports = (options: GeneratorOptions) => ({
     },
     {
       path: 'src/apps/main/containers/__tests__',
-      filename: 'ContaineHome.test.js',
+      filename: 'HomeApp.test.js',
       template: templateContainerHomeTest,
     },
     {
