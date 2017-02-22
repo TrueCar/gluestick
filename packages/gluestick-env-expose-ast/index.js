@@ -25,9 +25,9 @@ module.exports = (options, { logger }) => {
         envToExpose.reduce((prev, curr) => {
           return Object.assign(
             prev,
-            { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) }
+            { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) },
           );
-        }, {})
+        }, {}),
       ),
     );
     return config;

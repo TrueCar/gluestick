@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "flow": "echo \"No flowconfig specified\" && exit 0"
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "repository": {

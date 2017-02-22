@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape*/
 jest.mock('../detectEnvironmentVariables.js', () => jest.fn(
   (file) => file.includes('0') ? ['ENV_1', 'ENV_2'] : ['ENV_3'],
 ));
@@ -6,7 +7,7 @@ jest.mock('webpack', () => ({
     constructor(spec) {
       this.spec = spec;
     }
-  }
+  },
 }));
 const expose = require('../index');
 
