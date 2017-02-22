@@ -1,20 +1,30 @@
+/* @flow */
 /**
  * To import/require file from project use aliases:
  *   root, src, actions, assets, components, containers, reducers, config
  * To import/require renderer server file use relative paths.
  */
+
+import type {
+  Context,
+} from '../types';
+
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
-
+// $FlowIgnore
 const entries = require('project-entries').default;
+// $FlowIgnore
 const entriesConfig = require('project-entries-config');
+// $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;
-const BodyWrapper = require('./components/Body').default;
+// $FlowIgnore
 const assets = require('webpack-chunks');
+const BodyWrapper = require('./components/Body').default;
 
-module.exports = ({ config, logger }) => {
+
+module.exports = ({ config, logger }: Context) => {
   const app = express();
   app.use(compression());
   app.use(express.static(
