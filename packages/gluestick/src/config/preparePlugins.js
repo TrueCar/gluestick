@@ -13,6 +13,10 @@ module.exports = (logger: Logger): Plugin[] => {
       throw new Error('Invalid plugins configuration');
     }
 
+    if (pluginsConfig.length) {
+      logger.info('Compiling plugins:');
+    }
+
     const compiledPlugins = pluginsConfig.map((value) => {
       const normlizedPlugin = {
         name: typeof value === 'string' ? value : value.plugin,
@@ -25,8 +29,15 @@ module.exports = (logger: Logger): Plugin[] => {
       if (typeof value !== 'string' && Object.keys(value.options).length) {
         normlizedPlugin.options = value.options;
       }
+
+      if (typeof normlizedPlugin.plugin !== 'function') {
+        throw new Error(`Plugin ${normlizedPlugin.name} compilation failed`);
+      }
+
+      logger.success(`  ${normlizedPlugin.name}`);
       return {
         name: normlizedPlugin.name,
+        // $FlowFixMe we check if this is a function above
         body: normlizedPlugin.plugin(normlizedPlugin.options),
       };
     });

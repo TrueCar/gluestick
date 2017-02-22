@@ -24,6 +24,7 @@ type ExecWithConfig = (
     skipProjectConfig: boolean;
     skipClientEntryGeneration: boolean;
     skipServerEntryGeneration: boolean;
+    skipPlugins: boolean;
   },
   hooks: {
     pre: Function;
@@ -40,6 +41,7 @@ const execWithConfig: ExecWithConfig = (
     skipProjectConfig,
     skipClientEntryGeneration,
     skipServerEntryGeneration,
+    skipPlugins,
   } = {},
   { pre, post } = {},
 ): void => {
@@ -56,7 +58,7 @@ const execWithConfig: ExecWithConfig = (
   const projectConfig: Object = skipProjectConfig
     ? {}
     : packageJson.gluestick;
-  const plugins: Plugin[] = preparePlugins(logger);
+  const plugins: Plugin[] = !skipPlugins ? preparePlugins(logger) : [];
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   const webpackConfig = GSConfig && useWebpackConfig ? compileWebpackConfig(
     logger, plugins, projectConfig, GSConfig,
