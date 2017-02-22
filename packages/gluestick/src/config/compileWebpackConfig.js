@@ -29,6 +29,7 @@ module.exports = (
   gluestickConfig: GSConfig,
   { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
 ): CompiledConfig => {
+  process.env.COMPILATION_TIMESTAMP = 'chuj';
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings: UniversalSettings = {
     server: {
@@ -54,26 +55,20 @@ module.exports = (
     gluestickConfig.ports.client,
   );
 
-  const clientEnvConfigOverides: Object = plugins
+  const clientEnvConfigFinal: WebpackConfig = plugins
     .filter((plugin: Plugin): boolean => !!plugin.body.overwriteClientWebpackConfig)
     .reduce((prev: Object, plugin: Plugin) => {
-      return Object.assign(
-        prev,
-        plugin.body.overwriteClientWebpackConfig(clone(clientEnvConfig)),
-      );
-    }, {});
-  const serverEnvConfigOverides: Object = plugins
+      return plugin.body.overwriteClientWebpackConfig(clone(prev));
+    }, clientEnvConfig);
+  const serverEnvConfigFinal: WebpackConfig = plugins
     .filter((plugin: Plugin): boolean => !!plugin.body.overwriteServerWebpackConfig)
     .reduce((prev: Object, plugin: Plugin) => {
-      return Object.assign(
-        prev,
-        plugin.body.overwriteServerWebpackConfig(clone(serverEnvConfig)),
-      );
-    }, {});
+      return plugin.body.overwriteServerWebpackConfig(clone(prev));
+    }, serverEnvConfig);
 
   return {
     universalSettings: universalWebpackSettings,
-    client: Object.assign(clientEnvConfig, clientEnvConfigOverides),
-    server: Object.assign(serverEnvConfig, serverEnvConfigOverides),
+    client: clientEnvConfigFinal,
+    server: serverEnvConfigFinal,
   };
 };

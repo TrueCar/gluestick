@@ -26,7 +26,7 @@ module.exports = (logger: Logger): Plugin[] => {
       normlizedPlugin.plugin = require(
         typeof value === 'string' ? value : value.plugin,
       );
-      if (typeof value !== 'string' && Object.keys(value.options).length) {
+      if (typeof value !== 'string' && value.options) {
         normlizedPlugin.options = value.options;
       }
 
@@ -38,7 +38,7 @@ module.exports = (logger: Logger): Plugin[] => {
       return {
         name: normlizedPlugin.name,
         // $FlowFixMe we check if this is a function above
-        body: normlizedPlugin.plugin(normlizedPlugin.options),
+        body: normlizedPlugin.plugin(normlizedPlugin.options, logger),
       };
     });
 

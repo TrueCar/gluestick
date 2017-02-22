@@ -33,13 +33,25 @@ describe('config/compileGluestickConfig', () => {
 
   it('should return overwriten config', () => {
     // $FlowIgnore
-    expect(compileGluestickConfig([{
-      name: 'testPlugin',
-      body: {
-        overwriteGluestickConfig: (config) => {
-          return Object.assign(config, { protocol: 'https' });
+    expect(compileGluestickConfig([
+      // $FlowIgnore
+      {
+        name: 'testPlugin',
+        body: {
+          overwriteGluestickConfig: (config) => {
+            return Object.assign(config, { protocol: 'https' });
+          },
         },
       },
-    }])).toEqual({ ...defaultConfig, protocol: 'https' });
+      // $FlowIgnore
+      {
+        name: 'testPlugin',
+        body: {
+          overwriteGluestickConfig: (config) => {
+            return Object.assign(config, { host: 'test' });
+          },
+        },
+      },
+    ])).toEqual({ ...defaultConfig, protocol: 'https', host: 'test' });
   });
 });

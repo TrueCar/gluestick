@@ -9,12 +9,11 @@ module.exports = (plugins: Plugin[]): GSConfig => {
     throw new Error('Invalid plugins argument');
   }
 
-  const GSConfigOverrides: any = plugins
+  return plugins
     .filter((plugin: Plugin): boolean => !!plugin.body.overwriteGluestickConfig)
     .map((plugin: Plugin) => plugin.body.overwriteGluestickConfig)
-    .reduce((prev: Object, curr): Object => {
+    .reduce((prev: GSConfig, curr): GSConfig => {
       // $FlowFixMe curr will be a function
-      return Object.assign(prev, curr(clone(defaultConfig)));
-    }, {});
-  return Object.assign({}, defaultConfig, GSConfigOverrides);
+      return curr(clone(prev));
+    }, defaultConfig);
 };

@@ -53,8 +53,8 @@ export type Plugin = {
   name: string;
   body: {
     overwriteGluestickConfig?: (config: GSConfig) => void;
-    overwriteClientWebpackConfig: (config: WebpackConfig) => void;
-    overwriteServerWebpackConfig: (config: WebpackConfig) => void;
+    overwriteClientWebpackConfig: (config: WebpackConfig) => WebpackConfig;
+    overwriteServerWebpackConfig: (config: WebpackConfig) => WebpackConfig;
   };
 };
 
