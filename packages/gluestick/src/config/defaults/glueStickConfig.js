@@ -29,6 +29,7 @@ const config: GSConfig = {
   ],
   customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
   defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
+  hooksPath: 'src/gluestick-hooks.js',
 };
 
 module.exports = config;

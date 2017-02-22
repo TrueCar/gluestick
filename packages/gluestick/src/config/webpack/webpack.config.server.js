@@ -30,5 +30,8 @@ module.exports = (
   config.resolve.alias['webpack-chunks'] = path.join(
     process.cwd(), gluestickConfig.buildAssetsPath, gluestickConfig.webpackChunks,
   );
+  config.resolve.alias['gluestick-hooks'] = path.join(
+    process.cwd(), gluestickConfig.hooksPath,
+  );
   return serverConfiguration(config, settings);
 };
