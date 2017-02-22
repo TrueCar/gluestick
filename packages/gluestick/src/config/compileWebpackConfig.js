@@ -12,6 +12,7 @@ import type {
 } from '../types';
 
 const path = require('path');
+const clone = require('clone');
 const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
@@ -52,9 +53,21 @@ module.exports = (
     serverConfig,
     gluestickConfig.ports.client,
   );
+
+  const clientEnvConfigOverides: Object = plugins
+    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteClientWebpackConfig)
+    .reduce((prev: Object, plugin: Plugin) => {
+      return Object.assign(prev, plugin.body.overwriteClientWebpackConfig(clientEnvConfig));
+    }, {});
+  const serverEnvConfigOverides: Object = plugins
+    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteServerWebpackConfig)
+    .reduce((prev: Object, plugin: Plugin) => {
+      return Object.assign(prev, plugin.body.overwriteServerWebpackConfig(serverEnvConfig));
+    }, {});
+
   return {
     universalSettings: universalWebpackSettings,
-    client: clientEnvConfig,
-    server: serverEnvConfig,
+    client: Object.assign(clientEnvConfig, clientEnvConfigOverides),
+    server: Object.assign(serverEnvConfig, serverEnvConfigOverides),
   };
 };

@@ -29,8 +29,8 @@ describe('config/compileGluestickConfig', () => {
     expect(compileGluestickConfig([{
       name: 'testPlugin',
       body: {
-        GSConfig: {
-          protocol: 'https',
+        overwriteGluestickConfig: (config) => {
+          return Object.assign(config, { protocol: 'https' });
         },
       },
     }])).toEqual({ ...defaultConfig, protocol: 'https' });

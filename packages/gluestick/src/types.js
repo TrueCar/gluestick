@@ -51,7 +51,11 @@ export type CompiledConfig = {
 
 export type Plugin = {
   name: string;
-  body: any;
+  body: {
+    overwriteGluestickConfig?: (config: GSConfig) => void;
+    overwriteClientWebpackConfig: (config: WebpackConfig) => void;
+    overwriteServerWebpackConfig: (config: WebpackConfig) => void;
+  };
 };
 
 export type Config = {
