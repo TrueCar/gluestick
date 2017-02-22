@@ -7,6 +7,8 @@ import type {
   WebpackConfig,
   UniversalWebpackConfigurator,
   Logger,
+  UniversalSettings,
+  CompiledConfig,
 } from '../types';
 
 const path = require('path');
@@ -25,9 +27,9 @@ module.exports = (
   projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
   { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
-): WebpackConfig => {
+): CompiledConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
-  const universalWebpackSettings = {
+  const universalWebpackSettings: UniversalSettings = {
     server: {
       input: path.join(__dirname, '../renderer/entry.js'),
       output: path.join(process.cwd(), './build/server/renderer.js'),

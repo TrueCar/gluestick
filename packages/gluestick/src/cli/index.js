@@ -36,6 +36,7 @@ commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .option(...statelessFunctionalOption)
   .option('-O, --gen-options <value>', 'options to pass to the generator')
   .action((...commandArguments) => {
@@ -49,6 +50,7 @@ commander
   .command('destroy <container|component|reducer>')
   .description('destroy a generated container')
   .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/destroy'),
@@ -71,7 +73,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: false, useWebpackConfig: false },
+      { useGSConfig: true, useWebpackConfig: false },
     );
   });
 
@@ -152,13 +154,6 @@ commander
       },
     );
   });
-
-/* commander
-  .command("run")
-  .arguments("<script_path>")
-  .action((scriptPath) => run(scriptPath, (err) => {
-    if (err) { logger.error(err); }
-  }));*/
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander

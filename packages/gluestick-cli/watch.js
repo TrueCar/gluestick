@@ -13,7 +13,7 @@ module.exports = (exitWithError) => {
   }
   let srcPath = null;
   try {
-    if (!/file:.*/.test(packageContent.dependencies.gluestick)) {
+    if (/\d\.\d\.\d.*/.test(packageContent.dependencies.gluestick)) {
       exitWithError('Gluestick dependency does not contain valid path');
     }
     const pathFromDependency = packageContent.dependencies.gluestick.replace('file://', '').replace('file:', '');
