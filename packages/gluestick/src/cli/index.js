@@ -28,7 +28,7 @@ commander
     execWithConfig(
       require('../commands/new'),
       commandArguments,
-      { useGSConfig: true, skipProjectConfig: true },
+      { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
     );
   });
 
