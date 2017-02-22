@@ -1,5 +1,5 @@
 const spawn = require('cross-spawn');
-const autoUpgrade = require('../autoUpgrade');
+const autoUpgrade = require('../autoUpgrade/autoUpgrade');
 
 /*
  * Start server and (optionally) tests in different processes.

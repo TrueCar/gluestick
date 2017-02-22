@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
   existsSync: jest.fn((file) => file.includes('0')),
@@ -17,7 +18,7 @@ jest.mock('../../generator/parseConfig.js', () => jest.fn(
 ));
 const fs = require('fs');
 const path = require('path');
-const autoUpgrade = require('../');
+const autoUpgrade = require('../autoUpgrade');
 
 const originalPathJoin = path.join.bind(path);
 const getContext = (config) => ({
@@ -45,6 +46,7 @@ describe('autoUpgrade/index', () => {
 
   it('should not detect any changes', async () => {
     path.join = jest.fn(() => 'file-0');
+    // $FlowIgnore
     await autoUpgrade(getContext({
       changed: ['file-0'],
       added: ['file-0'],

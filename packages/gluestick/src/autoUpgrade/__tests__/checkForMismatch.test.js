@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
 jest.mock('../../generator/parseConfig.js', () => jest.fn(
   () => ({
@@ -30,6 +31,7 @@ describe('autoUpgrade/checkForMismatch', () => {
   });
 
   it('should detect mismatched modules', (done) => {
+    // $FlowIgnore
     checkForMismatch({
       dependencies: {
         depA: '1.0.0',
@@ -37,6 +39,7 @@ describe('autoUpgrade/checkForMismatch', () => {
       },
     }).then(result => {
       expect(result).toBeTruthy();
+      // $FlowIgnore
       expect(utils.promptModulesUpdate.mock.calls[0][0]).toEqual({
         depA: {
           required: '2.0.0',

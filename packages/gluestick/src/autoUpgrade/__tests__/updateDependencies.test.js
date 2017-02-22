@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
 }));
@@ -30,6 +31,7 @@ test('autoUpgrade/updateDependencies should update package and install', () => {
       type: 'devDependencies',
     },
   };
+  // $FlowIgnore
   updateDependencies(logger, projectPackage, mismatchedModules);
   const updatedPackage = JSON.parse(fs.writeFileSync.mock.calls[0][1]);
   expect(updatedPackage.dependencies).toEqual({

@@ -1,3 +1,4 @@
+/* @flow */
 const { isValidVersion } = require('../utils');
 
 describe('autoUpgrade/utils.isValidVersion', () => {
@@ -9,6 +10,7 @@ describe('autoUpgrade/utils.isValidVersion', () => {
 
   it('should return false when version is null or undefined', () => {
     const o = {};
+    // $FlowIgnore
     expect(isValidVersion(null, '1.0.0')).toEqual(false);
     expect(isValidVersion(o.version, '0.0.1')).toEqual(false);
   });
