@@ -28,7 +28,7 @@ commander
     execWithConfig(
       require('../commands/new'),
       commandArguments,
-      { useGSConfig: true, skipProjectConfig: true },
+      { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
     );
   });
 
@@ -73,7 +73,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: false, useWebpackConfig: false, skipPlugins: true },
+      { useGSConfig: true, useWebpackConfig: false, skipPlugins: true },
     );
   });
 

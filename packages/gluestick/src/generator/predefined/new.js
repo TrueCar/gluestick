@@ -33,6 +33,7 @@ const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateReducer = require('../templates/Reducer')(createTemplate);
 const templateEntries = require('../templates/entries')(createTemplate);
+const templateGluestickPlugins = require('../templates/gluestick.plugins')(createTemplate);
 
 const { flowVersion } = require('../constants');
 // @TODO use config in new command when PR #571 is merged
@@ -101,6 +102,11 @@ module.exports = (options: GeneratorOptions) => ({
       template: templateEntryWrapper,
     },
     // Config
+    {
+      path: 'src',
+      filename: 'gluestick.plugins.js',
+      template: templateGluestickPlugins,
+    },
     {
       path: 'src/config',
       filename: '.Dockerfile',
