@@ -12,6 +12,7 @@ import type {
 } from '../types';
 
 const path = require('path');
+const clone = require('clone');
 const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
@@ -28,6 +29,7 @@ module.exports = (
   gluestickConfig: GSConfig,
   { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
 ): CompiledConfig => {
+  process.env.COMPILATION_TIMESTAMP = 'chuj';
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings: UniversalSettings = {
     server: {
@@ -52,9 +54,21 @@ module.exports = (
     serverConfig,
     gluestickConfig.ports.client,
   );
+
+  const clientEnvConfigFinal: WebpackConfig = plugins
+    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteClientWebpackConfig)
+    .reduce((prev: Object, plugin: Plugin) => {
+      return plugin.body.overwriteClientWebpackConfig(clone(prev));
+    }, clientEnvConfig);
+  const serverEnvConfigFinal: WebpackConfig = plugins
+    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteServerWebpackConfig)
+    .reduce((prev: Object, plugin: Plugin) => {
+      return plugin.body.overwriteServerWebpackConfig(clone(prev));
+    }, serverEnvConfig);
+
   return {
     universalSettings: universalWebpackSettings,
-    client: clientEnvConfig,
-    server: serverEnvConfig,
+    client: clientEnvConfigFinal,
+    server: serverEnvConfigFinal,
   };
 };

@@ -10,10 +10,7 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
   configuration.devtool = 'source-map';
   configuration.plugins.push(
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
-      },
-      REDUX_DEVTOOLS: false,
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,

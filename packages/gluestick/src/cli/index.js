@@ -73,7 +73,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: false },
+      { useGSConfig: false, useWebpackConfig: false, skipPlugins: true },
     );
   });
 
@@ -114,6 +114,7 @@ commander
   .command('start-client', null, { noHelp: true })
   .description('start client')
   .action((...commandArguments) => {
+    process.env.COMMAND = 'start-client';
     execWithConfig(
       require('../commands/start-client'),
       commandArguments,
@@ -127,6 +128,7 @@ commander
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .action((...commandArguments) => {
+    process.env.COMMAND = 'start-server';
     execWithConfig(
       require('../commands/start-server'),
       commandArguments,

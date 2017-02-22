@@ -10,11 +10,7 @@ module.exports = (
   const configuration: Object = clientConfig({ development: true, css_bundle: true });
   configuration.plugins.push(
     new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-        BABEL_ENV: JSON.stringify('development/client'),
-      },
-      REDUX_DEVTOOLS: false, // enable/disable redux-devtools
+      'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),

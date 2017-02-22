@@ -1,3 +1,6 @@
+/* @flow */
+import type { Plugin } from '../types';
+
 const path = require('path');
 const preparePlugins = require('../config/preparePlugins');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
@@ -21,6 +24,7 @@ type ExecWithConfig = (
     skipProjectConfig: boolean;
     skipClientEntryGeneration: boolean;
     skipServerEntryGeneration: boolean;
+    skipPlugins: boolean;
   },
   hooks: {
     pre: Function;
@@ -28,7 +32,7 @@ type ExecWithConfig = (
   }
 ) => void;
 
-module.exports = (
+const execWithConfig: ExecWithConfig = (
   func,
   commandArguments,
   {
@@ -37,10 +41,11 @@ module.exports = (
     skipProjectConfig,
     skipClientEntryGeneration,
     skipServerEntryGeneration,
+    skipPlugins,
   } = {},
   { pre, post } = {},
-): ExecWithConfig => {
-  let packageJson = null;
+): void => {
+  let packageJson = {};
   try {
     packageJson = require(path.join(process.cwd(), 'package.json'));
     if (!packageJson.dependencies.gluestick) {
@@ -50,12 +55,12 @@ module.exports = (
     logger.error(error.message);
     process.exit(1);
   }
-  const projectConfig = skipProjectConfig
+  const projectConfig: Object = skipProjectConfig
     ? {}
     : packageJson.gluestick;
-  const plugins = preparePlugins(projectConfig);
+  const plugins: Plugin[] = !skipPlugins ? preparePlugins(logger) : [];
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
-  const webpackConfig = useWebpackConfig ? compileWebpackConfig(
+  const webpackConfig = GSConfig && useWebpackConfig ? compileWebpackConfig(
     logger, plugins, projectConfig, GSConfig,
     { skipClientEntryGeneration, skipServerEntryGeneration },
   ) : null;
@@ -77,3 +82,5 @@ module.exports = (
     process.exit(1);
   }
 };
+
+module.exports = execWithConfig;
