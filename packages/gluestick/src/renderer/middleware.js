@@ -65,7 +65,7 @@ module.exports = async (
       // $FlowFixMe
       !!module.hot,
     );
-    
+
     const {
       redirectLocation,
       renderProps,
