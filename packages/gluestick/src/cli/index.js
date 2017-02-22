@@ -73,7 +73,7 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: false, useWebpackConfig: false, skipPlugins: true },
+      { useGSConfig: true, useWebpackConfig: false, skipPlugins: true },
     );
   });
 

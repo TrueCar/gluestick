@@ -2,7 +2,7 @@
 import type { Context } from '../types.js';
 
 const spawn = require('cross-spawn');
-//const autoUpgrade = require('../autoUpgrade/autoUpgrade');
+const autoUpgrade = require('../autoUpgrade/autoUpgrade');
 
 type StartOptions = {
   runTests: boolean;
