@@ -36,7 +36,7 @@ describe('renderer/render', () => {
   const renderProps = {
     routes: getRoutes(),
   };
-  const currentRoute = {};
+
   const httpClient = {};
   const entryWrapperConfig = {};
   const envVariables = [];
