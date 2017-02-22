@@ -45,6 +45,7 @@ const checkForMismatch = (requiredPackage: ProjectPackage): Promise<UpdateDepsPr
     'new', 'package.json', {},
   );
   const templatePackage: ProjectPackage = JSON.parse(
+    // $FlowIgnore template at this point will be a string
     parseConfig({
       entry: packageGeneratorEntry,
     }, {}).entry.template,

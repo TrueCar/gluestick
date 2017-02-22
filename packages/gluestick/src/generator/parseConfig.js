@@ -12,8 +12,8 @@ type Entry = {
 type Config = {
   entry?: Entry;
   entries?: Entry[];
-  args: Object;
-  modify: Object[];
+  args?: Object;
+  modify?: Object[];
 }
 
 type UserConfig = Config | (options: Object) => Config;
@@ -27,7 +27,7 @@ type UserConfig = Config | (options: Object) => Config;
  * @param {Object} options Options to pass to functional entry
  * @returns {Entry}
  */
-const parseEntry = (entry: Entry, commonArgs: Object, options: Object): Entry => {
+const parseEntry = (entry: Entry, commonArgs?: Object, options: Object): Entry => {
   const parsedEntry: Entry = { ...entry };
 
   if (
