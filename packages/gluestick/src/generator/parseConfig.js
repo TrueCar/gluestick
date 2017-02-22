@@ -1,15 +1,19 @@
+/* @flow */
 const path = require('path');
 
 type Entry = {
-  path: string,
-  filename: string,
-  template: Function,
+  path: string;
+  filename: string;
+  template: ((args?: Object) => string) | string;
+  args?: Object;
+  overwrite: boolean;
 }
 
 type Config = {
-  entry?: Entry,
-  entries?: Entry[],
-  args: Object,
+  entry?: Entry;
+  entries?: Entry[];
+  args?: Object;
+  modify?: Object[];
 }
 
 type UserConfig = Config | (options: Object) => Config;
@@ -17,13 +21,13 @@ type UserConfig = Config | (options: Object) => Config;
 /**
  * Parses single entry.
  *
- * @param {Object} entry Entry to parse
+ * @param {Entry} entry Entry to parse
  * @param {Object} commonArgs Base/common arguments to pass to template
  * Those aruments might be overwritten by entry-specific arguments
  * @param {Object} options Options to pass to functional entry
- * @returns {Object}
+ * @returns {Entry}
  */
-const parseEntry = (entry: Entry, commonArgs: Object, options: Object): Entry => {
+const parseEntry = (entry: Entry, commonArgs?: Object, options: Object): Entry => {
   const parsedEntry: Entry = { ...entry };
 
   if (
@@ -41,6 +45,7 @@ const parseEntry = (entry: Entry, commonArgs: Object, options: Object): Entry =>
     parsedEntry.path = `${parsedEntry.path}/${options.dir}`.replace(/\/\//, '/');
   }
   const args = { ...commonArgs, ...parsedEntry.args };
+  // $FlowFixMe template is function and it overwritten itself with string that it returns
   parsedEntry.template = parsedEntry.template(args);
   return parsedEntry;
 };
@@ -48,9 +53,9 @@ const parseEntry = (entry: Entry, commonArgs: Object, options: Object): Entry =>
 /**
  * Parses generator config.
  *
- * @param {Object} config Generator config
+ * @param {UserConfig} config Generator config
  * @param {Object} options Options to pass to functional entry
- * @returns {Object}
+ * @returns {Config}
  */
 const parseConfig = (config: UserConfig, options: Object): Config => {
   const parsedConfig: Config = typeof config === 'function' ? config(options) : { ...config };
@@ -62,6 +67,7 @@ const parseConfig = (config: UserConfig, options: Object): Config => {
       entry => parseEntry(entry, parsedConfig.args, options),
     );
   } else {
+    // $FlowFixMe entry is overwritten with parsed entry
     parsedConfig.entry = parseEntry(parsedConfig.entry, parsedConfig.args, options);
   }
   return parsedConfig;

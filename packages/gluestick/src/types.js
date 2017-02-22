@@ -27,6 +27,10 @@ export type GSConfig = {
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;
   customErrorTemplatePath: string;
+  autoUpgrade: {
+    added: string[],
+    changed: string[],
+  };
   [key: string]: any;
 };
 
@@ -97,13 +101,19 @@ export type Generator = {
 }
 
 export type WrittenTemplate = {
-  name: string;
-  config: any;
+  written: string[];
+  modified: string[];
 }
 
 export type GeneratorOptions = {
-  [key: string]: ?string;
-}
+  [key: string]: any;
+};
+
+export type PredefinedGeneratorOptions = {
+  name: string;
+  dir?: string;
+  entryPoint: string;
+};
 
 export type Compiler = {
   run: (error: any) => void;
@@ -157,4 +167,26 @@ export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cach
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd;
   setCacheIfProd: SetCacheIfProd;
+}
+
+export type MismatchedModules = {
+  [key: string]: {
+    required: string;
+    project: string;
+    type: string;
+  }
+}
+
+export type ProjectPackage = {
+  dependencies: {
+    [key: string]: string;
+  };
+  devDependencies: {
+    [key: string]: string;
+  };
+}
+
+export type UpdateDepsPromptResults = {
+  shouldFix: boolean;
+  mismatchedModules: MismatchedModules;
 }

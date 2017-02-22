@@ -194,6 +194,11 @@ module.exports = (options: GeneratorOptions) => ({
       template: templateReducer,
     },
     {
+      path: 'src/shared/reducers',
+      filename: 'index.js',
+      template: templateReducer,
+    },
+    {
       path: 'src/apps/main/components/__tests__',
       filename: 'Home.test.js',
       template: templateHomeTest,
@@ -205,7 +210,7 @@ module.exports = (options: GeneratorOptions) => ({
     },
     {
       path: 'src/apps/main/containers/__tests__',
-      filename: 'ContaineHome.test.js',
+      filename: 'HomeApp.test.js',
       template: templateContainerHomeTest,
     },
     {
