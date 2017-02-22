@@ -11,6 +11,7 @@ ${args => args.entries.reduce((prev, curr) => {
 export default {
 ${args => args.entries.reduce((prev, curr) => {
   const entryDefinition = `  '${curr.path}': {\n`
+    + `${curr.explicitName ? `    name: '${curr.explicitName}',\n` : ''}`
     + `    component: ${curr.name}Entry,\n`
     + `    routes: ${curr.name}Routes,\n`
     + `    reducers: ${curr.name}Reducers,\n`
