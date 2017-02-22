@@ -19,11 +19,13 @@ module.exports = ({ config, logger }: Context) => {
     const entryConfig = parseConfig({
       entry: generatorEntry,
     }, {});
+    // $FlowIgnore
     const templateHash: string = sha1(entryConfig.entry.template);
     if (currentHash !== templateHash) {
       const absolutePath: string = path.join(process.cwd(), filePath);
       logger.success(`${filePath} file is out of date. Updating at path ${absolutePath}...`);
       mkdirp.sync(path.dirname(filePath));
+      // $FlowIgnore template will be a string
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
@@ -37,6 +39,7 @@ module.exports = ({ config, logger }: Context) => {
         entry: generatorEntry,
       }, {});
       mkdirp.sync(path.dirname(filePath));
+      // $FlowIgnore template will be a string
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
