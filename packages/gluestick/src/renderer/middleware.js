@@ -92,7 +92,7 @@ module.exports = async (
     const currentRoute: Object = renderProps.routes[renderProps.routes.length - 1];
     setHeaders(res, currentRoute);
 
-    // This will be used when streaming generated response or from cache.
+    // This will be used when streaming generated response.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
     const output: RenderOutput = render(

@@ -91,8 +91,9 @@ module.exports = (
   } else {
     responseString = renderToStaticMarkup(rootElement);
   }
-
-  cacheManager.setCacheIfProd(req, responseString);
+  if (currentRoute.cache) {
+    cacheManager.setCacheIfProd(req, responseString, currentRoute.cacheTTL);
+  }
   return {
     responseString,
     rootElement, // only for testing
