@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
+    "test-coverage": "jest --coverage",
     "lint": "eslint ./",
     "flow": "echo \"No flowconfig specified\" && exit 0"
   },
