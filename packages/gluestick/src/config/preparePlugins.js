@@ -44,8 +44,11 @@ module.exports = (logger: Logger): Plugin[] => {
 
     return compiledPlugins;
   } catch (error) {
-    console.log(error);
-    logger.warn(error);
+    if (error.code === 'MODULE_NOT_FOUND') {
+      logger.info('No gluestick.plugins.js file found');
+    } else {
+      logger.warn(error);
+    }
     return [];
   }
 };
