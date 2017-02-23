@@ -86,6 +86,8 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {},
+      {},
     );
     expect(response.send.mock.calls[0]).toEqual(['output']);
   });
@@ -103,6 +105,8 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {},
+      {},
     );
     expect(response.redirect.mock.calls[0]).toEqual([301, 'pathnamesearch']);
   });
@@ -120,6 +124,8 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {},
+      {},
     );
     expect(response.sendStatus.mock.calls[0]).toEqual([404]);
   });
@@ -133,6 +139,8 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {},
+      {},
     );
     expect(errorHandler.mock.calls.length).toBe(1);
   });
@@ -153,6 +161,8 @@ describe('renderer/middleware', () => {
         { entries, entriesConfig },
         { EntryWrapper, BodyWrapper },
         assets,
+        {},
+        {},
       );
       expect(response.send.mock.calls[0]).toEqual(['cached']);
     });

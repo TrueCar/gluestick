@@ -1,8 +1,8 @@
-module.exports = (hooks, ...args) => {
-  // Check if args i set
-  if (hooks.constructor === Array) {
-    hooks.forEach(hook => hook(...args));
-  } else {
-    hooks(...args);
+/* @flow */
+
+module.exports = (hooks: ?(Function | Function[]), arg?: any): any => {
+  if (hooks) {
+    return Array.isArray(hooks) ? hooks.reduce((val, hook) => hook(val), arg) : hooks(arg);
   }
+  return arg;
 };
