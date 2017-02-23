@@ -1,11 +1,20 @@
 /* @flow */
-import type { Logger, Config, Context, Request, GSConfig, UniversalSettings, WebpackConfig, CompiledConfig } from '../../types';
+import type {
+  Logger,
+  Config,
+  Context,
+  Request,
+  GSConfig,
+  UniversalSettings,
+  WebpackConfig,
+  CompiledConfig,
+} from '../../types';
+
+type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
 
 const React = require('react');
 const clone = require('clone');
 const render = require('../render');
-
-type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
 
 class Index extends React.Component {
   render() {
