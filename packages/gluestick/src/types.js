@@ -193,3 +193,13 @@ export type UpdateDepsPromptResults = {
   shouldFix: boolean;
   mismatchedModules: MismatchedModules;
 }
+
+export type Hooks = {
+  renderFromCache?: Function[];
+  postRenderRequirements?: Function[];
+  preRedirect?: Function[];
+  postRenderProps?: Function[],
+  postGetCurrentRoute?: Function[],
+  postRender?: Function[],
+  error?: Function[],
+}
