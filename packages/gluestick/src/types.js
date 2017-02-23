@@ -125,6 +125,9 @@ export type Response = {
   send: (value: string | Object | Buffer) => void;
   set: (header: { [key: string]: string }) => void;
   redirect: (code: number, location: string) => void;
+  header: (header: string) => void;
+  status: (code: number) => Response;
+  json: (json: Object) => void;
 }
 
 export type Request = {

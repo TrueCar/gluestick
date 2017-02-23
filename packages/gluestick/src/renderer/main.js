@@ -7,6 +7,8 @@
 
 import type {
   Context,
+  Request,
+  Response,
 } from '../types';
 
 const path = require('path');
@@ -27,14 +29,14 @@ const BodyWrapper = require('./components/Body').default;
 
 
 module.exports = ({ config, logger }: Context) => {
-  const app = express();
+  const app: Object = express();
   app.use(compression());
   app.use(express.static(
     path.join(process.cwd(), config.GSConfig.assetsPath),
   ));
 
   if (process.env.NODE_ENV !== 'production') {
-    app.get('/gluestick-proxy-poll', (req, res) => {
+    app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
       // allow requests from our client side loading page
       res.header('Access-Control-Allow-Origin', '*');
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -42,7 +44,7 @@ module.exports = ({ config, logger }: Context) => {
     });
   }
 
-  app.use((req, res) => {
+  app.use((req: Request, res: Response) => {
     middleware(
       { config, logger },
       req, res,
@@ -54,7 +56,7 @@ module.exports = ({ config, logger }: Context) => {
     );
   });
 
-  const server = app.listen(config.GSConfig.ports.server);
+  const server: Object = app.listen(config.GSConfig.ports.server);
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
     server.close();

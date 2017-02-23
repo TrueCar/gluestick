@@ -46,6 +46,7 @@ module.exports = async (
   try {
     // If we have cached item then render it.
     const cached: string | null = cacheManager.getCachedIfProd(req);
+    // load from cache hook(cached)
     if (cached) {
       res.send(cached);
       return null;
@@ -55,6 +56,7 @@ module.exports = async (
       { config, logger },
       req, entries,
     );
+    // after requirements hook (requirements)
 
     const httpClient: Function = getHttpClient(options.httpClient, req, res);
     const store: Object = createStore(
@@ -75,6 +77,7 @@ module.exports = async (
     );
 
     if (redirectLocation) {
+      // redirect hook(redirectLocation)
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
@@ -94,8 +97,7 @@ module.exports = async (
     setHeaders(res, currentRoute);
 
     // This will be used when streaming generated response or from cache.
-    // const statusCode = getStatusCode(store.getState(), currentRoute);
-
+    // preRenderHook (EntryPoint, store, httpClient, renderProps, currentRoute)
     const output: RenderOutput = render(
       { config, logger },
       req,
@@ -115,9 +117,11 @@ module.exports = async (
       { assets, cacheManager },
       {},
     );
+    // post render hook (res, output);
     res.send(output.responseString);
     return null;
   } catch (error) {
+    // error hook (error)
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler(
       { config, logger },
