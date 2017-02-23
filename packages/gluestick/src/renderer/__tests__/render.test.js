@@ -112,6 +112,42 @@ describe('renderer/render', () => {
     routes: getRoutes(),
   };
 
+  const renderResult = async (email: boolean, cache: boolean, renderMethod):Object => {
+    const currentRoute = clone(renderProps);
+    currentRoute.email = email;
+    currentRoute.cache = cache;
+    const results = await render(
+      context,
+      request,
+      { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
+      { renderProps, currentRoute },
+      { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
+      { assets, cacheManager },
+      { renderMethod });
+    return results;
+  };
+
+  const checkTest = async (email, cache, renderMethod) => {
+    cacheManager.setCacheIfProd.mockReset();
+    const results = await renderResult(email, cache, renderMethod);
+    if (email) {
+      expect(results.rootElement.props.head).toBeNull();
+      expect(results.rootElement.props.body.props.html).not.toContain('data-reactid');
+      expect(results.rootElement.props.body.props.html).toBeDefined();
+    } else {
+      expect(results.rootElement.props.head).not.toBeNull();
+      if (!renderMethod) {
+        expect(results.rootElement.props.body.props.html).toContain('data-reactid');
+      }
+    }
+    if (cache) {
+      expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
+    } else {
+      expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(0);
+    }
+    expect(results.responseString).toBeDefined();
+  };
+
   const httpClient = {};
   const entryWrapperConfig = {};
   const envVariables = [];
@@ -121,45 +157,13 @@ describe('renderer/render', () => {
   describe('without a custom render method and cache set to true', () => {
     describe('when the route is an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithEmail = clone(renderProps);
-        currentRouteWithEmail.email = true;
-        currentRouteWithEmail.cache = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithEmail },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          {},
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).toBeNull();
-        expect(results.rootElement.props.body.props.html).toBeDefined();
-        expect(results.rootElement.props.body.props.html).not.toContain('data-reactid');
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
+        await checkTest(true, true);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithCache = clone(renderProps);
-        currentRouteWithCache.cache = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithCache },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          {},
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).not.toBeNull();
-        expect(results.rootElement.props.body.props.html).toContain('data-reactid');
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
+        await checkTest(false, true);
       });
     });
   });
@@ -176,43 +180,13 @@ describe('renderer/render', () => {
 
     describe('when the route is an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithEmail = clone(renderProps);
-        currentRouteWithEmail.email = true;
-        currentRouteWithEmail.cache = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithEmail },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          { renderMethod },
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).toBeNull();
-        expect(results.rootElement.props.body.props.html).toBeDefined();
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
+        await checkTest(true, true, renderMethod);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithCache = clone(renderProps);
-        currentRouteWithCache.cache = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithCache },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          { renderMethod },
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).not.toBeNull();
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(1);
+        await checkTest(false, true, renderMethod);
       });
     });
   });
@@ -220,43 +194,13 @@ describe('renderer/render', () => {
   describe('without a custom render method and cache set to false', () => {
     describe('when the route is an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithEmail = clone(renderProps);
-        currentRouteWithEmail.email = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithEmail },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          {},
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).toBeNull();
-        expect(results.rootElement.props.body.props.html).toBeDefined();
-        expect(results.rootElement.props.body.props.html).not.toContain('data-reactid');
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(0);
+        await checkTest(true, false);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithoutCache = clone(renderProps);
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithoutCache },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          {},
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).not.toBeNull();
-        expect(results.rootElement.props.body.props.html).toContain('data-reactid');
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(0);
+        await checkTest(false, false);
       });
     });
   });
@@ -273,41 +217,13 @@ describe('renderer/render', () => {
 
     describe('when the route is an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithEmail = clone(renderProps);
-        currentRouteWithEmail.email = true;
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithEmail },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          { renderMethod },
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).toBeNull();
-        expect(results.rootElement.props.body.props.html).toBeDefined();
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(0);
+        await checkTest(true, false, renderMethod);
       });
     });
 
     describe('when the route is not an email route', () => {
       it('should render output', async () => {
-        cacheManager.setCacheIfProd.mockReset();
-        const currentRouteWithoutCache = clone(renderProps);
-        const results = await render(
-          context,
-          request,
-          { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
-          { renderProps, currentRoute: currentRouteWithoutCache },
-          { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
-          { assets, cacheManager },
-          { renderMethod },
-        );
-        expect(results.responseString).toBeDefined();
-        expect(results.rootElement.props.head).not.toBeNull();
-        expect(cacheManager.setCacheIfProd.mock.calls.length).toBe(0);
+        await checkTest(false, false, renderMethod);
       });
     });
   });
