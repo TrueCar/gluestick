@@ -127,7 +127,7 @@ module.exports = async (
     res.send(output.responseString);
     return null;
   } catch (error) {
-    hooksHelper(hooks.error);
+    hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler(
       { config, logger },
