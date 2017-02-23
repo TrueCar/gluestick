@@ -1,8 +1,9 @@
 /* @flow */
-import type { Context } from '../../types';
+import type { Context, WebpackConfigEntry } from '../../types';
 
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
+const webpack = require('webpack');
 
 type Process = {
   kill: Function,
@@ -24,13 +25,24 @@ const watchSource = (watchDirectories: string[], callback: Function): void => {
   });
 };
 
+const compile = ({ config, logger }: Context, cb: Function): void => {
+  const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
+  logger.info('Compiling server bundle...');
+  webpack(webpackConfig).run(error => {
+    if (error) {
+      throw error;
+    }
+    cb();
+  });
+};
+
 const debug = (
   { config, logger }: Context,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,
 ): Process => {
-  const debugSpawn: Process = spawn(
+  const debugProcess = spawn(
     'node',
     [
       `--inspect${debugPort ? `=${debugPort}` : ''}`,
@@ -42,10 +54,10 @@ const debug = (
       env: Object.assign({}, process.env, { NODE_ENV: 'debug' }),
     },
   );
-  debugSpawn.on('error', error => {
-    logger.error(error);
+  debugProcess.on('error', processError => {
+    logger.error(processError);
   });
-  return debugSpawn;
+  return debugProcess;
 };
 
 module.exports = (
@@ -56,13 +68,17 @@ module.exports = (
 ) => {
   let debugProcess: ?Process = null;
   watchSource(config.GSConfig.debugWatchDirectories, () => {
-    if (debugProcess) {
-      debugProcess.kill();
-    }
+    compile({ config, logger }, () => {
+      if (debugProcess) {
+        debugProcess.kill();
+      }
 
-    process.nextTick(() => {
-      debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+      process.nextTick(() => {
+        debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+      });
     });
   });
-  debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+  compile({ config, logger }, () => {
+    debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+  });
 };
