@@ -33,6 +33,7 @@ describe('config/webpack/buildEntries', () => {
       options: {
         component: 'path/to/main/component',
         routes: 'path/to/main/routes',
+        reducers: 'path/to/main/reducers',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
       },
     }, {}]);
@@ -42,6 +43,7 @@ describe('config/webpack/buildEntries', () => {
       options: {
         component: 'path/to/home/component',
         routes: 'path/to/home/routes',
+        reducers: 'path/to/home/reducers',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
       },
     }, {}]);

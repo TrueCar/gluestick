@@ -5,15 +5,16 @@ import getRoutes from "${args => args.routes}";
 import EntryWeapper from "../EntryWrapper";
 import { createStore } from "gluestick-shared";
 import middleware from "config/redux-middleware";
+import reducers from "${args => args.reducers}";
 
 import '${args => args.component}';
 
 export const getStore = (httpClient) => {
   return createStore(
     httpClient,
-    () => require('apps/main/reducers/index'),
+    () => reducers,
     middleware,
-    (cb) => module.hot && module.hot.accept('../../src/apps/main/reducers', cb),
+    (cb) => module.hot && module.hot.accept('../../${args => args.reducers}', cb),
     !!module.hot
   );
 };
@@ -28,6 +29,7 @@ module.exports = (options) => {
     args: {
       component: options.component,
       routes: options.routes,
+      reducers: options.reducers,
     },
     entry: {
       path: options.clientEntryInitPath,

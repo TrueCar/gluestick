@@ -17,6 +17,7 @@ const buildEntries = (gluestickConfig: GSConfig, logger: Logger) => {
       options: {
         component: entries[entry].component,
         routes: entries[entry].routes,
+        reducers: entries[entry].reducers,
         clientEntryInitPath: gluestickConfig.clientEntryInitPath,
       },
     }, logger);
