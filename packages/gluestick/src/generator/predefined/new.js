@@ -160,6 +160,11 @@ module.exports = (options: GeneratorOptions) => ({
     },
     // Main app
     {
+      path: 'src/apps/main/assets',
+      filename: '.gitkeep',
+      template: templateEmpty,
+    },
+    {
       path: 'src/apps/main',
       filename: 'routes.js',
       template: templateRoutes,
@@ -198,6 +203,11 @@ module.exports = (options: GeneratorOptions) => ({
       path: 'src/apps/main/reducers',
       filename: 'index.js',
       template: templateReducer,
+    },
+    {
+      path: 'src/shared/assets',
+      filename: '.gitkeep',
+      template: templateEmpty,
     },
     {
       path: 'src/shared/reducers',
