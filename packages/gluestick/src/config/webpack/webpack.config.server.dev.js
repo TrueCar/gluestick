@@ -8,9 +8,7 @@ module.exports = (serverConfig: WebpackConfig, devServerPort: number): WebpackCo
   const configuration: Object = serverConfig;
   configuration.plugins.push(
     new webpack.DefinePlugin({
-      'process.env': {
-        COMPILATION_TIMESTAMP: JSON.stringify(new Date().toISOString()),
-      },
+      'process.env.COMPILATION_TIMESTAMP': JSON.stringify(new Date().toISOString()),
     }),
   );
   configuration.output.publicPath = `http://localhost:${devServerPort}${

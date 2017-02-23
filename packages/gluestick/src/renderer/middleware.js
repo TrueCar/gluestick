@@ -66,10 +66,11 @@ module.exports = async (
       () => requirements.reducers,
       [],
       // $FlowFixMe
-      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
+      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
     );
+
     const {
       redirectLocation,
       renderProps,
@@ -99,7 +100,10 @@ module.exports = async (
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
     currentRoute = hooksHelper(hooks.postGetCurrentRoute, currentRoute);
     setHeaders(res, currentRoute);
-    // This will be used when streaming generated response or from cache.
+
+    // This will be used when streaming generated response.
+    // const statusCode = getStatusCode(store.getState(), currentRoute);
+
     let output: RenderOutput = render(
       { config, logger },
       req,

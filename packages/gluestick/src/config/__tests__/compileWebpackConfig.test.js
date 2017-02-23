@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 
@@ -12,9 +13,28 @@ const loggerMock = {
 
 describe('config/compileWebpackConfig', () => {
   it('should return webpack config', () => {
-    const webpackConfig = compileWebpackConfig(loggerMock, [], {}, defaultGSConfig);
+    // $FlowIgnore
+    const webpackConfig = compileWebpackConfig(loggerMock, [
+      {
+        body: {
+          // $FlowIgnore
+          overwriteClientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+          // $FlowIgnore
+          overwriteServerWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+        },
+      },
+      {
+        body: {
+          // $FlowIgnore
+          overwriteClientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
+        },
+      },
+    ], {}, defaultGSConfig);
     expect(webpackConfig.universalSettings).not.toBeNull();
     expect(webpackConfig.client).not.toBeNull();
     expect(webpackConfig.server).not.toBeNull();
+    expect(webpackConfig.client.testProp).toBeTruthy();
+    expect(webpackConfig.server.testProp).toBeTruthy();
+    expect(webpackConfig.client.testPropNew).toBeTruthy();
   });
 });

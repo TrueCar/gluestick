@@ -53,5 +53,6 @@ module.exports = (
     reducers: entries[entryName].reducers,
     routes: entries[entryName].routes,
     name: entries[entryName].name || entryName,
+    key: entryName,
   };
 };

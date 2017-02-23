@@ -42,6 +42,7 @@ const config: GSConfig = {
       'gluestick/500.hbs',
       'gluestick/EntryWrapper.js',
       'src/entries.json',
+      'src/gluestick.plugins.js',
       'src/apps/main/Index.js',
       'src/apps/main/routes.js',
       'src/apps/main/reducers/index.js',

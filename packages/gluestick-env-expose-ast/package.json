@@ -1,0 +1,38 @@
+{
+  "name": "gluestick-env-expose-ast",
+  "version": "1.0.0",
+  "description": "Expose strategy for environment variables from AST for Gluestick",
+  "main": "index.js",
+  "homepage": "https://github.com/TrueCar/gluestick",
+  "bugs": "https://github.com/TrueCar/gluestick/issues",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "lint": "eslint ./",
+    "flow": "echo \"No flowconfig specified\" && exit 0"
+  },
+  "author": "Todd Williams <toddsurfs@icloud.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:TrueCar/gluestick.git"
+  },
+  "jest": {
+    "notify": true,
+    "testRegex": ".*/__tests__/.*\\.test\\.js$"
+  },
+  "dependencies": {
+    "babel-core": "6.22.1",
+    "babel-traverse": "^6.22.1",
+    "webpack": "2.2.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "7.1.1",
+    "eslint": "3.14.1",
+    "eslint-config-airbnb": "14.1.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "3.0.2",
+    "eslint-plugin-react": "6.9.0",
+    "jest": "18.1.0"
+  }
+}

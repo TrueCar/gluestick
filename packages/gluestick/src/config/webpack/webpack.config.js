@@ -53,7 +53,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: 'node_modules',
+        exclude: /node_modules\/(?!gluestick)/,
         use: [{
           loader: 'babel-loader',
           options: {
