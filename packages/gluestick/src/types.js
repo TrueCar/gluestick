@@ -195,11 +195,11 @@ export type UpdateDepsPromptResults = {
 }
 
 export type Hooks = {
-  renderFromCache?: Function[];
-  postRenderRequirements?: Function[];
-  preRedirect?: Function[];
-  postRenderProps?: Function[],
-  postGetCurrentRoute?: Function[],
-  postRender?: Function[],
-  error?: Function[],
+  renderFromCache?: Function | Function[];
+  postRenderRequirements?: Function | Function[];
+  preRedirect?: Function | Function[];
+  postRenderProps?: Function | Function[],
+  postGetCurrentRoute?: Function | Function[],
+  postRender?: Function | Function[],
+  error?: Function | Function[],
 }
