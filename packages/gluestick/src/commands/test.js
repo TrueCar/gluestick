@@ -2,6 +2,7 @@
 
 import type { Context } from '../types.js';
 
+const fs = require('fs');
 const spawn = require('cross-spawn').spawn;
 const path = require('path');
 
@@ -27,13 +28,23 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
     moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
 
+  const roots = ['src'];
+  if (fs.existsSync(path.join(process.cwd(), 'test'))) {
+    // Previous to gluestick 1.0, projects used to have test folder, if that folder is not present
+    // and we add it to the roots, the watch mode of Jest will fail: ENOENT
+    roots[roots.length] = 'test';
+  }
 
   const config = {
     moduleNameMapper,
-    testPathDirs: ['src', 'test'],
+    roots,
     transformIgnorePatterns: [
       '/node_modules/(?!gluestick-addon-)',
     ],
+    // Clear watchman warnings (including the one of `test` folder non-existing for new projects)
+    // Might be worth in the future to come back here and see if there is a really difference
+    // using watchman or not
+    watchman: false,
   };
 
   const argv = [];
