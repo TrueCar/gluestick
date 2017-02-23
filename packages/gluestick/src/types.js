@@ -159,6 +159,7 @@ export type RenderRequirements = {
   routes: Function;
   reducers: Object;
   name: string;
+  key: string;
 }
 
 export type RenderOutput = {

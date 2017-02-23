@@ -11,13 +11,21 @@ const getAssetPathForFile = (filename: string, section: string, webpackAssets: O
   return webpackPath;
 };
 
+const filterEntryName = (name: string): string => {
+  if (name === '/') {
+    return 'main';
+  }
+  const match = /\/(.*)/.exec(name);
+  return match ? match[1] : name;
+};
+
 module.exports = (
   { config, logger }: Context, entryPoint: string, assets: Object,
 ): { styleTags: Object[], scriptTags: Object[] } => {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
   let key: number = 0;
-  const entryPointName: string = entryPoint === '/' ? 'main' : entryPoint;
+  const entryPointName: string = filterEntryName(entryPoint);
 
   if (process.env.NODE_ENV === 'production') {
     const stylesHref: string = getAssetPathForFile(entryPointName, 'styles', assets);

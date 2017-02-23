@@ -61,10 +61,11 @@ module.exports = async (
       () => requirements.reducers,
       [],
       // $FlowFixMe
-      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.name].reducers, cb),
+      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
     );
+
     const {
       redirectLocation,
       renderProps,

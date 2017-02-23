@@ -16,6 +16,7 @@ const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger) => {
         return {
           path: entry,
           name: entries[entry].name || (entry === '/' ? 'main' : entry.replace('/', '')),
+          explicitName: entries[entry].name,
           component: entries[entry].component,
           routes: entries[entry].routes,
           reducers: entries[entry].reducers,
