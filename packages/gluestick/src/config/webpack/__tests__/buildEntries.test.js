@@ -3,6 +3,7 @@ require('./sharedMocks');
 jest.mock('glob', () => ({
   sync: jest.fn(() => ['path/to/main/entry.js']),
 }));
+jest.mock('fs-extra');
 
 const path = require('path');
 const buildEntries = require('../buildEntries');
