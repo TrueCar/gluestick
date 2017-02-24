@@ -32,7 +32,6 @@ describe('config/compileGluestickConfig', () => {
   });
 
   it('should return overwriten config', () => {
-    // $FlowIgnore
     expect(compileGluestickConfig([
       // $FlowIgnore
       {

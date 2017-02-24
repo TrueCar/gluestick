@@ -1,63 +1,81 @@
-/* eslint-disable no-useless-escape*/
-jest.mock('../detectEnvironmentVariables.js', () => jest.fn(
-  (file) => file.includes('0') ? ['ENV_1', 'ENV_2'] : ['ENV_3'],
-));
-jest.mock('webpack', () => ({
-  DefinePlugin: class {
-    constructor(spec) {
-      this.spec = spec;
-    }
+jest.mock('app.js', () => ({
+  protocol: 'http',
+  host: '0.0.0.0',
+  port: '7777',
+  assetPort: '7778',
+  test: true,
+}), { virtual: true });
+jest.mock('add.js', () => ({
+  additionalAliases: {
+    aliasName: ['alias'],
   },
-}));
-const expose = require('../index');
+  additionalLoaders: ['loader'],
+  plugins: ['plugin'],
+  vendor: ['vendor'],
+}), { virtual: true });
 
-test('plugin should not expose anything', () => {
-  const results = expose({}, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
-  expect(clientPlugins.length).toBe(0);
-  expect(serverPlugins.length).toBe(0);
-});
+const path = require('path');
 
-test('plugin should expose from single file', () => {
-  process.env.ENV_1 = true;
-  process.env.ENV_2 = false;
-  const results = expose({
-    parse: 'file0',
-  }, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
-  expect(clientPlugins.length).toBe(1);
-  expect(clientPlugins[0].spec).toEqual({
-    'process.env.ENV_1': '\"true\"',
-    'process.env.ENV_2': '\"false\"',
-  });
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
-  expect(serverPlugins.length).toBe(1);
-  expect(serverPlugins[0].spec).toEqual({
-    'process.env.ENV_1': '\"true\"',
-    'process.env.ENV_2': '\"false\"',
-  });
-});
+const originalPathJoin = path.join.bind(path);
+const pluginFactory = require('../');
 
-test('plugin should expose from multiple files', () => {
-  process.env.ENV_1 = true;
-  process.env.ENV_2 = false;
-  process.env.ENV_3 = 'test';
-  const results = expose({
-    parse: ['file0', 'file1'],
-  }, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
-  expect(clientPlugins.length).toBe(1);
-  expect(clientPlugins[0].spec).toEqual({
-    'process.env.ENV_1': '\"true\"',
-    'process.env.ENV_2': '\"false\"',
-    'process.env.ENV_3': '\"test\"',
+describe('plugin', () => {
+  let plugin;
+
+  beforeEach(() => {
+    path.join = jest.fn(
+      (...values) => {
+        if (values.findIndex(val => val.includes('application')) > -1) {
+          return 'app.js';
+        }
+        return 'add.js';
+      },
+    );
+    plugin = pluginFactory();
   });
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
-  expect(serverPlugins.length).toBe(1);
-  expect(serverPlugins[0].spec).toEqual({
-    'process.env.ENV_1': '\"true\"',
-    'process.env.ENV_2': '\"false\"',
-    'process.env.ENV_3': '\"test\"',
+
+  afterAll(() => {
+    path.join = originalPathJoin;
+  });
+
+  it('should overwrite fluestick config', () => {
+    const gsConfig = { ports: {} };
+    plugin.overwriteGluestickConfig(gsConfig);
+    expect(gsConfig).toEqual({
+      protocol: 'http',
+      host: '0.0.0.0',
+      ports: {
+        client: '7777',
+        server: '7778',
+      },
+    });
+  });
+
+  it('should overwrite client webpack config', () => {
+    const webpackConfig = {
+      resolve: { alias: {} },
+      module: { rules: [] },
+      plugins: [],
+      entry: {},
+    };
+    plugin.overwriteClientWebpackConfig(webpackConfig);
+    expect(webpackConfig.resolve.alias.aliasName).toEqual('add.js');
+    expect(webpackConfig.module.rules).toEqual(['loader']);
+    expect(webpackConfig.plugins).toEqual(['plugin']);
+    expect(webpackConfig.entry.vendor).toEqual(['vendor']);
+  });
+
+  it('should overwrite server webpack config', () => {
+    const webpackConfig = {
+      resolve: { alias: {} },
+      module: { rules: [] },
+      plugins: [],
+      entry: {},
+    };
+    plugin.overwriteServerWebpackConfig(webpackConfig);
+    expect(webpackConfig.resolve.alias.aliasName).toEqual('add.js');
+    expect(webpackConfig.module.rules).toEqual(['loader']);
+    expect(webpackConfig.plugins).toEqual(['plugin']);
+    expect(webpackConfig.entry.vendor).toBeUndefined();
   });
 });

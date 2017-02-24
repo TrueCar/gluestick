@@ -5,43 +5,49 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 /* @flow */
 
 /**
- * GlueStick uses webpack-isomorphic-tools to support server side rendering.
- * The syntax for this is slightly different than the webpack config file.
- * Instead of defining a \`test\` regex, you supply an array of extensions.
- * For more information see: https://github.com/halt-hammerzeit/webpack-isomorphic-tools
+ * GlueStick uses universal-webpack to support server side rendering
  *
- * Example:
+ * additionalLoaders syntax is idential to webpack 2 loader config:
  * additionalLoaders: [
  *   {
- *     extensions: ["xml"],
- *     loader: "xml-loader"
+ *     test: RegExp,
+ *     exclude: RegExp | string,
+ *     use: [{
+ *       loader: string,
+ *       options: Object,
+ *     }]
  *   }
  * ]
+ * Every loader defined here must me installed.
  *
- * For the previous example to work, you would need to install \`xml-loader\` via npm. Then
- * you can use this loader by simply using the \`import\` syntax like:
- * import myData from "assets/xml/my-file.xml";
- *
- * Loaders also support \`include\`, \`exclude\` and \`query\`.
- * Additionally, you can provide a \`test\` regex instead of \`extensions\`
- * in order to bypass webpack-isomorphic-tools when needed.
- *
- * When adding additionalAliases, follow this pattern:
+ * additionalAliases syntax:
+ * additionalAliases: {
+ *   [aliasName: string]: string[],
+ * }
+ * example:
  * additionalAliases: {
  *   "aliasName": ["path", "to", "location"]
  * }
  *
- * for example:
- * additionalAliases: {
- *   "lib" : ["src", "lib"],
- *   "selectors" : ["src", "selectors"]
- * }
- *
+ * plugins follows the same syntax as in webpack 2
+ * 
+ * vendor syntax: string[]
+ * vendor is an array of files to add to vendor bundle resolved relatively to project root
  */
 
+type Loader = {
+  test: RegExp | string;
+  exclude?: RegExp | string;
+  use: [{
+    loader: string;
+    options?: Object;
+  }],
+  [key: string]: ?any;
+}
+
 type WebpackAdditions = {
-  additionalLoaders: string[];
-  additionalAliases: {[key: string]: string};
+  additionalLoaders: Loader[];
+  additionalAliases: { [key: string]: string[] };
   plugins: string[];
   vendor: string[];
 }

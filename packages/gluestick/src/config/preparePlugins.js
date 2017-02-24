@@ -55,7 +55,7 @@ const compilePlugin = (pluginConfig: Object, pluginOptions: Object): PluginWithS
     enchancedError.message = `${name} compilation failed: ${enchancedError.message}`;
     return {
       name,
-      body: () => {},
+      body: {},
       error: enchancedError,
     };
   }
