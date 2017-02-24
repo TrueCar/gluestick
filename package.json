@@ -9,7 +9,8 @@
     "test": "lerna exec npm run test",
     "test-coverage": "lerna exec npm run test-coverage",
     "lint": "lerna run lint",
-    "flow": "lerna exec npm run flow"
+    "flow": "lerna exec npm run flow",
+    "ci": "npm run lint && npm run flow && npm run test-coverage"
   },
   "dependencies": {
     "lerna": "2.0.0-beta.34",
