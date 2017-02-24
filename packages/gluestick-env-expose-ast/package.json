@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "lint": "eslint ./",
+    "lint": "eslint ./*.js ./__tests__/**/*.js",
     "flow": "echo \"No flowconfig specified\" && exit 0"
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
