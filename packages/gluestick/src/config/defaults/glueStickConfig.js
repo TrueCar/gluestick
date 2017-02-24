@@ -30,6 +30,7 @@ const config: GSConfig = {
   ],
   customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
   defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
+  hooksPath: 'src/gluestick.hooks.js',
   autoUpgrade: {
     added: [
       'src/config/application.js',        // -> prior to 0.1.6
@@ -43,6 +44,7 @@ const config: GSConfig = {
       'gluestick/EntryWrapper.js',
       'src/entries.json',
       'src/gluestick.plugins.js',
+      'src/gluestick.hooks.js',
       'src/apps/main/Index.js',
       'src/apps/main/routes.js',
       'src/apps/main/reducers/index.js',

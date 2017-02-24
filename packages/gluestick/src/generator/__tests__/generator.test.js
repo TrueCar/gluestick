@@ -41,17 +41,6 @@ describe('generator/index', () => {
       expect(logger.info).toBeCalledWith('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
     });
 
-    it('should log an error if you did not specify entryPoint', () => {
-      fs.existsSync = jest.fn().mockReturnValueOnce(true);
-      generator({
-        generatorName: 'component',
-        entityName: 'MyComponent',
-        options: {},
-      }, logger);
-      expect(logger.error).toBeCalledWith('You did not specify an entry point');
-      expect(logger.info).toBeCalledWith('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
-    });
-
     it('should log an error if path does not exist', () => {
       fs.existsSync = jest.fn().mockReturnValueOnce(false);
       generator({

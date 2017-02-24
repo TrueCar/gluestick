@@ -129,6 +129,9 @@ export type Response = {
   send: (value: string | Object | Buffer) => void;
   set: (header: { [key: string]: string }) => void;
   redirect: (code: number, location: string) => void;
+  header: (header: string) => void;
+  status: (code: number) => Response;
+  json: (json: Object) => void;
 }
 
 export type Request = {
@@ -194,4 +197,14 @@ export type ProjectPackage = {
 export type UpdateDepsPromptResults = {
   shouldFix: boolean;
   mismatchedModules: MismatchedModules;
+}
+
+export type Hooks = {
+  preRenderFromCache?: Function | Function[];
+  postRenderRequirements?: Function | Function[];
+  preRedirect?: Function | Function[];
+  postRenderProps?: Function | Function[];
+  postGetCurrentRoute?: Function | Function[];
+  postRender?: Function | Function[];
+  error?: Function | Function[];
 }

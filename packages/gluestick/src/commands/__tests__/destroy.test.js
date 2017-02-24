@@ -154,6 +154,10 @@ describe('cli: gluestick destroy', () => {
   //     fs.unlinkSync.mockClear();
   //   });
   //
+  //   it('destroy the file from apps/main if entryPoint is not specified', () => {
+  //     //
+  //   });
+  //
   //   it('destroy the file if the entryPoint is valid', () => {
   //     destroy(context, 'component', 'TestComponent', { entryPoint: 'shared' });
   //     expect(fs.unlinkSync).toHaveBeenCalled();

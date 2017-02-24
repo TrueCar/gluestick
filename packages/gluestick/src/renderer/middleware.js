@@ -9,6 +9,7 @@ import type {
   RenderRequirements,
   RenderOutput,
   CacheManager,
+  Hooks,
 } from '../types';
 
 const render = require('./render');
@@ -19,6 +20,7 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
+const hooksHelper = require('./helpers/hooks');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -39,6 +41,7 @@ module.exports = async (
   options: Options = {
     envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [],
   },
+  hooks: Hooks,
 ) => {
   /**
    * TODO: add hooks
@@ -47,16 +50,18 @@ module.exports = async (
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
     // If we have cached item then render it.
-    const cached: string | null = cacheManager.getCachedIfProd(req);
-    if (cached) {
+    const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
+    if (cachedBeforeHooks) {
+      const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
       return null;
     }
 
-    const requirements: RenderRequirements = getRequirementsFromEntry(
+    const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
       { config, logger },
       req, entries,
     );
+    const requirements = hooksHelper(hooks.postRenderRequirements, requirementsBeforeHooks);
 
     const httpClient: Function = getHttpClient(options.httpClient, req, res);
     const store: Object = createStore(
@@ -76,8 +81,9 @@ module.exports = async (
       { config, logger },
       req, requirements.routes, store, httpClient,
     );
-
+    const renderPropsAfterHooks: Object = hooksHelper(hooks.postRenderProps, renderProps);
     if (redirectLocation) {
+      hooksHelper(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
@@ -85,7 +91,7 @@ module.exports = async (
       return null;
     }
 
-    if (!renderProps) {
+    if (!renderPropsAfterHooks) {
       // This is only hit if there is no 404 handler in the react routes. A
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
@@ -93,13 +99,15 @@ module.exports = async (
       return null;
     }
 
-    const currentRoute: Object = renderProps.routes[renderProps.routes.length - 1];
+    const currentRouteBeforeHooks: Object =
+      renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
+    const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
     setHeaders(res, currentRoute);
 
     // This will be used when streaming generated response.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
-    const output: RenderOutput = render(
+    const outputBeforeHooks: RenderOutput = render(
       { config, logger },
       req,
       { EntryPoint: requirements.Component,
@@ -108,7 +116,7 @@ module.exports = async (
         routes: requirements.routes,
         httpClient,
       },
-      { renderProps, currentRoute },
+      { renderProps: renderPropsAfterHooks, currentRoute },
       {
         EntryWrapper,
         BodyWrapper,
@@ -118,9 +126,11 @@ module.exports = async (
       { assets, cacheManager },
       {},
     );
+    const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
     res.send(output.responseString);
     return null;
   } catch (error) {
+    hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler(
       { config, logger },

@@ -15,7 +15,7 @@ const convertToKebabCase = (value: string): string => {
 
 const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   if (!/^(shared|apps\/.+)$/.test(entryPoint)) {
-    logger.error(entryPoint ? `${entryPoint} is not a valid entry point` : 'You did not specify an entry point');
+    logger.error(`${entryPoint} is not a valid entry point`);
     logger.info('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
     return false;
   }
