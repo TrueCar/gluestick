@@ -1,12 +1,16 @@
-import { spawn } from 'cross-spawn';
-import path from 'path';
-import process from 'process';
-import { which } from 'shelljs';
-import autoUpgrade from '../autoUpgrade';
+/* @flow */
+import type { Context } from '../types.js';
 
-module.exports = async (name) => {
-  await autoUpgrade();
-  // Check if docker is installed first
+const spawn = require('cross-spawn');
+const path = require('path');
+const process = require('process');
+const which = require('shelljs').which;
+
+const autoUpgrade = require('../autoUpgrade/autoUpgrade');
+
+module.exports = async ({ config, logger }: Context, name: string) => {
+  await autoUpgrade({ config, logger });
+
   if (which('docker') !== null) {
     spawn(
       'docker',
@@ -14,7 +18,6 @@ module.exports = async (name) => {
       { stdio: 'inherit' },
     );
   } else {
-    // TODO: Use logger from context
-    // logger.warn('You must install docker before continuing');
+    logger.warn('You must install docker before continuing');
   }
 };
