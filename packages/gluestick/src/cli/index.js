@@ -107,6 +107,7 @@ commander
     execWithConfig(
       require('../commands/dockerize'),
       commandArguments,
+      { useGSConfig: true },
     );
   });
 
