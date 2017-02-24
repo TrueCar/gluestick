@@ -37,6 +37,7 @@ const gsConfig: GSConfig = {
   clientEntryInitPath: '',
   serverEntriesPath: '',
   entriesPath: '',
+  reduxMiddlewares: '',
   webpackChunks: '',
   proxyLogLevel: '',
   debugWatchDirectories: [],

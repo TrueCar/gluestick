@@ -27,7 +27,7 @@ const assets = require('webpack-chunks');
 // $FlowIgnore
 const hooks = require('gluestick-hooks');
 const BodyWrapper = require('./components/Body').default;
-const assets = require('webpack-chunks');
+// $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
 
 
