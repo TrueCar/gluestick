@@ -34,7 +34,7 @@ Is actively being worked on and supported by TrueCar.
 GlueStick works best with v6.x.x of node. Versions prior to v6 are not currently supported and node v7 has known issues: https://github.com/TrueCar/gluestick/issues/322
 
 ## Install
-```
+```bash
 npm install gluestick -g
 ```
 
@@ -44,16 +44,25 @@ You can view a complete getting started guide on our blog https://www.drivenbyco
 ## Overview
 GlueStick comes with several generators to help you get started. To create a
 new GlueStick project, run the following command:
-```
-gluestick new newapp
+```bash
+gluestick new <YOUR_APPLICATION_NAME>
 ```
 
 This will create the boilerplate code needed for a GlueStick application as
-well as install all of the initial npm dependencies.
+well as install all of the initial `npm` dependencies.
 
 Change directories into your projects folder and start your app and tests with:
-```
+```bash
 gluestick start
+```
+
+You can also run `client` and `server` side separately with:
+```bash
+gluestick start-client
+```
+or
+```bash
+gluestick start-server
 ```
 
 ## Generators
