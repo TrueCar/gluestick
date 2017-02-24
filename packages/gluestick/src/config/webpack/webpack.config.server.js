@@ -30,5 +30,8 @@ module.exports = (
   config.resolve.alias['webpack-chunks'] = path.join(
     process.cwd(), gluestickConfig.buildAssetsPath, gluestickConfig.webpackChunks,
   );
+  config.resolve.alias['redux-middlewares'] = path.join(
+    process.cwd(), gluestickConfig.reduxMiddlewares,
+  );
   return serverConfiguration(config, settings);
 };

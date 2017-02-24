@@ -13,6 +13,7 @@ const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const assets = require('webpack-chunks');
+const reduxMiddlewares = require('redux-middlewares').default;
 
 module.exports = ({ config, logger }) => {
   const app = express();
@@ -37,6 +38,12 @@ module.exports = ({ config, logger }) => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {
+        reduxMiddlewares,
+        envVariables: [],
+        httpClient: {},
+        entryWrapperConfig: {},
+      },
     );
   });
 

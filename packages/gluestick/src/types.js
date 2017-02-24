@@ -21,6 +21,7 @@ export type GSConfig = {
   clientEntryInitPath: string;
   serverEntriesPath: string;
   entriesPath: string;
+  reduxMiddlewares: string;
   webpackChunks: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];

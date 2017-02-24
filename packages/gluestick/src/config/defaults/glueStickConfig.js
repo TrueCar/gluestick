@@ -21,6 +21,7 @@ const config: GSConfig = {
   clientEntryInitPath: 'gluestick/clientEntryInit',
   serverEntriesPath: 'gluestick/entries',
   entriesPath: 'src/entries.json',
+  reduxMiddlewares: 'src/config/redux-middleware',
   webpackChunks: 'webpack-chunks.json',
   proxyLogLevel: 'info',
   debugWatchDirectories: [
