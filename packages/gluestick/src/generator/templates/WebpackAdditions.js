@@ -30,7 +30,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
  * }
  *
  * plugins follows the same syntax as in webpack 2
- * 
+ *
  * vendor syntax: string[]
  * vendor is an array of files to add to vendor bundle resolved relatively to project root
  */
