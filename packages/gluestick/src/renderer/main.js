@@ -54,6 +54,13 @@ module.exports = ({ config, logger }: Context) => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
+      {
+        reduxMiddlewares,
+        envVariables: [],
+        httpClient: {},
+        entryWrapperConfig: {},
+      },
+      hooks,
     );
   });
 
