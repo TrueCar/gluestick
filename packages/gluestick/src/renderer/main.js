@@ -1,4 +1,5 @@
 /* @flow */
+
 /**
  * To import/require file from project use aliases:
  *   root, src, actions, assets, components, containers, reducers, config
