@@ -2,6 +2,8 @@
 
 import type { CreateTemplate } from '../../types';
 
+const packageJSON = require('../../../package.json');
+
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 {
   "name": "${(args) => args.appName}",
@@ -25,7 +27,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
     "gluestick": "${
-      (args) => args.dev || '1.0.0' // TODO: replace with real version
+      (args) => args.dev || packageJSON.version
     }",
     "gluestick-shared": "0.4.22",
     "image-webpack-loader": "3.1.0",
