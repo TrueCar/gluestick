@@ -245,6 +245,12 @@ show up in the browser as you go. This is sort of experimental but it works
 great most of the time. However, sometimes you will still need to refresh the
 browser for certain changes.
 
+## Plugins
+Plugins documentation is available [here](docs/PLUGINS.md).
+
+## Apps
+Apps documentation is available [here](docs/APPS.md).
+
 ## Deployment & Production
 To run a gluestick application in production mode, simple set `NODE_ENV`
 envrionment variable to `production`.
