@@ -4,19 +4,12 @@ import type { Generator } from '../types';
 const fs = require('fs');
 const path = require('path');
 const createTemplate = require('./createTemplate');
+const { convertToCamelCase, convertToKebabCase } = require('./utils');
 // $FlowFixMe
 module.createTemplate = createTemplate;
 
 const PREDEFINED: string = 'predefined';
 const EXTERNAL: string = 'generators';
-
-const convertToCamelCase =
-  (value: string): string => value.replace(/(-\w)/g, match => match[1].toUpperCase());
-
-const convertToKebabCase = (value: string): string => {
-  const parsedValue = value.replace(/([A-Z])/g, match => `-${match[0].toLowerCase()}`);
-  return parsedValue[0] === '-' ? parsedValue.substring(1) : parsedValue;
-};
 
 const getPossiblePaths = (generatorName: string): string[] => [
   path.join(process.cwd(), `generators/${convertToCamelCase(generatorName)}.js`),

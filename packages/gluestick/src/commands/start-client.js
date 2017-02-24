@@ -51,8 +51,14 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
 
   if (process.env.NODE_ENV !== 'production') {
     const app: Object = express();
-    app.use(require('webpack-dev-middleware')(compiler, developmentServerOptions));
+    const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
+    app.use(devMiddleware);
     app.use(require('webpack-hot-middleware')(compiler));
+    devMiddleware.waitUntilValid(() => {
+      if (process.send) {
+        process.send('client started');
+      }
+    });
     // Proxy http requests from client to renderer server in development mode.
     app.use(proxy({
       changeOrigin: false,
@@ -80,6 +86,11 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
       if (error) {
         throw new Error(error);
       }
+
+      if (process.send) {
+        process.send('client started');
+      }
+
       logger.success('Client bundle successfully built.');
     });
   }
