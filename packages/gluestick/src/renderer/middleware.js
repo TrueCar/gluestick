@@ -49,7 +49,7 @@ module.exports = async (
     // If we have cached item then render it.
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
-      const cached = hooksHelper(hooks.renderFromCache, cachedBeforeHooks);
+      const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
       return null;
     }

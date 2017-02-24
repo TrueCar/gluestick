@@ -63,7 +63,7 @@ const response: Response = {
 };
 
 const hooks: Hooks = {
-  renderFromCache: jest.fn(v => v),
+  preRenderFromCache: jest.fn(v => v),
   postRenderRequirements: jest.fn(v => v),
   preRedirect: jest.fn(v => v),
   postRenderProps: jest.fn(v => v),
@@ -130,7 +130,7 @@ describe('renderer/middleware', () => {
       options,
       hooks,
     );
-    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe('renderer/middleware', () => {
       options,
       hooks,
     );
-    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(1);
     expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
@@ -182,7 +182,7 @@ describe('renderer/middleware', () => {
       options,
       hooks,
     );
-    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
@@ -227,7 +227,7 @@ describe('renderer/middleware', () => {
         options,
         hooks,
       );
-      expect(hooks.renderFromCache).toHaveBeenCalledTimes(1);
+      expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
       expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
       expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
       expect(hooks.postRenderProps).toHaveBeenCalledTimes(0);
