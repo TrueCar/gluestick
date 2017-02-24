@@ -32,7 +32,7 @@ module.exports = async (context: Context, command: Command, name: string, option
     return;
   }
 
-  const { entryPoint = '' } = options;
+  const { entryPoint = 'apps/main' } = options;
   if (!isValidEntryPoint(entryPoint, logger)) {
     return;
   }

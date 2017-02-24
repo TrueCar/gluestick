@@ -33,7 +33,7 @@ module.exports = (command: Command, logger: Logger): void => {
     options = {},
   } = command;
   const {
-    entryPoint = '',
+    entryPoint = 'apps/main',
   } = options;
 
   const predefinedGenerators = [
