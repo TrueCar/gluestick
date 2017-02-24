@@ -47,18 +47,18 @@ module.exports = async (
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
     // If we have cached item then render it.
-    let cached: string | null = cacheManager.getCachedIfProd(req);
-    if (cached) {
-      cached = hooksHelper(hooks.renderFromCache, cached);
+    const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
+    if (cachedBeforeHooks) {
+      const cached = hooksHelper(hooks.renderFromCache, cachedBeforeHooks);
       res.send(cached);
       return null;
     }
 
-    let requirements: RenderRequirements = getRequirementsFromEntry(
+    const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
       { config, logger },
       req, entries,
     );
-    requirements = hooksHelper(hooks.postRenderRequirements, requirements);
+    const requirements = hooksHelper(hooks.postRenderRequirements, requirementsBeforeHooks);
 
     const httpClient: Function = getHttpClient(options.httpClient, req, res);
     const store: Object = createStore(
@@ -80,7 +80,7 @@ module.exports = async (
     );
     const renderPropsAfterHooks: Object = hooksHelper(hooks.postRenderProps, renderProps);
     if (redirectLocation) {
-      hooksHelper(hooks.preRedirect);
+      hooksHelper(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
@@ -96,15 +96,15 @@ module.exports = async (
       return null;
     }
 
-    let currentRoute: Object =
+    const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
-    currentRoute = hooksHelper(hooks.postGetCurrentRoute, currentRoute);
+    const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
     setHeaders(res, currentRoute);
 
     // This will be used when streaming generated response.
     // const statusCode = getStatusCode(store.getState(), currentRoute);
 
-    let output: RenderOutput = render(
+    const outputBeforeHooks: RenderOutput = render(
       { config, logger },
       req,
       { EntryPoint: requirements.Component,
@@ -123,7 +123,7 @@ module.exports = async (
       { assets, cacheManager },
       {},
     );
-    output = hooksHelper(hooks.postRender, output);
+    const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
     res.send(output.responseString);
     return null;
   } catch (error) {
