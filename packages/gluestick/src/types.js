@@ -21,6 +21,7 @@ export type GSConfig = {
   clientEntryInitPath: string;
   serverEntriesPath: string;
   entriesPath: string;
+  reduxMiddlewares: string;
   webpackChunks: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];
@@ -56,8 +57,8 @@ export type Plugin = {
   name: string;
   body: {
     overwriteGluestickConfig?: (config: GSConfig) => void;
-    overwriteClientWebpackConfig: (config: WebpackConfig) => WebpackConfig;
-    overwriteServerWebpackConfig: (config: WebpackConfig) => WebpackConfig;
+    overwriteClientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
+    overwriteServerWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
   };
 };
 

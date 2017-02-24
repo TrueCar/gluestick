@@ -33,5 +33,8 @@ module.exports = (
   config.resolve.alias['gluestick-hooks'] = path.join(
     process.cwd(), gluestickConfig.hooksPath,
   );
+  config.resolve.alias['redux-middlewares'] = path.join(
+    process.cwd(), gluestickConfig.reduxMiddlewares,
+  );
   return serverConfiguration(config, settings);
 };

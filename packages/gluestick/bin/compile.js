@@ -1,7 +1,6 @@
 require('babel-polyfill');
 require('babel-core/register')({
-  only: /gluestick.*/,
-  ignore: /(webpack|build).*/,
+  ignore: /node_modules\/(?!gluestick.*)/,
   presets: [
     require.resolve('babel-preset-react'),
     require.resolve('babel-preset-es2015'),

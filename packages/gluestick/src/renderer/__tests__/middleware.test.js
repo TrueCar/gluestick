@@ -72,7 +72,7 @@ const hooks: Hooks = {
   error: jest.fn(v => v),
 };
 
-const options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} };
+const options = { envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [] };
 
 const getEntries = (routes): Entries => ({
   '/': {

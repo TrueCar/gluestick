@@ -65,6 +65,7 @@ describe('renderer/render', () => {
     clientEntryInitPath: '',
     serverEntriesPath: '',
     entriesPath: '',
+    reduxMiddlewares: '',
     webpackChunks: '',
     proxyLogLevel: '',
     debugWatchDirectories: [],

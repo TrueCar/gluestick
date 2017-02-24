@@ -27,6 +27,8 @@ const assets = require('webpack-chunks');
 // $FlowIgnore
 const hooks = require('gluestick-hooks');
 const BodyWrapper = require('./components/Body').default;
+// $FlowIgnore
+const reduxMiddlewares = require('redux-middlewares').default;
 
 
 module.exports = ({ config, logger }: Context) => {
@@ -52,7 +54,12 @@ module.exports = ({ config, logger }: Context) => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
-      { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
+      {
+        reduxMiddlewares,
+        envVariables: [],
+        httpClient: {},
+        entryWrapperConfig: {},
+      },
       hooks,
     );
   });

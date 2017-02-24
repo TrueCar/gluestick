@@ -28,6 +28,7 @@ type Options = {
   envVariables: string[];
   httpClient: Object;
   entryWrapperConfig: Object;
+  reduxMiddlewares: any[];
 };
 
 module.exports = async (
@@ -37,7 +38,9 @@ module.exports = async (
   { entries, entriesConfig }: { entries: Entries, entriesConfig: EntriesConfig },
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
   assets: Object,
-  options: Options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} },
+  options: Options = {
+    envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [],
+  },
   hooks: Hooks,
 ) => {
   /**
@@ -64,7 +67,7 @@ module.exports = async (
     const store: Object = createStore(
       httpClient,
       () => requirements.reducers,
-      [],
+      options.reduxMiddlewares,
       // $FlowFixMe
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe

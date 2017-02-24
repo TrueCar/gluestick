@@ -4,7 +4,11 @@ import type { Plugin, Logger } from '../types';
 
 const path = require('path');
 
-module.exports = (logger: Logger): Plugin[] => {
+type PluginWithStat = Plugin & {
+  error?: Error;
+};
+
+const getPluginsConfig = (logger: Logger): Object[] => {
   try {
     const pluginsRequiredConfig: Object = require(path.join(process.cwd(), 'src/gluestick.plugins.js'));
     const pluginsConfig = pluginsRequiredConfig.default || pluginsRequiredConfig;
@@ -16,39 +20,69 @@ module.exports = (logger: Logger): Plugin[] => {
     if (pluginsConfig.length) {
       logger.info('Compiling plugins:');
     }
+    return pluginsConfig;
+  } catch (error) {
+    logger.warn(error);
+    return [];
+  }
+};
 
-    const compiledPlugins = pluginsConfig.map((value) => {
-      const normlizedPlugin = {
-        name: typeof value === 'string' ? value : value.plugin,
-        plugin: null,
-        options: {},
-      };
-      normlizedPlugin.plugin = require(
-        typeof value === 'string' ? value : value.plugin,
-      );
-      if (typeof value !== 'string' && value.options) {
-        normlizedPlugin.options = value.options;
+const compilePlugin = (pluginConfig: Object, pluginOptions: Object): PluginWithStat => {
+  const name: string = typeof pluginConfig === 'string' ? pluginConfig : pluginConfig.plugin;
+  try {
+    const normlizedPlugin = {
+      plugin: null,
+      options: {},
+    };
+
+    normlizedPlugin.plugin = require(name);
+    if (typeof pluginConfig !== 'string' && pluginConfig.options) {
+      normlizedPlugin.options = pluginConfig.options;
+    }
+
+    if (typeof normlizedPlugin.plugin !== 'function') {
+      throw new Error('plugin must export function');
+    }
+
+    const pluginBody = normlizedPlugin.plugin(normlizedPlugin.options, pluginOptions);
+
+    return {
+      name,
+      body: pluginBody,
+    };
+  } catch (error) {
+    const enchancedError = error;
+    enchancedError.message = `${name} compilation failed: ${enchancedError.message}`;
+    return {
+      name,
+      body: {},
+      error: enchancedError,
+    };
+  }
+};
+
+module.exports = (logger: Logger): Plugin[] => {
+  const pluginsConfig = getPluginsConfig(logger);
+  if (!pluginsConfig.length) {
+    return [];
+  }
+
+  try {
+    const compiledPlugins: Plugin[] = pluginsConfig.map((value: Object): Plugin => {
+      const compilationResults: PluginWithStat = compilePlugin(value, { logger });
+      if (compilationResults.error) {
+        throw compilationResults.error;
       }
-
-      if (typeof normlizedPlugin.plugin !== 'function') {
-        throw new Error(`Plugin ${normlizedPlugin.name} compilation failed`);
-      }
-
-      logger.success(`  ${normlizedPlugin.name}`);
+      logger.success(`  ${compilationResults.name} compiled successfully`);
       return {
-        name: normlizedPlugin.name,
-        // $FlowFixMe we check if this is a function above
-        body: normlizedPlugin.plugin(normlizedPlugin.options, logger),
+        name: compilationResults.name,
+        body: compilationResults.body,
       };
     });
 
     return compiledPlugins;
   } catch (error) {
-    if (error.code === 'MODULE_NOT_FOUND') {
-      logger.info('No gluestick.plugins.js file found');
-    } else {
-      logger.warn(error);
-    }
+    logger.warn(error);
     return [];
   }
 };
