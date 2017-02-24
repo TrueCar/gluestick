@@ -30,12 +30,12 @@ import reducer from "${args => args.path}";
 
 describe("${args => args.path}", () => {
   it("returns the initial state", () => {
-    const state = void 0;
+    const state = {};
     expect(
       reducer({}, {
-        type: '_TEST_ACTION'
+        type: "_TEST_ACTION"
       })
-    ).toEqual({});
+    ).toEqual(state);
   });
 });
 `;

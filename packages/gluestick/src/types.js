@@ -14,7 +14,6 @@ export type GSConfig = {
   buildAssetsPath: string;
   assetsPath: string;
   sourcePath: string;
-  assetsPath: string;
   sharedPath: string;
   appsPath: string;
   configPath: string;

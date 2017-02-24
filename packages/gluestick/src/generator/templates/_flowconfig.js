@@ -16,7 +16,8 @@ flow/
 node_modules/gluestick/flow-typed
 
 [options]
-suppress_type=$FlowFixMe
+suppress_comment=\\\\(.\\\\|\\n\\\\)*\\\\$FlowFixMe
+suppress_comment=\\\\(.\\\\|\\n\\\\)*\\\\$FlowIgnore
 
 module.ignore_non_literal_requires=true
 
