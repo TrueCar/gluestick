@@ -202,8 +202,8 @@ export type Hooks = {
   preRenderFromCache?: Function | Function[];
   postRenderRequirements?: Function | Function[];
   preRedirect?: Function | Function[];
-  postRenderProps?: Function | Function[],
-  postGetCurrentRoute?: Function | Function[],
-  postRender?: Function | Function[],
-  error?: Function | Function[],
+  postRenderProps?: Function | Function[];
+  postGetCurrentRoute?: Function | Function[];
+  postRender?: Function | Function[];
+  error?: Function | Function[];
 }
