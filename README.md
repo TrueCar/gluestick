@@ -58,8 +58,17 @@ gluestick start
 
 ## Generators
 To help speed up development, GlueStick includes generators for common types of
-files. For Gluestick provided generators, you also need to provide an entry point
-`-E` where the files should be included: `shared` or `apps/${appName}`
+files. For Gluestick provided generators, you can also provide an entry point
+`-E` where the files should be included: `shared` or `apps/${appName}`. If you
+ do not provide one, `apps/main` will be used.
+
+#### App Generator
+The app generator will create new folder structure for a new app.
+
+Example:
+```
+gluestick generate app some-name
+```
 
 #### Container Generator
 The container generator will create a basic React component in the containers folder that is
@@ -76,7 +85,7 @@ file for that component.
 
 Example:
 ```
-gluestick generate component MyComponent -E apps/main
+gluestick generate component MyComponent
 ```
 
 #### Reducer Generator
@@ -88,11 +97,14 @@ Example:
 gluestick generate reducer todos -E shared
 ```
 
-You can also use the opposite command `destroy` to delete generate files.
+### Destroy command
+
+You can also use `destroy` to delete generated files: `component`, `container`
+and `reducer`.
 
 Example:
 ```
-gluestick destroy component MyComponent -E apps/main
+gluestick destroy component MyComponent -E apps/some-app
 ```
 
 ## Code quality
@@ -120,6 +132,12 @@ There is a predefined linting configuration (following [airbnb config](https://g
 for your project. Run it using:
 ```
 npm run lint
+```
+
+### Integration
+All of the above code quality commands can be executed simultaneously by:
+```
+npm run ci
 ```
 
 ## Styles
