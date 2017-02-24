@@ -1,3 +1,17 @@
+/* @flow */
+
+import type {
+  Context,
+  Request,
+  Response,
+  Logger,
+  EntriesConfig,
+  Entries,
+  Hooks,
+} from '../../types';
+
+const mocks = require('./mocks');
+
 /* eslint-disable react/no-multi-comp */
 jest.mock('gluestick-shared', () => ({
   getHttpClient: jest.fn(),
@@ -23,56 +37,83 @@ const React = require('react');
 const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
 
-const context = {
-  config: {},
-  logger: {
-    info: jest.fn(),
-    debug: jest.fn(),
-    success: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  },
+const logger: Logger = {
+  info: jest.fn(),
+  debug: jest.fn(),
+  success: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
 };
-const request = {
-  hostname: 'localhost',
-  url: '/',
+
+const context: Context = {
+  config: mocks.config,
+  logger,
 };
-const response = {
+
+const request: Request = mocks.request;
+
+const response: Response = {
   send: jest.fn(),
   set: jest.fn(),
   status: jest.fn(),
   sendStatus: jest.fn(),
   redirect: jest.fn(),
+  header: jest.fn(),
+  json: jest.fn(),
 };
-const getEntries = (routes) => ({
+
+const hooks: Hooks = {
+  renderFromCache: jest.fn(v => v),
+  postRenderRequirements: jest.fn(v => v),
+  preRedirect: jest.fn(v => v),
+  postRenderProps: jest.fn(v => v),
+  postGetCurrentRoute: jest.fn(v => v),
+  postRender: jest.fn(v => v),
+  error: jest.fn(v => v),
+};
+
+const options = { envVariables: [], httpClient: {}, entryWrapperConfig: {} };
+
+const getEntries = (routes): Entries => ({
   '/': {
     component: (class extends React.Component {
       render() {
         return <div>Index</div>;
       }
     }),
-    reducers: null,
+    reducers: {},
     routes: () => routes,
   },
 });
-const entriesConfig = {
-  '/': {
-    component: 'component',
-    reducers: 'reducers',
-    routes: 'routes',
-  },
-};
+
+const entriesConfig: EntriesConfig = mocks.entriesConfig;
+
 const assets = {};
 const EntryWrapper = {};
 const BodyWrapper = {};
 
+const clearHookMock = (key: string) => {
+  if (hooks[key]) {
+    if (!Array.isArray(hooks[key])) {
+      hooks[key].mockClear();
+    } else {
+      hooks[key].forEach(v => v.mockClear());
+    }
+  }
+};
+
+const clearHooksMock = () => {
+  Object.keys(hooks).map((key: string) => clearHookMock(key));
+};
+
 describe('renderer/middleware', () => {
   beforeEach(() => {
     response.send.mockReset();
+    clearHooksMock();
   });
 
   it('should render output', async () => {
-    const entries = getEntries({
+    const entries: Entries = getEntries({
       mockBehaviour: {
         renderProps: {
           routes: [{}],
@@ -86,9 +127,16 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
-      {},
-      {},
+      options,
+      hooks,
     );
+    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
+    expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
+    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
+    expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(1);
+    expect(hooks.postRender).toHaveBeenCalledTimes(1);
+    expect(hooks.error).toHaveBeenCalledTimes(0);
     expect(response.send.mock.calls[0]).toEqual(['output']);
   });
 
@@ -105,9 +153,16 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
-      {},
-      {},
+      options,
+      hooks,
     );
+    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
+    expect(hooks.preRedirect).toHaveBeenCalledTimes(1);
+    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
+    expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
+    expect(hooks.postRender).toHaveBeenCalledTimes(0);
+    expect(hooks.error).toHaveBeenCalledTimes(0);
     expect(response.redirect.mock.calls[0]).toEqual([301, 'pathnamesearch']);
   });
 
@@ -124,9 +179,16 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
-      {},
-      {},
+      options,
+      hooks,
     );
+    expect(hooks.renderFromCache).toHaveBeenCalledTimes(0);
+    expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
+    expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
+    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
+    expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
+    expect(hooks.postRender).toHaveBeenCalledTimes(0);
+    expect(hooks.error).toHaveBeenCalledTimes(0);
     expect(response.sendStatus.mock.calls[0]).toEqual([404]);
   });
 
@@ -139,10 +201,11 @@ describe('renderer/middleware', () => {
       { entries, entriesConfig },
       { EntryWrapper, BodyWrapper },
       assets,
-      {},
-      {},
+      options,
+      hooks,
     );
-    expect(errorHandler.mock.calls.length).toBe(1);
+    expect(hooks.error).toHaveBeenCalledTimes(1);
+    expect(errorHandler).toHaveBeenCalledTimes(1);
   });
 
   describe('in production', () => {
@@ -161,9 +224,16 @@ describe('renderer/middleware', () => {
         { entries, entriesConfig },
         { EntryWrapper, BodyWrapper },
         assets,
-        {},
-        {},
+        options,
+        hooks,
       );
+      expect(hooks.renderFromCache).toHaveBeenCalledTimes(1);
+      expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
+      expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
+      expect(hooks.postRenderProps).toHaveBeenCalledTimes(0);
+      expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
+      expect(hooks.postRender).toHaveBeenCalledTimes(0);
+      expect(hooks.error).toHaveBeenCalledTimes(0);
       expect(response.send.mock.calls[0]).toEqual(['cached']);
     });
   });
