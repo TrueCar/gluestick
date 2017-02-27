@@ -5,7 +5,9 @@ import type { LoggerTypes } from '../types';
 const chalk = require('chalk');
 
 const success = chalk.green;
-const info = chalk.gray;
+// Here we don't want to set color
+// cause of https://github.com/TrueCar/gluestick/issues/624
+const info = (msg) => msg;
 const warn = chalk.yellow;
 const filename = chalk.cyan;
 const highlight = chalk.bold;
