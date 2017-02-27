@@ -4,6 +4,7 @@ import type { Context, WebpackConfigEntry } from '../../types';
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
+const logMessage = require('./logMessage');
 
 type Process = {
   kill: Function,
@@ -54,6 +55,7 @@ const debug = (
       env: Object.assign({}, process.env, { NODE_ENV: 'debug' }),
     },
   );
+  logMessage(logger, debugProcess);
   debugProcess.on('error', processError => {
     logger.error(processError);
   });
