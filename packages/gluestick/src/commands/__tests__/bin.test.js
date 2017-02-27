@@ -1,4 +1,4 @@
-jest.mock('cross-spawn');
+jest.mock('cross-spawn', () => jest.fn(() => ({ on: jest.fn() })));
 
 const path = require('path');
 const bin = require('../bin');
