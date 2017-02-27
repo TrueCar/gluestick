@@ -16,5 +16,11 @@ module.exports = (context: Context, dependencyName: string, ...opts: any[]) => {
     {
       stdio: 'inherit',
     },
-  );
+  ).on('error', (error) => {
+    if (error.code === 'ENOENT') {
+      context.logger.error(`No binary found for ${dependencyName}`);
+    } else {
+      throw error;
+    }
+  });
 };
