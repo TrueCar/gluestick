@@ -29,6 +29,8 @@ const hooks = require('gluestick-hooks');
 const BodyWrapper = require('./components/Body').default;
 // $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
+// $FlowIgnore
+const pluginsConfig = require('plugins-config-path').defualt;
 
 
 module.exports = ({ config, logger }: Context) => {

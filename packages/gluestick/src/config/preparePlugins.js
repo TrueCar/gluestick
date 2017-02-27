@@ -2,15 +2,13 @@
 
 import type { Plugin, Logger } from '../types';
 
-const path = require('path');
-
 type PluginWithStat = Plugin & {
   error?: Error;
 };
 
-const getPluginsConfig = (logger: Logger): Object[] => {
+const getPluginsConfig = (logger: Logger, pluginsConfigPath: string): Object[] => {
   try {
-    const pluginsRequiredConfig: Object = require(path.join(process.cwd(), 'src/gluestick.plugins.js'));
+    const pluginsRequiredConfig: Object = require(pluginsConfigPath);
     const pluginsConfig = pluginsRequiredConfig.default || pluginsRequiredConfig;
 
     if (!Array.isArray(pluginsConfig)) {
@@ -61,8 +59,8 @@ const compilePlugin = (pluginConfig: Object, pluginOptions: Object): PluginWithS
   }
 };
 
-module.exports = (logger: Logger): Plugin[] => {
-  const pluginsConfig = getPluginsConfig(logger);
+module.exports = (logger: Logger, pluginsConfigPath: string): Plugin[] => {
+  const pluginsConfig = getPluginsConfig(logger, pluginsConfigPath);
   if (!pluginsConfig.length) {
     return [];
   }

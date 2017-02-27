@@ -8,6 +8,11 @@ ${args => args.entries.reduce((prev, curr) => {
   return prev.concat(entryImports);
 }, '')}
 
+${args => args.plugins.reduce((prev, curr) => {
+  const pluginImport = `import '${curr.plugin}';\n`;
+  return prev.concat(pluginImport);
+}, '')}
+
 export default {
 ${args => args.entries.reduce((prev, curr) => {
   const entryDefinition = `  '${curr.path}': {\n`
@@ -25,6 +30,7 @@ module.exports = (options) => {
   return {
     args: {
       entries: options.entries,
+      plugins: options.plugins,
     },
     entry: {
       path: options.serverEntriesPath,
