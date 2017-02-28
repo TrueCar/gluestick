@@ -40,7 +40,7 @@ describe("${args => args.path}", () => {
 });
 `;
 
-const getReducerExport = name => `export { default as ${name} } from "./${name}";\n`;
+const getReducerImport = (name, dir) => `import ${name} from "./${dir}";`;
 
 module.exports = (options: PredefinedGeneratorOptions) => {
   const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
@@ -49,12 +49,20 @@ module.exports = (options: PredefinedGeneratorOptions) => {
     modify: {
       file: path.join('src', options.entryPoint, 'reducers', 'index'),
       modifier: (content: string) => {
-        if (content) {
-          const lines = content.split('\n');
-          lines[lines.length - 1] = getReducerExport(`${directoryPrefix}${rewrittenName}`);
-          return lines.join('\n');
-        }
-        return getReducerExport(`${directoryPrefix}${rewrittenName}`);
+        const lines = content
+          ? content.split('\n')
+          : ['/* @flow */', '', 'export default {', '};', '']; // Defaults if file does not exist
+        // If reducer was generated in nested directory, add this directory to name
+        // and make it camelCase
+        const name = directoryPrefix
+          ? `${directoryPrefix.replace('/', '')}${rewrittenName[0].toUpperCase()}${rewrittenName.slice(1)}`
+          : rewrittenName;
+        // Add import statement
+        lines.splice(1, 0, getReducerImport(name, `${directoryPrefix}${rewrittenName}`));
+        const exportStartIndex = lines.indexOf('export default {');
+        // Add reducer to object
+        lines.splice(exportStartIndex + 1, 0, `  ${name},`);
+        return lines.join('\n');
       },
     },
     entries: [
