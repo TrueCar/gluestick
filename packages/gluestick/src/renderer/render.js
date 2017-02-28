@@ -58,6 +58,9 @@ module.exports = (
       getRoutes={routes}
       httpClient={httpClient}
       rootWrappers={entriesPlugins}
+      rootWrappersOptions={{
+        userAgent: req.headers['user-agent'],
+      }}
     />
   );
 
