@@ -31,7 +31,6 @@ if (typeof window === "object") {
 `;
 
 module.exports = (options) => {
-  console.log(options.plugins);
   return {
     args: {
       component: options.component,
