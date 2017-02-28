@@ -10,8 +10,9 @@ ${args => args.entries.reduce((prev, curr) => {
 }, '')}
 
 ${args => args.plugins.reduce((prev, curr) => {
-  const pluginImport = `import ${convertToCamelCase(curr.plugin)} from '${curr.plugin}';\n`;
-  return prev.concat(pluginImport);
+  const info = '// Workaround for external modules not being compiled\n';
+  const pluginImport = `import ${convertToCamelCase(curr.plugin)} from '../node_modules/${curr.plugin}';\n`;
+  return prev.concat(info, pluginImport);
 }, '')}
 
 export const plugins = [
