@@ -8,8 +8,7 @@ const pluginsFilter = require('../../lib/pluginsFilter');
 
 const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger) => {
   const entries = require(path.join(process.cwd(), gluestickConfig.entriesPath));
-  const plugins = require(gluestickConfig.pluginsConfigPath).default;
-  console.log('ABCDE', plugins);
+  const plugins = require(gluestickConfig.pluginsConfigPath);
   generator({
     generatorName: 'serverEntries',
     entityName: path.basename(gluestickConfig.serverEntriesPath),
@@ -25,7 +24,7 @@ const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger) => {
           reducers: entries[entry].reducers,
         };
       }),
-      plugins: pluginsFilter(plugins, 'rootWrapper'),
+      plugins: pluginsFilter(Array.isArray(plugins) ? plugins : plugins.default, 'rootWrapper'),
     },
   }, logger);
 };

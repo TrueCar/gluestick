@@ -1,4 +1,5 @@
 const createTemplate = module.parent.createTemplate;
+const { convertToCamelCase } = require('../utils');
 
 const template = createTemplate`
 ${args => args.entries.reduce((prev, curr) => {
@@ -9,9 +10,20 @@ ${args => args.entries.reduce((prev, curr) => {
 }, '')}
 
 ${args => args.plugins.reduce((prev, curr) => {
-  const pluginImport = `import '${curr.plugin}';\n`;
+  const pluginImport = `import ${convertToCamelCase(curr.plugin)} from '${curr.plugin}';\n`;
   return prev.concat(pluginImport);
 }, '')}
+
+export const plugins = [
+  ${args => args.plugins.reduce((prev, curr, index, arr) => {
+    console.log('ARR', arr, 'INDEX', index);
+    return prev.concat(
+      `${index > 0 ? '  ' : ''}`
+      + `${convertToCamelCase(curr.plugin)},`
+      + `${arr.length - 1 !== index ? '\n' : ''}`,
+    );
+  }, '')}
+];
 
 export default {
 ${args => args.entries.reduce((prev, curr) => {

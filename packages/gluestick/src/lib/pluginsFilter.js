@@ -1,10 +1,10 @@
 /* @flow */
 
 module.exports = (
-  plugins: Array<Object | string>,
+  plugins: Array<Object>,
   flag: string,
   invert: boolean = false,
-): Array<Object | string> => {
+): Array<Object> => {
   return plugins.filter((plugin) => {
     const baseCheck = typeof plugin !== 'string' && plugin[flag];
     return invert ? !baseCheck : baseCheck;

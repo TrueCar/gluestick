@@ -30,13 +30,20 @@ type WrappersRequirements = {
   BodyWrapper: Object;
   entryWrapperConfig: Object;
   envVariables: any[];
+  entriesPlugins: Function[];
 };
 module.exports = (
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
   { renderProps, currentRoute }: { renderProps: Object; currentRoute: Object },
-  { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables }: WrappersRequirements,
+  {
+    EntryWrapper,
+    BodyWrapper,
+    entryWrapperConfig,
+    envVariables,
+    entriesPlugins,
+  }: WrappersRequirements,
   { assets, cacheManager }: { assets: Object; cacheManager: Object },
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput => {
@@ -50,6 +57,7 @@ module.exports = (
       config={entryWrapperConfig}
       getRoutes={routes}
       httpClient={httpClient}
+      rootWrappers={entriesPlugins}
     />
   );
 
