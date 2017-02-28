@@ -137,6 +137,7 @@ export type Response = {
 export type Request = {
   url: string;
   hostname: string;
+  headers: Object;
 }
 
 export type Entries = {

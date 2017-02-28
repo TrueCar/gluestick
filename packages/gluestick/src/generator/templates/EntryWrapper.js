@@ -45,7 +45,7 @@ export default class EntryWrapper extends Component {
   static defaultProps = {
     rootWrappers: [],
   }
-  
+
   render () {
     const {
       routerContext,
@@ -54,10 +54,11 @@ export default class EntryWrapper extends Component {
       store,
       httpClient,
       rootWrappers,
+      rootWrappersOptions,
     } = this.props;
 
     return rootWrappers.reduce((prev, curr) => {
-      return curr(prev);
+      return curr(prev, rootWrappersOptions);
     }, (
       <Root
         routerContext={routerContext}
