@@ -5,6 +5,9 @@
   "main": "./build/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
+    "test-coverage": "mocha --compilers js:babel-core/register --require babel-polyfill --recursive",
+    "flow": "echo \"No flowconfig specified\" && exit 0",
+    "lint": "echo \"No eslint config specified\" && exit 0",
     "clean": "rimraf build",
     "build": "./node_modules/.bin/babel src --out-dir build",
     "prepublish": "npm run clean && npm run build"
