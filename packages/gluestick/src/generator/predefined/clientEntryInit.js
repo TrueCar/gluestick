@@ -9,6 +9,12 @@ import reducers from "${args => args.reducers}";
 
 import '${args => args.component}';
 
+${args => {
+  return args.plugins.reduce((prev, curr) => {
+    return `${prev}import '${curr.plugin}';\n`;
+  }, '');
+}}
+
 export const getStore = (httpClient) => {
   return createStore(
     httpClient,
@@ -25,11 +31,13 @@ if (typeof window === "object") {
 `;
 
 module.exports = (options) => {
+  console.log(options.plugins);
   return {
     args: {
       component: options.component,
       routes: options.routes,
       reducers: options.reducers,
+      plugins: options.plugins,
     },
     entry: {
       path: options.clientEntryInitPath,
