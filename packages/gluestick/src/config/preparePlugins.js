@@ -2,6 +2,8 @@
 
 import type { Plugin, Logger } from '../types';
 
+const pluginsFilter = require('../lib/pluginsFilter');
+
 type PluginWithStat = Plugin & {
   error?: Error;
 };
@@ -18,7 +20,7 @@ const getPluginsConfig = (logger: Logger, pluginsConfigPath: string): Object[] =
     if (pluginsConfig.length) {
       logger.info('Compiling plugins:');
     }
-    return pluginsConfig;
+    return pluginsFilter(pluginsConfig, 'rootWrapper', true);
   } catch (error) {
     logger.warn(error);
     return [];

@@ -1,7 +1,12 @@
 /* @flow */
 
-module.exports = (plugins: Array<Object | string>, flag: string): Array<Object | string> => {
+module.exports = (
+  plugins: Array<Object | string>,
+  flag: string,
+  invert: boolean = false,
+): Array<Object | string> => {
   return plugins.filter((plugin) => {
-    return typeof plugin !== 'string' && plugin[flag];
+    const baseCheck = typeof plugin !== 'string' && plugin[flag];
+    return invert ? !baseCheck : baseCheck;
   });
 };
