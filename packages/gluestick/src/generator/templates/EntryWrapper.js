@@ -15,7 +15,7 @@ import browserHistory from "react-router/lib/browserHistory";
 const start = (
   getRoutes,
   getStore,
-  { rootWrappers } = {},
+  { rootWrappers, rootWrappersOptions } = {},
   match = originalMatch,
   history = browserHistory
 ) => {
@@ -33,6 +33,10 @@ const start = (
         getRoutes={getRoutes}
         httpClient={httpClient}
         rootWrappers={rootWrappers}
+        rootWrappersOptions={{
+          userAgent: window.navigator.userAgent,
+          ...rootWrappersOptions
+        }}
         {...renderProps}
       />
     );
