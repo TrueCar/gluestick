@@ -1,19 +1,19 @@
+const { convertToCamelCase } = require('../utils');
+
 const createTemplate = module.parent.createTemplate;
 
 const template = createTemplate`
 import getRoutes from "${args => args.routes}";
-import EntryWeapper from "../EntryWrapper";
+import EntryWrapper from "../EntryWrapper";
 import { createStore } from "gluestick-shared";
 import middleware from "config/redux-middleware";
 import reducers from "${args => args.reducers}";
 
 import '${args => args.component}';
 
-${args => {
-  return args.plugins.reduce((prev, curr) => {
-    return `${prev}import '${curr.plugin}';\n`;
-  }, '');
-}}
+${args => args.plugins.reduce((prev, curr) => {
+  return prev.concat(`import ${convertToCamelCase(curr.plugin)} from '${curr.plugin}';\n`);
+}, '')}
 
 export const getStore = (httpClient) => {
   return createStore(
@@ -26,7 +26,17 @@ export const getStore = (httpClient) => {
 };
 
 if (typeof window === "object") {
-  EntryWeapper.start(getRoutes, getStore);
+  const rootWrappers = [
+    ${args => args.plugins.reduce((prev, curr, index) => {
+      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.plugin)}`);
+    }, '')}
+  ];
+
+  EntryWrapper.start(
+    getRoutes,
+    getStore,
+    { rootWrappers },
+  );
 }
 `;
 
