@@ -1,6 +1,6 @@
 {
   "name": "gluestick-config-legacy",
-  "version": "1.0.0",
+  "version": "1.0.0-rc.2",
   "description": "Apply legacy config to new gluestick and webpack configs",
   "main": "index.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -30,6 +30,6 @@
     "eslint-plugin-react": "6.9.0",
     "jest": "18.1.0",
     "babel-preset-es2015": "6.22.0",
-    "babel-preset-stage-0": "6.22.0" 
+    "babel-preset-stage-0": "6.22.0"
   }
 }
