@@ -42,6 +42,10 @@ const start = (
 
 export default class EntryWrapper extends Component {
   static start = start;
+  static defaultProps = {
+    rootWrappers: [],
+  }
+  
   render () {
     const {
       routerContext,
