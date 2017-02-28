@@ -3,25 +3,25 @@ import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 .Home-header {
-  background-color: #222;
-  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 4rem 1rem;
   color: white;
-  margin-bottom: 0.5rem;
+  background-color: #222;
 }
 
 .Home-box {
-  background-color: #F5F5F5;
-  padding: 1rem;
-  margin: 0.5rem;
   width: 100%;
+  margin: 0 0.5rem;
+  padding: 1rem;
+  background-color: #F5F5F5;
 }
 
 .Home-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 1rem;
 }
 `;
