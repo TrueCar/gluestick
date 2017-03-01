@@ -27,7 +27,6 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "gluestick": "${
       (args) => args.dev || '1.0.0' // TODO: replace with real version
     }",
-    "gluestick-shared": "0.4.22",
     "image-webpack-loader": "3.1.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",

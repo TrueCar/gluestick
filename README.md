@@ -34,7 +34,7 @@ Is actively being worked on and supported by TrueCar.
 GlueStick works best with v6.x.x of node. Versions prior to v6 are not currently supported and node v7 has known issues: https://github.com/TrueCar/gluestick/issues/322
 
 ## Install
-```
+```bash
 npm install gluestick -g
 ```
 
@@ -44,29 +44,48 @@ You can view a complete getting started guide on our blog https://www.drivenbyco
 ## Overview
 GlueStick comes with several generators to help you get started. To create a
 new GlueStick project, run the following command:
-```
-gluestick new newapp
+```bash
+gluestick new <YOUR_APPLICATION_NAME>
 ```
 
 This will create the boilerplate code needed for a GlueStick application as
-well as install all of the initial npm dependencies.
+well as install all of the initial `npm` dependencies.
 
 Change directories into your projects folder and start your app and tests with:
-```
+```bash
 gluestick start
+```
+
+You can also run `client` and `server` side separately with:
+```bash
+gluestick start-client
+```
+or
+```bash
+gluestick start-server
 ```
 
 ## Generators
 To help speed up development, GlueStick includes generators for common types of
-files.
+files. For Gluestick provided generators, you can also provide an entry point
+`-E` where the files should be included: `shared` or `apps/${appName}`. If you
+ do not provide one, `apps/main` will be used.
 
-#### Container Generator
-The container generator will create a basic React component in the containers folder that is
-already hooked up to redux using the `@connect` middlware.
+#### App Generator
+The app generator will create new folder structure for a new app.
 
 Example:
 ```
-gluestick generate container MyContainer
+gluestick generate app some-name
+```
+
+#### Container Generator
+The container generator will create a basic React component in the containers folder that is
+already hooked up to redux using the `@connect` middleware.
+
+Example:
+```
+gluestick generate container MyContainer -E shared
 ```
 
 #### Component Generator
@@ -84,13 +103,51 @@ automatically export it from the `reducers/index.js` file.
 
 Example:
 ```
-gluestick generate reducer todos
+gluestick generate reducer todos -E shared
 ```
 
-## Tests
+### Destroy command
+
+You can also use `destroy` to delete generated files: `component`, `container`
+and `reducer`.
+
+Example:
+```
+gluestick destroy component MyComponent -E apps/some-app
+```
+
+## Code quality
+
+### Tests
 GlueStick sets up a testing environment using [Jest](https://facebook.github.io/jest/) and [Enzyme](https://github.com/airbnb/enzyme).
-You simply need to create files in the `test` folder with the extension .test.js and they
-will be executed through the test runner.
+
+You simply need to create files in any `__tests__` directory with the extension `.test.js` and they
+will be executed through the test runner using:
+```
+npm test
+```
+
+Tests can also be typed using `Flow` (see below). We use [flow-typed](https://github.com/flowtype/flow-typed) for Jest under the hood.
+
+### Types
+All generated files will use `/* flow */` and will be typed.
+We recommend you to do the same for your own files. To run flow just run:
+```
+npm run flow
+```
+
+### Linting
+There is a predefined linting configuration (following [airbnb config](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb))
+for your project. Run it using:
+```
+npm run lint
+```
+
+### Integration
+All of the above code quality commands can be executed simultaneously by:
+```
+npm run ci
+```
 
 ## Styles
 The preferred way to style components in the GlueStick environment is to use
@@ -133,11 +190,66 @@ Example:
 *Additional optional cache properties:*
 `cacheTTL` - number of seconds to store the cache for a particular route
 
+## Hooks
+Gluestick also provide hooks which can be defined in `src/gluestick.hooks.js`.
+You can use single hook or array of hooks like in example below. Usually you have to return modified value at the end of hook.
+```javascript
+/* src/gluestick.hooks.js */
+
+const preRenderFromCache = (cachedOutput) => {
+  // Do something with output and return it.
+  // Gluestick will render output with changes.
+  return cachedOutput;
+};
+
+const postRenderRequirementsOne = (requirements) => {
+  // Do something with requirements and return it.
+  return requirements;
+}
+
+const postRenderRequirementsTwo = (requirements) => {
+  // Here we have requirements with changes from postRenderRequirementsOne.
+  return requirements;
+}
+
+const errorHook = (error) => {
+  // In this hook we don't need to return value.
+  // Unless you have another error hook which will be called after this one.
+  console.log('Custom hook for error', error);
+}
+
+export default {
+  preRenderFromCache,
+  postRenderRequirements: [
+    postRenderRequirementsOne,
+    postRenderRequirementsTwo,
+  ],
+  error: errorHook,
+};
+```
+
+| name                   | need return value? |            when it is called?            |
+|------------------------|:------------------:|:----------------------------------------:|
+| preRenderFromCache     |        true        | before we render output from cache       |
+| postRenderRequirements |        true        | after we get requirements for entrypoint |
+| preRedirect            |        false       | before redirect                          |
+| postRenderProps        |        true        | after we get render props                |
+| postGetCurrentRoute    |        true        | after we get current route               |
+| postRender             |        true        | after render                             |
+| error                  |        false       | before we render error template          |
+
+
 ## Hot Loading
 GlueStick's development environment utilizing hotloading so your changes will
 show up in the browser as you go. This is sort of experimental but it works
 great most of the time. However, sometimes you will still need to refresh the
 browser for certain changes.
+
+## Plugins
+Plugins documentation is available [here](docs/PLUGINS.md).
+
+## Apps
+Apps documentation is available [here](docs/APPS.md).
 
 ## Deployment & Production
 To run a gluestick application in production mode, simple set `NODE_ENV`
