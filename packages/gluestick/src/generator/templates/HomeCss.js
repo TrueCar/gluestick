@@ -24,4 +24,14 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
   justify-content: space-between;
   margin-top: 1rem;
 }
+
+@media (max-width: 40rem) {
+  .Home-box {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .Home-row {
+    flex-wrap: wrap;
+  }
+}
 `;
