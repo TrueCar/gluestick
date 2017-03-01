@@ -33,7 +33,10 @@ type ProjectPackage = {
  *
  * @return {Promise}
  */
-const checkForMismatch = (requiredPackage: ProjectPackage): Promise<UpdateDepsPromptResults> => {
+const checkForMismatch = (
+  requiredPackage: ProjectPackage,
+  dev: boolean,
+): Promise<UpdateDepsPromptResults> => {
   // This is done to keep live reference to mock single function in testing
   const { isValidVersion, promptModulesUpdate } = utils;
   const projectPackage: ProjectPackage = {
@@ -59,7 +62,7 @@ const checkForMismatch = (requiredPackage: ProjectPackage): Promise<UpdateDepsPr
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
-    if (dep === 'gluestick' && !/\d\.\d\.\d.*/.test(projectPackage.dependencies[dep])) {
+    if (dev && dep === 'gluestick' && !/\d\.\d\.\d.*/.test(projectPackage.dependencies[dep])) {
       return;
     }
     if (
