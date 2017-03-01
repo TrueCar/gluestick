@@ -17,6 +17,7 @@ jest.mock('gluestick-shared', () => ({
   getHttpClient: jest.fn(),
   createStore: jest.fn(() => ({})),
   prepareRoutesWithTransitionHooks: jest.fn(val => val),
+  runBeforeRoutes: jest.fn(() => new Promise((r) => r())),
 }));
 jest.mock('../helpers/matchRoute.js', () => jest.fn(
   (ctx, req, routes) => ({
