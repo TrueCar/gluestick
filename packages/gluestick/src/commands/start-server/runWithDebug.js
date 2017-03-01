@@ -11,6 +11,9 @@ type Process = {
   on: Function,
 };
 
+/**
+ * Watch for changes in server source files then execute given callback.
+ */
 const watchSource = (watchDirectories: string[], callback: Function): void => {
   let timeout: number = -1;
   const watcher: Object = chokidar.watch(watchDirectories, {
@@ -26,6 +29,9 @@ const watchSource = (watchDirectories: string[], callback: Function): void => {
   });
 };
 
+/**
+ * Compile server bundle and execute given callback.
+ */
 const compile = ({ config, logger }: Context, cb: Function): void => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   logger.info('Compiling server bundle...');
@@ -37,6 +43,9 @@ const compile = ({ config, logger }: Context, cb: Function): void => {
   });
 };
 
+/**
+ * Spawn debugger process and print help messages.
+ */
 const debug = (
   { config, logger }: Context,
   serverEntrypointPath: string,
@@ -55,7 +64,10 @@ const debug = (
       env: Object.assign({}, process.env, { NODE_ENV: 'debug' }),
     },
   );
+
+  // Create channel to log messages from debug process.
   logMessage(logger, debugProcess);
+
   debugProcess.on('error', processError => {
     logger.error(processError);
   });
