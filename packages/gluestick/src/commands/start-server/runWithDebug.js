@@ -52,11 +52,13 @@ const debug = (
   args: string[],
   debugPort: number,
 ): Process => {
+  logger.warn('If you encouter problems, press ENTER to respawn debug process.');
+  logger.warn('Alternatively, press CTRL + C and re-run command.');
+
   const debugProcess = spawn(
     'node',
     [
       `--inspect${debugPort ? `=${debugPort}` : ''}`,
-      '--debug-brk',
       serverEntrypointPath,
     ].concat(args),
     {
@@ -81,18 +83,41 @@ module.exports = (
   debugPort: number,
 ) => {
   let debugProcess: ?Process = null;
-  watchSource(config.GSConfig.debugWatchDirectories, () => {
-    compile({ config, logger }, () => {
-      if (debugProcess) {
-        debugProcess.kill();
+  try {
+    // Recompile and respawn debug process on ENTER.
+    process.stdin.on('readable', () => {
+      const chunk = process.stdin.read();
+      if (chunk && chunk.toString() === '\n') {
+        if (debugProcess) {
+          debugProcess.kill();
+        }
+        compile({ config, logger }, () => {
+          debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+        });
       }
+    });
 
-      process.nextTick(() => {
-        debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+    watchSource(config.GSConfig.debugWatchDirectories, () => {
+      compile({ config, logger }, () => {
+        if (debugProcess) {
+          debugProcess.kill();
+        }
+
+        process.nextTick(() => {
+          debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+        });
       });
     });
-  });
-  compile({ config, logger }, () => {
-    debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
-  });
+
+    compile({ config, logger }, () => {
+      debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+    });
+  } catch (error) {
+    // Kill process if exist to prevent it hanging in system
+    // causing `Unable to open devtools socket: address already in use` error
+    if (debugProcess) {
+      debugProcess.kill();
+    }
+    throw error;
+  }
 };
