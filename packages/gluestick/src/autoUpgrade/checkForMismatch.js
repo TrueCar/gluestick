@@ -59,6 +59,9 @@ const checkForMismatch = (requiredPackage: ProjectPackage): Promise<UpdateDepsPr
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
+    if (dep === 'gluestick' && !/\d\.\d\.\d.*/.test(projectPackage.dependencies[dep])) {
+      return;
+    }
     if (
       !projectPackage.dependencies[dep] ||
       !isValidVersion(projectPackage.dependencies[dep], templatePackage.dependencies[dep])
