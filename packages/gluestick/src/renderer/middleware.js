@@ -20,7 +20,7 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
-const hooksHelper = require('./helpers/hooks');
+const { hooksHelper, callComponentsHooks } = require('./helpers/hooks');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -44,7 +44,6 @@ module.exports = async (
   hooks: Hooks,
 ) => {
   /**
-   * TODO: add hooks
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
@@ -99,13 +98,12 @@ module.exports = async (
       return null;
     }
 
+    await callComponentsHooks(store, renderPropsAfterHooks, { isServer: true, request: req });
+
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
     const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
     setHeaders(res, currentRoute);
-
-    // This will be used when streaming generated response.
-    // const statusCode = getStatusCode(store.getState(), currentRoute);
 
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },
