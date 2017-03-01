@@ -15,12 +15,12 @@ import type {
 const render = require('./render');
 const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
 const matchRoute = require('./helpers/matchRoute');
-const { getHttpClient, createStore } = require('gluestick-shared');
+const { getHttpClient, createStore, runBeforeRoutes } = require('gluestick-shared');
 const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
-const { hooksHelper, callComponentsHooks } = require('./helpers/hooks');
+const hooksHelper = require('./helpers/hooks');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -98,7 +98,7 @@ module.exports = async (
       return null;
     }
 
-    await callComponentsHooks(store, renderPropsAfterHooks, { isServer: true, request: req });
+    await runBeforeRoutes(store, renderPropsAfterHooks, { isServer: true, request: req });
 
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
