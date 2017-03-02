@@ -31,22 +31,21 @@ boilerplate code as new improvements are discovered.
 Is actively being worked on and supported by TrueCar.
 
 ## Requirements
-GlueStick works best with v6.x.x of node. Versions prior to v6 are not currently supported.
+Node 6.3.0+
 
-## Install
+## Quick Start
 ```bash
 npm install gluestick -g
+gluestick new SampleProject
+cd SampleProject
+gluestick start
 ```
 
 ## Docs & Help
 
-* [Commands](docs/COMMANDS.md)
-* [Apps](docs/APPS.md)
-* [Plugins](docs/PLUGINS.md)
-* [Code quality](docs/CODE_QUALITY.md)
-* [Styles](docs/STYLES.md)
-* [Caching & Hooks](docs/CACHING_AND_HOOKS.md)
-* [Environment details](docs/ENV_DETAILS.md)
+* [Commands](docs/Commands.md)
+* [Development](docs/Development.md)
+* [Plugins](docs/Plugins.md)
 
 ## Contributing
 

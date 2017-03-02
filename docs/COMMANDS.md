@@ -11,8 +11,8 @@ gluestick new <YOUR_APPLICATION_NAME>
 
 Available options:
 
-* `-d, --dev <path>` - Relative path to development version of gluestick
-* `-y, --yarn` - Use yarn to perform installations
+* `-d, --dev <path>` - Relative path from inside crated directory to development version of gluestick
+* `-y, --yarn` - Use yarn to perform installations (not working yet, see [#528](https://github.com/TrueCar/gluestick/issues/528))
 
 ### `gluestick generate`
 
@@ -26,7 +26,7 @@ Available options:
 
 * `-E --entry-point <entryPoint>` - Entry point for generated files
 * `-F, --functional` - Generate stateless functional component
-* `-O, --gen-options <value>` - Options to pass to the generator
+* `-O, --gen-options <value>` - Options to pass to the generator (see [generators](Generators.md))
 
 ### `gluestick start`
 
@@ -46,6 +46,27 @@ Available options:
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
 * `-P, --skip-build` - Skip build when running in production mode
+
+### `gluestick start-client`
+
+Starts client separately (part of `gluestick start` command)
+
+```bash
+gluestick start-client
+```
+
+### `gluestick start-server`
+
+Starts server separately (part of `gluestick start` command)
+
+```bash
+gluestick start-server
+```
+
+Available options:
+
+* `-D, --debug-server` - Debug server side rendering with built-in node inspector
+* `-p, --debug-port <number>` - Port on which to run node inspector
 
 ### `gluestick build`
 
@@ -71,27 +92,6 @@ Create docker image (requires `docker` installed on your machine)
 gluestick dockerize
 ```
 
-### `gluestick start-client`
-
-Starts client separately (part of `gluestick start` command)
-
-```bash
-gluestick start-client
-```
-
-### `gluestick start-server`
-
-Starts server separately (part of `gluestick start` command)
-
-```bash
-gluestick start-server
-```
-
-Available options:
-
-* `-D, --debug-server` - Debug server side rendering with built-in node inspector
-* `-p, --debug-port <number>` - Port on which to run node inspector
-
 ### `gluestick test`
 
 Run projects test suite
@@ -108,6 +108,8 @@ Available options:
 * `-C --coverage` - Create test coverage
 * `-W --watch` - Watch tests
 * `-R --pattern [pattern]` - Run specific test regex pattern name
+
+## Development commands
 
 ### `gluestick reinstall-dev`
 
@@ -139,3 +141,15 @@ You can check which commands are being called by `gluestick` and `gluestick-cli`
 
 * [gluestick-cli](../packages/gluestick-cli/README.md)
 * [gluestick](../packages/gluestick/README.md)
+
+## Generators
+
+Generators documentation is available [here](Generators.md).
+
+## Caching & Hooks
+
+Caching & Hooks documentation is available [here](CachingAndHooks.md).
+
+## Styles
+
+Styles documentation is available [here](Styles.md).
