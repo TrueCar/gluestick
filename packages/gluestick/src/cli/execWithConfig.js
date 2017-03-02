@@ -66,7 +66,11 @@ const execWithConfig: ExecWithConfig = (
   }
   const webpackConfig = GSConfig && useWebpackConfig ? compileWebpackConfig(
     logger, plugins, projectConfig, GSConfig,
-    { skipClientEntryGeneration, skipServerEntryGeneration },
+    {
+      skipClientEntryGeneration,
+      skipServerEntryGeneration,
+      entryOrGroupToBuild: commandArguments[commandArguments.length - 1].entrypoints,
+    },
   ) : null;
   const context = {
     config: {
