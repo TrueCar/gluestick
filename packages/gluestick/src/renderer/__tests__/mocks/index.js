@@ -76,6 +76,7 @@ const context: Context = { config, logger };
 const request: Request = {
   hostname: 'localhost',
   url: '/',
+  headers: { 'user-agent': '' },
 };
 
 const entriesConfig: EntriesConfig = {

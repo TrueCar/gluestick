@@ -59,6 +59,7 @@ const config: GSConfig = {
     ],
     changed: [
       'src/config/.Dockerfile',   // -> last updated in 0.2.0
+      'gluestick/EntryWrapper.js',
     ],
   },
 };

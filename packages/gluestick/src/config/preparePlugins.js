@@ -2,16 +2,16 @@
 
 import type { Plugin, Logger } from '../types';
 
-const path = require('path');
+const pluginsFilter = require('../lib/pluginsFilter');
 
 type PluginWithStat = Plugin & {
   error?: Error;
 };
 
-const getPluginsConfig = (logger: Logger): Object[] => {
+const getPluginsConfig = (logger: Logger, pluginsConfigPath: string): Object[] => {
   try {
-    const pluginsRequiredConfig: Object = require(path.join(process.cwd(), 'src/gluestick.plugins.js'));
-    const pluginsConfig = pluginsRequiredConfig.default || pluginsRequiredConfig;
+    const pluginsRequiredConfig: Object = require(pluginsConfigPath);
+    const pluginsConfig: Object = pluginsRequiredConfig.default || pluginsRequiredConfig;
 
     if (!Array.isArray(pluginsConfig)) {
       throw new Error('Invalid plugins configuration: must be an array');
@@ -20,7 +20,7 @@ const getPluginsConfig = (logger: Logger): Object[] => {
     if (pluginsConfig.length) {
       logger.info('Compiling plugins:');
     }
-    return pluginsConfig;
+    return pluginsFilter(pluginsConfig, 'rootWrapper', true);
   } catch (error) {
     logger.warn(error);
     return [];
@@ -61,8 +61,8 @@ const compilePlugin = (pluginConfig: Object, pluginOptions: Object): PluginWithS
   }
 };
 
-module.exports = (logger: Logger): Plugin[] => {
-  const pluginsConfig = getPluginsConfig(logger);
+module.exports = (logger: Logger, pluginsConfigPath: string): Plugin[] => {
+  const pluginsConfig = getPluginsConfig(logger, pluginsConfigPath);
   if (!pluginsConfig.length) {
     return [];
   }

@@ -43,5 +43,5 @@ however other plugins will still be compiled, and execution of command will
 continue.
 
 ## Avaiable plugins
-- [`gluestick-env-expose-ast`](plugins/GLUESTICK-ENV-EXPOSE-AST.md)
-- [`gluestick-config-legacy`](plugins/GLUESTICK-CONFIG-LEGACY.md)
+- [`gluestick-env-expose-ast`](../packages/gluestick-env-expose-ast/README.md)
+- [`gluestick-config-legacy`](../packages/gluestick-config-legacy/README.md)

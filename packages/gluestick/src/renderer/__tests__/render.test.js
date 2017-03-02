@@ -99,6 +99,8 @@ describe('renderer/render', () => {
     plugins: [],
   };
 
+  const entriesPlugins: Function[] = [];
+
   const context: Context = { config, logger };
 
   const request: Request = { headers: { 'user-agent': 'Moznota Browser 1.0' }, url: '', hostname: '' };
@@ -122,7 +124,7 @@ describe('renderer/render', () => {
       request,
       { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
       { renderProps, currentRoute },
-      { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables },
+      { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables, entriesPlugins },
       { assets, cacheManager },
       { renderMethod });
     return results;

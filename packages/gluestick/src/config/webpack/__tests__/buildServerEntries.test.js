@@ -20,7 +20,10 @@ describe('config/webpack/buildSeverEntries', () => {
   });
 
   it('should build server entries definition file', () => {
-    buildServerEntries(defaultGSConfig, {});
+    buildServerEntries(
+      { ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
+      {},
+    );
     expect(generate.mock.calls[0]).toEqual([{
       generatorName: 'serverEntries',
       entityName: path.basename(defaultGSConfig.serverEntriesPath),
@@ -39,6 +42,7 @@ describe('config/webpack/buildSeverEntries', () => {
           routes: 'path/to/home/routes',
           reducers: 'path/to/home/reducers',
         }],
+        plugins: [],
       },
     }, {}]);
   });

@@ -21,6 +21,7 @@ const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const hooksHelper = require('./helpers/hooks');
+const getStatusCode = require('./response/getStatusCode');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -31,15 +32,24 @@ type Options = {
   reduxMiddlewares: any[];
 };
 
+type EntriesArgs = {
+  entries: Entries;
+  entriesConfig: EntriesConfig;
+  entriesPlugins: Function[];
+};
+
 module.exports = async (
   { config, logger }: Context,
   req: Request,
   res: Response,
-  { entries, entriesConfig }: { entries: Entries, entriesConfig: EntriesConfig },
+  { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
   assets: Object,
   options: Options = {
-    envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [],
+    envVariables: [],
+    httpClient: {},
+    entryWrapperConfig: {},
+    reduxMiddlewares: [],
   },
   hooks: Hooks,
 ) => {
@@ -104,8 +114,7 @@ module.exports = async (
     const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
     setHeaders(res, currentRoute);
 
-    // This will be used when streaming generated response.
-    // const statusCode = getStatusCode(store.getState(), currentRoute);
+    const statusCode: number = getStatusCode(store, currentRoute);
 
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },
@@ -120,6 +129,7 @@ module.exports = async (
       {
         EntryWrapper,
         BodyWrapper,
+        entriesPlugins,
         entryWrapperConfig: options.entryWrapperConfig,
         envVariables: options.envVariables,
       },
@@ -127,7 +137,7 @@ module.exports = async (
       {},
     );
     const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
-    res.send(output.responseString);
+    res.status(statusCode).send(output.responseString);
     return null;
   } catch (error) {
     hooksHelper(hooks.error, error);

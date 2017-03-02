@@ -11,3 +11,5 @@ jest.mock('entries.json', () => ({
     reducers: 'path/to/home/reducers',
   },
 }), { virtual: true });
+jest.mock('plugins-config.js', () => ([
+]), { virtual: true });
