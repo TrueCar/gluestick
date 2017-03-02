@@ -73,7 +73,12 @@ const hooks: Hooks = {
   error: jest.fn(v => v),
 };
 
-const options = { envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [] };
+const options = {
+  envVariables: [],
+  httpClient: {},
+  entryWrapperConfig: {},
+  reduxMiddlewares: [],
+};
 
 const getEntries = (routes): Entries => ({
   '/': {
@@ -92,6 +97,7 @@ const entriesConfig: EntriesConfig = mocks.entriesConfig;
 const assets = {};
 const EntryWrapper = {};
 const BodyWrapper = {};
+const entriesPlugins = [];
 
 const clearHookMock = (key: string) => {
   if (hooks[key]) {
@@ -125,7 +131,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -152,7 +158,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -178,7 +184,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -200,7 +206,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -223,7 +229,7 @@ describe('renderer/middleware', () => {
         context,
         Object.assign(request, { url: '/cached' }),
         response,
-        { entries, entriesConfig },
+        { entries, entriesConfig, entriesPlugins },
         { EntryWrapper, BodyWrapper },
         assets,
         options,
