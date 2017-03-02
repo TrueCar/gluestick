@@ -65,6 +65,7 @@ commander
   .option('-T, --run-tests', 'run test hook')
   .option('-L, --log-level <level>', 'set the logging level', /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option('-E, --log-pretty [true|false]', 'set pretty printing for logging', cliHelpers.parseBooleanFlag)
+  .option('--dev', 'disable gluestick verion check')
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...testReportCoverageOption)
