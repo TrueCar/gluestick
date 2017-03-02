@@ -12,7 +12,13 @@ import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
 // This function is called only on client.
-const start = (getRoutes, getStore, match = originalMatch, history = browserHistory) => {
+const start = (
+  getRoutes,
+  getStore,
+  { rootWrappers, rootWrappersOptions } = {},
+  match = originalMatch,
+  history = browserHistory
+) => {
   // Allow developers to include code that will be executed before the app is
   // set up in the browser.
   require("config/init.browser");
@@ -26,6 +32,11 @@ const start = (getRoutes, getStore, match = originalMatch, history = browserHist
         store={store}
         getRoutes={getRoutes}
         httpClient={httpClient}
+        rootWrappers={rootWrappers}
+        rootWrappersOptions={{
+          userAgent: window.navigator.userAgent,
+          ...rootWrappersOptions
+        }}
         {...renderProps}
       />
     );
@@ -35,6 +46,10 @@ const start = (getRoutes, getStore, match = originalMatch, history = browserHist
 
 export default class EntryWrapper extends Component {
   static start = start;
+  static defaultProps = {
+    rootWrappers: [],
+  }
+
   render () {
     const {
       routerContext,
@@ -42,15 +57,19 @@ export default class EntryWrapper extends Component {
       radiumConfig,
       store,
       httpClient,
+      rootWrappers,
+      rootWrappersOptions,
     } = this.props;
 
-    return (
+    return rootWrappers.reduce((prev, curr) => {
+      return curr(prev, rootWrappersOptions);
+    }, (
       <Root
         routerContext={routerContext}
         routes={getRoutes(store, httpClient)}
         store={store}
       />
-    );
+    ));
   }
 }
 `;

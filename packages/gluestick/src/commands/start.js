@@ -8,10 +8,11 @@ type StartOptions = {
   runTests: boolean;
   skipBuild: boolean;
   parent: Object;
+  dev: boolean;
 };
 
 module.exports = async ({ config, logger }: Context, options: StartOptions) => {
-  await autoUpgrade({ config, logger });
+  await autoUpgrade({ config, logger }, options.dev);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   // Start tests only they asked us to or we are in production mode

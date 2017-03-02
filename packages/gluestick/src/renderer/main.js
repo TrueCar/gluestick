@@ -16,7 +16,6 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
-// $FlowIgnore
 const entries = require('project-entries').default;
 // $FlowIgnore
 const entriesConfig = require('project-entries-config');
@@ -29,7 +28,8 @@ const hooks = require('gluestick-hooks');
 const BodyWrapper = require('./components/Body').default;
 // $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
-
+// $FlowIgnore
+const entriesPlugins = require('project-entries').plugins;
 
 module.exports = ({ config, logger }: Context) => {
   const app: Object = express();
@@ -51,7 +51,7 @@ module.exports = ({ config, logger }: Context) => {
     middleware(
       { config, logger },
       req, res,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       {

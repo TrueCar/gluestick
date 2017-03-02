@@ -11,7 +11,7 @@ const updateDependencies = require('./updateDependencies');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('../generator/parseConfig');
 
-module.exports = ({ config, logger }: Context) => {
+module.exports = ({ config, logger }: Context, dev: boolean = false) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
   config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
@@ -45,7 +45,7 @@ module.exports = ({ config, logger }: Context) => {
   });
 
   // Update dependencies
-  return checkForMismatch(projectPackage).then((results: UpdateDepsPromptResults): void => {
+  return checkForMismatch(projectPackage, dev).then((results: UpdateDepsPromptResults): void => {
     if (results.shouldFix) {
       updateDependencies(logger, projectPackage, results.mismatchedModules);
     }

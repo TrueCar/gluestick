@@ -17,6 +17,7 @@ jest.mock('gluestick-shared', () => ({
   getHttpClient: jest.fn(),
   createStore: jest.fn(() => ({})),
   prepareRoutesWithTransitionHooks: jest.fn(val => val),
+  runBeforeRoutes: jest.fn(() => new Promise((r) => r())),
 }));
 jest.mock('../helpers/matchRoute.js', () => jest.fn(
   (ctx, req, routes) => ({
@@ -33,6 +34,7 @@ jest.mock('../render.js', () => jest.fn(() => ({
 jest.mock('../helpers/cacheManager.js', () => jest.fn(() => ({
   getCachedIfProd: jest.fn((req) => req.url === '/cached' ? 'cached' : null),
 })));
+jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 const React = require('react');
 const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
@@ -55,7 +57,7 @@ const request: Request = mocks.request;
 const response: Response = {
   send: jest.fn(),
   set: jest.fn(),
-  status: jest.fn(),
+  status: jest.fn(() => response),
   sendStatus: jest.fn(),
   redirect: jest.fn(),
   header: jest.fn(),
@@ -72,7 +74,12 @@ const hooks: Hooks = {
   error: jest.fn(v => v),
 };
 
-const options = { envVariables: [], httpClient: {}, entryWrapperConfig: {}, reduxMiddlewares: [] };
+const options = {
+  envVariables: [],
+  httpClient: {},
+  entryWrapperConfig: {},
+  reduxMiddlewares: [],
+};
 
 const getEntries = (routes): Entries => ({
   '/': {
@@ -91,6 +98,7 @@ const entriesConfig: EntriesConfig = mocks.entriesConfig;
 const assets = {};
 const EntryWrapper = {};
 const BodyWrapper = {};
+const entriesPlugins = [];
 
 const clearHookMock = (key: string) => {
   if (hooks[key]) {
@@ -124,7 +132,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -137,6 +145,7 @@ describe('renderer/middleware', () => {
     expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(1);
     expect(hooks.postRender).toHaveBeenCalledTimes(1);
     expect(hooks.error).toHaveBeenCalledTimes(0);
+    expect(response.status.mock.calls[0]).toEqual([200]);
     expect(response.send.mock.calls[0]).toEqual(['output']);
   });
 
@@ -150,7 +159,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -176,7 +185,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -198,7 +207,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { entries, entriesConfig },
+      { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       options,
@@ -221,7 +230,7 @@ describe('renderer/middleware', () => {
         context,
         Object.assign(request, { url: '/cached' }),
         response,
-        { entries, entriesConfig },
+        { entries, entriesConfig, entriesPlugins },
         { EntryWrapper, BodyWrapper },
         assets,
         options,
@@ -234,6 +243,7 @@ describe('renderer/middleware', () => {
       expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
       expect(hooks.postRender).toHaveBeenCalledTimes(0);
       expect(hooks.error).toHaveBeenCalledTimes(0);
+      expect(response.status.mock.calls[0]).toEqual([200]);
       expect(response.send.mock.calls[0]).toEqual(['cached']);
     });
   });
