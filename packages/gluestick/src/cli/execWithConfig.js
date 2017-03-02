@@ -58,8 +58,12 @@ const execWithConfig: ExecWithConfig = (
   const projectConfig: Object = skipProjectConfig
     ? {}
     : packageJson.gluestick;
-  const plugins: Plugin[] = !skipPlugins ? preparePlugins(logger) : [];
+  const pluginsConfigPath: string = path.join(process.cwd(), 'src/gluestick.plugins.js');
+  const plugins: Plugin[] = !skipPlugins ? preparePlugins(logger, pluginsConfigPath) : [];
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
+  if (GSConfig) {
+    GSConfig.pluginsConfigPath = pluginsConfigPath;
+  }
   const webpackConfig = GSConfig && useWebpackConfig ? compileWebpackConfig(
     logger, plugins, projectConfig, GSConfig,
     { skipClientEntryGeneration, skipServerEntryGeneration },

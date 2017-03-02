@@ -50,7 +50,7 @@ describe('autoUpgrade/index', () => {
     await autoUpgrade(getContext({
       changed: ['file-0'],
       added: ['file-0'],
-    }));
+    }), false);
     expect(fs.existsSync.mock.calls[0][0]).toEqual('file-0');
     expect(fs.writeFileSync.mock.calls.length).toBe(0);
   });
@@ -60,7 +60,7 @@ describe('autoUpgrade/index', () => {
     await autoUpgrade(getContext({
       changed: ['file-1'],
       added: ['file-1'],
-    }));
+    }), false);
     expect(fs.existsSync.mock.calls[0][0]).toEqual('file-1');
     expect(fs.writeFileSync.mock.calls).toEqual([
       ['file-1', 'file-0', 'utf-8'],

@@ -1,0 +1,24 @@
+# Styles
+The preferred way to style components in the GlueStick environment is to use
+[Radium](https://github.com/FormidableLabs/radium), but we also actively use
+and support css and sass.
+
+#### CSS and SASS
+If you want to include a base stylesheet (like bootstrap css), you can import
+your stylesheet at the top of any file and it will be included when the page
+loads. Any updates to your styles will also be hot loaded. You can use plain
+css or sass.
+
+Example:
+Edit /Index.js
+```
+import React, { Component } from "react";
+import "assets/css/my-custom-css.css";
+…
+```
+
+The code above will automatically extract the css from the referenced file and
+include it in a base css file that is included on new page loads. References to
+images and font files will automatically be handled as well.
+
+_If you would like to see better css support, please submit a pull request :)_

@@ -25,9 +25,11 @@ describe('config/webpack/buildEntries', () => {
   });
 
   it('should build client entries', () => {
-    expect(buildEntries(defaultGSConfig, {})).toEqual({
-      entry: 'path/to/main/entry.js',
-    });
+    expect(
+      buildEntries({ ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
+          {})).toEqual({
+            entry: 'path/to/main/entry.js',
+          });
     expect(generate.mock.calls[0]).toEqual([{
       generatorName: 'clientEntryInit',
       entityName: 'main',
@@ -36,6 +38,7 @@ describe('config/webpack/buildEntries', () => {
         routes: 'path/to/main/routes',
         reducers: 'path/to/main/reducers',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
+        plugins: [],
       },
     }, {}]);
     expect(generate.mock.calls[1]).toEqual([{
@@ -46,6 +49,7 @@ describe('config/webpack/buildEntries', () => {
         routes: 'path/to/home/routes',
         reducers: 'path/to/home/reducers',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
+        plugins: [],
       },
     }, {}]);
   });

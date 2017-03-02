@@ -6,7 +6,6 @@ const execWithConfig = require('./execWithConfig');
 
 const debugServerOption = ['-D, --debug-server', 'debug server side rendering with built-in node inspector'];
 const debugServerPortOption = ['-p, --debug-port <n>', 'port on which to run node inspector'];
-const firefoxOption = ['-F, --firefox', 'Use Firefox with test runner'];
 const singleRunOption = ['-S, --single', 'Run test suite only once'];
 const skipBuildOption = ['-P, --skip-build', 'skip build when running in production mode'];
 const statelessFunctionalOption = ['-F, --functional', '(generate component) stateless functional component'];
@@ -65,6 +64,7 @@ commander
   .option('-T, --run-tests', 'run test hook')
   .option('-L, --log-level <level>', 'set the logging level', /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option('-E, --log-pretty [true|false]', 'set pretty printing for logging', cliHelpers.parseBooleanFlag)
+  .option('--dev', 'disable gluestick verion check')
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...testReportCoverageOption)
@@ -138,7 +138,6 @@ commander
 
 commander
   .command('test')
-  .option(...firefoxOption)
   .option(...singleRunOption)
   .option(...testDebugOption)
   .option(...testReportCoverageOption)

@@ -36,5 +36,6 @@ module.exports = (
   config.resolve.alias['redux-middlewares'] = path.join(
     process.cwd(), gluestickConfig.reduxMiddlewares,
   );
+  config.resolve.alias['plugins-config-path'] = gluestickConfig.pluginsConfigPath;
   return serverConfiguration(config, settings);
 };
