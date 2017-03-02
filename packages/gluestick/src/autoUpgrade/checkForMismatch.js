@@ -62,7 +62,7 @@ const checkForMismatch = (
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
-    if (dev && dep === 'gluestick' && !/\d\.\d\.\d.*/.test(projectPackage.dependencies[dep])) {
+    if (dev && dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])) {
       return;
     }
     if (
