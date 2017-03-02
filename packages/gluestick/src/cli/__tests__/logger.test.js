@@ -1,25 +1,51 @@
 /* @flow */
 
-const logger = require('../logger');
+const loggerFactory = require('../logger');
 const colorScheme = require('../colorScheme');
 
-describe('logger', () => {
-  // $FlowFixMe Flow doesn't like that we assign console.log to a mock function
-  console.log = jest.fn();
-
-  const message = 'Some test message';
-
-  Object.keys(logger).forEach(key => {
-    if (key !== 'error') {
-      it(`logs ${key}`, () => {
-        logger[key](message);
-        expect(console.log).toBeCalledWith('[GlueStick]', colorScheme[key](message));
-      });
+const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
+  Object.keys(loggerInstance).forEach((level: string): void => {
+    console.log.mockClear();
+    loggerInstance[level](message);
+    if (shouldNotLog.indexOf(level) > -1) {
+      expect(console.log).not.toBeCalledWith('[GlueStick]', colorScheme[level](message));
+    } else if (level === 'error') {
+      expect(console.log).toHaveBeenCalledWith('[GlueStick]', 'ERROR: ', colorScheme[level](message));
+    } else {
+      expect(console.log).toHaveBeenCalledWith('[GlueStick]', colorScheme[level](message));
     }
   });
+};
 
-  it('logs error', () => {
-    logger.error('Errors are bad');
-    expect(console.log).toBeCalledWith('[GlueStick]', 'ERROR: ', colorScheme.error('Errors are bad'));
+const originalConsoleLog = console.log.bind(console);
+// $FlowFixMe Flow doesn't like that we assign console.log to a mock function
+console.log = jest.fn();
+
+describe('logger', () => {
+  const message = 'Some test message';
+
+  afterAll(() => {
+    // $FlowIgnore
+    console.log = originalConsoleLog;
+  });
+
+  it('should log `info`, `success`, `warn` and `error`', () => {
+    const logger = loggerFactory();
+    logAndAssert(message, ['debug'], logger);
+  });
+
+  it('should log `success`, `warn` and `error`', () => {
+    const logger = loggerFactory('success');
+    logAndAssert(message, ['debug', 'info'], logger);
+  });
+
+  it('should log `warn` and `error`', () => {
+    const logger = loggerFactory('warn');
+    logAndAssert(message, ['debug', 'info', 'success'], logger);
+  });
+
+  it('should log error`', () => {
+    const logger = loggerFactory('error');
+    logAndAssert(message, ['debug', 'info', 'success', 'warn'], logger);
   });
 });

@@ -5,7 +5,7 @@ const path = require('path');
 const preparePlugins = require('../config/preparePlugins');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
 const compileWebpackConfig = require('../config/compileWebpackConfig');
-const logger = require('./logger');
+const loggerFactory = require('./logger');
 
 const execHooks = (context, hooks) => {
   if (Array.isArray(hooks)) {
@@ -45,6 +45,7 @@ const execWithConfig: ExecWithConfig = (
   } = {},
   { pre, post } = {},
 ): void => {
+  const logger = loggerFactory(commandArguments[commandArguments.length - 1].logLevel);
   let packageJson = {};
   try {
     packageJson = require(path.join(process.cwd(), 'package.json'));

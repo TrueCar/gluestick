@@ -9,6 +9,7 @@ const debugServerPortOption = ['-p, --debug-port <n>', 'port on which to run nod
 const singleRunOption = ['-S, --single', 'Run test suite only once'];
 const skipBuildOption = ['-P, --skip-build', 'skip build when running in production mode'];
 const statelessFunctionalOption = ['-F, --functional', '(generate component) stateless functional component'];
+const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
 const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group'];
 
 const testDebugOption = ['-D, --debug-test', 'debug tests with built-in node inspector'];
@@ -63,9 +64,9 @@ commander
   .alias('s')
   .description('start everything')
   .option('-T, --run-tests', 'run test hook')
-  .option('-L, --log-level <level>', 'set the logging level', /^(fatal|error|warn|info|debug|trace|silent)$/, null)
   .option('--dev', 'disable gluestick verion check')
   .option(...entrypointsOption)
+  .option(...logLevelOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...testReportCoverageOption)
@@ -121,6 +122,7 @@ commander
 commander
   .command('start-client', null, { noHelp: true })
   .description('start client')
+  .option(...logLevelOption)
   .option(...entrypointsOption)
   .action((...commandArguments) => {
     process.env.COMMAND = 'start-client';
@@ -134,6 +136,7 @@ commander
 commander
   .command('start-server', null, { noHelp: true })
   .description('start server')
+  .option(...logLevelOption)
   .option(...entrypointsOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
