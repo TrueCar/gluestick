@@ -1,3 +1,4 @@
+/* @flow */
 require('./sharedMocks');
 
 jest.mock('glob', () => ({
@@ -5,31 +6,27 @@ jest.mock('glob', () => ({
 }));
 jest.mock('fs-extra');
 
-const path = require('path');
+// $FlowIgnore
+const entries = require('entries.json');
 const buildEntries = require('../buildEntries');
 const defaultGSConfig = require('../../defaults/glueStickConfig');
 const generate = require('../../../generator');
 
-const originalPath = path.join.bind({});
-
 describe('config/webpack/buildEntries', () => {
-  beforeEach(() => {
-    path.join = jest.fn().mockImplementation(
-      () => 'entries.json',
-    );
-  });
-
   afterEach(() => {
     jest.resetAllMocks();
-    path.join = originalPath;
   });
 
   it('should build client entries', () => {
-    expect(
-      buildEntries({ ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
-          {})).toEqual({
-            entry: 'path/to/main/entry.js',
-          });
+    // $FlowIgnore
+    expect(buildEntries(
+      { ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
+      {},
+      entries,
+    )).toEqual({
+      entry: 'path/to/main/entry.js',
+    });
+    // $FlowIgnore
     expect(generate.mock.calls[0]).toEqual([{
       generatorName: 'clientEntryInit',
       entityName: 'main',
@@ -41,6 +38,7 @@ describe('config/webpack/buildEntries', () => {
         plugins: [],
       },
     }, {}]);
+    // $FlowIgnore
     expect(generate.mock.calls[1]).toEqual([{
       generatorName: 'clientEntryInit',
       entityName: 'home',
