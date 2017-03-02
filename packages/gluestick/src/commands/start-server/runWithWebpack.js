@@ -6,6 +6,7 @@ const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
 const path = require('path');
 const { filename } = require('../../cli/colorScheme');
+const logMessage = require('./logMessage');
 
 /**
  * Spawns new process with rendering server.
@@ -24,23 +25,7 @@ const spawnServer = (
     [entryPointPath].concat(args),
     { stdio: ['ipc', 'inherit', 'inherit'] },
   );
-  child.on('message', (msg: { type: string, value: any[] }): void => {
-    switch (msg.type) {
-      default:
-      case 'info':
-        logger.info(...msg.value);
-        break;
-      case 'warn':
-        logger.warn(...msg.value);
-        break;
-      case 'error':
-        logger.error(...msg.value);
-        break;
-      case 'success':
-        logger.success(...msg.value);
-        break;
-    }
-  });
+  logMessage(logger, child);
   return child;
 };
 
