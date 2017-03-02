@@ -102,7 +102,6 @@ gluestick test
 
 Available options:
 
-* `-F, --firefox` - Use Firefox with test runner
 * `-S, --single` - Run test suite only once
 * `-D, --debug-test` - Debug tests with built-in node inspector
 * `-C --coverage` - Create test coverage
