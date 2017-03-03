@@ -2,6 +2,8 @@
 
 import type { CreateTemplate } from '../../types';
 
+const version = require('../../../package.json').version;
+
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 {
   "name": "${(args) => args.appName}",
@@ -25,9 +27,10 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
     "gluestick": "${
-      (args) => args.dev || '1.0.0' // TODO: replace with real version
+      (args) => args.dev || version
     }",
     "image-webpack-loader": "3.1.0",
+    "normalize.css": "^5.0.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-helmet": "4.0.0",

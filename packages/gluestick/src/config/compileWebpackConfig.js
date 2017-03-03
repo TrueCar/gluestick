@@ -35,7 +35,6 @@ module.exports = (
     entryOrGroupToBuild,
   }: CompilationOptions = {},
 ): CompiledConfig => {
-  process.env.COMPILATION_TIMESTAMP = 'chuj';
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings: UniversalSettings = {
     server: {
