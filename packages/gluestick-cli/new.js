@@ -3,25 +3,36 @@ const fs = require('fs');
 const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
+const glob = require('glob');
 const version = require('./package.json').version;
 
 module.exports = (appName, options, exitWithError) => {
-  let pathToGluestick = null;
-  let gluestickPackage = {};
-  try {
-    pathToGluestick = path.join(process.cwd(), appName, options.dev ? options.dev : '/');
-    if (options.dev) {
-      gluestickPackage = require(path.join(pathToGluestick, 'package.json'));
+  const packageDeps = {
+    dependencies: {
+      gluestick: version,
+
+    },
+  };
+  if (options.dev) {
+    const pathToGluestickRepo = path.join(process.cwd(), appName, '..', options.dev);
+    const pathToGluestickPackages = path.join(pathToGluestickRepo, 'packages');
+    let gluestickPackage = {};
+    const packages = glob.sync('*', { cwd: pathToGluestickPackages }).filter((e) => e !== 'gluestick-cli');
+    try {
+      gluestickPackage = require(path.join(pathToGluestickRepo, 'package.json'));
+    } catch (error) {
+      exitWithError(
+        `Development GlueStick path ${pathToGluestickRepo} is not valid`,
+      );
     }
-  } catch (error) {
-    exitWithError(
-      `Development GlueStick path ${pathToGluestick} is not valid`,
-    );
-  }
-  if (options.dev && gluestickPackage.name !== 'gluestick') {
-    exitWithError(
-      `${pathToGluestick} is not a path to GlueStick`,
-    );
+    if (gluestickPackage.name !== 'gluestick-packages') {
+      exitWithError(
+        `${pathToGluestickRepo} is not a path to GlueStick`,
+      );
+    }
+    packages.forEach(e => {
+      packageDeps.dependencies[e] = path.join('..', options.dev, 'packages', e);
+    });
   }
   const pathToApp = path.join(process.cwd(), appName);
   if (fs.existsSync(pathToApp)) {
@@ -30,11 +41,6 @@ module.exports = (appName, options, exitWithError) => {
     );
   }
   mkdir.sync(path.join(process.cwd(), appName));
-  const packageDeps = {
-    dependencies: {
-      gluestick: options.dev ? `file:${options.dev}` : version,
-    },
-  };
   fs.writeFileSync(path.join(
     process.cwd(), appName, 'package.json'),
     JSON.stringify(packageDeps),
