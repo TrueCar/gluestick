@@ -30,6 +30,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
       (args) => args.dev || version
     }",
     "image-webpack-loader": "3.1.0",
+    "normalize.css": "^5.0.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-helmet": "4.0.0",

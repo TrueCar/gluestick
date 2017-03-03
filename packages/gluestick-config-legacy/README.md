@@ -13,7 +13,7 @@ npm install --save gluestick-config-legacy`
 2. Define (and configure) plugin in `src/gluestick.plugins.js`:
 ```
 export default [
-  'gluestick-env-expose-ast'
+  'gluestick-config-legacy'
 ]
 ```
 

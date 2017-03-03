@@ -13,7 +13,7 @@ gluestick new <YOUR_APPLICATION_NAME>
 
 Available options:
 
-* `-d, --dev <path>` - Relative path to development version of gluestick
+* `-d, --dev <path>` - Relative path to development gluestick repo
 * `-y, --yarn` - Use yarn to perform installations (not working yet, see [#528](https://github.com/TrueCar/gluestick/issues/528))
 
 ### `gluestick reinstall-dev`

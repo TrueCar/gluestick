@@ -110,8 +110,7 @@
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$",
     "roots": [
-      "src",
-      "templates/new/src/config"
+      "src"
     ],
     "setupFiles": [
       "./jest/setup.js"

@@ -19,6 +19,7 @@ const templateContainerHomeTest = require('../templates/ContainerHomeTest')(crea
 const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(createTemplate);
 const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
+const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
 const tag = require('../../../package.json').version;
 const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
@@ -184,6 +185,11 @@ module.exports = (options: GeneratorOptions) => ({
       path: 'src/apps/main/components',
       filename: 'Home.js',
       template: templateHome,
+    },
+    {
+      path: 'src/apps/main/components',
+      filename: 'Home.css',
+      template: templateHomeCss,
     },
     {
       path: 'src/apps/main/components',

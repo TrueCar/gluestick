@@ -1,29 +1,26 @@
+/* @flow */
 require('./sharedMocks');
 
+// $FlowIgnore
+const entries = require('entries.json');
 const path = require('path');
 const buildServerEntries = require('../buildServerEntries');
 const defaultGSConfig = require('../../defaults/glueStickConfig');
 const generate = require('../../../generator');
 
-const originalPath = path.join.bind({});
-
 describe('config/webpack/buildSeverEntries', () => {
-  beforeEach(() => {
-    path.join = jest.fn().mockImplementation(
-      () => 'entries.json',
-    );
-  });
-
   afterEach(() => {
     jest.resetAllMocks();
-    path.join = originalPath;
   });
 
   it('should build server entries definition file', () => {
+    // $FlowIgnore
     buildServerEntries(
       { ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
       {},
+      entries,
     );
+    // $FlowIgnore
     expect(generate.mock.calls[0]).toEqual([{
       generatorName: 'serverEntries',
       entityName: path.basename(defaultGSConfig.serverEntriesPath),

@@ -11,11 +11,12 @@ module.exports = (
   configuration: WebpackConfig,
   settings: Object,
   gluestickConfig: GSConfig,
+  entries: Object,
   { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
 ): UniversalWebpackConfigurator => {
   const config = deepClone(configuration);
   // https://webpack.github.io/docs/multiple-entry-points.html
-  config.entry = skipEntryGeneration ? {} : buildEntries(gluestickConfig, logger);
+  config.entry = skipEntryGeneration ? {} : buildEntries(gluestickConfig, logger, entries);
   config.entry = Object.keys(config.entry).reduce((prev, curr) => {
     return Object.assign(prev, {
       [curr]: [
