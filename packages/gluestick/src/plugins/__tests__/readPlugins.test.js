@@ -1,3 +1,4 @@
+/* @flow */
 jest.mock('../../lib/utils.js', () => ({
   requireWithInterop: (val) => {
     if (val === 'throw-0') {
@@ -8,12 +9,14 @@ jest.mock('../../lib/utils.js', () => ({
       return [{ name: 'name' }];
     } else if (val === 'plugin-1' || val === 'plugin-3') {
       const fn = jest.fn();
+      // $FlowIgnore
       fn.meta = {
         type: 'config',
       };
       return fn;
     } else if (val === 'plugin-2') {
       const fn = jest.fn();
+      // $FlowIgnore
       fn.meta = {
         type: 'runtime',
       };
@@ -43,18 +46,21 @@ describe('plugins/readPlugin', () => {
   });
 
   it('should throw error if plugins decl is invalid', () => {
+    // $FlowIgnore
     expect(readPlugins(logger, 'throw-0', '')).toEqual([]);
     expect(logger.error.mock.calls[0])
       .toEqual([new Error('Invalid plugins configuration: must be an array')]);
   });
 
   it('should throw error if plugin decl is invalid', () => {
+    // $FlowIgnore
     expect(readPlugins(logger, 'throw-1', '')).toEqual([]);
     expect(logger.error.mock.calls[0])
       .toEqual([new Error('Invalid plugin declaration element: 11')]);
   });
 
   it('should read plugins', () => {
+    // $FlowIgnore
     const results = readPlugins(logger, 'abc', 'config');
     expect(results.length).toBe(2);
     expect(results[0].name).toEqual('plugin-1');
