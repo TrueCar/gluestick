@@ -11,7 +11,8 @@ import type {
   CompiledConfig,
 } from '../../types';
 
-type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
+type RenderMethod = (root: Object, styleTags: Object[]) =>
+{ body: string; head: Object[], additionalScripts?: Object[] };
 
 const React = require('react');
 const clone = require('clone');
