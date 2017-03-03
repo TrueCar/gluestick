@@ -43,10 +43,11 @@ Available options:
 * `-T, --run-tests` - Run test hook
 * `-L, --log-level <level>` - Set the logging level
   * Valid options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`
-* `-E, --log-pretty [true|false]` - Set pretty printing for logging
+* `-E, --entrypoints <entrypoints>`, Built only single entrypoint eg: `/home` or group of entrypoints
+eg: `profile-group`
 * `-D, --debug-server` - Debug server side rendering with built-in node inspector
 * `-p, --debug-port <number>` - Port on which to run node inspector
-* `-C --coverage` - Create test coverage report
+* `-C, --coverage` - Create test coverage report
 * `-P, --skip-build` - Skip build when running in production mode
 
 ### `gluestick build`
@@ -106,6 +107,6 @@ Available options:
 
 * `-S, --single` - Run test suite only once
 * `-D, --debug-test` - Debug tests with built-in node inspector
-* `-C --coverage` - Create test coverage
-* `-W --watch` - Watch tests
-* `-R --pattern [pattern]` - Run specific test regex pattern name
+* `-C, --coverage` - Create test coverage
+* `-W, --watch` - Watch tests
+* `-R, --pattern [pattern]` - Run specific test regex pattern name

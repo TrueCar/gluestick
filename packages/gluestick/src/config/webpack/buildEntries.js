@@ -8,9 +8,8 @@ const fs = require('fs-extra');
 const generator = require('../../generator');
 const pluginsFilter = require('../../plugins/pluginsFilter');
 
-const buildEntries = (gluestickConfig: GSConfig, logger: Logger) => {
+const buildEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object) => {
   fs.removeSync(path.join(process.cwd(), gluestickConfig.clientEntryInitPath));
-  const entries = require(path.join(process.cwd(), gluestickConfig.entriesPath));
   const plugins = require(gluestickConfig.pluginsConfigPath);
   Object.keys(entries).forEach(entry => {
     let name = entries[entry].name || entry;

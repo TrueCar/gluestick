@@ -9,6 +9,8 @@ const debugServerPortOption = ['-p, --debug-port <n>', 'port on which to run nod
 const singleRunOption = ['-S, --single', 'Run test suite only once'];
 const skipBuildOption = ['-P, --skip-build', 'skip build when running in production mode'];
 const statelessFunctionalOption = ['-F, --functional', '(generate component) stateless functional component'];
+const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
+const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group'];
 
 const testDebugOption = ['-D, --debug-test', 'debug tests with built-in node inspector'];
 const testReportCoverageOption = ['-C --coverage', 'Create test coverage'];
@@ -62,9 +64,9 @@ commander
   .alias('s')
   .description('start everything')
   .option('-T, --run-tests', 'run test hook')
-  .option('-L, --log-level <level>', 'set the logging level', /^(fatal|error|warn|info|debug|trace|silent)$/, null)
-  .option('-E, --log-pretty [true|false]', 'set pretty printing for logging', cliHelpers.parseBooleanFlag)
   .option('--dev', 'disable gluestick verion check')
+  .option(...entrypointsOption)
+  .option(...logLevelOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...testReportCoverageOption)
@@ -73,7 +75,13 @@ commander
     execWithConfig(
       require('../commands/start'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: false, skipPlugins: true },
+      {
+        useGSConfig: true,
+        useWebpackConfig: false,
+        skipPlugins: true,
+        skipClientEntryGeneration: true,
+        skipServerEntryGeneration: true,
+      },
     );
   });
 
@@ -114,6 +122,8 @@ commander
 commander
   .command('start-client', null, { noHelp: true })
   .description('start client')
+  .option(...logLevelOption)
+  .option(...entrypointsOption)
   .action((...commandArguments) => {
     process.env.COMMAND = 'start-client';
     execWithConfig(
@@ -126,6 +136,8 @@ commander
 commander
   .command('start-server', null, { noHelp: true })
   .description('start server')
+  .option(...logLevelOption)
+  .option(...entrypointsOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .action((...commandArguments) => {
