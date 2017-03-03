@@ -12,7 +12,7 @@ import type {
 } from '../../types';
 
 type RenderMethod = (root: Object, styleTags: Object[]) =>
-{ body: string; head: Object[], additionalScripts?: Object[] };
+  { body: string; head: Object[], additionalScripts?: Object[] };
 
 const React = require('react');
 const clone = require('clone');
