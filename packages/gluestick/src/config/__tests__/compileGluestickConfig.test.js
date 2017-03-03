@@ -38,7 +38,7 @@ describe('config/compileGluestickConfig', () => {
         name: 'testPlugin',
         overwrites: {
           gluestickConfig: (config) => {
-            return Object.assign(config, { protocol: 'https' });
+            return { ...config, protocol: 'https' };
           },
         },
       },
@@ -47,7 +47,7 @@ describe('config/compileGluestickConfig', () => {
         name: 'testPlugin',
         overwrites: {
           gluestickConfig: (config) => {
-            return Object.assign(config, { host: 'test' });
+            return { ...config, host: 'test' };
           },
         },
       },
