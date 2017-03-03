@@ -2,15 +2,20 @@ const path = require('path');
 const spawn = require('cross-spawn');
 
 module.exports = (exitWithError) => {
-  let gsPath = null;
+  let gsDeps = null;
+  let gsPackages = [];
   try {
-    gsPath = require(path.join(process.cwd(), 'package.json')).dependencies.gluestick;
+    gsDeps = require(path.join(process.cwd(), 'package.json')).dependencies;
+    gsPackages = Object.keys(gsDeps).filter(
+      (e => /^gluestick/.test(e) && !/\d+\.\d+\.\d+.*/.test(gsDeps[e])));
   } catch (error) {
     exitWithError(error.message);
   }
-  spawn(
-    'npm',
-    ['install', gsPath],
-    { stdio: 'inherit' },
-  );
+  gsPackages.forEach(e => {
+    spawn(
+      'npm',
+      ['install', gsDeps[e]],
+      { stdio: 'inherit' },
+    );
+  });
 };
