@@ -6,7 +6,7 @@ const glob = require('glob');
 const path = require('path');
 const fs = require('fs-extra');
 const generator = require('../../generator');
-const pluginsFilter = require('../../lib/pluginsFilter');
+const pluginsFilter = require('../../plugins/pluginsFilter');
 
 const buildEntries = (gluestickConfig: GSConfig, logger: Logger) => {
   fs.removeSync(path.join(process.cwd(), gluestickConfig.clientEntryInitPath));

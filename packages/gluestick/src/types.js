@@ -201,11 +201,20 @@ export type Hooks = {
   error?: Function | Function[];
 }
 
+export type Plugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  plugin: Function;
+  options: Object;
+};
+
 export type ConfigPlugin = {
   name: string;
   meta: {
     [key: string]: any;
-  },
+  };
   overwrites: {
     gluestickConfig?: (config: GSConfig) => void;
     clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;

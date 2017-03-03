@@ -1,8 +1,8 @@
 /* @flow */
-import type { Plugin } from '../types';
+import type { ConfigPlugin } from '../types';
 
 const path = require('path');
-const preparePlugins = require('../config/preparePlugins');
+const prepareConfigPlugins = require('../plugins/prepareConfigPlugins');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
 const compileWebpackConfig = require('../config/compileWebpackConfig');
 const logger = require('./logger');
@@ -59,7 +59,9 @@ const execWithConfig: ExecWithConfig = (
     ? {}
     : packageJson.gluestick;
   const pluginsConfigPath: string = path.join(process.cwd(), 'src/gluestick.plugins.js');
-  const plugins: Plugin[] = !skipPlugins ? preparePlugins(logger, pluginsConfigPath) : [];
+  const plugins: ConfigPlugin[] = !skipPlugins
+    ? prepareConfigPlugins(logger, pluginsConfigPath)
+    : [];
   const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
   if (GSConfig) {
     GSConfig.pluginsConfigPath = pluginsConfigPath;
