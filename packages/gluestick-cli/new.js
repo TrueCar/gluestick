@@ -3,6 +3,7 @@ const fs = require('fs');
 const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
+const version = require('./package.json').version;
 
 module.exports = (appName, options, exitWithError) => {
   let pathToGluestick = null;
@@ -31,7 +32,7 @@ module.exports = (appName, options, exitWithError) => {
   mkdir.sync(path.join(process.cwd(), appName));
   const packageDeps = {
     dependencies: {
-      gluestick: options.dev ? `file:${options.dev}` : '^1.0.0',
+      gluestick: options.dev ? `file:${options.dev}` : version,
     },
   };
   fs.writeFileSync(path.join(
