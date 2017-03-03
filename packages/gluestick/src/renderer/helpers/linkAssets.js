@@ -2,6 +2,12 @@
 
 import type { Context } from '../../types';
 
+type ExternalAsset = {
+  type: string;
+  href?: string;
+  content?: string;
+}
+
 const React = require('react');
 const getAssetsLoader = require('./getAssetsLoader');
 
@@ -19,8 +25,31 @@ const filterEntryName = (name: string): string => {
   return match ? match[1] : name;
 };
 
+const createExternalStyleTag = (asset: ExternalAsset, key: number) => {
+  if (asset.href) {
+    return <link key={key} rel="stylesheet" type={asset.type} href={asset.href} />;
+  } else if (asset.content) {
+    return <style>{`${asset.content}`}</style>;
+  }
+  return {};
+};
+
+const createExternalScriptTag = (asset: ExternalAsset, key: number) => {
+  if (asset.href) {
+    return <script key={key} type={asset.type} src={asset.href} />;
+  } else if (asset.content) {
+    return (<script
+      key={key}
+      type={asset.type}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{ __html: asset.content }}
+    />);
+  }
+  return {};
+};
+
 module.exports = (
-  { config, logger }: Context, entryPoint: string, assets: Object,
+  { config, logger }: Context, entryPoint: string, assets: Object, externalAssets?: ExternalAsset[],
 ): { styleTags: Object[], scriptTags: Object[] } => {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
@@ -52,6 +81,17 @@ module.exports = (
       dangerouslySetInnerHTML={{ __html: assetsLoader }}
     />,
   );
+
+  // Add external assets
+  if (externalAssets) {
+    externalAssets.forEach((asset) => {
+      if (asset.type === 'text/css') {
+        styleTags.push(createExternalStyleTag(asset, key++));
+      } else if (asset.type === 'text/javascript') {
+        scriptTags.push(createExternalScriptTag(asset, key++));
+      }
+    });
+  }
 
   return { styleTags, scriptTags };
 };
