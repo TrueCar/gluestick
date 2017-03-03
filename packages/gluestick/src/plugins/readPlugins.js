@@ -14,25 +14,29 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
     pluginsDeclaration.forEach((pluginDeclaration: any): void => {
       if (
         !pluginDeclaration
-        || typeof pluginDeclaration !== 'string'
+        || (typeof pluginDeclaration !== 'string' && typeof pluginDeclaration !== 'object')
         || (typeof pluginDeclaration === 'object' && !pluginDeclaration.plugin)
       ) {
-        throw new Error('Invalid plugin declaration element');
+        throw new Error(`Invalid plugin declaration element: ${JSON.stringify(pluginDeclaration)}`);
       }
     });
 
-    // $FlowIgnore
     return pluginsDeclaration.map((pluginDeclaration: any): Plugin => {
+      const name = typeof pluginDeclaration === 'string'
+        ? pluginDeclaration
+        : pluginDeclaration.plugin;
+      const body = requireWithInterop(name);
       return {
-        name: typeof pluginDeclaration === 'string' ? pluginDeclaration : pluginDeclaration.plugin,
-        plugin: requireWithInterop(pluginDeclaration),
-        options: typeof pluginDeclaration === 'string' ? {} : pluginDeclaration.options,
+        name,
+        plugin: body,
+        meta: body.meta,
+        options: typeof pluginDeclaration === 'string' ? {} : pluginDeclaration.options || {},
       };
-    }).filter((plugin: Plugin): boolean => {
-      return plugin.plugin.meta.type === pluginType;
+    }).filter((pluginData: Plugin): boolean => {
+      return pluginData.meta.type === pluginType;
     });
   } catch (error) {
-    logger.warn(error);
+    logger.error(error);
     return [];
   }
 };
