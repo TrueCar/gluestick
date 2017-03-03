@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.10.22",
+  "version": "0.0.0",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/index.js",
   "bin": "bin/gluestick.js",
@@ -109,8 +109,7 @@
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$",
     "roots": [
-      "src",
-      "templates/new/src/config"
+      "src"
     ],
     "setupFiles": [
       "./jest/setup.js"

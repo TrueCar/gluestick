@@ -7,6 +7,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 import React, { Component, PropTypes } from "react";
 import Helmet from "react-helmet";
 import { BodyAttributes } from "gluestick-shared";
+import "compiled/normalize.css";
 
 /**
  * The index html will be generated from this file. You can customize things as
