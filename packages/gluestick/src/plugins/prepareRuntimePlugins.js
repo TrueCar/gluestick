@@ -4,9 +4,15 @@ import type { RuntimePlugin, Plugin, Logger } from '../types';
 
 const readPlugins = require('./readPlugins');
 
+/**
+ * Prepare runtime plugins, which does not need compilation.
+ * They should be injected into project code, and executed from within project bundle.
+ */
 module.exports = (logger: Logger, pluginsConfigPath: string): RuntimePlugin[] => {
   const pluginsConfig: RuntimePlugin[] = readPlugins(logger, pluginsConfigPath, 'runtime')
     .map((pluginSpec: Plugin): RuntimePlugin => {
+      // Normalize each plugin to common format.
+      // Currently on `rootWrapper` function is processed.
       return {
         name: pluginSpec.name,
         meta: pluginSpec.meta,
@@ -15,6 +21,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): RuntimePlugin[] =>
         },
       };
     });
+
   if (!pluginsConfig.length) {
     return [];
   }
