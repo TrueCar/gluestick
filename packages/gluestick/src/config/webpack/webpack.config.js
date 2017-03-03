@@ -19,6 +19,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     appsPath,
     sharedPath,
     configPath,
+    nodeModulesPath,
   } = gluestickConfig;
   const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
@@ -33,6 +34,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         shared: path.join(process.cwd(), sourcePath, sharedPath),
         config: path.join(process.cwd(), sourcePath, configPath),
         apps: path.join(process.cwd(), sourcePath, appsPath),
+        compiled: path.join(process.cwd(), nodeModulesPath),
       },
     },
 
