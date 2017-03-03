@@ -35,6 +35,7 @@
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "dependencies": {
+    "aphrodite": "^1.1.0",
     "axios": "0.12.0",
     "babel-cli": "6.22.2",
     "babel-core": "6.22.1",
