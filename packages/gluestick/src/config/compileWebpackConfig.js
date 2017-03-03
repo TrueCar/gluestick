@@ -2,6 +2,7 @@
 
 import type {
   ConfigPlugin,
+  RuntimePlugin,
   GSConfig,
   ProjectConfig,
   WebpackConfig,
@@ -17,6 +18,7 @@ const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
+const prepareRuntimeEntries = require('../plugins/prepareRuntimePlugins');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -47,17 +49,23 @@ module.exports = (
     ? {}
     : prepareEntries(gluestickConfig, entryOrGroupToBuild);
 
+  // $FlowIgnore
+  const runtimePlugins: RuntimePlugin = skipClientEntryGeneration && skipServerEntryGeneration
+    ? []
+    : prepareRuntimeEntries(logger, gluestickConfig.pluginsConfigPath);
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
+  // $FlowIgnore
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries, runtimePlugins,
     { skipEntryGeneration: skipClientEntryGeneration },
   );
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
     clientConfig,
     gluestickConfig.ports.client,
   );
+  // $FlowIgnore
   const serverConfig: WebpackConfig = getServerConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries, runtimePlugins,
     { skipEntryGeneration: skipServerEntryGeneration },
   );
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(

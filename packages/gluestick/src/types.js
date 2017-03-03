@@ -221,3 +221,13 @@ export type ConfigPlugin = {
     serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
   };
 };
+
+export type RuntimePlugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  body: {
+    rootWrapper?: (component: Object) => Object;
+  }
+};

@@ -43,7 +43,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
     return [];
   }
 
-  logger.info('Compiling plugins:');
+  logger.info('Compiling config plugins:');
   try {
     const compiledPlugins: ConfigPlugin[] = pluginsConfig.map((value: Plugin): ConfigPlugin => {
       const compilationResults: Object = compilePlugin(value, { logger });

@@ -13,10 +13,11 @@ module.exports = (
   settings: Object,
   gluestickConfig: GSConfig,
   entries: Object,
+  runtimePlugins: Object[],
   { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
 ): WebpackConfig => {
   if (!skipEntryGeneration) {
-    buildServerEntries(gluestickConfig, logger, entries);
+    buildServerEntries(gluestickConfig, logger, entries, runtimePlugins);
   }
   const config = deepClone(configuration);
   config.resolve.alias['project-entries'] = path.join(

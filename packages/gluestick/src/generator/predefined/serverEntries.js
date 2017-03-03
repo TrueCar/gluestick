@@ -11,16 +11,15 @@ ${args => args.entries.reduce((prev, curr) => {
 
 ${args => args.plugins.reduce((prev, curr) => {
   const info = '// Workaround for external modules not being compiled\n';
-  const pluginImport = `import ${convertToCamelCase(curr.plugin)} from '../node_modules/${curr.plugin}';\n`;
+  const pluginImport = `import ${convertToCamelCase(curr.name)} from '../node_modules/${curr.name}';\n`;
   return prev.concat(info, pluginImport);
 }, '')}
 
 export const plugins = [
   ${args => args.plugins.reduce((prev, curr, index, arr) => {
-    console.log('ARR', arr, 'INDEX', index);
     return prev.concat(
       `${index > 0 ? '  ' : ''}`
-      + `${convertToCamelCase(curr.plugin)},`
+      + `${convertToCamelCase(curr.name)},`
       + `${arr.length - 1 !== index ? '\n' : ''}`,
     );
   }, '')}

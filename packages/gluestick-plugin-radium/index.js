@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleRoot } from 'radium';
 
-export default (component, rootWrapperOptions) => {
+const wrapper = (component, rootWrapperOptions) => {
   return (
     <StyleRoot
       radiumConfig={{ userAgent: rootWrapperOptions.userAgent }}
@@ -10,3 +10,7 @@ export default (component, rootWrapperOptions) => {
     </StyleRoot>
   );
 };
+
+wrapper.meta = { type: 'runtime' };
+
+export default wrapper;
