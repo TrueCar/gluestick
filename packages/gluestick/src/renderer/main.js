@@ -30,8 +30,11 @@ const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
+const pluginsDeclaration = require('src/gluestick.plugins.js').default;
+const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 
 module.exports = ({ config, logger }: Context) => {
+  const serverPlugins = prepareServerPlugins(logger, entriesPlugins, pluginsDeclaration);
   const app: Object = express();
   app.use(compression());
   app.use(express.static(

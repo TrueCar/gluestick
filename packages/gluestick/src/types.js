@@ -231,3 +231,12 @@ export type RuntimePlugin = {
     rootWrapper?: (component: Object) => Object;
   }
 };
+
+export type ServerPlugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  renderMethod: Function;
+  hooks: Hooks;
+};
