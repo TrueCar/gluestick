@@ -5,8 +5,19 @@ import type { Logger } from '../types';
 const util = require('util');
 const colorScheme = require('./colorScheme');
 
-const loggerFactory = type => (...args) => {
-    // eslint-disable-next-line no-console
+const levels = {
+  success: 20,
+  info: 10,
+  debug: 0,
+  warn: 30,
+  error: 40,
+};
+
+const loggerFactory = (type: string, level: string) => (...args) => {
+  if (levels[level] > levels[type]) {
+    return;
+  }
+  // eslint-disable-next-line no-console
   console.log(
       `[GlueStick]${process.env.COMMAND ? `[${process.env.COMMAND}]` : ''}`,
       ...(type === 'error' ? ['ERROR: '] : []).concat(
@@ -17,12 +28,12 @@ const loggerFactory = type => (...args) => {
     );
 };
 
-const logger: Logger = {
-  success: loggerFactory('success'),
-  info: loggerFactory('info'),
-  warn: loggerFactory('warn'),
-  debug: loggerFactory('debug'),
-  error: loggerFactory('error'),
+module.exports = (level: string = 'info'): Logger => {
+  return {
+    success: loggerFactory('success', level),
+    info: loggerFactory('info', level),
+    warn: loggerFactory('warn', level),
+    debug: loggerFactory('debug', level),
+    error: loggerFactory('error', level),
+  };
 };
-
-module.exports = logger;

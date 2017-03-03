@@ -1,6 +1,12 @@
 /* @flow */
 
-jest.mock('../../cli/logger');
+jest.mock('../../cli/logger', () => () => ({
+  info: jest.fn(),
+  success: jest.fn(),
+  debug: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+}));
 jest.mock('../../generator/utils');
 
 const fs = require('fs');
@@ -12,7 +18,7 @@ const mkdirp = require('mkdirp');
 const chalk = require('chalk');
 
 const destroy = require('../destroy');
-const logger = require('../../cli/logger');
+const logger = require('../../cli/logger')();
 const { isValidEntryPoint } = require('../../generator/utils');
 
 function createFiles(...filePaths) {
