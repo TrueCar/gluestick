@@ -1,6 +1,6 @@
-import gluestickPluginAphrodite from '../index.js';
-import { StyleSheet, css } from "aphrodite";
+import { StyleSheet, css } from 'aphrodite';
 import React from 'react';
+import gluestickPluginAphrodite from '../index.js';
 
 const styles = StyleSheet.create({ red: { backgroundColor: 'red' } });
 const element = <div className={css(styles.red)}>DIV</div>;
