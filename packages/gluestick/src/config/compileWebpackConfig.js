@@ -1,7 +1,7 @@
 /* @flow */
 
 import type {
-  Plugin,
+  ConfigPlugin,
   GSConfig,
   ProjectConfig,
   WebpackConfig,
@@ -24,7 +24,7 @@ type CompilationOptions = {
 
 module.exports = (
   logger: Logger,
-  plugins: Plugin[],
+  plugins: ConfigPlugin[],
   projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
   { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
@@ -55,19 +55,19 @@ module.exports = (
   );
 
   const clientEnvConfigFinal: WebpackConfig = plugins
-    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteClientWebpackConfig)
-    .reduce((prev: Object, plugin: Plugin) => {
-      return plugin.body.overwriteClientWebpackConfig
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.overwrites.clientWebpackConfig)
+    .reduce((prev: Object, plugin: ConfigPlugin) => {
+      return plugin.overwrites.clientWebpackConfig
         // $FlowIgnore
-        ? plugin.body.overwriteClientWebpackConfig(clone(prev))
+        ? plugin.overwrites.clientWebpackConfig(clone(prev))
         : prev;
     }, clientEnvConfig);
   const serverEnvConfigFinal: WebpackConfig = plugins
-    .filter((plugin: Plugin): boolean => !!plugin.body.overwriteServerWebpackConfig)
-    .reduce((prev: Object, plugin: Plugin) => {
-      return plugin.body.overwriteServerWebpackConfig
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.overwrites.serverWebpackConfig)
+    .reduce((prev: Object, plugin: ConfigPlugin) => {
+      return plugin.overwrites.serverWebpackConfig
         // $FlowIgnore
-        ? plugin.body.overwriteServerWebpackConfig(clone(prev))
+        ? plugin.overwrites.serverWebpackConfig(clone(prev))
         : prev;
     }, serverEnvConfig);
 
