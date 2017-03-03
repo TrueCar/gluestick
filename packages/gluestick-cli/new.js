@@ -10,7 +10,6 @@ module.exports = (appName, options, exitWithError) => {
   const packageDeps = {
     dependencies: {
       gluestick: version,
-
     },
   };
   if (options.dev) {

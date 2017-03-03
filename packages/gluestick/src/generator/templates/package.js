@@ -3,6 +3,11 @@
 import type { CreateTemplate } from '../../types';
 
 const version = require('../../../package.json').version;
+const path = require('path');
+
+/**
+ * TODO: include also other packages if dev flag was passed
+ */
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 {
@@ -27,7 +32,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
     "gluestick": "${
-      (args) => args.dev || version
+      (args) => args.dev ? path.join('..', args.dev, 'packages/gluestick') : version
     }",
     "image-webpack-loader": "3.1.0",
     "normalize.css": "^5.0.0",
