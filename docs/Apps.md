@@ -20,7 +20,8 @@ Schema for this file looks like this:
     "name": "<name>",
     "component": "<path/to/entry/root/component>",
     "routes": "<path/to/routes>",
-    "reducers": "<path/to/reducers>"
+    "reducers": "<path/to/reducers>",
+    "group": ["group-1", "group-2"]
   }
 ``` 
 
@@ -29,6 +30,7 @@ Schema for this file looks like this:
 - `component`: path to root component of entry
 - `routes`: path to routes declaration file
 - `reducer`: path to reducers file that exportes object
+- `group`: (optional) assign entry to group, see: [gluestick](../packages/gluestick/README.md) `--entrypoints` option
 
 **Plese note** that reducer should `export` (`default`) object with key-value pairs,
 when value is reducer function. Do not use `combineReducer`, it will be used later internally

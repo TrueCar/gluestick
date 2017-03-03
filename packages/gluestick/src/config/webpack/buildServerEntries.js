@@ -6,8 +6,7 @@ const path = require('path');
 const generator = require('../../generator');
 const pluginsFilter = require('../../lib/pluginsFilter');
 
-const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger) => {
-  const entries = require(path.join(process.cwd(), gluestickConfig.entriesPath));
+const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object) => {
   const plugins = require(gluestickConfig.pluginsConfigPath);
   generator({
     generatorName: 'serverEntries',

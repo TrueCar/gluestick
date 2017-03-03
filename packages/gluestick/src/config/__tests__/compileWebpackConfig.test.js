@@ -1,6 +1,7 @@
 /* @flow */
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
+jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 
 const compileWebpackConfig = require('../compileWebpackConfig');
 const defaultGSConfig = require('../defaults/glueStickConfig');

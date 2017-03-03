@@ -16,10 +16,12 @@ const clone = require('clone');
 const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
+const prepareEntries = require('./webpack/prepareEntries');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
   skipServerEntryGeneration: boolean;
+  entryOrGroupToBuild?: string;
 };
 
 module.exports = (
@@ -27,7 +29,11 @@ module.exports = (
   plugins: Plugin[],
   projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
-  { skipClientEntryGeneration, skipServerEntryGeneration }: CompilationOptions = {},
+  {
+    skipClientEntryGeneration,
+    skipServerEntryGeneration,
+    entryOrGroupToBuild,
+  }: CompilationOptions = {},
 ): CompiledConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
   const universalWebpackSettings: UniversalSettings = {
@@ -36,9 +42,14 @@ module.exports = (
       output: path.join(process.cwd(), './build/server/renderer.js'),
     },
   };
+
+  const entries: Object = skipClientEntryGeneration && skipServerEntryGeneration
+    ? {}
+    : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries,
     { skipEntryGeneration: skipClientEntryGeneration },
   );
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
@@ -46,7 +57,7 @@ module.exports = (
     gluestickConfig.ports.client,
   );
   const serverConfig: WebpackConfig = getServerConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig,
+    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries,
     { skipEntryGeneration: skipServerEntryGeneration },
   );
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(

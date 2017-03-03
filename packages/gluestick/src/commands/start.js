@@ -27,20 +27,27 @@ module.exports = async ({ config, logger }: Context, options: StartOptions) => {
   }
 
   if (!(isProduction && options.skipBuild)) {
-    spawn('node', ['./node_modules/.bin/gluestick', 'start-client'], {
-      stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
-      env: { ...process.env },
-    }).on('message', (payload) => {
+    spawn(
+      'node',
+      [
+        './node_modules/.bin/gluestick',
+        'start-client',
+        ...options.parent.rawArgs.slice(2),
+      ],
+      {
+        stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+        env: { ...process.env },
+      },
+    ).on('message', (payload) => {
       if (payload !== 'client started') {
         return;
       }
-
       spawn(
         'node',
         [
           './node_modules/.bin/gluestick',
           'start-server',
-          ...options.parent.rawArgs.slice(3),
+          ...options.parent.rawArgs.slice(2),
         ],
         {
           stdio: 'inherit',
