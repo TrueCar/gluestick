@@ -48,7 +48,7 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
         meta: {
           type: 'config',
         },
-        plugin: () => ({
+        body: () => ({
           overwriteGluestickConfig: () => 'gluestickConfig',
           overwriteClientWebpackConfig: () => 'clientWebpackConfig',
           overwriteServerWebpackConfig: () => 'serverWebpackConfig',
@@ -59,7 +59,7 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
         meta: {
           type: 'config',
         },
-        plugin: () => ({
+        body: () => ({
           overwriteGluestickConfig: () => 'gluestickConfig',
           overwriteClientWebpackConfig: () => 'clientWebpackConfig',
           overwriteServerWebpackConfig: () => 'serverWebpackConfig',
@@ -73,7 +73,7 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
         meta: {
           type: 'config',
         },
-        plugin: 'string',
+        body: 'string',
       },
     ];
   } else if (value === 'throw') {
@@ -83,7 +83,7 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
         meta: {
           type: 'config',
         },
-        plugin: () => {
+        body: () => {
           throw new Error('test');
         },
       },

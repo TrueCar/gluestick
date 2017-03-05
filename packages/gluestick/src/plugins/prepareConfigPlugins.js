@@ -4,26 +4,27 @@ import type { ConfigPlugin, Plugin, Logger } from '../types';
 
 const readPlugins = require('./readPlugins');
 
-type PluginWithStat = ConfigPlugin & {
+type CompilationResults = {
+  overwrites: {
+    [key: string]: Function;
+  };
   error?: Error;
 };
 
 /**
  * Make necessary assertions and compile plugin.
  */
-const compilePlugin = (pluginData: Plugin, pluginOptions: Object): PluginWithStat => {
+const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationResults => {
   try {
-    if (typeof pluginData.plugin !== 'function') {
+    if (typeof pluginData.body !== 'function') {
       throw new Error('plugin must export function');
     }
 
-    const pluginBody = pluginData.plugin(pluginData.options, pluginOptions);
+    const pluginBody = pluginData.body(pluginData.options, pluginOptions);
 
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      name: pluginData.name,
-      meta: pluginData.meta,
       overwrites: {
         gluestickConfig: pluginBody.overwriteGluestickConfig,
         clientWebpackConfig: pluginBody.overwriteClientWebpackConfig,
@@ -35,8 +36,6 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): PluginWithSta
     const enchancedError = error;
     enchancedError.message = `${pluginData.name} compilation failed: ${enchancedError.message}`;
     return {
-      name: pluginData.name,
-      meta: pluginData.meta,
       overwrites: {},
       error: enchancedError,
     };
@@ -60,7 +59,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
     const compiledPlugins: ConfigPlugin[] = pluginsConfig.map((value: Plugin): ConfigPlugin => {
       // Second `compilePlugin` argument is an object with gluestick utilities that
       // will be available for plugins to use.
-      const compilationResults: Object = compilePlugin(value, { logger });
+      const compilationResults: CompilationResults = compilePlugin(value, { logger });
       if (compilationResults.error) {
         throw compilationResults.error;
       }
@@ -68,7 +67,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
       return {
         name: value.name,
         overwrites: compilationResults.overwrites,
-        meta: compilationResults.meta,
+        meta: value.meta,
       };
     });
 

@@ -36,7 +36,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
       const body = requireWithInterop(name);
       return {
         name,
-        plugin: body,
+        body,
         meta: body.meta,
         options: typeof pluginDeclaration === 'string' ? {} : pluginDeclaration.options || {},
       };

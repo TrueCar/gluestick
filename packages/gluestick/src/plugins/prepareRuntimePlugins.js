@@ -17,7 +17,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): RuntimePlugin[] =>
         name: pluginSpec.name,
         meta: pluginSpec.meta,
         body: {
-          rootWrapper: pluginSpec.plugin,
+          rootWrapper: pluginSpec.body,
         },
       };
     });
