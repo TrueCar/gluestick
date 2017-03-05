@@ -77,6 +77,8 @@ module.exports = (
 
   // Get runtime and server plugins, both runtime and server plugins in this case
   // won't be included in client bundles but in server aka renderer bundle.
+  // `./webpack/buildServerEntries.js` will invoke generator that will output
+  // those plugins to `entires.js` (default) file.
   // This step is important, since server code will go throught webpack
   // which requires static imports/requires, so all plugins must
   // be known in advance.
