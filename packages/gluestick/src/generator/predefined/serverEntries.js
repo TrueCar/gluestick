@@ -19,7 +19,8 @@ export const plugins = [
   ${args => args.plugins.reduce((prev, curr, index, arr) => {
     return prev.concat(
       `${index > 0 ? '  ' : ''}`
-      + `${convertToCamelCase(curr.name)},`
+      + `{ ref: ${convertToCamelCase(curr.name)}, type: '${curr.meta.type}'`
+      + `${curr.options ? `, options: ${JSON.stringify(curr.options)} },` : ' },'}`
       + `${arr.length - 1 !== index ? '\n' : ''}`,
     );
   }, '')}
