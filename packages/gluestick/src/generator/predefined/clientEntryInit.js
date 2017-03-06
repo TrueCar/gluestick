@@ -12,7 +12,7 @@ import reducers from "${args => args.reducers}";
 import '${args => args.component}';
 
 ${args => args.plugins.reduce((prev, curr) => {
-  return prev.concat(`import ${convertToCamelCase(curr.name)} from '${curr.name}';\n`);
+  return prev.concat(`import ${convertToCamelCase(curr.name)} from '${curr.name}/${curr.meta.type}';\n`);
 }, '')}
 
 export const getStore = (httpClient) => {

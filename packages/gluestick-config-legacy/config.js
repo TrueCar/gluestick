@@ -52,5 +52,3 @@ module.exports = () => {
     overwriteServerWebpackConfig: (config) => applyWebpackAdditions(config),
   };
 };
-
-module.exports.meta = { type: 'config' };

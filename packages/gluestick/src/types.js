@@ -206,7 +206,7 @@ export type Plugin = {
   meta: {
     [key: string]: any;
   };
-  body: Function;
+  body: Function | null;
   options: Object;
 };
 

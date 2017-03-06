@@ -33,15 +33,20 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
       const name = typeof pluginDeclaration === 'string'
         ? pluginDeclaration
         : pluginDeclaration.plugin;
-      const body = requireWithInterop(name);
+      let body = null;
+      try {
+        body = requireWithInterop(`${name}/${pluginType}.js`);
+      } catch (error) {
+
+      }
       return {
         name,
         body,
-        meta: body.meta,
+        meta: body ? { ...body.meta, type: pluginType }: {},
         options: typeof pluginDeclaration === 'string' ? {} : pluginDeclaration.options || {},
       };
     }).filter((pluginData: Plugin): boolean => {
-      return pluginData.meta.type === pluginType;
+      return !!pluginData.body;
     });
   } catch (error) {
     logger.error(error);
