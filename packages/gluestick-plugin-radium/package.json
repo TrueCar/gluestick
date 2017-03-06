@@ -2,15 +2,13 @@
   "name": "gluestick-plugin-radium",
   "version": "0.0.0",
   "description": "Plugin for supporting Radium in GlueStick project",
-  "main": "index.js",
+  "main": "runtime.js",
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "test-coverage": "jest --coverage",
-    "lint": "eslint ./ --ignore-path ../../.eslintignore",
-    "flow": "echo \"No flowconfig specified\" && exit 0"
+    "test-coverage": "jest --coverage"
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "repository": {
@@ -25,12 +23,6 @@
     "radium": "0.18.1"
   },
   "devDependencies": {
-    "babel-eslint": "7.1.1",
-    "eslint": "3.14.1",
-    "eslint-config-airbnb": "14.1.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-jsx-a11y": "3.0.2",
-    "eslint-plugin-react": "6.9.0",
     "jest": "18.1.0",
     "babel-preset-es2015": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
