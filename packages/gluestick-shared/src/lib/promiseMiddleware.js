@@ -1,32 +1,27 @@
-export default function promiseMiddleware (client) {
-  // eslint-disable-next-line no-unused-vars
-  return ({ dispatch, getState }) => {
-    return next => action => {
-      const { promise, type, ...rest } = action;
+export default (client) => () => next => action => {
+  const { promise, type, ...rest } = action;
 
-      if (!promise) {
-        return next(action);
-      }
+  if (!promise) {
+    return next(action);
+  }
 
-      const SUCCESS = type;
-      const INIT = type + "_INIT";
-      const FAILURE = type + "_FAILURE";
+  const SUCCESS = type;
+  const INIT = `${type}_INIT`;
+  const FAILURE = `${type}_FAILURE`;
 
-      next({...rest, type: INIT});
+  next({ ...rest, type: INIT });
 
-      const getPromise = typeof promise === "function" ? promise : () => promise;
+  const getPromise = typeof promise === 'function' ? promise : () => promise;
 
-      return getPromise(client)
-        .then(
-          payload => {
-            next({...rest, payload, type: SUCCESS});
-            return payload || true;
-          },
-          error => {
-            next({...rest, error, type: FAILURE});
-            return false;
-          }
-        );
-    };
-  };
-}
+  return getPromise(client)
+    .then(
+      payload => {
+        next({ ...rest, payload, type: SUCCESS });
+        return payload || true;
+      },
+      error => {
+        next({ ...rest, error, type: FAILURE });
+        return false;
+      },
+    );
+};
