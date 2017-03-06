@@ -12,7 +12,6 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
-    "flow": "flow",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
     "postpublish": "./docker/create-base-image.js",
     "update-version": "npm version",
@@ -94,15 +93,7 @@
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.15.0"
   },
-  "peerDependencies": {},
   "devDependencies": {
-    "babel-eslint": "7.1.1",
-    "eslint": "3.14.1",
-    "eslint-config-airbnb": "^14.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-react": "6.9.0",
-    "flow-bin": "^0.38.0",
     "temp": "0.8.3"
   },
   "jest": {

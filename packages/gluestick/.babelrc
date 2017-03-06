@@ -7,9 +7,9 @@
         "stage-0"
       ],
       "plugins": [
-        "transform-decorators-legacy"
-      ],
-      "sourceMaps": "inline"
+        "transform-decorators-legacy",
+        "transform-flow-strip-types"
+      ]
     }
   }
 }
