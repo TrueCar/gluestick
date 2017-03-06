@@ -38,7 +38,7 @@ describe('plugin', () => {
     path.join = originalPathJoin;
   });
 
-  it('should overwrite fluestick config', () => {
+  it('should overwrite gluestick config', () => {
     const gsConfig = { ports: {} };
     plugin.overwriteGluestickConfig(gsConfig);
     expect(gsConfig).toEqual({
