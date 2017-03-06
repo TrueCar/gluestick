@@ -17,17 +17,17 @@ describe('config/compileWebpackConfig', () => {
     // $FlowIgnore
     const webpackConfig = compileWebpackConfig(loggerMock, [
       {
-        body: {
+        overwrites: {
           // $FlowIgnore
-          overwriteClientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+          clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
           // $FlowIgnore
-          overwriteServerWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+          serverWebpackConfig: (config) => Object.assign(config, { testProp: true }),
         },
       },
       {
-        body: {
+        overwrites: {
           // $FlowIgnore
-          overwriteClientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
+          clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
         },
       },
     ], {}, defaultGSConfig);

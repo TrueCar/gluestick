@@ -38,3 +38,5 @@ module.exports = (options, { logger }) => {
     overwriteServerWebpackConfig: overwriteConfig,
   };
 };
+
+module.exports.meta = { type: 'config' };
