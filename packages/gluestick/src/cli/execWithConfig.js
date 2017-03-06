@@ -46,19 +46,19 @@ const execWithConfig: ExecWithConfig = (
   { pre, post } = {},
 ): void => {
   const logger = loggerFactory(commandArguments[commandArguments.length - 1].logLevel);
-  let packageJson = {};
-  try {
-    packageJson = require(path.join(process.cwd(), 'package.json'));
-    if (!packageJson.dependencies.gluestick) {
-      throw new Error('Command need to be run in gluestick project.');
-    }
-  } catch (error) {
-    logger.error(error.message);
-    process.exit(1);
-  }
+  // let packageJson = {};
+  // try {
+  //   packageJson = require(path.join(process.cwd(), 'package.json'));
+  //   if (!packageJson.dependencies.gluestick) {
+  //     throw new Error('Command need to be run in gluestick project.');
+  //   }
+  // } catch (error) {
+  //   logger.error(error.message);
+  //   process.exit(1);
+  // }
   const projectConfig: Object = skipProjectConfig
-    ? {}
-    : packageJson.gluestick;
+    ? {} : {}
+    // : packageJson.gluestick;
   const pluginsConfigPath: string = path.join(process.cwd(), 'src/gluestick.plugins.js');
   const plugins: ConfigPlugin[] = !skipPlugins
     ? prepareConfigPlugins(logger, pluginsConfigPath)

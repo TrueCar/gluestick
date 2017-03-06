@@ -38,7 +38,7 @@ const currentlyInProjectFolder = (folderPath: string) => {
 };
 
 module.exports = ({ logger }: Context, appName: string, options: Object = {}) => {
-  if (currentlyInProjectFolder(process.cwd())) {
+  //if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(appName)} is being generated...`);
 
     generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
@@ -52,5 +52,5 @@ module.exports = ({ logger }: Context, appName: string, options: Object = {}) =>
     logger.info('    Point the browser to http://localhost:8888');
 
     process.exit(0);
-  }
+  //}
 };
