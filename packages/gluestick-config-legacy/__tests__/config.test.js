@@ -17,7 +17,7 @@ jest.mock('add.js', () => ({
 const path = require('path');
 
 const originalPathJoin = path.join.bind(path);
-const pluginFactory = require('../');
+const pluginFactory = require('../config');
 
 describe('plugin', () => {
   let plugin;

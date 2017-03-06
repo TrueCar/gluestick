@@ -1,4 +1,4 @@
-const gluestickPluginRadium = require('../index.js').default;
+const gluestickPluginRadium = require('../runtime').default;
 
 test('Radium plugin should wrap component with StyleRoot', () => {
   const results = gluestickPluginRadium('component', { userAgent: 'test' });

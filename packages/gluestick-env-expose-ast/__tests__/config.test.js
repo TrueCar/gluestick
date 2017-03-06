@@ -9,7 +9,7 @@ jest.mock('webpack', () => ({
     }
   },
 }));
-const expose = require('../index');
+const expose = require('../config');
 
 test('plugin should not expose anything', () => {
   const results = expose({}, {});
