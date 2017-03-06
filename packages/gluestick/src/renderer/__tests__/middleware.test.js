@@ -38,6 +38,7 @@ jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 const React = require('react');
 const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
+const hooksHelper = require('../helpers/hooks');
 
 const logger: Logger = {
   info: jest.fn(),
@@ -136,7 +137,7 @@ describe('renderer/middleware', () => {
       { EntryWrapper, BodyWrapper },
       assets,
       options,
-      hooks,
+      { hooks, hooksHelper },
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -163,7 +164,7 @@ describe('renderer/middleware', () => {
       { EntryWrapper, BodyWrapper },
       assets,
       options,
-      hooks,
+      { hooks, hooksHelper },
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -189,7 +190,7 @@ describe('renderer/middleware', () => {
       { EntryWrapper, BodyWrapper },
       assets,
       options,
-      hooks,
+      { hooks, hooksHelper },
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -211,7 +212,7 @@ describe('renderer/middleware', () => {
       { EntryWrapper, BodyWrapper },
       assets,
       options,
-      hooks,
+      { hooks, hooksHelper },
     );
     expect(hooks.error).toHaveBeenCalledTimes(1);
     expect(errorHandler).toHaveBeenCalledTimes(1);
@@ -234,7 +235,7 @@ describe('renderer/middleware', () => {
         { EntryWrapper, BodyWrapper },
         assets,
         options,
-        hooks,
+        { hooks, hooksHelper },
       );
       expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
       expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
