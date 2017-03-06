@@ -14,21 +14,13 @@ export default function promiseMiddleware (client) {
 
       next({...rest, type: INIT});
 
-      let getPromise;
-      if (typeof promise === "function") {
-        getPromise = promise;
-      }
-      else {
-        getPromise = () => {
-          return promise;
-        };
-      }
+      const getPromise = typeof promise === "function" ? promise : () => promise;
 
       return getPromise(client)
         .then(
-          value => {
-            next({...rest, value, type: SUCCESS});
-            return value || true;
+          payload => {
+            next({...rest, payload, type: SUCCESS});
+            return payload || true;
           },
           error => {
             next({...rest, error, type: FAILURE});
@@ -38,4 +30,3 @@ export default function promiseMiddleware (client) {
     };
   };
 }
-
