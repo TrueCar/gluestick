@@ -68,7 +68,7 @@ module.exports = ({ config, logger }: Context) => {
   const server: Object = app.listen(config.GSConfig.ports.server);
 
   // call express App Hook which accept app as param.
-  hooksHelper(hooks.expressApp, app);
+  hooksHelper(hooks.postServerRun, app);
 
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {

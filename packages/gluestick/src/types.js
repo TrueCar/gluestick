@@ -194,7 +194,7 @@ export type UpdateDepsPromptResults = {
 export type Hook = Function | Function[];
 
 export type Hooks = {
-  expressApp?: Hook;
+  postServerRun?: Hook;
   preRenderFromCache?: Hook;
   postRenderRequirements?: Hook;
   preRedirect?: Hook;
