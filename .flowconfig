@@ -7,8 +7,8 @@
 [include]
 
 [libs]
-flow/
-flow-typed/
+flow/.*
+flow-typed/.*
 
 [options]
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
