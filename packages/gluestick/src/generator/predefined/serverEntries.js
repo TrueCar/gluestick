@@ -11,7 +11,7 @@ ${args => args.entries.reduce((prev, curr) => {
 
 ${args => args.plugins.reduce((prev, curr) => {
   const info = '// Workaround for external modules not being compiled\n';
-  const pluginImport = `import ${convertToCamelCase(curr.name)} from '../node_modules/${curr.name}';\n`;
+  const pluginImport = `import ${convertToCamelCase(curr.name)} from '../node_modules/${curr.name}/${curr.meta.type}';\n`;
   return prev.concat(info, pluginImport);
 }, '')}
 

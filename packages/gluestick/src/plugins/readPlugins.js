@@ -14,7 +14,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
     if (!Array.isArray(pluginsDeclaration)) {
       throw new Error('Invalid plugins configuration: must be an array');
     }
-
+    
     // Check if every element in plugins array matches schema.
     // It can be string or object with `plugin` filed set to plugin name.
     pluginsDeclaration.forEach((pluginDeclaration: any): void => {
