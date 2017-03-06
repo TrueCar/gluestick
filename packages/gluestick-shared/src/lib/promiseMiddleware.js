@@ -1,6 +1,6 @@
 export default function promiseMiddleware (client) {
   // eslint-disable-next-line no-unused-vars
-  return ({dispatch, getState}) => {
+  return ({ dispatch, getState }) => {
     return next => action => {
       const { promise, type, ...rest } = action;
 
