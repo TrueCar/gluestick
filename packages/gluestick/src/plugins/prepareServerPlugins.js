@@ -9,6 +9,7 @@ type CopilationResults = {
 
 type PluginRef = {
   ref: Function;
+  type: string;
   options?: Object;
 }
 
@@ -17,7 +18,7 @@ type PluginRef = {
  */
 const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationResults => {
   try {
-    const pluginBody = pluginSpec.body(pluginSpec.options, pluginOptions);
+    const pluginBody = pluginSpec.body ? pluginSpec.body(pluginSpec.options, pluginOptions) : {};
 
     // Currently server plugin can overwrite renderMethod and provide hooks.
     return {
@@ -48,10 +49,7 @@ module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
         if (typeof plugin.ref !== 'function') {
           throw new Error(`Plugin at position ${index} must export a function`);
         }
-        if (!plugin.ref.meta) {
-          throw new Error(`Plugin at position ${index} must export meta object`);
-        }
-        return plugin.ref.meta.type === 'server';
+        return plugin.type === 'server';
       },
     );
 

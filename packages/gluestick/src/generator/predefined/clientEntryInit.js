@@ -28,7 +28,7 @@ export const getStore = (httpClient) => {
 if (typeof window === "object") {
   const rootWrappers = [
     ${args => args.plugins.reduce((prev, curr, index) => {
-      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)}`);
+      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)},\n`);
     }, '')}
   ];
 
