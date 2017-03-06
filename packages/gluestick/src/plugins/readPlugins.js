@@ -14,7 +14,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
     if (!Array.isArray(pluginsDeclaration)) {
       throw new Error('Invalid plugins configuration: must be an array');
     }
-    
+
     // Check if every element in plugins array matches schema.
     // It can be string or object with `plugin` filed set to plugin name.
     pluginsDeclaration.forEach((pluginDeclaration: any): void => {
@@ -33,16 +33,20 @@ module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string)
       const name = typeof pluginDeclaration === 'string'
         ? pluginDeclaration
         : pluginDeclaration.plugin;
+
+      // Try to read plugin source. If it doesn't exists, it will be filtered from list.
       let body = null;
       try {
         body = requireWithInterop(`${name}/${pluginType}.js`);
       } catch (error) {
-
+        // NOOP it is possible that give file does not exists and it's
+        // perfectly fine.
       }
+
       return {
         name,
         body,
-        meta: body ? { ...body.meta, type: pluginType }: {},
+        meta: body ? { ...body.meta, type: pluginType } : {},
         options: typeof pluginDeclaration === 'string' ? {} : pluginDeclaration.options || {},
       };
     }).filter((pluginData: Plugin): boolean => {

@@ -25,12 +25,15 @@ const plugin2Ref = () => {};
 plugin2Ref.meta = { type: 'runtime' };
 const validPlugins = [{
   ref: plugin0Ref,
+  type: 'server',
 },
 {
   ref: plugin1Ref,
   options: { prop: true },
+  type: 'server',
 }, {
   ref: plugin2Ref,
+  type: 'runtime',
 }];
 
 describe('plugins/prepareServerPlugins', () => {
@@ -63,22 +66,11 @@ describe('plugins/prepareServerPlugins', () => {
     );
   });
 
-  it('should fail to compile plugin - no meta', () => {
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [{
-      ref: () => {},
-    }]);
-    expect(plugins.length).toBe(0);
-    expect(logger.warn.mock.calls.length).toBe(1);
-    expect(logger.warn.mock.calls[0][0].message).toEqual(
-      'Plugin at position 0 must export meta object',
-    );
-  });
-
   it('should catch error being throw from inside plugin', () => {
     const invalidPlugin = () => { throw new Error('test'); };
     invalidPlugin.meta = { type: 'server' };
     const plugins: ServerPlugin[] = prepareServerPlugins(logger, [{
-      ref: invalidPlugin,
+      ref: invalidPlugin, type: 'server',
     }]);
     expect(plugins.length).toBe(0);
     expect(logger.warn.mock.calls.length).toBe(1);
