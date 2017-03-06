@@ -2,7 +2,7 @@
 
 import type {
   ConfigPlugin,
-  RuntimePlugin,
+  Plugin,
   GSConfig,
   ProjectConfig,
   WebpackConfig,
@@ -18,7 +18,7 @@ const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
-const prepareRuntimeEntries = require('../plugins/prepareRuntimePlugins');
+const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 
 type CompilationOptions = {
@@ -57,9 +57,9 @@ module.exports = (
     : prepareEntries(gluestickConfig, entryOrGroupToBuild);
 
   // Get runtime plugins that will be applied to project code and bundled together.
-  const runtimePlugins: RuntimePlugin[] = skipClientEntryGeneration && skipServerEntryGeneration
+  const runtimePlugins: Plugin[] = skipClientEntryGeneration && skipServerEntryGeneration
     ? []
-    : prepareRuntimeEntries(logger, gluestickConfig.pluginsConfigPath);
+    : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
   // Get shared config between client and server.
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
@@ -82,7 +82,7 @@ module.exports = (
   // This step is important, since server code will go throught webpack
   // which requires static imports/requires, so all plugins must
   // be known in advance.
-  const runtimeAndServerPlugins = runtimePlugins.concat(
+  const runtimeAndServerPlugins: Plugin[] = runtimePlugins.concat(
     skipClientEntryGeneration && skipServerEntryGeneration
      ? []
      : readServerPlugins(logger, gluestickConfig.pluginsConfigPath),

@@ -13,14 +13,10 @@ type PluginRef = {
 }
 
 /**
- * Make necessary assertions and compile plugin.
+ * Compile plugin.
  */
 const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationResults => {
   try {
-    if (typeof pluginSpec.body !== 'function') {
-      throw new Error('plugin must export function');
-    }
-
     const pluginBody = pluginSpec.body(pluginSpec.options, pluginOptions);
 
     // Currently server plugin can overwrite renderMethod and provide hooks.
@@ -45,21 +41,30 @@ const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationRes
  * `options` object from plugin declaration file, and utilities from gluestick like logger.
  */
 module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
-  const filteredPlugins = plugins.filter(
-    (plugin: PluginRef): boolean => plugin.ref.meta.type === 'server',
-  );
-
-  if (!filteredPlugins.length) {
-    return [];
-  }
-
-  logger.info('Compiling server plugins:');
   try {
+    // Get server plugins only and perform necessry checks.
+    const filteredPlugins = plugins.filter(
+      (plugin: PluginRef, index: number): boolean => {
+        if (typeof plugin.ref !== 'function') {
+          throw new Error(`Plugin at position ${index} must export a function`);
+        }
+        if (!plugin.ref.meta) {
+          throw new Error(`Plugin at position ${index} must export meta object`);
+        }
+        return plugin.ref.meta.type === 'server';
+      },
+    );
+
+    if (!filteredPlugins.length) {
+      return [];
+    }
+
+    logger.info('Compiling server plugins:');
     // Compile plugin, if compilation fails, further compilation is prevented.
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
       (value: PluginRef): ServerPlugin => {
         const normalizedPlugin: Plugin = {
-          name: value.ref.name || value.ref.meta.name || 'unknown',
+          name: value.ref.meta.name || value.ref.name || 'unknown',
           meta: value.ref.meta,
           body: value.ref,
           options: value.options || {},
