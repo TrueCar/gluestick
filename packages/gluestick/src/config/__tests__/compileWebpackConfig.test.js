@@ -10,6 +10,7 @@ const loggerMock = {
   info: jest.fn(),
   debug: jest.fn(),
   success: jest.fn(),
+  error: jest.fn(),
 };
 
 describe('config/compileWebpackConfig', () => {
