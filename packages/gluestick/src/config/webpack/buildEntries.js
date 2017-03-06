@@ -5,7 +5,7 @@ import type { GSConfig, Logger } from '../../types';
 const glob = require('glob');
 const path = require('path');
 const fs = require('fs-extra');
-const generator = require('../../generator');
+const generator = require('gluestick-generators');
 const pluginsFilter = require('../../plugins/pluginsFilter');
 
 const buildEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object) => {

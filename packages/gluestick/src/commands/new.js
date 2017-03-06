@@ -5,7 +5,7 @@ const path = require('path');
 const spawn = require('cross-spawn');
 
 const { highlight, filename } = require('../cli/colorScheme');
-const generate = require('../generator');
+const generate = require('gluestick-generators');
 
 type ProjectData = {
   dependencies: {

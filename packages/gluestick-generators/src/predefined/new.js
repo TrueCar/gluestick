@@ -21,7 +21,7 @@ const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
 const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
-const tag = require('../../../package.json').version;
+const tag = require('../../package.json').version;
 const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
 const templateEntryWrapper = require('../templates/EntryWrapper')(createTemplate);
 const templateApp = require('../templates/App')(createTemplate);
@@ -37,10 +37,7 @@ const templateEntries = require('../templates/entries')(createTemplate);
 const templateGluestickPlugins = require('../templates/gluestick.plugins')(createTemplate);
 const templateGluestickHooks = require('../templates/gluestick.hooks')(createTemplate);
 
-const { flowVersion } = require('../constants');
-// @TODO use config in new command when PR #571 is merged
-const glueStickConfig = require('../../config/defaults/glueStickConfig');
-const webpackConfig = require('../../config/webpack/webpack.config');
+const { flowVersion, flowMapper } = require('../constants');
 
 module.exports = (options: GeneratorOptions) => ({
   entries: [
@@ -73,8 +70,7 @@ module.exports = (options: GeneratorOptions) => ({
       args: {
         appName: options.appName,
         version: flowVersion,
-        // $FlowFixMe review this after resolving the TODO mentioned above
-        mapper: webpackConfig(glueStickConfig).resolve.alias,
+        mapper: flowMapper,
       },
     },
     {

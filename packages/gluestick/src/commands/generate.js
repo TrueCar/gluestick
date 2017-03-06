@@ -2,7 +2,7 @@
 
 import type { Context } from '../types';
 
-const generator = require('../generator');
+const generator = require('gluestick-generators');
 
 export type Options = {
   entryPoint?: string;
