@@ -14,6 +14,9 @@ module.exports = (
   { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
 ): UniversalWebpackConfigurator => {
   const config = deepClone(configuration);
+  config.node = {
+    fs: "empty"
+  };
   // https://webpack.github.io/docs/multiple-entry-points.html
   config.entry = skipEntryGeneration ? {} : buildEntries(gluestickConfig, logger);
   config.entry = Object.keys(config.entry).reduce((prev, curr) => {
