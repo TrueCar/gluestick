@@ -53,15 +53,6 @@ export type CompiledConfig = {
   server: WebpackConfig;
 }
 
-export type Plugin = {
-  name: string;
-  body: {
-    overwriteGluestickConfig?: (config: GSConfig) => void;
-    overwriteClientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
-    overwriteServerWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
-  };
-};
-
 export type Config = {
   projectConfig?: ProjectConfig;
   GSConfig: GSConfig;
@@ -209,3 +200,43 @@ export type Hooks = {
   postRender?: Function | Function[];
   error?: Function | Function[];
 }
+
+export type Plugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  body: Function | null;
+  options: Object;
+};
+
+export type ConfigPlugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  overwrites: {
+    gluestickConfig?: (config: GSConfig) => void;
+    clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
+    serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
+  };
+};
+
+export type RuntimePlugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  body: {
+    rootWrapper?: (component: Object) => Object;
+  }
+};
+
+export type ServerPlugin = {
+  name: string;
+  meta: {
+    [key: string]: any;
+  };
+  renderMethod: Function;
+  hooks: Hooks;
+};

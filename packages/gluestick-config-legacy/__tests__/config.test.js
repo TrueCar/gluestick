@@ -17,7 +17,7 @@ jest.mock('add.js', () => ({
 const path = require('path');
 
 const originalPathJoin = path.join.bind(path);
-const pluginFactory = require('../');
+const pluginFactory = require('../config');
 
 describe('plugin', () => {
   let plugin;
@@ -38,7 +38,7 @@ describe('plugin', () => {
     path.join = originalPathJoin;
   });
 
-  it('should overwrite fluestick config', () => {
+  it('should overwrite gluestick config', () => {
     const gsConfig = { ports: {} };
     plugin.overwriteGluestickConfig(gsConfig);
     expect(gsConfig).toEqual({

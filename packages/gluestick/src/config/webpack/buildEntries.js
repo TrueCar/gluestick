@@ -6,11 +6,11 @@ const glob = require('glob');
 const path = require('path');
 const fs = require('fs-extra');
 const generator = require('../../generator');
-const pluginsFilter = require('../../lib/pluginsFilter');
 
-const buildEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object) => {
+const buildEntries = (
+  gluestickConfig: GSConfig, logger: Logger, entries: Object, plugins: Object[],
+): Object => {
   fs.removeSync(path.join(process.cwd(), gluestickConfig.clientEntryInitPath));
-  const plugins = require(gluestickConfig.pluginsConfigPath);
   Object.keys(entries).forEach(entry => {
     let name = entries[entry].name || entry;
     name = name === '/' ? 'main' : name.replace('/', '');
@@ -22,7 +22,7 @@ const buildEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object
         routes: entries[entry].routes,
         reducers: entries[entry].reducers,
         clientEntryInitPath: gluestickConfig.clientEntryInitPath,
-        plugins: pluginsFilter(Array.isArray(plugins) ? plugins : plugins.default, 'rootWrapper'),
+        plugins,
       },
     }, logger);
   });

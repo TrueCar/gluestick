@@ -24,8 +24,11 @@ const loggerFactory = (type: string): (values: Array<*>) => void => {
     };
   }
   return (...values) => {
+    const stringfiedValues = JSON.stringify(values, (key: string, value: any) => {
+      return typeof value === 'function' ? `[Function: ${value.name}]` : value;
+    });
     // $FlowFixMe
-    process.send({ type, value: values });
+    process.send({ type, value: stringfiedValues });
   };
 };
 const logger: Logger = {

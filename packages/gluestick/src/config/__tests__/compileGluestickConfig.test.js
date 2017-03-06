@@ -36,18 +36,18 @@ describe('config/compileGluestickConfig', () => {
       // $FlowIgnore
       {
         name: 'testPlugin',
-        body: {
-          overwriteGluestickConfig: (config) => {
-            return Object.assign(config, { protocol: 'https' });
+        overwrites: {
+          gluestickConfig: (config) => {
+            return { ...config, protocol: 'https' };
           },
         },
       },
       // $FlowIgnore
       {
         name: 'testPlugin',
-        body: {
-          overwriteGluestickConfig: (config) => {
-            return Object.assign(config, { host: 'test' });
+        overwrites: {
+          gluestickConfig: (config) => {
+            return { ...config, host: 'test' };
           },
         },
       },
