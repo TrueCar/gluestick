@@ -7,7 +7,7 @@ if (!__dirname.startsWith(process.cwd())) {
   console.log(red('To ensure everything works correctly, please uninstall `gluestick`'));
   console.log(red('and install globally `gluestick-cli`.'));
   process.exit(0);
-};
+}
 
 require('./compile');
 require('../src/cli');
