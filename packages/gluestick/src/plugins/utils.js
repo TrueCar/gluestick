@@ -3,10 +3,8 @@
 import type {
   ServerPlugin,
   Logger,
+  RenderMethod,
 } from '../types';
-
-type RenderMethod = (root: Object, styleTags: Object[]) =>
-{ body: string; head: Object[], additionalScripts?: Object[] };
 
 const _getRenderMethod = (plugins: ServerPlugin[], logger: Logger): ?RenderMethod => {
   const renderMethods = plugins

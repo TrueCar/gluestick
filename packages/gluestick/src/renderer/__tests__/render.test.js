@@ -9,10 +9,8 @@ import type {
   UniversalSettings,
   WebpackConfig,
   CompiledConfig,
+  RenderMethod,
 } from '../../types';
-
-type RenderMethod = (root: Object, styleTags: Object[]) =>
-  { body: string; head: Object[], additionalScripts?: Object[] };
 
 const React = require('react');
 const clone = require('clone');

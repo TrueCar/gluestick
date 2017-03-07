@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, Request, RenderOutput } from '../types';
+import type { Context, Request, RenderOutput, RenderMethod } from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
@@ -7,8 +7,6 @@ const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
-type RenderMethod = (root: Object, styleTags: Object[]) =>
-{ body: string; head: Object[], additionalScripts?: Object[] };
 const getRenderer = (
   isEmail: boolean,
   renderMethod?: RenderMethod,

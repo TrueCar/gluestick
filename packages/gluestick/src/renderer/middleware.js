@@ -11,6 +11,7 @@ import type {
   CacheManager,
   Hooks,
   ServerPlugin,
+  RenderMethod,
 } from '../types';
 
 const render = require('./render');
@@ -33,9 +34,6 @@ type Options = {
   entryWrapperConfig: Object;
   reduxMiddlewares: any[];
 };
-
-type RenderMethod = (root: Object, styleTags: Object[]) =>
-{ body: string; head: Object[], additionalScripts?: Object[] };
 
 type EntriesArgs = {
   entries: Entries;
