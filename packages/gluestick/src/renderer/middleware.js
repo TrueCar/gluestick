@@ -10,6 +10,7 @@ import type {
   RenderOutput,
   CacheManager,
   Hooks,
+  ServerPlugin,
 } from '../types';
 
 const render = require('./render');
@@ -22,6 +23,7 @@ const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const hooksHelper = require('./helpers/hooks');
 const getStatusCode = require('./response/getStatusCode');
+const createPluginUtils = require('../plugins/utils');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -31,6 +33,9 @@ type Options = {
   entryWrapperConfig: Object;
   reduxMiddlewares: any[];
 };
+
+type RenderMethod = (root: Object, styleTags: Object[]) =>
+{ body: string; head: Object[], additionalScripts?: Object[] };
 
 type EntriesArgs = {
   entries: Entries;
@@ -52,6 +57,7 @@ module.exports = async (
     reduxMiddlewares: [],
   },
   hooks: Hooks,
+  serverPlugins?: ServerPlugin[],
 ) => {
   /**
    * TODO: better logging
@@ -115,6 +121,13 @@ module.exports = async (
     const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
     setHeaders(res, currentRoute);
 
+    let renderMethod: RenderMethod;
+    const pluginUtils = createPluginUtils(logger);
+    const renderMethodFromPlugins = serverPlugins && pluginUtils.getRenderMethod(serverPlugins);
+    if (renderMethodFromPlugins) {
+      renderMethod = renderMethodFromPlugins;
+    }
+
     const statusCode: number = getStatusCode(store, currentRoute);
 
     const outputBeforeHooks: RenderOutput = render(
@@ -135,7 +148,7 @@ module.exports = async (
         envVariables: options.envVariables,
       },
       { assets, cacheManager },
-      {},
+      { renderMethod },
     );
     const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
     res.status(statusCode).send(output.responseString);
