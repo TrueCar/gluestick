@@ -75,7 +75,7 @@ const start = (
    * When the app is quit, we go through all of the processes that were
    * started up because of PM2 and we terminate them.
    */
-   process.on('SIGINT', (): void => {
+  process.on('SIGINT', (): void => {
     logger.info(`Stopping pm2 instance: ${name}…`);
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
