@@ -1,52 +1,57 @@
-import React, { Component, PropTypes } from "react";
-import { applyRouterMiddleware, Router, browserHistory } from "react-router";
-import { Provider } from "react-redux";
-import { useScroll } from "react-router-scroll";
+import React, { Component, PropTypes } from 'react';
+import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { useScroll } from 'react-router-scroll';
 
-import prepareRoutesWithTransitionHooks from "../lib/prepareRoutesWithTransitionHooks";
+import prepareRoutesWithTransitionHooks from '../lib/prepareRoutesWithTransitionHooks';
 
 export default class Root extends Component {
   static propTypes = {
+    /* eslint-disable */
     routes: PropTypes.object,
-    reducers: PropTypes.object,
     routerHistory: PropTypes.any,
-    routerContext: PropTypes.object
+    routerContext: PropTypes.object,
+    /* eslint-enable */
   };
 
   static defaultProps = {
-    routerHistory: typeof window !== "undefined" ? browserHistory : null
+    routerHistory: typeof window !== 'undefined' ? browserHistory : null,
   };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
-      mounted: false
+      mounted: false,
     };
 
     this.router = this._renderRouter(props);
   }
 
-  componentDidMount () {
-    this.setState({mounted: true});
+  _setMounted() {
+    this.setState({ mounted: true });
   }
 
-  render () {
+  componentDidMount() {
+    this._setMounted();
+  }
+
+  render() {
     const {
-      store
+      store,
     } = this.props;
 
     return (
       <Provider store={store}>
-          {this.router}
+        {this.router}
       </Provider>
     );
   }
 
-  _renderRouter (props) {
+  _renderRouter(props) {
     const {
       routes,
       routerContext,
-      routerHistory
+      routerHistory,
     } = props;
 
     // server rendering
@@ -54,15 +59,15 @@ export default class Root extends Component {
 
     // router middleware
     const render = applyRouterMiddleware(
-      useScroll((prevRouterProps, { routes }) => {
+      useScroll((prevRouterProps, results) => {
         // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
         // route components in the app. e.g.
         // <Route ignoreScrollBehavior={true} path="mypage" component={MyComponent} />
-        if (routes.some(route => route.ignoreScrollBehavior)) {
+        if (results.routes.some(route => route.ignoreScrollBehavior)) {
           return false;
         }
         return true;
-      })
+      }),
     );
 
     return (
@@ -72,4 +77,3 @@ export default class Root extends Component {
     );
   }
 }
-

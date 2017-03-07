@@ -1,7 +1,7 @@
-import React from "react";
-import { Route } from "react-router";
+import React from 'react';
+import { Route } from 'react-router';
 
-import TransitionHooks from "../components/TransitionHooks";
+import TransitionHooks from '../components/TransitionHooks';
 
 export default (routes) => {
   return (
