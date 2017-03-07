@@ -34,6 +34,9 @@ const entriesPlugins = require('project-entries').plugins;
 // @NOTE: uncomment this line to be able to use server plugins
 // const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 
+// $FlowIgnore Assets should be bundled into render to serve them in production.
+require.context('build-assets');
+
 module.exports = ({ config, logger }: Context) => {
   // @NOTE: uncomment this line to be able to use server plugins
   // const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
@@ -45,8 +48,8 @@ module.exports = ({ config, logger }: Context) => {
 
   const app: Object = express();
   app.use(compression());
-  app.use(express.static(
-    path.join(process.cwd(), config.GSConfig.assetsPath),
+  app.use('/assets', express.static(
+    path.join(process.cwd(), config.GSConfig.buildAssetsPath),
   ));
 
   if (process.env.NODE_ENV !== 'production') {
