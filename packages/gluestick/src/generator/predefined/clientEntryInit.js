@@ -12,7 +12,7 @@ import reducers from "${args => args.reducers}";
 import '${args => args.component}';
 
 ${args => args.plugins.reduce((prev, curr) => {
-  return prev.concat(`import ${convertToCamelCase(curr.name)} from '${curr.name}/${curr.meta.type}';\n`);
+  return prev.concat(`import ${convertToCamelCase(curr.name)} from "${curr.name}/${curr.meta.type}";\n`);
 }, '')}
 
 export const getStore = (httpClient) => {
@@ -27,15 +27,21 @@ export const getStore = (httpClient) => {
 
 if (typeof window === "object") {
   const rootWrappers = [
-    ${args => args.plugins.reduce((prev, curr, index) => {
-      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)},\n`);
+    ${args => args.plugins.filter((plugin) => plugin.meta.wrapper).reduce((prev, curr, index) => {
+      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)}.plugin,\n`);
+    }, '')}
+  ];
+
+  const preRenderHooks = [
+    ${args => args.plugins.filter((plugin) => plugin.meta.hook).reduce((prev, curr, index) => {
+      return prev.concat(`${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)}.plugin,\n`);
     }, '')}
   ];
 
   EntryWrapper.start(
     getRoutes,
     getStore,
-    { rootWrappers },
+    { rootWrappers, {}, preRenderHooks },
   );
 }
 `;
