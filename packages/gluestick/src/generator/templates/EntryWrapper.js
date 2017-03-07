@@ -40,8 +40,10 @@ const start = (
         {...renderProps}
       />
     );
-    if (preRenderHooks) {
-      preRenderHooks.forEach((hook) => { hook(); });
+    if (preRenderHooks && preRenderHooks.length > 0) {
+      preRenderHooks.forEach((hook) => {
+        if (typeof hook === "function") { hook(); }
+      });
     }
     render(entry, document.getElementById("main"));
   });
