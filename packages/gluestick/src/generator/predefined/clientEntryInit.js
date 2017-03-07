@@ -41,7 +41,7 @@ if (typeof window === "object") {
   EntryWrapper.start(
     getRoutes,
     getStore,
-    { rootWrappers, {}, preRenderHooks },
+    { rootWrappers, rootWrappersOptions: [], preRenderHooks },
   );
 }
 `;
