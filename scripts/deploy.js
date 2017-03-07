@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+if (process.argv.length <= 2 || !/\d+\.\d+\.\d+.*/.test(process.argv[2])) {
+  console.error('Invalid version specified.');
+  process.exit(1);
+}
+
 const spawn = require('cross-spawn').spawn;
 
 // Publish packages to npm registry
