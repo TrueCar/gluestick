@@ -20,7 +20,7 @@ export const getStore = (httpClient) => {
     httpClient,
     () => reducers,
     middleware,
-    (cb) => module.hot && module.hot.accept('../../${args => args.reducers}', cb),
+    (cb) => module.hot && module.hot.accept("../../${args => args.reducers}", cb),
     !!module.hot
   );
 };
