@@ -48,7 +48,6 @@ module.exports = async ({ config, logger }: Context, options: StartOptions) => {
   }
 
   if (!(isProduction && options.skipBuild)) {
-    console.log('chuj1');
     spawn(
       'node',
       [
