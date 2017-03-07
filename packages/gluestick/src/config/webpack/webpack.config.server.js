@@ -40,7 +40,7 @@ module.exports = (
   );
   config.resolve.alias['plugins-config-path'] = gluestickConfig.pluginsConfigPath;
   config.resolve.alias['build-assets'] = path.join(
-    config.resolve.alias.root, gluestickConfig.buildAssetsPath
+    config.resolve.alias.root, gluestickConfig.buildAssetsPath,
   );
   return serverConfiguration(config, settings);
 };
