@@ -16,7 +16,26 @@ module.exports = async ({ config, logger }: Context, options: StartOptions) => {
   await autoUpgrade({ config, logger }, options.dev);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
-  const rawArgs: string[] = filterArg(options.parent.rawArgs, 'dev');
+  console.log(rawArgs);
+  const rawArgs: string[] = filterArg(options.parent.rawArgs, ['--dev', '-P', '--skip-build']);
+  console.log(rawArgs);
+  const startServer = () => {
+    spawn(
+      'node',
+      [
+        './node_modules/.bin/gluestick',
+        'start-server',
+        ...rawArgs.slice(2),
+      ],
+      {
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          NODE_ENV: isProduction ? 'production' : 'development',
+        },
+      },
+    );
+  }
 
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {
@@ -30,6 +49,7 @@ module.exports = async ({ config, logger }: Context, options: StartOptions) => {
   }
 
   if (!(isProduction && options.skipBuild)) {
+    console.log('chuj1');
     spawn(
       'node',
       [
@@ -45,21 +65,10 @@ module.exports = async ({ config, logger }: Context, options: StartOptions) => {
       if (payload !== 'client started') {
         return;
       }
-      spawn(
-        'node',
-        [
-          './node_modules/.bin/gluestick',
-          'start-server',
-          ...rawArgs.slice(2),
-        ],
-        {
-          stdio: 'inherit',
-          env: {
-            ...process.env,
-            NODE_ENV: isProduction ? 'production' : 'development',
-          },
-        },
-      );
+
+      startServer();
     });
+  } else {
+    startServer();
   }
 };
