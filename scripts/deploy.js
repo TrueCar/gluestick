@@ -4,7 +4,7 @@ const spawn = require('cross-spawn').spawn;
 
 // Publish packages to npm registry
 spawn.sync('npm', [
-  'run', 'lerna', 'publish', '--', '--repo-version', process.argv[2], '--yes', '--skip-npm',
+  'run', 'lerna', 'publish', '--', '--repo-version', process.argv[2], '--yes',
 ], { stdio: 'inherit' });
 
 console.log('Pushing tag commit...');
