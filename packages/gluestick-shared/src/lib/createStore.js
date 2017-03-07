@@ -1,10 +1,10 @@
-import thunk from "redux-thunk";
-import { combineReducers, createStore, applyMiddleware, compose } from "redux";
-import _gluestick from "./reducers";
-import promiseMiddleware from "../lib/promiseMiddleware";
+import thunk from 'redux-thunk';
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
+import _gluestick from './reducers';
+import promiseMiddleware from '../lib/promiseMiddleware';
 
 export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
-  const reducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
+  const reducer = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
 
   let middleware = [
     promiseMiddleware(client),
@@ -14,7 +14,7 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
   // Include middleware that will warn when you mutate the state object
   // but only include it in dev mode
   if (devMode) {
-    middleware.push(require("redux-immutable-state-invariant")());
+    middleware.push(require('redux-immutable-state-invariant')());
   }
 
   // When `customMiddleware` is of type `function`, pass it current
@@ -26,15 +26,15 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
 
   const composeArgs = [
     applyMiddleware.apply(this, middleware),
-    typeof window === "object" && typeof window.devToolsExtension !== "undefined" ? window.devToolsExtension() : f => f
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
   ];
 
-  const finalCreateStore = compose.apply(null, composeArgs)(createStore);
-  const store = finalCreateStore(reducer, typeof window !== "undefined" ? window.__INITIAL_STATE__ : {});
+  const finalCreateStore = compose(...composeArgs)(createStore);
+  const store = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
 
   if (hotCallback) {
     hotCallback(() => {
-      const nextReducer = combineReducers(Object.assign({}, {_gluestick}, customRequire()));
+      const nextReducer = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
       store.replaceReducer(nextReducer);
     });
   }

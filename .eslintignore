@@ -1,5 +1,4 @@
 **/coverage/**
 **/node_modules/**
 **/flow-typed/**
-# TODO gluestick-shared needs to have lint fixed
-packages/gluestick-shared/**
+packages/gluestick-shared/build/**

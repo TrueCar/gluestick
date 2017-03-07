@@ -1,4 +1,4 @@
-import { match } from "react-router";
+import { match } from 'react-router';
 
 const getBeforeRoute = (component = {}) => {
   const c = component.WrappedComponent || component;
@@ -6,7 +6,7 @@ const getBeforeRoute = (component = {}) => {
   // @deprecated since 0.0.1
   // check for deprecated fetchData method
   if (c.fetchData) {
-    console.warn("`fetchData` is deprecated. Please use `gsBeforeRoute` instead.");
+    console.warn('`fetchData` is deprecated. Please use `gsBeforeRoute` instead.');
   }
 
   return c.gsBeforeRoute || c.fetchData;
@@ -18,8 +18,7 @@ function getRouteComponents(routes) {
   routes.forEach(route => {
     if (route.components) {
       Object.values(route.components).forEach(c => components.push(c));
-    }
-    else if (route.component) {
+    } else if (route.component) {
       components.push(route.component);
     }
   });
@@ -36,23 +35,24 @@ function getRouteComponents(routes) {
  * @param {Express.Request} [serverProps.request] if we are on the server, the
  * server request that triggered the method
  */
-export function runBeforeRoutes (store, renderProps, serverProps) {
+export function runBeforeRoutes(store, renderProps, serverProps = { isServer: false }) {
   const { params, location: query } = renderProps;
-  serverProps = serverProps || {isServer: false};
 
   const promises = getRouteComponents(renderProps.routes)
   .map(getBeforeRoute).filter(f => f) // only look at ones with a static gsBeforeRoute()
-  .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps));  // call fetch data methods and save promises
+  .map(beforeRoute => beforeRoute(
+    store, params, query || {}, serverProps,
+  ));  // call fetch data methods and save promises
 
   return Promise.all(promises);
 }
 
-export function createTransitionHook (store, routes) {
-  return function(location, cb) {
-    match({routes: routes, location}, async function (error, redirectLocation, renderProps) {
+export function createTransitionHook(store, routes) {
+  return function checkLocation(location, cb) {
+    match({ routes, location }, async (error, redirectLocation, renderProps) => {
       try {
         await runBeforeRoutes(store, renderProps);
-      } catch(err) {
+      } catch (err) {
         console.error(err);
       } finally {
         cb();
@@ -60,4 +60,3 @@ export function createTransitionHook (store, routes) {
     });
   };
 }
-

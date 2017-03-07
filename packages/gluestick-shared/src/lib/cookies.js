@@ -6,18 +6,18 @@ const COOKIE_OPTS = {
   maxAge: v => Number(v),
   path: v => v,
   secure: () => true,
-  signed: () => true
+  signed: () => true,
 };
 
-function Cookie(name=null, value=null, options={}) {
+function Cookie(name = null, value = null, options = {}) {
   this.name = name;
   this.value = value;
   this.options = options;
 }
 
-Cookie.prototype.toString = function(incoming=true) {
+Cookie.prototype.toString = function toString(incoming = true) {
   if (!this.name) {
-    return "";
+    return '';
   }
 
   const kvs = [`${this.name}=${encodeURIComponent(this.value)}`];
@@ -30,15 +30,14 @@ Cookie.prototype.toString = function(incoming=true) {
   Object.keys(COOKIE_OPTS).forEach(attr => {
     const value = this.options[attr];
 
-    if (typeof(value) === "boolean") {
+    if (typeof (value) === 'boolean') {
       bvs.push(attr.charAt(0).toUpperCase() + attr.slice(1));
-    }
-    else if (typeof(value) !== "undefined") {
+    } else if (typeof (value) !== 'undefined') {
       kvs.push(`${attr}=${value}`);
     }
   });
 
-  return kvs.concat(bvs).join("; ").trim();
+  return kvs.concat(bvs).join('; ').trim();
 };
 
 function camelCase(string) {
@@ -51,9 +50,10 @@ export function parse(cookieString) {
   const cookies = [];
   let c = new Cookie();
 
-  cookieString.split(";").forEach(s => {
-    const m = new RegExp("([\\w\%\-\.]+)=(.*)", "g").exec(s.trim());
-    let k = s.trim(), v;
+  cookieString.split(';').forEach(s => {
+    const m = /([\w%-.]+)=(.*)/g.exec(s.trim());
+    let k = s.trim();
+    let v;
 
     if (m !== null) {
       [k, v] = m.splice(1);
@@ -61,11 +61,10 @@ export function parse(cookieString) {
 
     const optionName = camelCase(k.charAt(0).toLowerCase() + k.slice(1));
 
-    if (COOKIE_OPTS.hasOwnProperty(optionName)) {
+    if (Object.hasOwnProperty.call(COOKIE_OPTS, optionName)) {
       const value = COOKIE_OPTS[optionName](v);
       c.options[optionName] = value;
-    }
-    else {
+    } else {
       if (c.name !== null) {
         cookies.push(c);
         c = new Cookie();
@@ -80,8 +79,8 @@ export function parse(cookieString) {
 }
 
 export function merge(oldCookieString, newCookieString) {
-  const oldCookieJar = !!oldCookieString ? parse(oldCookieString) : [];
-  const newCookieJar = !!newCookieString ? parse(newCookieString) : [];
+  const oldCookieJar = oldCookieString ? parse(oldCookieString) : [];
+  const newCookieJar = newCookieString ? parse(newCookieString) : [];
 
   const merged = [];
   oldCookieJar.forEach(cookie => {
@@ -89,5 +88,5 @@ export function merge(oldCookieString, newCookieString) {
       merged.push(cookie);
     }
   });
-  return merged.concat(newCookieJar).join("; ").trim();
+  return merged.concat(newCookieJar).join('; ').trim();
 }
