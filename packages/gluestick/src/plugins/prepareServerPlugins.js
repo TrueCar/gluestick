@@ -46,13 +46,12 @@ module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(
       (plugin: PluginRef, index: number): boolean => {
-        if (typeof plugin.ref !== 'function') {
+        if (typeof plugin.ref !== 'function' && typeof plugin.ref.plugin !== 'function') {
           throw new Error(`Plugin at position ${index} must export a function`);
         }
         return plugin.type === 'server';
       },
     );
-
     if (!filteredPlugins.length) {
       return [];
     }
@@ -62,12 +61,11 @@ module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
       (value: PluginRef): ServerPlugin => {
         const normalizedPlugin: Plugin = {
-          name: value.ref.meta.name || value.ref.name || 'unknown',
-          meta: value.ref.meta,
+          name: value.ref.meta ? value.ref.meta.name : value.ref.name || 'unknown',
+          meta: value.ref.meta || {},
           body: value.ref,
           options: value.options || {},
         };
-
         // Second `compilePlugin` argument is an object with gluestick utilities that
         // will be available for plugins to use.
         const compilationResults: Object = compilePlugin(normalizedPlugin, { logger });
