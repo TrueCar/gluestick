@@ -10,7 +10,8 @@
     "test-coverage": "lerna exec npm run test-coverage",
     "lint": "eslint .",
     "flow": "flow",
-    "ci": "npm run lint && npm run flow && npm run test-coverage"
+    "ci": "npm run lint && npm run flow && npm run test-coverage",
+    "publish": "./scripts/deploy.js"
   },
   "dependencies": {
     "lerna": "2.0.0-beta.37",
