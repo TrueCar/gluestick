@@ -12,6 +12,7 @@ const templateContainerHomeTest = require('../templates/ContainerHomeTest')(crea
 const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(createTemplate);
 const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
+const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
 const templateRoutes = require('../templates/Routes')(createTemplate);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
@@ -49,6 +50,11 @@ module.exports = (options: GeneratorOptions) => ({
       path: `src/apps/${options.name}/components`,
       filename: 'Home.js',
       template: templateHome,
+    },
+    {
+      path: `src/apps/${options.name}/components`,
+      filename: 'Home.css',
+      template: templateHomeCss,
     },
     {
       path: `src/apps/${options.name}/components`,
