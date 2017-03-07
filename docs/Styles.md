@@ -21,4 +21,13 @@ The code above will automatically extract the css from the referenced file and
 include it in a base css file that is included on new page loads. References to
 images and font files will automatically be handled as well.
 
+Please note if you use external modules (packages in `node_modules`) you need
+to use relative path or `compiled` alias. Otherwise those modules won't be
+compiled - loaders won't process them.
+Read more [here](https://github.com/TrueCar/gluestick/issues/734)
+```
+import "compiled/bootstrap/dist/css/bootstrap.css";
+```
+
+
 _If you would like to see better css support, please submit a pull request :)_
