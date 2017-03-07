@@ -10,7 +10,7 @@ import type {
   Context,
   Request,
   Response,
-  // ServerPlugin,
+  ServerPlugin,
 } from '../types';
 
 const path = require('path');
@@ -32,12 +32,12 @@ const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 // @NOTE: uncomment this line to be able to use server plugins
-// const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 
 module.exports = ({ config, logger }: Context) => {
   // @NOTE: uncomment this line to be able to use server plugins
-  // const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
-  // logger.debug(serverPlugins);
+  const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+  logger.debug(serverPlugins);
   // Get runtime plugins that will be passed to EntryWrapper.
   const runtimePlugins: Function[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
@@ -72,6 +72,7 @@ module.exports = ({ config, logger }: Context) => {
         entryWrapperConfig: {},
       },
       hooks,
+      serverPlugins,
     );
   });
 
