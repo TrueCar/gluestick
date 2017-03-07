@@ -51,6 +51,7 @@ module.exports = (
   const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
+  const rootWrappers = entriesPlugins.filter((plugin) => plugin.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}
@@ -58,7 +59,7 @@ module.exports = (
       config={entryWrapperConfig}
       getRoutes={routes}
       httpClient={httpClient}
-      rootWrappers={entriesPlugins}
+      rootWrappers={rootWrappers}
       rootWrappersOptions={{
         userAgent: req.headers['user-agent'],
       }}
