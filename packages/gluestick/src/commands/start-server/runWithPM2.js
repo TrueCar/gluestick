@@ -75,7 +75,7 @@ const start = (
    * When the app is quit, we go through all of the processes that were
    * started up because of PM2 and we terminate them.
    */
-  process.on('SIGINT', (): void => {
+   process.on('SIGINT', (): void => {
     logger.info(`Stopping pm2 instance: ${name}…`);
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
@@ -103,9 +103,9 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
     logger.info('Building server entry.');
 
     const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
-    pm2.connect((error: string) => {
-      if (error) {
-        logger.error(error);
+    pm2.connect((err: string) => {
+      if (err) {
+        logger.error(err);
         pm2.disconnect();
         process.exit(1);
       }
