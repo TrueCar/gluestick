@@ -8,9 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "test-coverage": "jest --coverage",
-    "lint": "eslint ./ --ignore-path ../../.eslintignore",
-    "flow": "echo \"No flowconfig specified\" && exit 0"
+    "test-coverage": "jest --coverage"
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "repository": {
