@@ -41,8 +41,7 @@ module.exports = ({ config, logger }: Context) => {
   // Get runtime plugins that will be passed to EntryWrapper.
 
   // Developers can add an optional hook that
-  // includes any script initialization stuff. This is a good place to add
-  // something like `require("newrelic");`
+  // includes script with initialization stuff.
   if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
     hooks.preInitServer();
   }
