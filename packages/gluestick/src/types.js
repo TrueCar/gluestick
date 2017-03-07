@@ -192,7 +192,7 @@ export type UpdateDepsPromptResults = {
 }
 
 export type Hooks = {
-  preInitServer?: Function | Function[];
+  preInitServer?: Function;
   preRenderFromCache?: Function | Function[];
   postRenderRequirements?: Function | Function[];
   preRedirect?: Function | Function[];
