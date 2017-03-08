@@ -8,4 +8,4 @@ const meta = { hook: true };
 export default {
   plugin,
   meta,
-}
+};
