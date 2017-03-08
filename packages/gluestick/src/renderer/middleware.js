@@ -22,7 +22,6 @@ const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
-const hooksHelper = require('./helpers/hooks');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
 
@@ -54,7 +53,7 @@ module.exports = async (
     entryWrapperConfig: {},
     reduxMiddlewares: [],
   },
-  hooks: Hooks,
+  { hooks, hooksHelper }: { hooks: Hooks, hooksHelper: Function },
   serverPlugins?: ServerPlugin[],
 ) => {
   /**

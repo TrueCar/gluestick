@@ -12,10 +12,7 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
-    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
-    "postpublish": "./docker/create-base-image.js",
-    "update-version": "npm version",
-    "postupdate-version": "./docker/generate-dockerfile.js"
+    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js"
   },
   "keywords": [
     "react",
