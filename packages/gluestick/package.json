@@ -9,9 +9,6 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src",
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "test-coverage": "jest --coverage",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js"
   },
   "keywords": [
@@ -57,7 +54,6 @@
     "handlebars": "4.0.6",
     "http-proxy-middleware": "0.17.3",
     "inquirer": "3.0.1",
-    "jest": "19.0.0",
     "lru-cache": "4.0.2",
     "mkdirp": "0.5.1",
     "node-glob": "1.2.0",
@@ -92,15 +88,5 @@
   },
   "devDependencies": {
     "temp": "0.8.3"
-  },
-  "jest": {
-    "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$",
-    "roots": [
-      "src"
-    ],
-    "setupFiles": [
-      "./jest/setup.js"
-    ]
   }
 }

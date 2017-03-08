@@ -4,8 +4,6 @@
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
-    "test": "jest",
-    "test-coverage": "jest --coverage",
     "clean": "rimraf build",
     "build": "./node_modules/.bin/babel src --out-dir build",
     "prepublish": "npm run clean && npm run build"
@@ -29,10 +27,6 @@
     "redux-immutable-state-invariant": "1.2.2",
     "redux-thunk": "2.0.1"
   },
-  "jest": {
-    "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$"
-  },
   "devDependencies": {
     "axios": "0.12.0",
     "babel-cli": "^6.8.0",
@@ -41,7 +35,6 @@
     "babel-preset-es2015": "6.22.0",
     "babel-preset-react": "6.23.0",
     "babel-preset-stage-0": "6.22.0",
-    "jest": "19.0.0",
     "radium": ">=0.17.1",
     "react": ">=15.1.0",
     "react-dom": ">=15.1.0",

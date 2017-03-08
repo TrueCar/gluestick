@@ -6,10 +6,22 @@ const spawnMock = require('cross-spawn');
 
 const spawnOptions = { stdio: 'inherit' };
 
+const testCwdPath = 'test-cwd';
+
 const getDependencyPath = name =>
-  path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', name);
+  path.join(testCwdPath, 'node_modules', '.bin', name);
+
+const originalProcessCwd = process.cwd.bind(process);
 
 describe('cli: gluestick bin', () => {
+  beforeEach(() => {
+    process.cwd = jest.fn(() => testCwdPath);
+  });
+
+  afterAll(() => {
+    process.cwd = originalProcessCwd;
+  });
+
   it('runs the dependency without any options', () => {
     const dependencyName = 'fakeDep';
 
