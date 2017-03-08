@@ -100,7 +100,7 @@
       "src"
     ],
     "setupFiles": [
-      "./jest/setup.js"
+      "./jest.js"
     ]
   }
 }
