@@ -40,6 +40,7 @@ module.exports = (command: Command, logger: Logger): void => {
     'component',
     'reducer',
     'container',
+    'package',
   ];
 
   if (predefinedGenerators.find((element) => element === generatorName)) {

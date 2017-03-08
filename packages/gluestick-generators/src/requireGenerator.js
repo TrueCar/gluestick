@@ -8,14 +8,15 @@ const { convertToCamelCase, convertToKebabCase } = require('./utils');
 // $FlowFixMe
 module.createTemplate = createTemplate;
 
-const PREDEFINED: string = 'predefined';
+const PATH_TO_GLUESTICK_TEMPLATES = '../../gluestick/generator/predefined';
+// const PATH_TO_GLUESTICK_CLI_PREDEFINED = '../gluestick-cli/generator';
 const EXTERNAL: string = 'generators';
 
 const getPossiblePaths = (generatorName: string): string[] => [
-  path.join(process.cwd(), `generators/${convertToCamelCase(generatorName)}.js`),
-  path.join(process.cwd(), `generators/${convertToKebabCase(generatorName)}.js`),
-  path.join(__dirname, `${PREDEFINED}/${convertToCamelCase(generatorName)}.js`),
-  path.join(__dirname, `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
+  path.join(process.cwd(), `${EXTERNAL}/${convertToCamelCase(generatorName)}.js`),
+  path.join(process.cwd(), `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
+  path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
+  path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
 ];
 
 /**

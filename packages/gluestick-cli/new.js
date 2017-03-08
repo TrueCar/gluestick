@@ -4,6 +4,7 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
+const generate = require('gluestick-generators');
 const version = require('./package.json').version;
 
 module.exports = (appName, options, exitWithError) => {
@@ -40,6 +41,28 @@ module.exports = (appName, options, exitWithError) => {
     );
   }
   mkdir.sync(path.join(process.cwd(), appName));
+
+  const generatorOptions = {
+    dev: options.dev || null,
+    appName,
+  };
+
+  const logger = {
+    info: console.log,
+    success: console.log,
+    error: console.log,
+    warn: console.log,
+  };
+  // console.log('test');
+  // generate(
+  //   {
+  //     generatorName: 'package',
+  //     entityName: 'package',
+  //     options: generatorOptions,
+  //   },
+  //   logger,
+  // );
+  // console.log('test1');
   fs.writeFileSync(path.join(
     process.cwd(), appName, 'package.json'),
     JSON.stringify(packageDeps),
