@@ -9,7 +9,7 @@ const mkdirp = require('mkdirp');
 const checkForMismatch = require('./checkForMismatch');
 const updateDependencies = require('./updateDependencies');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
-const parseConfig = require('../generator/parseConfig');
+const parseConfig = require('gluestick-generators').parseConfig;
 
 module.exports = ({ config, logger }: Context, dev: boolean = false) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));

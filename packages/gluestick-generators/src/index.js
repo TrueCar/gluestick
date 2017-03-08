@@ -1,3 +1,6 @@
 /* @flow */
 
-module.exports = require('./generator');
+module.exports = {
+  default: require('./generator'),
+  parseConfig: require('./parseConfig'),
+};

@@ -7,7 +7,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const cliColorScheme = require('../cli/colorScheme');
-const { isValidEntryPoint } = require('../generator/utils');
+const { isValidEntryPoint } = require('../utils');
 
 const { highlight, filename } = cliColorScheme;
 

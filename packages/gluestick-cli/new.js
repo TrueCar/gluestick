@@ -4,7 +4,7 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
-const generate = require('gluestick-generators');
+const generate = require('gluestick-generators').default;
 const version = require('./package.json').version;
 
 module.exports = (appName, options, exitWithError) => {
@@ -52,6 +52,7 @@ module.exports = (appName, options, exitWithError) => {
     success: console.log,
     error: console.log,
     warn: console.log,
+    debug: console.log,
   };
 
   process.chdir(appName);

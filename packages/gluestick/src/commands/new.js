@@ -4,7 +4,7 @@ import type { Context, Logger } from '../types';
 
 const path = require('path');
 const spawn = require('cross-spawn');
-const generate = require('gluestick-generators');
+const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../cli/colorScheme');
 const packageJSON = require('../../package.json');

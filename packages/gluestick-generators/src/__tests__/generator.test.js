@@ -1,5 +1,4 @@
 /* @flow */
-
 jest.mock('../writeTemplate', () => ({
   written: ['my-path/MyComponent', 'my-path/__tests__/MyComponent'],
   modified: [],
@@ -7,8 +6,15 @@ jest.mock('../writeTemplate', () => ({
 jest.mock('../../cli/logger');
 
 const fs = require('fs');
-const generator = require('../');
-const logger = require('../../cli/logger');
+const generator = require('../').default;
+
+const logger = {
+  info: console.log,
+  success: console.log,
+  error: console.log,
+  warn: console.log,
+  debug: console.log,
+};
 
 describe('generator/index', () => {
   beforeEach(() => {

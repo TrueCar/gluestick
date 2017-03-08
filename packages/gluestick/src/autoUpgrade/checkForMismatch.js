@@ -2,7 +2,7 @@
 import type { MismatchedModules, UpdateDepsPromptResults } from '../types';
 
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
-const parseConfig = require('../generator/parseConfig');
+const parseConfig = require('gluestick-generators').parseConfig;
 const utils = require('./utils');
 
 type ProjectPackage = {

@@ -1,5 +1,5 @@
 /* @flow */
-import type { GeneratorOptions } from '../types';
+import type { GeneratorOptions } from '../../src/types';
 
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;

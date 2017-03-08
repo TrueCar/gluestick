@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../types';
+import type { PredefinedGeneratorOptions } from '../../src/types';
 
 const path = require('path');
 

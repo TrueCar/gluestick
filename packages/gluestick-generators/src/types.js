@@ -12,11 +12,6 @@ export type LoggerTypes = {
   error: Function;
 }
 
-export type CreateTemplate = (
-  interpolations: Array<*>,
-  strings: Array<string>,
-) => (args: Object) => string;
-
 export type Generator = {
   name: string;
   config: any;
