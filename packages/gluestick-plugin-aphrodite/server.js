@@ -2,7 +2,7 @@ import { StyleSheetServer } from 'aphrodite';
 import { renderToString } from 'react-dom/server';
 import React from 'react';
 
-export default () => ({
+const aphroditePlugin = () => ({
   renderMethod: (root) => {
     const { css, html } = StyleSheetServer.renderStatic(() => {
       return renderToString(root);
@@ -16,3 +16,7 @@ export default () => ({
     return { body: html, head, additionalScript };
   },
 });
+
+aphroditePlugin.meta = { name: 'gluestick-plugin-aphrodite' };
+
+export default aphroditePlugin;
