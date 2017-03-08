@@ -3,17 +3,16 @@ jest.mock('../writeTemplate', () => ({
   written: ['my-path/MyComponent', 'my-path/__tests__/MyComponent'],
   modified: [],
 }));
-jest.mock('../../cli/logger');
 
 const fs = require('fs');
 const generator = require('../').default;
 
 const logger = {
-  info: console.log,
-  success: console.log,
-  error: console.log,
-  warn: console.log,
-  debug: console.log,
+  info: jest.fn(),
+  success: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
 };
 
 describe('generator/index', () => {

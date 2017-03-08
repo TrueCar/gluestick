@@ -20,13 +20,21 @@ type Command = {
   options?: GeneratorOptions;
 }
 
+const logger: Logger = {
+  info: console.log,
+  success: console.log,
+  error: console.log,
+  warn: console.log,
+  debug: console.log,
+};
+
 /**
  * Starts generator routine.
  *
  * @param command {Object} { generatorName, entityName, entryPoint, options } Command object
  * @param logger {Object} logger Logger instance
  */
-module.exports = (command: Command, logger: Logger): void => {
+module.exports = (command: Command, logger: Logger = logger): void => {
   const {
     generatorName,
     entityName,

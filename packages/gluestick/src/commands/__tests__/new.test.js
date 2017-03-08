@@ -4,12 +4,12 @@ import path from 'path';
 import newApp from '../new';
 
 jest.mock('cross-spawn');
-jest.mock('../../generator');
+jest.mock('gluestick-generators');
 
 const spawn = require('cross-spawn');
 
 const { highlight, filename } = require('../../cli/colorScheme');
-const generate = require('../../generator');
+const generate = require('gluestick-generators').default;
 
 const mockPackageJson = (mockPath) => {
   jest.doMock(mockPath, () => {
