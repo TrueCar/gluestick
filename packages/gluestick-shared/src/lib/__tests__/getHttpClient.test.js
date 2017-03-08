@@ -40,7 +40,7 @@ describe('lib/getHttpClient', () => {
       return i;
     }
 
-    const create = jest.fn(() => (getInstance()));
+    const create = jest.fn(() => getInstance());
 
     defaultHeaders = {
       common: {
