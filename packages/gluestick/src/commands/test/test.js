@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context } from '../types.js';
+import type { Context } from '../../types.js';
 
 const fs = require('fs');
 const spawn = require('cross-spawn').spawn;
@@ -8,8 +8,8 @@ const path = require('path');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
-const JEST_DEBUG_CONFIG_PATH = `${path.join(__dirname, '..', '..', 'jest')}/jestEnvironmentNodeDebug.js`;
-const TEST_MOCKS_PATH = `${path.join(__dirname, '..', '..', 'jest', '__mocks__')}`;
+const JEST_DEBUG_CONFIG_PATH = path.join(__dirname, 'jestEnvironmentNodeDebug.js');
+const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const getJestDefaultConfig = (aliases, webpackRules) => {
   const moduleNameMapper = {};
