@@ -1,6 +1,4 @@
-import sinon from 'sinon';
-import { expect } from 'chai';
-import getHttpClient from '../../src/lib/getHttpClient';
+import getHttpClient from '../getHttpClient';
 
 describe('lib/getHttpClient', () => {
   let axiosMock;
@@ -42,9 +40,7 @@ describe('lib/getHttpClient', () => {
       return i;
     }
 
-    const create = sinon.stub().returns(getInstance());
-    create.onCall(1).returns(getInstance());
-    create.onCall(2).returns(getInstance());
+    const create = jest.fn(() => (getInstance()));
 
     defaultHeaders = {
       common: {
@@ -72,7 +68,7 @@ describe('lib/getHttpClient', () => {
     getHttpClient(options, undefined, undefined, axiosMock);
     const { modifyInstance, ...expectedResult } = options;
     expectedResult.headers = defaultHeaders;
-    expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
+    expect(axiosMock.create.mock.calls[0][0]).toEqual(expectedResult);
   });
 
   it('should call create with passed params (including merged headers) and without modifyInstance', () => {
@@ -88,7 +84,7 @@ describe('lib/getHttpClient', () => {
     getHttpClient(options, undefined, undefined, axiosMock);
     const { modifyInstance, ...expectedResult } = options;
     expectedResult.headers = { ...expectedResult.headers, ...defaultHeaders };
-    expect(axiosMock.create.lastCall.args[0]).to.deep.equal(expectedResult);
+    expect(axiosMock.create.mock.calls[0][0]).toEqual(expectedResult);
   });
 
   it('should merge request headers if request object is passed', () => {
@@ -106,10 +102,10 @@ describe('lib/getHttpClient', () => {
       },
     };
     getHttpClient(options, req, {}, axiosMock);
-    expect(axiosMock.create.calledWith(options)).to.equal(false);
+    expect(axiosMock.create).not.toBeCalledWith(options);
 
     const { headers, ...config } = options;
-    expect(axiosMock.create.lastCall.args[0]).to.deep.equal({
+    expect(axiosMock.create.mock.calls[0][0]).toEqual({
       baseURL: `http://${req.headers.host}`,
       headers: {
         ...req.headers,
@@ -128,7 +124,7 @@ describe('lib/getHttpClient', () => {
       secure: true,
     };
     getHttpClient({}, req, {}, axiosMock);
-    expect(axiosMock.create.lastCall.args[0].baseURL).to.equal(`https://${req.headers.host}`);
+    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(`https://${req.headers.host}`);
   });
 
   it('should set baseURL with http if req.secure is false', () => {
@@ -140,7 +136,7 @@ describe('lib/getHttpClient', () => {
       secure: false,
     };
     getHttpClient({}, req, {}, axiosMock);
-    expect(axiosMock.create.lastCall.args[0].baseURL).to.equal(`http://${req.headers.host}`);
+    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(`http://${req.headers.host}`);
   });
 
   it('should forward along cookies back to the browser', () => {
@@ -153,9 +149,9 @@ describe('lib/getHttpClient', () => {
     };
 
     const mockServerResponse = {
-      removeHeader: sinon.spy(),
-      cookie: sinon.spy(),
-      append: sinon.spy(),
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
@@ -165,7 +161,7 @@ describe('lib/getHttpClient', () => {
       },
     });
 
-    expect(mockServerResponse.append.lastCall.args).to.deep.equal(['Set-Cookie', 'oh=hai']);
+    expect(mockServerResponse.append.mock.calls[0]).toEqual(['Set-Cookie', 'oh=hai']);
   });
 
   it('should send received cookies in subsequent requests with the same instance', () => {
@@ -178,9 +174,9 @@ describe('lib/getHttpClient', () => {
     };
 
     const mockServerResponse = {
-      removeHeader: sinon.spy(),
-      cookie: sinon.spy(),
-      append: sinon.spy(),
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
       headers: {
         'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
       },
@@ -196,7 +192,7 @@ describe('lib/getHttpClient', () => {
       headers: {},
     });
 
-    expect(request[0].headers.cookie).to.equal('name=Lincoln; _some_cookie=abc; another_cookie=something');
+    expect(request[0].headers.cookie).toEqual('name=Lincoln; _some_cookie=abc; another_cookie=something');
   });
 
   it('should not send received cookies in subsequent requests with a new instance', () => {
@@ -209,9 +205,9 @@ describe('lib/getHttpClient', () => {
     };
 
     const mockServerResponse = {
-      removeHeader: sinon.spy(),
-      cookie: sinon.spy(),
-      append: sinon.spy(),
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
       headers: {
         'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
       },
@@ -229,11 +225,11 @@ describe('lib/getHttpClient', () => {
       headers: {},
     });
 
-    expect(request[0].headers.cookie).to.equal('name=Lincoln');
+    expect(request[0].headers.cookie).toEqual('name=Lincoln');
   });
 
   it('should allow you to modify the axios instance with `modifyInstance`', () => {
-    const calledInsideModify = sinon.spy();
+    const calledInsideModify = jest.fn();
     const options = {
       modifyInstance: (client) => {
         calledInsideModify();
@@ -250,8 +246,8 @@ describe('lib/getHttpClient', () => {
       secure: false,
     };
     const client = getHttpClient(options, req);
-    expect(calledInsideModify.called).to.equal(true);
-    expect(client.modifiedClient).to.equal(true);
+    expect(calledInsideModify.mock.calls.length).toBe(1);
+    expect(client.modifiedClient).toEqual(true);
   });
 
   it('should merge headers from 3 sources when in the browser', (done) => {
@@ -297,9 +293,9 @@ describe('lib/getHttpClient', () => {
     const client = getHttpClient(optionsForGetHttpClient);
     client.get('/test/url', optionsForGet).then((response) => {
       const { headers } = response.config;
-      expect(headers.header1).to.equal('from optionsForGetHttpClient');
-      expect(headers.header2).to.equal('from optionsForGet');
-      expect(headers.header3).to.equal('from modifyInstance');
+      expect(headers.header1).toEqual('from optionsForGetHttpClient');
+      expect(headers.header2).toEqual('from optionsForGet');
+      expect(headers.header3).toEqual('from modifyInstance');
       done();
     });
   });
@@ -345,9 +341,9 @@ describe('lib/getHttpClient', () => {
       },
     };
     const mockServerResponse = {
-      removeHeader: sinon.spy(),
-      cookie: sinon.spy(),
-      append: sinon.spy(),
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
     };
     const optionsForGet = {
       headers: {
@@ -357,10 +353,10 @@ describe('lib/getHttpClient', () => {
     const client = getHttpClient(optionsForGetHttpClient, req, mockServerResponse);
     client.get('/test/url', optionsForGet).then((response) => {
       const { headers } = response.config;
-      expect(headers.header1).to.equal('from req');
-      expect(headers.header2).to.equal('from optionsForGetHttpClient');
-      expect(headers.header3).to.equal('from optionsForGet');
-      expect(headers.header4).to.equal('from modifyInstance');
+      expect(headers.header1).toEqual('from req');
+      expect(headers.header2).toEqual('from optionsForGetHttpClient');
+      expect(headers.header3).toEqual('from optionsForGet');
+      expect(headers.header4).toEqual('from modifyInstance');
       done();
     });
   });
