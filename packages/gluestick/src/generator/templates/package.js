@@ -34,6 +34,9 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "gluestick": "${
       (args) => args.dev ? path.join('..', args.dev, 'packages/gluestick') : version
     }",
+    "gluestick-shared": "${
+      (args) => args.dev ? path.join('..', args.dev, 'packages/gluestick-shared') : version
+    }",
     "image-webpack-loader": "3.1.0",
     "normalize.css": "^5.0.0",
     "react": "15.4.2",
