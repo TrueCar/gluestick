@@ -40,6 +40,13 @@ require.context('build-assets');
 module.exports = ({ config, logger }: Context) => {
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
   // Get runtime plugins that will be passed to EntryWrapper.
+
+  // Developers can add an optional hook that
+  // includes script with initialization stuff.
+  if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
+    hooks.preInitServer();
+  }
+
   const runtimePlugins: Function[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
     .map((plugin: Object) => plugin.ref);

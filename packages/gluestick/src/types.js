@@ -194,6 +194,7 @@ export type UpdateDepsPromptResults = {
 export type Hook = Function | Function[];
 
 export type Hooks = {
+  preInitServer?: Function;
   postServerRun?: Hook;
   preRenderFromCache?: Hook;
   postRenderRequirements?: Hook;
@@ -202,7 +203,7 @@ export type Hooks = {
   postGetCurrentRoute?: Hook;
   postRender?: Hook;
   error?: Hook;
-}
+};
 
 export type Plugin = {
   name: string;
