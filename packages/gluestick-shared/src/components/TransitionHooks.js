@@ -1,10 +1,10 @@
-import React, { Component, PropTypes } from "react";
-import { createTransitionHook } from "../lib/route-helper";
+import React, { Component, PropTypes } from 'react';
+import { createTransitionHook } from '../lib/route-helper';
 
 export default class TransitionHooks extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired
+    store: PropTypes.object.isRequired,
   };
 
   componentWillMount() {
@@ -17,7 +17,7 @@ export default class TransitionHooks extends Component {
     this.unListenBefore();
   }
 
-  render () {
+  render() {
     return (
       <div>
         {this.props.children}

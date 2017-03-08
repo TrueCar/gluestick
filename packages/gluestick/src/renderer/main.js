@@ -10,6 +10,7 @@ import type {
   Context,
   Request,
   Response,
+  // ServerPlugin,
 } from '../types';
 
 const path = require('path');
@@ -24,18 +25,32 @@ const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const assets = require('webpack-chunks');
 // $FlowIgnore
-const hooks = require('gluestick-hooks');
+const hooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
 // $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
+const hooksHelper = require('./helpers/hooks');
+// @NOTE: uncomment this line to be able to use server plugins
+// const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+
+// $FlowIgnore Assets should be bundled into render to serve them in production.
+require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
+  // @NOTE: uncomment this line to be able to use server plugins
+  // const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+  // logger.debug(serverPlugins);
+  // Get runtime plugins that will be passed to EntryWrapper.
+  const runtimePlugins: Function[] = entriesPlugins
+    .filter((plugin: Object) => plugin.type === 'runtime')
+    .map((plugin: Object) => plugin.ref);
+
   const app: Object = express();
   app.use(compression());
-  app.use(express.static(
-    path.join(process.cwd(), config.GSConfig.assetsPath),
+  app.use('/assets', express.static(
+    path.join(process.cwd(), config.GSConfig.buildAssetsPath),
   ));
 
   if (process.env.NODE_ENV !== 'production') {
@@ -51,7 +66,7 @@ module.exports = ({ config, logger }: Context) => {
     middleware(
       { config, logger },
       req, res,
-      { entries, entriesConfig, entriesPlugins },
+      { entries, entriesConfig, entriesPlugins: runtimePlugins },
       { EntryWrapper, BodyWrapper },
       assets,
       {
@@ -60,11 +75,15 @@ module.exports = ({ config, logger }: Context) => {
         httpClient: {},
         entryWrapperConfig: {},
       },
-      hooks,
+      { hooks, hooksHelper },
     );
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);
+
+  // call express App Hook which accept app as param.
+  hooksHelper(hooks.postServerRun, app);
+
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
     server.close();

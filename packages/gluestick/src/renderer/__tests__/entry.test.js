@@ -27,7 +27,7 @@ describe('renderer/entry', () => {
       logFn('test message');
       expect(process.send.mock.calls[index][0]).toEqual({
         type: key,
-        value: ['test message'],
+        value: '["test message"]',
       });
     });
   });

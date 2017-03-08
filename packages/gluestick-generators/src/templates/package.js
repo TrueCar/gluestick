@@ -52,6 +52,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
     "flow-bin": "${(args) => args.flowVersion}",
+    "flow-typed": "^2.0.0",
     "react-addons-test-utils": "15.4.2",
     "react-hot-loader": "1.3.1",
     "react-transform-catch-errors": "1.0.2",

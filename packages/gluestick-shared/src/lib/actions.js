@@ -1,4 +1,4 @@
-export const SET_STATUS_CODE = "SET_STATUS_CODE";
+export const SET_STATUS_CODE = 'SET_STATUS_CODE';
 
 
 export function set404StatusCode() {
@@ -8,6 +8,6 @@ export function set404StatusCode() {
 export function setStatusCode(statusCode) {
   return {
     type: SET_STATUS_CODE,
-    statusCode: statusCode
+    statusCode,
   };
 }

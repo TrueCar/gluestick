@@ -4,10 +4,11 @@ import type { GSConfig, Logger } from '../../types';
 
 const path = require('path');
 const generator = require('gluestick-generators');
-const pluginsFilter = require('../../plugins/pluginsFilter');
 
-const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger, entries: Object) => {
-  const plugins = require(gluestickConfig.pluginsConfigPath);
+
+const buildServerEntries = (
+  gluestickConfig: GSConfig, logger: Logger, entries: Object, plugins: Object[],
+): void => {
   generator({
     generatorName: 'serverEntries',
     entityName: path.basename(gluestickConfig.serverEntriesPath),
@@ -23,7 +24,7 @@ const buildServerEntries = (gluestickConfig: GSConfig, logger: Logger, entries: 
           reducers: entries[entry].reducers,
         };
       }),
-      plugins: pluginsFilter(Array.isArray(plugins) ? plugins : plugins.default, 'rootWrapper'),
+      plugins,
     },
   }, logger);
 };

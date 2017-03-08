@@ -1,6 +1,6 @@
-export default function promiseMiddleware (client) {
+export default function promiseMiddleware(client) {
   // eslint-disable-next-line no-unused-vars
-  return ({dispatch, getState}) => {
+  return ({ dispatch, getState }) => {
     return next => action => {
       const { promise, type, ...rest } = action;
 
@@ -9,16 +9,15 @@ export default function promiseMiddleware (client) {
       }
 
       const SUCCESS = type;
-      const INIT = type + "_INIT";
-      const FAILURE = type + "_FAILURE";
+      const INIT = `${type}_INIT`;
+      const FAILURE = `${type}_FAILURE`;
 
-      next({...rest, type: INIT});
+      next({ ...rest, type: INIT });
 
       let getPromise;
-      if (typeof promise === "function") {
+      if (typeof promise === 'function') {
         getPromise = promise;
-      }
-      else {
+      } else {
         getPromise = () => {
           return promise;
         };
@@ -27,13 +26,13 @@ export default function promiseMiddleware (client) {
       return getPromise(client)
         .then(
           value => {
-            next({...rest, value, type: SUCCESS});
+            next({ ...rest, value, type: SUCCESS });
             return value || true;
           },
           error => {
-            next({...rest, error, type: FAILURE});
+            next({ ...rest, error, type: FAILURE });
             return false;
-          }
+          },
         );
     };
   };

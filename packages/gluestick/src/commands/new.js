@@ -1,11 +1,13 @@
 /* @flow */
+
 import type { Context, Logger } from '../types';
 
 const path = require('path');
 const spawn = require('cross-spawn');
+const generate = require('gluestick-generators');
 
 const { highlight, filename } = require('../cli/colorScheme');
-const generate = require('gluestick-generators');
+const packageJSON = require('../../package.json');
 
 type ProjectData = {
   dependencies: {
@@ -42,8 +44,9 @@ module.exports = ({ logger }: Context, appName: string, options: Object = {}) =>
     logger.info(`${filename(appName)} is being generated...`);
 
     generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
-    // @TODO we need to figure out a better way
-    spawn.sync('npm', ['install'], { stdio: 'inherit' });
+    spawn.sync('npm', ['install'], { stdio: 'inherit' }); // @TODO we need to figure out a better way
+    // Install necessary flow-typed definitions
+    spawn.sync('./node_modules/.bin/flow-typed', ['install', `jest@${packageJSON.dependencies.jest}`], { stdio: 'inherit' });
 
     logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
     logger.info('To run your app and start developing');

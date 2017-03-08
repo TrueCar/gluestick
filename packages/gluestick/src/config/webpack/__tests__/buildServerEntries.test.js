@@ -16,9 +16,10 @@ describe('config/webpack/buildSeverEntries', () => {
   it('should build server entries definition file', () => {
     // $FlowIgnore
     buildServerEntries(
-      { ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
+      defaultGSConfig,
       {},
       entries,
+      [],
     );
     // $FlowIgnore
     expect(generate.mock.calls[0]).toEqual([{

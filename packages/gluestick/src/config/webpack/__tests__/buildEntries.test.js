@@ -20,9 +20,10 @@ describe('config/webpack/buildEntries', () => {
   it('should build client entries', () => {
     // $FlowIgnore
     expect(buildEntries(
-      { ...defaultGSConfig, pluginsConfigPath: 'plugins-config.js' },
+      defaultGSConfig,
       {},
       entries,
+      [],
     )).toEqual({
       entry: 'path/to/main/entry.js',
     });

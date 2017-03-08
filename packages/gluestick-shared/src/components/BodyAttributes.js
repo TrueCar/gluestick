@@ -1,9 +1,9 @@
-import { Component, Children, PropTypes } from "react";
-import withSideEffect from "react-side-effect";
+import { Component, Children, PropTypes } from 'react';
+import withSideEffect from 'react-side-effect';
 
 
 const supportedHTML4Attributes = {
-  "bgColor": "bgcolor"
+  bgColor: 'bgcolor',
 };
 
 class BodyAttributes extends Component {
@@ -13,12 +13,12 @@ class BodyAttributes extends Component {
 }
 
 BodyAttributes.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 function reducePropsToState(propsList) {
   const attrs = {};
-  propsList.forEach(function (props) {
+  propsList.forEach((props) => {
     const transformedAttrs = transformHTML4Props(props);
     Object.assign(attrs, props, transformedAttrs);
   });
@@ -43,7 +43,7 @@ function transformHTML4Props(props) {
    *
    */
   Object.keys(supportedHTML4Attributes).forEach(propName => {
-    if (props.hasOwnProperty(propName)) {
+    if (Object.prototype.hasOwnProperty.call(props, propName)) {
       const name = supportedHTML4Attributes[propName];
       const value = props[propName];
       const transformedProp = { [`data-oy-${name}`]: value };
@@ -55,5 +55,5 @@ function transformHTML4Props(props) {
 
 export default withSideEffect(
   reducePropsToState,
-  handleStateChangeOnClient
+  handleStateChangeOnClient,
 )(BodyAttributes);
