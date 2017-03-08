@@ -1,12 +1,11 @@
-/* @flow */
-
-import type { CreateTemplate } from '../types';
-
 const path = require('path');
+const version = require('../package.json').version;
 
-const version = require('../../package.json').version;
+/* DO NOT MODIFY */
+const createTemplate = module.parent.createTemplate;
+/* END OF DO NOT MODIFY */
 
-module.exports = (createTemplate: CreateTemplate) => createTemplate`
+const templatePackage = createTemplate`
 {
   "name": "${(args) => args.appName}",
   "version": "1.0.0",
@@ -51,7 +50,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "enzyme": "2.7.1",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
-    "flow-bin": "${(args) => args.flowVersion}",
+    "flow-bin": "0.38.0",
     "flow-typed": "^2.0.0",
     "react-addons-test-utils": "15.4.2",
     "react-hot-loader": "1.3.1",
@@ -62,3 +61,17 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
   }
 }
 `;
+
+module.exports = (options) => ({
+  entries: [
+    {
+      path: '/',
+      filename: 'package.json',
+      template: templatePackage,
+      args: {
+        dev: options.dev,
+        appName: options.appName,
+      },
+    },
+  ],
+});

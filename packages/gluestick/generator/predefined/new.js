@@ -5,7 +5,6 @@ import type { GeneratorOptions } from '../types';
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
 
-const templatePackage = require('../templates/package')(createTemplate);
 const template500hbs = require('../templates/500hbs')(createTemplate);
 const templateIndex = require('../templates/Index')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
@@ -41,18 +40,6 @@ const { flowVersion, flowMapper } = require('../constants');
 
 module.exports = (options: GeneratorOptions) => ({
   entries: [
-    // Root directory files
-    {
-      path: '/',
-      filename: 'package.json',
-      template: templatePackage,
-      overwrite: true,
-      args: {
-        dev: options.dev,
-        appName: options.appName,
-        flowVersion,
-      },
-    },
     {
       path: '/',
       filename: '.gitignore',

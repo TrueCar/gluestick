@@ -9,7 +9,7 @@ const { convertToCamelCase, convertToKebabCase } = require('./utils');
 module.createTemplate = createTemplate;
 
 const PATH_TO_GLUESTICK_TEMPLATES = '../../gluestick/generator/predefined';
-// const PATH_TO_GLUESTICK_CLI_PREDEFINED = '../gluestick-cli/generator';
+const PATH_TO_GLUESTICK_CLI_TEMPLATES = '../../../templates';
 const EXTERNAL: string = 'generators';
 
 const getPossiblePaths = (generatorName: string): string[] => [
@@ -17,6 +17,8 @@ const getPossiblePaths = (generatorName: string): string[] => [
   path.join(process.cwd(), `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
   path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
   path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
+  path.join(__dirname, PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
+  path.join(__dirname, PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
 ];
 
 /**

@@ -53,25 +53,23 @@ module.exports = (appName, options, exitWithError) => {
     error: console.log,
     warn: console.log,
   };
-  // console.log('test');
-  // generate(
-  //   {
-  //     generatorName: 'package',
-  //     entityName: 'package',
-  //     options: generatorOptions,
-  //   },
-  //   logger,
-  // );
-  // console.log('test1');
-  fs.writeFileSync(path.join(
-    process.cwd(), appName, 'package.json'),
-    JSON.stringify(packageDeps),
+
+  process.chdir(appName);
+
+  generate(
+    {
+      generatorName: 'package',
+      entityName: 'package',
+      options: generatorOptions,
+    },
+    logger,
   );
+
   spawn.sync(
     options.yarn ? 'yarn' : 'npm',
     ['install'],
     {
-      cwd: path.join(process.cwd(), appName),
+      cwd: process.cwd(),
       stdio: 'inherit',
     },
   );
@@ -79,7 +77,7 @@ module.exports = (appName, options, exitWithError) => {
     './node_modules/.bin/gluestick',
     commander.rawArgs.slice(2),
     {
-      cwd: path.join(process.cwd(), appName),
+      cwd: process.cwd(),
       stdio: 'inherit',
     },
   );
