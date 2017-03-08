@@ -52,5 +52,5 @@ We are using GitHub Issues for our public bugs. We keep a close eye on this and 
 * All new features, enhancements and contributions go to `next`
 * We cut release candidates using git tags from `staging`
   * QA and testing are done on `staging`  
-  * High priority bugs are worked on `staging`. We submit two Pull Requests. One in `staging` and one in `next` (last one is tagged with `PR on hold`). Reviews are done in the `staging` PR. Once this one is merged, the PR from `next` can also be merged
-* When `staging` is ready we merge it into `master` which is our official production branch for final releases
+  * High priority bugs are worked on `staging`. Once the PR is reviewed and merged, then we open another PR to merge `staging` into `next`
+* When `staging` is ready for a final release, we merge it into `master` which is our official production branch
