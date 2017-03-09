@@ -128,4 +128,46 @@ with `body` property with actual string that will be send to browser, `head` arr
 elements that will be injected into `<head>` of document nad optionally `additionalScript`,
 which also is a array of React `<script>` elements to inject to document.
 
+## Runtime plugns
+Runtime plugins are a little bit different, since they don't export factory
+function but must return object with 2 properties:
+- `meta` - object with meta information, you must specifiy if plugin is a `rootWrapper` or a `hook`.
+You must provida exactly one flag in `meta` object:
+```
+const meta = { rootWrapper: true };
+```
+or 
+```
+const meta = { hook: true };
+```
+- `plugin` - function with plugin implementation
 
+Depending on what flag is set, `plugin` function will look slightly different:
+- if `rootWrapper` is `true`:
+```
+const plugin = (component, rootWrapperOptions) => component;
+```
+where `component` is a root app component, `rootWrapperOptions` is an object, which currently
+has only one property - `userAgent` which is equivalent of `window.navigator.userAgent` (client) or
+`user-agent` header from request (server). In this case `plugin` function must return a valid
+React component. Typically `component` argument will be wrapped with some other component.
+- if `hook` is `true`, `plugin` will be a argument-less function which returned value will be
+discard.
+
+Example:
+```
+import React from 'react';
+import SomeRoot from 'some-lib';
+
+export default {
+  meta: { rootWrapper: true },
+  plugin: (component, rootWrapperOptions) => {
+    return (
+      <SomeRoot userAgent={rootWrapperOptions.userAgent}>
+        {component}
+      </SomeRoot>
+    );
+  },
+};
+
+```
