@@ -56,6 +56,8 @@ export default {
 
 | name                   | need return value? |            when it is called?            |
 |------------------------|:------------------:|:----------------------------------------:|
+| preInitServer          |        false       | before server is started                 |
+| postServerRun          |        false       | after server is run                      |
 | preRenderFromCache     |        true        | before we render output from cache       |
 | postRenderRequirements |        true        | after we get requirements for entrypoint |
 | preRedirect            |        false       | before redirect                          |

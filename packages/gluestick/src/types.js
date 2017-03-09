@@ -191,15 +191,19 @@ export type UpdateDepsPromptResults = {
   mismatchedModules: MismatchedModules;
 }
 
+export type Hook = Function | Function[];
+
 export type Hooks = {
-  preRenderFromCache?: Function | Function[];
-  postRenderRequirements?: Function | Function[];
-  preRedirect?: Function | Function[];
-  postRenderProps?: Function | Function[];
-  postGetCurrentRoute?: Function | Function[];
-  postRender?: Function | Function[];
-  error?: Function | Function[];
-}
+  preInitServer?: Function;
+  postServerRun?: Hook;
+  preRenderFromCache?: Hook;
+  postRenderRequirements?: Hook;
+  preRedirect?: Hook;
+  postRenderProps?: Hook;
+  postGetCurrentRoute?: Hook;
+  postRender?: Hook;
+  error?: Hook;
+};
 
 export type Plugin = {
   name: string;

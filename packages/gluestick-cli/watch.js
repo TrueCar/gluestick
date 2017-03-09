@@ -38,12 +38,11 @@ module.exports = (exitWithError) => {
   gsDependenciesPath.forEach((e, i) => {
     const packageName = gsPackages[i];
     const convertFilePath = filePath => {
-      const split = filePath.split(packageName);
       return path.join(
         process.cwd(),
         'node_modules',
         packageName,
-        split[split.length - 1],
+        /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath)[1],
       );
     };
     const watcher = chokidar.watch(`${e}/**/*`, {

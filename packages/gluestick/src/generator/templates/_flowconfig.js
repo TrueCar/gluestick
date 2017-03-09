@@ -13,7 +13,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 
 [libs]
 flow/
-node_modules/gluestick/flow-typed
+flow-typed/
 
 [options]
 suppress_comment=\\\\(.\\\\|\\n\\\\)*\\\\$FlowFixMe

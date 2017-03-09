@@ -4,7 +4,7 @@ export default (client) => () => next => action => {
   if (!promise) {
     return next(action);
   }
-
+  
   const SUCCESS = type;
   const INIT = `${type}_INIT`;
   const FAILURE = `${type}_FAILURE`;
