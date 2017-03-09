@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "0.0.0",
+  "version": "1.0.0-rc.6",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "src/index.js",
   "bin": "bin/gluestick.js",
@@ -54,7 +54,7 @@
     "extract-text-webpack-plugin": "2.0.0-beta.5",
     "fs-extra": "2.0.0",
     "gluestick-generators": "file:../gluestick-generators",
-    "gluestick-shared": "0.4.22",
+    "gluestick-shared": "^1.0.0-rc.6",
     "handlebars": "4.0.6",
     "http-proxy-middleware": "0.17.3",
     "inquirer": "3.0.1",
@@ -101,10 +101,14 @@
       "src"
     ],
     "setupFiles": [
+<<<<<<< HEAD
       "./jest/setup.js"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!gluestick*)"
+=======
+      "./jest.js"
+>>>>>>> 1fff51bc279052840276977273181cd348c3e070
     ]
   }
 }
