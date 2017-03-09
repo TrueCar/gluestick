@@ -52,7 +52,7 @@ const getJestDefaultConfig = (aliases, webpackRules) => {
   return argv;
 };
 
-const getDebugDefaultConfig = (aliases, webpackRules) => {
+const getDebugDefaultConfig = (aliases, webpackRules, options) => {
   const argv = [];
   argv.push('--inspect');
   argv.push('--debug-brk');
@@ -62,7 +62,15 @@ const getDebugDefaultConfig = (aliases, webpackRules) => {
   argv.push(...getJestDefaultConfig(aliases, webpackRules));
   argv.push('-i');
   argv.push('--watch');
-  return argv;
+  // Exclude those options to avoid dublication.
+  const optionsToExclude = ['-D', '--debug-test', '-i', '--runInBand', '--watch', '--config', '-c'];
+  return argv.concat(
+    options.filter((option: string): boolean => {
+      return optionsToExclude.findIndex((optionToExclude: string): boolean => {
+        return new RegExp(`^${optionToExclude}.*`).test(option);
+      }) === -1;
+    }),
+  );
 };
 
 module.exports = (context: Context, options: { [key: string]: Object }) => {
@@ -75,13 +83,13 @@ module.exports = (context: Context, options: { [key: string]: Object }) => {
   const webpackRules: Object = context.config.webpackConfig.client.module.rules.map(
     rule => rule.test,
   );
+  const rawOptions = options.parent.rawArgs.slice(3);
   if (options.debugTest) {
-    const argvDebug = getDebugDefaultConfig(aliases, webpackRules);
+    const argvDebug = getDebugDefaultConfig(aliases, webpackRules, rawOptions);
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
     const jest = require('jest');
-    const argv = getJestDefaultConfig(aliases, webpackRules)
-      .concat(options.parent.rawArgs.slice(3));
+    const argv = getJestDefaultConfig(aliases, webpackRules).concat(rawOptions);
     // Since we require Jest programmatically, we need to make sure
     // to set NODE_ENV='test' when running it
     process.env.NODE_ENV = 'test';
