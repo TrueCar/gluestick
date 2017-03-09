@@ -65,24 +65,7 @@ const getDebugDefaultConfig = (aliases, webpackRules) => {
   return argv;
 };
 
-const createArgs = (defaultArgs, options) => {
-  const argv = [].concat(defaultArgs);
-  const { coverage, watch, pattern } = options;
-
-  if (coverage) {
-    argv.push('--coverage');
-  }
-  if (watch) {
-    argv.push('--watch');
-  }
-  if (pattern) {
-    argv.push(pattern);
-  }
-
-  return argv;
-};
-
-module.exports = (context: Context, options: { [key: string]: string }) => {
+module.exports = (context: Context, options: { [key: string]: Object }) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
@@ -97,7 +80,8 @@ module.exports = (context: Context, options: { [key: string]: string }) => {
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
     const jest = require('jest');
-    const argv = createArgs(getJestDefaultConfig(aliases, webpackRules), options);
+    const argv = getJestDefaultConfig(aliases, webpackRules)
+      .concat(options.parent.rawArgs.slice(3));
     // Since we require Jest programmatically, we need to make sure
     // to set NODE_ENV='test' when running it
     process.env.NODE_ENV = 'test';
