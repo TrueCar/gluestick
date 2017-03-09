@@ -25,7 +25,7 @@ const templatePackage = createTemplate`
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
     ${(args) => Object.entries(args.gluestickDependencies).reduce(
-      (prev, [key, value], i, arr) => `${prev}"${key}": "${value}",${i === arr.length - 1 ? '' : '\n    '}`,
+      (prev, [key, value], i, arr) => `${prev}"${key}": "file:${value}",${i === arr.length - 1 ? '' : '\n    '}`,
       '',
     )}
     "image-webpack-loader": "3.1.0",
