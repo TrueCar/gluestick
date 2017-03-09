@@ -8,12 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "test-watch": "jest --watch",
-    "test-coverage": "jest --coverage",
-    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js",
-    "postpublish": "./docker/create-base-image.js",
-    "update-version": "npm version",
-    "postupdate-version": "./docker/generate-dockerfile.js"
+    "test-coverage": "jest --coverage"
   },
   "keywords": [
     "react",
@@ -42,9 +37,6 @@
     "babel-preset-stage-0": "6.22.0",
     "jest": "19.0.0",
     "mkdirp": "^0.5.1"
-  },
-  "devDependencies": {
-    "temp": "0.8.3"
   },
   "jest": {
     "notify": true,
