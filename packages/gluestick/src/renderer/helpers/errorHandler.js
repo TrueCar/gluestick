@@ -3,7 +3,7 @@ import type { Response, Request, Context } from '../../types';
 
 const fs = require('fs');
 const Handlebars = require('handlebars');
-// We use handlebars to deliver the 505 page. This lets you
+// We use handlebars to deliver the 500 page. This lets you
 // use a handlebars template so you can display the stack trace or
 // any request, response information you would like.
 Handlebars.registerHelper('notForProduction', (options) => {
@@ -36,7 +36,12 @@ module.exports = async (
     const customTemplate = await tryReadFile(config.GSConfig.customErrorTemplatePath);
     const output = customTemplate || await tryReadFile(config.GSConfig.defaultErrorTemplatePath);
     if (output) {
-      res.send(Handlebars.compile(output)({ req, res, error }));
+      res.send(Handlebars.compile(output)({
+        showStack: process.env.NODE_ENV !== 'production',
+        req,
+        res,
+        error,
+      }));
     } else {
       res.sendStatus(501);
     }
