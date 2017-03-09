@@ -7,9 +7,10 @@ jest.mock('cross-spawn');
 jest.mock('gluestick-generators');
 
 const spawn = require('cross-spawn');
+const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../../cli/colorScheme');
-const generate = require('gluestick-generators').default;
+const packageJSON = require('../../../package.json');
 
 const mockPackageJson = (mockPath) => {
   jest.doMock(mockPath, () => {
@@ -104,10 +105,15 @@ describe('cli: gluestick new', () => {
     }, logger);
   });
 
-  it('calls spawn.sync install with correct parameters', () => {
+  it('calls spawn.sync install flow-typed definitions', () => {
     mockProcessCwdCallOnce();
     newApp(context, validProjectName);
-    expect(spawn.sync).toBeCalledWith('npm', ['install'], { stdio: 'inherit' });
+
+    expect(spawn.sync).toBeCalledWith(
+      './node_modules/.bin/flow-typed',
+      ['install', `jest@${packageJSON.dependencies.jest}`],
+      { stdio: 'inherit' },
+    );
   });
 
   it('logs a successful message if everything ran correctly', () => {

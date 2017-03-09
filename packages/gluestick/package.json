@@ -102,6 +102,9 @@
     ],
     "setupFiles": [
       "./jest/setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!gluestick*)"
     ]
   }
 }

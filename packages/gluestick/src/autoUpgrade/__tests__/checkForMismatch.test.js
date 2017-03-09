@@ -1,7 +1,7 @@
 /* @flow */
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
 jest.mock('gluestick-generators', () => ({
-  parseConfig: () => jest.fn(
+  parseConfig: jest.fn(
     () => ({
       entry: {
         template: JSON.stringify({
