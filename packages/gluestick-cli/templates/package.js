@@ -1,6 +1,3 @@
-const path = require('path');
-const version = require('../package.json').version;
-
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
@@ -27,9 +24,10 @@ const templatePackage = createTemplate`
     "babel-preset-stage-0": "6.22.0",
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
-    "gluestick": "${
-      (args) => args.dev ? path.join('..', args.dev, 'packages/gluestick') : version
-    }",
+    ${(args) => Object.entries(args.gluestickDependencies).reduce(
+      (prev, [key, value], i, arr) => `${prev}"${key}": "${value}",${i === arr.length - 1 ? '' : '\n    '}`,
+      '',
+    )}
     "image-webpack-loader": "3.1.0",
     "normalize.css": "^5.0.0",
     "react": "15.4.2",
@@ -62,15 +60,15 @@ const templatePackage = createTemplate`
 }
 `;
 
-module.exports = (options) => ({
+module.exports = ({ gluestickDependencies, appName }) => ({
   entries: [
     {
       path: '/',
       filename: 'package.json',
       template: templatePackage,
       args: {
-        dev: options.dev,
-        appName: options.appName,
+        gluestickDependencies,
+        appName,
       },
     },
   ],

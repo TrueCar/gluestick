@@ -20,7 +20,7 @@ type Command = {
   options?: GeneratorOptions;
 }
 
-const logger: Logger = {
+const defaultLogger: Logger = {
   info: console.log,
   success: console.log,
   error: console.log,
@@ -34,7 +34,7 @@ const logger: Logger = {
  * @param command {Object} { generatorName, entityName, entryPoint, options } Command object
  * @param logger {Object} logger Logger instance
  */
-module.exports = (command: Command, logger: Logger = logger): void => {
+module.exports = (command: Command, logger: Logger = defaultLogger): void => {
   const {
     generatorName,
     entityName,

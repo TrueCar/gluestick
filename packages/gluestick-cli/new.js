@@ -34,6 +34,7 @@ module.exports = (appName, options, exitWithError) => {
       packageDeps.dependencies[e] = path.join('..', options.dev, 'packages', e);
     });
   }
+
   const pathToApp = path.join(process.cwd(), appName);
   if (fs.existsSync(pathToApp)) {
     exitWithError(
@@ -43,16 +44,8 @@ module.exports = (appName, options, exitWithError) => {
   mkdir.sync(path.join(process.cwd(), appName));
 
   const generatorOptions = {
-    dev: options.dev || null,
+    gluestickDependencies: packageDeps.dependencies,
     appName,
-  };
-
-  const logger = {
-    info: console.log,
-    success: console.log,
-    error: console.log,
-    warn: console.log,
-    debug: console.log,
   };
 
   process.chdir(appName);
@@ -63,7 +56,6 @@ module.exports = (appName, options, exitWithError) => {
       entityName: 'package',
       options: generatorOptions,
     },
-    logger,
   );
 
   spawn.sync(
