@@ -6,16 +6,10 @@ const execWithConfig = require('./execWithConfig');
 
 const debugServerOption = ['-D, --debug-server', 'debug server side rendering with built-in node inspector'];
 const debugServerPortOption = ['-p, --debug-port <n>', 'port on which to run node inspector'];
-const singleRunOption = ['-S, --single', 'Run test suite only once'];
 const skipBuildOption = ['-P, --skip-build', 'skip build when running in production mode'];
 const statelessFunctionalOption = ['-F, --functional', '(generate component) stateless functional component'];
 const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
 const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group'];
-
-const testDebugOption = ['-D, --debug-test', 'debug tests with built-in node inspector'];
-const testReportCoverageOption = ['-C --coverage', 'Create test coverage'];
-const testWatchOption = ['-W --watch', 'Watch tests'];
-const testPatternOption = ['-R --pattern [pattern]', 'Run specific test regex pattern name'];
 
 commander
   .version(cliHelpers.getVersion());
@@ -65,11 +59,11 @@ commander
   .description('start everything')
   .option('-T, --run-tests', 'run test hook')
   .option('--dev', 'disable gluestick verion check')
+  .option('-C --coverage', 'create test coverage')
   .option(...entrypointsOption)
   .option(...logLevelOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
-  .option(...testReportCoverageOption)
   .option(...skipBuildOption)
   .action((...commandArguments) => {
     execWithConfig(
@@ -150,11 +144,8 @@ commander
 
 commander
   .command('test')
-  .option(...singleRunOption)
-  .option(...testDebugOption)
-  .option(...testReportCoverageOption)
-  .option(...testWatchOption)
-  .option(...testPatternOption)
+  .allowUnknownOption()
+  .option('-D, --debug-test', 'debug tests with built-in node inspector')
   .description('start tests')
   .action((...commandArguments) => {
     execWithConfig(
