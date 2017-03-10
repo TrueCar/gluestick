@@ -24,7 +24,7 @@ const templatePackage = createTemplate`
     "babel-preset-stage-0": "6.22.0",
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
-    ${(args) => Object.keys(args.gluestickDependencies).reduce(
+    ${(args) => Object.keys(args.gluestickDependencies).reverse().reduce(
       (prev, key, i, arr) => prev.concat(
         `"${key}": "file:${args.gluestickDependencies[key]}",${i === arr.length - 1 ? '' : '\n    '}`,
       ),
