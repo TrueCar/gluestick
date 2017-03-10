@@ -47,11 +47,11 @@ const checkForMismatch = (
   const packageGeneratorEntry: Object = getSingleEntryFromGenerator(
     'new', 'package.json', {},
   );
-  const templatePackage: ProjectPackage = JSON.parse(
-    // $FlowIgnore template at this point will be a string
-    parseConfig({
-      entry: packageGeneratorEntry,
-    }, {}).entry.template,
+  const templatePackage: ProjectPackage = JSON.parse('{}'
+    // // $FlowIgnore template at this point will be a string
+    // parseConfig({
+    //   entry: packageGeneratorEntry,
+    // }, {}).entry.template,
   );
   const mismatchedModules: MismatchedModules = {};
   const markMissing = (dep, type) => {
