@@ -35,7 +35,7 @@ Node 6.3.0+
 
 ## Quick Start
 ```bash
-npm install gluestick -g
+npm install gluestick-cli -g
 gluestick new SampleProject
 cd SampleProject
 gluestick start
