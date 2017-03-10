@@ -15,7 +15,9 @@ module.exports = ({ config, logger }: Context, dev: boolean = false) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
   config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
-    const generatorEntry: Object = getSingleEntryFromGenerator('new', path.basename(filePath), {});
+    const generatorEntry: Object = getSingleEntryFromGenerator(
+      '../../generator/predefined/new', path.basename(filePath), {},
+    );
     const entryConfig = parseConfig({
       entry: generatorEntry,
     }, {});
@@ -34,7 +36,9 @@ module.exports = ({ config, logger }: Context, dev: boolean = false) => {
     if (!fs.existsSync(path.join(process.cwd(), filePath))) {
       const absolutePath: string = path.join(process.cwd(), filePath);
       logger.success(`File ${filePath} does not exist. Creating at path ${absolutePath}...`);
-      const generatorEntry: Object = getSingleEntryFromGenerator('new', path.basename(filePath), {});
+      const generatorEntry: Object = getSingleEntryFromGenerator(
+        '../../generator/predefined/new', path.basename(filePath), {},
+      );
       const entryConfig = parseConfig({
         entry: generatorEntry,
       }, {});

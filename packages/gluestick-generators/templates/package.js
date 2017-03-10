@@ -26,7 +26,7 @@ const templatePackage = createTemplate`
     "file-loader": "0.9.0",
     ${(args) => Object.keys(args.gluestickDependencies).reverse().reduce(
       (prev, key, i, arr) => prev.concat(
-        `"${key}": "file:${args.gluestickDependencies[key]}",${i === arr.length - 1 ? '' : '\n    '}`,
+        `"${key}": "${args.gluestickDependencies[key]}",${i === arr.length - 1 ? '' : '\n    '}`,
       ),
       '',
     )}

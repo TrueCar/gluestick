@@ -2,7 +2,7 @@
 import type { Context } from '../types.js';
 
 const spawn = require('cross-spawn');
-// const autoUpgrade = require('../autoUpgrade/autoUpgrade');
+const autoUpgrade = require('../autoUpgrade/autoUpgrade');
 const { filterArg } = require('./utils');
 
 type StartOptions = {
@@ -13,7 +13,7 @@ type StartOptions = {
 };
 
 module.exports = async ({ config, logger }: Context, options: StartOptions) => {
-  // await autoUpgrade({ config, logger }, options.dev);
+  await autoUpgrade({ config, logger }, options.dev);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, ['--dev', '-P', '--skip-build']);
