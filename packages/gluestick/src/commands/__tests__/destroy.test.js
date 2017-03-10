@@ -7,7 +7,7 @@ jest.mock('../../cli/logger', () => () => ({
   warn: jest.fn(),
   error: jest.fn(),
 }));
-jest.mock('../../generator/utils');
+jest.mock('../../utils');
 
 const fs = require('fs');
 const inquirer = require('inquirer');
@@ -19,7 +19,7 @@ const chalk = require('chalk');
 
 const destroy = require('../destroy');
 const logger = require('../../cli/logger')();
-const { isValidEntryPoint } = require('../../generator/utils');
+const { isValidEntryPoint } = require('../../utils');
 
 function createFiles(...filePaths) {
   filePaths.forEach((pathToFile) => {
@@ -176,4 +176,3 @@ describe('cli: gluestick destroy', () => {
   //   });
   // });
 });
-
