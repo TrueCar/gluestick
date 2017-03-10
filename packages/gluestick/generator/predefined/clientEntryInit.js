@@ -1,4 +1,4 @@
-const { convertToCamelCase } = require('../utils');
+const { convertToCamelCase } = require('../../src/utils');
 
 const createTemplate = module.parent.createTemplate;
 

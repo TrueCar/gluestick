@@ -1,5 +1,5 @@
 const createTemplate = module.parent.createTemplate;
-const { convertToCamelCase } = require('../utils');
+const { convertToCamelCase } = require('../../src/utils');
 
 const getPluginName = (name, type) => {
   return convertToCamelCase(`${name}${type[0].toUpperCase()}${type.substring(1)}`);
