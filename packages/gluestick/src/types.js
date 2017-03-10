@@ -244,3 +244,6 @@ export type ServerPlugin = {
   renderMethod: Function;
   hooks: Hooks;
 };
+
+export type RenderMethod = (root: Object, styleTags: Object[]) =>
+{ body: string; head: Object[], additionalScripts?: Object[] };

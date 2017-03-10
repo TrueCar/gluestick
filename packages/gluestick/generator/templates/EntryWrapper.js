@@ -15,7 +15,7 @@ import browserHistory from "react-router/lib/browserHistory";
 const start = (
   getRoutes,
   getStore,
-  { rootWrappers, rootWrappersOptions } = {},
+  { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
   match = originalMatch,
   history = browserHistory
 ) => {
@@ -40,6 +40,11 @@ const start = (
         {...renderProps}
       />
     );
+    if (preRenderHooks && preRenderHooks.length > 0) {
+      preRenderHooks.forEach((hook) => {
+        if (typeof hook === "function") { hook(); }
+      });
+    }
     render(entry, document.getElementById("main"));
   });
 };

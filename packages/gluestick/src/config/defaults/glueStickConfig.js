@@ -41,7 +41,6 @@ const config: GSConfig = {
       '.dockerignore',                    // -> prior to 0.3.6
       'src/config/init.browser.js',       // -> prior to 0.9.26
       // From V2
-      'gluestick/500.hbs',
       'gluestick/EntryWrapper.js',
       'src/entries.json',
       'src/gluestick.plugins.js',

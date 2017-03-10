@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, Request, RenderOutput } from '../types';
+import type { Context, Request, RenderOutput, RenderMethod } from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
@@ -7,7 +7,6 @@ const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
 
-type RenderMethod = (root: Object, styleTags: Object[]) => { body: string; head: Object[] };
 const getRenderer = (
   isEmail: boolean,
   renderMethod?: RenderMethod,
@@ -50,6 +49,7 @@ module.exports = (
   const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
+  const rootWrappers = entriesPlugins.filter((plugin) => plugin.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}
@@ -57,7 +57,7 @@ module.exports = (
       config={entryWrapperConfig}
       getRoutes={routes}
       httpClient={httpClient}
-      rootWrappers={entriesPlugins}
+      rootWrappers={rootWrappers}
       rootWrappersOptions={{
         userAgent: req.headers['user-agent'],
       }}
