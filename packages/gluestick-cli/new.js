@@ -31,7 +31,7 @@ module.exports = (appName, options, exitWithError) => {
       );
     }
     packages.forEach(e => {
-      packageDeps.dependencies[e] = path.join('..', options.dev, 'packages', e);
+      packageDeps.dependencies[e] = `file:${path.join('..', options.dev, 'packages', e)}`;
     });
   }
 
