@@ -24,8 +24,10 @@ const templatePackage = createTemplate`
     "babel-preset-stage-0": "6.22.0",
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
-    ${(args) => Object.entries(args.gluestickDependencies).reduce(
-      (prev, [key, value], i, arr) => `${prev}"${key}": "file:${value}",${i === arr.length - 1 ? '' : '\n    '}`,
+    ${(args) => Object.keys(args.gluestickDependencies).reduce(
+      (prev, key, i, arr) => prev.concat(
+        `"${key}": "file:${args.gluestickDependencies[key]}",${i === arr.length - 1 ? '' : '\n    '}`,
+      ),
       '',
     )}
     "image-webpack-loader": "3.1.0",
