@@ -46,18 +46,6 @@ const config: GSConfig = {
       'src/entries.json',
       'src/gluestick.plugins.js',
       'src/gluestick.hooks.js',
-      'src/apps/main/Index.js',
-      'src/apps/main/routes.js',
-      'src/apps/main/reducers/index.js',
-      'src/apps/main/components/Home.js',
-      'src/apps/main/components/Home.css',
-      'src/apps/main/components/MasterLayout.js',
-      'src/apps/main/components/__tests__/Home.test.js',
-      'src/apps/main/components/__tests__/MasterLayout.test.js',
-      'src/apps/main/containers/HomeApp.js',
-      'src/apps/main/containers/NoMatchApp.js',
-      'src/apps/main/containers/__tests__/HomeApp.test.js',
-      'src/apps/main/containers/__tests__/NoMatchApp.test.js',
     ],
     changed: [
       'src/config/.Dockerfile',   // -> last updated in 0.2.0
