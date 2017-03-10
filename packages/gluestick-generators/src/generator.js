@@ -34,7 +34,11 @@ const defaultLogger: Logger = {
  * @param command {Object} { generatorName, entityName, entryPoint, options } Command object
  * @param logger {Object} logger Logger instance
  */
-module.exports = (command: Command, logger: Logger = defaultLogger): void => {
+module.exports = (
+  command: Command,
+  logger: Logger = defaultLogger,
+  pathToGenerator?: string,
+): void => {
   const {
     generatorName,
     entityName,
@@ -61,7 +65,7 @@ module.exports = (command: Command, logger: Logger = defaultLogger): void => {
     return;
   }
 
-  const generator: Generator = requireGenerator(generatorName);
+  const generator: Generator = requireGenerator(generatorName, pathToGenerator);
   const generatorConfig: Object = parseConfig(
     generator.config,
     {

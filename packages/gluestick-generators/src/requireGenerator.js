@@ -27,9 +27,13 @@ const getPossiblePaths = (generatorName: string): string[] => [
  * @param {String} generatorName Generator name to require
  * @returns {Object}
  */
-const requireGeneratorConfig = (generatorName: string): Generator => {
+const requireGeneratorConfig = (
+  generatorName: string,
+  validPathToGenerator: ?string,
+): Generator => {
   const paths: string[] = getPossiblePaths(generatorName);
-  const pathToGenerator: ?string = paths.find(generatorPath => fs.existsSync(generatorPath));
+  const pathToGenerator: ?string =
+    validPathToGenerator || paths.find(generatorPath => fs.existsSync(generatorPath));
 
   if (!pathToGenerator) {
     throw new Error(
