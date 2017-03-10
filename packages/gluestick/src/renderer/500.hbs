@@ -18,8 +18,8 @@
     </head>
     <body>
       <h1>500 Error</h1>
-      {{#notForProduction}}
+      {{#if showStack}}
         <pre>{{error.stack}}</pre>
-      {{/notForProduction}}
+      {{/if}}
     </body>
 </html>

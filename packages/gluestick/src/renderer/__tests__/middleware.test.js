@@ -38,7 +38,7 @@ jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 const React = require('react');
 const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
-const hooksHelper = require('../helpers/hooks');
+const hooksHelper = require('../helpers/hooks').call;
 
 const logger: Logger = {
   info: jest.fn(),

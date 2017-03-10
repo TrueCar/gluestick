@@ -68,7 +68,7 @@ describe('plugins/prepareServerPlugins', () => {
 
   it('should catch error being throw from inside plugin', () => {
     const invalidPlugin = () => { throw new Error('test'); };
-    invalidPlugin.meta = { type: 'server' };
+    invalidPlugin.meta = { type: 'server', name: 'invalidPlugin' };
     const plugins: ServerPlugin[] = prepareServerPlugins(logger, [{
       ref: invalidPlugin, type: 'server',
     }]);
