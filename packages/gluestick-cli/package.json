@@ -10,8 +10,7 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0",
-    "test-coverage": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\""
   },
   "keywords": [
     "react",

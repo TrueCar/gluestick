@@ -1,21 +1,20 @@
 {
   "name": "gluestick-packages",
   "scripts": {
-    "install:npm": "npm install && lerna bootstrap",
-    "install:yarn": "npm install && npm run yarn:install && npm run link",
     "lerna": "lerna",
-    "yarn:install": "lerna exec --concurrency=1 -- yarn install",
-    "link": "lerna exec --concurrency=99 -- linklocal",
-    "test": "lerna exec npm run test",
-    "test-coverage": "lerna exec npm run test-coverage",
+    "yarn:install": "lerna exec --concurrency=1 -- yarn",
+    "install:npm": "npm install && lerna bootstrap",
+    "install:yarn": "yarn && npm run yarn:install && lerna bootstrap --concurrency=1",
+    "clean": "lerna clean --yes",
+    "test": "lerna exec --concurrency=1 -- npm run test -- --bail --no-cache",
+    "test-coverage": "lerna exec --concurrency=1 -- npm run test -- --bail --coverage --no-cache",
     "lint": "eslint .",
     "flow": "flow",
     "ci": "npm run lint && npm run flow && npm run test-coverage",
     "publish": "./scripts/deploy.js"
   },
   "dependencies": {
-    "lerna": "2.0.0-beta.37",
-    "linklocal": "2.8.0"
+    "lerna": "2.0.0-beta.37"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
