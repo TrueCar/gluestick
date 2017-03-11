@@ -13,8 +13,10 @@ type StartOptions = {
 };
 
 module.exports = async ({ config, logger }: Context, options: StartOptions) => {
-  await autoUpgrade({ config, logger }, options.dev);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
+  if (!isProduction) {
+    await autoUpgrade({ config, logger }, options.dev);
+  }
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, ['--dev', '-P', '--skip-build']);
 
