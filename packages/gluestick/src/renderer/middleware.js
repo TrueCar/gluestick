@@ -54,7 +54,7 @@ module.exports = async (
     reduxMiddlewares: [],
   },
   { hooks, hooksHelper }: { hooks: Hooks, hooksHelper: Function },
-  serverPlugins?: ServerPlugin[],
+  serverPlugins: ?ServerPlugin[],
 ) => {
   /**
    * TODO: better logging
