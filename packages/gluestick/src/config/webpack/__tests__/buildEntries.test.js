@@ -10,7 +10,7 @@ jest.mock('fs-extra');
 const entries = require('entries.json');
 const buildEntries = require('../buildEntries');
 const defaultGSConfig = require('../../defaults/glueStickConfig');
-const generate = require('../../../generator');
+const generate = require('gluestick-generators').default;
 
 describe('config/webpack/buildEntries', () => {
   afterEach(() => {

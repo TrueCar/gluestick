@@ -1,4 +1,4 @@
-jest.mock('../../../generator', () => jest.fn());
+jest.mock('gluestick-generators', () => ({ default: jest.fn() }));
 jest.mock('entries.json', () => ({
   '/': {
     component: 'path/to/main/component',

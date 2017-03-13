@@ -1,20 +1,23 @@
 /* @flow */
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
-jest.mock('../../generator/parseConfig.js', () => jest.fn(
-  () => ({
-    entry: {
-      template: JSON.stringify({
-        dependencies: {
-          depA: '2.0.0',
-          depB: '1.0.0',
-        },
-        devDependencies: {
-          depC: '1.0.0',
-        },
-      }),
-    },
-  }),
-));
+jest.mock('gluestick-generators', () => ({
+  parseConfig: jest.fn(
+    () => ({
+      entry: {
+        template: JSON.stringify({
+          dependencies: {
+            depA: '2.0.0',
+            depB: '1.0.0',
+          },
+          devDependencies: {
+            depC: '1.0.0',
+          },
+        }),
+      },
+    }),
+  ),
+}));
+
 const utils = require('../utils');
 const checkForMismatch = require('../checkForMismatch');
 

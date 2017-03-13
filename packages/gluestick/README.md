@@ -105,8 +105,7 @@ gluestick test
 
 Available options:
 
-* `-S, --single` - Run test suite only once
 * `-D, --debug-test` - Debug tests with built-in node inspector
-* `-C, --coverage` - Create test coverage
-* `-W, --watch` - Watch tests
-* `-R, --pattern [pattern]` - Run specific test regex pattern name
+
+This command supports all [Jest CLI options](https://facebook.github.io/jest/docs/cli.html#options)
+including `<regexForTestFile>` argument.

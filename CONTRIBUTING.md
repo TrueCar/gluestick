@@ -4,13 +4,13 @@ GlueStick is an open source project sponsored by TrueCar that uses it to speed u
 
 ### Pull Requests
 
-**You can submit your pull request on the `develop` branch**.
+**You can submit your pull request on the `next` branch**.
 
 Before submitting a pull request, please make sure the following is done…
 
-1. Fork the repo and create your branch from `develop`.
+1. Fork the repo and create your branch from `next`.
 2. **Describe your test plan in your commit.** If you've added code that should be tested, add tests!
-3. If you've changed APIs, update the documentation.
+3. If you've changed APIs, update the documentation (`docs` folder).
 4. Ensure tests, lints and flow-check pass on *Circle CI*.
 5. Ensure that *Node Security* check passed.
 6. Squash your commits (`git rebase -i`).
@@ -18,14 +18,7 @@ Before submitting a pull request, please make sure the following is done…
 
 ### Contributor License Agreement (CLA)
 
-TODO: @toddw
-
-## Issues
-
-### Where to Find
-
-We are using GitHub Issues for our public bugs. We keep a close eye on this and try to make it clear when we have an internal fix in progress. Before filing a new task, try to make sure your problem doesn't already exist.
-
+In your fist PR you will be asked to sing our CLA.
 
 ## Style Guide
 
@@ -47,3 +40,17 @@ We are using GitHub Issues for our public bugs. We keep a close eye on this and 
 ### Documentation
 
 * Do not wrap lines at 80 characters - configure your editor to soft-wrap when editing documentation.
+
+## Issues
+
+We are using GitHub Issues for our public bugs. We keep a close eye on this and try to make it clear when we have an internal fix in progress. Before filing a new task, try to make sure your problem doesn't already exist.
+
+# Git flow
+
+`next` -> `staging` -> `master`
+
+* All new features, enhancements and contributions go to `next`
+* We cut release candidates using git tags from `staging`
+  * QA and testing are done on `staging`  
+  * High priority bugs are worked on `staging`. Once the PR is reviewed and merged, then we open another PR that `cherry-pick` those changes into `next`
+* When `staging` is ready for a final release, we merge it into `master` which is our official production branch

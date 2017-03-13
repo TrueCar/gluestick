@@ -45,3 +45,129 @@ continue.
 ## Avaiable plugins
 - [`gluestick-env-expose-ast`](../packages/gluestick-env-expose-ast/README.md)
 - [`gluestick-config-legacy`](../packages/gluestick-config-legacy/README.md)
+
+# How to write a plugin
+First of all, there are 3 types of plugins:
+- `config` - modifies gluestick and webpack configs, both server and client one
+- `runtime` - bundled into JavaScript bundles and executed when final output is being
+rendered
+- `server` - bundled into renderer (server) bundle and executed when renderer starts
+
+Plugin must implement at least one type, but they can have multiple types specified.
+To implement a type, you must create a file in top level of plugin directory and name
+it: `<type>.js` so it can be: `config.js`, `runtime.js`, `server.js`.
+
+You don't need to worry about compilation, babel, loaders etc. because they will be
+compiled inside gluestick on the fly as long as you use features that are available in:
+- `babel-preset-es2015`,
+- `babel-preset-stage-0`,
+- `babel-preset-react`,
+- `babel-plugin-transform-decorators-legacy`,
+- `babel-plugins-transform-flow-strip-types`
+
+## Config plugin
+Must export function that returns object will overwriters.
+```
+module.exports = (options, { logger }) => {
+  return {
+    overwriteGluestickConfig: config => config,
+    overwriteClientWebpackConfig: config => config,
+    overwriteServerWebpackConfig: config => config,
+  };
+};
+```
+Exported function is a factory for `overwriteGluestickConfig`, `overwriteClientWebpackConfig`
+and `overwriteServerWebpackConfig`. This factory function accepts options that are defined
+in plugins declaration file inside project, by default `src/gluestick.plugins.js`. Second
+argument is an object with utilities provided by gluestick, currently the only one is
+logger, that you can use to print messages using:
+- `logger.debug(...args)`
+- `logger.info(...args)`
+- `logger.success(...args)`
+- `logger.warn(...args)`
+- `logger.error(...args)`
+
+Each of overwriters must be a function accepting prepared by gluestick config and must return
+altered config:
+
+- `overwriteGluestickConfig: config => config` - accepts gluestick config and must return the same
+valid gluestick config with modified values
+- `overwriteClientWebpackConfig: config => config` - accepts client webpack config and
+must return valid webpack config for client bundle
+- `overwriteServerWebpackConfig: config => config` - accepts server webpack config and
+must return valid webpack config for renderer (server) bundle
+
+## Server plugin
+Server plugins similarly to config plugins, must export factory function, that
+accept options and gluestick utils. 
+```
+module.exports = (options, { logger }) => ({
+  renderMethod: (root) => ({
+    body: '...',
+    head: [],
+    additionalScript: []
+  }),
+  hooks: {}
+});
+
+module.exports.meta = { name: 'gluestick-plugin-myplugin' };
+```
+This factory function must return object with implementation of `renderMethod`
+or with `hooks` object that contains any of [these hooks](./CachingAndHooks.md).
+
+By default gluestick will try to get name of the plugin from `meta` property set on exported factory
+function, then from factory function name property. If it does not find any name, it will use
+`unknown`. It's recommended to set `name` of plugin in `meta` property, so when
+calling `gluestick start` or `gluestick start-server` it will print your plugin name,
+along with other compiled plugins. `name` property also will be used when there is an
+error in plugin implementation to create helpful, user friendly message.
+
+`renderMethod` is usefull for supplying custom function to use when rendering app on server.
+It only accepts one argument with react root component to render and must return an object
+with `body` property with actual string that will be send to browser, `head` array with React
+elements that will be injected into `<head>` of document nad optionally `additionalScript`,
+which also is a array of React `<script>` elements to inject to document.
+
+## Runtime plugns
+Runtime plugins are a little bit different, since they don't export factory
+function but must return object with 2 properties:
+- `meta` - object with meta information, you must specifiy if plugin is a `rootWrapper` or a `hook`.
+You must provida exactly one flag in `meta` object:
+```
+const meta = { rootWrapper: true };
+```
+or 
+```
+const meta = { hook: true };
+```
+- `plugin` - function with plugin implementation
+
+Depending on what flag is set, `plugin` function will look slightly different:
+- if `rootWrapper` is `true`:
+```
+const plugin = (component, rootWrapperOptions) => component;
+```
+where `component` is a root app component, `rootWrapperOptions` is an object, which currently
+has only one property - `userAgent` which is equivalent of `window.navigator.userAgent` (client) or
+`user-agent` header from request (server). In this case `plugin` function must return a valid
+React component. Typically `component` argument will be wrapped with some other component.
+- if `hook` is `true`, `plugin` will be a argument-less function which returned value will be
+discard.
+
+Example:
+```
+import React from 'react';
+import SomeRoot from 'some-lib';
+
+export default {
+  meta: { rootWrapper: true },
+  plugin: (component, rootWrapperOptions) => {
+    return (
+      <SomeRoot userAgent={rootWrapperOptions.userAgent}>
+        {component}
+      </SomeRoot>
+    );
+  },
+};
+
+```

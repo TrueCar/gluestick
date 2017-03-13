@@ -1,7 +1,7 @@
-jest.mock('../../generator');
+jest.mock('gluestick-generators');
 
+const generator = require('gluestick-generators').default;
 const generate = require('../generate');
-const generator = require('../../generator');
 const logger = require('../../cli/logger');
 
 describe('cli: gluestick generate', () => {

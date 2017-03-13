@@ -10,6 +10,11 @@ const getDependencyPath = name =>
 
 // `opts` is array of options with Command object attached as last element
 module.exports = (context: Context, dependencyName: string, ...opts: any[]) => {
+  if (typeof dependencyName !== 'string') {
+    context.logger.error('No binary is specified or is invalid');
+    context.logger.error('Syntax for this command is `gluestick bin <binaryName>`');
+    return;
+  }
   spawn(
     getDependencyPath(dependencyName),
     opts[opts.length - 1].parent.rawArgs.slice(4),

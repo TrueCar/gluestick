@@ -5,6 +5,12 @@ const spawn = require('cross-spawn');
 const autoUpgrade = require('../autoUpgrade/autoUpgrade');
 const { filterArg } = require('./utils');
 
+const skippedOptions: string[] = [
+  '--dev',
+  '-P', '--skip-build',
+  '-T', '--run-tests',
+];
+
 type StartOptions = {
   runTests: boolean;
   skipBuild: boolean;
@@ -13,10 +19,12 @@ type StartOptions = {
 };
 
 module.exports = async ({ config, logger }: Context, options: StartOptions) => {
-  await autoUpgrade({ config, logger }, options.dev);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
+  if (!isProduction) {
+    await autoUpgrade({ config, logger }, options.dev);
+  }
 
-  const rawArgs: string[] = filterArg(options.parent.rawArgs, ['--dev', '-P', '--skip-build']);
+  const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
 
   const startServer = () => {
     spawn(

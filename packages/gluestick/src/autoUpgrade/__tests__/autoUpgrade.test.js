@@ -11,11 +11,13 @@ jest.mock('../checkForMismatch.js', () => jest.fn(
   () => Promise.resolve({ shouldFix: false }),
 ));
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
-jest.mock('../../generator/parseConfig.js', () => jest.fn(
-  () => ({
-    entry: { template: 'file-0' },
-  }),
-));
+jest.mock('gluestick-generators', () => ({
+  parseConfig: jest.fn(
+    () => ({
+      entry: { template: 'file-0' },
+    }),
+  ),
+}));
 const fs = require('fs');
 const path = require('path');
 const autoUpgrade = require('../autoUpgrade');

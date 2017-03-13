@@ -4,9 +4,9 @@ import type { Context, Logger } from '../types';
 
 const path = require('path');
 const spawn = require('cross-spawn');
+const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../cli/colorScheme');
-const generate = require('../generator');
 const packageJSON = require('../../package.json');
 
 type ProjectData = {
@@ -44,12 +44,7 @@ module.exports = ({ logger }: Context, appName: string, options: Object = {}) =>
     logger.info(`${filename(appName)} is being generated...`);
 
     generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
-    // @TODO we need to figure out a better way
-    spawn.sync(
-      options.yarn ? 'yarn' : 'npm',
-      ['install'],
-      { stdio: 'inherit' },
-    );
+
     // Install necessary flow-typed definitions
     spawn.sync('./node_modules/.bin/flow-typed', ['install', `jest@${packageJSON.dependencies.jest}`], { stdio: 'inherit' });
 

@@ -1,15 +1,14 @@
-import temp from 'temp';
-import rimraf from 'rimraf';
 import path from 'path';
 import newApp from '../new';
 
 jest.mock('cross-spawn');
-jest.mock('../../generator');
+jest.mock('gluestick-generators');
 
 const spawn = require('cross-spawn');
+const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../../cli/colorScheme');
-const generate = require('../../generator');
+const packageJSON = require('../../../package.json');
 
 const mockPackageJson = (mockPath) => {
   jest.doMock(mockPath, () => {
@@ -34,9 +33,6 @@ mockPackageJson(path.join(__dirname, 'new', 'noGluestick', 'package.json'));
 mockPackageJson(path.join(__dirname, 'new', 'noDependencies', 'package.json'));
 
 describe('cli: gluestick new', () => {
-  let originalCwd;
-  let tmpDir;
-
   const logger = jest.fn();
   logger.error = jest.fn();
   logger.info = jest.fn();
@@ -47,17 +43,12 @@ describe('cli: gluestick new', () => {
   const cloneProcessCwd = process.cwd.bind({});
 
   beforeEach(() => {
-    originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync('gluestick-new');
-    process.chdir(tmpDir);
     process.exit = jest.fn();
   });
 
-  afterEach((done) => {
+  afterEach(() => {
     process.cwd = cloneProcessCwd.bind({});
     jest.resetAllMocks();
-    process.chdir(originalCwd);
-    rimraf(tmpDir, done);
   });
 
   const mockProcessCwdCallOnce = () => {
@@ -104,10 +95,15 @@ describe('cli: gluestick new', () => {
     }, logger);
   });
 
-  it('calls spawn.sync install with correct parameters', () => {
+  it('calls spawn.sync install flow-typed definitions', () => {
     mockProcessCwdCallOnce();
     newApp(context, validProjectName);
-    expect(spawn.sync).toBeCalledWith('npm', ['install'], { stdio: 'inherit' });
+
+    expect(spawn.sync).toBeCalledWith(
+      './node_modules/.bin/flow-typed',
+      ['install', `jest@${packageJSON.dependencies.jest}`],
+      { stdio: 'inherit' },
+    );
   });
 
   it('logs a successful message if everything ran correctly', () => {

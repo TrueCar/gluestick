@@ -4,6 +4,7 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
+const generate = require('gluestick-generators').default;
 const version = require('./package.json').version;
 
 module.exports = (appName, options, exitWithError) => {
@@ -33,6 +34,7 @@ module.exports = (appName, options, exitWithError) => {
       packageDeps.dependencies[e] = `file:${path.join('..', options.dev, 'packages', e)}`;
     });
   }
+
   const pathToApp = path.join(process.cwd(), appName);
   if (fs.existsSync(pathToApp)) {
     exitWithError(
@@ -40,15 +42,27 @@ module.exports = (appName, options, exitWithError) => {
     );
   }
   mkdir.sync(path.join(process.cwd(), appName));
-  fs.writeFileSync(path.join(
-    process.cwd(), appName, 'package.json'),
-    JSON.stringify(packageDeps),
+
+  const generatorOptions = {
+    gluestickDependencies: packageDeps.dependencies,
+    appName,
+  };
+
+  process.chdir(appName);
+
+  generate(
+    {
+      generatorName: 'package',
+      entityName: 'package',
+      options: generatorOptions,
+    },
   );
+
   spawn.sync(
     options.yarn ? 'yarn' : 'npm',
     ['install'],
     {
-      cwd: path.join(process.cwd(), appName),
+      cwd: process.cwd(),
       stdio: 'inherit',
     },
   );
@@ -56,7 +70,7 @@ module.exports = (appName, options, exitWithError) => {
     './node_modules/.bin/gluestick',
     commander.rawArgs.slice(2),
     {
-      cwd: path.join(process.cwd(), appName),
+      cwd: process.cwd(),
       stdio: 'inherit',
     },
   );

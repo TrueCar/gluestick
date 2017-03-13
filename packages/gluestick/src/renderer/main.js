@@ -10,7 +10,7 @@ import type {
   Context,
   Request,
   Response,
-  // ServerPlugin,
+  ServerPlugin,
 } from '../types';
 
 const path = require('path');
@@ -25,23 +25,27 @@ const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const assets = require('webpack-chunks');
 // $FlowIgnore
-const hooks = require('gluestick-hooks').default;
+const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
 // $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
-// @NOTE: uncomment this line to be able to use server plugins
-// const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+const hooksHelper = require('./helpers/hooks');
+const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 
 // $FlowIgnore Assets should be bundled into render to serve them in production.
 require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
-  // @NOTE: uncomment this line to be able to use server plugins
-  // const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
-  // logger.debug(serverPlugins);
-  // Get runtime plugins that will be passed to EntryWrapper.
+  const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+  // Merge hooks from project and plugins' hooks.
+  const hooks = hooksHelper.merge(projectHooks, serverPlugins);
+  // Developers can add an optional hook that
+  // includes script with initialization stuff.
+  if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
+    hooks.preInitServer();
+  }
 
   // Developers can add an optional hook that
   // includes script with initialization stuff.
@@ -49,6 +53,7 @@ module.exports = ({ config, logger }: Context) => {
     hooks.preInitServer();
   }
 
+  // Get runtime plugins that will be passed to EntryWrapper.
   const runtimePlugins: Function[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
     .map((plugin: Object) => plugin.ref);
@@ -81,11 +86,16 @@ module.exports = ({ config, logger }: Context) => {
         httpClient: {},
         entryWrapperConfig: {},
       },
-      hooks,
+      { hooks, hooksHelper: hooksHelper.call },
+      serverPlugins,
     );
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);
+
+  // Call express App Hook which accept app as param.
+  hooksHelper.call(hooks.postServerRun, app);
+
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
     server.close();
