@@ -32,7 +32,7 @@ describe('generator/createTemplate tag function', () => {
 
     const bakedTemplate = createTemplate`
       Some text
-      ${2 ** 2}
+      ${2 * 2}
       Some text 2
       ${args => args.someVar}
       Some text 3
@@ -50,7 +50,7 @@ describe('generator/createTemplate tag function', () => {
     `;
     const secondBakedTemplate = createTemplate(2)`
       Some text
-      ${2 ** 2}
+      ${2 * 2}
       Some text 2
       ${args => args.someVar}
       Some text 3
@@ -68,7 +68,7 @@ describe('generator/createTemplate tag function', () => {
     `;
     const secondBakedTemplate = createTemplate(0)`
     Some text
-      ${2 ** 2}
+      ${2 * 2}
       Some text 2
       ${args => args.someVar}
       Some text 3

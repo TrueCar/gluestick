@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-aphrodite",
-  "version": "0.0.0",
+  "version": "1.0.0-rc.7",
   "description": "Plugin for supporting Aphrodite in GlueStick project",
   "main": "index.js",
   "homepage": "https://github.com/TrueCar/gluestick",
