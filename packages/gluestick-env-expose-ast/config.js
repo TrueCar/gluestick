@@ -34,8 +34,10 @@ module.exports = (options, { logger }) => {
   };
 
   return {
-    overwriteClientWebpackConfig: overwriteConfig,
-    overwriteServerWebpackConfig: overwriteConfig,
+    postOverwrites: {
+      clientWebpackConfig: overwriteConfig,
+      serverWebpackConfig: overwriteConfig,
+    },
   };
 };
 

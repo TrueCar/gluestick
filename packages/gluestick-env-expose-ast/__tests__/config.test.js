@@ -13,8 +13,8 @@ const expose = require('../config');
 
 test('plugin should expose from default file', () => {
   const results = expose({}, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
+  const clientPlugins = results.postOverwrites.clientWebpackConfig({ plugins: [] }).plugins;
+  const serverPlugins = results.postOverwrites.serverWebpackConfig({ plugins: [] }).plugins;
   expect(clientPlugins.length).toBe(1);
   expect(serverPlugins.length).toBe(1);
 });
@@ -25,13 +25,13 @@ test('plugin should expose from single file', () => {
   const results = expose({
     parse: 'file0',
   }, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
+  const clientPlugins = results.postOverwrites.clientWebpackConfig({ plugins: [] }).plugins;
   expect(clientPlugins.length).toBe(1);
   expect(clientPlugins[0].spec).toEqual({
     'process.env.ENV_1': '\"true\"',
     'process.env.ENV_2': '\"false\"',
   });
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
+  const serverPlugins = results.postOverwrites.serverWebpackConfig({ plugins: [] }).plugins;
   expect(serverPlugins.length).toBe(1);
   expect(serverPlugins[0].spec).toEqual({
     'process.env.ENV_1': '\"true\"',
@@ -46,14 +46,14 @@ test('plugin should expose from multiple files', () => {
   const results = expose({
     parse: ['file0', 'file1'],
   }, {});
-  const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
+  const clientPlugins = results.postOverwrites.clientWebpackConfig({ plugins: [] }).plugins;
   expect(clientPlugins.length).toBe(1);
   expect(clientPlugins[0].spec).toEqual({
     'process.env.ENV_1': '\"true\"',
     'process.env.ENV_2': '\"false\"',
     'process.env.ENV_3': '\"test\"',
   });
-  const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
+  const serverPlugins = results.postOverwrites.serverWebpackConfig({ plugins: [] }).plugins;
   expect(serverPlugins.length).toBe(1);
   expect(serverPlugins[0].spec).toEqual({
     'process.env.ENV_1': '\"true\"',

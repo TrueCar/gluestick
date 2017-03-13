@@ -40,7 +40,7 @@ describe('plugin', () => {
 
   it('should overwrite gluestick config', () => {
     const gsConfig = { ports: {} };
-    plugin.overwriteGluestickConfig(gsConfig);
+    plugin.postOverwrites.gluestickConfig(gsConfig);
     expect(gsConfig).toEqual({
       protocol: 'http',
       host: '0.0.0.0',
@@ -51,6 +51,20 @@ describe('plugin', () => {
     });
   });
 
+  it('should overwrite shared webpack config', () => {
+    const webpackConfig = {
+      resolve: { alias: {} },
+      module: { rules: [] },
+      plugins: [],
+      entry: {},
+    };
+    plugin.preOverwrites.sharedWebpackConfig(webpackConfig);
+    expect(webpackConfig.resolve.alias.aliasName).toEqual('add.js');
+    expect(webpackConfig.module.rules).toEqual([]);
+    expect(webpackConfig.plugins).toEqual([]);
+    expect(webpackConfig.entry).toEqual({});
+  });
+
   it('should overwrite client webpack config', () => {
     const webpackConfig = {
       resolve: { alias: {} },
@@ -58,8 +72,8 @@ describe('plugin', () => {
       plugins: [],
       entry: {},
     };
-    plugin.overwriteClientWebpackConfig(webpackConfig);
-    expect(webpackConfig.resolve.alias.aliasName).toEqual('add.js');
+    plugin.postOverwrites.clientWebpackConfig(webpackConfig);
+    expect(webpackConfig.resolve.alias).toEqual({});
     expect(webpackConfig.module.rules).toEqual(['loader']);
     expect(webpackConfig.plugins).toEqual(['plugin']);
     expect(webpackConfig.entry.vendor).toEqual(['vendor']);
@@ -72,8 +86,8 @@ describe('plugin', () => {
       plugins: [],
       entry: {},
     };
-    plugin.overwriteServerWebpackConfig(webpackConfig);
-    expect(webpackConfig.resolve.alias.aliasName).toEqual('add.js');
+    plugin.postOverwrites.serverWebpackConfig(webpackConfig);
+    expect(webpackConfig.resolve.alias).toEqual({});
     expect(webpackConfig.module.rules).toEqual(['loader']);
     expect(webpackConfig.plugins).toEqual(['plugin']);
     expect(webpackConfig.entry.vendor).toBeUndefined();

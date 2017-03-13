@@ -14,21 +14,11 @@ module.exports = () => {
   );
 
   const applyWebpackAdditions = (webpackConfig, isClient = false) => {
-    const additionalAliases = getProp(webpackAdditions, 'additionalAliases');
     const additionalLoaders = getProp(webpackAdditions, 'additionalLoaders');
     const additionalPlugins = getProp(webpackAdditions, 'plugins');
     const vendor = getProp(webpackAdditions, 'vendor');
 
     const config = webpackConfig;
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      ...Object.keys(additionalAliases).reduce((prev, curr) => {
-        return Object.assign(
-          prev,
-          { [curr]: path.join(process.cwd(), ...additionalAliases[curr]) },
-        );
-      }, {}),
-    };
     config.module.rules = config.module.rules.concat(additionalLoaders);
     config.plugins = config.plugins.concat(additionalPlugins);
     if (isClient && config.entry.vendor && vendor.length) {
@@ -40,15 +30,33 @@ module.exports = () => {
   };
 
   return {
-    overwriteGluestickConfig: (config) => {
-      const gluestickConfig = config;
-      gluestickConfig.protocol = getProp(applicationServer, 'protocol');
-      gluestickConfig.host = getProp(applicationServer, 'host');
-      gluestickConfig.ports.client = getProp(applicationServer, 'port');
-      gluestickConfig.ports.server = getProp(applicationServer, 'assetPort');
-      return gluestickConfig;
+    preOverwrites: {
+      sharedWebpackConfig: (webpackConfig) => {
+        const additionalAliases = getProp(webpackAdditions, 'additionalAliases');
+        const config = webpackConfig;
+        config.resolve.alias = {
+          ...config.resolve.alias,
+          ...Object.keys(additionalAliases).reduce((prev, curr) => {
+            return Object.assign(
+              prev,
+              { [curr]: path.join(process.cwd(), ...additionalAliases[curr]) },
+            );
+          }, {}),
+        };
+        return config;
+      },
     },
-    overwriteClientWebpackConfig: (config) => applyWebpackAdditions(config, true),
-    overwriteServerWebpackConfig: (config) => applyWebpackAdditions(config),
+    postOverwrites: {
+      gluestickConfig: (config) => {
+        const gluestickConfig = config;
+        gluestickConfig.protocol = getProp(applicationServer, 'protocol');
+        gluestickConfig.host = getProp(applicationServer, 'host');
+        gluestickConfig.ports.client = getProp(applicationServer, 'port');
+        gluestickConfig.ports.server = getProp(applicationServer, 'assetPort');
+        return gluestickConfig;
+      },
+      clientWebpackConfig: (config) => applyWebpackAdditions(config, true),
+      serverWebpackConfig: (config) => applyWebpackAdditions(config),
+    },
   };
 };
