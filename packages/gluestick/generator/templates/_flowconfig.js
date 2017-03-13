@@ -23,7 +23,7 @@ module.ignore_non_literal_requires=true
 
 ${(args) => Object.entries(args.mapper).reduce((prev, [key, value]) => {
   // $FlowFixMe check problems with Object.entries
-  const curr = `module.name_mapper='^${key}/\\(.*\\)'-><PROJECT_ROOT>${value}/\\1'\n`;
+  const curr = `module.name_mapper='^${key}/\\(.*\\)'->'<PROJECT_ROOT>${value}/\\1'\n`;
   return prev.concat(curr);
 }, '')}
 [version]
