@@ -11,12 +11,12 @@ jest.mock('webpack', () => ({
 }));
 const expose = require('../config');
 
-test('plugin should not expose anything', () => {
+test('plugin should expose from default file', () => {
   const results = expose({}, {});
   const clientPlugins = results.overwriteClientWebpackConfig({ plugins: [] }).plugins;
   const serverPlugins = results.overwriteServerWebpackConfig({ plugins: [] }).plugins;
-  expect(clientPlugins.length).toBe(0);
-  expect(serverPlugins.length).toBe(0);
+  expect(clientPlugins.length).toBe(1);
+  expect(serverPlugins.length).toBe(1);
 });
 
 test('plugin should expose from single file', () => {
