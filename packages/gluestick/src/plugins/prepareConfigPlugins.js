@@ -21,7 +21,6 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
     }
 
     const pluginBody = pluginData.body(pluginData.options, pluginOptions);
-
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
@@ -36,7 +35,7 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
     const enchancedError = error;
     enchancedError.message = `${pluginData.name} compilation failed: ${enchancedError.message}`;
     return {
-      overwrites: {},
+      postOverwrites: {},
       error: enchancedError,
     };
   }
@@ -48,7 +47,6 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
  */
 module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => {
   const pluginsConfig: Plugin[] = readPlugins(logger, pluginsConfigPath, 'config');
-
   if (!pluginsConfig.length) {
     return [];
   }

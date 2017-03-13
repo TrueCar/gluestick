@@ -18,7 +18,7 @@ describe('config/compileWebpackConfig', () => {
     // $FlowIgnore
     const webpackConfig = compileWebpackConfig(loggerMock, [
       {
-        overwrites: {
+        postOverwrites: {
           // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
           // $FlowIgnore
@@ -26,7 +26,7 @@ describe('config/compileWebpackConfig', () => {
         },
       },
       {
-        overwrites: {
+        postOverwrites: {
           // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
         },
