@@ -5,7 +5,7 @@ import type { ConfigPlugin, Plugin, Logger } from '../types';
 const readPlugins = require('./readPlugins');
 
 type CompilationResults = {
-  overwrites: {
+  postOverwrites: {
     [key: string]: Function;
   };
   error?: Error;
@@ -25,10 +25,10 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      overwrites: {
-        gluestickConfig: pluginBody.overwriteGluestickConfig,
-        clientWebpackConfig: pluginBody.overwriteClientWebpackConfig,
-        serverWebpackConfig: pluginBody.overwriteServerWebpackConfig,
+      postOverwrites: {
+        gluestickConfig: pluginBody.postOverwrites.gluestickConfig,
+        clientWebpackConfig: pluginBody.postOverwrites.clientWebpackConfig,
+        serverWebpackConfig: pluginBody.postOverwrites.serverWebpackConfig,
       },
     };
   } catch (error) {
@@ -66,7 +66,7 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
       logger.success(`  ${value.name} compiled successfully`);
       return {
         name: value.name,
-        overwrites: compilationResults.overwrites,
+        postOverwrites: compilationResults.postOverwrites,
         meta: value.meta,
       };
     });

@@ -106,21 +106,21 @@ module.exports = (
 
   // Apply config plugins to final client webpack config.
   const clientEnvConfigFinal: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.overwrites.clientWebpackConfig)
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.clientWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
-      return plugin.overwrites.clientWebpackConfig
+      return plugin.postOverwrites.clientWebpackConfig
         // $FlowIgnore
-        ? plugin.overwrites.clientWebpackConfig(clone(prev))
+        ? plugin.postOverwrites.clientWebpackConfig(clone(prev))
         : prev;
     }, clientEnvConfig);
 
   // Apply config plugins to final server webpack config.
   const serverEnvConfigFinal: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.overwrites.serverWebpackConfig)
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.serverWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
-      return plugin.overwrites.serverWebpackConfig
+      return plugin.postOverwrites.serverWebpackConfig
         // $FlowIgnore
-        ? plugin.overwrites.serverWebpackConfig(clone(prev))
+        ? plugin.postOverwrites.serverWebpackConfig(clone(prev))
         : prev;
     }, serverEnvConfig);
 

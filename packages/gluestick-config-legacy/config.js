@@ -40,15 +40,17 @@ module.exports = () => {
   };
 
   return {
-    overwriteGluestickConfig: (config) => {
-      const gluestickConfig = config;
-      gluestickConfig.protocol = getProp(applicationServer, 'protocol');
-      gluestickConfig.host = getProp(applicationServer, 'host');
-      gluestickConfig.ports.client = getProp(applicationServer, 'port');
-      gluestickConfig.ports.server = getProp(applicationServer, 'assetPort');
-      return gluestickConfig;
+    postOverwrites: {
+      gluestickConfig: (config) => {
+        const gluestickConfig = config;
+        gluestickConfig.protocol = getProp(applicationServer, 'protocol');
+        gluestickConfig.host = getProp(applicationServer, 'host');
+        gluestickConfig.ports.client = getProp(applicationServer, 'port');
+        gluestickConfig.ports.server = getProp(applicationServer, 'assetPort');
+        return gluestickConfig;
+      },
+      clientWebpackConfig: (config) => applyWebpackAdditions(config, true),
+      serverWebpackConfig: (config) => applyWebpackAdditions(config),
     },
-    overwriteClientWebpackConfig: (config) => applyWebpackAdditions(config, true),
-    overwriteServerWebpackConfig: (config) => applyWebpackAdditions(config),
   };
 };

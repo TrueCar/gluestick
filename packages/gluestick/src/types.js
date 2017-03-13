@@ -219,7 +219,7 @@ export type ConfigPlugin = {
   meta: {
     [key: string]: any;
   };
-  overwrites: {
+  postOverwrites: {
     gluestickConfig?: (config: GSConfig) => void;
     clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
     serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig;

@@ -10,8 +10,8 @@ module.exports = (plugins: ConfigPlugin[]): GSConfig => {
   }
 
   return plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.overwrites.gluestickConfig)
-    .map((plugin: ConfigPlugin) => plugin.overwrites.gluestickConfig)
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.gluestickConfig)
+    .map((plugin: ConfigPlugin) => plugin.postOverwrites.gluestickConfig)
     .reduce((prev: GSConfig, curr): GSConfig => {
       // $FlowFixMe curr will be a function
       return curr(clone(prev));
