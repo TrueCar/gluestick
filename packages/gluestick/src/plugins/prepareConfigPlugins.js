@@ -5,7 +5,10 @@ import type { ConfigPlugin, Plugin, Logger } from '../types';
 const readPlugins = require('./readPlugins');
 
 type CompilationResults = {
-  overwrites: {
+  preOverwrites: {
+    [key: string]: Function;
+  };
+  postOverwrites: {
     [key: string]: Function;
   };
   error?: Error;
@@ -21,22 +24,19 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
     }
 
     const pluginBody = pluginData.body(pluginData.options, pluginOptions);
-
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      overwrites: {
-        gluestickConfig: pluginBody.overwriteGluestickConfig,
-        clientWebpackConfig: pluginBody.overwriteClientWebpackConfig,
-        serverWebpackConfig: pluginBody.overwriteServerWebpackConfig,
-      },
+      preOverwrites: pluginBody.preOverwrites || {},
+      postOverwrites: pluginBody.postOverwrites || {},
     };
   } catch (error) {
     // Proivde user-frinedly error message, so the user will know what plugin failed.
     const enchancedError = error;
     enchancedError.message = `${pluginData.name} compilation failed: ${enchancedError.message}`;
     return {
-      overwrites: {},
+      preOverwrites: {},
+      postOverwrites: {},
       error: enchancedError,
     };
   }
@@ -48,7 +48,6 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
  */
 module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => {
   const pluginsConfig: Plugin[] = readPlugins(logger, pluginsConfigPath, 'config');
-
   if (!pluginsConfig.length) {
     return [];
   }
@@ -66,7 +65,8 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
       logger.success(`  ${value.name} compiled successfully`);
       return {
         name: value.name,
-        overwrites: compilationResults.overwrites,
+        preOverwrites: compilationResults.preOverwrites,
+        postOverwrites: compilationResults.postOverwrites,
         meta: value.meta,
       };
     });

@@ -70,31 +70,41 @@ Must export function that returns object will overwriters.
 ```
 module.exports = (options, { logger }) => {
   return {
-    overwriteGluestickConfig: config => config,
-    overwriteClientWebpackConfig: config => config,
-    overwriteServerWebpackConfig: config => config,
+    preOverwrites: {
+      sharedWebpackConfig: config => config,
+    },
+    postOverwrites: {
+      gluestickConfig: config => config,
+      clientWebpackConfig: config => config,
+      serverWebpackConfig: config => config,
+    },
   };
 };
 ```
-Exported function is a factory for `overwriteGluestickConfig`, `overwriteClientWebpackConfig`
-and `overwriteServerWebpackConfig`. This factory function accepts options that are defined
-in plugins declaration file inside project, by default `src/gluestick.plugins.js`. Second
-argument is an object with utilities provided by gluestick, currently the only one is
-logger, that you can use to print messages using:
+Exported function is a factory for two groups of overwrites: `preOverwrites` and `postOverwrites`.
+This factory function accepts options that are defined in plugins declaration file inside project,
+by default `src/gluestick.plugins.js`. Second argument is an object with utilities provided by
+gluestick, currently the only one is logger, that you can use to print messages using:
 - `logger.debug(...args)`
 - `logger.info(...args)`
 - `logger.success(...args)`
 - `logger.warn(...args)`
 - `logger.error(...args)`
 
-Each of overwriters must be a function accepting prepared by gluestick config and must return
-altered config:
+`preOverwrites` are executed before specific configs are prepared. This is the place for modification
+that should be considered by universal-webpack, for example aliases, which can define if file
+from import is external or not.
+- `sharedWebpackConfig: config => config` - accepts shared webpack config and
+must return valid webpack config which will be the base for both by client and server configs
 
-- `overwriteGluestickConfig: config => config` - accepts gluestick config and must return the same
+`postOverwrites` are executed after every config is prepared, so modifications to configs will
+go directly to webpack compiler. Modification done here won't be taken into considiration by
+uniwersal-webpack. This is the place for isomorphic-like things.
+- `gluestickConfig: config => config` - accepts gluestick config and must return the same
 valid gluestick config with modified values
-- `overwriteClientWebpackConfig: config => config` - accepts client webpack config and
+- `clientWebpackConfig: config => config` - accepts client webpack config and
 must return valid webpack config for client bundle
-- `overwriteServerWebpackConfig: config => config` - accepts server webpack config and
+- `serverWebpackConfig: config => config` - accepts server webpack config and
 must return valid webpack config for renderer (server) bundle
 
 ## Server plugin

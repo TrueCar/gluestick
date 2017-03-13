@@ -18,7 +18,8 @@ describe('config/compileWebpackConfig', () => {
     // $FlowIgnore
     const webpackConfig = compileWebpackConfig(loggerMock, [
       {
-        overwrites: {
+        preOverwrites: {},
+        postOverwrites: {
           // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
           // $FlowIgnore
@@ -26,7 +27,11 @@ describe('config/compileWebpackConfig', () => {
         },
       },
       {
-        overwrites: {
+        preOverwrites: {
+          // $FlowIgnore
+          sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
+        },
+        postOverwrites: {
           // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
         },
@@ -37,6 +42,8 @@ describe('config/compileWebpackConfig', () => {
     expect(webpackConfig.server).not.toBeNull();
     expect(webpackConfig.client.testProp).toBeTruthy();
     expect(webpackConfig.server.testProp).toBeTruthy();
+    expect(webpackConfig.client.preTestProp).toBeTruthy();
+    expect(webpackConfig.server.preTestProp).toBeTruthy();
     expect(webpackConfig.client.testPropNew).toBeTruthy();
   });
 });
