@@ -64,9 +64,19 @@ module.exports = (
   // Get shared config between client and server.
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
 
+  // Apply pre overwriters from config plugins to shared webpack config.
+  const sharedConfigFinal: WebpackConfig = plugins
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.preOverwrites.sharedWebpackConfig)
+    .reduce((prev: Object, plugin: ConfigPlugin) => {
+      return plugin.preOverwrites.sharedWebpackConfig
+        // $FlowIgnore
+        ? plugin.preOverwrites.sharedWebpackConfig(clone(prev))
+        : prev;
+    }, sharedConfig);
+
   // Get client non-env specific webpack config.
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    logger, sharedConfig, universalWebpackSettings, gluestickConfig, entries, runtimePlugins,
+    logger, sharedConfigFinal, universalWebpackSettings, gluestickConfig, entries, runtimePlugins,
     { skipEntryGeneration: skipClientEntryGeneration },
   );
   // Get client env specific webpack config.
@@ -91,7 +101,7 @@ module.exports = (
   // Get server non-env specific webpack config.
   const serverConfig: WebpackConfig = getServerConfig(
     logger,
-    sharedConfig,
+    sharedConfigFinal,
     universalWebpackSettings,
     gluestickConfig,
     entries,
@@ -104,7 +114,7 @@ module.exports = (
     gluestickConfig.ports.client,
   );
 
-  // Apply config plugins to final client webpack config.
+  // Apply post overwriters from config plugins to final client webpack config.
   const clientEnvConfigFinal: WebpackConfig = plugins
     .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.clientWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
@@ -114,7 +124,7 @@ module.exports = (
         : prev;
     }, clientEnvConfig);
 
-  // Apply config plugins to final server webpack config.
+  // Apply post overwriters from config plugins to final server webpack config.
   const serverEnvConfigFinal: WebpackConfig = plugins
     .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.serverWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
