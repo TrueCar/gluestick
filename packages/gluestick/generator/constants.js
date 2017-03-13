@@ -9,5 +9,6 @@ module.exports = {
     shared: '/src/shared',
     config: '/src/config',
     apps: '/src/apps',
+    compiled: '/node_modules',
   },
 };
