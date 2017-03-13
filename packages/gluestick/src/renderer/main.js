@@ -47,14 +47,13 @@ module.exports = ({ config, logger }: Context) => {
     hooks.preInitServer();
   }
 
-  // Get runtime plugins that will be passed to EntryWrapper.
-
   // Developers can add an optional hook that
   // includes script with initialization stuff.
   if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
     hooks.preInitServer();
   }
 
+  // Get runtime plugins that will be passed to EntryWrapper.
   const runtimePlugins: Function[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
     .map((plugin: Object) => plugin.ref);
