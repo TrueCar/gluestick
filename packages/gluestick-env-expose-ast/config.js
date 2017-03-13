@@ -8,7 +8,7 @@ module.exports = (options, { logger }) => {
     envToExpose = options.parse
       .map((file) => detectEnvVars(path.join(process.cwd(), file), logger))
       .reduce((prev, curr) => prev.concat(curr), []);
-  } else if (options.parse) {
+  } else {
     envToExpose = detectEnvVars(
       path.join(process.cwd(), options.parse || 'src/config/application.js'),
       logger,
