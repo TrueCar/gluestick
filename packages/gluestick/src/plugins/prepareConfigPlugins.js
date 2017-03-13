@@ -27,14 +27,8 @@ const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationRe
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      preOverwrites: {
-        sharedWebpackConfig: pluginBody.preOverwrites.sharedWebpackConfig,
-      },
-      postOverwrites: {
-        gluestickConfig: pluginBody.postOverwrites.gluestickConfig,
-        clientWebpackConfig: pluginBody.postOverwrites.clientWebpackConfig,
-        serverWebpackConfig: pluginBody.postOverwrites.serverWebpackConfig,
-      },
+      preOverwrites: pluginBody.preOverwrites || {},
+      postOverwrites: pluginBody.postOverwrites || {},
     };
   } catch (error) {
     // Proivde user-frinedly error message, so the user will know what plugin failed.
