@@ -1,5 +1,7 @@
 /* @flow */
 
+jest.mock('fs');
+
 jest.mock('../../cli/logger', () => () => ({
   info: jest.fn(),
   success: jest.fn(),
@@ -12,9 +14,6 @@ jest.mock('../../utils');
 const fs = require('fs');
 const inquirer = require('inquirer');
 const path = require('path');
-const temp = require('temp');
-const rimraf = require('rimraf');
-const mkdirp = require('mkdirp');
 const chalk = require('chalk');
 
 const destroy = require('../destroy');
@@ -27,45 +26,25 @@ function createFiles(...filePaths) {
   });
 }
 
-function createDirectories(rootDir, ...directories) {
-  directories.forEach((directory) => {
-    mkdirp.sync(path.join(rootDir, 'src', directory));
-    mkdirp.sync(path.join(rootDir, 'src', directory, '__tests__'));
-  });
-}
-
 describe('cli: gluestick destroy', () => {
-  let originalCwd;
-  let tmpDir;
-
-  const fileExists = filePath => fs.existsSync(path.join(tmpDir, filePath));
+  const rootDir = path.resolve();
+  const fileExists = filePath => fs.existsSync(path.join(rootDir, filePath));
   const context = { config: { plugins: [] }, logger };
   // $FlowFixMe
   isValidEntryPoint.mockReturnValue(true);
 
   beforeEach(() => {
     logger.error.mockClear();
-
-    originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync('gluestick-destroy');
-    process.chdir(tmpDir);
-    fs.closeSync(fs.openSync('.gluestick', 'w'));
-    createDirectories(tmpDir, 'shared/components', 'shared/reducers', 'shared/containers');
-  });
-
-  afterEach((done) => {
-    process.chdir(originalCwd);
-    rimraf(tmpDir, done);
   });
 
   describe('when files are generated without sub-directories', () => {
     beforeEach(() => {
-      const componentPath = path.join(tmpDir, 'src/shared/components/TestComponent.js');
-      const componentTestPath = path.join(tmpDir, 'src/shared/components/__tests__/TestComponent.test.js');
-      const containerPath = path.join(tmpDir, 'src/shared/containers/TestContainer.js');
-      const containerTestPath = path.join(tmpDir, 'src/shared/containers/__tests__/TestContainer.test.js');
-      const reducerPath = path.join(tmpDir, 'src/shared/reducers/testReducer.js');
-      const reducerTestPath = path.join(tmpDir, 'src/shared/reducers/__tests__/testReducer.test.js');
+      const componentPath = path.join(rootDir, 'src/shared/components/TestComponent.js');
+      const componentTestPath = path.join(rootDir, 'src/shared/components/__tests__/TestComponent.test.js');
+      const containerPath = path.join(rootDir, 'src/shared/containers/TestContainer.js');
+      const containerTestPath = path.join(rootDir, 'src/shared/containers/__tests__/TestContainer.test.js');
+      const reducerPath = path.join(rootDir, 'src/shared/reducers/testReducer.js');
+      const reducerTestPath = path.join(rootDir, 'src/shared/reducers/__tests__/testReducer.test.js');
       createFiles(
         componentPath,
         componentTestPath,
@@ -133,19 +112,18 @@ describe('cli: gluestick destroy', () => {
 
   describe('when sub-directories are provided', () => {
     beforeEach(() => {
-      createDirectories(tmpDir, path.join('shared', 'components', 'mydirectory'));
-      const componentPath = path.join(tmpDir, 'src/shared/components/mydirectory/TestComponent.js');
-      const componentTestPath = path.join(tmpDir, 'src/shared/components/mydirectory/__tests__/TestComponent.test.js');
+      const componentPath = path.join(rootDir, 'src/shared/components/dir/TestComponent.js');
+      const componentTestPath = path.join(rootDir, 'src/shared/components/dir/__tests__/TestComponent.test.js');
       createFiles(componentPath, componentTestPath);
     });
 
     it('removes the files under the directory', () => {
-      expect(fileExists('src/shared/components/mydirectory/TestComponent.js')).toEqual(true);
-      expect(fileExists('src/shared/components/mydirectory/__tests__/TestComponent.test.js')).toEqual(true);
-      destroy(context, 'component', 'mydirectory/TestComponent', { entryPoint: 'shared' });
+      expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(true);
+      expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(true);
+      destroy(context, 'component', 'dir/TestComponent', { entryPoint: 'shared' });
       expect(logger.error).not.toHaveBeenCalled();
-      expect(fileExists('src/shared/components/mydirectory/TestComponent.js')).toEqual(false);
-      expect(fileExists('src/shared/components/mydirectory/__tests__/TestComponent.test.js')).toEqual(false);
+      expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(false);
+      expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(false);
     });
   });
 

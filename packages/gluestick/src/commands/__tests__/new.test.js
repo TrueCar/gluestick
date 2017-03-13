@@ -1,5 +1,3 @@
-import temp from 'temp';
-import rimraf from 'rimraf';
 import path from 'path';
 import newApp from '../new';
 
@@ -35,9 +33,6 @@ mockPackageJson(path.join(__dirname, 'new', 'noGluestick', 'package.json'));
 mockPackageJson(path.join(__dirname, 'new', 'noDependencies', 'package.json'));
 
 describe('cli: gluestick new', () => {
-  let originalCwd;
-  let tmpDir;
-
   const logger = jest.fn();
   logger.error = jest.fn();
   logger.info = jest.fn();
@@ -48,17 +43,12 @@ describe('cli: gluestick new', () => {
   const cloneProcessCwd = process.cwd.bind({});
 
   beforeEach(() => {
-    originalCwd = process.cwd();
-    tmpDir = temp.mkdirSync('gluestick-new');
-    process.chdir(tmpDir);
     process.exit = jest.fn();
   });
 
-  afterEach((done) => {
+  afterEach(() => {
     process.cwd = cloneProcessCwd.bind({});
     jest.resetAllMocks();
-    process.chdir(originalCwd);
-    rimraf(tmpDir, done);
   });
 
   const mockProcessCwdCallOnce = () => {

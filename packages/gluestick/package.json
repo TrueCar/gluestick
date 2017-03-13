@@ -91,9 +91,6 @@
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.15.0"
   },
-  "devDependencies": {
-    "temp": "0.8.3"
-  },
   "jest": {
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$",
