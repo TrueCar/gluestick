@@ -39,7 +39,7 @@ require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
-  
+
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
 
