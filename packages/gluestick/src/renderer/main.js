@@ -39,13 +39,9 @@ require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
-  // Developers can add an optional hook that
-  // includes script with initialization stuff.
-  if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
-    hooks.preInitServer();
-  }
 
   // Developers can add an optional hook that
   // includes script with initialization stuff.
