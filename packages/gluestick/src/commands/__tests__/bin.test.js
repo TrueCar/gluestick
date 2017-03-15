@@ -29,4 +29,10 @@ describe('cli: gluestick bin', () => {
       getDependencyPath(dependencyName), dependencyOptions, spawnOptions,
     );
   });
+
+  it('should return permaturely if dependency name is invalid', () => {
+    const context = { logger: { error: jest.fn() } };
+    bin(context, 1);
+    expect(context.logger.error.mock.calls[0]).toEqual(['No binary is specified or is invalid']);
+  });
 });
