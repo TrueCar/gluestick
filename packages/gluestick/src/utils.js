@@ -6,7 +6,11 @@ const fs = require('fs');
 const path = require('path');
 
 const convertToCamelCase =
-  (value: string): string => value.replace(/(-\w)/g, match => match[1].toUpperCase());
+  (value: string): string => `${
+    value[0].toLowerCase()
+  }${
+    value.substr(1).replace(/(-\w)/g, match => match[1].toUpperCase())
+  }`;
 
 const convertToKebabCase = (value: string): string => {
   const parsedValue = value.replace(/([A-Z])/g, match => `-${match[0].toLowerCase()}`);
