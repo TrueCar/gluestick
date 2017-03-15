@@ -77,6 +77,7 @@ describe('autoUpgrade/index', () => {
       changed: [],
       added: [],
     }), true);
+    // $FlowIgnore updateDependencies is mocked
     expect(updateDependencies.mock.calls.length).toBe(1);
   });
 });
