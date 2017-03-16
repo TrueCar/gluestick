@@ -6,7 +6,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 
 import React, { Component, PropTypes } from "react";
 import Helmet from "react-helmet";
-import { BodyAttributes } from "gluestick-shared";
+import { BodyAttributes } from "gluestick";
 import "compiled/normalize.css";
 
 /**
