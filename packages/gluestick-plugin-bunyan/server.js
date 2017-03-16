@@ -24,7 +24,7 @@ const defaultSettings = {
 const bunyanPlugin = (): Logger => {
   let options: Options = defaultSettings;
   try {
-    const userSettings = require('src/bunyan.config.js').default;
+    const userSettings: Options = require('src/bunyan.config.js').default;
     options = Object.assign(options, userSettings);
   } catch (error) {
     // NOOP if we haven't settings from user we use default.
