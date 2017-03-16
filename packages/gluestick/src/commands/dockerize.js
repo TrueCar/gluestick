@@ -6,11 +6,7 @@ const path = require('path');
 const process = require('process');
 const which = require('shelljs').which;
 
-const autoUpgrade = require('../autoUpgrade/autoUpgrade');
-
-module.exports = async ({ config, logger }: Context, name: string) => {
-  await autoUpgrade({ config, logger });
-
+module.exports = ({ config, logger }: Context, name: string) => {
   if (which('docker') !== null) {
     spawn(
       'docker',
