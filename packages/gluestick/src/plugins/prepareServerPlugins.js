@@ -20,10 +20,11 @@ const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationRes
   try {
     const pluginBody = pluginSpec.body ? pluginSpec.body(pluginSpec.options, pluginOptions) : {};
 
-    // Currently server plugin can overwrite renderMethod and provide hooks.
+    // Currently server plugin can overwrite renderMethod and provide hooks and logger.
     return {
       renderMethod: pluginBody.renderMethod,
       hooks: pluginBody.hooks,
+      logger: pluginBody.logger,
     };
   } catch (error) {
     // Proivde user-frinedly error message, so the user will know what plugin failed.
@@ -32,6 +33,7 @@ const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationRes
     return {
       renderMethod: () => {},
       hooks: {},
+      logger: {},
       error: enchancedError,
     };
   }
@@ -78,6 +80,7 @@ module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
           meta: normalizedPlugin.meta,
           renderMethod: compilationResults.renderMethod,
           hooks: compilationResults.hooks,
+          logger: compilationResults.logger,
         };
       },
     );
