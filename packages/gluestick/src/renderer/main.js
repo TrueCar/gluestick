@@ -43,8 +43,10 @@ require.context('build-assets');
 module.exports = ({ config, logger }: Context) => {
   const pluginUtils = createPluginUtils(logger);
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+  
   // Use custom logger from plugins or default logger.
   const customLogger: ?Logger = pluginUtils.getCustomLogger(serverPlugins);
+
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
 
