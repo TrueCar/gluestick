@@ -255,7 +255,7 @@ describe('lib/getHttpClient', () => {
     // https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
     // Would like to use github.com/mzabriskie/moxios
     // but it did not work with axios 0.12.0 in gluestick-shared.
-    function mockSuccessAdapter(resolve, reject, config) {
+    function mockSuccessAdapter(config) {
       const response = {
         config,
         data: null,
@@ -264,7 +264,7 @@ describe('lib/getHttpClient', () => {
         status: 200,
         statusText: '',
       };
-      resolve(response);
+      return Promise.resolve(response);
     }
     function modifyInstance(client) {
       client.interceptors.request.use(
@@ -305,7 +305,7 @@ describe('lib/getHttpClient', () => {
     // https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
     // Would like to use github.com/mzabriskie/moxios
     // but it did not work with axios 0.12.0 in gluestick-shared.
-    function mockSuccessAdapter(resolve, reject, config) {
+    function mockSuccessAdapter(config) {
       const response = {
         config,
         data: null,
@@ -314,7 +314,7 @@ describe('lib/getHttpClient', () => {
         status: 200,
         statusText: '',
       };
-      resolve(response);
+      return Promise.resolve(response);
     }
     function modifyInstance(client) {
       client.interceptors.request.use(

@@ -1,6 +1,11 @@
 /* eslint-disable no-useless-escape*/
 jest.mock('../detectEnvironmentVariables.js', () => jest.fn(
-  (file) => file.includes('0') ? ['ENV_1', 'ENV_2'] : ['ENV_3'],
+  (file) => {
+    if (file.includes('0')) {
+      return ['ENV_1', 'ENV_2'];
+    }
+    return file.includes('2') ? [] : ['ENV_3'];
+  },
 ));
 jest.mock('webpack', () => ({
   DefinePlugin: class {
@@ -10,6 +15,14 @@ jest.mock('webpack', () => ({
   },
 }));
 const expose = require('../config');
+
+test('plugin should not expose anything', () => {
+  const results = expose({ parse: 'file2' }, {});
+  const clientPlugins = results.postOverwrites.clientWebpackConfig({ plugins: [] }).plugins;
+  const serverPlugins = results.postOverwrites.serverWebpackConfig({ plugins: [] }).plugins;
+  expect(clientPlugins.length).toBe(0);
+  expect(serverPlugins.length).toBe(0);
+});
 
 test('plugin should expose from default file', () => {
   const results = expose({}, {});

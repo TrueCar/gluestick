@@ -19,6 +19,11 @@ const entries = {
     reducers: 'reducers',
     routes: 'routes',
   },
+  '/home/def': {
+    component: 'component',
+    reducers: 'reducers',
+    routes: 'routes',
+  },
 };
 
 describe('renderer/helpers/getRequirementsFromEntry', () => {

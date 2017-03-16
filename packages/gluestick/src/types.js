@@ -246,6 +246,7 @@ export type ServerPlugin = {
   };
   renderMethod: Function;
   hooks: Hooks;
+  logger: Logger;
 };
 
 export type RenderMethod = (root: Object, styleTags: Object[]) =>
