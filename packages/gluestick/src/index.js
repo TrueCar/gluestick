@@ -1,1 +1,1 @@
-module.exports = require('gluestick-shared');
+module.exports = require('./shared');

@@ -13,7 +13,7 @@ import type {
 const mocks = require('./mocks');
 
 /* eslint-disable react/no-multi-comp */
-jest.mock('gluestick-shared', () => ({
+jest.mock('../../../shared', () => ({
   getHttpClient: jest.fn(),
   createStore: jest.fn(() => ({})),
   prepareRoutesWithTransitionHooks: jest.fn(val => val),
