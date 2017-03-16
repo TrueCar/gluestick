@@ -7,7 +7,7 @@ export type Options = {
   streams?: Object[];
   serializers?: Object;
   src?: boolean;
-}
+};
 
 export type Logger = {
   success: Function;
@@ -15,11 +15,11 @@ export type Logger = {
   warn: Function;
   debug: Function;
   error: Function;
-}
+};
 
 const defaultSettings = {
   name: 'default name',
-}
+};
 
 const bunyanPlugin = (): Logger => {
   let options: Options = defaultSettings;
@@ -33,7 +33,7 @@ const bunyanPlugin = (): Logger => {
   loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
   return {
     logger: loggerWithSuccessMethod,
-  }
+  };
 };
 
 bunyanPlugin.meta = { name: 'gluestick-plugin-bunyan' };
