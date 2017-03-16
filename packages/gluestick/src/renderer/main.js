@@ -18,6 +18,7 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
+const onFinished = require('on-finished');
 const entries = require('project-entries').default;
 // $FlowIgnore
 const entriesConfig = require('project-entries-config');
@@ -76,6 +77,13 @@ module.exports = ({ config, logger }: Context) => {
   app.use((req: Request, res: Response) => {
     if (customLogger) {
       customLogger.info({ req });
+      onFinished(res, (err, response) => {
+        if (err) {
+          customLogger.error(err);
+        } else {
+          customLogger.info({ res: response });
+        }
+      });
     }
     middleware(
       { config, logger },
