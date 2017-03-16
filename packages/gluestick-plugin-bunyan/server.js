@@ -1,7 +1,9 @@
+/* @flow */
+
 import bunyan from 'bunyan';
 
 export type Options = {
-  name: number;
+  name: string;
   level?: string | number;
   stream?: Object;
   streams?: Object[];
@@ -17,19 +19,20 @@ export type Logger = {
   error: Function;
 };
 
-const defaultSettings = {
+const defaultSettings: Options = {
   name: 'default name',
 };
 
-const bunyanPlugin = (): Logger => {
+const bunyanPlugin = (): { logger: Logger } => {
   let options: Options = defaultSettings;
   try {
+    // $FlowIgnore
     const userSettings: Options = require('src/bunyan.config.js').default;
     options = Object.assign(options, userSettings);
   } catch (error) {
     // NOOP if we haven't settings from user we use default.
   }
-  const loggerWithSuccessMethod = bunyan.createLogger(options);
+  const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
   loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
   return {
     logger: loggerWithSuccessMethod,
