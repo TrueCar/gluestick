@@ -11,6 +11,7 @@ import type {
   Request,
   Response,
   ServerPlugin,
+  Logger,
 } from '../types';
 
 const path = require('path');
@@ -33,13 +34,16 @@ const reduxMiddlewares = require('redux-middlewares').default;
 const entriesPlugins = require('project-entries').plugins;
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+const createPluginUtils = require('../plugins/utils');
 
 // $FlowIgnore Assets should be bundled into render to serve them in production.
 require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
+  const pluginUtils = createPluginUtils(logger);
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
-
+  // Use custom logger from plugins or default logger.
+  const customLogger: ?Logger = pluginUtils.getCustomLogger(serverPlugins);
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
 
@@ -70,6 +74,9 @@ module.exports = ({ config, logger }: Context) => {
   }
 
   app.use((req: Request, res: Response) => {
+    if (customLogger) {
+      customLogger.info({ req });
+    }
     middleware(
       { config, logger },
       req, res,
