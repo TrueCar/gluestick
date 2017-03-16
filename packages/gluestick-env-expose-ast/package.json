@@ -1,6 +1,6 @@
 {
   "name": "gluestick-env-expose-ast",
-  "version": "1.0.0-rc.8",
+  "version": "1.0.0-rc.9",
   "description": "Expose strategy for environment variables from AST for Gluestick",
   "main": "config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
