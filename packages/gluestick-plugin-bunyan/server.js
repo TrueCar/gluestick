@@ -19,7 +19,6 @@ export type Logger = {
 
 const defaultSettings = {
   name: 'default name',
-  serializers: bunyan.stdSerializers,
 }
 
 const bunyanPlugin = (): Logger => {
