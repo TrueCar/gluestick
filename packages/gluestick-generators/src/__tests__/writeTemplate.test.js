@@ -66,6 +66,19 @@ describe('generator/writeTemplate', () => {
     expect(fsMock[pathToIndex]).toEqual('new index');
   });
 
+  it('should apply single modification without specified extension', () => {
+    const pathToIndex = path.join(process.cwd(), 'example/index.js');
+    fsMock[pathToIndex] = 'index';
+    writeTemplate({
+      modify: {
+        file: 'example/index',
+        modifier: content => `new ${content}`,
+      },
+      entry: entryFixture,
+    });
+    expect(fsMock[pathToIndex]).toEqual('new index');
+  });
+
   it('should apply multiple modifications', () => {
     const pathToIndex0 = path.join(process.cwd(), 'example/index0.js');
     const pathToIndex1 = path.join(process.cwd(), 'example/index1.js');

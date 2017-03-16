@@ -32,7 +32,8 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$"
+    "testRegex": ".*/__tests__/.*\\.test\\.js$",
+    "coveragePathIgnorePatterns": ["/build/"]
   },
   "devDependencies": {
     "babel-cli": "^6.8.0",

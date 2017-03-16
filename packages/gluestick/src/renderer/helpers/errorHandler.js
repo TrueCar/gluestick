@@ -2,13 +2,10 @@
 import type { Response, Request, Context } from '../../types';
 
 const fs = require('fs');
-const Handlebars = require('handlebars');
 // We use handlebars to deliver the 500 page. This lets you
 // use a handlebars template so you can display the stack trace or
 // any request, response information you would like.
-Handlebars.registerHelper('notForProduction', (options) => {
-  return process.env.NODE_ENV === 'production' ? '' : options.fn(this);
-});
+const Handlebars = require('handlebars');
 
 const tryReadFile = (filePath: string): Promise<string | boolean> =>
   new Promise((
