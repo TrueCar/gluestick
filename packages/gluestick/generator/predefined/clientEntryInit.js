@@ -5,7 +5,7 @@ const createTemplate = module.parent.createTemplate;
 const template = createTemplate`
 import getRoutes from "${args => args.routes}";
 import EntryWrapper from "../EntryWrapper";
-import { createStore } from "gluestick";
+import { createStore } from "compiled/gluestick";
 import middleware from "config/redux-middleware";
 import reducers from "${args => args.reducers}";
 

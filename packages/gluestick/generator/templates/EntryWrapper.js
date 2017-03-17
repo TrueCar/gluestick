@@ -7,7 +7,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
 import { render } from "react-dom";
-import { Root, getHttpClient } from "gluestick";
+import { Root, getHttpClient } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
