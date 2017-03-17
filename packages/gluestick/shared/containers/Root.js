@@ -5,7 +5,23 @@ import { useScroll } from 'react-router-scroll';
 
 import prepareRoutesWithTransitionHooks from '../lib/prepareRoutesWithTransitionHooks';
 
-export default class Root extends Component {
+type DefaultProps = {
+  routerHistory: ?Object;
+}
+
+type Props = {
+  /* eslint-disable */
+  routes: Object;
+  routerHistory: any;
+  routerContext: Object;
+  /* eslint-enable */
+};
+
+type State = {
+  mounted: boolean;
+}
+
+export default class Root extends Component<DefaultProps, Props, State> {
   static propTypes = {
     /* eslint-disable */
     routes: PropTypes.object,
@@ -18,7 +34,7 @@ export default class Root extends Component {
     routerHistory: typeof window !== 'undefined' ? browserHistory : null,
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       mounted: false,
@@ -47,7 +63,7 @@ export default class Root extends Component {
     );
   }
 
-  _renderRouter(props) {
+  _renderRouter(props: Props) {
     const {
       routes,
       routerContext,
@@ -58,7 +74,7 @@ export default class Root extends Component {
     if (routerContext) return routerContext;
 
     // router middleware
-    const render = applyRouterMiddleware(
+    const render: Function = applyRouterMiddleware(
       useScroll((prevRouterProps, results) => {
         // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
         // route components in the app. e.g.
