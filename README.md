@@ -1,4 +1,5 @@
 # GlueStick - Beyond the Boilerplate
+TEST CLA BOT
 [![npm](https://img.shields.io/npm/v/gluestick.svg)](https://www.npmjs.com/package/gluestick)
 [![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
 
