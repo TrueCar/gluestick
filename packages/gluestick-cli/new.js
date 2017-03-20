@@ -4,6 +4,7 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
+const which = require('shelljs').which;
 const generate = require('gluestick-generators').default;
 const version = require('./package.json').version;
 
@@ -59,16 +60,24 @@ module.exports = (appName, options, exitWithError) => {
   );
 
   spawn.sync(
-    options.yarn ? 'yarn' : 'npm',
+    !options.npm && which('yarn') !== null ? 'yarn' : 'npm',
     ['install'],
     {
       cwd: process.cwd(),
       stdio: 'inherit',
     },
   );
+  // Remove --npm or -n options cause this is no longer needed
+  const args = commander.rawArgs.slice(2);
+  if (args.indexOf('--npm') >= 0) {
+    args.splice(args.indexOf('--npm'), 1);
+  } else if (args.indexOf('-n') >= 0) {
+    args.splice(args.indexOf('-n'), 1);
+  }
+
   spawn.sync(
     './node_modules/.bin/gluestick',
-    commander.rawArgs.slice(2),
+    args,
     {
       cwd: process.cwd(),
       stdio: 'inherit',
