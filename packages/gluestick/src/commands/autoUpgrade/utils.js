@@ -1,5 +1,5 @@
 /* @flow */
-import type { Logger, Question, MismatchedModules, UpdateDepsPromptResults } from '../types';
+import type { Logger, Question, MismatchedModules, UpdateDepsPromptResults } from '../../types';
 
 const path = require('path');
 const fs = require('fs');
