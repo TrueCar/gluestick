@@ -1,6 +1,6 @@
 {
   "name": "gluestick-shared",
-  "version": "1.0.0-rc.7",
+  "version": "1.0.0-rc.8",
   "description": "This contains the shared code in the GlueStick CLI and the apps that it generates.",
   "main": "./build/index.js",
   "scripts": {
@@ -32,7 +32,8 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$"
+    "testRegex": ".*/__tests__/.*\\.test\\.js$",
+    "coveragePathIgnorePatterns": ["/build/"]
   },
   "devDependencies": {
     "babel-cli": "^6.8.0",

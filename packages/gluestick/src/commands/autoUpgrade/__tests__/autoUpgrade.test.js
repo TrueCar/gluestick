@@ -8,7 +8,7 @@ jest.mock('mkdirp', () => ({ sync: jest.fn() }));
 jest.mock('file-0', () => '', { virtual: true });
 jest.mock('file-1', () => '', { virtual: true });
 jest.mock('../checkForMismatch.js', () => jest.fn(
-  () => Promise.resolve({ shouldFix: false }),
+  (a, dev) => Promise.resolve({ shouldFix: dev }),
 ));
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
 jest.mock('gluestick-generators', () => ({
@@ -18,9 +18,11 @@ jest.mock('gluestick-generators', () => ({
     }),
   ),
 }));
+jest.mock('../updateDependencies.js', () => jest.fn());
 const fs = require('fs');
 const path = require('path');
 const autoUpgrade = require('../autoUpgrade');
+const updateDependencies = require('../updateDependencies');
 
 const originalPathJoin = path.join.bind(path);
 const getContext = (config) => ({
@@ -68,5 +70,14 @@ describe('autoUpgrade/index', () => {
       ['file-1', 'file-0', 'utf-8'],
       ['file-1', 'file-0', 'utf-8'],
     ]);
+  });
+  it('should update dependencies', async () => {
+    path.join = jest.fn(() => 'file-1');
+    await autoUpgrade(getContext({
+      changed: [],
+      added: [],
+    }), true);
+    // $FlowIgnore updateDependencies is mocked
+    expect(updateDependencies.mock.calls.length).toBe(1);
   });
 });

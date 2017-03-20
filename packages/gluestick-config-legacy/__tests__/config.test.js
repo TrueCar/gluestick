@@ -79,6 +79,17 @@ describe('plugin', () => {
     expect(webpackConfig.entry.vendor).toEqual(['vendor']);
   });
 
+  it('should overwrite unshift new value to vendor in client webpack config', () => {
+    const webpackConfig = {
+      resolve: { alias: {} },
+      module: { rules: [] },
+      plugins: [],
+      entry: { vendor: ['file.js'] },
+    };
+    plugin.postOverwrites.clientWebpackConfig(webpackConfig);
+    expect(webpackConfig.entry.vendor).toEqual(['vendor', 'file.js']);
+  });
+
   it('should overwrite server webpack config', () => {
     const webpackConfig = {
       resolve: { alias: {} },
