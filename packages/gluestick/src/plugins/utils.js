@@ -19,6 +19,17 @@ const _getRenderMethod = (plugins: ServerPlugin[], logger: Logger): ?RenderMetho
   return null;
 };
 
+const _getCustomLogger = (plugins: ServerPlugin[]): ?Logger => {
+  const loggers = plugins
+  .filter((plugin) => plugin.logger)
+  .map(({ logger }) => logger);
+  if (loggers && loggers.length > 0) {
+    return loggers[loggers.length - 1];
+  }
+  return null;
+};
+
 module.exports = (logger: Logger) => ({
   getRenderMethod: (plugins: ServerPlugin[]) => _getRenderMethod(plugins, logger),
+  getCustomLogger: _getCustomLogger,
 });

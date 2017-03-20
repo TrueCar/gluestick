@@ -39,6 +39,7 @@ commander
     execWithConfig(
       require('../commands/generate'),
       commandArguments,
+      { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
     );
   });
 
@@ -51,6 +52,7 @@ commander
     execWithConfig(
       require('../commands/destroy'),
       commandArguments,
+      { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
     );
   });
 
@@ -99,6 +101,7 @@ commander
     execWithConfig(
       require('../commands/bin'),
       commandArguments,
+      { skipProjectConfig: true, skipPlugins: true },
     );
   });
 
@@ -110,7 +113,7 @@ commander
     execWithConfig(
       require('../commands/dockerize'),
       commandArguments,
-      { useGSConfig: true },
+      { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
     );
   });
 
