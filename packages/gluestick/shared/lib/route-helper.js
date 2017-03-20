@@ -1,8 +1,10 @@
+/* @flow */
+
 import { match } from 'react-router';
+import type { GetBeforeRoute } from '../types';
 
-const getBeforeRoute = (component = {}) => {
-  const c = component.WrappedComponent || component;
-
+const getBeforeRoute: GetBeforeRoute = (component = {}) => {
+  const c: Object = component.WrappedComponent || component;
   // @deprecated since 0.0.1
   // check for deprecated fetchData method
   if (c.fetchData) {
@@ -13,11 +15,10 @@ const getBeforeRoute = (component = {}) => {
 };
 
 function getRouteComponents(routes) {
-  const components = [];
-
+  const components: Object[] = [];
   routes.forEach(route => {
     if (route.components) {
-      Object.values(route.components).forEach(c => components.push(c));
+      Object.values(route.components).forEach((c: any) => components.push(c));
     } else if (route.component) {
       components.push(route.component);
     }
@@ -35,10 +36,14 @@ function getRouteComponents(routes) {
  * @param {Express.Request} [serverProps.request] if we are on the server, the
  * server request that triggered the method
  */
-export function runBeforeRoutes(store, renderProps, serverProps = { isServer: false }) {
-  const { params, location: query } = renderProps;
+export function runBeforeRoutes(
+  store: Object,
+  renderProps: Object,
+  serverProps: Object = { isServer: false },
+): Promise<any[]> {
+  const { params, location: query } : {params: Object, location: Object } = renderProps;
 
-  const promises = getRouteComponents(renderProps.routes)
+  const promises: Promise<any>[] = getRouteComponents(renderProps.routes)
   .map(getBeforeRoute).filter(f => f) // only look at ones with a static gsBeforeRoute()
   .map(beforeRoute => beforeRoute(
     store, params, query || {}, serverProps,
@@ -47,8 +52,8 @@ export function runBeforeRoutes(store, renderProps, serverProps = { isServer: fa
   return Promise.all(promises);
 }
 
-export function createTransitionHook(store, routes) {
-  return function checkLocation(location, cb) {
+export function createTransitionHook(store: Object, routes: Object[]): Function {
+  return function checkLocation(location: Object, cb: Function): void {
     match({ routes, location }, async (error, redirectLocation, renderProps) => {
       try {
         await runBeforeRoutes(store, renderProps);

@@ -1,6 +1,6 @@
 /* @flow */
 
-const { ROUTE_NAME_404_NOT_FOUND } = require('gluestick-shared');
+const { ROUTE_NAME_404_NOT_FOUND } = require('../../../shared');
 
 module.exports = (store: Object, currentRoute: Object): number => {
   const state = store.getState();
