@@ -37,7 +37,7 @@ export default function (
 
   const composeArgs: Function[] = [
     applyMiddleware.apply(this, middleware),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' && process.env.NODE_ENV !== 'production' ? window.devToolsExtension() : f => f,
   ];
 
   const finalCreateStore: CreateStore = compose(...composeArgs)(createStore);
