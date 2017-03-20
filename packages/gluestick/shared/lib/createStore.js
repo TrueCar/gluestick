@@ -5,13 +5,16 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import _gluestick from './reducers';
 import promiseMiddleware from '../lib/promiseMiddleware';
 
+type Store = Object;
+type CreateStore = () => Store;
+
 export default function (
   client: () => Object,
   customRequire: () => Object,
   customMiddleware: (middlewares: any[]) => any[] | any[],
   hotCallback: (cb: Function) => void,
   devMode: Boolean,
-) {
+): Store {
   const reducer: Object = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
 
   let middleware: Function[] = [
@@ -37,11 +40,11 @@ export default function (
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
   ];
 
-  const finalCreateStore: () => Object = compose(...composeArgs)(createStore);
-  const store: Object = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
+  const finalCreateStore: CreateStore = compose(...composeArgs)(createStore);
+  const store: Store = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
 
   if (hotCallback) {
-    hotCallback(() => {
+    hotCallback((): void => {
       const nextReducer: Object = combineReducers(
         Object.assign({}, { _gluestick }, customRequire()),
       );

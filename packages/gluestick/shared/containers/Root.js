@@ -1,3 +1,5 @@
+/* @flow */
+
 import React, { Component, PropTypes } from 'react';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
@@ -14,6 +16,7 @@ type Props = {
   routes: Object;
   routerHistory: any;
   routerContext: Object;
+  store: Object;
   /* eslint-enable */
 };
 
@@ -27,12 +30,18 @@ export default class Root extends Component<DefaultProps, Props, State> {
     routes: PropTypes.object,
     routerHistory: PropTypes.any,
     routerContext: PropTypes.object,
+    store: PropTypes.object,
     /* eslint-enable */
   };
 
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     routerHistory: typeof window !== 'undefined' ? browserHistory : null,
   };
+
+  state: State;
+  props: Props;
+
+  router: Object;
 
   constructor(props: Props) {
     super(props);
@@ -63,7 +72,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
     );
   }
 
-  _renderRouter(props: Props) {
+  _renderRouter(props: Props): Object | Component<*, *, *> {
     const {
       routes,
       routerContext,
