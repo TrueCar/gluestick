@@ -1,11 +1,11 @@
 /* @flow */
-import type { MismatchedModules, UpdateDepsPromptResults } from '../types';
+import type { MismatchedModules, UpdateDepsPromptResults } from '../../types';
 
 const path = require('path');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 const utils = require('./utils');
-const version = require('../../package.json').version;
+const version = require('../../../package.json').version;
 
 type ProjectPackage = {
   dependencies: Object,

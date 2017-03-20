@@ -1,11 +1,11 @@
 /* @flow */
-import type { Logger, MismatchedModules, ProjectPackage } from '../types';
+import type { Logger, MismatchedModules, ProjectPackage } from '../../types';
 
 const fs = require('fs');
 const path = require('path');
 const sO = require('sorted-object');
 
-const { install: installDeps, cleanSync: cleanDeps } = require('../lib/npmDependencies');
+const { install: installDeps, cleanSync: cleanDeps } = require('../../lib/npmDependencies');
 
 /**
  * Given an object of mismatched modules, load up the project's package.json
