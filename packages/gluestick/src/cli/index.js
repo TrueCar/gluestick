@@ -19,7 +19,6 @@ commander
   .description('generate a new application')
   .arguments('<appName>')
   .option('-d, --dev <path>', 'path to dev version of gluestick')
-  .option('--yarn', 'use yarn instead of npm')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/new'),
