@@ -2,7 +2,7 @@
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
 }));
-jest.mock('../../lib/npmDependencies.js', () => ({
+jest.mock('../../../lib/npmDependencies.js', () => ({
   install: jest.fn(),
   cleanSync: jest.fn(),
 }));
