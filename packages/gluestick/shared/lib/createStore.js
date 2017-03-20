@@ -1,12 +1,20 @@
+/* @flow */
+
 import thunk from 'redux-thunk';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import _gluestick from './reducers';
 import promiseMiddleware from '../lib/promiseMiddleware';
 
-export default function (client, customRequire, customMiddleware, hotCallback, devMode) {
-  const reducer = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
+export default function (
+  client: () => Object,
+  customRequire: () => Object,
+  customMiddleware: (middlewares: any[]) => any[] | any[],
+  hotCallback: (cb: Function) => void,
+  devMode: Boolean,
+) {
+  const reducer: Object = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
 
-  let middleware = [
+  let middleware: Function[] = [
     promiseMiddleware(client),
     thunk,
   ];
@@ -24,17 +32,19 @@ export default function (client, customRequire, customMiddleware, hotCallback, d
     ? customMiddleware([...middleware])
     : middleware.concat(customMiddleware);
 
-  const composeArgs = [
+  const composeArgs: Function[] = [
     applyMiddleware.apply(this, middleware),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f,
   ];
 
-  const finalCreateStore = compose(...composeArgs)(createStore);
-  const store = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
+  const finalCreateStore: () => Object = compose(...composeArgs)(createStore);
+  const store: Object = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
 
   if (hotCallback) {
     hotCallback(() => {
-      const nextReducer = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
+      const nextReducer: Object = combineReducers(
+        Object.assign({}, { _gluestick }, customRequire()),
+      );
       store.replaceReducer(nextReducer);
     });
   }

@@ -1,10 +1,11 @@
 /* @flow */
+
 import React, { Component, PropTypes } from 'react';
 import { createTransitionHook } from '../lib/route-helper';
 
 type Props = {
   children: any;
-  routes: Object;
+  routes: Object[];
 }
 
 export default class TransitionHooks extends Component<void, Props, void> {

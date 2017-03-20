@@ -1,4 +1,5 @@
 /* @flow */
+
 import type { SetStatusCode } from '../types';
 
 type SetStatusCodeAction = {

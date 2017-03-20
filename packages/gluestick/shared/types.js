@@ -14,3 +14,13 @@ export type CookieOptions = {
   secure: () => boolean;
   signed: () => boolean;
 };
+
+export type GetBeforeRoute = (component: Object) => Function;
+
+export type GetRouteComponents = (routes: Object[]) => Object[];
+
+type ReduxNextFunction = (obj: Object) => void;
+
+export type PromiseMiddleware = (client: Function | Object) => (
+  () => ((next: ReduxNextFunction) => ((action: Object) => void))
+);

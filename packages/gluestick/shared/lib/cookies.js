@@ -1,4 +1,5 @@
 /* @flow */
+
 import type { CookieOptions } from '../types';
 
 const COOKIE_OPTS: CookieOptions = {

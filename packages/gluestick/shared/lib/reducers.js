@@ -1,3 +1,5 @@
+/* @flow */
+
 import { SET_STATUS_CODE } from './actions';
 
 const INITIAL_STATE = {};
@@ -7,7 +9,7 @@ const INITIAL_STATE = {};
  *
  * It also exists to prevent an error when no other reducers have been added.
  */
-export default function _gluestick(state = INITIAL_STATE, action) {
+export default function _gluestick(state: Object = INITIAL_STATE, action: Object) {
   switch (action.type) {
     case SET_STATUS_CODE: {
       return {
