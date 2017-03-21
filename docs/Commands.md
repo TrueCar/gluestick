@@ -12,7 +12,7 @@ gluestick new <YOUR_APPLICATION_NAME>
 Available options:
 
 * `-d, --dev <path>` - Relative path from inside crated directory to development version of gluestick
-* `-y, --yarn` - Use yarn to perform installations (not working yet, see [#528](https://github.com/TrueCar/gluestick/issues/528))
+* `-n, --npm` - Use npm instead of yarn for install dependencies
 
 ### `gluestick generate`
 
