@@ -10,7 +10,7 @@ import type {
   Hooks,
 } from '../../types';
 
-const mocks = require('./mocks');
+const mocks = require('../../__tests__/mocks/context');
 
 /* eslint-disable react/no-multi-comp */
 jest.mock('../../../shared', () => ({

@@ -10,7 +10,7 @@ import type {
   GSConfig,
   Request,
   EntriesConfig,
-} from '../../../types';
+} from '../../types.js';
 
 const logger: Logger = {
   success: () => {},
