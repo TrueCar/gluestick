@@ -9,17 +9,7 @@ const spawnFn = jest.fn(
 );
 jest.setMock('cross-spawn', spawnFn);
 const startCommand = require('../start');
-
-const context = {
-  config: {},
-  logger: {
-    debug: jest.fn(),
-    info: jest.fn(),
-    wanr: jest.fn(),
-    error: jest.fn(),
-    success: jest.fn(),
-  },
-};
+const context = require('../../renderer/__tests__/mocks');
 
 describe('commands/start', () => {
   beforeEach(() => {
@@ -31,8 +21,10 @@ describe('commands/start', () => {
     it('should not spawn test command and spawn start-server and start-client only', () => {
       const originalNodeEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
-      // $FlowIgnore
       startCommand(context, {
+        dev: false,
+        skipBuild: false,
+        runTests: false,
         parent: {
           rawArgs: [],
         },
@@ -46,9 +38,10 @@ describe('commands/start', () => {
     it('should not spawn test not start-client command and spawn start-server only', () => {
       const originalNodeEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
-      // $FlowIgnore
       startCommand(context, {
         skipBuild: true,
+        dev: false,
+        runTests: false,
         parent: {
           rawArgs: ['-P'],
         },
@@ -61,9 +54,10 @@ describe('commands/start', () => {
 
   describe('in development', () => {
     it('should spawn test command', () => {
-      // $FlowIgnore
       startCommand(context, {
         runTests: true,
+        dev: false,
+        skipBuild: false,
         parent: {
           rawArgs: ['-T'],
         },
@@ -74,8 +68,10 @@ describe('commands/start', () => {
     });
 
     it('should spawn start-server and start-client', () => {
-      // $FlowIgnore
       startCommand(context, {
+        dev: false,
+        skipBuild: false,
+        runTests: false,
         parent: {
           rawArgs: [],
         },
@@ -87,8 +83,10 @@ describe('commands/start', () => {
     });
 
     it('should not start-server if payload from event message is invalid', () => {
-      // $FlowIgnore
       startCommand(context, {
+        dev: false,
+        skipBuild: false,
+        runTests: false,
         parent: {
           rawArgs: [],
         },
