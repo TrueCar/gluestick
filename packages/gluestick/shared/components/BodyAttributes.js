@@ -1,12 +1,17 @@
+/* @flow */
+
 import { Component, Children, PropTypes } from 'react';
 import withSideEffect from 'react-side-effect';
 
-
-const supportedHTML4Attributes = {
+const supportedHTML4Attributes: { bgColor: string } = {
   bgColor: 'bgcolor',
 };
 
-class BodyAttributes extends Component {
+type Props = {
+  children: any;
+}
+
+class BodyAttributes extends Component<void, Props, void> {
   render() {
     return Children.only(this.props.children);
   }
@@ -16,22 +21,24 @@ BodyAttributes.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-function reducePropsToState(propsList) {
+function reducePropsToState(propsList: Object[]) {
   const attrs = {};
-  propsList.forEach((props) => {
+  propsList.forEach((props: Object) => {
     const transformedAttrs = transformHTML4Props(props);
     Object.assign(attrs, props, transformedAttrs);
   });
   return attrs;
 }
 
-function handleStateChangeOnClient(attrs) {
+function handleStateChangeOnClient(attrs: Object) {
   for (const key in attrs) {
-    document.body.setAttribute(key, attrs[key]);
+    if (document.body) {
+      document.body.setAttribute(key, attrs[key]);
+    }
   }
 }
 
-function transformHTML4Props(props) {
+function transformHTML4Props(props: Object) {
   const transformedProps = {};
 
   /*
@@ -42,11 +49,11 @@ function transformHTML4Props(props) {
    * Note: Only attributes that are white-listed by oy-vey will be rendered
    *
    */
-  Object.keys(supportedHTML4Attributes).forEach(propName => {
+  Object.keys(supportedHTML4Attributes).forEach((propName: string) => {
     if (Object.prototype.hasOwnProperty.call(props, propName)) {
-      const name = supportedHTML4Attributes[propName];
-      const value = props[propName];
-      const transformedProp = { [`data-oy-${name}`]: value };
+      const name: string = supportedHTML4Attributes[propName];
+      const value: string = props[propName];
+      const transformedProp: { [key: string]: string } = { [`data-oy-${name}`]: value };
       Object.assign(transformedProps, transformedProp);
     }
   });

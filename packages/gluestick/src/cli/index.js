@@ -56,6 +56,23 @@ commander
   });
 
 commander
+  .command('auto-upgrade')
+  .description('perform automatic dependency and gluestick files upgrade')
+  .action((...commandArguments) => {
+    execWithConfig(
+      require('../commands/autoUpgrade'),
+      commandArguments,
+      {
+        useGSConfig: true,
+        useWebpackConfig: false,
+        skipPlugins: true,
+        skipClientEntryGeneration: true,
+        skipServerEntryGeneration: true,
+      },
+    );
+  });
+
+commander
   .command('start')
   .alias('s')
   .description('start everything')
