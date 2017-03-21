@@ -13,11 +13,11 @@ import type {
 } from '../../types.js';
 
 const logger: Logger = {
-  success: () => {},
+  success: jest.fn(),
   info: () => {},
   warn: () => {},
   debug: () => {},
-  error: () => {},
+  error: jest.fn(),
 };
 
 const gsConfig: GSConfig = {
