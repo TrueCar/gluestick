@@ -9,7 +9,7 @@ const spawnFn = jest.fn(
 );
 jest.setMock('cross-spawn', spawnFn);
 const startCommand = require('../start');
-const context = require('../../renderer/__tests__/mocks');
+const context = require('../../__tests__/mocks/context');
 
 describe('commands/start', () => {
   beforeEach(() => {
