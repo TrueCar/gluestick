@@ -1,4 +1,8 @@
-export default (client) => () => next => action => {
+/* @flow */
+
+import type { PromiseMiddleware } from '../types';
+
+const promiseMiddleware: PromiseMiddleware = (client) => () => next => action => {
   const { promise, type, ...rest } = action;
 
   if (!promise) {
@@ -11,7 +15,7 @@ export default (client) => () => next => action => {
 
   next({ ...rest, type: INIT });
 
-  const getPromise = typeof promise === 'function' ? promise : () => promise;
+  const getPromise: Function = typeof promise === 'function' ? promise : () => promise;
 
   return getPromise(client)
     .then(
@@ -25,3 +29,5 @@ export default (client) => () => next => action => {
       },
     );
 };
+
+export default promiseMiddleware;

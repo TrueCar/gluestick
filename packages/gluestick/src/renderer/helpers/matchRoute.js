@@ -4,7 +4,7 @@ import type { Context, Request } from '../../types';
 const { match } = require('react-router');
 const {
   prepareRoutesWithTransitionHooks,
-} = require('gluestick-shared');
+} = require('../../../shared');
 
 module.exports = (
   { config, logger }: Context,

@@ -4,6 +4,7 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
+const chalk = require('chalk');
 const generate = require('gluestick-generators').default;
 const version = require('./package.json').version;
 
@@ -58,17 +59,29 @@ module.exports = (appName, options, exitWithError) => {
     },
   );
 
+  const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
+  if (!options.npm && !isYarnAvailable) {
+    console.log(
+      chalk.yellow.bgBlack('You are installing dependencies using npm, consider using yarn.'),
+    );
+  }
+
   spawn.sync(
-    options.yarn ? 'yarn' : 'npm',
+    !options.npm && isYarnAvailable ? 'yarn' : 'npm',
     ['install'],
     {
       cwd: process.cwd(),
       stdio: 'inherit',
     },
   );
+  // Remove --npm or -n options cause this is no longer needed in
+  // gluestick new command.
+  const args = commander.rawArgs.slice(2)
+    .filter((v) => v !== '--npm' && v !== '-n');
+
   spawn.sync(
     './node_modules/.bin/gluestick',
-    commander.rawArgs.slice(2),
+    args,
     {
       cwd: process.cwd(),
       stdio: 'inherit',

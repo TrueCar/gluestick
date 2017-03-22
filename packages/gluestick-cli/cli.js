@@ -22,7 +22,7 @@ commander
   .description('generate a new application')
   .arguments('<appName>')
   .option('-d, --dev <path>', 'relative path to development version of gluestick')
-  .option('-y, --yarn', 'use yarn instead of npm')
+  .option('-n, --npm', 'use npm instead of yarn')
   .action((appName, options) => {
     newApp(appName, options, exitWithError);
   });

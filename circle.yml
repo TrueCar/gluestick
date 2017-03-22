@@ -2,7 +2,7 @@ machine:
   environment:
     NODE_ENV: test
   node:
-    version: 6.3.0
+    version: 6.9.0
   services:
     - docker
 general:

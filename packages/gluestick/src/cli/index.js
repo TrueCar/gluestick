@@ -19,7 +19,6 @@ commander
   .description('generate a new application')
   .arguments('<appName>')
   .option('-d, --dev <path>', 'path to dev version of gluestick')
-  .option('--yarn', 'use yarn instead of npm')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/new'),
@@ -53,6 +52,23 @@ commander
       require('../commands/destroy'),
       commandArguments,
       { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
+    );
+  });
+
+commander
+  .command('auto-upgrade')
+  .description('perform automatic dependency and gluestick files upgrade')
+  .action((...commandArguments) => {
+    execWithConfig(
+      require('../commands/autoUpgrade'),
+      commandArguments,
+      {
+        useGSConfig: true,
+        useWebpackConfig: false,
+        skipPlugins: true,
+        skipClientEntryGeneration: true,
+        skipServerEntryGeneration: true,
+      },
     );
   });
 

@@ -1,5 +1,5 @@
 /* @flow */
-jest.mock('gluestick-shared', () => ({
+jest.mock('../../../../shared', () => ({
   ROUTE_NAME_404_NOT_FOUND: 'ROUTE_NAME_404_NOT_FOUND',
 }));
 const getStatusCode = require('../getStatusCode');

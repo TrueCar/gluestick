@@ -36,6 +36,7 @@ const getJestDefaultConfig = (aliases: Object, webpackRules: RegExp[]): string[]
   }
 
   const config = {
+    testRegex: '\\/__tests__\\/.*\\.(test|spec)\\.jsx?$',
     moduleNameMapper,
     roots,
     transformIgnorePatterns: [

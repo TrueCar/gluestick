@@ -17,7 +17,7 @@ import type {
 const render = require('./render');
 const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
 const matchRoute = require('./helpers/matchRoute');
-const { getHttpClient, createStore, runBeforeRoutes } = require('gluestick-shared');
+const { getHttpClient, createStore, runBeforeRoutes } = require('../../shared');
 const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
