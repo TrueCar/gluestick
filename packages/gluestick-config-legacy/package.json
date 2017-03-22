@@ -1,6 +1,6 @@
 {
   "name": "gluestick-config-legacy",
-  "version": "1.0.0-rc.11",
+  "version": "1.0.0-rc.13",
   "description": "Apply legacy config to new gluestick and webpack configs",
   "main": "config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
