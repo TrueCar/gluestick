@@ -44,7 +44,11 @@ describe("${args => args.path}", () => {
 const getReducerImport = (name, dir) => `import ${name} from "./${dir}";`;
 
 module.exports = (options: PredefinedGeneratorOptions) => {
-  const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
+  const rewrittenName = `${
+    options.name[0].toLowerCase()
+  }${
+    convertToCamelCase(options.name.slice(1))
+  }`;
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
     modify: {
@@ -72,12 +76,12 @@ module.exports = (options: PredefinedGeneratorOptions) => {
     },
     entries: [
       {
-        path: path.join('src', options.entryPoint, 'reducers'),
+        path: path.join('src', options.entryPoint, 'reducers', directoryPrefix),
         filename: rewrittenName,
         template: reducerTemplate,
       },
       {
-        path: path.join('src', options.entryPoint, 'reducers', '__tests__'),
+        path: path.join('src', options.entryPoint, 'reducers', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
