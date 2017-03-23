@@ -17,7 +17,7 @@ const spawnWithErrorHandling = (...args) => {
 
 // Publish packages to npm registry
 spawnWithErrorHandling('npm', [
-  'run', 'lerna', 'publish', '--', '--repo-version', version, '--yes',
+  'run', 'lerna', 'publish', '--', '--repo-version', version, '--yes', '--force-publish=*',
 ], { stdio: 'inherit' });
 
 console.log('Pushing tag commit...');

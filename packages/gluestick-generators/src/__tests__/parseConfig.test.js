@@ -186,6 +186,7 @@ describe('generator/parseConfig', () => {
   });
 
   it('should parse config with additional directory in name filed', () => {
+    // Additional directory must be added manually to entry path
     const config = parseConfig({
       args: {
         name: 'TestName',
@@ -203,7 +204,7 @@ describe('generator/parseConfig', () => {
         name: 'TestName',
       },
       entry: {
-        path: 'path/to/directory/additionalDir',
+        path: 'path/to/directory',
         filename: 'Test.js',
         template: 'TestName',
       },
