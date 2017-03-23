@@ -7,16 +7,16 @@ const getPluginName = (name, type) => {
 
 const template = createTemplate`
 ${args => args.entries.reduce((prev, curr) => {
-  const entryImports = `import ${curr.name}Entry from '${curr.component}';\n`
-    + `import ${curr.name}Routes from '${curr.routes}';\n`
-    + `import ${curr.name}Reducers from '${curr.reducers}';\n`;
+  const entryImports = `import ${curr.name}Entry from "${curr.component}";\n`
+    + `import ${curr.name}Routes from "${curr.routes}";\n`
+    + `import ${curr.name}Reducers from "${curr.reducers}";\n`;
   return prev.concat(entryImports);
 }, '')}
 
 ${args => args.plugins.reduce((prev, curr) => {
   const info = '// Workaround for external modules not being compiled\n';
   const pluginImport = `import ${getPluginName(curr.name, curr.meta.type)} `
-    + `from '../node_modules/${curr.name}/${curr.meta.type}';\n`;
+    + `from "compiled/${curr.name}/${curr.meta.type}";\n`;
   return prev.concat(info, pluginImport);
 }, '')}
 
@@ -24,7 +24,7 @@ export const plugins = [
   ${args => args.plugins.reduce((prev, curr, index, arr) => {
     return prev.concat(
       `${index > 0 ? '  ' : ''}`
-      + `{ ref: ${getPluginName(curr.name, curr.meta.type)}, type: '${curr.meta.type}'`
+      + `{ ref: ${getPluginName(curr.name, curr.meta.type)}, type: "${curr.meta.type}"`
       + `${curr.options ? `, options: ${JSON.stringify(curr.options)} },` : ' },'}`
       + `${arr.length - 1 !== index ? '\n' : ''}`,
     );
@@ -33,7 +33,7 @@ export const plugins = [
 
 export default {
 ${args => args.entries.reduce((prev, curr) => {
-  const entryDefinition = `  '${curr.path}': {\n`
+  const entryDefinition = `  "${curr.path}": {\n`
     + `${curr.explicitName ? `    name: '${curr.explicitName}',\n` : ''}`
     + `    component: ${curr.name}Entry,\n`
     + `    routes: ${curr.name}Routes,\n`
