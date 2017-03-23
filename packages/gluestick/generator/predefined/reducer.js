@@ -3,6 +3,7 @@
 import type { PredefinedGeneratorOptions } from '../../src/types';
 
 const path = require('path');
+const { convertToCamelCase } = require('../../src/utils');
 
 const createTemplate = module.parent.createTemplate;
 
@@ -55,7 +56,11 @@ module.exports = (options: PredefinedGeneratorOptions) => {
         // If reducer was generated in nested directory, add this directory to name
         // and make it camelCase
         const name = directoryPrefix
-          ? `${directoryPrefix.replace('/', '')}${rewrittenName[0].toUpperCase()}${rewrittenName.slice(1)}`
+          ? `${
+              convertToCamelCase(directoryPrefix.replace('/', ''))
+            }${
+              rewrittenName[0].toUpperCase()}${rewrittenName.slice(1)
+            }`
           : rewrittenName;
         // Add import statement
         lines.splice(1, 0, getReducerImport(name, `${directoryPrefix}${rewrittenName}`));
