@@ -3,6 +3,7 @@
 import type { PredefinedGeneratorOptions } from '../../src/types';
 
 const path = require('path');
+const { convertToCamelCase } = require('../../src/utils');
 
 const createTemplate = module.parent.createTemplate;
 
@@ -43,7 +44,11 @@ describe("${args => args.path}", () => {
 const getReducerImport = (name, dir) => `import ${name} from "./${dir}";`;
 
 module.exports = (options: PredefinedGeneratorOptions) => {
-  const rewrittenName = `${options.name[0].toLowerCase()}${options.name.slice(1)}`;
+  const rewrittenName = `${
+    options.name[0].toLowerCase()
+  }${
+    convertToCamelCase(options.name.slice(1))
+  }`;
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
     modify: {
@@ -55,7 +60,11 @@ module.exports = (options: PredefinedGeneratorOptions) => {
         // If reducer was generated in nested directory, add this directory to name
         // and make it camelCase
         const name = directoryPrefix
-          ? `${directoryPrefix.replace('/', '')}${rewrittenName[0].toUpperCase()}${rewrittenName.slice(1)}`
+          ? `${
+              convertToCamelCase(directoryPrefix.replace('/', ''))
+            }${
+              rewrittenName[0].toUpperCase()}${rewrittenName.slice(1)
+            }`
           : rewrittenName;
         // Add import statement
         lines.splice(1, 0, getReducerImport(name, `${directoryPrefix}${rewrittenName}`));
@@ -67,12 +76,12 @@ module.exports = (options: PredefinedGeneratorOptions) => {
     },
     entries: [
       {
-        path: path.join('src', options.entryPoint, 'reducers'),
+        path: path.join('src', options.entryPoint, 'reducers', directoryPrefix),
         filename: rewrittenName,
         template: reducerTemplate,
       },
       {
-        path: path.join('src', options.entryPoint, 'reducers', '__tests__'),
+        path: path.join('src', options.entryPoint, 'reducers', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {

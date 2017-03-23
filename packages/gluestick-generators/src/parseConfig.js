@@ -41,9 +41,7 @@ const parseEntry = (entry: Entry, commonArgs?: Object, options: Object): Entry =
   if (!path.extname(parsedEntry.filename).length && parsedEntry.filename[0] !== '.') {
     parsedEntry.filename += '.js';
   }
-  if (options.dir) {
-    parsedEntry.path = `${parsedEntry.path}/${options.dir}`.replace(/\/\//, '/');
-  }
+
   const args = { ...commonArgs, ...parsedEntry.args };
   // $FlowFixMe template is function and it overwritten itself with string that it returns
   parsedEntry.template = parsedEntry.template(args);

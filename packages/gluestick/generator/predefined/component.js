@@ -3,6 +3,7 @@
 import type { PredefinedGeneratorOptions } from '../../src/types';
 
 const path = require('path');
+const { convertToCamelCase } = require('../../src/utils');
 
 const createTemplate = module.parent.createTemplate;
 
@@ -52,7 +53,11 @@ describe("${args => args.path}", () => {
 `;
 
 module.exports = (options: PredefinedGeneratorOptions) => {
-  const rewrittenName = `${options.name[0].toUpperCase()}${options.name.slice(1)}`;
+  const rewrittenName = `${
+    options.name[0].toUpperCase()
+  }${
+    convertToCamelCase(options.name.slice(1))
+  }`;
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
 
   return {
@@ -61,12 +66,12 @@ module.exports = (options: PredefinedGeneratorOptions) => {
     },
     entries: [
       {
-        path: path.join('src', options.entryPoint, 'components'),
+        path: path.join('src', options.entryPoint, 'components', directoryPrefix),
         filename: rewrittenName,
         template: options.functional ? functionalComponentTemplate : classComponentTemplate,
       },
       {
-        path: path.join('src', options.entryPoint, 'components', '__tests__'),
+        path: path.join('src', options.entryPoint, 'components', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
