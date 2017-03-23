@@ -83,7 +83,7 @@ module.exports = (options: PredefinedGeneratorOptions) => {
         template: containerTemplate,
       },
       {
-        path: path.join('src', options.entryPoint, 'containers', '__tests__', directoryPrefix),
+        path: path.join('src', options.entryPoint, 'containers', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
