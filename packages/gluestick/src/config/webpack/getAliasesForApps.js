@@ -15,25 +15,25 @@ module.exports = (gluestickConfig: GSConfig): { [key: string]: string } => {
   );
   return Object.keys(entries)
     .map((entry: string): EntryAlias => {
-      const name = entries[entry].name || entry === '/' ? 'main' : entry.substr(1);
-      const pathMath = /(.*apps\/[^/]+)/.exec(entries[entry].component);
-      console.log(pathMath);
-      let appPath = pathMath && pathMath.length > 1
-        ? path.join(process.cwd(), pathMath[1])
+      const name: string = entries[entry].name || (entry === '/' ? 'main' : entry.substr(1));
+      const pathMatch = /(.*apps\/[^/]+)/.exec(entries[entry].component);
+      let appPath: string = pathMatch && pathMatch.length > 1
+        ? path.join(process.cwd(), pathMatch[1])
         : '';
-      if (!pathMath || !pathMath.length === 0) {
+      if (!pathMatch || !pathMatch.length === 0) {
         // Check if the app exist using name
         const testAppPath: string = path.join(
           process.cwd(),
           gluestickConfig.sourcePath,
           gluestickConfig.appsPath,
+          name,
         );
         appPath = fs.existsSync(testAppPath) ? testAppPath : '';
-      } else if (!pathMath[1].includes(name)) {
+      } else if (!pathMatch[1].includes(name)) {
         // Double check if path to app is valid
         const testAppPath: string = path.join(
           process.cwd(),
-          pathMath[1],
+          pathMatch[1],
         );
         appPath = fs.existsSync(testAppPath) ? testAppPath : '';
       }
