@@ -1,5 +1,5 @@
 {
-  "name": "gluestick",
+  "name": "gluestick-bin",
   "version": "1.0.0-rc.13",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "shared/index.js",
