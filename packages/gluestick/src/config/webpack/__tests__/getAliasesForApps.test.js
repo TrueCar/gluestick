@@ -10,7 +10,7 @@ jest.mock('cwd/entryPathMatch.json', () => ({
     component: 'src/apps/main/Index.js',
   },
 }), { virtual: true });
-jest.mock('cwd/entries.json', () => ({
+jest.mock('cwd/entriesFilter.json', () => ({
   '/test2': {
     component: '',
   },
@@ -19,9 +19,18 @@ jest.mock('cwd/entries.json', () => ({
     component: 'src/apps/home/Index.js',
   },
 }), { virtual: true });
+jest.mock('cwd/entries.json', () => ({
+  '/home': {
+    name: 'Home',
+    component: 'src/apps/home/Index.js',
+  },
+  '/profile': {
+    component: 'src/external/profile/Index.js',
+  },
+}), { virtual: true });
 jest.mock('fs', () => ({
   existsSync: (value) => {
-    if (value === 'cwd/test2') {
+    if (value.includes('test2')) {
       return false;
     }
     return true;
@@ -89,13 +98,28 @@ describe('config/webpack/getAliasesForApps', () => {
     expect(
       getAliasesForApps(
         mockGSConfig({
-          entriesPath: 'entries.json',
+          entriesPath: 'entriesFilter.json',
           sourcePath: '',
           appsPath: '',
         }),
       ),
     ).toEqual({
       Home: 'cwd/src/apps/home',
+    });
+  });
+
+  it('should return multiple aliases', () => {
+    expect(
+      getAliasesForApps(
+        mockGSConfig({
+          entriesPath: 'entries.json',
+          sourcePath: 'src',
+          appsPath: 'apps',
+        }),
+      ),
+    ).toEqual({
+      Home: 'cwd/src/apps/home',
+      profile: 'cwd/src/apps/profile',
     });
   });
 });
