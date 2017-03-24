@@ -52,7 +52,7 @@ commander
   .command('*', null, { noHelp: true })
   .action(() => {
     spawn(
-      './node_modules/.bin/gluestick',
+      './node_modules/.bin/gluestick-bin',
       commander.rawArgs.slice(2),
       { stdio: 'inherit' },
     );
