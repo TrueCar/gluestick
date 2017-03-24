@@ -9,6 +9,7 @@ const cssCustomProperties = require('postcss-custom-properties');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
+const getAliasesForApps = require('./getAliasesForApps');
 
 module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
   const appRoot: string = process.cwd();
@@ -28,6 +29,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     resolve: {
       extensions: ['.js', '.css', '.json'],
       alias: {
+        ...getAliasesForApps(gluestickConfig),
         root: process.cwd(),
         src: path.join(process.cwd(), sourcePath),
         assets: path.join(process.cwd(), assetsPath),
