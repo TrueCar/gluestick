@@ -1,16 +1,41 @@
-# `gluestick`
-Gluestick package is a dependency which is being added to your project to handle most of `gluestick` functionalities. Commands are available through `bin` directory from your `node_modules` or proxied via [gluestick's command line interface](../packages/gluestick-cli).
+# `gluestick-cli`
+Gluestick CLI is an command line interface for `gluestick` package. It exposes few commands from your global packages, and proxies rest of them to your [local distribution of gluestick](../packages/gluestick).
 
 ## Exposed commands
 
-- `gluestick new <YOUR_APPLICATION_NAME>` - generate new project
-- `gluestick generate <ENTITY_TYPE> <ENTITY_NAME>` - generates a new entity from given template
-- `gluestick start` - starts a gluestick project
-- `gluestick build` - create an production asset build
-- `gluestick bin <DEPENDENCY_NAME> -- <DEPENDENCY_ARGS>` - Execute binary dependenciy
-- `gluestick dockerize` - create docker image (requires `docker` installed on your machine)
-- `gluestick start-client` - starts client separately (part of `gluestick start` command)
-- `gluestick start-server` - starts server separately (part of `gluestick start` command)
-- `gluestick test` - run projects test suite
+### `gluestick new`
 
-Detailed description on all commands is available [here](../../docs/Commands.md)
+Takes care of generating new project
+
+```bash
+gluestick new <YOUR_APPLICATION_NAME>
+```
+
+Available options:
+
+* `-d, --dev <path>` - Relative path to development gluestick repo
+* `-n, --npm` - Use npm instead of yarn for install dependencies
+
+### `gluestick reinstall-dev`
+
+Reinstall gluestick dependency project
+
+```bash
+gluestick reinstall-dev
+```
+
+### `gluestick watch`
+
+Watches and applies changes from gluestick package to current project
+
+```bash
+gluestick watch
+```
+
+### `gluestick reset-hard`
+
+Removes gluestick dependency project clean build, cache and reinstalls dependencies
+
+```bash
+gluestick reset-hard
+```
