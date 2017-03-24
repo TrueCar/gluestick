@@ -70,7 +70,7 @@ module.exports = (appName, options, exitWithError) => {
     !options.npm && isYarnAvailable ? 'yarn' : 'npm',
     ['install'],
     {
-      cwd: process.cwd(),
+      cwd: pathToApp,
       stdio: 'inherit',
     },
   );
@@ -80,10 +80,10 @@ module.exports = (appName, options, exitWithError) => {
     .filter((v) => v !== '--npm' && v !== '-n');
 
   spawn.sync(
-    './node_modules/.bin/gluestick',
+    './node_modules/.bin/gluestick-bin',
     args,
     {
-      cwd: process.cwd(),
+      cwd: pathToApp,
       stdio: 'inherit',
     },
   );

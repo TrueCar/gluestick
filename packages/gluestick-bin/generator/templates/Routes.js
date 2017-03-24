@@ -6,7 +6,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 
 import React from "react";
 import { Route, IndexRoute } from "react-router";
-import { ROUTE_NAME_404_NOT_FOUND } from "compiled/gluestick";
+import { ROUTE_NAME_404_NOT_FOUND } from "compiled/gluestick-bin";
 
 import MasterLayout from "./components/MasterLayout";
 import HomeApp from "./containers/HomeApp";
