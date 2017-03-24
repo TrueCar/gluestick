@@ -26,7 +26,7 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
     spawn(
       'node',
       [
-        './node_modules/.bin/gluestick',
+        './node_modules/.bin/gluestick-bin',
         'start-server',
         ...rawArgs.slice(2),
       ],
@@ -55,7 +55,7 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
     spawn(
       'node',
       [
-        './node_modules/.bin/gluestick',
+        './node_modules/.bin/gluestick-bin',
         'start-client',
         ...rawArgs.slice(2),
       ],

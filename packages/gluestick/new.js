@@ -11,14 +11,14 @@ const version = require('./package.json').version;
 module.exports = (appName, options, exitWithError) => {
   const packageDeps = {
     dependencies: {
-      gluestick: version,
+      'gluestick-bin': version,
     },
   };
   if (options.dev) {
     const pathToGluestickRepo = path.join(process.cwd(), appName, '..', options.dev);
     const pathToGluestickPackages = path.join(pathToGluestickRepo, 'packages');
     let gluestickPackage = {};
-    const packages = glob.sync('*', { cwd: pathToGluestickPackages }).filter((e) => e !== 'gluestick-cli');
+    const packages = glob.sync('*', { cwd: pathToGluestickPackages }).filter((e) => e !== 'gluestick');
     try {
       gluestickPackage = require(path.join(pathToGluestickRepo, 'package.json'));
     } catch (error) {

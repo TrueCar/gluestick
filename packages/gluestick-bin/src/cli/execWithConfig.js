@@ -49,7 +49,7 @@ const execWithConfig: ExecWithConfig = (
   let packageJson = {};
   try {
     packageJson = require(path.join(process.cwd(), 'package.json'));
-    if (!packageJson.dependencies.gluestick) {
+    if (!packageJson.dependencies['gluestick-bin']) {
       throw new Error('Command need to be run in gluestick project.');
     }
   } catch (error) {
