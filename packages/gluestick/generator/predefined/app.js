@@ -37,16 +37,17 @@ module.exports = (options: GeneratorOptions) => {
       },
     }, {
       file: '.flowconfig',
-      modifier: (content: string) => {
+      modifier: (content: string): string => {
         if (!content) {
           throw new Error('Generating new app without bootstraped project');
         }
-        const flowConfigLines = content.split('\n');
-        const moduleMappers = flowConfigLines.filter(line => line.startsWith('module.name_mapper'));
-        const newMapperRegex = new RegExp(`'\\^${appName}\\/\\(\\.\\*\\)'`);
+        const flowConfigLines: string[] = content.split('\n');
+        const moduleMappers: string[] = flowConfigLines
+          .filter(line => line.startsWith('module.name_mapper'));
+        const newMapperRegex: RegExp = new RegExp(`'\\^${appName}\\/\\(\\.\\*\\)'`);
         if (moduleMappers.findIndex(mapper => newMapperRegex.test(mapper)) === -1) {
           flowConfigLines.reverse();
-          let added = false;
+          let added: boolean = false;
           const updatedFlowConfigLines: string[] = flowConfigLines
             .reduce((prev: string[], curr: string): string[] => {
               if (curr.startsWith('module.name_mapper') && !added) {
