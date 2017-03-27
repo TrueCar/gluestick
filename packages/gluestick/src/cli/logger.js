@@ -35,5 +35,6 @@ module.exports = (level: string = 'info'): Logger => {
     warn: loggerFactory('warn', level),
     debug: loggerFactory('debug', level),
     error: loggerFactory('error', level),
+    level,
   };
 };

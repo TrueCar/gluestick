@@ -19,6 +19,8 @@ const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
 const onFinished = require('on-finished');
+// $FlowIgnore
+const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
 // $FlowIgnore
 const entriesConfig = require('project-entries-config');
@@ -36,6 +38,7 @@ const entriesPlugins = require('project-entries').plugins;
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
+const setProxies = require('./helpers/setProxies');
 
 // $FlowIgnore Assets should be bundled into render to serve them in production.
 require.context('build-assets');
@@ -67,6 +70,8 @@ module.exports = ({ config, logger }: Context) => {
     path.join(process.cwd(), config.GSConfig.buildAssetsPath),
   ));
 
+  setProxies(app, applicationConfig.proxies, logger);
+
   if (process.env.NODE_ENV !== 'production') {
     app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
       // allow requests from our client side loading page
@@ -96,7 +101,7 @@ module.exports = ({ config, logger }: Context) => {
       {
         reduxMiddlewares,
         envVariables: [],
-        httpClient: {},
+        httpClient: applicationConfig.httpClient || {},
         entryWrapperConfig: {},
       },
       { hooks, hooksHelper: hooksHelper.call },

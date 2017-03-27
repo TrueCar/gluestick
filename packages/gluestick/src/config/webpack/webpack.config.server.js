@@ -42,5 +42,11 @@ module.exports = (
   config.resolve.alias['build-assets'] = path.join(
     config.resolve.alias.root, gluestickConfig.buildAssetsPath,
   );
+  config.resolve.alias['application-config'] = path.join(
+    config.resolve.alias.root,
+    gluestickConfig.sourcePath,
+    gluestickConfig.configPath,
+    gluestickConfig.applicationConfigPath,
+  );
   return serverConfiguration(config, settings);
 };
