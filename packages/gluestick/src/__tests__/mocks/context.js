@@ -18,6 +18,7 @@ const logger: Logger = {
   warn: () => {},
   debug: () => {},
   error: jest.fn(),
+  level: 'info',
 };
 
 const gsConfig: GSConfig = {
