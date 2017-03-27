@@ -99,7 +99,8 @@
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$",
     "roots": [
-      "src"
+      "src",
+      "generator"
     ],
     "setupFiles": [
       "./jest.js"

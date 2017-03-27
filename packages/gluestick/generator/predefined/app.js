@@ -44,7 +44,10 @@ module.exports = (options: GeneratorOptions) => {
         const flowConfigLines: string[] = content.split('\n');
         const moduleMappers: string[] = flowConfigLines
           .filter(line => line.startsWith('module.name_mapper'));
-        const newMapperRegex: RegExp = new RegExp(`'\\^${appName}\\/\\(\\.\\*\\)'`);
+        const newMapperRegex: RegExp = new RegExp(
+          `module.name_mapper='\\^${convertToCamelCase(options.name)}`,
+        );
+
         if (moduleMappers.findIndex(mapper => newMapperRegex.test(mapper)) === -1) {
           flowConfigLines.reverse();
           let added: boolean = false;
