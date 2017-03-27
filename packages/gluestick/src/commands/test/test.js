@@ -65,7 +65,6 @@ const getJestDefaultConfig = (aliases: Object, webpackRules: RegExp[]): string[]
   };
 
   const argv: string[] = [];
-  console.log(mergeCustomConfig(config));
   argv.push('--config', JSON.stringify(mergeCustomConfig(config)));
   return argv;
 };
