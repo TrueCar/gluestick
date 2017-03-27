@@ -4,7 +4,7 @@ const loggerFactory = require('../logger');
 const colorScheme = require('../colorScheme');
 
 const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
-  Object.keys(loggerInstance).forEach((level: string): void => {
+  Object.keys(loggerInstance).filter(key => key !== 'level').forEach((level: string): void => {
     console.log.mockClear();
     loggerInstance[level](message);
     if (shouldNotLog.indexOf(level) > -1) {
