@@ -38,7 +38,6 @@ module.exports = (options: GeneratorOptions) => {
     }, {
       file: '.flowconfig',
       modifier: (content: string) => {
-        console.log(content);
         if (!content) {
           throw new Error('Generating new app without bootstraped project');
         }
