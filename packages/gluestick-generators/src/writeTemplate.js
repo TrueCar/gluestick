@@ -38,7 +38,7 @@ const writeEntry = (entryConfig: Object): string => {
 const applyModification = (modification: Modification): string => {
   let absolutePath: string = path.join(process.cwd(), modification.file);
 
-  if (!path.extname(absolutePath).length) {
+  if (!modification.file.startsWith('.') && !path.extname(absolutePath).length) {
     absolutePath += '.js';
   }
 

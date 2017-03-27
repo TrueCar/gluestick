@@ -10,5 +10,6 @@ module.exports = {
     config: '/src/config',
     apps: '/src/apps',
     compiled: '/node_modules',
+    main: '/src/apps/main',
   },
 };
