@@ -23,7 +23,7 @@ const { convertToCamelCase, convertToKebabCase } = require('../../src/utils');
 module.exports = (options: GeneratorOptions) => {
   const appName = convertToKebabCase(options.name);
   return ({
-    modify: {
+    modify: [{
       file: 'src/entries.json',
       modifier: (content: string) => {
         const entries = content ? JSON.parse(content) : {};
@@ -35,7 +35,36 @@ module.exports = (options: GeneratorOptions) => {
         };
         return JSON.stringify(entries, null, '  ');
       },
-    },
+    }, {
+      file: '.flowconfig',
+      modifier: (content: string) => {
+        console.log(content);
+        if (!content) {
+          throw new Error('Generating new app without bootstraped project');
+        }
+        const flowConfigLines = content.split('\n');
+        const moduleMappers = flowConfigLines.filter(line => line.startsWith('module.name_mapper'));
+        const newMapperRegex = new RegExp(`'\\^${appName}\\/\\(\\.\\*\\)'`);
+        if (moduleMappers.findIndex(mapper => newMapperRegex.test(mapper)) === -1) {
+          flowConfigLines.reverse();
+          let added = false;
+          const updatedFlowConfigLines: string[] = flowConfigLines
+            .reduce((prev: string[], curr: string): string[] => {
+              if (curr.startsWith('module.name_mapper') && !added) {
+                added = true;
+                return prev.concat([
+                  `module.name_mapper='^${convertToCamelCase(options.name)}/\\(.*\\)'->`
+                  + `'<PROJECT_ROOT>/src/apps/${appName}/\\1'\n`,
+                  curr,
+                ]);
+              }
+              return prev.concat(curr);
+            }, []);
+          return updatedFlowConfigLines.reverse().join('\n');
+        }
+        return content;
+      },
+    }],
     entries: [
       // Your new inner app
       {
