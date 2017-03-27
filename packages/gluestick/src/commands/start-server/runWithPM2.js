@@ -55,7 +55,7 @@ const start = (
     watch: false,
   };
   const logProcess: Object = spawn(
-    `${require.resolve('pm2').split('pm2')[0]}.bin/pm2`,
+    require.resolve('pm2/bin/pm2'),
     ['logs', name, '--raw', '--lines', 0],
     { stdio: 'inherit' },
   );
