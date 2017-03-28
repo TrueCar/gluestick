@@ -3,7 +3,12 @@ const spawnMock = jest.fn();
 jest.mock('jest', () => ({ run: jest.fn() }));
 jest.setMock('cross-spawn', ({ spawn: { sync: spawnMock } }));
 jest.mock('cwd/empty/package.json', () => ({}), { virtual: true });
-jest.mock('cwd/custom/package.json', () => ({}), { virtual: true });
+jest.mock('cwd/custom/package.json', () => ({
+  jest: {
+    roots: ['customRoot'],
+    verbose: true,
+  },
+}), { virtual: true });
 
 const clone = require('clone');
 const context = require('../../../__tests__/mocks/context');
@@ -143,7 +148,8 @@ describe('commands/test/test', () => {
           ['woff', 'css', 'alias1', 'alias2'].find((alias) => mapper.includes(alias)),
         ).not.toBeUndefined();
       });
-      expect(jestConfig.roots).toEqual(['src', 'test']);
+      expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);
+      expect(jestConfig.verbose).toBeTruthy();
       fs.existsSync = originalExistsSync;
     });
   });
