@@ -14,7 +14,7 @@ import type {
 
 const logger: Logger = {
   success: jest.fn(),
-  info: () => {},
+  info: jest.fn(),
   warn: () => {},
   debug: () => {},
   error: jest.fn(),
@@ -50,7 +50,10 @@ const gsConfig: GSConfig = {
   },
 };
 
-const client: WebpackConfig = {};
+const client: WebpackConfig = {
+  resolve: {},
+  module: {},
+};
 const server: WebpackConfig = {};
 
 const universalSettings: UniversalSettings = {
