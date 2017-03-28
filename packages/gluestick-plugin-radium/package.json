@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-radium",
-  "version": "1.0.0-rc.15",
+  "version": "v1.0.0-rc.16",
   "description": "Plugin for supporting Radium in GlueStick project",
   "main": "runtime.js",
   "homepage": "https://github.com/TrueCar/gluestick",
