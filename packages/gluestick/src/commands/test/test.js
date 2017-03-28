@@ -21,7 +21,7 @@ const mergeCustomConfig = (defaultConfig: Object): Object => {
     let value: any = null;
     if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
       value = defaultConfig[curr].concat(customConfig[curr]);
-    } else if (Object.prototype.toString.call(customConfig[curr]) === '[object Object]') {
+    } else if (Object.prototype.toString.call(customConfig[curr]) !== '[object Object]') {
       value = customConfig[curr];
     } else {
       value = { ...defaultConfig[curr], ...customConfig[curr] };
