@@ -56,7 +56,7 @@ const getJestDefaultConfig = (aliases: Object, webpackRules: RegExp[]): string[]
     moduleNameMapper,
     roots,
     transformIgnorePatterns: [
-      '/node_modules/(?!gluestick-addon-)',
+      '/node_modules/(?!gluestick)',
     ],
     // Clear watchman warnings (including the one of `test` folder non-existing for new projects)
     // Might be worth in the future to come back here and see if there is a really difference
