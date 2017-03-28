@@ -1,4 +1,5 @@
 /* @flow */
+jest.mock('fs');
 const spawnMock = jest.fn();
 jest.mock('jest', () => ({ run: jest.fn() }));
 jest.setMock('cross-spawn', ({ spawn: { sync: spawnMock } }));
@@ -121,8 +122,7 @@ describe('commands/test/test', () => {
 
     it('should run jest directly with merged default and custom config', () => {
       path.join = () => 'cwd/custom/package.json';
-      const originalExistsSync = fs.existsSync.bind(fs);
-      fs.existsSync = () => true;
+      fs.existsSync = jest.fn(() => true);
       testCommand(getMockedContext({
         alias1: 'path/to/alias1',
         alias2: 'path/to/alias2',
@@ -150,7 +150,6 @@ describe('commands/test/test', () => {
       });
       expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);
       expect(jestConfig.verbose).toBeTruthy();
-      fs.existsSync = originalExistsSync;
     });
   });
 });
