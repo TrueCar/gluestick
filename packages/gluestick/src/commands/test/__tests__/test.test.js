@@ -8,6 +8,9 @@ jest.mock('cwd/custom/package.json', () => ({
   jest: {
     roots: ['customRoot'],
     verbose: true,
+    moduleNameMapper: {
+      html: 'html-mapper',
+    },
   },
 }), { virtual: true });
 
@@ -143,9 +146,10 @@ describe('commands/test/test', () => {
       expect(jestMock.run.mock.calls.length).toBe(1);
       const jestConfig = JSON.parse(jestMock.run.mock.calls[0][0][1]);
       expect(jestMock.run.mock.calls[0][0].indexOf('--config')).toBeGreaterThan(-1);
+      expect(Object.keys(jestConfig.moduleNameMapper).length).toBe(5);
       Object.keys(jestConfig.moduleNameMapper).forEach((mapper) => {
         expect(
-          ['woff', 'css', 'alias1', 'alias2'].find((alias) => mapper.includes(alias)),
+          ['woff', 'css', 'alias1', 'alias2', 'html'].find((alias) => mapper.includes(alias)),
         ).not.toBeUndefined();
       });
       expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);

@@ -18,11 +18,17 @@ const mergeCustomConfig = (defaultConfig: Object): Object => {
   }
 
   return Object.keys(customConfig).reduce((prev: Object, curr: string): Object => {
+    let value: any = null;
+    if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
+      value = defaultConfig[curr].concat(customConfig[curr]);
+    } else if (Object.prototype.toString.call(customConfig[curr]) !== '[object Object]') {
+      value = customConfig[curr];
+    } else {
+      value = { ...defaultConfig[curr], ...customConfig[curr] };
+    }
     return {
       ...prev,
-      [curr]: Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])
-        ? defaultConfig[curr].concat(customConfig[curr])
-        : customConfig[curr],
+      [curr]: value,
     };
   }, defaultConfig);
 };
