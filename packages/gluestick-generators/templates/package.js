@@ -22,7 +22,8 @@ const templatePackage = createTemplate`
     "babel-preset-es2015": "6.22.0",
     "babel-preset-react": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
-    "css-loader": "0.26.1",
+    "css-loader": "0.27.3",
+    "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.9.0",
     ${(args) => Object.keys(args.gluestickDependencies).reverse().reduce(
       (prev, key, i, arr) => prev.concat(
@@ -30,7 +31,7 @@ const templatePackage = createTemplate`
       ),
       '',
     )}
-    "image-webpack-loader": "3.1.0",
+    "image-webpack-loader": "3.3.0",
     "normalize.css": "^5.0.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
@@ -38,8 +39,8 @@ const templatePackage = createTemplate`
     "react-redux": "5.0.2",
     "react-router": "3.0.2",
     "redux": "3.6.0",
-    "sass-loader": "4.1.1",
-    "style-loader": "0.13.1",
+    "sass-loader": "6.0.3",
+    "style-loader": "0.16.1",
     "svg-react-loader": "0.3.7"
   },
   "author": "",

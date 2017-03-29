@@ -23,6 +23,7 @@ export type GSConfig = {
   entriesPath: string;
   reduxMiddlewares: string;
   webpackChunks: string;
+  webpackStats: string;
   proxyLogLevel: string;
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;

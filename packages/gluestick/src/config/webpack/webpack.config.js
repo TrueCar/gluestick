@@ -6,8 +6,6 @@ const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const cssCustomProperties = require('postcss-custom-properties');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssCalc = require('postcss-calc');
 const getAliasesForApps = require('./getAliasesForApps');
 
@@ -113,8 +111,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     },
 
     plugins: [
-      new ExtractTextPlugin('[name]-[chunkhash].css'),
-      new OptimizeCSSAssetsPlugin(),
       new webpack.LoaderOptionsPlugin({
         test: /\.(scss|css)$/,
         options: {
@@ -139,6 +135,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
+      new webpack.ProgressPlugin(),
     ],
   };
 

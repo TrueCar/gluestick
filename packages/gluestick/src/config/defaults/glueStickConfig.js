@@ -24,6 +24,7 @@ const config: GSConfig = {
   entriesPath: 'src/entries.json',
   reduxMiddlewares: 'src/config/redux-middleware',
   webpackChunks: 'webpack-chunks.json',
+  webpackStats: 'build/webpack-stats',
   proxyLogLevel: 'info',
   debugWatchDirectories: [
     path.join(process.cwd(), 'src/**/*.js'),

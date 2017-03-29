@@ -29,5 +29,5 @@ module.exports = (
       ],
     });
   }, {});
-  return options => clientConfiguration(config, settings, options);
+  return () => config;
 };
