@@ -137,6 +137,8 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       }),
       new webpack.ProgressPlugin(),
     ],
+
+    bail: true,
   };
 
   return configuration;
