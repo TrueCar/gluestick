@@ -49,7 +49,9 @@ module.exports = (
   const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins.filter((plugin) => plugin.meta.wrapper);
+  const rootWrappers = entriesPlugins
+    .filter((plugin) => plugin.meta.wrapper)
+    .map(({ plugin }) => plugin);
   const entryWrapper = (
     <EntryWrapper
       store={store}

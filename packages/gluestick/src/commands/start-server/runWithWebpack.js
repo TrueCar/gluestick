@@ -57,6 +57,7 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
     path.join(process.cwd(), '**/*'),
   ], {
     ignored: [
+      /\.DS_Store/,
       /build\/server/,
       /gluestick\/clientEntryInit/,
       /node_modules\/(?!gluestick\/src)/,
