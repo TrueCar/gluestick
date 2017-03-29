@@ -101,6 +101,7 @@ commander
 commander
   .command('build')
   .description('create production asset build')
+  .option('-S, --stats', 'create webpack stats file')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/build'),

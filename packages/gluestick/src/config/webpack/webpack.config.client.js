@@ -2,9 +2,9 @@
 
 import type { WebpackConfig, UniversalWebpackConfigurator, GSConfig, Logger } from '../../types';
 
-const { clientConfiguration } = require('universal-webpack');
 const deepClone = require('clone');
 const buildEntries = require('./buildEntries');
+const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
 
 module.exports = (
   logger: Logger,
@@ -29,5 +29,11 @@ module.exports = (
       ],
     });
   }, {});
-  return options => clientConfiguration(config, settings, options);
+  config.plugins.push(
+    new chunksPlugin(
+      deepClone(configuration),
+      { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },
+    ),
+  );
+  return () => config;
 };
