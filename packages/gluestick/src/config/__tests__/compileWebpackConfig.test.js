@@ -21,19 +21,15 @@ describe('config/compileWebpackConfig', () => {
       {
         preOverwrites: {},
         postOverwrites: {
-          // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
-          // $FlowIgnore
           serverWebpackConfig: (config) => Object.assign(config, { testProp: true }),
         },
       },
       {
         preOverwrites: {
-          // $FlowIgnore
           sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
         },
         postOverwrites: {
-          // $FlowIgnore
           clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
         },
       },

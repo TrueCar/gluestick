@@ -41,6 +41,7 @@ const gsConfig: GSConfig = {
   reduxMiddlewares: '',
   webpackChunks: '',
   proxyLogLevel: '',
+  webpackStats: '',
   debugWatchDirectories: [],
   defaultErrorTemplatePath: '',
   customErrorTemplatePath: '',

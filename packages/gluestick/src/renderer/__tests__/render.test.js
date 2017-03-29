@@ -47,34 +47,7 @@ describe('renderer/render', () => {
     error: () => {},
   };
 
-  const gsConfig: GSConfig = {
-    protocol: '',
-    host: '',
-    ports: {
-      client: 0,
-      server: 0,
-    },
-    buildAssetsPath: '',
-    assetsPath: '',
-    sourcePath: '',
-    sharedPath: '',
-    appsPath: '',
-    configPath: '',
-    entryWrapperPath: '',
-    clientEntryInitPath: '',
-    serverEntriesPath: '',
-    entriesPath: '',
-    reduxMiddlewares: '',
-    webpackChunks: '',
-    proxyLogLevel: '',
-    debugWatchDirectories: [],
-    defaultErrorTemplatePath: '',
-    customErrorTemplatePath: '',
-    autoUpgrade: {
-      added: [],
-      changed: [],
-    },
-  };
+  const gsConfig: GSConfig = require('../../__tests__/mocks/context').config.GSConfig;
 
   const universalSettings: UniversalSettings = {
     server: {
