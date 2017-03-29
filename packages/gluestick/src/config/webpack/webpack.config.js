@@ -55,7 +55,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     module: {
       rules: [{
         test: /\.js$/,
-        exclude: /node_modules\/(?!gluestick)/,
+        exclude: new RegExp(`(node_modules/(?!gluestick))|(${buildAssetsPath})`),
         use: [{
           loader: 'babel-loader',
           options: {
