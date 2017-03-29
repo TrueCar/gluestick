@@ -55,6 +55,7 @@
     "gluestick-generators": "^1.0.0-rc.17",
     "handlebars": "4.0.6",
     "http-proxy-middleware": "0.17.3",
+    "ignore-loader": "0.1.2",
     "inquirer": "3.0.1",
     "jest": "19.0.0",
     "lru-cache": "4.0.2",
