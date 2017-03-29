@@ -20,6 +20,8 @@ module.exports = (
     buildServerEntries(gluestickConfig, logger, entries, runtimeAndServerPlugins);
   }
   const config = deepClone(configuration);
+  config.module.rules[1].use = 'ignore-loader';
+  config.module.rules[2].use = 'ignore-loader';
   config.resolve.alias['project-entries'] = path.join(
     process.cwd(), gluestickConfig.serverEntriesPath,
   );
