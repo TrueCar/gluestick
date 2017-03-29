@@ -50,7 +50,7 @@
     "enzyme": "2.7.1",
     "eventsource-polyfill": "0.9.6",
     "express": "4.14.0",
-    "extract-text-webpack-plugin": "2.0.0-beta.5",
+    "extract-text-webpack-plugin": "2.1.0",
     "fs-extra": "2.0.0",
     "gluestick-generators": "^1.0.0-rc.17",
     "handlebars": "4.0.6",
