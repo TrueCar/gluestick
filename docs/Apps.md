@@ -21,15 +21,17 @@ Schema for this file looks like this:
     "component": "<path/to/entry/root/component>",
     "routes": "<path/to/routes>",
     "reducers": "<path/to/reducers>",
+    "config": "<path/to/config>",
     "group": ["group-1", "group-2"]
   }
 ``` 
 
-- `key`: URL-like entry name for example `/vehicles`, must be kebab-case
+- `key`: URL-like entry name for example `/vehicles`, must be kebab-case and __match top-level route__ `path` __property in specified routes__
 - `name`: custom, user-firendly entry name (optional), must be camelCase
 - `component`: path to root component of entry
 - `routes`: path to routes declaration file
 - `reducer`: path to reducers file that exportes object
+- `config`: path to app configuration file, if not specified `config/application` will be used (usually you do not need to specify it)
 - `group`: (optional) assign entry to group, see: [gluestick](../packages/gluestick/README.md) `--entrypoints` option
 
 **Plese note** that reducer should `export` (`default`) object with key-value pairs,

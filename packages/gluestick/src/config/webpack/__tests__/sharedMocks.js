@@ -9,6 +9,7 @@ jest.mock('entries.json', () => ({
     component: 'path/to/home/component',
     routes: 'path/to/home/routes',
     reducers: 'path/to/home/reducers',
+    config: 'path/to/home/config',
   },
 }), { virtual: true });
 jest.mock('plugins-config.js', () => ([
