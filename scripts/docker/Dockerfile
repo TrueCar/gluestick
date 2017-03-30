@@ -67,7 +67,7 @@ ENV BUILD_PACKAGES "autoconf \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    npm install gluestick@$GLUESTICK_VERSION -g && \
+    npm install gluestick-cli@$GLUESTICK_VERSION -g && \
     npm install && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
