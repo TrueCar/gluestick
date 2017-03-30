@@ -22,6 +22,7 @@ const buildEntries = (
         routes: entries[entry].routes,
         reducers: entries[entry].reducers,
         clientEntryInitPath: gluestickConfig.clientEntryInitPath,
+        config: entries[entry].config || `${gluestickConfig.configPath}/${gluestickConfig.applicationConfigPath}`,
         plugins,
       },
     }, logger);

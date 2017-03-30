@@ -13,6 +13,7 @@ import browserHistory from "react-router/lib/browserHistory";
 
 // This function is called only on client.
 const start = (
+  config,
   getRoutes,
   getStore,
   { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
@@ -23,7 +24,7 @@ const start = (
   // set up in the browser.
   require("config/init.browser");
 
-  const httpClient = getHttpClient(/*config.httpClient*/);
+  const httpClient = getHttpClient(config.httpClient);
   const store = getStore(httpClient);
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
     const entry = (
