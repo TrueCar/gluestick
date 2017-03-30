@@ -29,7 +29,7 @@ type WrappersRequirements = {
   BodyWrapper: Object;
   entryWrapperConfig: Object;
   envVariables: any[];
-  entriesPlugins: Function[];
+  entriesPlugins: { plugin: Function; meta: Object; }[];
 };
 module.exports = (
   context: Context,
