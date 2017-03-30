@@ -55,7 +55,7 @@ const start = (
     watch: false,
   };
   const logProcess: Object = spawn(
-    `${require.resolve('pm2').split('pm2')[0]}.bin/pm2`,
+    require.resolve('pm2/bin/pm2'),
     ['logs', name, '--raw', '--lines', 0],
     { stdio: 'inherit' },
   );
@@ -80,16 +80,13 @@ const start = (
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
         logger.info(`Deleting process ${name}.`);
-        pm2.delete(name, () => {
-          pm2.disconnect(() => {
-            process.exit();
-          });
-        });
+        pm2.delete(name);
+        pm2.disconnect();
+        process.exit(0);
       } else {
         logger.warn(`No process with name ${name} exists.`);
-        pm2.disconnect(() => {
-          process.exit();
-        });
+        pm2.disconnect();
+        process.exit(0);
       }
     });
   });
