@@ -37,7 +37,7 @@ type Options = {
 type EntriesArgs = {
   entries: Entries;
   entriesConfig: EntriesConfig;
-  entriesPlugins: Function[];
+  entriesPlugins: Object[];
 };
 
 module.exports = async (

@@ -60,7 +60,7 @@ module.exports = ({ config, logger }: Context) => {
   }
 
   // Get runtime plugins that will be passed to EntryWrapper.
-  const runtimePlugins: Function[] = entriesPlugins
+  const runtimePlugins: Object[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
     .map((plugin: Object) => plugin.ref);
 

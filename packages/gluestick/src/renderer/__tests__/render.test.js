@@ -71,7 +71,7 @@ describe('renderer/render', () => {
     plugins: [],
   };
 
-  const entriesPlugins: Function[] = [];
+  const entriesPlugins: Object[] = [];
 
   const context: Context = { config, logger };
 
