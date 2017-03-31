@@ -80,9 +80,15 @@ const start = (
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
         logger.info(`Deleting process ${name}.`);
-        pm2.delete(name);
-        pm2.disconnect();
-        process.exit(0);
+        pm2.delete(name, (deleteError) => {
+          if (deleteError) {
+            logger.error(deleteError);
+            pm2.disconnect();
+            process.exit(1);
+          }
+          pm2.disconnect();
+          process.exit(0);
+        });
       } else {
         logger.warn(`No process with name ${name} exists.`);
         pm2.disconnect();
@@ -110,7 +116,12 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
       checkIfPM2ProcessExists(instanceName, (exists: boolean): void => {
         if (exists) {
           logger.info(`PM2 process ${instanceName} already running, stopping the process`);
-          pm2.stop(instanceName, () => {
+          pm2.stop(instanceName, (stopError) => {
+            if (stopError) {
+              logger.error(stopError);
+              process.exit(1);
+            }
+
             start({ config, logger }, instanceName, entryPointPath, args);
           });
         } else {
