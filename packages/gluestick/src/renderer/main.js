@@ -88,6 +88,7 @@ module.exports = ({ config, logger }: Context) => {
         }
       });
     }
+    // TODO: cache on production
     fs.readFile(
       path.join(
         process.cwd(), config.GSConfig.buildAssetsPath, config.GSConfig.webpackChunks,
