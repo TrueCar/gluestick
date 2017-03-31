@@ -16,11 +16,7 @@ const loggerFactory = (type: string): (values: Array<*>) => void => {
           return prev.concat(typeof curr === 'string' ? curr : util.inspect(curr, { depth: 4 }));
         }, '')
       }`;
-      if (type === 'error') {
-        process.stderr.write(log);
-      } else {
-        process.stdout.write(log);
-      }
+      process.stderr.write(`${log}\n`);
     };
   }
   return (...values) => {
