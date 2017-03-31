@@ -15,10 +15,10 @@ import type {
 } from '../types';
 
 const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
+const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 // $FlowIgnore
 const applicationConfig = require('application-config').default;
@@ -88,34 +88,29 @@ module.exports = ({ config, logger }: Context) => {
         }
       });
     }
-    // TODO: cache on production
-    fs.readFile(
-      path.join(
-        process.cwd(), config.GSConfig.buildAssetsPath, config.GSConfig.webpackChunks,
-      ),
-      (error, assets) => {
-        if (error) {
-          logger.error(error);
-          res.sendStatus(500);
-        } else {
-          middleware(
-            { config, logger },
-            req, res,
-            { entries, entriesConfig, entriesPlugins: runtimePlugins },
-            { EntryWrapper, BodyWrapper },
-            JSON.parse(assets.toString()),
-            {
-              reduxMiddlewares,
-              envVariables: [],
-              httpClient: applicationConfig.httpClient || {},
-              entryWrapperConfig: {},
-            },
-            { hooks, hooksHelper: hooksHelper.call },
-            serverPlugins,
-          );
-        }
-      },
-    );
+    readAssets(`${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`)
+      .then((assets: Object): void => {
+        console.log(assets);
+        middleware(
+          { config, logger },
+          req, res,
+          { entries, entriesConfig, entriesPlugins: runtimePlugins },
+          { EntryWrapper, BodyWrapper },
+          assets,
+          {
+            reduxMiddlewares,
+            envVariables: [],
+            httpClient: applicationConfig.httpClient || {},
+            entryWrapperConfig: {},
+          },
+          { hooks, hooksHelper: hooksHelper.call },
+          serverPlugins,
+        );
+      })
+      .catch((error: Error) => {
+        logger.error(error);
+        res.sendStatus(500);
+      });
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);
