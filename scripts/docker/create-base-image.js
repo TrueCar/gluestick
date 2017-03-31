@@ -4,9 +4,10 @@ const crossSpawn = require('cross-spawn');
 const version = require('../../lerna.json').version;
 
 const tag = `truecar/gluestick:${version}`;
+console.log(`Creating Docker base image for ${tag}`);
 
 module.exports = (spawn = crossSpawn) => {
-  console.log('Building docer image...');
+  console.log('Building docker image...');
   console.log(spawn('docker', [
     'build',
     '-f', './scripts/docker/Dockerfile',

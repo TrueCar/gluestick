@@ -8,6 +8,7 @@ import EntryWrapper from "../EntryWrapper";
 import { createStore } from "compiled/gluestick";
 import middleware from "config/redux-middleware";
 import reducers from "${args => args.reducers}";
+${args => args.config ? `import config from "${args.config}";` : 'const config = {};'}
 
 import "${args => args.component}";
 
@@ -39,6 +40,7 @@ if (typeof window === "object") {
   ];
 
   EntryWrapper.start(
+    config,
     getRoutes,
     getStore,
     { rootWrappers, rootWrappersOptions: [], preRenderHooks },
@@ -52,6 +54,7 @@ module.exports = (options) => {
       component: options.component,
       routes: options.routes,
       reducers: options.reducers,
+      config: options.config,
       plugins: options.plugins,
     },
     entry: {

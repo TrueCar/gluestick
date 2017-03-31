@@ -8,6 +8,23 @@ const path = require('path');
 const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
 
+function debounce(func, wait, immediate) {
+  let timeout;
+  return (...args) => {
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (!immediate) {
+        func(...args);
+      }
+    }, wait);
+
+    if (callNow) func(...args);
+  };
+}
+
 /**
  * Spawns new process with rendering server.
  *
@@ -40,11 +57,11 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
   const compile = (): void => {
+    logger.info('Building server entry.');
     webpack(webpackConfig).run(error => {
       if (error) {
         throw error;
       }
-      logger.info('Building server entry.');
       if (child) {
         child.kill();
       }
@@ -53,6 +70,9 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   };
   logger.debug('Initial compilation');
   compile();
+  const debouncedCompile = debounce(() => {
+    compile();
+  }, 10000);
   const watcher: Object = chokidar.watch([
     path.join(process.cwd(), '**/*'),
   ], {
@@ -60,13 +80,13 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
       /\.DS_Store/,
       /build\/server/,
       /gluestick\/clientEntryInit/,
-      /node_modules\/(?!gluestick\/src)/,
+      /node_modules\/(?!gluestick\/src\/renderer)/,
     ],
   }).on('ready', () => {
     logger.info('Started watching...');
     watcher.on('all', (stat, file) => {
       logger.info(`File ${filename(file)} changed [${stat}]`);
-      compile();
+      debouncedCompile();
     });
   });
 };
