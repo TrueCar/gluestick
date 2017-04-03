@@ -93,7 +93,11 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         test: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           'file-loader?name=[name]-[hash].[ext]',
-          'image-webpack-loader',
+          {
+            loader: 'image-webpack-loader',
+            // Workaround https://github.com/tcoopman/image-webpack-loader/issues/88#issuecomment-289454242
+            options: {},
+          },
         ],
       },
       {
@@ -139,6 +143,8 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
 
     bail: true,
     node: {
+      // TODO: Move these mocks to generated app.
+      dns: 'empty',
       fs: 'empty',
       net: 'empty',
     },
