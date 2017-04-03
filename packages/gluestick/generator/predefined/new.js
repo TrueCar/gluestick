@@ -255,6 +255,6 @@ module.exports = (options: GeneratorOptions) => {
     },
   ];
   return {
-    entries: options.skipMain ? entries.filter(o => !o.path.includes('apps/main')) : entries
+    entries: options.skipMain ? entries.filter(o => !o.path.includes('apps/main')) : entries,
   };
 };
