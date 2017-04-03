@@ -140,6 +140,8 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
 
     bail: true,
     node: {
+      // TODO: Move these mocks to generated app.
+      dns: 'empty',
       fs: 'empty',
       net: 'empty',
     },
