@@ -31,7 +31,7 @@ const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   return true;
 };
 
-const debounce = (func: Function, wait: number, immediate: boolean = false) => {
+const debounce = (func: Function, wait: number, immediate: boolean = false): Function => {
   let timeout;
   return (...args: any[]) => {
     const callNow = immediate && !timeout;
@@ -48,9 +48,28 @@ const debounce = (func: Function, wait: number, immediate: boolean = false) => {
   };
 };
 
+const throttle = (fn: Function, threshold: number = 250): Function => {
+  let last;
+  let deferTimer;
+  return (...args) => {
+    const now = +new Date();
+    if (last && now < last + threshold) {
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(() => {
+        last = now;
+        fn(...args);
+      }, threshold);
+    } else {
+      last = now;
+      fn(...args);
+    }
+  };
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
   convertToKebabCase,
   debounce,
+  throttle,
 };
