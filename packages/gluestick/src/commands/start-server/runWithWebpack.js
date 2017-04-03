@@ -76,7 +76,7 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   const watcher: Object = chokidar.watch([
     path.join(process.cwd(), `${config.GSConfig.sourcePath}/**/*`),
     path.join(process.cwd(), `${config.GSConfig.assetsPath}/**/*`),
-    path.join(process.cwd(), 'gluestick/EntryWrapper.js'),
+    path.join(process.cwd(), `${config.GSConfig.entryWrapperPath}.js`),
     path.join(process.cwd(), 'node_modules/gluestick/src/renderer/**/*'),
   ], {
     ignored: [
