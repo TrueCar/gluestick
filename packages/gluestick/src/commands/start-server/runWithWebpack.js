@@ -72,15 +72,17 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   compile();
   const debouncedCompile = debounce(() => {
     compile();
-  }, 10000);
+  }, 300);
   const watcher: Object = chokidar.watch([
-    path.join(process.cwd(), '**/*'),
+    path.join(process.cwd(), `${config.GSConfig.sourcePath}/**/*`),
+    path.join(process.cwd(), `${config.GSConfig.assetsPath}/**/*`),
+    path.join(process.cwd(), `${config.GSConfig.entryWrapperPath}.js`),
+    path.join(process.cwd(), 'node_modules/gluestick/src/renderer/**/*'),
   ], {
     ignored: [
+      /(^|[/\\])\../,
       /\.DS_Store/,
-      /build\/server/,
-      /gluestick\/clientEntryInit/,
-      /node_modules\/(?!gluestick\/src\/renderer)/,
+      /\.log$/,
     ],
   }).on('ready', () => {
     logger.info('Started watching...');
