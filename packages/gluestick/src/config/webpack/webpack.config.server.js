@@ -5,6 +5,7 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 const { serverConfiguration } = require('universal-webpack');
 const path = require('path');
 const deepClone = require('clone');
+const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
 
 module.exports = (
@@ -44,5 +45,8 @@ module.exports = (
     gluestickConfig.configPath,
     gluestickConfig.applicationConfigPath,
   );
+  config.plugins.push(progressHandler.plugin('server'));
+  // Mute progress handler so it dosn't interfeare with client's one
+  progressHandler.toggleMute('server');
   return serverConfiguration(config, settings);
 };

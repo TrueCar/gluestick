@@ -4,6 +4,7 @@ import type { WebpackConfig, UniversalWebpackConfigurator, GSConfig, Logger } fr
 
 const deepClone = require('clone');
 const buildEntries = require('./buildEntries');
+const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
 
 module.exports = (
@@ -34,6 +35,7 @@ module.exports = (
       deepClone(configuration),
       { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },
     ),
+    progressHandler.plugin('client'),
   );
   return () => config;
 };

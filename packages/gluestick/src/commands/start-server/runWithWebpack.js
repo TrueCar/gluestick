@@ -8,6 +8,7 @@ const path = require('path');
 const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
 const { debounce } = require('../../utils');
+const progressHandler = require('../../config/webpack/progressHandler');
 
 /**
  * Spawns new process with rendering server.
@@ -40,7 +41,7 @@ const spawnServer = (
 module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
-  const compile = (): void => {
+  const compile = (cb: Function = () => {}): void => {
     logger.info('Building server entry.');
     webpack(webpackConfig).watch({}, error => {
       if (error) {
@@ -49,11 +50,16 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
       if (child) {
         child.kill();
       }
+
+      cb();
+
       child = spawnServer({ config, logger }, entryPointPath, args);
     });
   };
   logger.debug('Initial compilation');
-  compile();
+  compile(() => {
+    progressHandler.toggleMute('server');
+  });
   const debouncedCompile = debounce(() => {
     compile();
   }, 300);

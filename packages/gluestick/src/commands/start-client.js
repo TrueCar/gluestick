@@ -5,6 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
+const progressHandler = require('../config/webpack/progressHandler');
 
 type DevelopmentServerOptions = {
   quiet: boolean, // don’t output anything to the console
@@ -55,9 +56,7 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
     app.use(devMiddleware);
     app.use(require('webpack-hot-middleware')(compiler));
     devMiddleware.waitUntilValid(() => {
-      if (process.send) {
-        process.send('client started');
-      }
+      progressHandler.toggleMute('client');
     });
     // Proxy http requests from client to renderer server in development mode.
     app.use(proxy({
@@ -85,10 +84,6 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
     compiler.run((error: string) => {
       if (error) {
         throw new Error(error);
-      }
-
-      if (process.send) {
-        process.send('client started');
       }
 
       logger.success('Client bundle successfully built.');

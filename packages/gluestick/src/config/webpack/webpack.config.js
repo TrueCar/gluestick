@@ -135,7 +135,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
-      new webpack.ProgressPlugin(),
     ],
 
     bail: true,
