@@ -7,7 +7,23 @@ const chokidar = require('chokidar');
 const path = require('path');
 const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
-const { debounce } = require('../../utils');
+
+function debounce(func, wait, immediate) {
+  let timeout;
+  return (...args) => {
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (!immediate) {
+        func(...args);
+      }
+    }, wait);
+
+    if (callNow) func(...args);
+  };
+}
 
 /**
  * Spawns new process with rendering server.
@@ -56,7 +72,7 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   compile();
   const debouncedCompile = debounce(() => {
     compile();
-  }, 300);
+  }, 10000);
   const watcher: Object = chokidar.watch([
     path.join(process.cwd(), '**/*'),
   ], {
