@@ -7,23 +7,7 @@ const chokidar = require('chokidar');
 const path = require('path');
 const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
-
-function debounce(func, wait, immediate) {
-  let timeout;
-  return (...args) => {
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-      timeout = null;
-      if (!immediate) {
-        func(...args);
-      }
-    }, wait);
-
-    if (callNow) func(...args);
-  };
-}
+const { debounce } = require('../../utils');
 
 /**
  * Spawns new process with rendering server.

@@ -31,8 +31,26 @@ const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   return true;
 };
 
+const debounce = (func: Function, wait: number, immediate: boolean = false) => {
+  let timeout;
+  return (...args: any[]) => {
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (!immediate) {
+        func(...args);
+      }
+    }, wait);
+
+    if (callNow) func(...args);
+  };
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
   convertToKebabCase,
+  debounce,
 };
