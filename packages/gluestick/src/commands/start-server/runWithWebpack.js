@@ -3,11 +3,7 @@ import type { Context, WebpackConfigEntry } from '../../types';
 
 const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
-const chokidar = require('chokidar');
-const path = require('path');
-const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
-const { debounce } = require('../../utils');
 const progressHandler = require('../../config/webpack/progressHandler');
 
 /**
@@ -59,24 +55,5 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   logger.debug('Initial compilation');
   compile(() => {
     progressHandler.toggleMute('server');
-  });
-  const debouncedCompile = debounce(() => {
-    compile();
-  }, 300);
-  const watcher: Object = chokidar.watch([
-    path.join(process.cwd(), 'src/**/*'),
-    path.join(process.cwd(), 'gluestick/EntryWrapper.js'),
-    path.join(process.cwd(), 'node_modules/gluestick/src/renderer/**/*'),
-  ], {
-    ignored: [
-      /(^|[/\\])\../,
-      /\.DS_Store/,
-    ],
-  }).on('ready', () => {
-    logger.info('Started watching...');
-    watcher.on('all', (stat, file) => {
-      logger.info(`File ${filename(file)} changed [${stat}]`);
-      debouncedCompile();
-    });
   });
 };
