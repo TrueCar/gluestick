@@ -66,17 +66,13 @@ describe('commands/start-client', () => {
 
   it('should build client bundle in production', () => {
     const originalNodeEnv = process.env.NODE_ENV;
-    const originalProcessSend = process.send;
     process.env.NODE_ENV = 'production';
     process.send = jest.fn();
     startClientCommand(context);
     expect(isWebpackConfigValid).toBeTruthy();
     runCallback(null);
     expect(context.logger.success.mock.calls[0]).toEqual(['Client bundle successfully built.']);
-    // $FlowIgnore process.send is mocked
-    expect(process.send.mock.calls[0]).toEqual(['client started']);
     process.env.NODE_ENV = originalNodeEnv;
-    process.send = originalProcessSend;
   });
 
   it('should throw compilation error in production', () => {
@@ -91,12 +87,8 @@ describe('commands/start-client', () => {
   });
 
   it('should start express with webpack dev and hot middlewares', () => {
-    const originalProcessSend = process.send;
-    process.send = jest.fn();
     startClientCommand(context);
     waitUntilValidCallback();
-    // $FlowIgnore process.send is mocked
-    expect(process.send.mock.calls[0]).toEqual(['client started']);
     expect(middlewares.length).toBe(3);
     const res = {};
     res.status = jest.fn(() => res);
@@ -106,8 +98,6 @@ describe('commands/start-client', () => {
     listenCallback('');
     expect(context.logger.success.mock.calls[0][0].includes('Client server running on'))
       .toBeTruthy();
-    process.send = jest.fn();
-    process.send = originalProcessSend;
   });
 
   it('should throw error if express fails to listen for requests', () => {
