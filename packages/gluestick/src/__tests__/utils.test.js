@@ -57,7 +57,7 @@ describe('utils', () => {
       // will execute exactly after the given time, but
       // rather it guarantees the function will be called
       // NO SOONER that the value in the 2nd arg
-      expect(fn.mock.calls.length).toBeGreaterThan(20);
+      expect(fn.mock.calls.length).toBeLessThan(100);
       fn.mock.calls.forEach(args => {
         expect(args).toEqual([true]);
       });
