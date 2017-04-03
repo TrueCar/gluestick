@@ -37,8 +37,8 @@ const templateGluestickHooks = require('../templates/gluestick.hooks')(createTem
 
 const { flowVersion, flowMapper } = require('../constants');
 
-module.exports = (options: GeneratorOptions) => ({
-  entries: [
+module.exports = (options: GeneratorOptions) => {
+  const entries = [
     {
       path: '/',
       filename: '.gitignore',
@@ -253,5 +253,8 @@ module.exports = (options: GeneratorOptions) => ({
       filename: '.gitkeep',
       template: templateEmpty,
     },
-  ],
-});
+  ];
+  return {
+    entries: options.skipMain ? entries.filter(o => !o.path.includes('apps/main')) : entries
+  };
+};

@@ -19,6 +19,7 @@ commander
   .description('generate a new application')
   .arguments('<appName>')
   .option('-d, --dev <path>', 'path to dev version of gluestick')
+  .option('-s, --skip-main', 'gluestick will not generate main app')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/new'),

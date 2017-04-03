@@ -14,6 +14,8 @@
     "publish": "./scripts/deploy.js"
   },
   "dependencies": {
+    "gluestick": "file:packages/gluestick",
+    "gluestick-cli": "file:packages/gluestick-cli",
     "lerna": "2.0.0-beta.37"
   },
   "devDependencies": {
