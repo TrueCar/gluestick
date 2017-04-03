@@ -56,7 +56,7 @@ module.exports = ({ config, logger }: Context) => {
   // Developers can add an optional hook that
   // includes script with initialization stuff.
   if (hooks.preInitServer) {
-      hooksHelper.call(hooks.preInitServer);
+    hooksHelper.call(hooks.preInitServer);
   }
 
   // Get runtime plugins that will be passed to EntryWrapper.
