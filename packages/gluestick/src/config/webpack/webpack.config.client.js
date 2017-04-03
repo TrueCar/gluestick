@@ -37,7 +37,7 @@ module.exports = (
       { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },
     ),
     // Make it so *.server.js files return null in client
-    new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, "./mocks/serverFileMock.js")),
+    new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
   );
   return () => config;
 };
