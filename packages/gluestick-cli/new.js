@@ -8,8 +8,6 @@ const chalk = require('chalk');
 const generate = require('gluestick-generators').default;
 const fetch = require('node-fetch');
 
-
-
 module.exports = (appName, options, exitWithError) => {
   fetch('http://registry.npmjs.org/gluestick')
     .then(res => res.json())
