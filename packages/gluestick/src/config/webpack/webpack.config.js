@@ -140,6 +140,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
 
     bail: true,
     node: {
+      dns: 'empty',
       fs: 'empty',
       net: 'empty',
     },
