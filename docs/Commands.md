@@ -13,6 +13,7 @@ Available options:
 
 * `-d, --dev <path>` - Relative path from inside crated directory to development version of gluestick
 * `-n, --npm` - Use npm instead of yarn for install dependencies
+* `-s, --skip-main` - Gluestick will not generate main app
 
 ### `gluestick generate`
 
