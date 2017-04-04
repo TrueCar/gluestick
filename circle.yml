@@ -14,6 +14,7 @@ dependencies:
     - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     - sudo apt-get update && sudo apt-get install yarn
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
   override:
     - npm run install:yarn
 test:
@@ -26,6 +27,5 @@ deployment:
     tag: /v\d+\.\d+\.\d+.*/
     owner: TrueCar
     commands:
-      - echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
       # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - npm run publish -- $CIRCLE_TAG
