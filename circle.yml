@@ -15,6 +15,9 @@ dependencies:
     - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     - sudo apt-get update && sudo apt-get install yarn
     - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+    # Make sure there is no cache
+    - npm cache clean
+    - yarn cache clean
   override:
     - npm run install:yarn
 test:
