@@ -35,6 +35,7 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
       },
     }),
   );
+  configuration.bail = true;
   return configuration;
 };
 
