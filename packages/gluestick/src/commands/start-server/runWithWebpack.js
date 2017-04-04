@@ -3,27 +3,8 @@ import type { Context, WebpackConfigEntry } from '../../types';
 
 const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
-const chokidar = require('chokidar');
-const path = require('path');
-const { filename } = require('../../cli/colorScheme');
 const logMessage = require('./logMessage');
-
-function debounce(func, wait, immediate) {
-  let timeout;
-  return (...args) => {
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-      timeout = null;
-      if (!immediate) {
-        func(...args);
-      }
-    }, wait);
-
-    if (callNow) func(...args);
-  };
-}
+const progressHandler = require('../../config/webpack/progressHandler');
 
 /**
  * Spawns new process with rendering server.
@@ -58,35 +39,18 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
   let child: ?Object = null;
   const compile = (): void => {
     logger.info('Building server entry.');
-    webpack(webpackConfig).run(error => {
+    webpack(webpackConfig).watch({}, error => {
       if (error) {
         throw error;
       }
       if (child) {
         child.kill();
       }
+
       child = spawnServer({ config, logger }, entryPointPath, args);
     });
   };
   logger.debug('Initial compilation');
   compile();
-  const debouncedCompile = debounce(() => {
-    compile();
-  }, 10000);
-  const watcher: Object = chokidar.watch([
-    path.join(process.cwd(), '**/*'),
-  ], {
-    ignored: [
-      /\.DS_Store/,
-      /build\/server/,
-      /gluestick\/clientEntryInit/,
-      /node_modules\/(?!gluestick\/src\/renderer)/,
-    ],
-  }).on('ready', () => {
-    logger.info('Started watching...');
-    watcher.on('all', (stat, file) => {
-      logger.info(`File ${filename(file)} changed [${stat}]`);
-      debouncedCompile();
-    });
-  });
+  progressHandler.toggleMute('server');
 };

@@ -18,6 +18,7 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
+const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 // $FlowIgnore
 const applicationConfig = require('application-config').default;
@@ -26,8 +27,6 @@ const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
 // $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;
-// $FlowIgnore
-const assets = require('webpack-chunks');
 // $FlowIgnore
 const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
@@ -39,9 +38,6 @@ const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
-
-// $FlowIgnore Assets should be bundled into render to serve them in production.
-require.context('build-assets');
 
 module.exports = ({ config, logger }: Context) => {
   const pluginUtils = createPluginUtils(logger);
@@ -55,12 +51,12 @@ module.exports = ({ config, logger }: Context) => {
 
   // Developers can add an optional hook that
   // includes script with initialization stuff.
-  if (hooks.preInitServer && typeof hooks.preInitServer === 'function') {
-    hooks.preInitServer();
+  if (hooks.preInitServer) {
+    hooksHelper.call(hooks.preInitServer);
   }
 
   // Get runtime plugins that will be passed to EntryWrapper.
-  const runtimePlugins: Function[] = entriesPlugins
+  const runtimePlugins: Object[] = entriesPlugins
     .filter((plugin: Object) => plugin.type === 'runtime')
     .map((plugin: Object) => plugin.ref);
 
@@ -92,21 +88,28 @@ module.exports = ({ config, logger }: Context) => {
         }
       });
     }
-    middleware(
-      { config, logger },
-      req, res,
-      { entries, entriesConfig, entriesPlugins: runtimePlugins },
-      { EntryWrapper, BodyWrapper },
-      assets,
-      {
-        reduxMiddlewares,
-        envVariables: [],
-        httpClient: applicationConfig.httpClient || {},
-        entryWrapperConfig: {},
-      },
-      { hooks, hooksHelper: hooksHelper.call },
-      serverPlugins,
-    );
+    readAssets(`${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`)
+      .then((assets: Object): void => {
+        middleware(
+          { config, logger },
+          req, res,
+          { entries, entriesConfig, entriesPlugins: runtimePlugins },
+          { EntryWrapper, BodyWrapper },
+          assets,
+          {
+            reduxMiddlewares,
+            envVariables: [],
+            httpClient: applicationConfig.httpClient || {},
+            entryWrapperConfig: {},
+          },
+          { hooks, hooksHelper: hooksHelper.call },
+          serverPlugins,
+        );
+      })
+      .catch((error: Error) => {
+        logger.error(error);
+        res.sendStatus(500);
+      });
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);

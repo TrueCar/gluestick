@@ -43,7 +43,7 @@ module.exports = ({ logger }: Context, appName: string, options: Object = {}) =>
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(appName)} is being generated...`);
 
-    generateTemplate('new', appName, logger, { dev: options.dev || null, appName });
+    generateTemplate('new', appName, logger, { dev: options.dev || null, appName, skipMain: options.skipMain });
 
     // Install necessary flow-typed definitions
     spawn.sync('./node_modules/.bin/flow-typed', ['install', `jest@${packageJSON.dependencies.jest}`], { stdio: 'inherit' });

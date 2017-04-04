@@ -22,24 +22,6 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
 
-  const startServer = () => {
-    spawn(
-      'node',
-      [
-        './node_modules/.bin/gluestick',
-        'start-server',
-        ...rawArgs.slice(2),
-      ],
-      {
-        stdio: 'inherit',
-        env: {
-          ...process.env,
-          NODE_ENV: isProduction ? 'production' : 'development',
-        },
-      },
-    );
-  };
-
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {
     spawn('gluestick', ['test', ...rawArgs.slice(4)], {
@@ -63,14 +45,22 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
         stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
         env: { ...process.env },
       },
-    ).on('message', (payload) => {
-      if (payload !== 'client started') {
-        return;
-      }
-
-      startServer();
-    });
-  } else {
-    startServer();
+    );
   }
+
+  spawn(
+    'node',
+    [
+      './node_modules/.bin/gluestick',
+      'start-server',
+      ...rawArgs.slice(2),
+    ],
+    {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        NODE_ENV: isProduction ? 'production' : 'development',
+      },
+    },
+  );
 };

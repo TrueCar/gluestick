@@ -31,8 +31,27 @@ const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   return true;
 };
 
+const throttle = (fn: Function, threshold: number = 250): Function => {
+  let last;
+  let deferTimer;
+  return (...args) => {
+    const now = +new Date();
+    if (last && now < last + threshold) {
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(() => {
+        last = now;
+        fn(...args);
+      }, threshold);
+    } else {
+      last = now;
+      fn(...args);
+    }
+  };
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
   convertToKebabCase,
+  throttle,
 };

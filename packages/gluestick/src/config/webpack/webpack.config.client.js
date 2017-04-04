@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
 const buildEntries = require('./buildEntries');
+const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
 
 module.exports = (
@@ -38,6 +39,7 @@ module.exports = (
     ),
     // Make it so *.server.js files return null in client
     new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
+    progressHandler.plugin('client'),
   );
   return () => config;
 };
