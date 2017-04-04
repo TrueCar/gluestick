@@ -173,7 +173,9 @@ export type ComponentCachingConfig = {
   whiteListNonStringKeys?: string[];
 }
 export type ComponentsCachingConfig = {
-  [key: string]: ComponentCachingConfig;
+  compontens: {
+    [key: string]: ComponentCachingConfig;
+  };
 }
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
 export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cache?: Object) => void;
