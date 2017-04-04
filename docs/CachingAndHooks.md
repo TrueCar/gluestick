@@ -30,9 +30,9 @@ export default {
     "Component2": {
         strategy: "template",
         enable: true
-    }
-  }
-}
+    },
+  },
+};
 ```
 
 [`Here`](https://github.com/electrode-io/electrode-react-ssr-caching) you can find more information about `cacheConfig`.
