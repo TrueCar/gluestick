@@ -28,4 +28,4 @@ deployment:
     owner: TrueCar
     commands:
       # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - npm run publish -- $CIRCLE_TAG
+      - BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG
