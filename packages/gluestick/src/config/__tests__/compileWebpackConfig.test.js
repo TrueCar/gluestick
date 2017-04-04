@@ -1,8 +1,13 @@
-/* @flow */
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
+jest.mock('./cwd/src/gluestick.hooks.js', () => ({
+  default: {
+    webpackClientConfig: (a) => a,
+    webpackServerConfig: (a) => a,
+  },
+}));
 
 const compileWebpackConfig = require('../compileWebpackConfig');
 const defaultGSConfig = require('../defaults/glueStickConfig');
@@ -14,7 +19,18 @@ const loggerMock = {
   error: jest.fn(),
 };
 
+const originalProcessCwd = process.cwd.bind(process);
+
 describe('config/compileWebpackConfig', () => {
+  beforeAll(() => {
+    process.cwd = () => 'cwd';
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
+    process.cwd = originalProcessCwd;
+  });
+
   it('should return webpack config', () => {
     // $FlowIgnore
     const webpackConfig = compileWebpackConfig(loggerMock, [
