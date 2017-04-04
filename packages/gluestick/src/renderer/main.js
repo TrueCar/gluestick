@@ -90,7 +90,6 @@ module.exports = ({ config, logger }: Context) => {
     }
     readAssets(`${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`)
       .then((assets: Object): void => {
-        console.log(assets);
         middleware(
           { config, logger },
           req, res,
