@@ -1,6 +1,6 @@
 {
   "name": "gluestick-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "./index.js",
   "bin": {

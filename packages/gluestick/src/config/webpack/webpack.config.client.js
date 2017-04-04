@@ -2,6 +2,8 @@
 
 import type { WebpackConfig, UniversalWebpackConfigurator, GSConfig, Logger } from '../../types';
 
+const webpack = require('webpack');
+const path = require('path');
 const deepClone = require('clone');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
@@ -35,6 +37,8 @@ module.exports = (
       deepClone(configuration),
       { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },
     ),
+    // Make it so *.server.js files return null in client
+    new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
     progressHandler.plugin('client'),
   );
   return () => config;
