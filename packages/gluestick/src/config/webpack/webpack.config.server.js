@@ -5,6 +5,7 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 const { serverConfiguration } = require('universal-webpack');
 const path = require('path');
 const deepClone = require('clone');
+const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
 
 module.exports = (
@@ -31,9 +32,6 @@ module.exports = (
   config.resolve.alias['entry-wrapper'] = path.join(
     process.cwd(), gluestickConfig.entryWrapperPath,
   );
-  config.resolve.alias['webpack-chunks'] = path.join(
-    process.cwd(), gluestickConfig.buildAssetsPath, gluestickConfig.webpackChunks,
-  );
   config.resolve.alias['gluestick-hooks'] = path.join(
     process.cwd(), gluestickConfig.hooksPath,
   );
@@ -41,14 +39,14 @@ module.exports = (
     process.cwd(), gluestickConfig.reduxMiddlewares,
   );
   config.resolve.alias['plugins-config-path'] = gluestickConfig.pluginsConfigPath;
-  config.resolve.alias['build-assets'] = path.join(
-    config.resolve.alias.root, gluestickConfig.buildAssetsPath,
-  );
   config.resolve.alias['application-config'] = path.join(
     config.resolve.alias.root,
     gluestickConfig.sourcePath,
     gluestickConfig.configPath,
     gluestickConfig.applicationConfigPath,
   );
+  config.plugins.push(progressHandler.plugin('server'));
+  // Mute progress handler so it dosn't interfeare with client's one
+  progressHandler.toggleMute('server');
   return serverConfiguration(config, settings);
 };

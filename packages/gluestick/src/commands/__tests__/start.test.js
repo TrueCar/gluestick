@@ -63,8 +63,7 @@ describe('commands/start', () => {
         },
       });
       expect(spawnFn.mock.calls[0][1][0]).toEqual('test');
-      // There will be 2 calls to spawn since 'message' event is not triggered
-      expect(spawnFn.mock.calls.length).toBe(2);
+      expect(spawnFn.mock.calls.length).toBe(3);
     });
 
     it('should spawn start-server and start-client', () => {
@@ -80,20 +79,6 @@ describe('commands/start', () => {
       expect(spawnFn.mock.calls[0][1][1]).toEqual('start-client');
       expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
       expect(spawnFn.mock.calls.length).toBe(2);
-    });
-
-    it('should not start-server if payload from event message is invalid', () => {
-      startCommand(context, {
-        dev: false,
-        skipBuild: false,
-        runTests: false,
-        parent: {
-          rawArgs: [],
-        },
-      });
-      spawnEventHandlers.forEach((evh) => evh.fn('client failed'));
-      expect(spawnFn.mock.calls[0][1][1]).toEqual('start-client');
-      expect(spawnFn.mock.calls.length).toBe(1);
     });
   });
 });
