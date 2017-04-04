@@ -41,7 +41,8 @@ module.exports = ({ config, logger }: Context, entryPointPath: string, args: str
     logger.info('Building server entry.');
     webpack(webpackConfig).watch({}, error => {
       if (error) {
-        throw error;
+        logger.error(error);
+        return;
       }
       if (child) {
         child.kill();
