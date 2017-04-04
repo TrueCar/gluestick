@@ -24,6 +24,6 @@ console.log('Pushing tag commit...');
 spawnWithErrorHandling('git', ['push']);
 
 // Create docker image and push to Docker Hub
-require('./docker/create-base-image')(spawnWithErrorHandling);
+// require('./docker/create-base-image')(spawnWithErrorHandling);
 
 console.log('Done!');

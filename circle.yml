@@ -27,5 +27,5 @@ deployment:
     owner: TrueCar
     commands:
       - echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-      - yes | docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - npm run publish -- $CIRCLE_TAG
