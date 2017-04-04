@@ -177,7 +177,7 @@ export type ComponentsCachingConfig = {
 }
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
 export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cache?: Object) => void;
-export type EnableComponentCaching = (config: ComponentsCachingConfig) => void;
+export type EnableComponentCaching = (config: ?ComponentsCachingConfig) => void;
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd;
   setCacheIfProd: SetCacheIfProd;
