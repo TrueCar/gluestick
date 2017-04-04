@@ -173,7 +173,7 @@ export type ComponentCachingConfig = {
   whiteListNonStringKeys?: string[];
 }
 export type ComponentsCachingConfig = {
-  compontens: {
+  compontens?: {
     [key: string]: ComponentCachingConfig;
   };
 }
