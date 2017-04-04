@@ -204,6 +204,8 @@ export type Hooks = {
   postGetCurrentRoute?: Hook;
   postRender?: Hook;
   error?: Hook;
+  webpackClientConfig?: Hook;
+  webpackServerConfig?: Hook;
 };
 
 export type Plugin = {
