@@ -1,10 +1,17 @@
 /* @flow */
 
-import type { Logger, CacheManager, GetCachedIfProd, SetCacheIfProd } from '../../types';
+import type {
+  Logger,
+  CacheManager,
+  GetCachedIfProd,
+  SetCacheIfProd,
+  EnableComponentCaching,
+} from '../../types';
 
 const LRU = require('lru-cache');
+const SSRCaching = require('electrode-react-ssr-caching');
 
-// Creatin cache
+// Creating cache
 const DEFAULT_TTL: number = 60 * 60 * 1000;
 const lruOptions: { maxAge: number, max: number } = {
   maxAge: DEFAULT_TTL,
@@ -17,6 +24,13 @@ const getCacheKey = ({ hostname, url }: { hostname: string, url: string}): strin
 };
 
 module.exports = (logger: Logger, isProduction: boolean): CacheManager => {
+  const enableComponentCaching: EnableComponentCaching = (config) => {
+    if (isProduction && !!config) {
+      // only enable caching if componentCacheConfig has an object
+      SSRCaching.enableCaching(true);
+      SSRCaching.setCachingConfig(config);
+    }
+  };
   const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
     if (isProduction) {
       const key: string = getCacheKey(req);
@@ -40,5 +54,6 @@ module.exports = (logger: Logger, isProduction: boolean): CacheManager => {
   return {
     getCachedIfProd,
     setCacheIfProd,
+    enableComponentCaching,
   };
 };

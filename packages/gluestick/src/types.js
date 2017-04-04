@@ -163,11 +163,25 @@ export type RenderOutput = {
   rootElement: Object;
 }
 
+export type ComponentCachingConfig = {
+  strategy: string;
+  enable: boolean;
+  genCacheKey: (*) => string;
+  preserveKeys?: string[];
+  preserveEmptyKeys?: string[];
+  ignoreKeys?: string[];
+  whiteListNonStringKeys?: string[];
+}
+export type ComponentsCachingConfig = {
+  [key: string]: ComponentCachingConfig;
+}
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
 export type SetCacheIfProd = (req: Request, value: string, maxAge?: number, cache?: Object) => void;
+export type EnableComponentCaching = (config: ComponentsCachingConfig) => void;
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd;
   setCacheIfProd: SetCacheIfProd;
+  enableComponentCaching: EnableComponentCaching;
 }
 
 export type MismatchedModules = {
