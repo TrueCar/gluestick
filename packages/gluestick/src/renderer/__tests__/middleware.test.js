@@ -33,6 +33,7 @@ jest.mock('../render.js', () => jest.fn(() => ({
 })));
 jest.mock('../helpers/cacheManager.js', () => jest.fn(() => ({
   getCachedIfProd: jest.fn((req) => req.url === '/cached' ? 'cached' : null),
+  enableComponentCaching: jest.fn(),
 })));
 jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 const React = require('react');
@@ -138,6 +139,8 @@ describe('renderer/middleware', () => {
       assets,
       options,
       { hooks, hooksHelper },
+      [],
+      {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);

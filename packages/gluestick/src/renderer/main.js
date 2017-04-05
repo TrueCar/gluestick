@@ -34,10 +34,14 @@ const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
+// $FlowIgnore
+const cachingConfig = require('caching-config').default;
+
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
+
 
 module.exports = ({ config, logger }: Context) => {
   const pluginUtils = createPluginUtils(logger);
@@ -104,6 +108,7 @@ module.exports = ({ config, logger }: Context) => {
           },
           { hooks, hooksHelper: hooksHelper.call },
           serverPlugins,
+          cachingConfig,
         );
       })
       .catch((error: Error) => {
