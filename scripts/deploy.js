@@ -17,11 +17,21 @@ const spawnWithErrorHandling = (...args) => {
 
 // Publish packages to npm registry
 spawnWithErrorHandling('npm', [
-  'run', 'lerna', 'publish', '--', '--repo-version', version, '--yes', '--force-publish=*',
+  'run',
+  'lerna',
+  'publish',
+  '--',
+  '--repo-version',
+  version,
+  '--yes',
+  '--force-publish=*',
+  '--skip-git',
 ], { stdio: 'inherit' });
 
-console.log('Pushing tag commit...');
-spawnWithErrorHandling('git', ['push']);
+console.log('Pushing commit...');
+spawnWithErrorHandling('git', ['add', '.']);
+spawnWithErrorHandling('git', ['commit', '-m', `v${version}`]);
+spawnWithErrorHandling('git', ['push', 'origin', process.env.BRANCH]);
 
 // Create docker image and push to Docker Hub
 // require('./docker/create-base-image')(spawnWithErrorHandling);
