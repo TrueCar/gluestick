@@ -7,6 +7,7 @@ if (process.argv.length <= 2 || !/\d+\.\d+\.\d+.*/.test(process.argv[2])) {
 
 const version = process.argv[2];
 const spawn = require('cross-spawn');
+const exec = require('child_process').execSync;
 
 const spawnWithErrorHandling = (...args) => {
   const results = spawn.sync(...args);
@@ -26,12 +27,14 @@ spawnWithErrorHandling('npm', [
   '--yes',
   '--force-publish=*',
   '--skip-git',
+  process.argv.slice(3),
 ], { stdio: 'inherit' });
 
 console.log('Pushing commit...');
-spawnWithErrorHandling('git', ['add', '.']);
-spawnWithErrorHandling('git', ['commit', '-m', `v${version}`]);
-spawnWithErrorHandling('git', ['push', 'origin', process.env.BRANCH]);
+exec('git checkout staging');
+exec('git add .');
+exec(`git commit -m v${version}`);
+exec(`git push origin ${process.env.BRANCH}`);
 
 // Create docker image and push to Docker Hub
 // require('./docker/create-base-image')(spawnWithErrorHandling);
