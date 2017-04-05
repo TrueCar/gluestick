@@ -31,6 +31,7 @@ spawnWithErrorHandling('npm', [
 ], { stdio: 'inherit' });
 
 console.log('Pushing commit...');
+exec('git checkout staging');
 exec('git add .');
 exec(`git commit -m v${version}`);
 exec(`git push origin ${process.env.BRANCH}`);
