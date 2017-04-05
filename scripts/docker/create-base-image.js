@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const crossSpawn = require('cross-spawn');
-const version = require('../../lerna.json').version;
+const version = require('../../lerna.json').version.replace('v', '');
 
 const tag = `truecar/gluestick:${version}`;
 console.log(`Creating Docker base image for ${tag}`);
