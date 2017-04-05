@@ -37,21 +37,24 @@ const spawnServer = (
 module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
-  const compile = (): void => {
-    logger.info('Building server entry.');
-    webpack(webpackConfig).watch({}, error => {
-      if (error) {
-        logger.error(error);
-        return;
-      }
-      if (child) {
-        child.kill();
-      }
-
-      child = spawnServer({ config, logger }, entryPointPath, args);
-    });
-  };
+  let initial: boolean = true;
   logger.debug('Initial compilation');
-  compile();
-  progressHandler.toggleMute('server');
+  logger.info('Building server entry.');
+  webpack(webpackConfig).watch({}, error => {
+    if (error) {
+      logger.error(error);
+      return;
+    }
+
+    if (initial) {
+      progressHandler.toggleMute('server');
+      initial = false;
+    }
+
+    if (child) {
+      child.kill();
+    }
+
+    child = spawnServer({ config, logger }, entryPointPath, args);
+  });
 };
