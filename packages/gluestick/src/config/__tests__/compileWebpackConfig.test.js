@@ -5,8 +5,8 @@ jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
 jest.mock('src/gluestick.hooks', () => ({
   default: {
-    webpackClientConfig: (config) => Object.assign({ mutated: true }, config),
-    webpackServerConfig: (config) => Object.assign({ mutated: true }, config),
+    webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
+    webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
   },
 }), { virtual: true });
 
@@ -18,11 +18,14 @@ const loggerMock = {
   debug: jest.fn(),
   success: jest.fn(),
   error: jest.fn(),
+  warn: jest.fn(),
 };
 
 const originalProcessCwd = process.cwd.bind(process);
 const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
   {
+    name: 'test',
+    meta: {},
     preOverwrites: {},
     postOverwrites: {
       clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
@@ -30,6 +33,8 @@ const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
     },
   },
   {
+    name: 'test',
+    meta: {},
     preOverwrites: {
       sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
     },
@@ -68,5 +73,5 @@ describe('config/compileWebpackConfig', () => {
 
     expect(webpackConfig.client.mutated).toBeTruthy();
     expect(webpackConfig.server.mutated).toBeTruthy();
-  })
+  });
 });
