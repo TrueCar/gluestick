@@ -17,50 +17,98 @@ type StartOptions = {
   dev: boolean;
 };
 
+const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn(
+      'node',
+      [
+        './node_modules/.bin/gluestick',
+        ...args,
+      ],
+      {
+        stdio: 'inherit',
+        env: { ...process.env, ...customEnv },
+      },
+    );
+
+    childProcess.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Command ${args.join(' ')} returned code ${code}`));
+      }
+    });
+    childProcess.on('error', (error) => {
+      reject(error);
+    });
+  });
+};
+
 module.exports = ({ config, logger }: Context, options: StartOptions) => {
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
 
+  /* gluestick start
+   *   -> spawn start-client (w/ build), spawn start-server (w/ build)
+   *
+   * gluestick start --skip-build
+   *   -> gluestick start
+   *
+   * NODE_ENV=production gluestick start
+   *   -> build client, build server, spawn start-server (w/o build)
+   *
+   * NODE_ENV=production gluestick start --skip-build
+   *   -> spawn start-server (w/o build)
+   */
+
   // Start tests only they asked us to or we are in production mode
   if (!isProduction && options.runTests) {
-    spawn('gluestick', ['test', ...rawArgs.slice(4)], {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        NODE_ENV: 'test',
-      },
-    });
-  }
-
-  if (!(isProduction && options.skipBuild)) {
-    spawn(
-      'node',
+    spawnFunc(
       [
-        './node_modules/.bin/gluestick',
-        'start-client',
-        ...rawArgs.slice(2),
+        'test',
+        ...rawArgs.slice(4),
       ],
       {
-        stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
-        env: { ...process.env },
+        NODE_ENV: 'test',
       },
     );
   }
 
-  spawn(
-    'node',
-    [
-      './node_modules/.bin/gluestick',
+  if (!isProduction) {
+    spawnFunc([
+      'start-client',
+      ...rawArgs.slice(3),
+    ]);
+  }
+
+  if (!isProduction || (isProduction && options.skipBuild)) {
+    spawnFunc([
       'start-server',
-      ...rawArgs.slice(2),
-    ],
-    {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        NODE_ENV: isProduction ? 'production' : 'development',
-      },
-    },
-  );
+      ...rawArgs.slice(3),
+    ]);
+  }
+
+  if (isProduction && !options.skipBuild) {
+    Promise.all([
+      spawnFunc([
+        'build',
+        '--client',
+        ...rawArgs.slice(3),
+      ]),
+      spawnFunc([
+        'build',
+        '--server',
+        ...rawArgs.slice(3),
+      ]),
+    ]).then(() => {
+      spawnFunc([
+        'start-server',
+        ...rawArgs.slice(3),
+      ]);
+    }).catch((error) => {
+      logger.error(error);
+      process.exit(1);
+    });
+  }
 };
