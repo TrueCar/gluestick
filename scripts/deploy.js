@@ -5,7 +5,7 @@ if (process.argv.length <= 2 || !/\d+\.\d+\.\d+.*/.test(process.argv[2])) {
   process.exit(1);
 }
 
-const version = process.argv[2];
+const version = process.argv[2].replace('v', '');
 const spawn = require('cross-spawn');
 const exec = require('child_process').execSync;
 
