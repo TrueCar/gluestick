@@ -25,7 +25,7 @@ const getCacheKey = ({ hostname, url }: { hostname: string, url: string}): strin
 
 module.exports = (logger: Logger, isProduction: boolean): CacheManager => {
   const enableComponentCaching: EnableComponentCaching = (config) => {
-    if (isProduction && !!config && !!config.components) {
+    if (isProduction && config && config.components) {
       // only enable caching if componentCacheConfig has an object
       SSRCaching.enableCaching(true);
       SSRCaching.setCachingConfig(config);

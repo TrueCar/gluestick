@@ -16,7 +16,7 @@ Example:
 *Additional optional cache properties:*
 `cacheTTL` - number of seconds to store the cache for a particular route
 
-Gluestick supprots SSR component caching by using [`electrode-react-ssr-caching`](https://github.com/electrode-io/electrode-react-ssr-caching).
+Gluestick allows SSR component caching by using [`electrode-react-ssr-caching`](https://github.com/electrode-io/electrode-react-ssr-caching).
 For using it you need to determine `cacheConfig` in `src/config/caching.server.js`
 
 Example:
