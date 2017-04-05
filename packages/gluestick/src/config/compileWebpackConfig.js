@@ -136,7 +136,7 @@ module.exports = (
         : prev;
     }, serverEnvConfig);
 
-  const pathToWebpackConfigHooks: string = path.join(process.cwd(), 'src', 'gluestick.hooks');
+  const pathToWebpackConfigHooks: string = path.join(process.cwd(), 'src', 'webpack.hooks');
   const { webpackClientConfig, webpackServerConfig }: Hooks =
     require(pathToWebpackConfigHooks).default;
 

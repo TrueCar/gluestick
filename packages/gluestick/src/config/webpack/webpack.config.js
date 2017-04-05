@@ -140,11 +140,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
     ],
-
     node: {
-      // TODO: Move these mocks to generated app.
-      dns: 'empty',
-      fs: 'empty',
       net: 'empty',
     },
   };
