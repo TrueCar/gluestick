@@ -35,6 +35,7 @@ const templateEntries = require('../templates/entries')(createTemplate);
 const templateGluestickPlugins = require('../templates/gluestick.plugins')(createTemplate);
 const templateGluestickHooks = require('../templates/gluestick.hooks')(createTemplate);
 const templateWebpackHooks = require('../templates/webpack.hooks')(createTemplate);
+const templateCachingServer = require('../templates/caching.server')(createTemplate);
 
 const { flowVersion, flowMapper } = require('../constants');
 
@@ -126,6 +127,11 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src/config',
       filename: 'webpack-additions.js',
       template: templateWebpackAdditions,
+    },
+    {
+      path: 'src/config',
+      filename: 'caching.server.js',
+      template: templateCachingServer,
     },
     // Shared
     {
