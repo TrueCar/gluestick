@@ -1,11 +1,12 @@
+/* @flow */
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
 jest.mock('src/gluestick.hooks', () => ({
   default: {
-    webpackClientConfig: (a) => a,
-    webpackServerConfig: (a) => a,
+    webpackClientConfig: (config) => Object.assign({ mutated: true }, config),
+    webpackServerConfig: (config) => Object.assign({ mutated: true }, config),
   },
 }), { virtual: true });
 
@@ -20,36 +21,38 @@ const loggerMock = {
 };
 
 const originalProcessCwd = process.cwd.bind(process);
+const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
+  {
+    preOverwrites: {},
+    postOverwrites: {
+      clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+      serverWebpackConfig: (config) => Object.assign(config, { testProp: true }),
+    },
+  },
+  {
+    preOverwrites: {
+      sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
+    },
+    postOverwrites: {
+      clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
+    },
+  },
+], {}, defaultGSConfig);
 
 describe('config/compileWebpackConfig', () => {
   beforeAll(() => {
+    // $FlowIgnore
     process.cwd = () => '.';
   });
 
   afterAll(() => {
-    jest.resetAllMocks();
+    // $FlowIgnore
     process.cwd = originalProcessCwd;
   });
 
   it('should return webpack config', () => {
-    // $FlowIgnore
-    const webpackConfig = compileWebpackConfig(loggerMock, [
-      {
-        preOverwrites: {},
-        postOverwrites: {
-          clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
-          serverWebpackConfig: (config) => Object.assign(config, { testProp: true }),
-        },
-      },
-      {
-        preOverwrites: {
-          sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
-        },
-        postOverwrites: {
-          clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
-        },
-      },
-    ], {}, defaultGSConfig);
+    const webpackConfig = compileMockedWebpackConfig();
+
     expect(webpackConfig.universalSettings).not.toBeNull();
     expect(webpackConfig.client).not.toBeNull();
     expect(webpackConfig.server).not.toBeNull();
@@ -59,4 +62,11 @@ describe('config/compileWebpackConfig', () => {
     expect(webpackConfig.server.preTestProp).toBeTruthy();
     expect(webpackConfig.client.testPropNew).toBeTruthy();
   });
+
+  it('should mutate webpack config when hooks are present', () => {
+    const webpackConfig = compileMockedWebpackConfig();
+
+    expect(webpackConfig.client.mutated).toBeTruthy();
+    expect(webpackConfig.server.mutated).toBeTruthy();
+  })
 });

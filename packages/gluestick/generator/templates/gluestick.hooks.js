@@ -12,7 +12,7 @@ export default {
   postGetCurrentRoute: [],
   postRender: [],
   error: [],
-  webpackClientConfig: (config) => config,
-  webpackServerConfig: (config) => config,
+  webpackClientConfig: [],
+  webpackServerConfig: [],
 };
 `;
