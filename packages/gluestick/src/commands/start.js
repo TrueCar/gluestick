@@ -44,7 +44,9 @@ const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
   });
 };
 
-module.exports = ({ config, logger }: Context, options: StartOptions) => {
+module.exports = (
+  { config, logger }: Context, options: StartOptions,
+): Promise<any> => {
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
@@ -83,14 +85,14 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
   }
 
   if (!isProduction || (isProduction && options.skipBuild)) {
-    spawnFunc([
+    return spawnFunc([
       'start-server',
       ...rawArgs.slice(3),
     ]);
   }
 
   if (isProduction && !options.skipBuild) {
-    Promise.all([
+    return Promise.all([
       spawnFunc([
         'build',
         '--client',
@@ -111,4 +113,8 @@ module.exports = ({ config, logger }: Context, options: StartOptions) => {
       process.exit(1);
     });
   }
+
+  return Promise.reject(
+    new Error('Start failed'),
+  );
 };

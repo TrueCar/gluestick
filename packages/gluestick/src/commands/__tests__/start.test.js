@@ -11,6 +11,8 @@ jest.setMock('cross-spawn', spawnFn);
 const startCommand = require('../start');
 const context = require('../../__tests__/mocks/context');
 
+const originalNodeEnv = process.env.NODE_ENV;
+
 describe('commands/start', () => {
   beforeEach(() => {
     spawnEventHandlers = [];
@@ -18,10 +20,16 @@ describe('commands/start', () => {
   });
 
   describe('in production', () => {
-    it('should not spawn test command and spawn start-server and start-client only', () => {
-      const originalNodeEnv = process.env.NODE_ENV;
+    beforeEach(() => {
       process.env.NODE_ENV = 'production';
-      startCommand(context, {
+    });
+
+    afterAll(() => {
+      process.env.NODE_ENV = originalNodeEnv;
+    });
+
+    it('should build client, server and spawn start-server without build', () => {
+      const startPromise = startCommand(context, {
         dev: false,
         skipBuild: false,
         runTests: false,
@@ -29,44 +37,60 @@ describe('commands/start', () => {
           rawArgs: [],
         },
       });
-      spawnEventHandlers.forEach((evh) => evh.fn('client started'));
-      expect(spawnFn.mock.calls[0][1][1]).toEqual('start-client');
-      expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
-      process.env.NODE_ENV = originalNodeEnv;
+
+      spawnEventHandlers.forEach(({ event, fn }) => {
+        if (event === 'exit') {
+          fn(0);
+        }
+      });
+
+      return startPromise.then(() => {
+        expect(spawnFn.mock.calls[0][1][1]).toEqual('build');
+        expect(spawnFn.mock.calls[0][1][2]).toEqual('--client');
+        expect(spawnFn.mock.calls[1][1][1]).toEqual('build');
+        expect(spawnFn.mock.calls[1][1][2]).toEqual('--server');
+        expect(spawnFn.mock.calls[2][1][1]).toEqual('start-server');
+      });
     });
 
-    it('should not spawn test not start-client command and spawn start-server only', () => {
-      const originalNodeEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-      startCommand(context, {
-        skipBuild: true,
+    it('should try to build client, server and handle rejection', () => {
+      const originalProcessExit = process.exit.bind(process);
+      // $FlowIgnore
+      process.exit = jest.fn();
+      const startPromise = startCommand(context, {
         dev: false,
+        skipBuild: false,
         runTests: false,
         parent: {
-          rawArgs: ['-P'],
+          rawArgs: [],
+        },
+      });
+
+      spawnEventHandlers[0].fn(1);
+      spawnEventHandlers[3].fn(new Error('test'));
+
+      return startPromise.then(() => {
+        expect(process.exit.mock.calls).toEqual([[1]]);
+        // $FlowIgnore
+        process.exit = originalProcessExit;
+      });
+    });
+
+    it('should spawn start-server without build if skipBuild is passed', () => {
+      startCommand(context, {
+        dev: false,
+        skipBuild: true,
+        runTests: false,
+        parent: {
+          rawArgs: ['--skip-build'],
         },
       });
       expect(spawnFn.mock.calls[0][1][1]).toEqual('start-server');
-      expect(spawnFn.mock.calls.length).toBe(1);
-      process.env.NODE_ENV = originalNodeEnv;
     });
   });
 
   describe('in development', () => {
-    it('should spawn test command', () => {
-      startCommand(context, {
-        runTests: true,
-        dev: false,
-        skipBuild: false,
-        parent: {
-          rawArgs: ['-T'],
-        },
-      });
-      expect(spawnFn.mock.calls[0][1][0]).toEqual('test');
-      expect(spawnFn.mock.calls.length).toBe(3);
-    });
-
-    it('should spawn start-server and start-client', () => {
+    it('should spawn start-client with build and spawn start-server with build', () => {
       startCommand(context, {
         dev: false,
         skipBuild: false,
@@ -75,11 +99,21 @@ describe('commands/start', () => {
           rawArgs: [],
         },
       });
-      spawnEventHandlers.forEach((evh) => evh.fn('client started'));
       expect(spawnFn.mock.calls[0][1][1]).toEqual('start-client');
       expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
-      expect(spawnFn.mock.calls.length).toBe(2);
+    });
+    it('should spawn start-client with build, spawn start-server with build and run tests', () => {
+      startCommand(context, {
+        dev: false,
+        skipBuild: false,
+        runTests: true,
+        parent: {
+          rawArgs: [],
+        },
+      });
+      expect(spawnFn.mock.calls[0][1][1]).toEqual('test');
+      expect(spawnFn.mock.calls[1][1][1]).toEqual('start-client');
+      expect(spawnFn.mock.calls[2][1][1]).toEqual('start-server');
     });
   });
 });
-

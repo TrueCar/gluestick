@@ -4,7 +4,6 @@ import type { Context } from '../../types';
 const { spawn } = require('cross-spawn');
 const pm2 = require('pm2');
 const sha1 = require('sha1');
-const webpack = require('webpack');
 
 type PM2Config = {
   script: string,
