@@ -44,9 +44,7 @@ const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
   });
 };
 
-module.exports = (
-  { config, logger }: Context, options: StartOptions,
-): Promise<any> => {
+module.exports = ({ config, logger }: Context, options: StartOptions): Promise<any> => {
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
@@ -95,12 +93,6 @@ module.exports = (
     return Promise.all([
       spawnFunc([
         'build',
-        '--client',
-        ...rawArgs.slice(3),
-      ]),
-      spawnFunc([
-        'build',
-        '--server',
         ...rawArgs.slice(3),
       ]),
     ]).then(() => {

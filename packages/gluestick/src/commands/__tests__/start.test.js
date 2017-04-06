@@ -46,14 +46,11 @@ describe('commands/start', () => {
 
       return startPromise.then(() => {
         expect(spawnFn.mock.calls[0][1][1]).toEqual('build');
-        expect(spawnFn.mock.calls[0][1][2]).toEqual('--client');
-        expect(spawnFn.mock.calls[1][1][1]).toEqual('build');
-        expect(spawnFn.mock.calls[1][1][2]).toEqual('--server');
-        expect(spawnFn.mock.calls[2][1][1]).toEqual('start-server');
+        expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
       });
     });
 
-    it('should try to build client, server and handle rejection', () => {
+    it('should try to build client, server and handle rejection (non-zero code)', () => {
       const originalProcessExit = process.exit.bind(process);
       // $FlowIgnore
       process.exit = jest.fn();
@@ -67,7 +64,28 @@ describe('commands/start', () => {
       });
 
       spawnEventHandlers[0].fn(1);
-      spawnEventHandlers[3].fn(new Error('test'));
+
+      return startPromise.then(() => {
+        expect(process.exit.mock.calls).toEqual([[1]]);
+        // $FlowIgnore
+        process.exit = originalProcessExit;
+      });
+    });
+
+    it('should try to build client, server and handle rejection (error)', () => {
+      const originalProcessExit = process.exit.bind(process);
+      // $FlowIgnore
+      process.exit = jest.fn();
+      const startPromise = startCommand(context, {
+        dev: false,
+        skipBuild: false,
+        runTests: false,
+        parent: {
+          rawArgs: [],
+        },
+      });
+
+      spawnEventHandlers[1].fn(new Error('test'));
 
       return startPromise.then(() => {
         expect(process.exit.mock.calls).toEqual([[1]]);
