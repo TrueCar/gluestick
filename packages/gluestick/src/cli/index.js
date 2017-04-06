@@ -103,8 +103,8 @@ commander
   .command('build')
   .description('create production asset build')
   .option('-S, --stats', 'create webpack stats file')
-  .option('--client', 'gluestick builds only client')
-  .option('--server', 'gluestick builds only server')
+  .option('--client', 'gluestick builds only client bundle')
+  .option('--server', 'gluestick builds only server bundle')
   .action((...commandArguments) => {
     execWithConfig(
       require('../commands/build'),

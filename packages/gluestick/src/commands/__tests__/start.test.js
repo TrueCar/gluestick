@@ -108,7 +108,7 @@ describe('commands/start', () => {
         skipBuild: false,
         runTests: true,
         parent: {
-          rawArgs: [],
+          rawArgs: ['-T'],
         },
       });
       expect(spawnFn.mock.calls[0][1][1]).toEqual('test');
