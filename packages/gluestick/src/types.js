@@ -12,6 +12,7 @@ export type GSConfig = {
     server: number;
   };
   buildAssetsPath: string;
+  buildRendererPath: string;
   assetsPath: string;
   sourcePath: string;
   sharedPath: string;
@@ -210,7 +211,7 @@ export type UpdateDepsPromptResults = {
 
 export type Hook = Function | Function[];
 
-export type Hooks = {
+export type GSHooks = {
   preInitServer?: Function;
   postServerRun?: Hook;
   preRenderFromCache?: Hook;
@@ -220,6 +221,11 @@ export type Hooks = {
   postGetCurrentRoute?: Hook;
   postRender?: Hook;
   error?: Hook;
+};
+
+export type WebpackHooks = {
+  webpackClientConfig?: Hook;
+  webpackServerConfig?: Hook;
 };
 
 export type Plugin = {
@@ -262,7 +268,7 @@ export type ServerPlugin = {
     [key: string]: any;
   };
   renderMethod: Function;
-  hooks: Hooks;
+  hooks: GSHooks;
   logger: Logger;
 };
 

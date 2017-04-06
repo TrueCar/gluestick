@@ -10,6 +10,7 @@ import type {
   Logger,
   UniversalSettings,
   CompiledConfig,
+  WebpackHooks,
 } from '../types';
 
 const path = require('path');
@@ -20,6 +21,7 @@ const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
+const hookHelper = require('../renderer/helpers/hooks');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -45,7 +47,7 @@ module.exports = (
   const universalWebpackSettings: UniversalSettings = {
     server: {
       input: path.join(__dirname, '../renderer/entry.js'),
-      output: path.join(process.cwd(), './build/server/renderer.js'),
+      output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
     },
   };
 
@@ -115,7 +117,7 @@ module.exports = (
   );
 
   // Apply post overwriters from config plugins to final client webpack config.
-  const clientEnvConfigFinal: WebpackConfig = plugins
+  const clientEnvConfigOverwriten: WebpackConfig = plugins
     .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.clientWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
       return plugin.postOverwrites.clientWebpackConfig
@@ -125,7 +127,7 @@ module.exports = (
     }, clientEnvConfig);
 
   // Apply post overwriters from config plugins to final server webpack config.
-  const serverEnvConfigFinal: WebpackConfig = plugins
+  const serverEnvConfigOverwriten: WebpackConfig = plugins
     .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.serverWebpackConfig)
     .reduce((prev: Object, plugin: ConfigPlugin) => {
       return plugin.postOverwrites.serverWebpackConfig
@@ -133,6 +135,26 @@ module.exports = (
         ? plugin.postOverwrites.serverWebpackConfig(clone(prev))
         : prev;
     }, serverEnvConfig);
+
+  const pathToWebpackConfigHooks: string =
+    path.join(process.cwd(), gluestickConfig.webpackHooksPath);
+
+
+  let webpackConfigHooks: WebpackHooks = {};
+
+  try {
+    webpackConfigHooks = require(pathToWebpackConfigHooks).default;
+  } catch (e) {
+    logger.warn(e);
+  }
+
+  // Applies client hooks provided by user
+  const clientEnvConfigFinal: WebpackConfig =
+    hookHelper.call(webpackConfigHooks.webpackClientConfig, clientEnvConfigOverwriten);
+
+  // Applies server hooks provided by user
+  const serverEnvConfigFinal: WebpackConfig =
+    hookHelper.call(webpackConfigHooks.webpackServerConfig, serverEnvConfigOverwriten);
 
   return {
     universalSettings: universalWebpackSettings,

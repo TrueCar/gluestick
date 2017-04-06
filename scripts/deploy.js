@@ -37,6 +37,6 @@ exec(`git commit -m v${version}`);
 exec(`git push origin ${process.env.BRANCH}`);
 
 // Create docker image and push to Docker Hub
-// require('./docker/create-base-image')(spawnWithErrorHandling);
+require('./docker/create-base-image')(spawnWithErrorHandling);
 
 console.log('Done!');

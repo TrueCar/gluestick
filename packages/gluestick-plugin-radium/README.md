@@ -7,17 +7,14 @@ This plugin allows to specify set of tools to manage inline styles on React elem
 npm install --save gluestick-plugin-radium
 ```
 * Define (and configure) plugin in `src/gluestick.plugins.js`:
-```
+```javascript
 export default [
- {
-   plugin: 'gluestick-plugin-radium',
-   rootWrapper: true
- }
+  'gluestick-plugin-radium'
 ]
 ```
 
 ## Example usage
-```
+```javascript
 import React, { Component } from "react";
 
 export default class Home extends Component {

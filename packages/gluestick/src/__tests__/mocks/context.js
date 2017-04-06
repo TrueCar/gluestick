@@ -29,6 +29,7 @@ const gsConfig: GSConfig = {
     server: 0,
   },
   buildAssetsPath: '',
+  buildRendererPath: '',
   assetsPath: '',
   sourcePath: '',
   sharedPath: '',

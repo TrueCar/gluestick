@@ -4,7 +4,6 @@ import type { Context } from '../../types';
 const { spawn } = require('cross-spawn');
 const pm2 = require('pm2');
 const sha1 = require('sha1');
-const webpack = require('webpack');
 
 type PM2Config = {
   script: string,
@@ -99,35 +98,28 @@ const start = (
 };
 
 module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
-  webpack(config.webpackConfig.server).run(error => {
-    if (error) {
-      throw error;
+  const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
+  pm2.connect((err: string) => {
+    if (err) {
+      logger.error(err);
+      pm2.disconnect();
+      process.exit(1);
     }
-    logger.info('Building server entry.');
 
-    const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
-    pm2.connect((err: string) => {
-      if (err) {
-        logger.error(err);
-        pm2.disconnect();
-        process.exit(1);
-      }
+    checkIfPM2ProcessExists(instanceName, (exists: boolean): void => {
+      if (exists) {
+        logger.info(`PM2 process ${instanceName} already running, stopping the process`);
+        pm2.stop(instanceName, (stopError) => {
+          if (stopError) {
+            logger.error(stopError);
+            process.exit(1);
+          }
 
-      checkIfPM2ProcessExists(instanceName, (exists: boolean): void => {
-        if (exists) {
-          logger.info(`PM2 process ${instanceName} already running, stopping the process`);
-          pm2.stop(instanceName, (stopError) => {
-            if (stopError) {
-              logger.error(stopError);
-              process.exit(1);
-            }
-
-            start({ config, logger }, instanceName, entryPointPath, args);
-          });
-        } else {
           start({ config, logger }, instanceName, entryPointPath, args);
-        }
-      });
+        });
+      } else {
+        start({ config, logger }, instanceName, entryPointPath, args);
+      }
     });
   });
 };

@@ -45,7 +45,7 @@ module.exports = (
     logger.debug(`Found entry for path ${entryName}`);
   }
   if (!entryName) {
-    throw new Error('No matching entry definition found');
+    throw new Error(`No matching entry definition found for '${req.url}'`);
   }
 
   return {

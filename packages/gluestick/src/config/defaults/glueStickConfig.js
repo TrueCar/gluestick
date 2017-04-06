@@ -12,6 +12,7 @@ const config: GSConfig = {
     server: 8880,
   },
   buildAssetsPath: 'build/assets',
+  buildRendererPath: 'build/server',
   assetsPath: 'assets',
   sourcePath: 'src',
   appsPath: 'apps',
@@ -33,6 +34,7 @@ const config: GSConfig = {
   customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
   defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
   hooksPath: 'src/gluestick.hooks.js',
+  webpackHooksPath: 'src/webpack.hooks.js',
   cachingConfigPath: 'src/config/caching.server',
   nodeModulesPath: 'node_modules',
   autoUpgrade: {
@@ -48,6 +50,7 @@ const config: GSConfig = {
       'src/entries.json',
       'src/gluestick.plugins.js',
       'src/gluestick.hooks.js',
+      'src/webpack.hooks.js',
       'src/config/caching.server.js',
     ],
     changed: [

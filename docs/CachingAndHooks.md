@@ -41,7 +41,7 @@ export default {
 ## Hooks
 Gluestick also provide hooks which can be defined in `src/gluestick.hooks.js`.
 You can use single hook or array of hooks like in example below. Usually you have to return modified value at the end of hook.
-```javascript
+```js
 /* src/gluestick.hooks.js */
 
 const preRenderFromCache = (cachedOutput) => {
@@ -87,3 +87,20 @@ export default {
 | postGetCurrentRoute    |        true        | after we get current route               |
 | postRender             |        true        | after render                             |
 | error                  |        false       | before we render error template          |
+
+## Webpack Hooks
+GlueStick allows you to mutate it's default Webpack configs client and server.
+
+You can specify hooks in `src/webpack.hooks.js` - they work just like regular GlueStick hooks so you can pass function or array of them.
+
+```js
+const webpackClientConfig = (config) => {
+  // Mutate client config here
+  return config;
+}
+
+const webpackServerConfig = (config) => {
+  // Mutate server config here
+  return config;
+}
+```

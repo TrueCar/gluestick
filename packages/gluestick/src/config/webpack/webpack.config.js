@@ -60,7 +60,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           loader: 'babel-loader',
           options: {
             plugins: [
-              'transform-decorators-legacy',
               'transform-flow-strip-types',
             ],
             presets: [
@@ -134,11 +133,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
     ],
-
     node: {
-      // TODO: Move these mocks to generated app.
-      dns: 'empty',
-      fs: 'empty',
       net: 'empty',
     },
   };
