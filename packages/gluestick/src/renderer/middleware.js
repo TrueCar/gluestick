@@ -9,7 +9,7 @@ import type {
   RenderRequirements,
   RenderOutput,
   CacheManager,
-  Hooks,
+  GSHooks,
   ServerPlugin,
   RenderMethod,
   ComponentsCachingConfig,
@@ -54,7 +54,7 @@ module.exports = async (
     entryWrapperConfig: {},
     reduxMiddlewares: [],
   },
-  { hooks, hooksHelper }: { hooks: Hooks, hooksHelper: Function },
+  { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?ServerPlugin[],
   cachingConfig: ?ComponentsCachingConfig,
 ) => {
