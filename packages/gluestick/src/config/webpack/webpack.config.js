@@ -60,7 +60,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           loader: 'babel-loader',
           options: {
             plugins: [
-              'transform-decorators-legacy',
               'transform-flow-strip-types',
             ],
             presets: [

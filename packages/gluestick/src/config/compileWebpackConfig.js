@@ -136,17 +136,25 @@ module.exports = (
         : prev;
     }, serverEnvConfig);
 
-  const pathToWebpackConfigHooks: string = path.join(process.cwd(), 'src', 'webpack.hooks');
-  const { webpackClientConfig, webpackServerConfig }: Hooks =
-    require(pathToWebpackConfigHooks).default;
+  const pathToWebpackConfigHooks: string =
+    path.join(process.cwd(), gluestickConfig.webpackHooksPath);
+
+
+  let webpackConfigHooks: Hooks = {};
+
+  try {
+    webpackConfigHooks = require(pathToWebpackConfigHooks).default;
+  } catch (e) {
+    logger.warn(e);
+  }
 
   // Applies client hooks provided by user
   const clientEnvConfigFinal: WebpackConfig =
-    hookHelper.call(webpackClientConfig, clientEnvConfigOverwriten);
+    hookHelper.call(webpackConfigHooks.webpackClientConfig, clientEnvConfigOverwriten);
 
   // Applies server hooks provided by user
   const serverEnvConfigFinal: WebpackConfig =
-    hookHelper.call(webpackServerConfig, serverEnvConfigOverwriten);
+    hookHelper.call(webpackConfigHooks.webpackServerConfig, serverEnvConfigOverwriten);
 
   return {
     universalSettings: universalWebpackSettings,
