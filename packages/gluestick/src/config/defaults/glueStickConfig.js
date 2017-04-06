@@ -12,6 +12,7 @@ const config: GSConfig = {
     server: 8880,
   },
   buildAssetsPath: 'build/assets',
+  buildRendererPath: 'build/server',
   assetsPath: 'assets',
   sourcePath: 'src',
   appsPath: 'apps',

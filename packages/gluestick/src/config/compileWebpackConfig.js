@@ -45,7 +45,7 @@ module.exports = (
   const universalWebpackSettings: UniversalSettings = {
     server: {
       input: path.join(__dirname, '../renderer/entry.js'),
-      output: path.join(process.cwd(), './build/server/renderer.js'),
+      output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
     },
   };
 
