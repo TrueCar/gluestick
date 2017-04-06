@@ -10,7 +10,7 @@ import type {
   Logger,
   UniversalSettings,
   CompiledConfig,
-  Hooks,
+  WebpackHooks,
 } from '../types';
 
 const path = require('path');
@@ -140,7 +140,7 @@ module.exports = (
     path.join(process.cwd(), gluestickConfig.webpackHooksPath);
 
 
-  let webpackConfigHooks: Hooks = {};
+  let webpackConfigHooks: WebpackHooks = {};
 
   try {
     webpackConfigHooks = require(pathToWebpackConfigHooks).default;

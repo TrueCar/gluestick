@@ -7,7 +7,7 @@ import type {
   Logger,
   EntriesConfig,
   Entries,
-  Hooks,
+  GSHooks,
 } from '../../types';
 
 const mocks = require('../../__tests__/mocks/context');
@@ -66,7 +66,7 @@ const response: Response = {
   json: jest.fn(),
 };
 
-const hooks: Hooks = {
+const hooks: GSHooks = {
   preRenderFromCache: jest.fn(v => v),
   postRenderRequirements: jest.fn(v => v),
   preRedirect: jest.fn(v => v),
