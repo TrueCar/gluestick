@@ -22,12 +22,12 @@ spawnWithErrorHandling('npm', [
   'lerna',
   'publish',
   '--',
+  '--skip-git',
   '--repo-version',
   version,
   '--yes',
   '--force-publish=*',
-  '--skip-git',
-  process.argv.slice(3),
+  ...process.argv.slice(3),
 ], { stdio: 'inherit' });
 
 console.log('Pushing commit...');
