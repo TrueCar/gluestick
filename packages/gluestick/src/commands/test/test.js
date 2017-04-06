@@ -33,16 +33,14 @@ const mergeCustomConfig = (defaultConfig: Object): Object => {
   }, defaultConfig);
 };
 
-const getJestDefaultConfig = (aliases: Object, webpackRules: RegExp[]): string[] => {
+const getJestDefaultConfig = (aliases: Object): string[] => {
   const moduleNameMapper = {};
 
   // Handling Static Assets = mock them out
-  const fileRegex: RegExp = new RegExp(
-    `${webpackRules[3].source}|${webpackRules[4].source}|${webpackRules[5].source}`,
-  );
-  moduleNameMapper[fileRegex.source] = `${TEST_MOCKS_PATH}/fileMock.js`;
-  const stylesRegex: RegExp = new RegExp(`${webpackRules[1].source}|${webpackRules[2].source}`);
-  moduleNameMapper[stylesRegex.source] = `${TEST_MOCKS_PATH}/styleMock.js`;
+  moduleNameMapper[
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$'
+  ] = `${TEST_MOCKS_PATH}/fileMock.js`;
+  moduleNameMapper['\\.(css|scss|sass|less)$'] = `${TEST_MOCKS_PATH}/styleMock.js`;
 
   // We map webpack aliases from webpack-isomorphic-tools-config file
   // so Jest can detect them in tests too
@@ -76,7 +74,7 @@ const getJestDefaultConfig = (aliases: Object, webpackRules: RegExp[]): string[]
 };
 
 const getDebugDefaultConfig = (
-  logger: Logger, aliases: Object, webpackRules: RegExp[], options: string[],
+  logger: Logger, aliases: Object, options: string[],
 ): string[] => {
   const argv = [];
   argv.push('--inspect');
@@ -84,7 +82,7 @@ const getDebugDefaultConfig = (
   argv.push(JEST_PATH);
   argv.push('--env');
   argv.push(JEST_DEBUG_CONFIG_PATH);
-  argv.push(...getJestDefaultConfig(aliases, webpackRules));
+  argv.push(...getJestDefaultConfig(aliases));
   argv.push('-i');
   argv.push('--watch');
   // Exclude those options to avoid dublication.
@@ -116,20 +114,16 @@ module.exports = (context: Context, ...commandArguments: any[]) => {
   };
   // $FlowFixMe
   const aliases: Object = context.config.webpackConfig.client.resolve.alias;
-  // $FlowFixMe
-  const webpackRules: RegExp[] = context.config.webpackConfig.client.module.rules.map(
-    rule => rule.test,
-  );
   const options: Object = commandArguments[commandArguments.length - 1];
   const rawOptions: string[] = options.parent.rawArgs.slice(3);
   if (options.debugTest) {
     const argvDebug: string[] = getDebugDefaultConfig(
-      context.logger, aliases, webpackRules, rawOptions,
+      context.logger, aliases, rawOptions,
     );
     spawn.sync('node', argvDebug, spawnOptions);
   } else {
     const jest = require('jest');
-    const argv: string[] = getJestDefaultConfig(aliases, webpackRules).concat(rawOptions);
+    const argv: string[] = getJestDefaultConfig(aliases).concat(rawOptions);
     // Since we require Jest programmatically, we need to make sure
     // to set NODE_ENV='test' when running it
     process.env.NODE_ENV = 'test';
