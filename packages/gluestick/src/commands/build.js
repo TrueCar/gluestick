@@ -28,19 +28,19 @@ const buildFunc = ({ logger, config } : Context, options: Object, buildType: str
 module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
   const options: Object = commandArgs[commandArgs.length - 1];
   if (config.webpackConfig) {
-    if (options.client) {
+    if (options.client && !options.server) {
       clearBuildDirectory(config.GSConfig, 'client');
       buildFunc({ logger, config }, options, 'client');
     }
 
-    if (options.server) {
+    if (options.server && !options.client) {
       clearBuildDirectory(config.GSConfig, 'server');
       // Unmute server compilation
       webpackProgressHandler.toggleMute('server');
       buildFunc({ logger, config }, options, 'server');
     }
 
-    if (!options.client && !options.server) {
+    if ((!options.client && !options.server) || (options.client && options.server)) {
       clearBuildDirectory(config.GSConfig, 'client');
       clearBuildDirectory(config.GSConfig, 'server');
       buildFunc({ logger, config }, options, 'client');
