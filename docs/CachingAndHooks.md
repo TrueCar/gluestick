@@ -89,9 +89,9 @@ export default {
 | error                  |        false       | before we render error template          |
 
 ## Webpack Hooks
-Gluestick allows you to mutate default it's Webpack configs client and server.
+GlueStick allows you to mutate it's default Webpack configs client and server.
 
-You can specify hooks in `src/webpack.hooks.js` - they work just like regular Gluestick hooks so you can specify, so you can pass function or array of them.
+You can specify hooks in `src/webpack.hooks.js` - they work just like regular GlueStick hooks so you can pass function or array of them.
 
 ```js
 const webpackClientConfig = (config) => {
