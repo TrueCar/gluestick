@@ -106,10 +106,21 @@ commander
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
   .action((...commandArguments) => {
+    // Performance tweak:
+    // If `--client` flag is passed, skip server entry generation.
+    // If `--server` flag is passed, skip client entry generation.
+    const options = commandArguments[commandArguments.length - 1];
+    const skipEntries = {};
+    if (options.client && !options.server) {
+      skipEntries.skipServerEntryGeneration = true;
+    } else if (!options.client && options.server) {
+      skipEntries.skipClientEntryGeneration = true;
+    }
+
     execWithConfig(
       require('../commands/build'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      { useGSConfig: true, useWebpackConfig: true, ...skipEntries },
     );
   });
 
