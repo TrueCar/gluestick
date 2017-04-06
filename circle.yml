@@ -27,5 +27,5 @@ deployment:
     tag: /v\d+\.\d+\.\d+.*/
     owner: TrueCar
     commands:
-      # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
       - BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG

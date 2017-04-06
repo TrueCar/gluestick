@@ -40,8 +40,7 @@ const templatePackage = createTemplate`
     "react-router": "3.0.2",
     "redux": "3.6.0",
     "sass-loader": "6.0.3",
-    "style-loader": "0.16.1",
-    "svg-react-loader": "0.3.7"
+    "style-loader": "0.16.1"
   },
   "author": "",
   "license": "ISC",
