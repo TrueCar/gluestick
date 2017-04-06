@@ -27,7 +27,7 @@ spawnWithErrorHandling('npm', [
   version,
   '--yes',
   '--force-publish=*',
-  process.argv.slice(3),
+  ...process.argv.slice(3),
 ], { stdio: 'inherit' });
 
 console.log('Pushing commit...');
