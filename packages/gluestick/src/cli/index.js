@@ -103,11 +103,24 @@ commander
   .command('build')
   .description('create production asset build')
   .option('-S, --stats', 'create webpack stats file')
+  .option('--client', 'gluestick builds only client bundle')
+  .option('--server', 'gluestick builds only server bundle')
   .action((...commandArguments) => {
+    // Performance tweak:
+    // If `--client` flag is passed, skip server entry generation.
+    // If `--server` flag is passed, skip client entry generation.
+    const options = commandArguments[commandArguments.length - 1];
+    const skipEntries = {};
+    if (options.client && !options.server) {
+      skipEntries.skipServerEntryGeneration = true;
+    } else if (!options.client && options.server) {
+      skipEntries.skipClientEntryGeneration = true;
+    }
+
     execWithConfig(
       require('../commands/build'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true },
+      { useGSConfig: true, useWebpackConfig: true, ...skipEntries },
     );
   });
 
@@ -161,7 +174,14 @@ commander
     execWithConfig(
       require('../commands/start-server'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true, skipClientEntryGeneration: true });
+      {
+        useGSConfig: true,
+        useWebpackConfig: true,
+        skipClientEntryGeneration: true,
+        // Performance tweak: if NODE_ENV is production start-server will only run server bundle
+        // without creating bundle
+        skipServerEntryGeneration: process.env.NODE_ENV === 'production',
+      });
   });
 
 commander
