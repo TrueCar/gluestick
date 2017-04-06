@@ -104,12 +104,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         use: [
           'file-loader?name=[name]-[hash].[ext]',
         ],
-      },
-      {
-        test: /\.(svg)$/,
-        use: [
-          'svg-react-loader',
-        ],
       }],
     },
 

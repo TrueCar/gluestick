@@ -6,7 +6,7 @@ entire page responses on pages where it makes sense like a home or landing
 page.
 
 Example:
-```
+```javascript
 <Route path="/" component={HomeApp} cache={true} />
 ```
 
@@ -15,6 +15,28 @@ Example:
 
 *Additional optional cache properties:*
 `cacheTTL` - number of seconds to store the cache for a particular route
+
+Gluestick allows SSR component caching by using [`electrode-react-ssr-caching`](https://github.com/electrode-io/electrode-react-ssr-caching).
+For using it you need to determine `cacheConfig` in `src/config/caching.server.js`
+
+Example:
+```javascript
+export default {
+  components: {
+    "Component1": {
+        strategy: "simple",
+        enable: true
+    },
+    "Component2": {
+        strategy: "template",
+        enable: true
+    },
+  },
+};
+```
+
+[`Here`](https://github.com/electrode-io/electrode-react-ssr-caching) you can find more information about `cacheConfig`.
+
 
 ## Hooks
 Gluestick also provide hooks which can be defined in `src/gluestick.hooks.js`.
