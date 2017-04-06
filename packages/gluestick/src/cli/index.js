@@ -174,7 +174,14 @@ commander
     execWithConfig(
       require('../commands/start-server'),
       commandArguments,
-      { useGSConfig: true, useWebpackConfig: true, skipClientEntryGeneration: true });
+      {
+        useGSConfig: true,
+        useWebpackConfig: true,
+        skipClientEntryGeneration: true,
+        // Performance tweak: if NODE_ENV is production start-server will only run server bundle
+        // without creating bundle
+        skipServerEntryGeneration: process.env.NODE_ENV === 'production',
+      });
   });
 
 commander
