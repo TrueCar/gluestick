@@ -45,6 +45,9 @@ continue.
 ## Avaiable plugins
 - [`gluestick-env-expose-ast`](../packages/gluestick-env-expose-ast/README.md)
 - [`gluestick-config-legacy`](../packages/gluestick-config-legacy/README.md)
+- [`gluestick-plugin-aphrodite`](../packages/gluestick-plugin-aphrodite/README.md)
+- [`gluestick-plugin-radium`](../packages/gluestick-plugin-radium/README.md)
+- [`gluestick-plugin-bunyan`](../packages/gluestick-plugin-bunyan/README.md)
 
 # How to write a plugin
 First of all, there are 3 types of plugins:
@@ -109,7 +112,7 @@ must return valid webpack config for renderer (server) bundle
 
 ## Server plugin
 Server plugins similarly to config plugins, must export factory function, that
-accept options and gluestick utils. 
+accept options and gluestick utils.
 ```
 module.exports = (options, { logger }) => ({
   renderMethod: (root) => ({
@@ -146,7 +149,7 @@ You must provida exactly one flag in `meta` object:
 ```
 const meta = { rootWrapper: true };
 ```
-or 
+or
 ```
 const meta = { hook: true };
 ```
