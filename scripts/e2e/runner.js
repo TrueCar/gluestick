@@ -14,8 +14,6 @@ const PR_NUMBER = /pull\/(\d+)/.exec(process.env.CI_PULL_REQUEST)[1];
 
 const fetch = require('node-fetch');
 
-
-
 fetch(`http://api.github.com/repos/TrueCar/gluestick/pulls/${PR_NUMBER}`)
   .then(response => response.json())
   .then(body => {
