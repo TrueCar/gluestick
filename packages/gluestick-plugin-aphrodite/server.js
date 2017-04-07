@@ -9,7 +9,7 @@ const aphroditePlugin = () => ({
     });
     const head = [
       ...styleTags,
-      <style key="aphrodite-styles" data-aphrodite>{`${css.content}`}</style>
+      <style key="aphrodite-styles" data-aphrodite>{`${css.content}`}</style>,
     ];
     const rehydrate = `window.renderedClassNames = ${JSON.stringify(css.renderedClassNames)};`;
     const additionalScript = [
