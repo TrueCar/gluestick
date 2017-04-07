@@ -41,7 +41,7 @@ Starts a gluestick project
 gluestick start
 ```
 
-Depending on `NODE_ENV` value and presence of `-P`/`--skip-build` flag `start` command applies different behaviours:
+Depending on `NODE_ENV` value and presence of `-P`/`--skip-build` flag, `start` command applies different behaviours:
 
 |           `NODE_ENV`          | `-P`/`--skip-build` passed |          client build          | server build |
 |:-----------------------------:|:--------------------------:|:------------------------------:|:------------:|

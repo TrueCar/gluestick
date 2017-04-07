@@ -105,4 +105,4 @@ const webpackServerConfig = (config) => {
 }
 ```
 
-__IMPORTANT:__ run `gluestick auto-upgrade` command to ensure `src/webpack.hooks.js` file exists, otherwise some commands might fail.
+__IMPORTANT:__ If you're upgrading to newer GluesStick version, run `gluestick auto-upgrade` command to ensure `src/webpack.hooks.js` file exists, otherwise some commands might fail.
