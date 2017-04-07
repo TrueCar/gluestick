@@ -21,17 +21,17 @@ module.exports = () => {
   })
   .then(() => {
     return spawn('gluestick', [
+      'generate', 'app', 'third-app',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
       'generate', 'component', 'MyComponent',
     ], {}, CWD);
   })
   .then(() => {
     return spawn('gluestick', [
-      'generate', 'container', 'MyContainer', '-E', 'shared',
-    ], {}, CWD);
-  })
-  .then(() => {
-    return spawn('gluestick', [
-      'generate', 'reducer', 'myReducer',
+      'generate', 'component', 'MyComponent', '-E', 'shared',
     ], {}, CWD);
   })
   .then(() => {
@@ -41,12 +41,37 @@ module.exports = () => {
   })
   .then(() => {
     return spawn('gluestick', [
+      'generate', 'container', 'MyContainer',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'generate', 'container', 'MyContainer', '-E', 'shared',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
       'generate', 'container', 'MyContainer', '-E', 'apps/secondApp',
     ], {}, CWD);
   })
   .then(() => {
     return spawn('gluestick', [
+      'generate', 'reducer', 'myReducer',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'generate', 'reducer', 'myReducer', '-E', 'shared',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
       'generate', 'reducer', 'myReducer', '-E', 'apps/secondApp',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'generate', 'generator', 'myGenerator',
     ], {}, CWD);
   })
   .then(() => {
@@ -66,7 +91,37 @@ module.exports = () => {
   })
   .then(() => {
     return spawn('gluestick', [
+      'build',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'build',
+    ], { NODE_ENV: 'production' }, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
       'destroy', 'component', 'MyComponent',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'component', 'MyComponent', '-E', 'shared',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'component', 'MyComponent', '-E', 'apps/secondApp',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'container', 'MyContainer',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'container', 'MyContainer', '-E', 'shared',
     ], {}, CWD);
   })
   .then(() => {
@@ -80,6 +135,16 @@ module.exports = () => {
     ], {}, CWD);
   })
   .then(() => {
+    return spawn('npm', [
+      'run', 'lint',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('npm', [
+      'run', 'flow',
+    ], {}, CWD);
+  })
+  .then(() => {
     return spawn('gluestick', [
       'build',
     ], {}, CWD);
@@ -88,6 +153,26 @@ module.exports = () => {
     return spawn('gluestick', [
       'build',
     ], { NODE_ENV: 'production' }, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'reducer', 'myReducer',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'reducer', 'myReducer', '-E', 'shared',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'destroy', 'reducer', 'myReducer', '-E', 'apps/secondApp',
+    ], {}, CWD);
+  })
+  .then(() => {
+    return spawn('gluestick', [
+      'bin', 'gluestick', '-V',
+    ], {}, CWD);
   })
   .then(() => {
     process.exit(0);
