@@ -5,8 +5,13 @@ if (!process.env.CI_PULL_REQUEST) {
   process.exit(0);
 }
 
-if (!process.env.CIRCLE_BRANCH || !process.env.CIRCLE_BRANCH.includes('next')) {
-  console.log('RUNNER: E2E test can only be run in PR from `next` branch. Exiting');
+if (!process.env.CIRCLE_BRANCH
+  || (
+    !process.env.CIRCLE_BRANCH.includes('next')
+    && !process.env.CIRCLE_BRANCH.startsWith('hotfix')
+  )
+) {
+  console.log('RUNNER: E2E test can only be run in PR from `next` branch or `hotfix` folder. Exiting');
   process.exit(0);
 }
 
