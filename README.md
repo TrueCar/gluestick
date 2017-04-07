@@ -10,7 +10,7 @@ applications using React and Redux.
 2. **Isomorphic rendering.** Server-side and client-side rendering are identical. No more worries about SEO, pesky “loading” spinners, or users with javascript disabled
 3. **Integrated dockerization.** Go from development to production as simple as `gluestick dockerize MyApp`
 4. **Automatic babel and webpack loader support.** Cause writing ES5 is so boring
-5. **Automatic test framework setup.** Preloaded with `Mocha`, `Chai`, `Sinon`, `Enzyme`, and `React.TestUtils` right out of the box
+5. **Automatic test framework setup.** Preloaded with `Jest`, `Enzyme`, and `React.TestUtils` right out of the box
 6. **Built in common practices.** Things like code splitting, hot module replacement, react-router, etc
 7. **Rails like generators** for common needs like components/reducers/containers/etc, with all necessary hooks and tests
 

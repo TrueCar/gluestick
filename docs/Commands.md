@@ -5,6 +5,8 @@ GlueStick comes with several commands to help you get started. You can full list
 
 Takes care of generating new project
 
+If you use `new` command from `gluestick-cli` it will use latest `gluestick` version available on npm
+
 ```bash
 gluestick new <YOUR_APPLICATION_NAME>
 ```
@@ -33,9 +35,20 @@ Available options:
 
 Starts a gluestick project
 
+> If you want to start your project in production mode, run this command with `NODE_ENV=production`.
+
 ```bash
 gluestick start
 ```
+
+Depending on `NODE_ENV` value and presence of `-P`/`--skip-build` flag `start` command applies different behaviours:
+
+|           `NODE_ENV`          | `-P`/`--skip-build` passed |          client build          | server build |
+|:-----------------------------:|:--------------------------:|:------------------------------:|:------------:|
+| `development` / not specified |             no             | no (`start-client` is spawned) |      yes     |
+| `development` / not specified |             yes            | no (`start-client` is spawned) |      yes     |
+|          `production`         |             no             |               yes              |      yes     |
+|          `production`         |             yes            |               no               |      no      |
 
 Available options:
 
@@ -71,11 +84,17 @@ Available options:
 
 ### `gluestick build`
 
-Create an production asset build
+Create client and (__default__) / or server bundle
+
+> If you want to build in production mode, run this command with `NODE_ENV=production`.
 
 ```bash
 gluestick build
 ```
+
+Available options:
+* `--client` - Build only client bundle
+* `--server` - Build only server bundle
 
 ### `gluestick bin`
 
@@ -145,6 +164,16 @@ You can check which commands are being called by `gluestick` and `gluestick-cli`
 
 * [gluestick-cli](../packages/gluestick-cli/README.md)
 * [gluestick](../packages/gluestick/README.md)
+
+## Environment variables
+To pass enviroment variables when running command simply, add them at the beginning:
+```
+ENV_VAR_NAME=env_var_value gluestick <command>
+```
+for example to set `NODE_ENV` to production use:
+```
+NODE_ENV=production gluestick <command>
+```
 
 ## Generators
 

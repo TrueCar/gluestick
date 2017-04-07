@@ -5,7 +5,7 @@ Gluestick CLI is an command line interface for `gluestick` package. It exposes f
 
 ### `gluestick new`
 
-Takes care of generating new project
+Create new GlueStick project with latest `gluestick` version available on npm
 
 ```bash
 gluestick new <YOUR_APPLICATION_NAME>
@@ -15,6 +15,8 @@ Available options:
 
 * `-d, --dev <path>` - Relative path to development gluestick repo
 * `-n, --npm` - Use npm instead of yarn for install dependencies
+* `-s, --skip-main` - Skip `main` app generation
+
 
 ### `gluestick reinstall-dev`
 
