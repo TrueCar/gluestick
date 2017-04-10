@@ -31,6 +31,22 @@ Available options:
 * `-F, --functional` - Generate stateless functional component
 * `-O, --gen-options <value>` - Options to pass to the generator (see [generators](Generators.md))
 
+### `gluestick destroy`
+
+Removes entity created by `generate` command
+
+> `destory` command only removes files, meaning if entity generator modifies already existing file,
+you need to manually update that file, so this command works best with `component` and `container`,
+but for `reducer` generator it will only remove reducer and test for it, so any reference to that reducer in `reducers/index.js` must be removed manually
+
+```bash
+gluestick destory <ENTITY_TYPE> <ENTITY_NAME>
+```
+
+Available options:
+
+* `-E --entry-point <entryPoint>` - Entry point (app) from which entity should be removed
+
 ### `gluestick start`
 
 Starts a gluestick project
