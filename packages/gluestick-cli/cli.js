@@ -52,11 +52,20 @@ commander
 commander
   .command('*', null, { noHelp: true })
   .action(() => {
-    spawn(
+    const childProcess = spawn(
       './node_modules/.bin/gluestick',
       commander.rawArgs.slice(2),
       { stdio: 'inherit' },
     );
+    childProcess.on('error', (error) => {
+      console.error(chalk.red(error));
+      process.exit(1);
+    });
+    childProcess.on('exit', (code) => {
+      if (code !== 0) {
+        process.exit(code);
+      }
+    });
   });
 
 commander.parse(process.argv);
