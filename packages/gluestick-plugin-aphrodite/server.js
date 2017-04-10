@@ -3,11 +3,14 @@ import { renderToString } from 'react-dom/server';
 import React from 'react';
 
 const aphroditePlugin = () => ({
-  renderMethod: (root) => {
+  renderMethod: (root, styleTags) => {
     const { css, html } = StyleSheetServer.renderStatic(() => {
       return renderToString(root);
     });
-    const head = [<style key="aphrodite-styles" data-aphrodite>{`${css.content}`}</style>];
+    const head = [
+      ...styleTags,
+      <style key="aphrodite-styles" data-aphrodite>{`${css.content}`}</style>,
+    ];
     const rehydrate = `window.renderedClassNames = ${JSON.stringify(css.renderedClassNames)};`;
     const additionalScript = [
       // eslint-disable-next-line react/no-danger
