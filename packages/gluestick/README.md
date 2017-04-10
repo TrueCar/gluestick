@@ -5,6 +5,7 @@ Gluestick package is a dependency which is being added to your project to handle
 
 - `gluestick new <YOUR_APPLICATION_NAME>` - generate new project
 - `gluestick generate <ENTITY_TYPE> <ENTITY_NAME>` - generates a new entity from given template
+- `gluestick destroy <ENTITY_TYPE> <ENTITY_NAME>` - remove entity created by `generate` command
 - `gluestick start` - starts a gluestick project
 - `gluestick build` - create an production asset build
 - `gluestick bin <DEPENDENCY_NAME> -- <DEPENDENCY_ARGS>` - Execute binary dependenciy
