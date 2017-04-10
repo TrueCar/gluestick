@@ -1,10 +1,12 @@
 const { spawn } = require('child_process');
 
-module.exports = (command, args, customEnv = {}, customCwd = process.cwd()) => {
+module.exports = (command, customCwd = process.cwd(), customEnv = {}, stdio = 'inherit') => {
+  const bin = command.split(' ')[0];
+  const args = command.split(' ').slice(1);
   return new Promise((resolve, reject) => {
     console.log();
     console.log(`/${'*'.repeat(80)}/`);
-    console.log(` * Running ${command} command:`);
+    console.log(` * Running ${bin} command:`);
     console.log(` *   ${args.join(' ')}`);
     if (Object.keys(customEnv).length) {
       console.log(' * with custom env:');
@@ -14,15 +16,26 @@ module.exports = (command, args, customEnv = {}, customCwd = process.cwd()) => {
     console.log(` *   ${customCwd}`);
     console.log(`/${'*'.repeat(80)}/`);
 
-    const childProcess = spawn(command, [...args], {
-      stdio: 'inherit',
+    const childProcess = spawn(bin, [...args], {
+      stdio,
       cwd: customCwd,
       env: Object.assign({}, process.env, customEnv),
     });
 
+    let stdout = '';
+    let stderr = '';
+    if (stdio === 'pipe') {
+      childProcess.stdout.on('data', data => {
+        stdout += data.toString();
+      });
+      childProcess.stderr.on('data', data => {
+        stderr += data.toString();
+      });
+    }
+
     childProcess.on('exit', (code) => {
       if (code === 0) {
-        resolve();
+        resolve({ stdout, stderr });
       } else {
         reject(new Error(`${args.join(' ')} errored with code: ${code}`));
       }
