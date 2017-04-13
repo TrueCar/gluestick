@@ -8,21 +8,32 @@ const { convertToCamelCase, convertToKebabCase } = require('./utils');
 // $FlowFixMe
 module.createTemplate = createTemplate;
 
-const PATH_TO_GLUESTICK_TEMPLATES: string = '../../gluestick/generator/predefined';
-const PATH_TO_GLUESTICK_CLI_TEMPLATES: string = '../../../templates';
+const PATH_TO_GLUESTICK_TEMPLATES: string = '../../generator/predefined';
+const PATH_TO_GLUESTICK_CLI_TEMPLATES: string = '../templates';
 const EXTERNAL: string = 'generators';
 const INTERNAL: string = '../templates';
 
-const getPossiblePaths = (generatorName: string): string[] => [
-  path.join(process.cwd(), `${EXTERNAL}/${convertToCamelCase(generatorName)}.js`),
-  path.join(process.cwd(), `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
-  path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
-  path.join(__dirname, PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
-  path.join(__dirname, PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
-  path.join(__dirname, PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
-  path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
-  path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
-];
+const safeResolve = (moduleToResolve: string, ...args: string[]): string => {
+  try {
+    return path.join(require.resolve(moduleToResolve), ...args);
+  } catch (e) {
+    return '';
+  }
+};
+
+const getPossiblePaths = (generatorName: string): string[] => {
+  const paths: string[] = [
+    path.join(process.cwd(), `${EXTERNAL}/${convertToCamelCase(generatorName)}.js`),
+    path.join(process.cwd(), `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
+    safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
+    safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
+    safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
+    safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
+    path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
+    path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
+  ];
+  return paths.filter((element: string): boolean => element.length > 0);
+};
 
 /**
  * Requires generator from predefined generators or from GlueStick project.
