@@ -9,6 +9,8 @@ const cssCustomProperties = require('postcss-custom-properties');
 const postcssCalc = require('postcss-calc');
 const getAliasesForApps = require('./getAliasesForApps');
 
+const isProduction: boolean = process.env.NODE_ENV === 'production';
+
 module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
   const appRoot: string = process.cwd();
   const {
@@ -75,16 +77,16 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         test: /\.(scss)$/,
         use: [
           'style-loader',
-          'css-loader?importLoaders=2&sourceMap',
+          `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
           'postcss-loader',
-          'sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true',
+          `sass-loader${isProduction ? '' : 'outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
         ],
       },
       {
         test: /\.(css)$/,
         use: [
           'style-loader',
-          'css-loader?importLoaders=2&sourceMap',
+          `css-loader?importLoaders=1${isProduction ? '' : '&sourceMap'}`,
           'postcss-loader',
         ],
       },
