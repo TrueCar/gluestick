@@ -7,6 +7,7 @@ const glob = require('glob');
 const chalk = require('chalk');
 const generate = require('gluestick-generators').default;
 const fetch = require('node-fetch');
+const rimraf = require('rimraf');
 
 module.exports = (appName, options, exitWithError) => {
   fetch('http://registry.npmjs.org/gluestick')
@@ -88,6 +89,16 @@ module.exports = (appName, options, exitWithError) => {
         {
           cwd: process.cwd(),
           stdio: 'inherit',
+        },
+      );
+    })
+    .catch((error) => {
+      rimraf(
+        // Make sure CWD includes appName, we don't want to remove other files
+        process.cwd().includes(appName) ? process.cwd() : path.join(process.cwd(), appName),
+        () => {
+          console.error(error);
+          process.exit(1);
         },
       );
     });
