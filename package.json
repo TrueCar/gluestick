@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "flow": "flow",
     "ci": "npm run lint && npm run flow && npm run test-coverage",
-    "publish": "./scripts/deploy.js"
+    "publish": "./scripts/deploy.js",
+    "e2e": "CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH ./scripts/e2e/runner.js"
   },
   "dependencies": {
     "lerna": "2.0.0-beta.37"
@@ -24,6 +25,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
-    "flow-bin": "^0.38.0"
+    "flow-bin": "^0.38.0",
+    "node-fetch": "1.6.3"
   }
 }
