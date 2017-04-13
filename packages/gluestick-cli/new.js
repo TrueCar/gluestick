@@ -46,6 +46,7 @@ module.exports = (appName, options, exitWithError) => {
           `Directory ${pathToApp} already exists`,
         );
       }
+
       mkdir.sync(path.join(process.cwd(), appName));
 
       const generatorOptions = {
@@ -54,52 +55,50 @@ module.exports = (appName, options, exitWithError) => {
       };
 
       process.chdir(appName);
-
-      generate(
-        {
-          generatorName: 'package',
-          entityName: 'package',
-          options: generatorOptions,
-        },
-      );
-
-      const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
-      if (!options.npm && !isYarnAvailable) {
-        console.log(
-          chalk.yellow.bgBlack('You are installing dependencies using npm, consider using yarn.'),
+      try {
+        generate(
+          {
+            generatorName: 'package',
+            entityName: 'package',
+            options: generatorOptions,
+          },
         );
+
+        const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
+        if (!options.npm && !isYarnAvailable) {
+          console.log(
+            chalk.yellow.bgBlack('You are installing dependencies using npm, consider using yarn.'),
+          );
+        }
+
+        spawn.sync(
+          !options.npm && isYarnAvailable ? 'yarn' : 'npm',
+          ['install'],
+          {
+            cwd: process.cwd(),
+            stdio: 'inherit',
+          },
+        );
+        // Remove --npm or -n options cause this is no longer needed in
+        // gluestick new command.
+        const args = commander.rawArgs.slice(2)
+          .filter((v) => v !== '--npm' && v !== '-n');
+
+        spawn.sync(
+          './node_modules/.bin/gluestick',
+          args,
+          {
+            cwd: process.cwd(),
+            stdio: 'inherit',
+          },
+        );
+      } catch (error) {
+        rimraf.sync(
+          // Make sure CWD includes appName, we don't want to remove other files
+          process.cwd().includes(appName) ? process.cwd() : path.join(process.cwd(), appName),
+        );
+        console.error(error);
+        process.exit(1);
       }
-
-      spawn.sync(
-        !options.npm && isYarnAvailable ? 'yarn' : 'npm',
-        ['install'],
-        {
-          cwd: process.cwd(),
-          stdio: 'inherit',
-        },
-      );
-      // Remove --npm or -n options cause this is no longer needed in
-      // gluestick new command.
-      const args = commander.rawArgs.slice(2)
-        .filter((v) => v !== '--npm' && v !== '-n');
-
-      spawn.sync(
-        './node_modules/.bin/gluestick',
-        args,
-        {
-          cwd: process.cwd(),
-          stdio: 'inherit',
-        },
-      );
-    })
-    .catch((error) => {
-      rimraf(
-        // Make sure CWD includes appName, we don't want to remove other files
-        process.cwd().includes(appName) ? process.cwd() : path.join(process.cwd(), appName),
-        () => {
-          console.error(error);
-          process.exit(1);
-        },
-      );
     });
 };
