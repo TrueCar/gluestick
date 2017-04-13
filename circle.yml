@@ -22,6 +22,7 @@ test:
     - npm run lint
     - npm run flow
     - npm run test-coverage
+    - npm run e2e
 deployment:
   release:
     tag: /v\d+\.\d+\.\d+.*/
