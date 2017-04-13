@@ -24,7 +24,7 @@ test:
     - npm run lint
     - npm run flow
     - npm run test-coverage
-    - npm run e2e
+    - CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH npm run e2e
 deployment:
   release:
     tag: /v\d+\.\d+\.\d+.*/
