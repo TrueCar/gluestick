@@ -79,7 +79,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           'style-loader',
           `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
           'postcss-loader',
-          `sass-loader${isProduction ? '' : 'outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
+          `sass-loader${isProduction ? '' : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
         ],
       },
       {
