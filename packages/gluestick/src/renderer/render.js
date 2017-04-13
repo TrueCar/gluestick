@@ -97,12 +97,14 @@ module.exports = (
     />
   );
 
+  const docType: string = currentRoute.docType || '<!doctype html>';
+
   let responseString: string;
   if (isEmail) {
-    const generateCustomTemplate = ({ bodyContent }) => { return `${bodyContent}`; };
+    const generateCustomTemplate = ({ bodyContent }) => { return `${docType}${bodyContent}`; };
     responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
   } else {
-    responseString = renderToStaticMarkup(rootElement);
+    responseString = `${docType}${renderToStaticMarkup(rootElement)}`;
   }
   if (currentRoute.cache) {
     cacheManager.setCacheIfProd(req, responseString, currentRoute.cacheTTL);
