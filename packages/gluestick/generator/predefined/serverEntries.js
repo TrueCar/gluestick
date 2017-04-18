@@ -9,7 +9,8 @@ const template = createTemplate`
 ${args => args.entries.reduce((prev, curr) => {
   const entryImports = `import ${curr.name}Entry from "${curr.component}";\n`
     + `import ${curr.name}Routes from "${curr.routes}";\n`
-    + `import ${curr.name}Reducers from "${curr.reducers}";\n`;
+    + `import ${curr.name}Reducers from "${curr.reducers}";\n`
+    + `${curr.config ? `import ${curr.name}Config from "${curr.config}";\n` : ''}`;
   return prev.concat(entryImports);
 }, '')}
 
@@ -38,6 +39,7 @@ ${args => args.entries.reduce((prev, curr) => {
     + `    component: ${curr.name}Entry,\n`
     + `    routes: ${curr.name}Routes,\n`
     + `    reducers: ${curr.name}Reducers,\n`
+    + `${curr.config ? `    config: ${curr.name}Config,\n` : ''}`
     + '  },\n';
   return prev.concat(entryDefinition);
 }, '')}

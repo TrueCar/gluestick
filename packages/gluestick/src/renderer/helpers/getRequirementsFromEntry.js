@@ -52,6 +52,7 @@ module.exports = (
     Component: entries[entryName].component,
     reducers: entries[entryName].reducers,
     routes: entries[entryName].routes,
+    config: entries[entryName].config || null,
     name: entries[entryName].name || entryName,
     key: entryName,
   };

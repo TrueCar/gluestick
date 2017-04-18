@@ -42,20 +42,23 @@ describe('renderer/helpers/getRequirementsFromEntry', () => {
       Component: 'component',
       reducers: 'reducers',
       routes: 'routes',
+      config: null,
       name: '/home/abc',
       key: '/home/abc',
     });
   });
 
-  it('should return entry with custom name', () => {
+  it('should return entry with custom name and config', () => {
     const entriesWithCustomName = clone(entries);
     entriesWithCustomName['/home/abc'].name = 'custom';
+    entriesWithCustomName['/home/abc'].config = { test: true };
     expect(getRequirementsFromEntry(
       context, { url: '/home/abc' }, entriesWithCustomName,
     )).toEqual({
       Component: 'component',
       reducers: 'reducers',
       routes: 'routes',
+      config: { test: true },
       name: 'custom',
       key: '/home/abc',
     });
