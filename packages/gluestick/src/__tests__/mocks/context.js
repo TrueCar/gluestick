@@ -28,6 +28,7 @@ const gsConfig: GSConfig = {
     client: 0,
     server: 0,
   },
+  buildStaticPath: '',
   buildAssetsPath: '',
   buildRendererPath: '',
   assetsPath: '',
