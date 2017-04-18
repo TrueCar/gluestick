@@ -21,6 +21,11 @@ module.exports = {
           path.join(process.cwd(), gluestickConfig.buildAssetsPath, '*'),
         );
         break;
+      case 'static':
+        rimraf.sync(
+          path.join(process.cwd(), gluestickConfig.buildStaticPath, '*'),
+        );
+        break;
       default:
         throw new Error(`Invalid build type ${buildType}`);
     }
