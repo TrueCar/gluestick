@@ -1,9 +1,9 @@
 # 1.x Migration Guide
 
 This migration guide is splited into 3 parts:
-- Project overview
-- Apps and shared code
-- Configuration
+- [Project overview](#project-overview)
+- [Apps and shared code](#apps-and-shared-code)
+- [Configuration](#configuration)
 
 ## Project overview
 
