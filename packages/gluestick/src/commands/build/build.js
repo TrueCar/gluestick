@@ -7,6 +7,11 @@ const webpackProgressHandler = require('../../config/webpack/progressHandler');
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 
+const printAndExit = (error: Error) => {
+  console.error(error);
+  process.exit(1);
+};
+
 const buildFunc = (
   { logger, config } : Context, options: Object, buildType: string,
 ): Promise<void> => {
@@ -38,7 +43,7 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
   if (config.webpackConfig) {
     if (options.client && !options.server) {
       clearBuildDirectory(config.GSConfig, 'client');
-      buildFunc({ logger, config }, options, 'client').catch(error => { throw new Error(error); });
+      buildFunc({ logger, config }, options, 'client').catch(error => { printAndExit(error); });
     }
 
     if (options.server && !options.client) {
@@ -49,18 +54,18 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
         .then(() => {
           return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
         })
-        .catch(error => { throw new Error(error); });
+        .catch(error => { printAndExit(error); });
     }
 
     if ((!options.client && !options.server) || (options.client && options.server)) {
       clearBuildDirectory(config.GSConfig, 'client');
       clearBuildDirectory(config.GSConfig, 'server');
-      buildFunc({ logger, config }, options, 'client').catch(error => { throw new Error(error); });
+      buildFunc({ logger, config }, options, 'client').catch(error => { printAndExit(error); });
       buildFunc({ logger, config }, options, 'server')
         .then(() => {
           return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
         })
-        .catch(error => { throw new Error(error); });
+        .catch(error => { printAndExit(error); });
     }
   } else {
     logger.error('Webpack config not specified');
