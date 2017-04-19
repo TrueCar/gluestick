@@ -7,7 +7,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const cliColorScheme = require('../cli/colorScheme');
-const { isValidEntryPoint } = require('../utils');
+const { isValidEntryPoint, convertToCamelCase } = require('../utils');
 
 const { highlight, filename } = cliColorScheme;
 
@@ -95,13 +95,21 @@ module.exports = async (context: Context, command: Command, name: string, option
   // If we destroyed a reducer, remove it from the reducers index
   if (command === 'reducer') {
     const reducerIndexPath = path.join(CWD, 'src', entryPoint, 'reducers', 'index.js');
+    // console.log(dirname, basename);
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
-      const reducerLine = `export { default as ${generatedFileName} } from "./${generatedFileName}"`;
-      const newIndexLines = indexLines.filter(indexLine =>
-        // Only return lines from the reducer index that do not return the reducer
-        // we just destroyed. Check for semi colon and non-semi colon lines
-         indexLine !== reducerLine && indexLine !== `${reducerLine};`);
+      const reducerName = dirname === '.' ? basename : `${
+        convertToCamelCase(dirname.replace('/', ''))
+      }${
+        basename[0].toUpperCase()}${basename.slice(1)
+      }`;
+      const searchPatterns = [
+        new RegExp(`^import\\s+${reducerName}\\s+from.*;`),
+        new RegExp(`^  ${reducerName},`),
+      ];
+      const newIndexLines = indexLines.filter((line: string): boolean => {
+        return !(searchPatterns.filter((pattern: RegExp): boolean => pattern.test(line)).length > 0);
+      });
       fs.writeFileSync(reducerIndexPath, newIndexLines.join('\n'));
       logger.success(`${highlight(generatedFileName)} removed from reducer index ${filename(reducerIndexPath)}`);
     } catch (e) {
