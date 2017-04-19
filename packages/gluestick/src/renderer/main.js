@@ -30,7 +30,6 @@ const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
-// $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
 const thunkMiddleware = require('redux-middlewares').thunkMiddleware;

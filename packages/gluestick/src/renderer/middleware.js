@@ -33,6 +33,7 @@ type Options = {
   httpClient: Object;
   entryWrapperConfig: Object;
   reduxMiddlewares: any[];
+  thunkMiddleware: ?Function;
 };
 
 type EntriesArgs = {
@@ -50,10 +51,10 @@ module.exports = async (
   assets: Object,
   options: Options = {
     envVariables: [],
-    thunkMiddleware: Function,
     httpClient: {},
     entryWrapperConfig: {},
     reduxMiddlewares: [],
+    thunkMiddleware: null,
   },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?ServerPlugin[],
