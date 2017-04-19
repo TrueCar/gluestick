@@ -50,6 +50,7 @@ module.exports = async (
   assets: Object,
   options: Options = {
     envVariables: [],
+    thunkMiddleware: Function,
     httpClient: {},
     entryWrapperConfig: {},
     reduxMiddlewares: [],
@@ -87,6 +88,7 @@ module.exports = async (
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
+      options.thunkMiddleware,
     );
 
     const {

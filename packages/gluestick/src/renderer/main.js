@@ -33,6 +33,8 @@ const BodyWrapper = require('./components/Body').default;
 // $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
+const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
+// $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 // $FlowIgnore
 const cachingConfig = require('caching-config').default;
@@ -102,6 +104,7 @@ module.exports = ({ config, logger }: Context) => {
           assets,
           {
             reduxMiddlewares,
+            thunkMiddleware,
             envVariables: [],
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
