@@ -111,8 +111,8 @@ gluestick build
 Available options:
 * `--client` - Build only client bundle
 * `--server` - Build only server bundle
-* `--static` - Prepare static HTML for each entry
-* `--stats` - Output webpack stats
+* `-Z, --static` - Prepare static HTML for each entry
+* `-S, --stats` - Output webpack stats
 
 ### `gluestick bin`
 
