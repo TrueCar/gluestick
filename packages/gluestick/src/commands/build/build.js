@@ -1,73 +1,45 @@
 /* @flow */
-import type { Context, WebpackConfig, Compiler } from '../../types.js';
+import type { Context } from '../../types.js';
 
-const webpack = require('webpack');
-const createWebpackStats = require('../../config/createWebpackStats');
 const webpackProgressHandler = require('../../config/webpack/progressHandler');
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
+const compile = require('./compile');
 
 const printAndExit = (error: Error) => {
   console.error(error);
   process.exit(1);
 };
 
-const buildFunc = (
-  { logger, config } : Context, options: Object, buildType: string,
-): Promise<void> => {
-  const configuration: WebpackConfig = config.webpackConfig[buildType];
-  const compiler: Compiler = webpack(configuration);
-  return new Promise((resolve, reject) => {
-    compiler.run((error: string, stats: Object) => {
-      if (error) {
-        reject(error);
-      }
-
-      logger.success(
-        `${buildType[0].toUpperCase()}${buildType.slice(1)} bundle has been prepared `
-        + `for ${process.env.NODE_ENV || 'development'}`,
-      );
-
-      if (options.stats) {
-        logger.info('Creating webpack stats');
-        createWebpackStats(`${config.GSConfig.webpackStats}-${buildType}`, stats);
-      }
-
-      resolve();
-    });
-  });
-};
-
 module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
   const options: Object = commandArgs[commandArgs.length - 1];
-  if (config.webpackConfig) {
-    if (options.client && !options.server) {
-      clearBuildDirectory(config.GSConfig, 'client');
-      buildFunc({ logger, config }, options, 'client').catch(error => { printAndExit(error); });
-    }
+  // If neither server not client flag is passed
+  // set them both to true to compile both client and server.
+  if (!options.client && !options.server) {
+    options.client = true;
+    options.server = true;
+  }
 
-    if (options.server && !options.client) {
-      clearBuildDirectory(config.GSConfig, 'server');
-      // Unmute server compilation
-      webpackProgressHandler.toggleMute('server');
-      buildFunc({ logger, config }, options, 'server')
-        .then(() => {
-          return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
-        })
-        .catch(error => { printAndExit(error); });
-    }
+  if (options.static && !options.server) {
+    logger.warn('--static options should be used with server build');
+  }
 
-    if ((!options.client && !options.server) || (options.client && options.server)) {
-      clearBuildDirectory(config.GSConfig, 'client');
-      clearBuildDirectory(config.GSConfig, 'server');
-      buildFunc({ logger, config }, options, 'client').catch(error => { printAndExit(error); });
-      buildFunc({ logger, config }, options, 'server')
-        .then(() => {
-          return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
-        })
-        .catch(error => { printAndExit(error); });
-    }
-  } else {
-    logger.error('Webpack config not specified');
+  if (options.client) {
+    clearBuildDirectory(config.GSConfig, 'client');
+    compile({ logger, config }, options, 'client').catch(printAndExit);
+  }
+
+  // If only server flag is passed, unmute server compilation - by default it's muted.
+  if (options.server && !options.client) {
+    webpackProgressHandler.toggleMute('server');
+  }
+
+  if (options.server) {
+    clearBuildDirectory(config.GSConfig, 'server');
+    compile({ logger, config }, options, 'server')
+      .then(() => {
+        return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
+      })
+      .catch(printAndExit);
   }
 };
