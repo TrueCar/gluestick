@@ -19,7 +19,7 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
   });
   child.on('exit', (code) => {
     if (code && code !== 0) {
-      throw new Error(`Rnderer process exited with code ${code}`);
+      throw new Error(`Renderer process exited with code ${code}`);
     }
   });
   return child;
@@ -38,7 +38,7 @@ module.exports = ({ config, logger }: Context) => {
       if (msg.value.includes('Renderer listening')) {
         resolve();
       } else {
-        reject();
+        reject('Renderer failed to start');
       }
     });
   }).then(() => {
