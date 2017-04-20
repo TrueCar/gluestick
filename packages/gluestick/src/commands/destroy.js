@@ -7,7 +7,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const cliColorScheme = require('../cli/colorScheme');
-const { isValidEntryPoint, convertToCamelCase, convertToCamelCaseWithPrefix } = require('../utils');
+const { isValidEntryPoint, convertToCamelCaseWithPrefix } = require('../utils');
 
 const { highlight, filename } = cliColorScheme;
 
