@@ -11,6 +11,7 @@ export type GSConfig = {
     client: number;
     server: number;
   };
+  buildStaticPath: string;
   buildAssetsPath: string;
   buildRendererPath: string;
   assetsPath: string;
@@ -131,6 +132,7 @@ export type Request = {
   url: string;
   hostname: string;
   headers: Object;
+  method: string;
 }
 
 export type Entries = {
@@ -139,6 +141,7 @@ export type Entries = {
     routes: Function;
     reducers: Object;
     name?: string;
+    config?: Object;
   }
 }
 
@@ -155,6 +158,7 @@ export type RenderRequirements = {
   Component: Function;
   routes: Function;
   reducers: Object;
+  config: ?Object;
   name: string;
   key: string;
 }

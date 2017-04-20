@@ -36,6 +36,7 @@ describe('config/webpack/buildSeverEntries', () => {
         }, {
           path: '/home',
           name: 'home',
+          config: 'path/to/home/config',
           component: 'path/to/home/component',
           routes: 'path/to/home/routes',
           reducers: 'path/to/home/reducers',

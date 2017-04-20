@@ -123,13 +123,6 @@ module.exports = () => {
     'MyContainer.js',
     '__tests__/MyContainer.test.js'
   );
-  // Lint, flow, test after removal of components and containers
-  exec('npm run lint', CWD);
-  exec('npm run flow', CWD);
-  exec('gluestick test', CWD);
-  // Build in dev and prod bundles after removal of components and containers
-  exec('gluestick build', CWD);
-  exec('gluestick build', CWD, { NODE_ENV: 'production' });
   // Destroy reducer
   exec('gluestick destroy reducer myReducer', CWD);
   assertions.notExists(
@@ -149,6 +142,13 @@ module.exports = () => {
     'myReducer.js',
     '__tests__/myReducer.test.js'
   );
+  // Lint, flow, test after removal of components, containers and reducers
+  exec('npm run lint', CWD);
+  exec('npm run flow', CWD);
+  exec('gluestick test', CWD);
+  // Build in dev and prod bundles after removal of components, containers and reducers
+  exec('gluestick build', CWD);
+  exec('gluestick build', CWD, { NODE_ENV: 'production' });
   // Run bin command
   spawn('gluestick bin gluestick -V', CWD, {}, 'pipe').then(({ stdout }) => {
     console.log(stdout);
@@ -157,18 +157,11 @@ module.exports = () => {
     }
     return Promise.resolve();
   })
-  // Build in production should fail due to missing reducer and bail: true
-  .then(() => {
-    return spawn('gluestick build', CWD, { NODE_ENV: 'production' })
-      .then(() => {
-        console.error('gluestick build in production after reducer removal should fail');
-        process.exit(1);
-      })
-      .catch(() => {
-        return Promise.resolve();
-      });
-  })
   .then(() => {
     process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
   });
 };

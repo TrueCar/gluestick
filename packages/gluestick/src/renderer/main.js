@@ -30,8 +30,9 @@ const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
-// $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
+// $FlowIgnore
+const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 // $FlowIgnore
@@ -81,7 +82,13 @@ module.exports = ({ config, logger }: Context) => {
     });
   }
 
-  app.use((req: Request, res: Response) => {
+  app.use((req: Request, res: Response, next: Function) => {
+    // Use SSR middleware only for entries/app routes
+    if (!Object.keys(entries).find((key: string): boolean => req.url.startsWith(key))) {
+      next();
+      return;
+    }
+
     if (customLogger) {
       customLogger.info({ req });
       onFinished(res, (err, response) => {
@@ -92,6 +99,7 @@ module.exports = ({ config, logger }: Context) => {
         }
       });
     }
+
     readAssets(`${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`)
       .then((assets: Object): void => {
         middleware(
@@ -102,6 +110,7 @@ module.exports = ({ config, logger }: Context) => {
           assets,
           {
             reduxMiddlewares,
+            thunkMiddleware,
             envVariables: [],
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
@@ -115,6 +124,13 @@ module.exports = ({ config, logger }: Context) => {
         logger.error(error);
         res.sendStatus(500);
       });
+  });
+
+  // 404 handler
+  // @TODO: support custom 404 error page
+  app.use((req: Request, res: Response) => {
+    logger.warn(`${req.method} ${req.url} was not found`);
+    res.sendStatus(404);
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);

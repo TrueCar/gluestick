@@ -33,6 +33,7 @@ type Options = {
   httpClient: Object;
   entryWrapperConfig: Object;
   reduxMiddlewares: any[];
+  thunkMiddleware: ?Function;
 };
 
 type EntriesArgs = {
@@ -53,6 +54,7 @@ module.exports = async (
     httpClient: {},
     entryWrapperConfig: {},
     reduxMiddlewares: [],
+    thunkMiddleware: null,
   },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?ServerPlugin[],
@@ -78,7 +80,10 @@ module.exports = async (
     );
     const requirements = hooksHelper(hooks.postRenderRequirements, requirementsBeforeHooks);
 
-    const httpClient: Function = getHttpClient(options.httpClient, req, res);
+    const httpClientOptions = requirements.config && requirements.config.httpClient
+      ? requirements.config.httpClient
+      : options.httpClient;
+    const httpClient: Function = getHttpClient(httpClientOptions, req, res);
     const store: Object = createStore(
       httpClient,
       () => requirements.reducers,
@@ -87,6 +92,7 @@ module.exports = async (
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
+      options.thunkMiddleware,
     );
 
     const {

@@ -28,6 +28,7 @@ const gsConfig: GSConfig = {
     client: 0,
     server: 0,
   },
+  buildStaticPath: '',
   buildAssetsPath: '',
   buildRendererPath: '',
   assetsPath: '',
@@ -83,6 +84,7 @@ const request: Request = {
   hostname: 'localhost',
   url: '/',
   headers: { 'user-agent': '' },
+  method: 'GET',
 };
 
 const entriesConfig: EntriesConfig = {

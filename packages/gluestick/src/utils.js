@@ -17,6 +17,20 @@ const convertToKebabCase = (value: string): string => {
   return parsedValue[0] === '-' ? parsedValue.substring(1) : parsedValue;
 };
 
+const convertToPascalCase = (value: string): string => `${
+  value[0].toUpperCase()
+}${
+  convertToCamelCase(value.slice(1))
+}`;
+
+const convertToCamelCaseWithPrefix = (prefix: string, value: string): string => {
+  return `${
+    convertToCamelCase(prefix)
+  }${
+    convertToPascalCase(value)
+  }`;
+};
+
 const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   if (!/^(shared|apps\/.+)$/.test(entryPoint)) {
     logger.error(`${entryPoint} is not a valid entry point`);
@@ -53,5 +67,7 @@ module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
   convertToKebabCase,
+  convertToPascalCase,
+  convertToCamelCaseWithPrefix,
   throttle,
 };
