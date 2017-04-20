@@ -96,8 +96,21 @@ describe('cli: gluestick destroy', () => {
         expect(fileExists('src/shared/reducers/__tests__/testReducer.test.js')).toEqual(false);
       });
 
-      it.skip('it removes reducer from reducers/index.js when removing a specified reducer', () => {
-        // @TODO needs implementation
+      it('it removes reducer from reducers/index.js when removing a specified reducer', () => {
+        const reducerIndexBefore = '/* @flow */\n'
+          + 'import testReducer from "./testReducer";\n'
+          + '\n'
+          + 'export default {\n'
+          + '  testReducer,\n'
+          + '};\n';
+        const reducerIndexAfter = '/* @flow */\n'
+          + '\n'
+          + 'export default {\n'
+          + '};\n';
+        const reducersIndexPath = path.join(rootDir, 'src/shared/reducers/index.js');
+        fs.writeFileSync(reducersIndexPath, reducerIndexBefore);
+        destroy(context, 'reducer', 'testReducer', { entryPoint: 'shared' });
+        expect(fs.readFileSync(reducersIndexPath)).toEqual(reducerIndexAfter);
       });
 
       it('removes the specified container and its associated test', () => {

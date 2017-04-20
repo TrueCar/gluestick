@@ -19,7 +19,10 @@ module.exports = {
   unlinkSync: (file: string) => {
     _files[file] = false; // Faster than destroy and ok for testing purposes
   },
-  writeFileSync: () => {
-    // @TODO, implement when implementing skipped test from destroy.test.js
+  writeFileSync: (file: string, data: string) => {
+    _files[file] = data;
+  },
+  readFileSync: (file: string) => {
+    return _files[file];
   },
 };

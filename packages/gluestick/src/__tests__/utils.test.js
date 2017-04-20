@@ -24,6 +24,18 @@ describe('utils', () => {
     expect(utils.convertToCamelCase('SomeValue')).toEqual('someValue');
   });
 
+  it('covertToCamelCaseWithPrefix should convert to camel case and add prefix', () => {
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'someValue')).toEqual('prefixSomeValue');
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'some-value')).toEqual('prefixSomeValue');
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'SomeValue')).toEqual('prefixSomeValue');
+  });
+
+  it('covertToPascalCase should convert to pascal case', () => {
+    expect(utils.convertToPascalCase('someValue')).toEqual('SomeValue');
+    expect(utils.convertToPascalCase('some-value')).toEqual('SomeValue');
+    expect(utils.convertToPascalCase('SomeValue')).toEqual('SomeValue');
+  });
+
   it('covertToKebabCase should convert to kebab case', () => {
     expect(utils.convertToKebabCase('someValue')).toEqual('some-value');
     expect(utils.convertToKebabCase('some-value')).toEqual('some-value');

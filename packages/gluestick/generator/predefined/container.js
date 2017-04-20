@@ -3,7 +3,7 @@
 import type { PredefinedGeneratorOptions } from '../../src/types';
 
 const path = require('path');
-const { convertToCamelCase } = require('../../src/utils');
+const { convertToPascalCase } = require('../../src/utils');
 
 const createTemplate = module.parent.createTemplate;
 
@@ -66,11 +66,7 @@ describe("${args => args.path}", () => {
 `;
 
 module.exports = (options: PredefinedGeneratorOptions) => {
-  const rewrittenName = `${
-    options.name[0].toUpperCase()
-  }${
-    convertToCamelCase(options.name.slice(1))
-  }`;
+  const rewrittenName = convertToPascalCase(options.name);
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
     args: {
