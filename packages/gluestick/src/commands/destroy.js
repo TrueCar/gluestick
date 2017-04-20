@@ -95,7 +95,6 @@ module.exports = async (context: Context, command: Command, name: string, option
   // If we destroyed a reducer, remove it from the reducers index
   if (command === 'reducer') {
     const reducerIndexPath = path.join(CWD, 'src', entryPoint, 'reducers', 'index.js');
-    // console.log(dirname, basename);
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
       const reducerName: string = dirname === '.' ? basename : `${
