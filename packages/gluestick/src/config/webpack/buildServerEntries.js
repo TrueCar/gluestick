@@ -22,6 +22,7 @@ const buildServerEntries = (
           component: entries[entry].component,
           routes: entries[entry].routes,
           reducers: entries[entry].reducers,
+          config: entries[entry].config,
         };
       }),
       plugins,

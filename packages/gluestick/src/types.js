@@ -139,6 +139,7 @@ export type Entries = {
     routes: Function;
     reducers: Object;
     name?: string;
+    config?: Object;
   }
 }
 
@@ -155,6 +156,7 @@ export type RenderRequirements = {
   Component: Function;
   routes: Function;
   reducers: Object;
+  config: ?Object;
   name: string;
   key: string;
 }
