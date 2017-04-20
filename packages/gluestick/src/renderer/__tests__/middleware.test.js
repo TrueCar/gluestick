@@ -81,6 +81,7 @@ const options = {
   httpClient: {},
   entryWrapperConfig: {},
   reduxMiddlewares: [],
+  thunkMiddleware: null,
 };
 
 const getEntries = (routes): Entries => ({

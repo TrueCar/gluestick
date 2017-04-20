@@ -30,8 +30,9 @@ const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
 const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
-// $FlowIgnore
 const reduxMiddlewares = require('redux-middlewares').default;
+// $FlowIgnore
+const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 // $FlowIgnore
@@ -102,6 +103,7 @@ module.exports = ({ config, logger }: Context) => {
           assets,
           {
             reduxMiddlewares,
+            thunkMiddleware,
             envVariables: [],
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
