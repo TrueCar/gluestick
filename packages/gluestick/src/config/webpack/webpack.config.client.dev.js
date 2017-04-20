@@ -8,6 +8,7 @@ module.exports = (
   clientConfig: UniversalWebpackConfigurator, devServerPort: number,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: true, css_bundle: true });
+  configuration.devtool = 'cheap-module-eval-source-map';
   configuration.plugins.push(
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
