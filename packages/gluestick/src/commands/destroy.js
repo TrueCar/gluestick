@@ -98,20 +98,20 @@ module.exports = async (context: Context, command: Command, name: string, option
     // console.log(dirname, basename);
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
-      const reducerName = dirname === '.' ? basename : `${
+      const reducerName: string = dirname === '.' ? basename : `${
         convertToCamelCase(dirname.replace('/', ''))
       }${
         basename[0].toUpperCase()}${basename.slice(1)
       }`;
-      const searchPatterns = [
+      const searchPatterns: RegExp[] = [
         new RegExp(`^import\\s+${reducerName}\\s+from.*;`),
         new RegExp(`^  ${reducerName},`),
       ];
       const newIndexLines = indexLines.filter((line: string): boolean => {
-        return !(searchPatterns.filter((pattern: RegExp): boolean => pattern.test(line)).length > 0);
+        return searchPatterns.filter((pattern: RegExp): boolean => pattern.test(line)).length === 0;
       });
       fs.writeFileSync(reducerIndexPath, newIndexLines.join('\n'));
-      logger.success(`${highlight(generatedFileName)} removed from reducer index ${filename(reducerIndexPath)}`);
+      logger.success(`${highlight(reducerName)} removed from reducer index ${filename(reducerIndexPath)}`);
     } catch (e) {
       logger.error('Unable to modify reducers index. Reducer not removed from index');
     }
