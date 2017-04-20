@@ -75,7 +75,12 @@ describe('renderer/render', () => {
 
   const context: Context = { config, logger };
 
-  const request: Request = { headers: { 'user-agent': 'Moznota Browser 1.0' }, url: '', hostname: '' };
+  const request: Request = {
+    headers: { 'user-agent': 'Moznota Browser 1.0' },
+    url: '',
+    hostname: '',
+    method: 'GET',
+  };
 
   const store = {
     getState: jest.fn(() => {}),

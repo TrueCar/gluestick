@@ -84,6 +84,7 @@ const request: Request = {
   hostname: 'localhost',
   url: '/',
   headers: { 'user-agent': '' },
+  method: 'GET',
 };
 
 const entriesConfig: EntriesConfig = {
