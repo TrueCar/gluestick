@@ -7,7 +7,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 
 const cliColorScheme = require('../cli/colorScheme');
-const { isValidEntryPoint, convertToCamelCase } = require('../utils');
+const { isValidEntryPoint, convertToCamelCase, convertToCamelCaseWithPrefix } = require('../utils');
 
 const { highlight, filename } = cliColorScheme;
 
@@ -97,11 +97,9 @@ module.exports = async (context: Context, command: Command, name: string, option
     const reducerIndexPath = path.join(CWD, 'src', entryPoint, 'reducers', 'index.js');
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
-      const reducerName: string = dirname === '.' ? basename : `${
-        convertToCamelCase(dirname.replace('/', ''))
-      }${
-        basename[0].toUpperCase()}${basename.slice(1)
-      }`;
+      const reducerName: string = dirname === '.'
+        ? basename
+        : convertToCamelCaseWithPrefix(dirname.replace('/', ''), basename);
       const searchPatterns: RegExp[] = [
         new RegExp(`^import\\s+${reducerName}\\s+from.*;`),
         new RegExp(`^  ${reducerName},`),

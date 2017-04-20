@@ -21,7 +21,7 @@ const writeEntry = (entryConfig: Object): string => {
   const destinationDirectory: string = path.join(process.cwd(), entryConfig.path);
   const outputPath: string = path.join(destinationDirectory, entryConfig.filename);
   if (!entryConfig.overwrite && fs.existsSync(outputPath)) {
-    throw new Error(`File ${outputPath} alredy exists`);
+    throw new Error(`File ${outputPath} alredy exists\n`);
   }
   mkdir.sync(destinationDirectory);
   fs.writeFileSync(outputPath, entryConfig.template, 'utf-8');
@@ -52,7 +52,7 @@ const applyModification = (modification: Modification): string => {
   if (typeof modifiedContent === 'string') {
     fs.writeFileSync(absolutePath, modifiedContent, 'utf-8');
   } else if (modifiedContent) {
-    throw new Error(`Modified content for ${absolutePath} must be a string`);
+    throw new Error(`Modified content for ${absolutePath} must be a string\n`);
   }
 
   return absolutePath;
