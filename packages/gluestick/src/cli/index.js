@@ -105,6 +105,7 @@ commander
   .option('-S, --stats', 'create webpack stats file')
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
+  .option('-Z, --static', 'prepare html file for static hosting')
   .action((...commandArguments) => {
     // Performance tweak:
     // If `--client` flag is passed, skip server entry generation.

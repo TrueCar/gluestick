@@ -11,6 +11,7 @@ export type GSConfig = {
     client: number;
     server: number;
   };
+  buildStaticPath: string;
   buildAssetsPath: string;
   buildRendererPath: string;
   assetsPath: string;
