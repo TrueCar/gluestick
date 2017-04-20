@@ -83,7 +83,7 @@ module.exports = ({ config, logger }: Context) => {
 
   app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
-    if (!Object.keys(entries).find(key => req.url.startsWith(key))) {
+    if (!Object.keys(entries).find((key: string): boolean => req.url.startsWith(key))) {
       next();
       return;
     }
@@ -126,7 +126,7 @@ module.exports = ({ config, logger }: Context) => {
 
   // 404 handler
   // @TODO: support custom 404 error page
-  app.use((req, res) => {
+  app.use((req: Request, res: Response) => {
     logger.warn(`${req.method} ${req.url} was not found`);
     res.sendStatus(404);
   });

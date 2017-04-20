@@ -132,6 +132,7 @@ export type Request = {
   url: string;
   hostname: string;
   headers: Object;
+  method: string;
 }
 
 export type Entries = {
