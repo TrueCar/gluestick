@@ -63,7 +63,7 @@ const execWithConfig: ExecWithConfig = (
   const plugins: ConfigPlugin[] = !skipPlugins
     ? prepareConfigPlugins(logger, pluginsConfigPath)
     : [];
-  const GSConfig = useGSConfig ? compileGlueStickConfig(plugins, projectConfig) : null;
+  const GSConfig = useGSConfig ? compileGlueStickConfig(logger, plugins, projectConfig) : null;
   if (GSConfig) {
     GSConfig.pluginsConfigPath = pluginsConfigPath;
   }
