@@ -34,6 +34,7 @@ const templateReducer = require('../templates/Reducer')(createTemplate);
 const templateEntries = require('../templates/entries')(createTemplate);
 const templateGluestickPlugins = require('../templates/gluestick.plugins')(createTemplate);
 const templateGluestickHooks = require('../templates/gluestick.hooks')(createTemplate);
+const templateGluestickConfig = require('../templates/gluestick.config')(createTemplate);
 const templateWebpackHooks = require('../templates/webpack.hooks')(createTemplate);
 const templateCachingServer = require('../templates/caching.server')(createTemplate);
 
@@ -92,6 +93,11 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src',
       filename: 'gluestick.hooks.js',
       template: templateGluestickHooks,
+    },
+    {
+      path: 'src',
+      filename: 'gluestick.config.js',
+      template: templateGluestickConfig,
     },
     {
       path: 'src',
