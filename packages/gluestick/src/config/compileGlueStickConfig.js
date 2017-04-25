@@ -26,9 +26,9 @@ module.exports = (logger: Logger, plugins: ConfigPlugin[]): GSConfig => {
   return getConfigHook(logger)(
     plugins
       .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.gluestickConfig)
-      .map((plugin: ConfigPlugin) => plugin.postOverwrites.gluestickConfig)
-      .reduce((prev: GSConfig, curr): GSConfig => {
-        // $FlowFixMe curr will be a function
+      // $FlowIgnore filter above ensures `gluestickConfig` won't be undefinfed/null
+      .map((plugin: ConfigPlugin): Function => plugin.postOverwrites.gluestickConfig)
+      .reduce((prev: GSConfig, curr: (config: GSConfig) => GSConfig): GSConfig => {
         return curr(clone(prev));
       }, defaultConfig),
   );
