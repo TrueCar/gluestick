@@ -34,6 +34,7 @@ const config: GSConfig = {
   ],
   customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
   defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
+  gluestickConfigPath: 'src/gluestick.config.js',
   hooksPath: 'src/gluestick.hooks.js',
   webpackHooksPath: 'src/webpack.hooks.js',
   cachingConfigPath: 'src/config/caching.server',
@@ -53,6 +54,8 @@ const config: GSConfig = {
       'src/gluestick.hooks.js',
       'src/webpack.hooks.js',
       'src/config/caching.server.js',
+      // 1.x
+      'src/gluestick.config.js',
     ],
     changed: [
       'src/config/.Dockerfile',   // -> last updated in 0.2.0

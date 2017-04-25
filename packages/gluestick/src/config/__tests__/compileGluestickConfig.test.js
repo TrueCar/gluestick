@@ -1,10 +1,15 @@
 /* @flow */
+jest.mock('cwd/src/gluestick.config.js', () => ({
+  default: config => ({ ...config, buildStaticPath: 'test' }),
+}), { virtual: true });
 const compileGluestickConfig = require('../compileGlueStickConfig');
 const defaultConfig = require('../defaults/glueStickConfig');
 
+const logger = require('../../__tests__/mocks/context').logger;
+
 describe('config/compileGluestickConfig', () => {
   it('should return default config', () => {
-    expect(compileGluestickConfig([])).toEqual(defaultConfig);
+    expect(compileGluestickConfig(logger, [])).toEqual(defaultConfig);
   });
 
   it('should throw error', () => {
@@ -32,7 +37,10 @@ describe('config/compileGluestickConfig', () => {
   });
 
   it('should return overwriten config', () => {
-    expect(compileGluestickConfig([
+    const originalProcessCwd = process.cwd.bind(process);
+    // $FlowIgnore
+    process.cwd = () => 'cwd';
+    expect(compileGluestickConfig(logger, [
       // $FlowIgnore
       {
         name: 'testPlugin',
@@ -51,6 +59,8 @@ describe('config/compileGluestickConfig', () => {
           },
         },
       },
-    ])).toEqual({ ...defaultConfig, protocol: 'https', host: 'test' });
+    ])).toEqual({ ...defaultConfig, protocol: 'https', host: 'test', buildStaticPath: 'test' });
+    // $FlowIgnore
+    process.cwd = originalProcessCwd;
   });
 });
