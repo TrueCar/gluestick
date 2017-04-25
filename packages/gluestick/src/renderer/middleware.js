@@ -84,15 +84,21 @@ module.exports = async (
       ? requirements.config.httpClient
       : options.httpClient;
     const httpClient: Function = getHttpClient(httpClientOptions, req, res);
+
+    // Allow to specify different redux config
+    const reduxOptions = requirements.config && requirements.config.reduxOptions
+      ? requirements.config.reduxOptions
+      : { middlewares: options.reduxMiddlewares, thunk: options.thunkMiddleware };
+
     const store: Object = createStore(
       httpClient,
       () => requirements.reducers,
-      options.reduxMiddlewares,
+      reduxOptions.middlewares,
       // $FlowFixMe
       (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
-      options.thunkMiddleware,
+      reduxOptions.thunk,
     );
 
     const {
