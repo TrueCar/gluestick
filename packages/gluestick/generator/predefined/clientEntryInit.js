@@ -6,7 +6,7 @@ const template = createTemplate`
 import getRoutes from "${args => args.routes}";
 import EntryWrapper from "../EntryWrapper";
 import { createStore } from "compiled/gluestick";
-import middleware, { thunkMiddleware } from "config/redux-middleware";
+import globalMiddlewares, { thunkMiddleware as globalThunkMiddleware } from "config/redux-middleware";
 import reducers from "${args => args.reducers}";
 ${args => args.config ? `import config from "${args.config}";` : 'const config = {};'}
 
@@ -20,10 +20,14 @@ export const getStore = (httpClient) => {
   return createStore(
     httpClient,
     () => reducers,
-    middleware,
+    config.reduxOptions && config.reduxOptions.middlewares
+      ? config.reduxOptions.middlewares
+      : globalMiddlewares,
     (cb) => module.hot && module.hot.accept("../../${args => args.reducers}", cb),
     !!module.hot,
-    thunkMiddleware,
+    config.reduxOptions && config.reduxOptions.thunk
+      ? config.reduxOptions.thunk
+      : globalThunkMiddleware,
   );
 };
 
