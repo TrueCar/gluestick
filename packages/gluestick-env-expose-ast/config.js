@@ -15,28 +15,39 @@ module.exports = (options, { logger }) => {
     );
   }
 
-  const overwriteConfig = (config) => {
-    if (!envToExpose.length) {
-      return config;
-    }
-
-    config.plugins.push(
-      new webpack.DefinePlugin(
-        envToExpose.reduce((prev, curr) => {
-          return Object.assign(
-            prev,
-            { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) },
-          );
-        }, {}),
-      ),
-    );
-    return config;
-  };
-
   return {
     postOverwrites: {
-      clientWebpackConfig: overwriteConfig,
-      serverWebpackConfig: overwriteConfig,
+      clientWebpackConfig: (config) => {
+        console.log(config.plugins);
+        return config;
+      },
+      serverWebpackConfig: (config) => {
+        console.log('envToExpose', envToExpose);
+        if (!envToExpose.length) {
+          return config;
+        }
+
+        if (options.exposeRuntime) {
+          config.plugins.push(
+            new webpack.DefinePlugin({
+              'process.env.ENV_VARIABLES': JSON.stringify(envToExpose),
+            }),
+          );
+        } else {
+          config.plugins.push(
+            new webpack.DefinePlugin(
+              envToExpose.reduce((prev, curr) => {
+                return Object.assign(
+                  prev,
+                  { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) },
+                );
+              }, {}),
+            ),
+          );
+        }
+
+        return config;
+      },
     },
   };
 };
