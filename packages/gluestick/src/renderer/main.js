@@ -43,6 +43,9 @@ const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 
+const envVariables: string[] = process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
+  ? process.env.ENV_VARIABLES
+  : [];
 
 module.exports = ({ config, logger }: Context) => {
   const pluginUtils = createPluginUtils(logger);
@@ -111,7 +114,7 @@ module.exports = ({ config, logger }: Context) => {
           {
             reduxMiddlewares,
             thunkMiddleware,
-            envVariables: [],
+            envVariables,
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
           },
