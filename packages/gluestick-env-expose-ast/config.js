@@ -15,11 +15,7 @@ module.exports = (options, { logger }) => {
     );
   }
 
-  const overwriteConfig = (config) => {
-    if (!envToExpose.length) {
-      return config;
-    }
-
+  const pushVarsToDefinePlugin = (config) => {
     config.plugins.push(
       new webpack.DefinePlugin(
         envToExpose.reduce((prev, curr) => {
@@ -30,13 +26,58 @@ module.exports = (options, { logger }) => {
         }, {}),
       ),
     );
-    return config;
   };
 
   return {
     postOverwrites: {
-      clientWebpackConfig: overwriteConfig,
-      serverWebpackConfig: overwriteConfig,
+      clientWebpackConfig: (config) => {
+        if (!envToExpose.length) {
+          return config;
+        }
+
+        if (options.exposeRuntime) {
+          let ruleIndex = -1;
+          const jsRule = config.module.rules.find(({ test }, i) => {
+            if (test.source.includes('js')) {
+              ruleIndex = i;
+              return true;
+            }
+            return false;
+          });
+          let babelLoaderIndex = -1;
+          jsRule.use.find(({ loader }, i) => {
+            if (loader === 'babel-loader') {
+              babelLoaderIndex = i;
+              return true;
+            }
+            return false;
+          });
+          config.module.rules[ruleIndex].use[babelLoaderIndex].options.plugins.push(
+            require.resolve('babel-plugin-gluestick'),
+          );
+        } else {
+          pushVarsToDefinePlugin(config);
+        }
+
+        return config;
+      },
+      serverWebpackConfig: (config) => {
+        if (!envToExpose.length) {
+          return config;
+        }
+
+        if (options.exposeRuntime) {
+          config.plugins.push(
+            new webpack.DefinePlugin({
+              'process.env.ENV_VARIABLES': JSON.stringify(envToExpose),
+            }),
+          );
+        } else {
+          pushVarsToDefinePlugin(config);
+        }
+
+        return config;
+      },
     },
   };
 };
