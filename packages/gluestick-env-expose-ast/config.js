@@ -36,8 +36,6 @@ module.exports = (options, { logger }) => {
         }
 
         if (options.exposeRuntime) {
-          const configuration = config;
-          configuration.plugins = config.plugins.filter(p => p.constructor.name !== 'DefinePlugin');
           let ruleIndex = -1;
           const jsRule = config.module.rules.find(({ test }, i) => {
             if (test.source.includes('js')) {
