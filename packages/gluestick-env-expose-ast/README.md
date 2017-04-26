@@ -27,4 +27,5 @@ export default [
 ```
 
 ## Configuration
-- `parse`: `string | string[]` - path or array of paths to files which will be parsed for `process.env.*`.
+- `parse`: `string | string[]` - path or array of paths to files which will be parsed for `process.env.*`
+- `exposeRuntime`: `boolean` - replace `process.env` with `window.__GS_ENV_VARS__` to allow to pass variables in runtime instead of on compilation time, it will also pass detected vars to server bundle so `window.__GS_ENV_VARS__` gets properly propagated when renderering page on server
