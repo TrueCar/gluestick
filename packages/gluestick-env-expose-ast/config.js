@@ -15,14 +15,54 @@ module.exports = (options, { logger }) => {
     );
   }
 
+  const pushVarsToDefinePlugin = (config) => {
+    config.plugins.push(
+      new webpack.DefinePlugin(
+        envToExpose.reduce((prev, curr) => {
+          return Object.assign(
+            prev,
+            { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) },
+          );
+        }, {}),
+      ),
+    );
+  };
+
   return {
     postOverwrites: {
       clientWebpackConfig: (config) => {
-        console.log(config.plugins);
+        if (!envToExpose.length) {
+          return config;
+        }
+
+        if (options.exposeRuntime) {
+          config.plugins = config.plugins.filter(p => p.constructor.name !== 'DefinePlugin');
+          let ruleIndex = -1;
+          const jsRule = config.module.rules.find(({ test }, i) => {
+            if (test.source.includes('js')) {
+              ruleIndex = i;
+              return true;
+            }
+            return false;
+          });
+          let babelLoaderIndex = -1;
+          jsRule.use.find(({ loader }, i) => {
+            if (loader === 'babel-loader') {
+              babelLoaderIndex = i;
+              return true;
+            }
+            return false;
+          });
+          config.module.rules[ruleIndex].use[babelLoaderIndex].options.plugins.push(
+            require.resolve('babel-plugin-gluestick'),
+          );
+        } else {
+          pushVarsToDefinePlugin(config);
+        }
+
         return config;
       },
       serverWebpackConfig: (config) => {
-        console.log('envToExpose', envToExpose);
         if (!envToExpose.length) {
           return config;
         }
@@ -34,16 +74,7 @@ module.exports = (options, { logger }) => {
             }),
           );
         } else {
-          config.plugins.push(
-            new webpack.DefinePlugin(
-              envToExpose.reduce((prev, curr) => {
-                return Object.assign(
-                  prev,
-                  { [`process.env.${curr}`]: JSON.stringify(process.env[curr]) },
-                );
-              }, {}),
-            ),
-          );
+          pushVarsToDefinePlugin(config);
         }
 
         return config;
