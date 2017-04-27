@@ -32,6 +32,8 @@ module.exports = (
       ],
     });
   }, {});
+  // Modify 'es2015' preset in babel-loader plugins.
+  config.module.rules[0].use[0].options.presets[1] = ['es2015', { modules: false }];
   config.plugins.push(
     new chunksPlugin(
       deepClone(configuration),
