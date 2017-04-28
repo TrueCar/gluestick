@@ -14,13 +14,14 @@ export default function (
   customMiddleware: (middlewares: any[]) => any[] | any[],
   hotCallback: (cb: Function) => void,
   devMode: Boolean,
-  thunkMiddleware: Function = thunk,
+  thunkMiddleware: Function,
 ): Store {
   const reducer: Object = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
 
   let middleware: Function[] = [
     promiseMiddleware(client),
-    thunkMiddleware,
+    // Using OR operator instead of default argument, since null value will be casted to false
+    thunkMiddleware || thunk,
   ];
 
   // Include middleware that will warn when you mutate the state object
