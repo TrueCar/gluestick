@@ -33,6 +33,7 @@ module.exports = (
   configuration.module.rules[0].use[0].options.plugins.push(
     'react-hot-loader/babel',
   );
+  configuration.module.rules[0].use[0].options.presets.push('react-hmre');
   configuration.output.publicPath = `http://localhost:${devServerPort}${configuration.output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
