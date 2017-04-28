@@ -1,9 +1,10 @@
 # 1.x Migration Guide
 
-This migration guide is divided into 3 parts:
+This migration guide is divided into 4 parts:
 - [Project overview](#project-overview)
 - [Apps and shared code](#apps-and-shared-code)
 - [Configuration](#configuration)
+- [Other breaking changes](#other-breaking-changes)
 
 ## Project overview
 
@@ -144,3 +145,7 @@ There are also other files:
 To use `config/webpack-additions.js` and/or `config/application.server.js` you must need `gluestick-config-legacy` plugin installed and enabled, however the recommended approach is to use `webpack.hooks.js`, since at some point in the future `gluestick-config-legacy` will be deprecated.
 
 `config/redux-middleware.js` and `config/application.js` works as before.
+
+# Other breaking changes
+- `promiseMiddleware` returns `payload` instead of `value` in `action` object used by reducers
+- `axios` (update to `0.15.3`) in `catch` handler passes instance of `Error` with `response` property instead of just `response`, see associated PR [here](https://github.com/mzabriskie/axios/pull/345/files#diff-b19c56bc1192e2f4840a79ffebfe1d7bR18).
