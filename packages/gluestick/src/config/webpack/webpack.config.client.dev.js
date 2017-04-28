@@ -1,8 +1,8 @@
 /* @flow */
-
-import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+import type { WebpackConfig, UniversalWebpackConfigurator, BabelOptions } from '../../types';
 
 const webpack = require('webpack');
+const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
   clientConfig: UniversalWebpackConfigurator, devServerPort: number,
@@ -29,16 +29,24 @@ module.exports = (
     });
   }, {});
   // Add react transformation to babel-loader plugins.
-  configuration.module.rules[0].use[0].options.plugins.push([
-    'react-transform',
-    {
-      transforms: [{
-        transform: 'react-transform-hmr',
-        imports: ['react'],
-        locals: ['module'],
-      }],
-    },
-  ]);
+  updateBabelLoaderConfig(configuration, (options: BabelOptions): BabelOptions => {
+    return {
+      ...options,
+      plugins: [
+        ...options.plugins,
+        [
+          'react-transform',
+          {
+            transforms: [{
+              transform: 'react-transform-hmr',
+              imports: ['react'],
+              locals: ['module'],
+            }],
+          },
+        ],
+      ],
+    };
+  });
   configuration.output.publicPath = `http://localhost:${devServerPort}${configuration.output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
