@@ -65,7 +65,7 @@ const start = (
 };
 
 if (module.hot) {
-  module.hot.accept('./EntryWrapper.js', () => {
+  module.hot.accept('../src/apps/main/Index.js', () => {
     start(...hotReloadCache);
   });
 }
