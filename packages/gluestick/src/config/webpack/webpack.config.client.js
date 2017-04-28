@@ -49,7 +49,6 @@ module.exports = (
       ],
     };
   });
-  console.log(config.module.rules[0].use[0].options);
   config.plugins.push(
     new chunksPlugin(
       deepClone(configuration),
