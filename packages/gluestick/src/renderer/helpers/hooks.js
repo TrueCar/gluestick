@@ -17,7 +17,6 @@ module.exports = {
         if (Array.isArray(hooks[hookName])) {
           hooks[hookName] = hooks[hookName].concat(curr.hooks[hookName]);
         } else {
-          // $FlowIgnore concat can add single item also
           hooks[hookName] = [].concat(curr.hooks[hookName]);
         }
       });
