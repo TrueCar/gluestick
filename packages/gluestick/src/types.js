@@ -280,6 +280,6 @@ export type RenderMethod = (root: Object, styleTags: Object[]) =>
 { body: string; head: Object[], additionalScripts?: Object[] };
 
 export type BabelOptions = {
-  plugins: Array<string | any[]>,
-  presets: Array<string | any[]>,
+  plugins: Array<string | mixed[]>,
+  presets: Array<string | mixed[]>,
 }

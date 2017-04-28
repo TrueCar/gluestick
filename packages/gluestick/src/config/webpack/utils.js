@@ -21,7 +21,6 @@ const updateBabelLoaderConfig = (
     }
     return false;
   });
-
   // eslint-disable-next-line no-param-reassign
   config.module.rules[jsRuleIndex].use[babelLoaderIndex].options = modifier(babelLoader.options);
 };
