@@ -2251,9 +2251,9 @@ globals@^9.0.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
-gluestick-generators@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.6.0.tgz#0b20b98962b62a5c7b6b6d7b2aacc6f63679cf27"
+gluestick-generators@^1.7.0:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.7.2.tgz#20e276eb7a60c6a8aafaaac0ab1868d9fe07bdd7"
   dependencies:
     babel-cli "6.22.2"
     babel-core "6.22.1"
