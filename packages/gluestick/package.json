@@ -54,11 +54,7 @@
     "express": "4.14.0",
     "extract-text-webpack-plugin": "2.1.0",
     "fs-extra": "2.0.0",
-<<<<<<< HEAD
     "gluestick-generators": "^1.7.2",
-=======
-    "gluestick-generators": "^1.7.1",
->>>>>>> ef0de97d380f4020bc656bd463b13177f168f47e
     "handlebars": "4.0.6",
     "http-proxy-middleware": "0.17.3",
     "ignore-loader": "0.1.2",
