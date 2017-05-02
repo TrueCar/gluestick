@@ -62,11 +62,10 @@ RUN apt-get update && \
     apt-get install -y yarn  && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    npm install gluestick-cli@$GLUESTICK_VERSION -g && \
+    npm install gluestick-cli@$GLUESTICK_VERSION node-gyp -g && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN yarn global add node-gyp
 RUN apt-get update && apt-get install dnsmasq -y
 
 ADD ./scripts/docker/dnsmasq.conf /etc/dnsmasq.conf
