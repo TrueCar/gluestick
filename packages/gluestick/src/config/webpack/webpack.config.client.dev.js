@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
-  clientConfig: UniversalWebpackConfigurator, devServerPort: number, devServerHost: string
+  clientConfig: UniversalWebpackConfigurator, devServerPort: number, devServerHost: string,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: true, css_bundle: true });
   configuration.devtool = 'cheap-module-eval-source-map';
