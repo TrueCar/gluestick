@@ -85,6 +85,7 @@ module.exports = (
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
     clientConfig,
     gluestickConfig.ports.client,
+    gluestickConfig.host
   );
 
   // Get runtime and server plugins, both runtime and server plugins in this case
