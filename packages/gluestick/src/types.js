@@ -278,3 +278,8 @@ export type ServerPlugin = {
 
 export type RenderMethod = (root: Object, styleTags: Object[]) =>
 { body: string; head: Object[], additionalScripts?: Object[] };
+
+export type BabelOptions = {
+  plugins: Array<string | mixed[]>,
+  presets: Array<string | mixed[]>,
+}

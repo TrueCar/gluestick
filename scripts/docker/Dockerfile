@@ -8,10 +8,6 @@ ENV ASSET_URL="/assets/"
 RUN mkdir /app
 WORKDIR /app
 
-# @TODO this was used to pre-install common dependencies in an app head of time
-# so yarn runs faster when building an app from the pre-built docker image
-# ADD ./templates/new/package.json /app
-
 ENV BUILD_PACKAGES "autoconf \
                     automake \
                     build-essential \
@@ -59,16 +55,14 @@ ENV BUILD_PACKAGES "autoconf \
                     zlib1g-dev"
 
 
-# Currently some apps only work with `npm install` so we are disabling yarn until that is resolved
-#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    #echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-    #apt-get install -y yarn=0.16.1-1  && \
 RUN apt-get update && \
+    apt-get install -y yarn  && \
     apt-get install -y --no-install-recommends git && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
-    npm install gluestick-cli@$GLUESTICK_VERSION -g && \
-    npm install && \
+    npm install gluestick-cli@$GLUESTICK_VERSION node-gyp -g && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 

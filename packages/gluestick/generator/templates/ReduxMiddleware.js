@@ -13,4 +13,5 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 // const logger = createLogger();
 // export default [logger];
 export default [];
+export const thunkMiddleware = null;
 `;

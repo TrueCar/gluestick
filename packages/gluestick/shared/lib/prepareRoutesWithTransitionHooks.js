@@ -5,7 +5,8 @@ import { Route } from 'react-router';
 
 import TransitionHooks from '../components/TransitionHooks';
 
-export default (routes: Object): React.Component<*, *, *> => {
+// eslint-disable-next-line no-undef
+export default (routes: Object): React$Element<*> => {
   return (
     <Route name="TransitionHooks" component={TransitionHooks}>
       {routes}
