@@ -16,4 +16,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 module.ignore_non_literal_requires=true
 
 [version]
-^0.44.2
+^0.45.0
