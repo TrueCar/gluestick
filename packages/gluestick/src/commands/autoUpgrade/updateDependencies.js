@@ -17,11 +17,13 @@ const { install: installDeps, cleanSync: cleanDeps } = require('../../lib/npmDep
 const updateDependencies = (
   logger: Logger, projectPackage: ProjectPackage, mismatchedModules: MismatchedModules,
 ) => {
-  const updatedPackage: ProjectPackage = {
-    dependencies: {},
-    devDependencies: {},
-    ...projectPackage,
-  };
+  const updatedPackage: ProjectPackage = projectPackage;
+  if (!updatedPackage.dependencies) {
+    updatedPackage.dependencies = {};
+  }
+  if (!updatedPackage.devDependencies) {
+    updatedPackage.devDependencies = {};
+  }
 
   Object.keys(mismatchedModules).forEach((dep: string): void => {
     const depPackage = mismatchedModules[dep];

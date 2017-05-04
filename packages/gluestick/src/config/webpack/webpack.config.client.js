@@ -1,6 +1,12 @@
 /* @flow */
 
-import type { WebpackConfig, UniversalWebpackConfigurator, GSConfig, Logger } from '../../types';
+import type {
+  WebpackConfig,
+  UniversalWebpackConfigurator,
+  GSConfig,
+  Logger,
+  BabelOptions,
+} from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
@@ -8,6 +14,7 @@ const deepClone = require('clone');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
+const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
   logger: Logger,
@@ -33,7 +40,15 @@ module.exports = (
     });
   }, {});
   // Modify 'es2015' preset in babel-loader plugins.
-  config.module.rules[0].use[0].options.presets[0] = ['es2015', { modules: false }];
+  updateBabelLoaderConfig(config, (options: BabelOptions): BabelOptions => {
+    return {
+      ...options,
+      presets: [
+        ['es2015', { modules: false }],
+        ...options.presets.filter(preset => preset !== 'es2015'),
+      ],
+    };
+  });
   config.plugins.push(
     new chunksPlugin(
       deepClone(configuration),

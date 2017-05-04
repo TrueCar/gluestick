@@ -1,11 +1,11 @@
 /* @flow */
-
-import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+import type { WebpackConfig, UniversalWebpackConfigurator, BabelOptions } from '../../types';
 
 const webpack = require('webpack');
+const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
-  clientConfig: UniversalWebpackConfigurator, devServerPort: number,
+  clientConfig: UniversalWebpackConfigurator, devServerPort: number, devServerHost: string,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: true, css_bundle: true });
   configuration.devtool = 'cheap-module-eval-source-map';
@@ -24,17 +24,17 @@ module.exports = (
     return Object.assign(prev, {
       [curr]: [
         'react-hot-loader/patch',
-        `webpack-hot-middleware/client?path=http://localhost:${devServerPort}/__webpack_hmr`,
+        `webpack-hot-middleware/client?path=http://${devServerHost}:${devServerPort}/__webpack_hmr`,
         'webpack/hot/only-dev-server',
       ].concat(configuration.entry[curr]),
     });
   }, {});
   // Add react transformation to babel-loader plugins.
+  configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration.output.publicPath}`;
   configuration.module.rules[0].use[0].options.plugins.push(
     'react-hot-loader/babel',
   );
   configuration.module.rules[0].use[0].options.presets.push('react-hmre');
-  configuration.output.publicPath = `http://localhost:${devServerPort}${configuration.output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
   return configuration;
