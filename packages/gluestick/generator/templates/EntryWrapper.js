@@ -111,6 +111,7 @@ const start = (
 
 export default class EntryWrapper extends Component {
   static start = start;
+  static rerender = rerender;
   static defaultProps = {
     rootWrappers: [],
   }
