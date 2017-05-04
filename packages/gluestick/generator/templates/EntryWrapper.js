@@ -12,32 +12,20 @@ import { Root, getHttpClient } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
-let hotReloadCache = [];
+// Cache for HMR to store data between multiple rerenders.
+const hotReloadCache = {
+  httpClient: null,
+  store: null,
+  rootWrappers: null,
+  rootWrappersOptions: null,
+  preRenderHooks: null,
+};
 
-// This function is called only on client.
-const start = (
-  config,
-  getRoutes,
-  getStore,
-  { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
-  match = originalMatch,
-  history = browserHistory
+const matchRouteAndRender = (
+  { match, history },
+  { getRoutes, store, httpClient },
+  { rootWrappers, rootWrappersOptions, preRenderHooks }
 ) => {
-  hotReloadCache = [
-    config,
-    getRoutes,
-    getStore,
-    { rootWrappers, rootWrappersOptions, preRenderHooks },
-    match,
-    history,
-  ];
-
-  // Allow developers to include code that will be executed before the app is
-  // set up in the browser.
-  require("config/init.browser");
-
-  const httpClient = getHttpClient(config.httpClient);
-  const store = getStore(httpClient);
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
     const entry = (
       <AppContainer>
@@ -55,6 +43,7 @@ const start = (
         />
       </AppContainer>
     );
+
     if (preRenderHooks && preRenderHooks.length > 0) {
       preRenderHooks.forEach((hook) => {
         if (typeof hook === "function") { hook(); }
@@ -64,11 +53,61 @@ const start = (
   });
 };
 
-if (module.hot) {
-  module.hot.accept('./EntryWrapper.js', () => {
-    start(...hotReloadCache);
+// Rerender whole app (for HMR purpose).
+const rerender = (updatedGetRoutes) => {
+  const { httpClient, store, rootWrappers, rootWrappersOptions, preRenderHooks } = hotReloadCache;
+
+  matchRouteAndRender({
+    match: originalMatch,
+    history: browserHistory,
+  }, {
+    getRoutes: updatedGetRoutes,
+    store,
+    httpClient,
+  }, {
+    rootWrappers,
+    rootWrappersOptions,
+    preRenderHooks,
   });
-}
+};
+
+// This function is called only on client on initial render.
+const start = (
+  config,
+  getRoutes,
+  getStore,
+  { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
+  match = originalMatch,
+  history = browserHistory
+) => {
+  // Allow developers to include code that will be executed before the app is
+  // set up in the browser.
+  require("config/init.browser");
+
+  const httpClient = getHttpClient(config.httpClient);
+  const store = getStore(httpClient);
+
+  if (process.env.NODE_ENV !== "production") {
+    hotReloadCache.httpClient = httpClient;
+    hotReloadCache.store = store;
+    hotReloadCache.rootWrappers = rootWrappers;
+    hotReloadCache.rootWrappersOption = rootWrappersOptions;
+    hotReloadCache.preRenderHooks = preRenderHooks;
+  }
+
+  matchRouteAndRender({
+    match,
+    history,
+  }, {
+    getRoutes,
+    store,
+    httpClient,
+  }, {
+    rootWrappers,
+    rootWrappersOptions,
+    preRenderHooks,
+  });
+};
 
 export default class EntryWrapper extends Component {
   static start = start;

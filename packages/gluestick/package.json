@@ -30,6 +30,9 @@
     "url": "git@github.com:TrueCar/gluestick.git"
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
+  "peerDependencies": {
+    "react-hot-loader": "3.x"
+  },
   "dependencies": {
     "axios": "0.15.3",
     "babel-cli": "6.22.2",
