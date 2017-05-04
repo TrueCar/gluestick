@@ -50,6 +50,12 @@ if (typeof window === "object") {
     getStore,
     { rootWrappers, rootWrappersOptions: [], preRenderHooks },
   );
+
+  if (module.hot) {
+    module.hot.accept("${args => args.routes}", () => {
+      EntryWrapper.rerender(require("${args => args.routes}").default);
+    });
+  }
 }
 `;
 

@@ -30,11 +30,17 @@ module.exports = (
     });
   }, {});
   // Add react transformation to babel-loader plugins.
+  updateBabelLoaderConfig(configuration, (options: BabelOptions): BabelOptions => {
+    return {
+      ...options,
+      plugins: [
+        ...options.plugins,
+        'react-hot-loader/babel',
+      ],
+    };
+  });
+  // configuration.module.rules[0].use[0].options.presets.push('react-hmre');
   configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration.output.publicPath}`;
-  configuration.module.rules[0].use[0].options.plugins.push(
-    'react-hot-loader/babel',
-  );
-  configuration.module.rules[0].use[0].options.presets.push('react-hmre');
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
   return configuration;
