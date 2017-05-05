@@ -43,7 +43,8 @@ module.exports = (
 
   const vendorBundleHref: string = getAssetPathForFile('vendor', 'javascript', assets);
   const entryPointBundleHref: string = getAssetPathForFile(entryPointName, 'javascript', assets);
-  const assetsLoader: string = getAssetsLoader({}, entryPointBundleHref, vendorBundleHref);
+  const loadJSConfig = Object.assign({before: () => {}}, config.loadjs || {});
+  const assetsLoader: string = getAssetsLoader(loadJSConfig, entryPointBundleHref, vendorBundleHref);
   scriptTags.push(
     <script
       key="script-loader"
