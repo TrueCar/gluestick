@@ -4,6 +4,8 @@ import type { Context, WebpackConfigEntry } from '../../types';
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
+const fs = require('fs');
+const path = require('path');
 const logMessage = require('./logMessage');
 
 type Process = {
@@ -82,6 +84,16 @@ module.exports = (
   args: string[],
   debugPort: number,
 ) => {
+  // Check if `webpack-chunks.json` is present
+  if (!fs.existsSync(
+    path.join(process.cwd(), config.GSConfig.buildAssetsPath, config.GSConfig.webpackChunks),
+  )) {
+    logger.warn(
+      '`build/assets/webpack-chunks.json` is not present. Run `gluestick build --client`'
+      + ' to generare it, otherwise renderer won\'t work properly.',
+    );
+  }
+
   let debugProcess: ?Process = null;
   try {
     // Recompile and respawn debug process on ENTER.
