@@ -1,7 +1,7 @@
 /* @flow */
 
 module.exports = {
-  flowVersion: '0.44.2',
+  flowVersion: '0.45.0',
   flowMapper: {
     root: '',
     src: '/src',
