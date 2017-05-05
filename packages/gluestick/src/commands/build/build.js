@@ -20,7 +20,7 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
     options.server = true;
   }
 
-  if (options.static && !options.client && !options.serverr) {
+  if (options.static && (!options.client || !options.server)) {
     throw new Error('--static options must be used with both client and server build');
   }
 
