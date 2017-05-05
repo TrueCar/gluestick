@@ -30,5 +30,6 @@ deployment:
     tag: /v\d+\.\d+\.\d+.*/
     owner: TrueCar
     commands:
+      - docker pull node:6.10-slim
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
       - BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG
