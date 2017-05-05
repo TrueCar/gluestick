@@ -33,10 +33,12 @@ module.exports = ({ config, logger }: Context) => {
 
   // Hack: wait for `Renderer listening on port xxxx.` message,
   // otherwise we won't know if it started yet or not.
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     child.on('message', (msg: { type: string, value: any[] }): void => {
       if (msg.value.includes('Renderer listening')) {
         resolve();
+      } else if (msg.type === 'ERROR') {
+        reject('Renderer failed to start');
       }
     });
   }).then(() => {
