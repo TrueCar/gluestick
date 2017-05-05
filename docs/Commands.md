@@ -71,7 +71,7 @@ Available options:
 * `-T, --run-tests` - Run test hook
 * `-L, --log-level <level>` - Set the logging level
   * Valid options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`
-* `-E, --log-pretty [true|false]` - Set pretty printing for logging
+* `-E, --entry-point <entryPoint>` - Specify which entry (or group of them) to build and run, entry must match it's key (eg: `/home`) in `src/entries.json` or group it is assigned to (eg: `profile-apps`)
 * `-D, --debug-server` - Debug server side rendering with built-in node inspector
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
