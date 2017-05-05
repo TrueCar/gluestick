@@ -13,7 +13,7 @@ import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
 // Cache for HMR to store data between multiple rerenders.
-const hotReloadCache = {
+const hotReloadCache: Object = {
   httpClient: null,
   store: null,
   rootWrappers: null,
