@@ -7,8 +7,17 @@ const assertions = require('./utils/assertions');
 
 const CWD = path.join(process.cwd(), '../', 'e2eApp');
 
+process.on('uncaughtException', (error) => {
+  console.error(error);
+  process.exit(1);
+});
+
 module.exports = () => {
   exec('npm install -g ./packages/gluestick-cli');
+  exec(
+    'npm install /home/ubuntu/gluestick/packages/gluestick-generators',
+    '/opt/circleci/nodejs/v6.9.0/lib/node_modules/gluestick-cli'
+  );
 
   // New project with npm
   exec('gluestick new e2eApp --npm --dev ./gluestick', path.join(process.cwd(), '../'));

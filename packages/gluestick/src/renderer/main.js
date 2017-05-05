@@ -110,7 +110,7 @@ module.exports = ({ config, logger }: Context) => {
           req, res,
           { entries, entriesConfig, entriesPlugins: runtimePlugins },
           { EntryWrapper, BodyWrapper },
-          assets,
+          { assets, loadjsConfig: applicationConfig.loadjs || {} },
           {
             reduxMiddlewares,
             thunkMiddleware,

@@ -37,7 +37,7 @@ module.exports = ({ config, logger }: Context) => {
     child.on('message', (msg: { type: string, value: any[] }): void => {
       if (msg.value.includes('Renderer listening')) {
         resolve();
-      } else {
+      } else if (msg.type === 'ERROR') {
         reject('Renderer failed to start');
       }
     });

@@ -31,6 +31,12 @@ type WrappersRequirements = {
   envVariables: any[];
   entriesPlugins: { plugin: Function; meta: Object; }[];
 };
+type AssetsCacheOpts = {
+  assets: Object;
+  loadjsConfig: Object;
+  cacheManager: Object;
+};
+
 module.exports = (
   context: Context,
   req: Request,
@@ -43,10 +49,10 @@ module.exports = (
     envVariables,
     entriesPlugins,
   }: WrappersRequirements,
-  { assets, cacheManager }: { assets: Object; cacheManager: Object },
+  { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput => {
-  const { styleTags, scriptTags } = linkAssets(context, entryName, assets);
+  const { styleTags, scriptTags } = linkAssets(context, entryName, assets, loadjsConfig);
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const rootWrappers = entriesPlugins

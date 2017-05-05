@@ -90,8 +90,7 @@ describe('cli/execWithConfig', () => {
     execWithConfig(command, [{}], {
       skipPlugins: true,
     }, {});
-    expect(process.stderr.write.mock.calls[0])
-      .toEqual(['test']);
+    expect(process.stderr.write.mock.calls[0][0].includes('test')).toBeTruthy();
     expect(process.exit.mock.calls[0]).toEqual([1]);
     process.cwd = originalProcessCwd;
     process.exit = originalProcessExit;
