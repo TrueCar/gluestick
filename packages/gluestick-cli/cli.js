@@ -8,14 +8,44 @@ const reinstallDev = require('./reinstallDev');
 const watch = require('./watch');
 const resetHard = require('./reset');
 
+const version = require(path.join(__dirname, 'package.json')).version;
+
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
   process.exit(1);
 };
 
-commander.version(
-  require(path.join(__dirname, 'package.json')).version,
-);
+commander.version(version);
+
+if (['-v', '-V', '--version'].indexOf(process.argv[2]) >= 0) {
+  console.log(`${chalk.green('gluestick-cli')}: ${version} (global binary)`);
+  let localVersion = 'n/a';
+  let localInstalledVersion = '';
+  try {
+    localVersion = require(path.join(process.cwd(), 'package.json')).dependencies.gluestick;
+  } catch (e) {
+    // noop
+  }
+  try {
+    localInstalledVersion = require(
+      path.join(process.cwd(), 'node_modules/gluestick', 'package.json'),
+    ).version;
+  } catch (e) {
+    // noop
+  }
+  console.log(
+    `${chalk.green('gluestick')}: ${localVersion}${
+      localVersion !== localInstalledVersion && localInstalledVersion.length
+        ? `, installed ${localInstalledVersion}`
+        : ''
+    } (${
+      localVersion !== 'n/a'
+        ? 'local dependency in current directory'
+        : 'not in gluestick project'
+    })`,
+  );
+  process.exit(0);
+}
 
 commander
   .command('new')
