@@ -51,7 +51,7 @@ const templatePackage = createTemplate`
     "enzyme": "2.7.1",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
-    "flow-bin": "0.44.2",
+    "flow-bin": "0.45.0",
     "flow-typed": "^2.0.0",
     "react-addons-test-utils": "15.4.2",
     "react-hot-loader": "1.3.1",
