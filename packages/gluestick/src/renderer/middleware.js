@@ -48,7 +48,7 @@ module.exports = async (
   res: Response,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
-  assets: Object,
+  { assets, loadjsConfig }: { assets: Object; loadjsConfig: Object },
   options: Options = {
     envVariables: [],
     httpClient: {},
@@ -159,7 +159,7 @@ module.exports = async (
         entryWrapperConfig: options.entryWrapperConfig,
         envVariables: options.envVariables,
       },
-      { assets, cacheManager },
+      { assets, loadjsConfig, cacheManager },
       { renderMethod },
     );
     const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);

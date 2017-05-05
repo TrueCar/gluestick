@@ -16,7 +16,7 @@ describe('renderer/helpers/linkAssets', () => {
     const {
       styleTags,
       scriptTags,
-    } = linkAssets({}, 'main', assets);
+    } = linkAssets({}, 'main', assets, {});
     expect(styleTags.length).toBe(0);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -30,7 +30,7 @@ describe('renderer/helpers/linkAssets', () => {
     const {
       styleTags,
       scriptTags,
-    } = linkAssets({}, 'main', assets);
+    } = linkAssets({}, 'main', assets, {});
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -46,7 +46,7 @@ describe('renderer/helpers/linkAssets', () => {
     const {
       styleTags,
       scriptTags,
-    } = linkAssets({}, '/', assets);
+    } = linkAssets({}, '/', assets, {});
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -62,7 +62,7 @@ describe('renderer/helpers/linkAssets', () => {
     const {
       styleTags,
       scriptTags,
-    } = linkAssets({}, '/main', assets);
+    } = linkAssets({}, '/main', assets, {});
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -70,5 +70,16 @@ describe('renderer/helpers/linkAssets', () => {
     expect(scriptTags[0].props.dangerouslySetInnerHTML.__html.includes('vendor-js')).toBeTruthy();
     expect(styleTags[0].type).toEqual('link');
     process.env.NODE_ENV = originalENV;
+  });
+
+  it('should pass loadjs config', () => {
+    const {
+      scriptTags,
+    } = linkAssets({}, 'main', assets, {
+      before: () => { console.log('LoadJSBefore'); },
+    });
+    expect(scriptTags.length).toBe(1);
+    expect(scriptTags[0].props.dangerouslySetInnerHTML.__html)
+      .toContain('console.log(\'LoadJSBefore\')');
   });
 });

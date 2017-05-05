@@ -99,6 +99,7 @@ const getEntries = (routes): Entries => ({
 const entriesConfig: EntriesConfig = mocks.entriesConfig;
 
 const assets = {};
+const loadjsConfig = {};
 const EntryWrapper = {};
 const BodyWrapper = {};
 const entriesPlugins = [];
@@ -137,7 +138,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
       [],
@@ -166,7 +167,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -192,7 +193,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -214,7 +215,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -237,7 +238,7 @@ describe('renderer/middleware', () => {
         response,
         { entries, entriesConfig, entriesPlugins },
         { EntryWrapper, BodyWrapper },
-        assets,
+        { assets, loadjsConfig },
         options,
         { hooks, hooksHelper },
       );
