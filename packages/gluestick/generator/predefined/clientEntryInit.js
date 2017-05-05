@@ -7,7 +7,6 @@ import getRoutes from "${args => args.routes}";
 import EntryWrapper from "../EntryWrapper";
 import { createStore } from "compiled/gluestick";
 import globalMiddlewares, { thunkMiddleware as globalThunkMiddleware } from "config/redux-middleware";
-import reducers from "${args => args.reducers}";
 ${args => args.config ? `import config from "${args.config}";` : 'const config = {};'}
 
 import "${args => args.component}";
@@ -19,7 +18,7 @@ ${args => args.plugins.reduce((prev, curr) => {
 export const getStore = (httpClient) => {
   return createStore(
     httpClient,
-    () => reducers,
+    () => require("${args => args.reducers}").default,
     config.reduxOptions && config.reduxOptions.middlewares
       ? config.reduxOptions.middlewares
       : globalMiddlewares,
@@ -50,6 +49,12 @@ if (typeof window === "object") {
     getStore,
     { rootWrappers, rootWrappersOptions: [], preRenderHooks },
   );
+
+  if (module.hot) {
+    module.hot.accept("${args => args.routes}", () => {
+      EntryWrapper.rerender(require("${args => args.routes}").default);
+    });
+  }
 }
 `;
 
