@@ -97,31 +97,19 @@ describe('commands/build/build', () => {
     }, 0);
   });
 
-  it('should build client and log warn about static markup', (done) => {
-    build(context, { client: true, server: false, static: true });
-    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(1);
-    // $FlowIgnore donesn't know about jest mock
-    expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
-    expect(compile).toHaveBeenCalledTimes(1);
-    // $FlowIgnore donesn't know about jest mock
-    expect(compile.mock.calls[0][2]).toEqual('client');
-    setTimeout(() => {
-      expect(getEntiresSnapshots).toHaveBeenCalledTimes(0);
-      done();
-    }, 0);
+  it('should fail to build if static was passed, but client won\'t be build', () => {
+    expect(() => {
+      build(context, { client: false, server: true, static: true });
+    }).toThrowError('--static options must be used with both client and server build');
+    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
+    expect(compile).toHaveBeenCalledTimes(0);
   });
 
-  it('should build server and static markup', (done) => {
-    build(context, { server: true, static: true });
-    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(1);
-    // $FlowIgnore donesn't know about jest mock
-    expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('server');
-    expect(compile).toHaveBeenCalledTimes(1);
-    // $FlowIgnore donesn't know about jest mock
-    expect(compile.mock.calls[0][2]).toEqual('server');
-    setTimeout(() => {
-      expect(getEntiresSnapshots).toHaveBeenCalledTimes(1);
-      done();
-    }, 0);
+  it('should fail to build if static was passed, but server won\'t be build', () => {
+    expect(() => {
+      build(context, { client: true, server: false, static: true });
+    }).toThrowError('--static options must be used with both client and server build');
+    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
+    expect(compile).toHaveBeenCalledTimes(0);
   });
 });

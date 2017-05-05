@@ -20,13 +20,14 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
     options.server = true;
   }
 
-  if (options.static && !options.server) {
-    logger.warn('--static options should be used with server build');
+  if (options.static && (!options.client || !options.server)) {
+    throw new Error('--static options must be used with both client and server build');
   }
 
+  let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    compile({ logger, config }, options, 'client').catch(printAndExit);
+    clientCompilation = compile({ logger, config }, options, 'client').catch(printAndExit);
   }
 
   // If only server flag is passed, unmute server compilation - by default it's muted.
@@ -36,10 +37,11 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
 
   if (options.server) {
     clearBuildDirectory(config.GSConfig, 'server');
-    compile({ logger, config }, options, 'server')
-      .then(() => {
-        return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
-      })
-      .catch(printAndExit);
+    Promise.all([
+      compile({ logger, config }, options, 'server').catch(printAndExit),
+      clientCompilation,
+    ]).then(() => {
+      return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
+    });
   }
 };

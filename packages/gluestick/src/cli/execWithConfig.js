@@ -6,6 +6,7 @@ const prepareConfigPlugins = require('../plugins/prepareConfigPlugins');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
 const compileWebpackConfig = require('../config/compileWebpackConfig');
 const loggerFactory = require('./logger');
+const colorScheme = require('./colorScheme');
 
 const execHooks = (context, hooks) => {
   if (Array.isArray(hooks)) {
@@ -89,7 +90,7 @@ const execWithConfig: ExecWithConfig = (
     func(context, ...commandArguments);
     execHooks(context, post);
   } catch (error) {
-    process.stderr.write(error.message);
+    process.stderr.write(`${colorScheme.error(error.message)}\n`);
     process.exit(1);
   }
 };
