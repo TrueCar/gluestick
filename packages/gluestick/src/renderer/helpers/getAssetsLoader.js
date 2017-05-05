@@ -1,6 +1,7 @@
 /* @flow */
 
 const serialize = require('serialize-javascript');
+
 type LoadJSConfig = {
   before: (path: string, el: HTMLScriptElement) => void,
 };
