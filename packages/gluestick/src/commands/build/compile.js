@@ -15,14 +15,16 @@ module.exports = (
         reject(error);
       }
 
+      const buildName: string = `${buildType[0].toUpperCase()}${buildType.slice(1)}`;
+
       logger.success(
-        `${buildType[0].toUpperCase()}${buildType.slice(1)} bundle has been prepared `
+        `${buildName} bundle has been prepared `
         + `for ${process.env.NODE_ENV || 'development'}`,
       );
 
       if (options.stats) {
-        logger.info('Creating webpack stats');
         createWebpackStats(`${config.GSConfig.webpackStats}-${buildType}`, stats);
+        logger.success(`${buildName} webpack stats created`);
       }
 
       resolve();

@@ -6,11 +6,6 @@ const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 const compile = require('./compile');
 
-const printAndExit = (error: Error) => {
-  console.error(error);
-  process.exit(1);
-};
-
 type CommandOptions = {
   stats: boolean;
   client: boolean;
@@ -39,10 +34,15 @@ module.exports = (
 
   const config = getContextConfig(logger);
 
-  let clientCompilation = Promise.resolve();
+  const compilationErrorHandler = (type: string) => error => {
+    logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
+  };
+
+  let clientCompilation = Promise.reject();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    clientCompilation = compile({ logger, config }, options, 'client').catch(printAndExit);
+    clientCompilation = compile({ logger, config }, options, 'client')
+      .catch(compilationErrorHandler('client'));
   }
 
   // If only server flag is passed, unmute server compilation - by default it's muted.
@@ -53,7 +53,7 @@ module.exports = (
   if (options.server) {
     clearBuildDirectory(config.GSConfig, 'server');
     Promise.all([
-      compile({ logger, config }, options, 'server').catch(printAndExit),
+      compile({ logger, config }, options, 'server').catch(compilationErrorHandler('server')),
       clientCompilation,
     ]).then(() => {
       return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();

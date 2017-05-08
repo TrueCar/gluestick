@@ -9,6 +9,9 @@ const generator = require('gluestick-generators').default;
 const buildServerEntries = (
   gluestickConfig: GSConfig, logger: Logger, entries: Object, plugins: Object[],
 ): void => {
+  const successMessageHandler = () => {
+    logger.info('Server entries created');
+  };
   generator({
     generatorName: 'serverEntries',
     entityName: path.basename(gluestickConfig.serverEntriesPath),
@@ -27,7 +30,7 @@ const buildServerEntries = (
       }),
       plugins,
     },
-  }, logger);
+  }, logger, { successMessageHandler });
 };
 
 module.exports = buildServerEntries;
