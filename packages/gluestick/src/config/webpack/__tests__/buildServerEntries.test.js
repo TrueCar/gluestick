@@ -22,7 +22,7 @@ describe('config/webpack/buildSeverEntries', () => {
       [],
     );
     // $FlowIgnore
-    expect(generate.mock.calls[0]).toEqual([{
+    expect(generate.mock.calls[0][0]).toEqual({
       generatorName: 'serverEntries',
       entityName: path.basename(defaultGSConfig.serverEntriesPath),
       options: {
@@ -43,6 +43,6 @@ describe('config/webpack/buildSeverEntries', () => {
         }],
         plugins: [],
       },
-    }, {}]);
+    });
   });
 });

@@ -28,7 +28,7 @@ describe('config/webpack/buildEntries', () => {
       entry: 'path/to/main/entry.js',
     });
     // $FlowIgnore
-    expect(generate.mock.calls[0]).toEqual([{
+    expect(generate.mock.calls[0][0]).toEqual({
       generatorName: 'clientEntryInit',
       entityName: 'main',
       options: {
@@ -39,9 +39,9 @@ describe('config/webpack/buildEntries', () => {
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
         plugins: [],
       },
-    }, {}]);
+    });
     // $FlowIgnore
-    expect(generate.mock.calls[1]).toEqual([{
+    expect(generate.mock.calls[1][0]).toEqual({
       generatorName: 'clientEntryInit',
       entityName: 'home',
       options: {
@@ -52,6 +52,6 @@ describe('config/webpack/buildEntries', () => {
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
         plugins: [],
       },
-    }, {}]);
+    });
   });
 });

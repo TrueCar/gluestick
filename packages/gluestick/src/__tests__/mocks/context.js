@@ -95,7 +95,30 @@ const entriesConfig: EntriesConfig = {
   },
 };
 
+const commandApi = {
+  getOptions: args => args[args.length - 1],
+  getLogger: () => ({
+    level: 'test',
+    clear: jest.fn(),
+    log: jest.fn(),
+    success: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    error: jest.fn(),
+    fatal: jest.fn(),
+    print,
+    printCommandInfo: jest.fn(),
+  }),
+  getContextConfig: () => ({}),
+  getGluestickConfig: () => ({}),
+  getPlugins: () => [],
+  getWebpackConfig: () => ({}),
+  isGluestickProject: () => true,
+};
+
 module.exports = {
+  commandApi,
   context,
   config,
   logger,
