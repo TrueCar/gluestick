@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, WebpackConfigEntry } from '../../types';
+import type { CLIContext, WebpackConfigEntry } from '../../types';
 
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
@@ -34,7 +34,7 @@ const watchSource = (watchDirectories: string[], callback: Function): void => {
 /**
  * Compile server bundle and execute given callback.
  */
-const compile = ({ config, logger }: Context, cb: Function): void => {
+const compile = ({ config, logger }: CLIContext, cb: Function): void => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   logger.info('Compiling server bundle...');
   webpack(webpackConfig).run(error => {
@@ -49,7 +49,7 @@ const compile = ({ config, logger }: Context, cb: Function): void => {
  * Spawn debugger process and print help messages.
  */
 const debug = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,
@@ -79,7 +79,7 @@ const debug = (
 };
 
 module.exports = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,

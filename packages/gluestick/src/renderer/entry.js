@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Logger, GSConfig } from '../types';
+import type { LoggerTypes, GSConfig } from '../types';
 
 const util = require('util');
 
@@ -27,7 +27,7 @@ const loggerFactory = (type: string): (values: Array<*>) => void => {
     process.send({ type, value: stringfiedValues });
   };
 };
-const logger: Logger = {
+const logger: LoggerTypes = {
   info: loggerFactory('info'),
   success: loggerFactory('success'),
   error: loggerFactory('error'),

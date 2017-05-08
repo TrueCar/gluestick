@@ -1,11 +1,10 @@
 /* @flow */
-import type { Context, WebpackConfig, Compiler } from '../types.js';
+import type { CLIContext, WebpackConfig, Compiler } from '../types.js';
 
 const path = require('path');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
-const progressHandler = require('../config/webpack/progressHandler');
 
 type DevelopmentServerOptions = {
   quiet: boolean, // don’t output anything to the console
@@ -23,7 +22,7 @@ type DevelopmentServerOptions = {
   stats: Object,
 };
 
-module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): void => {
+module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): void => {
   if (!webpackConfig) {
     throw new Error('Webpack config not specified');
   }
@@ -55,9 +54,6 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
     const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
     app.use(devMiddleware);
     app.use(require('webpack-hot-middleware')(compiler));
-    devMiddleware.waitUntilValid(() => {
-      progressHandler.toggleMute('client');
-    });
     // Proxy http requests from client to renderer server in development mode.
     app.use(proxy({
       changeOrigin: false,

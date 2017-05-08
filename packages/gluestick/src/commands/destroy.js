@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context } from '../types.js';
+import type { CLIContext } from '../types.js';
 
 const fs = require('fs');
 const path = require('path');
@@ -23,7 +23,7 @@ type Options = {
   entryPoint?: string;
 }
 
-module.exports = async (context: Context, command: Command, name: string, options: Options) => {
+module.exports = async (context: CLIContext, command: Command, name: string, options: Options) => {
   const { logger } = context;
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {

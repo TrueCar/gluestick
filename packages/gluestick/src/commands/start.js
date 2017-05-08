@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../types.js';
+import type { CLIContext } from '../types.js';
 
 const spawn = require('cross-spawn');
 const { filterArg } = require('./utils');
@@ -44,7 +44,7 @@ const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
   });
 };
 
-module.exports = ({ config, logger }: Context, options: StartOptions): Promise<any> => {
+module.exports = ({ config, logger }: CLIContext, options: StartOptions): Promise<any> => {
   const isProduction: boolean = process.env.NODE_ENV === 'production';
 
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);

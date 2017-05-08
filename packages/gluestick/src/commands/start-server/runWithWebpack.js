@@ -1,10 +1,9 @@
 /* @flow */
-import type { Context, WebpackConfigEntry } from '../../types';
+import type { CLIContext, WebpackConfigEntry } from '../../types';
 
 const webpack = require('webpack');
 const { spawn } = require('cross-spawn');
 const logMessage = require('./logMessage');
-const progressHandler = require('../../config/webpack/progressHandler');
 
 /**
  * Spawns new process with rendering server.
@@ -14,7 +13,7 @@ const progressHandler = require('../../config/webpack/progressHandler');
  * @param {Array<string>} args Arguments to pass to entry
  */
 const spawnServer = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   entryPointPath: string,
   args: string[],
 ): Object => {
@@ -34,21 +33,15 @@ const spawnServer = (
  * @param {string} entryPointPath Path to renderer server entry file
  * @param {Array<string>} args Arguments to pass to entry
  */
-module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
+module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: string[]) => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
-  let initial: boolean = true;
   logger.debug('Initial compilation');
   logger.info('Building server entry.');
   webpack(webpackConfig).watch({}, error => {
     if (error) {
       logger.error(error);
       return;
-    }
-
-    if (initial) {
-      progressHandler.toggleMute('server');
-      initial = false;
     }
 
     if (child) {

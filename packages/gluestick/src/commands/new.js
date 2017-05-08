@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context, Logger } from '../types';
+import type { CLIContext, Logger } from '../types';
 
 const path = require('path');
 const spawn = require('cross-spawn');
@@ -39,7 +39,7 @@ const currentlyInProjectFolder = (folderPath: string) => {
   }
 };
 
-module.exports = ({ logger }: Context, appName: string, options: Object = {}) => {
+module.exports = ({ logger }: CLIContext, appName: string, options: Object = {}) => {
   if (currentlyInProjectFolder(process.cwd())) {
     logger.info(`${filename(appName)} is being generated...`);
 

@@ -1,11 +1,11 @@
 /* @flow */
-import type { Context, WebpackConfig, Compiler } from '../../types.js';
+import type { CLIContext, WebpackConfig, Compiler } from '../../types.js';
 
 const webpack = require('webpack');
 const createWebpackStats = require('../../config/createWebpackStats');
 
 module.exports = (
-  { logger, config }: Context, options: Object, buildType: string,
+  { logger, config }: CLIContext, options: Object, buildType: string,
 ): Promise<void> => {
   const configuration: WebpackConfig = config.webpackConfig[buildType];
   const compiler: Compiler = webpack(configuration);

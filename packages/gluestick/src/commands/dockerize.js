@@ -1,12 +1,12 @@
 /* @flow */
-import type { Context } from '../types.js';
+import type { CLIContext } from '../types.js';
 
 const spawn = require('cross-spawn');
 const path = require('path');
 const process = require('process');
 const which = require('shelljs').which;
 
-module.exports = ({ config, logger }: Context, name: string) => {
+module.exports = ({ config, logger }: CLIContext, name: string) => {
   if (which('docker') !== null) {
     spawn(
       'docker',

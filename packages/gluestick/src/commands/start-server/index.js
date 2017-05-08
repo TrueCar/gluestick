@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../../types';
+import type { CLIContext } from '../../types';
 
 const runWithWebpack = require('./runWithWebpack');
 const runWithPM2 = require('./runWithPM2');
@@ -33,7 +33,7 @@ const getServerEntry = (config: Object): Entry => {
  * @param {Object} { debug = false, debugPort }
  */
 module.exports = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   { debugServer = false, debugPort }: DebugOptions,
 ): void => {
   const entry: Entry = getServerEntry(config);

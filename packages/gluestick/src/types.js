@@ -65,18 +65,19 @@ export type Config = {
 export type Logger = LoggerTypes & {
   level?: string;
   clear: () => void;
+  log: (type: string, title: string, ...args: any[]) => void;
   print: (...args: any[]) => void;
   custom: (type: string, typeText: string, ...args: any[]) => void;
   printCommandInfo: () => void;
+  fatal: (...args: any[]) => void;
 };
 
 export type LoggerTypes = {
-  success: Function;
-  info: Function;
-  warn: Function;
-  debug: Function;
-  error: Function;
-  fatal: Function;
+  success: (...args: any[]) => void;
+  info: (...args: any[]) => void;
+  warn: (...args: any[]) => void;
+  debug: (...args: any[]) => void;
+  error: (...args: any[]) => void;
 }
 
 export type CommandAPI = {
@@ -89,9 +90,14 @@ export type CommandAPI = {
   getContextConfig: Function;
 };
 
+export type CLIContext = {
+  config: Config;
+  logger: Logger;
+}
+
 export type Context = {
  config: Config;
- logger: Logger;
+ logger: LoggerTypes;
 };
 
 export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;

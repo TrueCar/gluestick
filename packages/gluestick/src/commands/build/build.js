@@ -1,7 +1,6 @@
 /* @flow */
 import type { Logger, CommandAPI } from '../../types.js';
 
-const webpackProgressHandler = require('../../config/webpack/progressHandler');
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 const compile = require('./compile');

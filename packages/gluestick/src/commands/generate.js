@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context } from '../types';
+import type { CLIContext } from '../types';
 
 const generator = require('gluestick-generators').default;
 
@@ -10,7 +10,7 @@ export type Options = {
   genOptions?: string;
 }
 
-const generate = ({ config, logger }: Context, generatorName: string, entityName: string,
+const generate = ({ config, logger }: CLIContext, generatorName: string, entityName: string,
   options: Options) => {
   const filteredOptions = {
     ...JSON.parse(options.genOptions ? options.genOptions : '{}'),
