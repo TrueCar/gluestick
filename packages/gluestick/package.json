@@ -31,6 +31,7 @@
   },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "peerDependencies": {
+    "babel-loader": "7.x",
     "react-hot-loader": "3.x"
   },
   "devDependencies": {
@@ -78,6 +79,7 @@
     "postcss-calc": "^5.3.1",
     "postcss-custom-properties": "^5.0.1",
     "postcss-loader": "^1.2.1",
+    "progress": "2.0.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-loader": "2.4.0",

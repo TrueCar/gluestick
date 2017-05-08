@@ -56,7 +56,7 @@ module.exports = (
     ),
     // Make it so *.server.js files return null in client
     new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
-    progressHandler.plugin('client'),
+    progressHandler('client'),
   );
   return () => config;
 };

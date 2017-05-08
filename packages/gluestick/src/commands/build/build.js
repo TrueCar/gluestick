@@ -32,22 +32,20 @@ module.exports = (
     logger.fatal('--static options must be used with both client and server build');
   }
 
-  const config = getContextConfig(logger);
+  const config = getContextConfig(logger, {
+    skipClientEntryGeneration: !options.client,
+    skipServerEntryGeneration: !options.server,
+  });
 
   const compilationErrorHandler = (type: string) => error => {
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
   };
 
-  let clientCompilation = Promise.reject();
+  let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
     clientCompilation = compile({ logger, config }, options, 'client')
       .catch(compilationErrorHandler('client'));
-  }
-
-  // If only server flag is passed, unmute server compilation - by default it's muted.
-  if (options.server && !options.client) {
-    webpackProgressHandler.toggleMute('server');
   }
 
   if (options.server) {

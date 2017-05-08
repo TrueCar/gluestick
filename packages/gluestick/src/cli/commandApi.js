@@ -34,23 +34,29 @@ const getGluestickConfig = (
 };
 
 const getWebpackConfig = (
-  logger: Logger, plugins: ConfigPlugin[], projectConfig: Object, gluestickConfig: GSConfig,
+  logger: Logger,
+  plugins: ConfigPlugin[],
+  projectConfig: Object,
+  gluestickConfig: GSConfig,
+  options: Object,
 ): CompiledConfig => {
   return compileWebpackConfig(logger, plugins, projectConfig, gluestickConfig, {
     skipClientEntryGeneration: false,
     skipServerEntryGeneration: false,
-    entryOrGroupToBuild: '',
+    ...options,
   });
 };
 
-const getContextConfig = (logger: Logger): Config => {
+const getContextConfig = (logger: Logger, webpackOptions = {}): Config => {
   const projectConfig = {};
   const plugins = getPlugins(logger);
   const gluestickConfig = getGluestickConfig(logger, plugins, projectConfig);
 
   return {
     GSConfig: gluestickConfig,
-    webpackConfig: getWebpackConfig(logger, plugins, projectConfig, gluestickConfig),
+    webpackConfig: getWebpackConfig(
+      logger, plugins, projectConfig, gluestickConfig, webpackOptions,
+    ),
   };
 };
 

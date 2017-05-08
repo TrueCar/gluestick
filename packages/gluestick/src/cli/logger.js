@@ -6,6 +6,13 @@ const util = require('util');
 const clear = require('clear');
 const colorScheme = require('./colorScheme');
 
+const _log = console.log.bind(process);
+console._log = _log;
+
+// Webpack doesn't allow to use custom logger/reporter so console.log needs to surpressed
+// $FlowIgnore
+console.log = () => {};
+
 const levels = {
   success: 20,
   info: 10,
@@ -24,8 +31,7 @@ const loggerFactory = (type: string, level: string, customTypeText: string = '')
     ? `[GlueStick]${process.env.COMMAND ? `[${process.env.COMMAND}]` : ''}`
     : colorScheme[type](`  ${customTypeText.length ? customTypeText : type.toUpperCase()}  `);
 
-  // eslint-disable-next-line no-console
-  console.log(
+  _log(
       header,
       ...args.map(arg => typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
       '\n',
@@ -37,7 +43,7 @@ const customFactory = level => (type: string, typeText: string, ...args: any[]) 
 };
 
 const print = (...args) => {
-  console.log(...args);
+  _log(...args);
 };
 
 module.exports = (level: string): Logger => {
