@@ -11,7 +11,14 @@ const getOptions = commandArguments => commandArguments[commandArguments.length 
 
 const getLogger = (level: string = 'info'): Logger => loggerFactory(level);
 
-const isGluestickProject = () => {};
+const isGluestickProject = (packagePath: string = process.cwd()): boolean => {
+  try {
+    const packageJson = require(path.join(packagePath, 'package.json'));
+    return !!packageJson.dependencies.gluestick;
+  } catch (error) {
+    return false;
+  }
+};
 
 const getPlugins = (
   logger: Logger, pluginsConfigPath = path.join(process.cwd(), 'src/gluestick.plugins.js'),

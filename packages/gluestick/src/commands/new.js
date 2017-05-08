@@ -1,59 +1,49 @@
 /* @flow */
 
-import type { CLIContext, Logger } from '../types';
+import type { CommandAPI, Logger } from '../types';
 
-const path = require('path');
 const spawn = require('cross-spawn');
 const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../cli/colorScheme');
 const packageJSON = require('../../package.json');
 
-type ProjectData = {
-  dependencies: {
-    gluestick: string,
-  }
-}
-
-const generateTemplate = (
-  generatorName: string,
-  entityName: string,
-  logger: Logger,
-  options: Object,
+module.exports = (
+  { getLogger, getOptions, isGluestickProject }: CommandAPI, commandArguments: any[],
 ) => {
-  generate({
-    generatorName,
-    entityName,
-    options,
-  }, logger);
-};
+  const logger: Logger = getLogger();
+  const appName: string = commandArguments[0];
+  const options = getOptions(commandArguments);
 
-const currentlyInProjectFolder = (folderPath: string) => {
-  const fileName: string = path.join(folderPath, 'package.json');
-  let data: ?ProjectData = null;
-  try {
-    data = require(fileName);
-    return !!data.dependencies && !!data.dependencies.gluestick;
-  } catch (e) {
-    return false;
-  }
-};
+  const successMessageHandler = () => {
 
-module.exports = ({ logger }: CLIContext, appName: string, options: Object = {}) => {
-  if (currentlyInProjectFolder(process.cwd())) {
+  };
+
+  if (isGluestickProject()) {
+    logger.print('');
     logger.info(`${filename(appName)} is being generated...`);
 
-    generateTemplate('new', appName, logger, { dev: options.dev || null, appName, skipMain: options.skipMain });
+    generate({
+      generatorName: 'new',
+      entityName: appName,
+      options: { dev: options.dev || null, appName, skipMain: options.skipMain },
+    }, logger, { successMessageHandler });
 
     // Install necessary flow-typed definitions
-    spawn.sync('./node_modules/.bin/flow-typed', ['install', `jest@${packageJSON.dependencies.jest}`], { stdio: 'inherit' });
+    spawn.sync(
+      './node_modules/.bin/flow-typed',
+      ['install', `jest@${packageJSON.dependencies.jest}`],
+      { stdio: 'inherit' },
+    );
 
-    logger.info(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
-    logger.info('To run your app and start developing');
-    logger.info(`    cd ${appName}`);
-    logger.info('    gluestick start');
-    logger.info('    Point the browser to http://localhost:8888');
-
-    process.exit(0);
+    logger.print('');
+    logger.success(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+    logger.info(
+      'To run your app and start developing\n'
+      + `         -> cd ${appName}\n`
+      + '         -> gluestick start\n'
+      + '         -> Point the browser to http://localhost:8888',
+    );
+    // process.exit(0);
   }
 };

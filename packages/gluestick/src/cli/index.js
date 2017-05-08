@@ -15,19 +15,15 @@ const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific en
 commander
   .version(cliHelpers.getVersion());
 
-// commander
-//   .command('new')
-//   .description('generate a new application')
-//   .arguments('<appName>')
-//   .option('-d, --dev <path>', 'path to dev version of gluestick')
-//   .option('-s, --skip-main', 'gluestick will not generate main app')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/new'),
-//       commandArguments,
-//       { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
-//     );
-//   });
+commander
+  .command('new')
+  .description('generate a new application')
+  .arguments('<appName>')
+  .option('-d, --dev <path>', 'path to dev version of gluestick')
+  .option('-s, --skip-main', 'gluestick will not generate main app')
+  .action((...commandArguments) => {
+    require('../commands/new')(commandApi, commandArguments);
+  });
 
 // commander
 //   .command('generate <container|component|reducer|generator>')
@@ -108,23 +104,7 @@ commander
   .option('--server', 'gluestick builds only server bundle')
   .option('-Z, --static', 'prepare html file for static hosting')
   .action((...commandArguments) => {
-    // Performance tweak:
-    // If `--client` flag is passed, skip server entry generation.
-    // If `--server` flag is passed, skip client entry generation.
-    // const options = commandArguments[commandArguments.length - 1];
-    // const skipEntries = {};
-    // if (options.client && !options.server) {
-    //   skipEntries.skipServerEntryGeneration = true;
-    // } else if (!options.client && options.server) {
-    //   skipEntries.skipClientEntryGeneration = true;
-    // }
-
     require('../commands/build')(commandApi, commandArguments);
-    // execWithConfig(
-    //   ,
-    //   commandArguments,
-    //   { useGSConfig: true, useWebpackConfig: true, ...skipEntries },
-    // );
   });
 
 // commander
