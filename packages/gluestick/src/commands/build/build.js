@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../../types.js';
+import type { Logger, CommandAPI } from '../../types.js';
 
 const webpackProgressHandler = require('../../config/webpack/progressHandler');
 const { clearBuildDirectory } = require('../utils');
@@ -11,8 +11,21 @@ const printAndExit = (error: Error) => {
   process.exit(1);
 };
 
-module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
-  const options: Object = commandArgs[commandArgs.length - 1];
+type CommandOptions = {
+  stats: boolean;
+  client: boolean;
+  server: boolean;
+  static: boolean;
+}
+
+module.exports = (
+  { getOptions, getLogger, getContextConfig }: CommandAPI, commandArgs: any[],
+): void => {
+  const options: CommandOptions = getOptions(commandArgs);
+  const logger: Logger = getLogger();
+  logger.clear();
+  logger.printCommandInfo();
+
   // If neither server not client flag is passed
   // set them both to true to compile both client and server.
   if (!options.client && !options.server) {
@@ -21,8 +34,10 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
   }
 
   if (options.static && (!options.client || !options.server)) {
-    throw new Error('--static options must be used with both client and server build');
+    logger.fatal('--static options must be used with both client and server build');
   }
+
+  const config = getContextConfig(logger);
 
   let clientCompilation = Promise.resolve();
   if (options.client) {

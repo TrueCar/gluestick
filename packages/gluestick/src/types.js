@@ -60,11 +60,14 @@ export type Config = {
   projectConfig?: ProjectConfig;
   GSConfig: GSConfig;
   webpackConfig: CompiledConfig;
-  plugins: Plugin[];
 };
 
 export type Logger = LoggerTypes & {
   level?: string;
+  clear: () => void;
+  print: (...args: any[]) => void;
+  custom: (type: string, typeText: string, ...args: any[]) => void;
+  printCommandInfo: () => void;
 };
 
 export type LoggerTypes = {
@@ -73,7 +76,18 @@ export type LoggerTypes = {
   warn: Function;
   debug: Function;
   error: Function;
+  fatal: Function;
 }
+
+export type CommandAPI = {
+  getOptions: Function;
+  getLogger: Function;
+  isGluestickProject: Function;
+  getPlugins: Function;
+  getGluestickConfig: Function;
+  getWebpackConfig: Function;
+  getContextConfig: Function;
+};
 
 export type Context = {
  config: Config;
