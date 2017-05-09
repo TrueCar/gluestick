@@ -13,13 +13,7 @@ jest.mock('src/webpack.hooks.js', () => ({
 const compileWebpackConfig = require('../compileWebpackConfig');
 const defaultGSConfig = require('../defaults/glueStickConfig');
 
-const loggerMock = {
-  info: jest.fn(),
-  debug: jest.fn(),
-  success: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-};
+const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
 
 const originalProcessCwd = process.cwd.bind(process);
 const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
@@ -42,7 +36,7 @@ const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
       clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
     },
   },
-], {}, defaultGSConfig);
+], defaultGSConfig);
 
 describe('config/compileWebpackConfig', () => {
   beforeAll(() => {

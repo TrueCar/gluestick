@@ -30,9 +30,9 @@ const getPlugins = (
 };
 
 const getGluestickConfig = (
-  logger: Logger, plugins: ConfigPlugin[], projectConfig: Object,
+  logger: Logger, plugins: ConfigPlugin[],
 ): GSConfig => {
-  const config: GSConfig = compileGlueStickConfig(logger, plugins, projectConfig);
+  const config: GSConfig = compileGlueStickConfig(logger, plugins);
   if (config) {
     // $FlowIgnore get additional data from a property
     config.pluginsConfigPath = plugins.pluginsConfigPath;
@@ -43,11 +43,10 @@ const getGluestickConfig = (
 const getWebpackConfig = (
   logger: Logger,
   plugins: ConfigPlugin[],
-  projectConfig: Object,
   gluestickConfig: GSConfig,
   options: Object,
 ): CompiledConfig => {
-  return compileWebpackConfig(logger, plugins, projectConfig, gluestickConfig, {
+  return compileWebpackConfig(logger, plugins, gluestickConfig, {
     skipClientEntryGeneration: false,
     skipServerEntryGeneration: false,
     ...options,
@@ -55,14 +54,13 @@ const getWebpackConfig = (
 };
 
 const getContextConfig = (logger: Logger, webpackOptions = {}): Config => {
-  const projectConfig = {};
   const plugins = getPlugins(logger);
-  const gluestickConfig = getGluestickConfig(logger, plugins, projectConfig);
+  const gluestickConfig = getGluestickConfig(logger, plugins);
 
   return {
     GSConfig: gluestickConfig,
     webpackConfig: getWebpackConfig(
-      logger, plugins, projectConfig, gluestickConfig, webpackOptions,
+      logger, plugins, gluestickConfig, webpackOptions,
     ),
   };
 };

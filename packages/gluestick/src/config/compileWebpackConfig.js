@@ -32,7 +32,6 @@ type CompilationOptions = {
 module.exports = (
   logger: Logger,
   plugins: ConfigPlugin[],
-  projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
   {
     skipClientEntryGeneration,
