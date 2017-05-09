@@ -1,9 +1,11 @@
 /* @flow */
+
 jest.mock('fs', () => ({
   readFile: (file, cb) => {
     cb(file === 'fail.html' ? new Error('test error') : null, new Buffer('This is a {{ test }}!'));
   },
 }));
+
 let runCallback = () => {};
 let isWebpackConfigValid = false;
 jest.setMock('webpack', (config) => {
@@ -12,6 +14,7 @@ jest.setMock('webpack', (config) => {
     run: jest.fn(cb => { runCallback = cb; }),
   };
 });
+
 let middlewares = [];
 let listenCallback = () => {};
 let engineHandler = () => {};
@@ -21,6 +24,7 @@ jest.setMock('express', () => ({
   use: (middleware) => middlewares.push(middleware),
   listen: (port, host, cb) => { listenCallback = cb; },
 }));
+
 let waitUntilValidCallback = () => {};
 jest.mock('webpack-dev-middleware', () => (compiler, settings) => {
   if (!compiler) {
@@ -33,11 +37,13 @@ jest.mock('webpack-dev-middleware', () => (compiler, settings) => {
     waitUntilValid: (cb) => { waitUntilValidCallback = cb; },
   };
 });
+
 jest.setMock('webpack-hot-middleware', () => (compiler) => {
   if (!compiler) {
     throw new Error('compiler not defined');
   }
 });
+
 let proxyOnErrorCallback = () => {};
 jest.setMock('http-proxy-middleware', (opts) => {
   proxyOnErrorCallback = opts.onError;
