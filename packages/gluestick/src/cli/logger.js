@@ -68,7 +68,7 @@ module.exports = (level: string): Logger => {
     error: loggerFactory('error', level),
     // Same as error but kills process after logging message
     fatal: (...args: any[]): void => {
-      logMessage({ type: 'error', title: 'error', level }, ...args);
+      logMessage({ type: 'error', title: '', level }, ...args);
       process.exit(1);
     },
     // Log message without any color enhancement

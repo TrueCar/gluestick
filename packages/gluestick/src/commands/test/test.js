@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context, Logger } from '../../types.js';
+import type { CommandAPI, Logger, Config } from '../../types.js';
 
 const fs = require('fs');
 const spawn = require('cross-spawn').spawn;
@@ -108,17 +108,28 @@ const getDebugDefaultConfig = (
   );
 };
 
-module.exports = (context: Context, ...commandArguments: any[]) => {
+module.exports = (
+  { getLogger, getOptions, getContextConfig }: CommandAPI, commandArguments: any[],
+) => {
   const spawnOptions = {
     stdio: 'inherit',
   };
+  const logger: Logger = getLogger();
+
+  logger.clear();
+  logger.printCommandInfo();
+
+  const config: Config = getContextConfig(logger, {
+    skipClientEntryGeneration: true,
+    skipServerEntryGeneration: true,
+  });
   // $FlowFixMe
-  const aliases: Object = context.config.webpackConfig.client.resolve.alias;
-  const options: Object = commandArguments[commandArguments.length - 1];
+  const aliases: Object = config.webpackConfig.client.resolve.alias;
+  const options: Object = getOptions(commandArguments);
   const rawOptions: string[] = options.parent.rawArgs.slice(3);
   if (options.debugTest) {
     const argvDebug: string[] = getDebugDefaultConfig(
-      context.logger, aliases, rawOptions,
+      logger, aliases, rawOptions,
     );
     spawn.sync('node', argvDebug, spawnOptions);
   } else {

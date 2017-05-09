@@ -15,19 +15,32 @@ jest.mock('cwd/custom/package.json', () => ({
 }), { virtual: true });
 
 const clone = require('clone');
-const context = require('../../../__tests__/mocks/context');
+const commandApi = require('../../../__tests__/mocks/context').commandApi;
 const testCommand = require('../test');
 const jestMock = require('jest');
 const path = require('path');
 const fs = require('fs');
 
-const getMockedContext = (aliases, rules) => {
-  const contextConfigCopy = clone(context.config);
-  contextConfigCopy.webpackConfig.client.resolve.alias = aliases;
-  contextConfigCopy.webpackConfig.client.module.rules = rules;
+const infoLogger = jest.fn();
+const getMockedCommandApi = (aliases, rules) => {
   return {
-    ...context,
-    config: contextConfigCopy,
+    ...commandApi,
+    getContextConfig: () => ({
+      webpackConfig: {
+        client: {
+          resolve: {
+            alias: aliases,
+          },
+          module: {
+            rules,
+          },
+        },
+      },
+    }),
+    getLogger: () => ({
+      ...commandApi.getLogger(),
+      info: infoLogger,
+    }),
   };
 };
 
@@ -42,19 +55,19 @@ describe('commands/test/test', () => {
   describe('in debug mode', () => {
     it('should spawn degugger', () => {
       path.join = () => 'cwd/empty/package.json';
-      testCommand(getMockedContext({}, [
+      testCommand(getMockedCommandApi({}, [
         { test: /\.js$/ },
         { test: /\.scss$/ },
         { test: /\.css$/ },
         { test: /\.woff$/ },
         { test: /\.png$/ },
         { test: /\.ttf$/ },
-      ]), {
+      ]), [{
         debugTest: true,
         parent: {
           rawArgs: ['', '', '', '--debug-test'],
         },
-      });
+      }]);
       path.join = originalPathJoin;
       expect(spawnMock.mock.calls.length).toBe(1);
       expect(spawnMock.mock.calls[0][1].indexOf('--inspect')).toBeGreaterThan(-1);
@@ -70,23 +83,23 @@ describe('commands/test/test', () => {
     });
 
     it('should notify about default Jest params', () => {
-      context.logger.info.mockClear();
+      infoLogger.mockClear();
       path.join = () => 'cwd/empty/package.json';
-      testCommand(getMockedContext({}, [
+      testCommand(getMockedCommandApi({}, [
         { test: /\.js$/ },
         { test: /\.scss$/ },
         { test: /\.css$/ },
         { test: /\.woff$/ },
         { test: /\.png$/ },
         { test: /\.ttf$/ },
-      ]), {
+      ]), [{
         debugTest: true,
         parent: {
           rawArgs: ['', '', '', '--debug-test', '-i'],
         },
-      });
+      }]);
       path.join = originalPathJoin;
-      expect(context.logger.info.mock.calls[0]).toEqual([
+      expect(infoLogger.mock.calls[0]).toEqual([
         'Option \'-i\' is always set by default in debug mode',
       ]);
     });
@@ -95,7 +108,7 @@ describe('commands/test/test', () => {
   describe('in non-debug mode', () => {
     it('should run jest directly with default config', () => {
       path.join = () => 'cwd/empty/package.json';
-      testCommand(getMockedContext({
+      testCommand(getMockedCommandApi({
         alias1: 'path/to/alias1',
         alias2: 'path/to/alias2',
       }, [
@@ -105,12 +118,12 @@ describe('commands/test/test', () => {
         { test: /\.woff$/ },
         { test: /\.png$/ },
         { test: /\.ttf$/ },
-      ]), {
+      ]), [{
         debugTest: false,
         parent: {
           rawArgs: ['', '', ''],
         },
-      });
+      }]);
       path.join = originalPathJoin;
       expect(jestMock.run.mock.calls.length).toBe(1);
       const jestConfig = JSON.parse(jestMock.run.mock.calls[0][0][1]);
@@ -126,7 +139,7 @@ describe('commands/test/test', () => {
     it('should run jest directly with merged default and custom config', () => {
       path.join = () => 'cwd/custom/package.json';
       fs.existsSync = jest.fn(() => true);
-      testCommand(getMockedContext({
+      testCommand(getMockedCommandApi({
         alias1: 'path/to/alias1',
         alias2: 'path/to/alias2',
       }, [
@@ -136,12 +149,12 @@ describe('commands/test/test', () => {
         { test: /\.woff$/ },
         { test: /\.png$/ },
         { test: /\.ttf$/ },
-      ]), {
+      ]), [{
         debugTest: false,
         parent: {
           rawArgs: ['', '', ''],
         },
-      });
+      }]);
       path.join = originalPathJoin;
       expect(jestMock.run.mock.calls.length).toBe(1);
       const jestConfig = JSON.parse(jestMock.run.mock.calls[0][0][1]);
