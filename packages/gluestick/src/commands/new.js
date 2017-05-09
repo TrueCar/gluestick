@@ -6,6 +6,7 @@ const spawn = require('cross-spawn');
 const generate = require('gluestick-generators').default;
 
 const { highlight, filename } = require('../cli/colorScheme');
+const { createArrowList } = require('../cli/helpers');
 const packageJSON = require('../../package.json');
 
 module.exports = (
@@ -39,10 +40,11 @@ module.exports = (
     logger.print('');
     logger.success(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
     logger.info(
-      'To run your app and start developing\n'
-      + `         -> cd ${appName}\n`
-      + '         -> gluestick start\n'
-      + '         -> Point the browser to http://localhost:8888',
+      `To run your app and start developing\n${createArrowList([
+        `cd ${appName}`,
+        'gluestick start',
+        'Point the browser to http://localhost:8888',
+      ], 9)}`,
     );
     // process.exit(0);
   }
