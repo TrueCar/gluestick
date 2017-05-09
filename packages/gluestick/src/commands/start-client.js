@@ -2,6 +2,7 @@
 import type { CLIContext, WebpackConfig, Compiler } from '../types.js';
 
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
@@ -51,6 +52,17 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): 
 
   if (process.env.NODE_ENV !== 'production') {
     const app: Object = express();
+    app.engine('html', (filePath: string, options: { [key: string]: any }, next: Function) => {
+      fs.readFile(filePath, (error, template: Buffer) => {
+        if (error) {
+          return next(error);
+        }
+        return next(null, template.toString().replace(/{{ ?(\w+) ?}}/g, (match, key) => {
+          return options[key];
+        }));
+      });
+    });
+    app.set('view engine', 'html');
     const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
     app.use(devMiddleware);
     app.use(require('webpack-hot-middleware')(compiler));
@@ -63,7 +75,7 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): 
       // logProvider: () => logger,
       onError: (err: Object, req: Object, res: Object): void => {
         // When the client is restarting, show our polling message
-        res.status(200).sendFile('poll.html', { root: path.join(__dirname, '../lib') });
+        res.render(path.join(__dirname, '../lib/poll.html'), { port: GSConfig.ports.server });
       },
     }));
 
@@ -77,6 +89,7 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): 
       logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
     });
   } else {
+    // TODO: spawn build command instead of running compiler
     compiler.run((error: string) => {
       if (error) {
         throw new Error(error);
