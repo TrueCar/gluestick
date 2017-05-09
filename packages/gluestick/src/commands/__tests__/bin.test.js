@@ -4,6 +4,17 @@ const path = require('path');
 const bin = require('../bin');
 const spawnMock = require('cross-spawn');
 
+const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
+
+const errorLogger = jest.fn();
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+    error: errorLogger,
+  }),
+};
+
 const spawnOptions = { stdio: 'inherit' };
 
 const getDependencyPath = name =>
@@ -13,7 +24,7 @@ describe('cli: gluestick bin', () => {
   it('runs the dependency without any options', () => {
     const dependencyName = 'fakeDep';
 
-    bin({}, dependencyName, { parent: { rawArgs: [] } });
+    bin(commandApi, [dependencyName, { parent: { rawArgs: [] } }]);
     expect(spawnMock).toBeCalledWith(getDependencyPath(dependencyName), [], spawnOptions);
   });
 
@@ -24,15 +35,14 @@ describe('cli: gluestick bin', () => {
       parent: { rawArgs: ['', '', '', '', ...dependencyOptions] },
     };
 
-    bin({}, dependencyName, ...dependencyOptions, commanderObject);
+    bin(commandApi, [dependencyName, ...dependencyOptions, commanderObject]);
     expect(spawnMock).toBeCalledWith(
       getDependencyPath(dependencyName), dependencyOptions, spawnOptions,
     );
   });
 
   it('should return permaturely if dependency name is invalid', () => {
-    const context = { logger: { error: jest.fn() } };
-    bin(context, 1);
-    expect(context.logger.error.mock.calls[0]).toEqual(['No binary is specified or is invalid']);
+    bin(commandApi, [1]);
+    expect(errorLogger.mock.calls[0]).toEqual(['No binary is specified or is invalid']);
   });
 });

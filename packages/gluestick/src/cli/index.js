@@ -112,17 +112,13 @@ commander
     require('../commands/build')(commandApi, commandArguments);
   }));
 
-// commander
-//   .command('bin')
-//   .allowUnknownOption(true)
-//   .description('access dependencies bin directory')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/bin'),
-//       commandArguments,
-//       { skipProjectConfig: true, skipPlugins: true },
-//     );
-//   });
+commander
+  .command('bin')
+  .allowUnknownOption(true)
+  .description('access dependencies bin directory')
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/bin')(commandApi, commandArguments);
+  }));
 
 commander
   .command('dockerize')
