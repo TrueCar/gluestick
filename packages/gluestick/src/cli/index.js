@@ -124,17 +124,13 @@ commander
 //     );
 //   });
 
-// commander
-//   .command('dockerize')
-//   .description('create docker image')
-//   .arguments('<name>')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/dockerize'),
-//       commandArguments,
-//       { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
-//     );
-//   });
+commander
+  .command('dockerize')
+  .description('create docker image')
+  .arguments('<name>')
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/dockerize')(commandApi, commandArguments);
+  }));
 
 // commander
 //   .command('start-client', null, { noHelp: true })
