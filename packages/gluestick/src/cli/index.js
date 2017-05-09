@@ -138,27 +138,16 @@ commander
 //     );
 //   });
 
-// commander
-//   .command('start-server', null, { noHelp: true })
-//   .description('start server')
-//   .option(...logLevelOption)
-//   .option(...entrypointsOption)
-//   .option(...debugServerOption)
-//   .option(...debugServerPortOption)
-//   .action((...commandArguments) => {
-//     process.env.COMMAND = 'start-server';
-//     execWithConfig(
-//       require('../commands/start-server'),
-//       commandArguments,
-//       {
-//         useGSConfig: true,
-//         useWebpackConfig: true,
-//         skipClientEntryGeneration: true,
-//         // Performance tweak: if NODE_ENV is production start-server will only run server bundle
-//         // without creating bundle
-//         skipServerEntryGeneration: process.env.NODE_ENV === 'production',
-//       });
-//   });
+commander
+  .command('start-server', null, { noHelp: true })
+  .description('start server')
+  .option(...logLevelOption)
+  .option(...entrypointsOption)
+  .option(...debugServerOption)
+  .option(...debugServerPortOption)
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/start-server')(commandApi, commandArguments);
+  }));
 
 commander
   .command('test')

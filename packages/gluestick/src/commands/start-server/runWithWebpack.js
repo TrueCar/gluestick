@@ -36,8 +36,7 @@ const spawnServer = (
 module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: string[]) => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
-  logger.debug('Initial compilation');
-  logger.info('Building server entry.');
+  logger.info('Compiling renderer bundle');
   webpack(webpackConfig).watch({}, error => {
     if (error) {
       logger.error(error);

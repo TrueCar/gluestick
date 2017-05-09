@@ -54,6 +54,7 @@ const debug = (
   args: string[],
   debugPort: number,
 ): Process => {
+  logger.clear();
   logger.warn('If you encouter problems, press ENTER to respawn debug process.');
   logger.warn('Alternatively, press CTRL + C and re-run command.');
 

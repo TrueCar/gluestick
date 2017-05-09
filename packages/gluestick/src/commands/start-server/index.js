@@ -1,13 +1,14 @@
 /* @flow */
-import type { CLIContext } from '../../types';
+import type { CommandAPI, Logger } from '../../types';
 
 const runWithWebpack = require('./runWithWebpack');
 const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
 
-type DebugOptions = {
-  debugServer?: boolean,
-  debugPort: number,
+type Options = {
+  logLevel?: string;
+  debugServer?: boolean;
+  debugPort: number;
 }
 
 type Entry = {
@@ -33,9 +34,22 @@ const getServerEntry = (config: Object): Entry => {
  * @param {Object} { debug = false, debugPort }
  */
 module.exports = (
-  { config, logger }: CLIContext,
-  { debugServer = false, debugPort }: DebugOptions,
+  { getLogger, getOptions, getContextConfig }: CommandAPI,
+  commandArguments: any[],
 ): void => {
+  const { debugServer, debugPort, logLevel }: Options = getOptions(commandArguments);
+  const logger: Logger = getLogger(logLevel);
+
+  logger.clear();
+  logger.printCommandInfo();
+
+  const config = getContextConfig(logger, {
+    skipClientEntryGeneration: true,
+    // Performance tweak: if NODE_ENV is production start-server will only run server bundle
+    // without creating bundle
+    skipServerEntryGeneration: process.env.NODE_ENV === 'production',
+  });
+
   const entry: Entry = getServerEntry(config);
   if (debugServer) {
     runWithDebug({ config, logger }, entry.path, entry.args, debugPort);
