@@ -1,4 +1,9 @@
 /* @flow */
+jest.mock('fs', () => ({
+  readFile: (file, cb) => {
+    cb(file === 'fail.html' ? new Error('test error') : null, new Buffer('This is a {{ test }}!'));
+  },
+}));
 let runCallback = () => {};
 let isWebpackConfigValid = false;
 jest.setMock('webpack', (config) => {
@@ -9,7 +14,10 @@ jest.setMock('webpack', (config) => {
 });
 let middlewares = [];
 let listenCallback = () => {};
+let engineHandler = () => {};
 jest.setMock('express', () => ({
+  engine: (ext, hdl) => { engineHandler = hdl; },
+  set: () => {},
   use: (middleware) => middlewares.push(middleware),
   listen: (port, host, cb) => { listenCallback = cb; },
 }));
@@ -48,6 +56,25 @@ describe('commands/start-client', () => {
     context.logger.error.mockClear();
     waitUntilValidCallback = () => {};
     proxyOnErrorCallback = () => {};
+  });
+
+  it('should respond with compilated template using render engine', () => {
+    startClientCommand(context);
+    return Promise.all([
+      new Promise((resolve) => {
+        engineHandler('test.html', { test: 'test' }, (error, data) => {
+          expect(error).toBeNull();
+          expect(data).toEqual('This is a test!');
+          resolve();
+        });
+      }),
+      new Promise((resolve) => {
+        engineHandler('fail.html', { test: 'test' }, (error) => {
+          expect(error).toEqual(new Error('test error'));
+          resolve();
+        });
+      }),
+    ]);
   });
 
   it('should throw excpetion if webpack config is not specified', () => {
@@ -90,11 +117,10 @@ describe('commands/start-client', () => {
     startClientCommand(context);
     waitUntilValidCallback();
     expect(middlewares.length).toBe(3);
-    const res = {};
-    res.status = jest.fn(() => res);
-    res.sendFile = jest.fn(() => res);
+    const res = { render: jest.fn() };
     proxyOnErrorCallback(null, {}, res);
-    expect(res.status.mock.calls[0]).toEqual([200]);
+    expect(res.render.mock.calls[0][0].includes('poll.html')).toBeTruthy();
+    expect(res.render.mock.calls[0][1]).toEqual({ port: context.config.GSConfig.ports.server });
     listenCallback('');
     expect(context.logger.success.mock.calls[0][0].includes('Client server running on'))
       .toBeTruthy();
