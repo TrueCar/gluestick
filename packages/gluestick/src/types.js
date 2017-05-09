@@ -62,8 +62,7 @@ export type Config = {
   webpackConfig: CompiledConfig;
 };
 
-export type Logger = LoggerTypes & {
-  level?: string;
+export type Logger = BaseLogger & {
   clear: () => void;
   log: (type: string, title: string, ...args: any[]) => void;
   print: (...args: any[]) => void;
@@ -72,7 +71,8 @@ export type Logger = LoggerTypes & {
   fatal: (...args: any[]) => void;
 };
 
-export type LoggerTypes = {
+export type BaseLogger = {
+  level?: string;
   success: (...args: any[]) => void;
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
@@ -97,7 +97,7 @@ export type CLIContext = {
 
 export type Context = {
  config: Config;
- logger: LoggerTypes;
+ logger: BaseLogger;
 };
 
 export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;

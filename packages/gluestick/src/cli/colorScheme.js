@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { LoggerTypes } from '../types';
+import type { BaseLogger } from '../types';
 
 const chalk = require('chalk');
 
@@ -12,7 +12,7 @@ const highlight = chalk.bold;
 const debug = chalk.bgWhite.black;
 const error = chalk.bgRed.black;
 
-type ColorScheme = LoggerTypes & {
+type ColorScheme = BaseLogger & {
   filename: Function;
   highlight: Function;
 }
