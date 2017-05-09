@@ -34,20 +34,16 @@ commander
     require('../commands/new')(commandApi, commandArguments);
   }));
 
-// commander
-//   .command('generate <container|component|reducer|generator>')
-//   .description('generate a new entity from given template')
-//   .arguments('<name>')
-//   .option('-E --entry-point <entryPoint>', 'entry point for generated files')
-//   .option(...statelessFunctionalOption)
-//   .option('-O, --gen-options <value>', 'options to pass to the generator')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/generate'),
-//       commandArguments,
-//       { useGSConfig: true, skipProjectConfig: true, skipPlugins: true },
-//     );
-//   });
+commander
+  .command('generate <container|component|reducer|generator>')
+  .description('generate a new entity from given template')
+  .arguments('<name>')
+  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
+  .option(...statelessFunctionalOption)
+  .option('-O, --gen-options <value>', 'options to pass to the generator')
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/generate')(commandApi, commandArguments);
+  }));
 
 // commander
 //   .command('destroy <container|component|reducer>')
