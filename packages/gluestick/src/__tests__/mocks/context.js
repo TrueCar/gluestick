@@ -2,17 +2,19 @@
 
 import type {
   Context,
+  CLIContext,
   Config,
   WebpackConfig,
   UniversalSettings,
   CompiledConfig,
-  Logger,
+  CommandAPI,
+  BaseLogger,
   GSConfig,
   Request,
   EntriesConfig,
 } from '../../types.js';
 
-const logger: Logger = {
+const logger: BaseLogger = {
   success: jest.fn(),
   info: jest.fn(),
   warn: () => {},
@@ -95,8 +97,8 @@ const entriesConfig: EntriesConfig = {
   },
 };
 
-const commandApi = {
-  getOptions: args => args[args.length - 1],
+const commandApi: CommandAPI = {
+  getOptions: (args: any[]) => args[args.length - 1],
   getLogger: () => ({
     level: 'test',
     clear: jest.fn(),
@@ -117,8 +119,17 @@ const commandApi = {
   isGluestickProject: () => true,
 };
 
+const cliContext: CLIContext = {
+  config: {
+    GSConfig: gsConfig,
+    webpackConfig,
+  },
+  logger: commandApi.getLogger(),
+};
+
 module.exports = {
   commandApi,
+  cliContext,
   context,
   config,
   logger,

@@ -4,7 +4,6 @@ import type {
   ConfigPlugin,
   Plugin,
   GSConfig,
-  ProjectConfig,
   WebpackConfig,
   UniversalWebpackConfigurator,
   Logger,

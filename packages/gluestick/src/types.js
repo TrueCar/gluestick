@@ -66,7 +66,6 @@ export type Logger = BaseLogger & {
   clear: () => void;
   log: (type: string, title: string, ...args: any[]) => void;
   print: (...args: any[]) => void;
-  custom: (type: string, typeText: string, ...args: any[]) => void;
   printCommandInfo: () => void;
   fatal: (...args: any[]) => void;
 };
