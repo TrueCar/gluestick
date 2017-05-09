@@ -1,13 +1,18 @@
 /* @flow */
 
-import type { CLIContext } from '../types.js';
+import type { CommandAPI, Logger } from '../types.js';
 
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 
 const cliColorScheme = require('../cli/colorScheme');
-const { isValidEntryPoint, convertToCamelCaseWithPrefix } = require('../utils');
+const {
+  isValidEntryPoint,
+  convertToCamelCaseWithPrefix,
+  convertToCamelCase,
+  convertToPascalCase,
+} = require('../utils');
 
 const { highlight, filename } = cliColorScheme;
 
@@ -23,12 +28,22 @@ type Options = {
   entryPoint?: string;
 }
 
-module.exports = async (context: CLIContext, command: Command, name: string, options: Options) => {
-  const { logger } = context;
+module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]) => {
+  const logger: Logger = getLogger();
+
+  logger.clear();
+  logger.printCommandInfo();
+
+  const command: Command = commandArguments[0];
+  const name: string = commandArguments[1];
+  const options: Options = getOptions(commandArguments);
+
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.error(`${highlight(command)} is not a valid destroy command.`);
-    logger.info(`Available destroy commands: ${Object.keys(availableCommands).map(c => highlight(c)).join(', ')}`);
+    logger.info(`Available destroy commands: ${
+      Object.keys(availableCommands).map(c => highlight(c)).join(', ')
+    }`);
     return;
   }
 
@@ -37,8 +52,8 @@ module.exports = async (context: CLIContext, command: Command, name: string, opt
     return;
   }
 
-  const dirname = path.dirname(name);
-  const basename = path.basename(name);
+  const dirname: string = path.dirname(name);
+  const basename: string = path.basename(name);
 
   if (/\W/.test(basename)) {
     logger.error(`${highlight(basename)} is not a valid name.`);
@@ -47,21 +62,21 @@ module.exports = async (context: CLIContext, command: Command, name: string, opt
 
   // Possibly mutate the name by converting it to Pascal Case
   // (only for container and component for now)
-  const originalName = basename; // store original name for later
-  let generatedFileName = basename;
+  const originalName: string = basename; // store original name for later
+  let generatedFileName: string = basename;
   if (['container', 'component'].indexOf(command) !== -1) {
-    generatedFileName = generatedFileName.substr(0, 1).toUpperCase() + generatedFileName.substr(1);
+    generatedFileName = convertToPascalCase(generatedFileName);
   }
   if (['reducer', 'action-creator'].indexOf(command) !== -1) {
-    generatedFileName = generatedFileName.substr(0, 1).toLowerCase() + generatedFileName.substr(1);
+    generatedFileName = convertToCamelCase(generatedFileName);
   }
 
   // Remove the file
-  const CWD = process.cwd();
-  const generateRoot = path.join(CWD, 'src', entryPoint, availableCommands[command]);
-  const destinationRoot = path.resolve(generateRoot, dirname);
-  const destinationPath = path.join(destinationRoot, `${generatedFileName}.js`);
-  let fileExists = true;
+  const CWD: string = process.cwd();
+  const generateRoot: string = path.join(CWD, 'src', entryPoint, availableCommands[command]);
+  const destinationRoot: string = path.resolve(generateRoot, dirname);
+  const destinationPath: string = path.join(destinationRoot, `${generatedFileName}.js`);
+  let fileExists: boolean = true;
   try {
     fs.statSync(destinationPath);
   } catch (e) {
@@ -75,7 +90,9 @@ module.exports = async (context: CLIContext, command: Command, name: string, opt
       const question = {
         type: 'confirm',
         name: 'confirm',
-        message: `You wanted to destroy ${filename(originalName)} but the generated name is ${filename(generatedFileName)}.\nWould you like to continue with destroying ${filename(generatedFileName)}?`,
+        message: `You wanted to destroy ${filename(originalName)} but the generated name is `
+          + `${filename(generatedFileName)}.\nWould you like to continue with `
+          + `destroying ${filename(generatedFileName)}?`,
       };
       // @NOTE: We are using await so that we can wait for the result
       // of the promise before moving on
@@ -83,6 +100,7 @@ module.exports = async (context: CLIContext, command: Command, name: string, opt
       if (!answers.confirm) {
         process.exit();
       }
+      logger.print();
     }
 
     fs.unlinkSync(destinationPath);
@@ -115,9 +133,13 @@ module.exports = async (context: CLIContext, command: Command, name: string, opt
   }
 
   // Remove the test file
-  const testFolder = path.resolve(path.join(CWD, 'src', entryPoint, availableCommands[command]), dirname, '__tests__');
-  const testPath = path.join(testFolder, `${generatedFileName}.test.js`);
-  let testFileExists = true;
+  const testFolder: string = path.resolve(
+    path.join(CWD, 'src', entryPoint, availableCommands[command]),
+    dirname,
+    '__tests__',
+  );
+  const testPath: string = path.join(testFolder, `${generatedFileName}.test.js`);
+  let testFileExists: boolean = true;
   try {
     fs.statSync(testPath);
   } catch (e) {
