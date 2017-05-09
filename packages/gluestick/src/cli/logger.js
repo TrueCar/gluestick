@@ -35,7 +35,8 @@ const logMessage = ({ type, level, title }, ...args: any[]) => {
     ? `[GlueStick]${process.env.COMMAND ? `[${process.env.COMMAND}]` : ''}`
     : enhancer(`  ${title.length ? title : type.toUpperCase()}  `);
 
-  _log(
+  // $FlowIgnore use original log method for easier testing
+  console._log(
       header,
       ...args.map(arg => typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
       '\n',
@@ -47,13 +48,16 @@ const loggerFactory = (type: string, level: string, title: string = '') => (...a
 };
 
 const print = (...args) => {
-  _log(...args);
+  // $FlowIgnore use original log method for easier testing
+  console._log(...args);
 };
 
 module.exports = (level: string): Logger => {
   return {
     level,
+    // Clears screen
     clear,
+    // Log custom message
     log: (type: string, title: string, ...args: any[]): void => {
       logMessage({ type, title, level }, ...args);
     },
@@ -62,11 +66,14 @@ module.exports = (level: string): Logger => {
     warn: loggerFactory('warn', level),
     debug: loggerFactory('debug', level),
     error: loggerFactory('error', level),
+    // Same as error but kills process after logging message
     fatal: (...args: any[]): void => {
       logMessage({ type: 'error', title: 'error', level }, ...args);
       process.exit(1);
     },
+    // Log message without any color enhancement
     print,
+    // Log command info message
     printCommandInfo: () => {
       logMessage(
         { type: 'success', title: 'COMMAND', level },

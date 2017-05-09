@@ -4,33 +4,43 @@ const loggerFactory = require('../logger');
 const colorScheme = require('../colorScheme');
 
 const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
-  Object.keys(loggerInstance).filter(key => key !== 'level').forEach((level: string): void => {
-    console.log.mockClear();
+  ['debug', 'info', 'warn', 'error', 'success'].forEach((level: string): void => {
+    // $FlowFixMe logger adds _log to console object
+    console._log.mockClear();
     loggerInstance[level](message);
     if (shouldNotLog.indexOf(level) > -1) {
-      expect(console.log).not.toBeCalledWith('[GlueStick]', colorScheme[level](message));
-    } else if (level === 'error') {
-      expect(console.log).toHaveBeenCalledWith('[GlueStick]', 'ERROR: ', colorScheme[level](message));
+      // $FlowFixMe logger adds _log to console object
+      expect(console._log).not.toBeCalledWith(
+        colorScheme[level](`  ${level.toUpperCase()}  `),
+        message,
+        '\n',
+      );
     } else {
-      expect(console.log).toHaveBeenCalledWith('[GlueStick]', colorScheme[level](message));
+      // $FlowFixMe logger adds _log to console object
+      expect(console._log).toHaveBeenCalledWith(
+        colorScheme[level](`  ${level.toUpperCase()}  `),
+        message,
+        '\n',
+      );
     }
   });
 };
 
-const originalConsoleLog = console.log.bind(console);
+// $FlowFixMe logger adds _log to console object
+const originalConsoleLog = console._log.bind(console);
 // $FlowFixMe Flow doesn't like that we assign console.log to a mock function
-console.log = jest.fn();
+console._log = jest.fn();
 
-describe('logger', () => {
+describe('cli/logger', () => {
   const message = 'Some test message';
 
   afterAll(() => {
     // $FlowIgnore
-    console.log = originalConsoleLog;
+    console._log = originalConsoleLog;
   });
 
   it('should log `info`, `success`, `warn` and `error`', () => {
-    const logger = loggerFactory();
+    const logger = loggerFactory('info');
     logAndAssert(message, ['debug'], logger);
   });
 

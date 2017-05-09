@@ -9,7 +9,7 @@ const info = chalk.bgCyan.black;
 const warn = chalk.bgYellow.black;
 const filename = chalk.magenta;
 const highlight = chalk.bold;
-const debug = chalk.bgWhite.back;
+const debug = chalk.bgWhite.black;
 const error = chalk.bgRed.black;
 
 type ColorScheme = LoggerTypes & {
