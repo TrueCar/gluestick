@@ -12,6 +12,15 @@ const statelessFunctionalOption = ['-F, --functional', '(generate component) sta
 const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
 const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group'];
 
+const safelyExecCommand = (commandFn) => (...commandArguments) => {
+  try {
+    commandFn(...commandArguments);
+  } catch (error) {
+    const logger = commandApi.getLogger();
+    logger.fatal(error);
+  }
+};
+
 commander
   .version(cliHelpers.getVersion());
 
@@ -21,9 +30,9 @@ commander
   .arguments('<appName>')
   .option('-d, --dev <path>', 'path to dev version of gluestick')
   .option('-s, --skip-main', 'gluestick will not generate main app')
-  .action((...commandArguments) => {
+  .action(safelyExecCommand((...commandArguments) => {
     require('../commands/new')(commandApi, commandArguments);
-  });
+  }));
 
 // commander
 //   .command('generate <container|component|reducer|generator>')
@@ -103,9 +112,9 @@ commander
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
   .option('-Z, --static', 'prepare html file for static hosting')
-  .action((...commandArguments) => {
+  .action(safelyExecCommand((...commandArguments) => {
     require('../commands/build')(commandApi, commandArguments);
-  });
+  }));
 
 // commander
 //   .command('bin')
@@ -167,29 +176,22 @@ commander
 //       });
 //   });
 
-// commander
-//   .command('test')
-//   .allowUnknownOption()
-//   .option('-D, --debug-test', 'debug tests with built-in node inspector')
-//   .description('start tests')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/test'),
-//       commandArguments,
-//       {
-//         useGSConfig: true,
-//         useWebpackConfig: true,
-//         skipClientEntryGeneration: true,
-//         skipServerEntryGeneration: true,
-//       },
-//     );
-//   });
+commander
+  .command('test')
+  .allowUnknownOption()
+  .option('-D, --debug-test', 'debug tests with built-in node inspector')
+  .description('start tests')
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/test')(commandApi, commandArguments);
+  }));
 
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander
   .command('*', null, { noHelp: true })
   .action((cmd) => {
-    process.stderr.write(`Command '${highlight(cmd)}' not recognized`);
+    const logger = commandApi.getLogger();
+    logger.clear();
+    logger.warn(`Command '${highlight(cmd)}' not recognized`);
     commander.help();
   });
 
