@@ -12,7 +12,12 @@ console._log = _log;
 
 // Webpack doesn't allow to use custom logger/reporter so console.log needs to surpressed
 // $FlowIgnore
-console.log = () => {};
+console.log = (...args) => {
+  if (args.filter(arg => /warning|error/gi.test(arg)).length) {
+    // $FlowIgnore
+    console._log(...args);
+  }
+};
 
 const levels = {
   success: 20,
