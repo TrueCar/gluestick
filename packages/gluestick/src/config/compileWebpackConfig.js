@@ -47,6 +47,7 @@ module.exports = (
       input: path.join(__dirname, '../renderer/entry.js'),
       output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
     },
+    silent: true,
   };
 
   // Get entries to build from json file.

@@ -6,18 +6,18 @@ const colorScheme = require('../colorScheme');
 const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
   ['debug', 'info', 'warn', 'error', 'success'].forEach((level: string): void => {
     // $FlowFixMe logger adds _log to console object
-    console._log.mockClear();
+    console.log.mockClear();
     loggerInstance[level](message);
     if (shouldNotLog.indexOf(level) > -1) {
       // $FlowFixMe logger adds _log to console object
-      expect(console._log).not.toBeCalledWith(
+      expect(console.log).not.toBeCalledWith(
         colorScheme[level](`  ${level.toUpperCase()}  `),
         message,
         '\n',
       );
     } else {
       // $FlowFixMe logger adds _log to console object
-      expect(console._log).toHaveBeenCalledWith(
+      expect(console.log).toHaveBeenCalledWith(
         colorScheme[level](`  ${level.toUpperCase()}  `),
         message,
         '\n',
@@ -27,16 +27,16 @@ const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: O
 };
 
 // $FlowFixMe logger adds _log to console object
-const originalConsoleLog = console._log.bind(console);
+const originalConsoleLog = console.log.bind(console);
 // $FlowFixMe Flow doesn't like that we assign console.log to a mock function
-console._log = jest.fn();
+console.log = jest.fn();
 
 describe('cli/logger', () => {
   const message = 'Some test message';
 
   afterAll(() => {
     // $FlowIgnore
-    console._log = originalConsoleLog;
+    console.log = originalConsoleLog;
   });
 
   it('should log `info`, `success`, `warn` and `error`', () => {

@@ -43,6 +43,9 @@ const progressBarPlugin = (logger: Logger, name: string, options = {}) => {
   if (!enabled) {
     return () => {};
   }
+  if (!logger.pretty) {
+    return new webpack.ProgressPlugin();
+  }
 
   const header: string = chalk.bgMagenta.black(`  COMPILATION:${name.toUpperCase()}  `);
   const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;

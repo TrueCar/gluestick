@@ -63,6 +63,7 @@ export type Config = {
 };
 
 export type Logger = BaseLogger & {
+  pretty: boolean;
   clear: () => void;
   log: (type: string, title: string, ...args: any[]) => void;
   print: (...args: any[]) => void;

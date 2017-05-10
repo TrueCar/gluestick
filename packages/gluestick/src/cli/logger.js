@@ -4,20 +4,8 @@ import type { Logger } from '../types';
 
 const util = require('util');
 const clear = require('clear');
+const readline = require('readline');
 const colorScheme = require('./colorScheme');
-
-const _log = console.log.bind(process);
-// $FlowIgnore add original log method for easier debuging
-console._log = _log;
-
-// Webpack doesn't allow to use custom logger/reporter so console.log needs to surpressed
-// $FlowIgnore
-console.log = (...args) => {
-  if (args.filter(arg => /warning|error/gi.test(arg)).length) {
-    // $FlowIgnore
-    console._log(...args);
-  }
-};
 
 const levels = {
   success: 20,
@@ -27,7 +15,9 @@ const levels = {
   error: 40,
 };
 
-const verbose = process.env.NODE_ENV === 'production' || process.env.CI || process.env.CD;
+const raw = (
+  process.env.NODE_ENV === 'production' || process.env.CI || process.env.CD
+) && !process.env.GS_LOG_PRETTY;
 
 const logMessage = ({ type, level, title }, ...args: any[]) => {
   if (levels[level] > levels[type]) {
@@ -36,15 +26,15 @@ const logMessage = ({ type, level, title }, ...args: any[]) => {
 
   const enhancer: Function = colorScheme[type];
 
-  const header: string = verbose
-    ? `[GlueStick]${process.env.COMMAND ? `[${process.env.COMMAND}]` : ''}`
+  const header: string = raw
+    ? `[GlueStick][${process.argv[2]}][${title.length ? title : type.toUpperCase()}]`
     : enhancer(`  ${title.length ? title : type.toUpperCase()}  `);
 
   // $FlowIgnore use original log method for easier testing
-  console._log(
+  console.log(
       header,
       ...args.map(arg => typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
-      '\n',
+      raw ? '' : '\n',
     );
 };
 
@@ -54,14 +44,15 @@ const loggerFactory = (type: string, level: string, title: string = '') => (...a
 
 const print = (...args) => {
   // $FlowIgnore use original log method for easier testing
-  console._log(...args);
+  console.log(...args);
 };
 
 module.exports = (level: string): Logger => {
   return {
+    pretty: !raw,
     level,
     // Clears screen
-    clear,
+    clear: raw ? () => {} : clear,
     // Log custom message
     log: (type: string, title: string, ...args: any[]): void => {
       logMessage({ type, title, level }, ...args);
@@ -85,9 +76,9 @@ module.exports = (level: string): Logger => {
         `gluestick ${process.argv.slice(2).join(' ')}`,
       );
     },
-    resetLine: () => {
-      process.stdout.clearLine();
-      process.stdout.cursorTo(0);
+    resetLine: raw ? () => {} : () => {
+      readline.clearLine(process.stdout, 0);
+      readline.cursorTo(process.stdout, 0);
     },
   };
 };
