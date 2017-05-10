@@ -15,6 +15,16 @@ const levels = {
   error: 40,
 };
 
+// If you need to find what module prints directly to console.log, uncomment this code
+// and replace `Put some text here` with some word from log you're interested in
+// console._log = console.log.bind(console);
+// console.log = (...args) => {
+//   console._log(...args);
+//   if (args[0].includes('Put some text here')) {
+//     console.trace('here');
+//   }
+// };
+
 const raw = (
   process.env.NODE_ENV === 'production' || process.env.CI || process.env.CD
 ) && !process.env.GS_LOG_PRETTY;
