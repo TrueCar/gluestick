@@ -103,7 +103,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
       } else if (msg === 'emitting') {
         stream.clearLine();
         stream.cursorTo(0);
-        logger.info(`${name[0].toUpperCase()}${name.slice(1)} bundle rebuilded`);
+        logger.info(`${name[0].toUpperCase()}${name.slice(1)} bundle rebuilt`);
       }
     }
 

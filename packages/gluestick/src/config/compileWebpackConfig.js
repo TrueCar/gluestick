@@ -53,7 +53,7 @@ module.exports = (
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
   // code for client and serverEntries for server.
-  let entries: Object;
+  let entries: Object = {};
   try {
     entries = skipClientEntryGeneration && skipServerEntryGeneration
       ? {}
