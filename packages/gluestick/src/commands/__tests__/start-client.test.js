@@ -49,8 +49,19 @@ jest.setMock('http-proxy-middleware', (opts) => {
   proxyOnErrorCallback = opts.onError;
 });
 
-const context = require('../../__tests__/mocks/context');
+const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
 const startClientCommand = require('../start-client');
+
+const successLogger = jest.fn();
+const errorLogger = jest.fn();
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+    success: successLogger,
+    error: errorLogger,
+  }),
+};
 
 describe('commands/start-client', () => {
   beforeEach(() => {
@@ -58,14 +69,14 @@ describe('commands/start-client', () => {
     runCallback = () => {};
     isWebpackConfigValid = false;
     listenCallback = () => {};
-    context.logger.success.mockClear();
-    context.logger.error.mockClear();
+    successLogger.mockClear();
+    errorLogger.mockClear();
     waitUntilValidCallback = () => {};
     proxyOnErrorCallback = () => {};
   });
 
   it('should respond with compilated template using render engine', () => {
-    startClientCommand(context);
+    startClientCommand(commandApi, [{}]);
     return Promise.all([
       new Promise((resolve) => {
         engineHandler('test.html', { test: 'test' }, (error, data) => {
@@ -83,35 +94,21 @@ describe('commands/start-client', () => {
     ]);
   });
 
-  it('should throw excpetion if webpack config is not specified', () => {
-    expect(() => {
-      // $FlowIgnore context should be invalid
-      startClientCommand({ config: {} });
-    }).toThrowError('Webpack config not specified');
-  });
-
-  it('should throw excpetion if gluestick config is not specified', () => {
-    expect(() => {
-       // $FlowIgnore context should be invalid
-      startClientCommand({ config: { webpackConfig: true } });
-    }).toThrowError('Gluestick config not specified');
-  });
-
   it('should build client bundle in production', () => {
     const originalNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
     process.send = jest.fn();
-    startClientCommand(context);
+    startClientCommand(commandApi, [{}]);
     expect(isWebpackConfigValid).toBeTruthy();
     runCallback(null);
-    expect(context.logger.success.mock.calls[0]).toEqual(['Client bundle successfully built.']);
+    expect(successLogger.mock.calls[0]).toEqual(['Client bundle successfully built.']);
     process.env.NODE_ENV = originalNodeEnv;
   });
 
   it('should throw compilation error in production', () => {
     const originalNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
-    startClientCommand(context);
+    startClientCommand(commandApi, [{}]);
     expect(isWebpackConfigValid).toBeTruthy();
     expect(() => {
       runCallback('test error');
@@ -120,20 +117,22 @@ describe('commands/start-client', () => {
   });
 
   it('should start express with webpack dev and hot middlewares', () => {
-    startClientCommand(context);
+    startClientCommand(commandApi, [{}]);
     waitUntilValidCallback();
     expect(middlewares.length).toBe(3);
     const res = { render: jest.fn() };
     proxyOnErrorCallback(null, {}, res);
     expect(res.render.mock.calls[0][0].includes('poll.html')).toBeTruthy();
-    expect(res.render.mock.calls[0][1]).toEqual({ port: context.config.GSConfig.ports.server });
+    expect(res.render.mock.calls[0][1]).toEqual({
+      port: commandApi.getContextConfig().GSConfig.ports.server,
+    });
     listenCallback('');
-    expect(context.logger.success.mock.calls[0][0].includes('Client server running on'))
+    expect(successLogger.mock.calls[0][0].includes('Client server running on'))
       .toBeTruthy();
   });
 
   it('should throw error if express fails to listen for requests', () => {
-    startClientCommand(context);
+    startClientCommand(commandApi, [{}]);
     listenCallback('test error');
   });
 });

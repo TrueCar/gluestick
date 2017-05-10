@@ -112,7 +112,10 @@ const commandApi: CommandAPI = {
     print,
     printCommandInfo: jest.fn(),
   }),
-  getContextConfig: () => ({}),
+  getContextConfig: () => ({
+    GSConfig: gsConfig,
+    webpackConfig,
+  }),
   getGluestickConfig: () => ({}),
   getPlugins: () => [],
   getWebpackConfig: () => ({}),
