@@ -13,6 +13,7 @@ module.exports = (
     compiler.run((error: string, stats: Object) => {
       if (error) {
         reject(error);
+        return;
       }
 
       const buildName: string = `${buildType[0].toUpperCase()}${buildType.slice(1)}`;

@@ -5,13 +5,14 @@ import type { GSConfig, Logger } from '../../types';
 const glob = require('glob');
 const path = require('path');
 const fs = require('fs-extra');
+const { highlight } = require('../../cli/colorScheme');
 const generator = require('gluestick-generators').default;
 
 const buildEntries = (
   gluestickConfig: GSConfig, logger: Logger, entries: Object, plugins: Object[],
 ): Object => {
   const successMessageHandler = (generatorName, entityName) => {
-    logger.info(`Client entry for ${entityName} created`);
+    logger.info(`Client entry for ${highlight(entityName)} created`);
   };
 
   fs.removeSync(path.join(process.cwd(), gluestickConfig.clientEntryInitPath));

@@ -71,31 +71,21 @@ commander
 //     );
 //   });
 
-// commander
-//   .command('start')
-//   .alias('s')
-//   .description('start everything')
-//   .option('-T, --run-tests', 'run test hook')
-//   .option('--dev', 'disable gluestick verion check')
-//   .option('-C --coverage', 'create test coverage')
-//   .option(...entrypointsOption)
-//   .option(...logLevelOption)
-//   .option(...debugServerOption)
-//   .option(...debugServerPortOption)
-//   .option(...skipBuildOption)
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/start'),
-//       commandArguments,
-//       {
-//         useGSConfig: true,
-//         useWebpackConfig: false,
-//         skipPlugins: true,
-//         skipClientEntryGeneration: true,
-//         skipServerEntryGeneration: true,
-//       },
-//     );
-//   });
+commander
+  .command('start')
+  .alias('s')
+  .description('start everything')
+  .option('-T, --run-tests', 'run test hook')
+  .option('--dev', 'disable gluestick verion check')
+  .option('-C --coverage', 'create test coverage')
+  .option(...entrypointsOption)
+  .option(...logLevelOption)
+  .option(...debugServerOption)
+  .option(...debugServerPortOption)
+  .option(...skipBuildOption)
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/start')(commandApi, commandArguments);
+  }));
 
 commander
   .command('build')

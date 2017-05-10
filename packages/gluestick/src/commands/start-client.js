@@ -27,11 +27,14 @@ type DevelopmentServerOptions = {
 module.exports = (
   { getLogger, getContextConfig, getOptions }: CommandAPI,
   commandArguments: any[],
+  { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
 ): void => {
   const logger: Logger = getLogger();
 
-  logger.clear();
-  logger.printCommandInfo();
+  if (printCommandInfo) {
+    logger.clear();
+    logger.printCommandInfo();
+  }
 
   const options = getOptions(commandArguments);
 
@@ -76,7 +79,7 @@ module.exports = (
       progressHandler.markValid('client');
     });
     app.use(devMiddleware);
-    app.use(require('webpack-hot-middleware')(compiler));
+    app.use(require('webpack-hot-middleware')(compiler, { log: () => {} }));
     // Proxy http requests from client to renderer server in development mode.
     app.use(proxy({
       changeOrigin: false,

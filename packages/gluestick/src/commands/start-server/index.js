@@ -34,12 +34,15 @@ const getServerEntry = (config: Object): Entry => {
 module.exports = (
   { getLogger, getOptions, getContextConfig }: CommandAPI,
   commandArguments: any[],
+  { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
 ): void => {
   const { debugServer, debugPort, logLevel, entrypoints }: Options = getOptions(commandArguments);
   const logger: Logger = getLogger(logLevel);
 
-  logger.clear();
-  logger.printCommandInfo();
+  if (printCommandInfo) {
+    logger.clear();
+    logger.printCommandInfo();
+  }
 
   const config = getContextConfig(logger, {
     skipClientEntryGeneration: true,

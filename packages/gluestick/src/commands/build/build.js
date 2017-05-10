@@ -37,6 +37,7 @@ module.exports = (
   });
 
   const compilationErrorHandler = (type: string) => error => {
+    logger.clear();
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
   };
 
