@@ -25,15 +25,19 @@ type DevelopmentServerOptions = {
 };
 
 module.exports = (
-  { getLogger, getContextConfig }: CommandAPI,
+  { getLogger, getContextConfig, getOptions }: CommandAPI,
+  commandArguments: any[],
 ): void => {
   const logger: Logger = getLogger();
 
   logger.clear();
   logger.printCommandInfo();
 
+  const options = getOptions(commandArguments);
+
   const { webpackConfig, GSConfig } = getContextConfig(logger, {
     skipServerEntryGeneration: true,
+    entryOrGroupToBuild: options.entrypoints,
   });
 
   const configuration: WebpackConfig = webpackConfig.client;
@@ -56,13 +60,13 @@ module.exports = (
 
   if (process.env.NODE_ENV !== 'production') {
     const app: Object = express();
-    app.engine('html', (filePath: string, options: { [key: string]: any }, next: Function) => {
+    app.engine('html', (filePath: string, opts: { [key: string]: any }, next: Function) => {
       fs.readFile(filePath, (error, template: Buffer) => {
         if (error) {
           return next(error);
         }
         return next(null, template.toString().replace(/{{ ?(\w+) ?}}/g, (match, key) => {
-          return options[key];
+          return opts[key];
         }));
       });
     });

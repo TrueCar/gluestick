@@ -11,12 +11,11 @@ module.exports = (gluestickConfig: GSConfig, entryOrGroupToBuild?: string): Obje
   if (entries['/main']) {
     throw new Error('`/main` cannot be used as entry key, as `main` is a reserved word');
   }
-
   if (!entryOrGroupToBuild) {
     return entries;
   }
   const useEntryKey: boolean = entryOrGroupToBuild[0] === '/';
-  return Object.keys(entries).filter((entryName: string): boolean => {
+  const entriesToBuild: string[] = Object.keys(entries).filter((entryName: string): boolean => {
     return useEntryKey
       // Match by entry key eg: `/home`
       // `/main` should be the alias for `/`
@@ -26,7 +25,13 @@ module.exports = (gluestickConfig: GSConfig, entryOrGroupToBuild?: string): Obje
         Array.isArray(entries[entryName].group)
         && entries[entryName].group.indexOf(entryOrGroupToBuild) > -1
       );
-  }).reduce((prev: Object, curr: string): Object => {
+  });
+
+  if (!entriesToBuild.length) {
+    throw new Error('No matching entry found');
+  }
+
+  return entriesToBuild.reduce((prev: Object, curr: string): Object => {
     return Object.assign(prev, { [curr]: entries[curr] });
   }, {});
 };

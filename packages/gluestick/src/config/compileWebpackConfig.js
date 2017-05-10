@@ -52,9 +52,14 @@ module.exports = (
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
   // code for client and serverEntries for server.
-  const entries: Object = skipClientEntryGeneration && skipServerEntryGeneration
-    ? {}
-    : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  let entries: Object;
+  try {
+    entries = skipClientEntryGeneration && skipServerEntryGeneration
+      ? {}
+      : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  } catch (error) {
+    logger.fatal(error.message);
+  }
 
   // Get runtime plugins that will be applied to project code and bundled together.
   const runtimePlugins: Plugin[] = skipClientEntryGeneration && skipServerEntryGeneration

@@ -6,6 +6,7 @@ const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
 
 type Options = {
+  entrypoints?: string;
   logLevel?: string;
   debugServer?: boolean;
   debugPort: number;
@@ -34,7 +35,7 @@ module.exports = (
   { getLogger, getOptions, getContextConfig }: CommandAPI,
   commandArguments: any[],
 ): void => {
-  const { debugServer, debugPort, logLevel }: Options = getOptions(commandArguments);
+  const { debugServer, debugPort, logLevel, entrypoints }: Options = getOptions(commandArguments);
   const logger: Logger = getLogger(logLevel);
 
   logger.clear();
@@ -45,6 +46,7 @@ module.exports = (
     // Performance tweak: if NODE_ENV is production start-server will only run server bundle
     // without creating bundle
     skipServerEntryGeneration: process.env.NODE_ENV === 'production',
+    entryOrGroupToBuild: entrypoints,
   });
 
   const entry: Entry = getServerEntry(config);
