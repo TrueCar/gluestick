@@ -5,18 +5,15 @@ const colorScheme = require('../colorScheme');
 
 const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
   ['debug', 'info', 'warn', 'error', 'success'].forEach((level: string): void => {
-    // $FlowFixMe logger adds _log to console object
     console.log.mockClear();
     loggerInstance[level](message);
     if (shouldNotLog.indexOf(level) > -1) {
-      // $FlowFixMe logger adds _log to console object
       expect(console.log).not.toBeCalledWith(
         colorScheme[level](`  ${level.toUpperCase()}  `),
         message,
         '\n',
       );
     } else {
-      // $FlowFixMe logger adds _log to console object
       expect(console.log).toHaveBeenCalledWith(
         colorScheme[level](`  ${level.toUpperCase()}  `),
         message,
@@ -26,7 +23,6 @@ const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: O
   });
 };
 
-// $FlowFixMe logger adds _log to console object
 const originalConsoleLog = console.log.bind(console);
 // $FlowFixMe Flow doesn't like that we assign console.log to a mock function
 console.log = jest.fn();

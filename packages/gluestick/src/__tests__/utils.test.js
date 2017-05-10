@@ -5,13 +5,9 @@ jest.mock('fs', () => ({
 }));
 const utils = require('../utils');
 
-const logger = {
-  info: jest.fn(),
-  debug: jest.fn(),
-  warn: jest.fn(),
-  success: jest.fn(),
-  error: jest.fn(),
-};
+const { getLogger } = require('../__tests__/mocks/context').commandApi;
+
+const logger = getLogger();
 
 describe('utils', () => {
   afterAll(() => {

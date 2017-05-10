@@ -30,7 +30,6 @@ const logMessage = ({ type, level, title }, ...args: any[]) => {
     ? `[GlueStick][${process.argv[2]}][${title.length ? title : type.toUpperCase()}]`
     : enhancer(`  ${title.length ? title : type.toUpperCase()}  `);
 
-  // $FlowIgnore use original log method for easier testing
   console.log(
       header,
       ...args.map(arg => typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
@@ -43,7 +42,6 @@ const loggerFactory = (type: string, level: string, title: string = '') => (...a
 };
 
 const print = (...args) => {
-  // $FlowIgnore use original log method for easier testing
   console.log(...args);
 };
 
