@@ -2,7 +2,6 @@ const commander = require('commander');
 const process = require('process');
 const { highlight } = require('./colorScheme');
 const cliHelpers = require('./helpers');
-const execWithConfig = require('./execWithConfig');
 const commandApi = require('./commandApi');
 
 const debugServerOption = ['-D, --debug-server', 'debug server side rendering with built-in node inspector'];
@@ -54,22 +53,12 @@ commander
     require('../commands/destroy')(commandApi, commandArguments);
   }));
 
-// commander
-//   .command('auto-upgrade')
-//   .description('perform automatic dependency and gluestick files upgrade')
-//   .action((...commandArguments) => {
-//     execWithConfig(
-//       require('../commands/autoUpgrade'),
-//       commandArguments,
-//       {
-//         useGSConfig: true,
-//         useWebpackConfig: false,
-//         skipPlugins: true,
-//         skipClientEntryGeneration: true,
-//         skipServerEntryGeneration: true,
-//       },
-//     );
-//   });
+commander
+  .command('auto-upgrade')
+  .description('perform automatic dependency and gluestick files upgrade')
+  .action(safelyExecCommand((...commandArguments) => {
+    require('../commands/autoUpgrade')(commandApi, commandArguments);
+  }));
 
 commander
   .command('start')
