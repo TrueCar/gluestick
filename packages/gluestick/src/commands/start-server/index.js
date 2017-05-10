@@ -29,9 +29,6 @@ const getServerEntry = (config: Object): Entry => {
  * Starts server side rendering.
  * If debug is false, this will use PM2 in production for
  * managing multiple instances.
- *
- * @param {Object} { config, logger } Context
- * @param {Object} { debug = false, debugPort }
  */
 module.exports = (
   { getLogger, getOptions, getContextConfig }: CommandAPI,

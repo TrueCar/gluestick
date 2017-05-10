@@ -5,27 +5,38 @@ import type { Logger } from '../../types';
 const chalk = require('chalk');
 const webpack = require('webpack');
 const ProgressBar = require('progress');
-const { throttle } = require('../../utils');
 
+// Compilation states
 const compilations = {
   server: {
     muted: false,
-    running: false,
+    running: true,
     finished: false,
-    postprocessing: false,
+    postprocessing: '',
   },
   client: {
     muted: false,
-    running: false,
+    running: true,
     finished: false,
+    postprocessing: '',
   },
 };
 
-// For documentation go here https://github.com/clessg/progress-bar-webpack-plugin
-// The code for ProgressBarPlugin is almost identical to the one from the link,
-// except for mutin/unmuting code, which was impossible to add using progress-bar-webpack-plugin
-// directy.
-const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
+/**
+ * Original solutions available here: https://github.com/clessg/progress-bar-webpack-plugin
+ * The code for progressBarPlugin is almost identical to the one from the link,
+ * except for mutin/unmuting code, which was impossible to add using progress-bar-webpack-plugin
+ * directy.
+ *
+ * Compilation can have 3 states:
+ * - compiling
+ * - postprocessing
+ * - rebuilding
+ *
+ * Compiling and postprocessing are done once at the beginning then only rebuilding cam happen
+ * multiple times.
+ */
+const progressBarPlugin = (logger: Logger, name: string, options = {}) => {
   const stream = options.stream || process.stderr;
   const enabled = stream && stream.isTTY;
 
@@ -33,9 +44,8 @@ const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
     return () => {};
   }
 
-  const barFormat = `${
-    chalk.bgMagenta.black(`  COMPILATION:${name.toUpperCase()}  `)
-  } [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;
+  const header: string = chalk.bgMagenta.black(`  COMPILATION:${name.toUpperCase()}  `);
+  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;
 
   const barOptions = {
     complete: '=',
@@ -53,19 +63,25 @@ const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
   let lastPercent = 0;
 
   return new webpack.ProgressPlugin((percent, msg) => {
-    // console._log(msg);
-    // Mark current compilation as running
-    if (!compilations[name].running) {
-      compilations[name].running = true;
-    }
-
     // If compilation is finished on server, start-server will start postprocessing
     // so log appropriate message
-    if (compilations[name].finished && !compilations[name].postprocessing && name === 'server') {
-      compilations[name].postprocessing = true;
-      // logger.print(
-      //   `${chalk.bgMagenta.black(`  COMPILATION:${name.toUpperCase()}  `)} Postprocessing`,
-      // );
+    if (compilations[name].finished && compilations[name].postprocessing === 'init' && name === 'server') {
+      compilations[name].postprocessing = 'running';
+      stream.write(
+        `${header} Postprocessing...`,
+      );
+    }
+
+    // If compilation is finished and done postprocessing, it means it's in rebuild state
+    if (compilations[name].finished && compilations[name].postprocessing === 'done') {
+      if (msg === 'compiling') {
+        stream.cursorTo(0);
+        stream.write(`${header} Rebuilding...`);
+      } else if (msg === 'emitting') {
+        stream.clearLine();
+        stream.cursorTo(0);
+        logger.info('Bundle rebuilded');
+      }
     }
 
     // If current compilation is server and is running, mute the client's one
@@ -95,7 +111,7 @@ const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
       running = true;
       // startTime = new Date();
       lastPercent = 0;
-    } else if (percent === 1) {
+    } else if (percent === 1 && compilations[name].running) {
       // const now = new Date();
       // const buildTime = `${(now - startTime) / 1000}s`;
 
@@ -104,6 +120,7 @@ const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
       compilations[name].running = false;
       if (!compilations[name].finished) {
         compilations[name].finished = true;
+        compilations[name].postprocessing = 'init';
       }
 
       running = false;
@@ -116,5 +133,13 @@ const ProgressBarPlugin = (logger: Logger, name: string, options = {}) => {
  * untill it completes, then it will unmute client and start showing it.
  */
 module.exports = (logger: Logger, compilationName: string) => {
-  return new ProgressBarPlugin(logger, compilationName);
+  return progressBarPlugin(logger, compilationName);
+};
+
+/**
+ * We can't get info from webpack, if bundle has done postprocessing, so we need to manually
+ * notify progress handler about it.
+ */
+module.exports.markValid = (compilationName: string) => {
+  compilations[compilationName].postprocessing = 'done';
 };

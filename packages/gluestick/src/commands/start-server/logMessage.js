@@ -1,7 +1,10 @@
 /* @flow */
 import type { Logger } from '../../types';
 
+const progressHandler = require('../../config/webpack/progressHandler');
+
 module.exports = (logger: Logger, childProcess: Object): void => {
+  let firstMessage = true;
   childProcess.on('message', (msg: { type: string, value: any[] }): void => {
     const parsedMsg = Array.isArray(msg.value)
       ? msg.value.map((v: string): Object => JSON.parse(v))
@@ -21,6 +24,11 @@ module.exports = (logger: Logger, childProcess: Object): void => {
         logger.error(...parsedMsg);
         break;
       case 'success':
+        if (firstMessage) {
+          firstMessage = false;
+          progressHandler.markValid('server');
+          logger.resetLine();
+        }
         logger.success(...parsedMsg);
         break;
     }

@@ -124,19 +124,14 @@ commander
     require('../commands/dockerize')(commandApi, commandArguments);
   }));
 
-// commander
-//   .command('start-client', null, { noHelp: true })
-//   .description('start client')
-//   .option(...logLevelOption)
-//   .option(...entrypointsOption)
-//   .action((...commandArguments) => {
-//     process.env.COMMAND = 'start-client';
-//     execWithConfig(
-//       require('../commands/start-client'),
-//       commandArguments,
-//       { useGSConfig: true, useWebpackConfig: true, skipServerEntryGeneration: true },
-//     );
-//   });
+commander
+  .command('start-client', null, { noHelp: true })
+  .description('start client')
+  .option(...logLevelOption)
+  .option(...entrypointsOption)
+  .action((...commandArguments) => {
+    require('../commands/start-client')(commandApi, commandArguments);
+  });
 
 commander
   .command('start-server', null, { noHelp: true })

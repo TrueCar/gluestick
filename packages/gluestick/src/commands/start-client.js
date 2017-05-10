@@ -1,11 +1,12 @@
 /* @flow */
-import type { CLIContext, WebpackConfig, Compiler } from '../types.js';
+import type { CommandAPI, Logger, WebpackConfig, Compiler } from '../types.js';
 
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
+const progressHandler = require('../config/webpack/progressHandler');
 
 type DevelopmentServerOptions = {
   quiet: boolean, // don’t output anything to the console
@@ -23,14 +24,17 @@ type DevelopmentServerOptions = {
   stats: Object,
 };
 
-module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): void => {
-  if (!webpackConfig) {
-    throw new Error('Webpack config not specified');
-  }
+module.exports = (
+  { getLogger, getContextConfig }: CommandAPI,
+): void => {
+  const logger: Logger = getLogger();
 
-  if (!GSConfig) {
-    throw new Error('Gluestick config not specified');
-  }
+  logger.clear();
+  logger.printCommandInfo();
+
+  const { webpackConfig, GSConfig } = getContextConfig(logger, {
+    skipServerEntryGeneration: true,
+  });
 
   const configuration: WebpackConfig = webpackConfig.client;
   const publicPath: string =
@@ -64,15 +68,17 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: CLIContext): 
     });
     app.set('view engine', 'html');
     const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
+    devMiddleware.waitUntilValid(() => {
+      progressHandler.markValid('client');
+    });
     app.use(devMiddleware);
     app.use(require('webpack-hot-middleware')(compiler));
     // Proxy http requests from client to renderer server in development mode.
     app.use(proxy({
       changeOrigin: false,
       target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
-      // TODO: make that work
-      // logLevel: GSConfig.proxyLogLevel,
-      // logProvider: () => logger,
+      logLevel: GSConfig.proxyLogLevel,
+      logProvider: () => logger,
       onError: (err: Object, req: Object, res: Object): void => {
         // When the client is restarting, show our polling message
         res.render(path.join(__dirname, '../lib/poll.html'), { port: GSConfig.ports.server });

@@ -80,5 +80,9 @@ module.exports = (level: string): Logger => {
         `gluestick ${process.argv.slice(2).join(' ')}`,
       );
     },
+    resetLine: () => {
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+    },
   };
 };
