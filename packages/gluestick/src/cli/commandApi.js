@@ -1,5 +1,12 @@
 /* @flow */
-import type { Logger, CommandAPI, ConfigPlugin, GSConfig, CompiledConfig, Config } from '../types.js';
+import type {
+  Logger,
+  CommandAPI,
+  ConfigPlugin,
+  GSConfig,
+  CompiledConfig,
+  Config,
+} from '../types.js';
 
 const path = require('path');
 const loggerFactory = require('./logger');
@@ -7,10 +14,13 @@ const prepareConfigPlugins = require('../plugins/prepareConfigPlugins');
 const compileWebpackConfig = require('../config/compileWebpackConfig');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
 
+// Get options object from command arguments
 const getOptions = commandArguments => commandArguments[commandArguments.length - 1];
 
+// Get logger instance
 const getLogger = (level: string = 'info'): Logger => loggerFactory(level);
 
+// Check if command is being run in gluestick project
 const isGluestickProject = (packagePath: string = process.cwd()): boolean => {
   try {
     const packageJson = require(path.join(packagePath, 'package.json'));
@@ -20,6 +30,7 @@ const isGluestickProject = (packagePath: string = process.cwd()): boolean => {
   }
 };
 
+// Get pluging array
 const getPlugins = (
   logger: Logger, pluginsConfigPath = path.join(process.cwd(), 'src/gluestick.plugins.js'),
 ): ConfigPlugin[] => {
@@ -29,17 +40,17 @@ const getPlugins = (
   return plugins;
 };
 
+// Compile gluestick config
 const getGluestickConfig = (
   logger: Logger, plugins: ConfigPlugin[],
 ): GSConfig => {
   const config: GSConfig = compileGlueStickConfig(logger, plugins);
-  if (config) {
-    // $FlowIgnore get additional data from a property
-    config.pluginsConfigPath = plugins.pluginsConfigPath;
-  }
+  // $FlowIgnore get additional data from a property
+  config.pluginsConfigPath = plugins.pluginsConfigPath;
   return config;
 };
 
+// Compile webpack configs
 const getWebpackConfig = (
   logger: Logger,
   plugins: ConfigPlugin[],
@@ -53,6 +64,7 @@ const getWebpackConfig = (
   });
 };
 
+// Compile both gluestick config and webpack configs
 const getContextConfig = (logger: Logger, webpackOptions = {}): Config => {
   const plugins = getPlugins(logger);
   const gluestickConfig = getGluestickConfig(logger, plugins);
@@ -64,10 +76,6 @@ const getContextConfig = (logger: Logger, webpackOptions = {}): Config => {
     ),
   };
 };
-
-// safelyExec
-
-// execHooks
 
 const commandApi: CommandAPI = {
   getOptions,
