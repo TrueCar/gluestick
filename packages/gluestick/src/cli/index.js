@@ -23,6 +23,11 @@ const safelyExecCommand = (commandFn) => (...commandArguments) => {
 commander
   .version(cliHelpers.getVersion());
 
+commander.option('-l, --light', 'use light color schema for logging', () => {
+  process.env.GS_LOG_LIGHT = true;
+  return true;
+});
+
 commander
   .command('new')
   .description('generate a new application')

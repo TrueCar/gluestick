@@ -4,17 +4,32 @@ import type { BaseLogger } from '../types';
 
 const chalk = require('chalk');
 
-const success = chalk.bgGreen.black;
-const info = chalk.bgCyan.black;
-const warn = chalk.bgYellow.black;
+const success = (...args) => process.env.GS_LOG_LIGHT
+? chalk.bgGreen.white(...args)
+: chalk.bgGreen.black(...args);
+const info = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgCyan.white(...args)
+  : chalk.bgCyan.black(...args);
+const warn = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgYellow.white(...args)
+  : chalk.bgYellow.black(...args);
 const filename = chalk.magenta;
 const highlight = chalk.bold;
-const debug = chalk.bgWhite.black;
-const error = chalk.bgRed.black;
+const debug = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgBlack.white(...args)
+  : chalk.bgWhite.black(...args);
+const error = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgRed.white(...args)
+  : chalk.bgRed.black(...args);
+
+const compilation = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgMagenta.white(...args)
+  : chalk.bgMagenta.black(...args);
 
 type ColorScheme = BaseLogger & {
   filename: Function;
   highlight: Function;
+  compilation: Function;
 }
 
 const colorScheme: ColorScheme = {
@@ -25,6 +40,7 @@ const colorScheme: ColorScheme = {
   error,
   filename,
   highlight,
+  compilation,
 };
 
 module.exports = colorScheme;

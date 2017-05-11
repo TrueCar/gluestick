@@ -5,6 +5,7 @@ import type { Logger } from '../../types';
 const chalk = require('chalk');
 const webpack = require('webpack');
 const ProgressBar = require('progress');
+const { compilation } = require('../../cli/colorScheme');
 
 /**
  * Compilation states
@@ -55,7 +56,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
     return new webpack.ProgressPlugin();
   }
 
-  const header: string = chalk.bgMagenta.black(`  COMPILATION:${name.toUpperCase()}  `);
+  const header: string = compilation(`  COMPILATION:${name.toUpperCase()}  `);
   const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;
 
   const barOptions = {
