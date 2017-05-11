@@ -1,9 +1,9 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../../src/types';
+import type { PredefinedGeneratorOptions } from '../../types';
 
 const path = require('path');
-const { convertToPascalCase } = require('../../src/utils');
+const { convertToPascalCase } = require('../../utils');
 
 const createTemplate = module.parent.createTemplate;
 

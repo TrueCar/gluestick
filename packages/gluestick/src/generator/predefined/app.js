@@ -1,5 +1,5 @@
 /* @flow */
-import type { GeneratorOptions } from '../../src/types';
+import type { GeneratorOptions } from '../../types';
 
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
@@ -18,7 +18,7 @@ const templateRoutes = require('../templates/Routes')(createTemplate);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateReducer = require('../templates/Reducer')(createTemplate);
-const { convertToCamelCase, convertToKebabCase } = require('../../src/utils');
+const { convertToCamelCase, convertToKebabCase } = require('../../utils');
 
 module.exports = (options: GeneratorOptions) => {
   const appName = convertToKebabCase(options.name);

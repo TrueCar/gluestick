@@ -1,9 +1,9 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../../src/types';
+import type { PredefinedGeneratorOptions } from '../../types';
 
 const path = require('path');
-const { convertToCamelCase, convertToCamelCaseWithPrefix } = require('../../src/utils');
+const { convertToCamelCase, convertToCamelCaseWithPrefix } = require('../../utils');
 
 const createTemplate = module.parent.createTemplate;
 

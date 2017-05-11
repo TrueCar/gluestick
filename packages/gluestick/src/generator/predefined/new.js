@@ -1,5 +1,5 @@
 /* @flow */
-import type { GeneratorOptions } from '../../src/types';
+import type { GeneratorOptions } from '../../types';
 
 /* DO NOT MODIFY */
 const createTemplate = module.parent.createTemplate;
@@ -19,7 +19,7 @@ const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
 const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
 const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
-const tag = require('../../package.json').version;
+const tag = require('../../../package.json').version;
 const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
 const templateEntryWrapper = require('../templates/EntryWrapper')(createTemplate);
 const templateApp = require('../templates/App')(createTemplate);
