@@ -205,13 +205,11 @@ Caching & Hooks documentation is available [here](CachingAndHooks.md).
 
 Styles documentation is available [here](Styles.md).
 
-## CLI messages logging
+## CLI message logging
 
-By default GlueStick will use dark theme when logging messages. If you want to use the light one
-either set `GS_LOG_LIGHT` environment variable to `true` or pass `--light` (`-l`) option when running
-command.
+By default GlueStick will use dark theme when logging messages. If you want to use the light one, either set `GS_LOG_LIGHT` environment variable to `true` or pass `--light` (`-l`) option when running command.
 
-For better CI/CD and other build tools support GlueStick will switch to _machine friendly output_ mode, so instead of colorful header you will get log matching the following format:
+For better CI/CD and other build tools support, GlueStick will switch to _machine friendly output_ mode, so instead of colorful header prefixing message, you will get log matching the following format:
 ```
 [GleuStick][<command>][<headerTitle>] <message>
 ```
