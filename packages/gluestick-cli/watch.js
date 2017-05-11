@@ -35,6 +35,18 @@ module.exports = (exitWithError) => {
         )
       : newPath;
   });
+
+  const babel = require(path.join(gsDependenciesPath[0], '../../node_modules/babel-core'));
+  const presets = [
+    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-es2015')),
+    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-stage-0')),
+    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-react')),
+  ];
+  const plugins = [
+    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-plugin-transform-decorators-legacy')),
+    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-plugin-transform-flow-strip-types')),
+  ];
+
   gsDependenciesPath.forEach((e, i) => {
     const packageName = gsPackages[i];
     const convertFilePath = filePath => {
@@ -42,7 +54,7 @@ module.exports = (exitWithError) => {
         process.cwd(),
         'node_modules',
         packageName,
-        /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath)[1],
+        /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath.replace('src', 'build'))[1],
       );
     };
     const watcher = chokidar.watch(`${e}/**/*`, {
@@ -56,10 +68,15 @@ module.exports = (exitWithError) => {
       .on('ready', () => {
         const copy = (filePath, type, typeColorFactory) => {
           const destPath = convertFilePath(filePath);
-          fs.copy(filePath, destPath, (err) => {
+          babel.transformFile(filePath, {
+            babelrc: false,
+            plugins,
+            presets,
+          }, (err, results) => {
             if (err) {
               console.error(chalk.red(err));
             } else {
+              fs.writeFileSync(destPath, results.code);
               console.log(`${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(`[${type}]`)}`);
             }
           });

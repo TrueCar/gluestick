@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const mkdir = require('mkdirp');
+const { execSync } = require('child_process');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
@@ -36,6 +37,14 @@ module.exports = (appName, options, exitWithError) => {
           );
         }
         packages.forEach(e => {
+          try {
+            execSync(`npm run build -- ${e}`, {
+              cwd: path.join(process.cwd(), options.dev),
+              stdio: 'ignore',
+            });
+          } catch (error) {
+            console.log(chalk.yellow(`Cannot build package ${e}: ${error.message}`));
+          }
           packageDeps.dependencies[e] = `file:${path.join('..', options.dev, 'packages', e)}`;
         });
       }
