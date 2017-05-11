@@ -53,6 +53,7 @@
     "chokidar": "1.6.1",
     "clear": "0.0.1",
     "clone": "2.1.0",
+    "cli-table": "0.3.1",
     "commander": "2.9.0",
     "compression": "1.6.2",
     "cross-spawn": "5.0.1",

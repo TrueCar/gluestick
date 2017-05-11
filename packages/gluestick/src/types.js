@@ -136,6 +136,7 @@ export type PredefinedGeneratorOptions = {
 
 export type Compiler = {
   run: (error: any) => void;
+  plugin: (event: string, callback: Function) => void;
 }
 
 export type Response = {

@@ -7,6 +7,8 @@ const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 const progressHandler = require('../config/webpack/progressHandler');
+const { printWebpackStats } = require('../utils');
+const build = require('./build');
 
 type DevelopmentServerOptions = {
   quiet: boolean, // don’t output anything to the console
@@ -25,10 +27,11 @@ type DevelopmentServerOptions = {
 };
 
 module.exports = (
-  { getLogger, getContextConfig, getOptions }: CommandAPI,
+  commandApi: CommandAPI,
   commandArguments: any[],
   { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
 ): void => {
+  const { getLogger, getContextConfig, getOptions } = commandApi;
   const logger: Logger = getLogger();
 
   if (printCommandInfo) {
@@ -37,6 +40,18 @@ module.exports = (
   }
 
   const options = getOptions(commandArguments);
+
+  if (process.env.NODE_ENV === 'production') {
+    build(commandApi, ['--client', {
+      ...options,
+      client: true,
+      parent: {
+        ...options.parent,
+        rawArgs: ['--client'],
+      },
+    }]);
+    return;
+  }
 
   const { webpackConfig, GSConfig } = getContextConfig(logger, {
     skipServerEntryGeneration: true,
@@ -60,55 +75,51 @@ module.exports = (
   };
 
   const compiler: Compiler = webpack(configuration);
+  let printedWebpackStats: boolean = false;
+  compiler.plugin('done', stats => {
+    if (!printedWebpackStats) {
+      printedWebpackStats = true;
+      printWebpackStats(logger, stats);
+    }
+  });
 
-  if (process.env.NODE_ENV !== 'production') {
-    const app: Object = express();
-    app.engine('html', (filePath: string, opts: { [key: string]: any }, next: Function) => {
-      fs.readFile(filePath, (error, template: Buffer) => {
-        if (error) {
-          return next(error);
-        }
-        return next(null, template.toString().replace(/{{ ?(\w+) ?}}/g, (match, key) => {
-          return opts[key];
-        }));
-      });
-    });
-    app.set('view engine', 'html');
-    const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
-    devMiddleware.waitUntilValid(() => {
-      progressHandler.markValid('client');
-    });
-    app.use(devMiddleware);
-    app.use(require('webpack-hot-middleware')(compiler, { log: () => {} }));
-    // Proxy http requests from client to renderer server in development mode.
-    app.use(proxy({
-      changeOrigin: false,
-      target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
-      logLevel: GSConfig.proxyLogLevel,
-      logProvider: () => logger,
-      onError: (err: Object, req: Object, res: Object): void => {
-        // When the client is restarting, show our polling message
-        res.render(path.join(__dirname, '../lib/poll.html'), { port: GSConfig.ports.server });
-      },
-    }));
-
-    // TODO: add hook
-    app.listen(GSConfig.ports.client, GSConfig.host, (error: string) => {
+  const app: Object = express();
+  app.engine('html', (filePath: string, opts: { [key: string]: any }, next: Function) => {
+    fs.readFile(filePath, (error, template: Buffer) => {
       if (error) {
-        logger.error(error);
-        return; // eslint-disable-line
+        return next(error);
       }
-
-      logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+      return next(null, template.toString().replace(/{{ ?(\w+) ?}}/g, (match, key) => {
+        return opts[key];
+      }));
     });
-  } else {
-    // TODO: spawn build command instead of running compiler
-    compiler.run((error: string) => {
-      if (error) {
-        throw new Error(error);
-      }
+  });
+  app.set('view engine', 'html');
+  const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
+  devMiddleware.waitUntilValid(() => {
+    progressHandler.markValid('client');
+  });
+  app.use(devMiddleware);
+  app.use(require('webpack-hot-middleware')(compiler, { log: () => {} }));
+  // Proxy http requests from client to renderer server in development mode.
+  app.use(proxy({
+    changeOrigin: false,
+    target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
+    logLevel: GSConfig.proxyLogLevel,
+    logProvider: () => logger,
+    onError: (err: Object, req: Object, res: Object): void => {
+      // When the client is restarting, show our polling message
+      res.render(path.join(__dirname, '../lib/poll.html'), { port: GSConfig.ports.server });
+    },
+  }));
 
-      logger.success('Client bundle successfully built.');
-    });
-  }
+  // TODO: add hook
+  app.listen(GSConfig.ports.client, GSConfig.host, (error: string) => {
+    if (error) {
+      logger.error(error);
+      return; // eslint-disable-line
+    }
+
+    logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+  });
 };

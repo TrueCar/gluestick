@@ -11,9 +11,13 @@ let isWebpackConfigValid = false;
 jest.setMock('webpack', (config) => {
   isWebpackConfigValid = !!config;
   return {
+    plugin: jest.fn(),
     run: jest.fn(cb => { runCallback = cb; }),
   };
 });
+
+jest.mock('../build');
+const build = require('../build');
 
 let middlewares = [];
 let listenCallback = () => {};
@@ -73,6 +77,7 @@ describe('commands/start-client', () => {
     errorLogger.mockClear();
     waitUntilValidCallback = () => {};
     proxyOnErrorCallback = () => {};
+    build.mockClear();
   });
 
   it('should respond with compilated template using render engine', () => {
@@ -99,20 +104,7 @@ describe('commands/start-client', () => {
     process.env.NODE_ENV = 'production';
     process.send = jest.fn();
     startClientCommand(commandApi, [{}]);
-    expect(isWebpackConfigValid).toBeTruthy();
-    runCallback(null);
-    expect(successLogger.mock.calls[0]).toEqual(['Client bundle successfully built.']);
-    process.env.NODE_ENV = originalNodeEnv;
-  });
-
-  it('should throw compilation error in production', () => {
-    const originalNodeEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
-    startClientCommand(commandApi, [{}]);
-    expect(isWebpackConfigValid).toBeTruthy();
-    expect(() => {
-      runCallback('test error');
-    }).toThrowError('test error');
+    expect(build).toHaveBeenCalled();
     process.env.NODE_ENV = originalNodeEnv;
   });
 

@@ -3,6 +3,7 @@ import type { CLIContext, WebpackConfig, Compiler } from '../../types.js';
 
 const webpack = require('webpack');
 const createWebpackStats = require('../../config/createWebpackStats');
+const { printWebpackStats } = require('../../utils');
 
 module.exports = (
   { logger, config }: CLIContext, options: Object, buildType: string,
@@ -22,6 +23,10 @@ module.exports = (
         `${buildName} bundle has been prepared `
         + `for ${process.env.NODE_ENV || 'development'}`,
       );
+
+      if (buildType === 'client') {
+        printWebpackStats(logger, stats);
+      }
 
       if (options.stats) {
         createWebpackStats(`${config.GSConfig.webpackStats}-${buildType}`, stats);
