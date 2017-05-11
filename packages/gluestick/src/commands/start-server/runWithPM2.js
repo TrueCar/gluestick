@@ -75,6 +75,7 @@ const start = (
    * started up because of PM2 and we terminate them.
    */
   process.on('SIGINT', (): void => {
+    logger.print();
     logger.info(`Stopping pm2 instance: ${name}…`);
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
