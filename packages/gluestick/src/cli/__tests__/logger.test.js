@@ -10,17 +10,18 @@ const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: O
     const header = process.env.CI
       ? `[GlueStick][${process.argv[2]}][${level.toUpperCase()}]`
       : colorScheme[level](`  ${level.toUpperCase()}  `);
+    const postfix = process.env.CI ? '' : '\n';
     if (shouldNotLog.indexOf(level) > -1) {
       expect(console.log).not.toBeCalledWith(
         header,
         message,
-        '\n',
+        postfix,
       );
     } else {
       expect(console.log).toHaveBeenCalledWith(
         header,
         message,
-        '\n',
+        postfix,
       );
     }
   });
