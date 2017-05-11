@@ -6,13 +6,10 @@ jest.mock('fs', () => ({
   },
 }));
 
-let runCallback = () => {};
-let isWebpackConfigValid = false;
-jest.setMock('webpack', (config) => {
-  isWebpackConfigValid = !!config;
+jest.setMock('webpack', () => {
   return {
     plugin: jest.fn(),
-    run: jest.fn(cb => { runCallback = cb; }),
+    run: jest.fn(),
   };
 });
 
@@ -70,8 +67,6 @@ const commandApi = {
 describe('commands/start-client', () => {
   beforeEach(() => {
     middlewares = [];
-    runCallback = () => {};
-    isWebpackConfigValid = false;
     listenCallback = () => {};
     successLogger.mockClear();
     errorLogger.mockClear();

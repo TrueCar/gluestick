@@ -7,15 +7,18 @@ const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: O
   ['debug', 'info', 'warn', 'error', 'success'].forEach((level: string): void => {
     console.log.mockClear();
     loggerInstance[level](message);
+    const header = process.env.CI
+      ? `[GlueStick][${process.argv[2]}][${level.toUpperCase()}]`
+      : colorScheme[level](`  ${level.toUpperCase()}  `);
     if (shouldNotLog.indexOf(level) > -1) {
       expect(console.log).not.toBeCalledWith(
-        colorScheme[level](`  ${level.toUpperCase()}  `),
+        header,
         message,
         '\n',
       );
     } else {
       expect(console.log).toHaveBeenCalledWith(
-        colorScheme[level](`  ${level.toUpperCase()}  `),
+        header,
         message,
         '\n',
       );

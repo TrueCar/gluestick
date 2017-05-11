@@ -14,7 +14,6 @@ jest.mock('cwd/custom/package.json', () => ({
   },
 }), { virtual: true });
 
-const clone = require('clone');
 const commandApi = require('../../../__tests__/mocks/context').commandApi;
 const testCommand = require('../test');
 const jestMock = require('jest');
