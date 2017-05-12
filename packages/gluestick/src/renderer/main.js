@@ -11,7 +11,7 @@ import type {
   Request,
   Response,
   ServerPlugin,
-  Logger,
+  BaseLogger,
 } from '../types';
 
 const path = require('path');
@@ -52,7 +52,7 @@ module.exports = ({ config, logger }: Context) => {
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
 
   // Use custom logger from plugins or default logger.
-  const customLogger: ?Logger = pluginUtils.getCustomLogger(serverPlugins);
+  const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);
 
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);

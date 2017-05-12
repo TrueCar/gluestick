@@ -5,7 +5,7 @@ jest.mock('cwd/src/gluestick.config.js', () => ({
 const compileGluestickConfig = require('../compileGlueStickConfig');
 const defaultConfig = require('../defaults/glueStickConfig');
 
-const logger = require('../../__tests__/mocks/context').logger;
+const logger = require('../../__tests__/mocks/context').commandApi.getLogger();
 
 describe('config/compileGluestickConfig', () => {
   it('should return default config', () => {

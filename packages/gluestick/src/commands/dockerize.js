@@ -1,12 +1,19 @@
 /* @flow */
-import type { Context } from '../types.js';
+import type { CommandAPI, Logger } from '../types.js';
 
 const spawn = require('cross-spawn');
 const path = require('path');
 const process = require('process');
 const which = require('shelljs').which;
 
-module.exports = ({ config, logger }: Context, name: string) => {
+module.exports = ({ getLogger }: CommandAPI, commandArguments: any[]) => {
+  const logger: Logger = getLogger();
+
+  logger.clear();
+  logger.printCommandInfo();
+
+  const name: string = commandArguments[0];
+
   if (which('docker') !== null) {
     spawn(
       'docker',
@@ -14,6 +21,6 @@ module.exports = ({ config, logger }: Context, name: string) => {
       { stdio: 'inherit' },
     );
   } else {
-    logger.warn('You must install docker before continuing');
+    logger.error('You must install docker before continuing');
   }
 };

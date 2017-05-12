@@ -1,12 +1,12 @@
 /* @flow */
-import type { Plugin, Logger } from '../types';
+import type { Plugin, BaseLogger } from '../types';
 
 const { requireWithInterop } = require('../lib/utils');
 
 /**
  * Require plugin declaration file, ensue schema is valid and return normalized Plugin object.
  */
-module.exports = (logger: Logger, pluginsConfigPath: string, pluginType: string): Plugin[] => {
+module.exports = (logger: BaseLogger, pluginsConfigPath: string, pluginType: string): Plugin[] => {
   try {
     // Plugin declaration file can be ESM or CommonJS.
     const pluginsDeclaration: any[] = requireWithInterop(pluginsConfigPath);

@@ -4,6 +4,8 @@ import type { Logger } from './types';
 
 const fs = require('fs');
 const path = require('path');
+const Table = require('cli-table');
+const chalk = require('chalk');
 
 const convertToCamelCase =
   (value: string): string => `${
@@ -63,6 +65,51 @@ const throttle = (fn: Function, threshold: number = 250): Function => {
   };
 };
 
+const printWebpackStats = (logger: Logger, stats: Object) => {
+  const compilationStats = stats.toJson({
+    assets: true,
+  });
+
+  const table = new Table({
+    head: ['Asset', 'Size'],
+    colWidths: [50, 12],
+    chars: {
+      top: '═',
+      'top-mid': '╤',
+      'top-left': '╔',
+      'top-right': '╗',
+      bottom: '═',
+      'bottom-mid': '╧',
+      'bottom-left': '╚',
+      'bottom-right': '╝',
+      left: '║',
+      'left-mid': '╟',
+      mid: '─',
+      'mid-mid': '┼',
+      right: '║',
+      'right-mid': '╢',
+      middle: '│',
+    },
+    style: {
+      head: ['green'],
+    },
+  });
+
+  const formatSize = size => {
+    if (size < 1024) {
+      return `${size} B`;
+    }
+    const kb = size / 1024;
+    return kb > 1024 ? chalk.yellow(`${(kb / 1024).toFixed(2)} MB`) : `${kb.toFixed(2)} KB`;
+  };
+
+  table.push(
+    ...compilationStats.assets.map(({ name, size }) => [name, formatSize(size)]),
+  );
+
+  logger.print(table.toString(), '\n');
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
@@ -70,4 +117,5 @@ module.exports = {
   convertToPascalCase,
   convertToCamelCaseWithPrefix,
   throttle,
+  printWebpackStats,
 };

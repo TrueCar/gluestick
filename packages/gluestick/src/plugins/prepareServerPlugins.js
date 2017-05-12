@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { ServerPlugin, Plugin, Logger } from '../types';
+import type { ServerPlugin, Plugin, BaseLogger } from '../types';
 
 type CopilationResults = {
   [key: string]: Function | Object;
@@ -43,7 +43,7 @@ const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationRes
  * Compile server plugins from given array. Those plugins are compiled with provided by user
  * `options` object from plugin declaration file, and utilities from gluestick like logger.
  */
-module.exports = (logger: Logger, plugins: PluginRef[]): ServerPlugin[] => {
+module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
   try {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(

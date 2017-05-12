@@ -20,6 +20,13 @@ type Command = {
   options?: GeneratorOptions;
 }
 
+type Options = {
+  pathToGenerator?: string,
+  successMessageHandler: (
+    generatorName: string, entityName: string, results: { written: string[], modified: string[] }
+  ) => void,
+}
+
 const defaultLogger: Logger = {
   info: console.log,
   success: console.log,
@@ -37,7 +44,10 @@ const defaultLogger: Logger = {
 module.exports = (
   command: Command,
   logger: Logger = defaultLogger,
-  pathToGenerator?: string,
+  {
+    pathToGenerator,
+    successMessageHandler,
+  }: Options = {},
 ): void => {
   const {
     generatorName,
@@ -78,11 +88,15 @@ module.exports = (
   );
 
   const results: WrittenTemplate = writeTemplate({ ...generatorConfig, options });
-  logger.success(
-    `${generator.name} ${entityName} generated successfully\n`
-    + 'Files written: \n'
-    + `  ${results.written.length ? results.written.join('\n  ') : '--'}`
-    + '\nFiles modified: \n'
-    + `  ${results.modified.length ? results.modified.join('\n  ') : '--'}`,
-  );
+  if (successMessageHandler) {
+    successMessageHandler(generator.name, entityName, results);
+  } else {
+    logger.success(
+      `${generator.name} ${entityName} generated successfully\n`
+      + 'Files written: \n'
+      + `  ${results.written.length ? results.written.join('\n  ') : '--'}`
+      + '\nFiles modified: \n'
+      + `  ${results.modified.length ? results.modified.join('\n  ') : '--'}`,
+    );
+  }
 };

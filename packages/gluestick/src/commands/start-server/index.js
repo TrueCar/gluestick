@@ -1,13 +1,15 @@
 /* @flow */
-import type { Context } from '../../types';
+import type { CommandAPI, Logger } from '../../types';
 
 const runWithWebpack = require('./runWithWebpack');
 const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
 
-type DebugOptions = {
-  debugServer?: boolean,
-  debugPort: number,
+type Options = {
+  entrypoints?: string;
+  logLevel?: string;
+  debugServer?: boolean;
+  debugPort: number;
 }
 
 type Entry = {
@@ -28,14 +30,28 @@ const getServerEntry = (config: Object): Entry => {
  * Starts server side rendering.
  * If debug is false, this will use PM2 in production for
  * managing multiple instances.
- *
- * @param {Object} { config, logger } Context
- * @param {Object} { debug = false, debugPort }
  */
 module.exports = (
-  { config, logger }: Context,
-  { debugServer = false, debugPort }: DebugOptions,
+  { getLogger, getOptions, getContextConfig }: CommandAPI,
+  commandArguments: any[],
+  { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
 ): void => {
+  const { debugServer, debugPort, logLevel, entrypoints }: Options = getOptions(commandArguments);
+  const logger: Logger = getLogger(logLevel);
+
+  if (printCommandInfo) {
+    logger.clear();
+    logger.printCommandInfo();
+  }
+
+  const config = getContextConfig(logger, {
+    skipClientEntryGeneration: true,
+    // Performance tweak: if NODE_ENV is production start-server will only run server bundle
+    // without creating bundle
+    skipServerEntryGeneration: process.env.NODE_ENV === 'production',
+    entryOrGroupToBuild: entrypoints,
+  });
+
   const entry: Entry = getServerEntry(config);
   if (debugServer) {
     runWithDebug({ config, logger }, entry.path, entry.args, debugPort);

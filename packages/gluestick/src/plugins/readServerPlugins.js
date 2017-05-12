@@ -1,9 +1,9 @@
 /* @flow */
-import type { Logger, Plugin } from '../types';
+import type { BaseLogger, Plugin } from '../types';
 
 const readPlugins = require('./readPlugins');
 
-module.exports = (logger: Logger, pluginsConfigPath: string): Plugin[] => {
+module.exports = (logger: BaseLogger, pluginsConfigPath: string): Plugin[] => {
   const plugins = readPlugins(logger, pluginsConfigPath, 'server');
   if (plugins.length) {
     logger.info('Including server plugins:');

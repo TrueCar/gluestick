@@ -10,7 +10,17 @@ const getEntiresSnapshots = require('../getEntiresSnapshots');
 const utils = require('../../utils');
 const build = require('../build');
 
-const context = require('../../../__tests__/mocks/context');
+const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
+
+const fatalLogger = jest.fn();
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+    fatal: fatalLogger,
+  }),
+};
+
 
 const originalProcessExit = process.exit.bind(process);
 // $FlowIgnore donesn't like overwriting this
@@ -32,7 +42,7 @@ describe('commands/build/build', () => {
   });
 
   it('should build client and server (no flags)', () => {
-    build(context, { client: false, server: false });
+    build(commandApi, [{ client: false, server: false }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(2);
     // $FlowIgnore donesn't know about jest mock
     expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
@@ -46,7 +56,7 @@ describe('commands/build/build', () => {
   });
 
   it('should build client and server (with flags)', () => {
-    build(context, { client: true, server: true });
+    build(commandApi, [{ client: true, server: true }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(2);
     // $FlowIgnore donesn't know about jest mock
     expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
@@ -60,7 +70,7 @@ describe('commands/build/build', () => {
   });
 
   it('should build client', () => {
-    build(context, { client: true });
+    build(commandApi, [{ client: true }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(1);
     // $FlowIgnore donesn't know about jest mock
     expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
@@ -70,7 +80,7 @@ describe('commands/build/build', () => {
   });
 
   it('should build server', () => {
-    build(context, { server: true });
+    build(commandApi, [{ server: true }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(1);
     // $FlowIgnore donesn't know about jest mock
     expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('server');
@@ -80,7 +90,7 @@ describe('commands/build/build', () => {
   });
 
   it('should build client, server and static markup', (done) => {
-    build(context, { client: false, server: false, static: true });
+    build(commandApi, [{ client: false, server: false, static: true }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(2);
     // $FlowIgnore donesn't know about jest mock
     expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
@@ -98,18 +108,16 @@ describe('commands/build/build', () => {
   });
 
   it('should fail to build if static was passed, but client won\'t be build', () => {
-    expect(() => {
-      build(context, { client: false, server: true, static: true });
-    }).toThrowError('--static options must be used with both client and server build');
-    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
-    expect(compile).toHaveBeenCalledTimes(0);
+    fatalLogger.mockClear();
+    build(commandApi, [{ client: false, server: true, static: true }]);
+    expect(fatalLogger)
+      .toHaveBeenCalledWith('--static options must be used with both client and server build');
   });
 
   it('should fail to build if static was passed, but server won\'t be build', () => {
-    expect(() => {
-      build(context, { client: true, server: false, static: true });
-    }).toThrowError('--static options must be used with both client and server build');
-    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
-    expect(compile).toHaveBeenCalledTimes(0);
+    fatalLogger.mockClear();
+    build(commandApi, [{ client: true, server: false, static: true }]);
+    expect(fatalLogger)
+      .toHaveBeenCalledWith('--static options must be used with both client and server build');
   });
 });

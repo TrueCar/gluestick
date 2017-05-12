@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context, UpdateDepsPromptResults, ProjectPackage } from '../../types';
+import type { CLIContext, UpdateDepsPromptResults, ProjectPackage } from '../../types';
 
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +11,7 @@ const updateDependencies = require('./updateDependencies');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 
-module.exports = ({ config, logger }: Context, dev: boolean = false) => {
+module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
   config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
