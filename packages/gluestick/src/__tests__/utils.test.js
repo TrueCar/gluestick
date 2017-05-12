@@ -7,8 +7,6 @@ jest.mock('fs', () => ({
 const utils = require('../utils');
 const { getLogger } = require('../__tests__/mocks/context').commandApi;
 
-const { getLogger } = require('../__tests__/mocks/context').commandApi;
-
 const logger = getLogger();
 
 describe('utils', () => {
