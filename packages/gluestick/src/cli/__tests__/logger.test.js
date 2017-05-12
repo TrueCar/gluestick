@@ -4,7 +4,7 @@ const loggerFactory = require('../logger');
 const colorScheme = require('../colorScheme');
 
 const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
-  ['debug', 'info', 'warn', 'error', 'success'].forEach((level: string): void => {
+  Object.keys(loggerFactory.levels).forEach((level: string): void => {
     console.log.mockClear();
     loggerInstance[level](message);
     const header = process.env.CI

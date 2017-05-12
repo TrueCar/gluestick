@@ -90,3 +90,5 @@ module.exports = (level: string): Logger => {
     },
   };
 };
+
+module.exports.levels = levels;
