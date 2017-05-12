@@ -11,7 +11,7 @@ module.createTemplate = createTemplate;
 const PATH_TO_GLUESTICK_TEMPLATES: string = '../../build/generator/predefined';
 const PATH_TO_GLUESTICK_CLI_TEMPLATES: string = '../templates';
 const EXTERNAL: string = 'generators';
-const INTERNAL: string = '../templates';
+const INTERNAL: string = './templates';
 
 const safeResolve = (moduleToResolve: string, ...args: string[]): string => {
   try {
