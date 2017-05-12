@@ -5,6 +5,8 @@ const glob = require('glob');
 const path = require('path');
 const fs = require('fs');
 const mkdir = require('mkdirp');
+const { execSync } = require('child_process');
+const rimraf = require('rimraf');
 
 let packageNames = [];
 if (process.argv.length < 3) {
@@ -19,6 +21,8 @@ packageNames.forEach((packageName) => {
     sourceMaps: 'inline',
   });
 
+  rimraf.sync(path.join(process.cwd(), 'packages', packageName, 'build'));
+
   glob.sync(`${path.join(process.cwd(), 'packages', packageName)}/src/**/*.js`, {
     ignore: [
       '**/__tests__/**/*',
@@ -30,4 +34,11 @@ packageNames.forEach((packageName) => {
     mkdir.sync(path.dirname(outputFilename));
     fs.writeFileSync(outputFilename, code, 'utf-8');
   });
+
+  if (packageName === 'gluestick-generators') {
+    const command = './node_modules/.bin/flow-copy-source -v -i \'**/__tests__/**\' '
+      + `./packages/${packageName}/src `
+      + `./packages/${packageName}/build`;
+    execSync(command);
+  }
 });

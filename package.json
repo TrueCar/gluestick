@@ -19,10 +19,10 @@
     "lerna": "2.0.0-beta.37"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-cli": "6.22.2",
+    "babel-eslint": "^7.1.1",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-es2015": "6.22.0",
     "babel-preset-react": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
@@ -32,8 +32,10 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
     "flow-bin": "^0.45.0",
-    "node-fetch": "1.6.3",
+    "flow-copy-source": "1.1.0",
     "glob": "7.1.1",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "node-fetch": "1.6.3",
+    "rimraf": "2.6.1"
   }
 }
