@@ -3,8 +3,8 @@
   "scripts": {
     "lerna": "lerna",
     "yarn:install": "lerna exec --concurrency=1 -- yarn",
-    "install:npm": "npm install && lerna bootstrap",
-    "install:yarn": "yarn && npm run yarn:install && lerna bootstrap --concurrency=1",
+    "install:npm": "npm install && npm run build && lerna bootstrap",
+    "install:yarn": "yarn && npm run build && npm run yarn:install && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "lerna exec --concurrency=1 -- npm run test -- --bail",
     "test-coverage": "lerna exec --concurrency=1 -- npm run test -- --bail --coverage",
