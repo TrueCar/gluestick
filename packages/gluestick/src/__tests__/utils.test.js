@@ -3,8 +3,8 @@
 jest.mock('fs', () => ({
   existsSync: (value) => ['src/shared', 'src/apps/main'].indexOf(value) > -1,
 }));
-const utils = require('../utils');
 
+const utils = require('../utils');
 const { getLogger } = require('../__tests__/mocks/context').commandApi;
 
 const logger = getLogger();
@@ -69,6 +69,30 @@ describe('utils', () => {
       fn.mock.calls.forEach(args => {
         expect(args).toEqual([true]);
       });
+    });
+  });
+
+  it('should return default export if ESM or module.exports if CJS', () => {
+    expect(utils.getDefaultExport({
+      isTest: true,
+    })).toEqual({
+      isTest: true,
+    });
+    expect(utils.getDefaultExport({
+      __esModule: true,
+      default: { isTest: true },
+    })).toEqual({
+      __esModule: true,
+      isTest: true,
+    });
+    expect(utils.getDefaultExport({
+      __esModule: true,
+      named: 'export',
+      default: { isTest: true },
+    })).toEqual({
+      __esModule: true,
+      named: 'export',
+      isTest: true,
     });
   });
 });

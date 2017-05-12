@@ -1,7 +1,10 @@
 /* @flow */
-jest.mock('cwd/src/gluestick.config.js', () => ({
-  default: config => ({ ...config, buildStaticPath: 'test' }),
-}), { virtual: true });
+jest.mock('../../utils', () => ({ requireModule: v => require(v) }));
+jest.mock(
+  'cwd/src/gluestick.config.js',
+  () => config => ({ ...config, buildStaticPath: 'test' }),
+  { virtual: true },
+);
 const compileGluestickConfig = require('../compileGlueStickConfig');
 const defaultConfig = require('../defaults/glueStickConfig');
 

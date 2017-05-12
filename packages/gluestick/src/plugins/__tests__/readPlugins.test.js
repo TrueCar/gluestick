@@ -1,5 +1,5 @@
 /* @flow */
-jest.mock('../../lib/utils.js', () => ({
+jest.mock('../../utils.js', () => ({
   requireWithInterop: (val) => {
     switch (val) {
       case 'throw-0':
