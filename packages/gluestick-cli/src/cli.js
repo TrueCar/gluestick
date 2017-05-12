@@ -8,7 +8,7 @@ const reinstallDev = require('./reinstallDev');
 const watch = require('./watch');
 const resetHard = require('./reset');
 
-const version = require(path.join(__dirname, 'package.json')).version;
+const version = require(path.join(__dirname, '../package.json')).version;
 
 const exitWithError = message => {
   console.error(chalk.red(`ERROR: ${message}`));
