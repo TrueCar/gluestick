@@ -1,1 +1,0 @@
-./node_modules/.bin/babel ./packages/$1/src --presets=react,es2015,stage-0 --plugins=transform-decorators-legacy,transform-flow-comments -d ./packages/$1/build
