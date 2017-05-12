@@ -37,7 +37,7 @@ module.exports = (logger: BaseLogger, pluginsConfigPath: string, pluginType: str
       // Try to read plugin source. If it doesn't exists, it will be filtered from list.
       let body = null;
       try {
-        body = requireWithInterop(`${name}/${pluginType}.js`);
+        body = requireWithInterop(`${name}/build/${pluginType}.js`);
       } catch (error) {
         // NOOP it is possible that give file does not exists and it's
         // perfectly fine.

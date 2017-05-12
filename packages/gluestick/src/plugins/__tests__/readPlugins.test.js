@@ -1,14 +1,11 @@
 /* @flow */
 jest.mock('../../utils.js', () => ({
-  requireWithInterop: (val) => {
-    switch (val) {
+  requireModule: (filename) => {
+    switch (filename) {
       case 'throw-0':
         return {};
       case 'throw-1':
         return [11];
-      case 'plugin-1/config.js':
-      case 'plugin-3/config.js':
-        return jest.fn();
       case 'decl':
         return [
           'plugin-1',
@@ -19,6 +16,15 @@ jest.mock('../../utils.js', () => ({
             plugin: 'plugin-3',
           },
         ];
+      default:
+        return null;
+    }
+  },
+  requireWithInterop: (val) => {
+    switch (val) {
+      case 'plugin-1/build/config.js':
+      case 'plugin-3/build/config.js':
+        return jest.fn();
       default:
         return null;
     }
