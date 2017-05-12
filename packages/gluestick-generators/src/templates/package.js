@@ -16,7 +16,7 @@ const templatePackage = createTemplate`
   },
   "dependencies": {
     "babel-core": "6.22.1",
-    "babel-loader": "6.2.10",
+    "babel-loader": "7.0.0",
     "babel-plugin-gluestick": "0.0.1",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-preset-es2015": "6.22.0",
