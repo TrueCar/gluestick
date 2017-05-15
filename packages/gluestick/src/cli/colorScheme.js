@@ -1,22 +1,35 @@
 /* @flow */
 
-import type { LoggerTypes } from '../types';
+import type { BaseLogger } from '../types';
 
 const chalk = require('chalk');
 
-const success = chalk.green;
-// Here we don't want to set color
-// cause of https://github.com/TrueCar/gluestick/issues/624
-const info = (msg) => msg;
-const warn = chalk.yellow;
-const filename = chalk.cyan;
+const success = (...args) => process.env.GS_LOG_LIGHT
+? chalk.bgGreen.white(...args)
+: chalk.bgGreen.black(...args);
+const info = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgCyan.white(...args)
+  : chalk.bgCyan.black(...args);
+const warn = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgYellow.white(...args)
+  : chalk.bgYellow.black(...args);
+const filename = chalk.magenta;
 const highlight = chalk.bold;
-const debug = chalk.dim;
-const error = chalk.red;
+const debug = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgBlack.white(...args)
+  : chalk.bgWhite.black(...args);
+const error = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgRed.white(...args)
+  : chalk.bgRed.black(...args);
 
-type ColorScheme = LoggerTypes & {
+const compilation = (...args) => process.env.GS_LOG_LIGHT
+  ? chalk.bgMagenta.white(...args)
+  : chalk.bgMagenta.black(...args);
+
+type ColorScheme = BaseLogger & {
   filename: Function;
   highlight: Function;
+  compilation: Function;
 }
 
 const colorScheme: ColorScheme = {
@@ -27,6 +40,7 @@ const colorScheme: ColorScheme = {
   error,
   filename,
   highlight,
+  compilation,
 };
 
 module.exports = colorScheme;

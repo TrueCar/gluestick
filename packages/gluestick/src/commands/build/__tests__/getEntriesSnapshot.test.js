@@ -30,13 +30,13 @@ describe('commands/build/getEntriesSnapshot', () => {
 
   it('should reject promise if spawning renderer fails', () => {
     const promise = getEntriesSnapshot(context);
-    handlers.filter(h => h.evt === 'message')[0].cb({ type: 'test', value: '' });
+    handlers.filter(h => h.evt === 'message')[0].cb({ type: 'ERROR', value: '' });
     return promise.catch(error => {
       expect(error).toEqual('Renderer failed to start');
     });
   });
 
-  it('should', () => {
+  it('should reject if there is a problem running renderer', () => {
     expect(() => {
       getEntriesSnapshot(context);
       handlers.filter(h => h.evt === 'error')[0].cb(new Error('test error'));

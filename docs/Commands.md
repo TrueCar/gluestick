@@ -71,7 +71,7 @@ Available options:
 * `-T, --run-tests` - Run test hook
 * `-L, --log-level <level>` - Set the logging level
   * Valid options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`
-* `-E, --log-pretty [true|false]` - Set pretty printing for logging
+* `-E, --entry-point <entryPoint>` - Specify which entry (or group of them) to build and run, entry must match it's key (eg: `/home`) in `src/entries.json` or group it is assigned to (eg: `profile-apps`)
 * `-D, --debug-server` - Debug server side rendering with built-in node inspector
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
@@ -204,3 +204,19 @@ Caching & Hooks documentation is available [here](CachingAndHooks.md).
 ## Styles
 
 Styles documentation is available [here](Styles.md).
+
+## CLI message logging
+
+By default GlueStick will use dark theme when logging messages. If you want to use the light one, either set `GS_LOG_LIGHT` environment variable to `true` or pass `--light` (`-l`) option when running a command.
+
+For better CI/CD and other build tools support, GlueStick will switch to _machine friendly output_ mode, thus instead of colorful header prefixing message, you will get log matching the following format:
+```
+[GleuStick][<command>][<headerTitle>] <message>
+```
+To switch to _machine friendly_ mode, one of the folling condition must be met: 
+
+* `NODE_ENV` must be set to `production`
+* `CI` must be set (to whatever value)
+* `CD` must be set (to whatever value)
+
+However, if you want to overwrite this behaviour pass `GS_LOG_PRETTY=true` when running a command.

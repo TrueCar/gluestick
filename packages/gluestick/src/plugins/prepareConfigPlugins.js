@@ -3,6 +3,7 @@
 import type { ConfigPlugin, Plugin, Logger } from '../types';
 
 const readPlugins = require('./readPlugins');
+const { requireModule, requireWithInterop, getDefaultExport } = require('../utils');
 
 type CompilationResults = {
   preOverwrites: {
@@ -58,7 +59,9 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
     const compiledPlugins: ConfigPlugin[] = pluginsConfig.map((value: Plugin): ConfigPlugin => {
       // Second `compilePlugin` argument is an object with gluestick utilities that
       // will be available for plugins to use.
-      const compilationResults: CompilationResults = compilePlugin(value, { logger });
+      const compilationResults: CompilationResults = compilePlugin(value, {
+        logger, requireModule, requireWithInterop, getDefaultExport,
+      });
       if (compilationResults.error) {
         throw compilationResults.error;
       }

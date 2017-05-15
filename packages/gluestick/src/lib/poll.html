@@ -58,7 +58,7 @@
         if (!httpRequest) return;
   
         httpRequest.onreadystatechange = reload;
-        httpRequest.open("GET", "http://localhost:8880/gluestick-proxy-poll");
+        httpRequest.open("GET", "http://localhost:{{ port }}/gluestick-proxy-poll");
         httpRequest.send();
       }
   

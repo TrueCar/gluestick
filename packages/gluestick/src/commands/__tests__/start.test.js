@@ -8,8 +8,21 @@ const spawnFn = jest.fn(
   }),
 );
 jest.setMock('cross-spawn', spawnFn);
+jest.mock('../start-client');
+jest.mock('../start-server');
 const startCommand = require('../start');
-const context = require('../../__tests__/mocks/context');
+const startClient = require('../start-client');
+const startServer = require('../start-server');
+const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
+
+const fatalLogger = jest.fn();
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+    fatal: fatalLogger,
+  }),
+};
 
 const originalNodeEnv = process.env.NODE_ENV;
 
@@ -17,11 +30,16 @@ describe('commands/start', () => {
   beforeEach(() => {
     spawnEventHandlers = [];
     spawnFn.mockClear();
+    fatalLogger.mockClear();
   });
 
   describe('in production', () => {
     beforeEach(() => {
       process.env.NODE_ENV = 'production';
+      // $FlowIgnore startClient is mocked
+      startClient.mockClear();
+      // $FlowIgnore startServer is mocked
+      startServer.mockClear();
     });
 
     afterAll(() => {
@@ -29,109 +47,151 @@ describe('commands/start', () => {
     });
 
     it('should build client, server and spawn start-server without build', () => {
-      const startPromise = startCommand(context, {
+      const startServerPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startServer.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      startCommand(commandApi, [{
         dev: false,
         skipBuild: false,
         runTests: false,
         parent: {
           rawArgs: [],
         },
-      });
+      }]);
 
+      expect(spawnFn.mock.calls[0][1][1]).toEqual('build');
       spawnEventHandlers.forEach(({ event, fn }) => {
         if (event === 'exit') {
           fn(0);
         }
       });
+      // $FlowIgnore startClient is mocked
+      expect(startClient.mock.calls.length).toBe(0);
 
-      return startPromise.then(() => {
-        expect(spawnFn.mock.calls[0][1][1]).toEqual('build');
-        expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
+      return startServerPromise.then(args => {
+        expect(args.length).toBeGreaterThan(0);
       });
     });
 
     it('should try to build client, server and handle rejection (non-zero code)', () => {
-      const originalProcessExit = process.exit.bind(process);
+      const promise = new Promise((resolve) => {
+        fatalLogger.mockImplementationOnce((msg) => { resolve(msg); });
+      });
       // $FlowIgnore
       process.exit = jest.fn();
-      const startPromise = startCommand(context, {
+      startCommand(commandApi, [{
         dev: false,
         skipBuild: false,
         runTests: false,
         parent: {
           rawArgs: [],
         },
-      });
+      }]);
 
       spawnEventHandlers[0].fn(1);
 
-      return startPromise.then(() => {
-        expect(process.exit.mock.calls).toEqual([[1]]);
-        // $FlowIgnore
-        process.exit = originalProcessExit;
+      return promise.then((msg) => {
+        expect(msg.includes('Build have failed')).toBeTruthy();
       });
     });
 
-    it('should try to build client, server and handle rejection (error)', () => {
-      const originalProcessExit = process.exit.bind(process);
-      // $FlowIgnore
-      process.exit = jest.fn();
-      const startPromise = startCommand(context, {
-        dev: false,
-        skipBuild: false,
-        runTests: false,
-        parent: {
-          rawArgs: [],
-        },
+    it('should try to test then start and handle rejection (error)', () => {
+      const promise = new Promise((resolve) => {
+        fatalLogger.mockImplementationOnce((msg) => { resolve(msg); });
       });
-
-      spawnEventHandlers[1].fn(new Error('test'));
-
-      return startPromise.then(() => {
-        expect(process.exit.mock.calls).toEqual([[1]]);
-        // $FlowIgnore
-        process.exit = originalProcessExit;
-      });
-    });
-
-    it('should spawn start-server without build if skipBuild is passed', () => {
-      startCommand(context, {
-        dev: false,
-        skipBuild: true,
-        runTests: false,
-        parent: {
-          rawArgs: ['--skip-build'],
-        },
-      });
-      expect(spawnFn.mock.calls[0][1][1]).toEqual('start-server');
-    });
-  });
-
-  describe('in development', () => {
-    it('should spawn start-client with build and spawn start-server with build', () => {
-      startCommand(context, {
-        dev: false,
-        skipBuild: false,
-        runTests: false,
-        parent: {
-          rawArgs: [],
-        },
-      });
-      expect(spawnFn.mock.calls[0][1][1]).toEqual('start-client');
-      expect(spawnFn.mock.calls[1][1][1]).toEqual('start-server');
-    });
-    it('should spawn start-client with build, spawn start-server with build and run tests', () => {
-      startCommand(context, {
+      process.env.NODE_ENV = originalNodeEnv;
+      startCommand(commandApi, [{
         dev: false,
         skipBuild: false,
         runTests: true,
         parent: {
           rawArgs: ['-T'],
         },
+      }]);
+
+      spawnEventHandlers[1].fn(new Error('test'));
+
+      return promise.then((msg) => {
+        expect(msg.includes('Some tests have failed')).toBeTruthy();
       });
+    });
+
+    it('should spawn start-server without build if skipBuild is passed', () => {
+      const startServerPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startServer.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      startCommand(commandApi, [{
+        dev: false,
+        skipBuild: true,
+        runTests: false,
+        parent: {
+          rawArgs: ['--skip-build'],
+        },
+      }]);
+      // $FlowIgnore startClient is mocked
+      expect(startClient.mock.calls.length).toBe(0);
+      spawnEventHandlers.forEach(({ event, fn }) => {
+        if (event === 'exit') {
+          fn(0);
+        }
+      });
+      return startServerPromise.then(args => {
+        expect(args.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('in development', () => {
+    it('should spawn start-client with build and spawn start-server with build', () => {
+      const startClientPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startClient.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      const startServerPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startServer.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      startCommand(commandApi, [{
+        dev: false,
+        skipBuild: false,
+        runTests: false,
+        parent: {
+          rawArgs: [],
+        },
+      }]);
+      return Promise.all([startClientPromise, startServerPromise])
+        .then(args => {
+          expect(args[0].length).toBeGreaterThan(0);
+          expect(args[1].length).toBeGreaterThan(0);
+        });
+    });
+
+    it('should spawn start-client with build, spawn start-server with build and run tests', () => {
+      const startClientPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startClient.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      const startServerPromise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startServer.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      startCommand(commandApi, [{
+        dev: false,
+        skipBuild: false,
+        runTests: true,
+        parent: {
+          rawArgs: ['-T'],
+        },
+      }]);
       expect(spawnFn.mock.calls[0][1][1]).toEqual('test');
-      expect(spawnFn.mock.calls[1][1][1]).toEqual('start-client');
-      expect(spawnFn.mock.calls[2][1][1]).toEqual('start-server');
+      spawnEventHandlers[0].fn(0);
+      return Promise.all([startClientPromise, startServerPromise])
+        .then(args => {
+          expect(args[0].length).toBeGreaterThan(0);
+          expect(args[1].length).toBeGreaterThan(0);
+        });
     });
   });
 });

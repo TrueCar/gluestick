@@ -23,12 +23,13 @@ test:
   override:
     - npm run lint
     - npm run flow
-    - npm run test-coverage
+    - npm run test-coverage -- -i
     - CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH npm run e2e
 deployment:
   release:
     tag: /v\d+\.\d+\.\d+.*/
     owner: TrueCar
     commands:
+      - docker pull node:6.10-slim
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
       - BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG

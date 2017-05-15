@@ -1,6 +1,6 @@
 # GlueStick - Beyond the Boilerplate
 [![npm](https://img.shields.io/npm/v/gluestick.svg)](https://www.npmjs.com/package/gluestick)
-[![Build Status](https://travis-ci.org/TrueCar/gluestick.svg?branch=develop)](https://travis-ci.org/TrueCar/gluestick)
+[![Build Status](https://circleci.com/gh/TrueCar/gluestick.svg?style=svg)](https://circleci.com/gh/TrueCar/gluestick)
 
 GlueStick is a command line interface for quickly developing universal web
 applications using React and Redux.

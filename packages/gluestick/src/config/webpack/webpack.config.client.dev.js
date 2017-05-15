@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
-  clientConfig: UniversalWebpackConfigurator, devServerPort: number,
+  clientConfig: UniversalWebpackConfigurator, devServerPort: number, devServerHost: string,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: true, css_bundle: true });
   configuration.devtool = 'cheap-module-eval-source-map';
@@ -23,7 +23,8 @@ module.exports = (
   configuration.entry = Object.keys(configuration.entry).reduce((prev, curr) => {
     return Object.assign(prev, {
       [curr]: [
-        `webpack-hot-middleware/client?path=http://localhost:${devServerPort}/__webpack_hmr`,
+        'react-hot-loader/patch',
+        `webpack-hot-middleware/client?path=http://${devServerHost}:${devServerPort}/__webpack_hmr`,
         'webpack/hot/only-dev-server',
       ].concat(configuration.entry[curr]),
     });
@@ -34,20 +35,12 @@ module.exports = (
       ...options,
       plugins: [
         ...options.plugins,
-        [
-          'react-transform',
-          {
-            transforms: [{
-              transform: 'react-transform-hmr',
-              imports: ['react'],
-              locals: ['module'],
-            }],
-          },
-        ],
+        'react-hot-loader/babel',
       ],
     };
   });
-  configuration.output.publicPath = `http://localhost:${devServerPort}${configuration.output.publicPath}`;
+  // configuration.module.rules[0].use[0].options.presets.push('react-hmre');
+  configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration.output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
   return configuration;

@@ -4,6 +4,10 @@ import type { Logger } from './types';
 
 const fs = require('fs');
 const path = require('path');
+const Table = require('cli-table');
+const chalk = require('chalk');
+const babel = require('babel-core');
+const requireFromString = require('require-from-string');
 
 const convertToCamelCase =
   (value: string): string => `${
@@ -63,6 +67,79 @@ const throttle = (fn: Function, threshold: number = 250): Function => {
   };
 };
 
+const printWebpackStats = (logger: Logger, stats: Object) => {
+  const compilationStats = stats.toJson({
+    assets: true,
+  });
+
+  const table = new Table({
+    head: ['Asset', 'Size'],
+    colWidths: [50, 12],
+    chars: {
+      top: '═',
+      'top-mid': '╤',
+      'top-left': '╔',
+      'top-right': '╗',
+      bottom: '═',
+      'bottom-mid': '╧',
+      'bottom-left': '╚',
+      'bottom-right': '╝',
+      left: '║',
+      'left-mid': '╟',
+      mid: '─',
+      'mid-mid': '┼',
+      right: '║',
+      'right-mid': '╢',
+      middle: '│',
+    },
+    style: {
+      head: ['green'],
+    },
+  });
+
+  const formatSize = size => {
+    if (size < 1024) {
+      return `${size} B`;
+    }
+    const kb = size / 1024;
+    return kb > 1024 ? chalk.yellow(`${(kb / 1024).toFixed(2)} MB`) : `${kb.toFixed(2)} KB`;
+  };
+
+  table.push(
+    ...compilationStats.assets.map(({ name, size }) => [name, formatSize(size)]),
+  );
+
+  logger.print(table.toString(), '\n');
+};
+
+const requireModule = (filename: string): any => {
+  const { code } = babel.transformFileSync(path.resolve(filename), {
+    presets: [
+      'es2015',
+      'stage-0',
+    ],
+    plugins: [
+      'transform-flow-strip-types',
+    ],
+  });
+  return getDefaultExport(requireFromString(code, filename));
+};
+
+const getDefaultExport = (input: any): any => {
+  if (input.__esModule) {
+    const output = input.default;
+    Object.keys(input).filter(key => key !== 'default').forEach(key => {
+      output[key] = input[key];
+    });
+    return output;
+  }
+  return input;
+};
+
+const requireWithInterop = (filename: string): any => {
+  return getDefaultExport(require(filename));
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
@@ -70,4 +147,8 @@ module.exports = {
   convertToPascalCase,
   convertToCamelCaseWithPrefix,
   throttle,
+  printWebpackStats,
+  requireModule,
+  requireWithInterop,
+  getDefaultExport,
 };

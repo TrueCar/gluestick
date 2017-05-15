@@ -60,24 +60,45 @@ export type Config = {
   projectConfig?: ProjectConfig;
   GSConfig: GSConfig;
   webpackConfig: CompiledConfig;
-  plugins: Plugin[];
 };
 
-export type Logger = LoggerTypes & {
+export type Logger = BaseLogger & {
+  pretty: boolean;
+  clear: () => void;
+  log: (type: string, title: string, ...args: any[]) => void;
+  print: (...args: any[]) => void;
+  printCommandInfo: () => void;
+  fatal: (...args: any[]) => void;
+  resetLine: () => void;
+};
+
+export type BaseLogger = {
   level?: string;
+  success: (...args: any[]) => void;
+  info: (...args: any[]) => void;
+  warn: (...args: any[]) => void;
+  debug: (...args: any[]) => void;
+  error: (...args: any[]) => void;
+}
+
+export type CommandAPI = {
+  getOptions: Function;
+  getLogger: Function;
+  isGluestickProject: Function;
+  getPlugins: Function;
+  getGluestickConfig: Function;
+  getWebpackConfig: Function;
+  getContextConfig: Function;
 };
 
-export type LoggerTypes = {
-  success: Function;
-  info: Function;
-  warn: Function;
-  debug: Function;
-  error: Function;
+export type CLIContext = {
+  config: Config;
+  logger: Logger;
 }
 
 export type Context = {
  config: Config;
- logger: Logger;
+ logger: BaseLogger;
 };
 
 export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
@@ -115,6 +136,7 @@ export type PredefinedGeneratorOptions = {
 
 export type Compiler = {
   run: (error: any) => void;
+  plugin: (event: string, callback: Function) => void;
 }
 
 export type Response = {

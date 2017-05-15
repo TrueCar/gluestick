@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Logger } from '../../types';
+import type { BaseLogger } from '../../types';
 
 const proxy = require('http-proxy-middleware');
 
@@ -23,7 +23,7 @@ const proxy = require('http-proxy-middleware');
  * @param {Array<ProxyConfig>} proxyConfigs array of proxy objects that will be applied
  *
  */
-module.exports = (app: Object, proxyConfigs: Object[] = [], logger: Logger) => {
+module.exports = (app: Object, proxyConfigs: Object[] = [], logger: BaseLogger) => {
   proxyConfigs.forEach((proxyConfig: Object): void => {
     const { filter, path, destination, options } = proxyConfig;
     const actualConfig = {

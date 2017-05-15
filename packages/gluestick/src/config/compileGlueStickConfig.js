@@ -5,12 +5,13 @@ const clone = require('clone');
 const path = require('path');
 const defaultConfig = require('./defaults/glueStickConfig');
 const hooksHelper = require('../renderer/helpers/hooks');
+const { requireModule } = require('../utils');
 
 const getConfigHook = (logger: Logger): Function => {
   try {
-    const configHooks: Function = require(
+    const configHooks: Function = requireModule(
       path.join(process.cwd(), defaultConfig.gluestickConfigPath),
-    ).default;
+    );
     return config => hooksHelper.call(configHooks, config);
   } catch (e) {
     logger.warn('GlueStick config hook was not found. Consider running `gluestick auto-upgrade`.');

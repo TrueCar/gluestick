@@ -1,4 +1,4 @@
 **/coverage/**
 **/node_modules/**
 **/flow-typed/**
-packages/gluestick-shared/build/**
+**/build/**

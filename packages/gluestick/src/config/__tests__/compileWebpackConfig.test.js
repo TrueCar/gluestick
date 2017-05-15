@@ -1,25 +1,18 @@
 /* @flow */
+jest.mock('../../utils', () => ({ requireModule: v => require(v) }));
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
 jest.mock('src/webpack.hooks.js', () => ({
-  default: {
-    webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
-    webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
-  },
+  webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
+  webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
 }), { virtual: true });
 
 const compileWebpackConfig = require('../compileWebpackConfig');
 const defaultGSConfig = require('../defaults/glueStickConfig');
 
-const loggerMock = {
-  info: jest.fn(),
-  debug: jest.fn(),
-  success: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-};
+const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
 
 const originalProcessCwd = process.cwd.bind(process);
 const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
@@ -42,7 +35,7 @@ const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
       clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
     },
   },
-], {}, defaultGSConfig);
+], defaultGSConfig);
 
 describe('config/compileWebpackConfig', () => {
   beforeAll(() => {

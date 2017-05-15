@@ -6,3 +6,4 @@ new/src/config/.Dockerfile
 .vscode
 lerna-debug.log
 .DS_Store
+build

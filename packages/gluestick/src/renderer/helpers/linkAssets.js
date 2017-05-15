@@ -20,7 +20,7 @@ const filterEntryName = (name: string): string => {
 };
 
 module.exports = (
-  { config, logger }: Context, entryPoint: string, assets: Object,
+  { config, logger }: Context, entryPoint: string, assets: Object, loadjsConfig: Object,
 ): { styleTags: Object[], scriptTags: Object[] } => {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
@@ -43,7 +43,11 @@ module.exports = (
 
   const vendorBundleHref: string = getAssetPathForFile('vendor', 'javascript', assets);
   const entryPointBundleHref: string = getAssetPathForFile(entryPointName, 'javascript', assets);
-  const assetsLoader: string = getAssetsLoader({}, entryPointBundleHref, vendorBundleHref);
+  const assetsLoader: string = getAssetsLoader(
+    { before: () => {}, ...loadjsConfig },
+    entryPointBundleHref,
+    vendorBundleHref,
+  );
   scriptTags.push(
     <script
       key="script-loader"

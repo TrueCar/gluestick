@@ -1,11 +1,14 @@
 /* @flow */
-import type { Context, WebpackConfig, Compiler } from '../types.js';
+import type { CommandAPI, Logger, WebpackConfig, Compiler } from '../types.js';
 
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 const progressHandler = require('../config/webpack/progressHandler');
+const { printWebpackStats } = require('../utils');
+const build = require('./build');
 
 type DevelopmentServerOptions = {
   quiet: boolean, // don’t output anything to the console
@@ -23,14 +26,37 @@ type DevelopmentServerOptions = {
   stats: Object,
 };
 
-module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): void => {
-  if (!webpackConfig) {
-    throw new Error('Webpack config not specified');
+module.exports = (
+  commandApi: CommandAPI,
+  commandArguments: any[],
+  { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
+): void => {
+  const { getLogger, getContextConfig, getOptions } = commandApi;
+  const logger: Logger = getLogger();
+
+  if (printCommandInfo) {
+    logger.clear();
+    logger.printCommandInfo();
   }
 
-  if (!GSConfig) {
-    throw new Error('Gluestick config not specified');
+  const options = getOptions(commandArguments);
+
+  if (process.env.NODE_ENV === 'production') {
+    build(commandApi, ['--client', {
+      ...options,
+      client: true,
+      parent: {
+        ...options.parent,
+        rawArgs: ['--client'],
+      },
+    }]);
+    return;
   }
+
+  const { webpackConfig, GSConfig } = getContextConfig(logger, {
+    skipServerEntryGeneration: true,
+    entryOrGroupToBuild: options.entrypoints,
+  });
 
   const configuration: WebpackConfig = webpackConfig.client;
   const publicPath: string =
@@ -49,44 +75,51 @@ module.exports = ({ config: { GSConfig, webpackConfig }, logger }: Context): voi
   };
 
   const compiler: Compiler = webpack(configuration);
+  let printedWebpackStats: boolean = false;
+  compiler.plugin('done', stats => {
+    if (!printedWebpackStats) {
+      printedWebpackStats = true;
+      printWebpackStats(logger, stats);
+    }
+  });
 
-  if (process.env.NODE_ENV !== 'production') {
-    const app: Object = express();
-    const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
-    app.use(devMiddleware);
-    app.use(require('webpack-hot-middleware')(compiler));
-    devMiddleware.waitUntilValid(() => {
-      progressHandler.toggleMute('client');
-    });
-    // Proxy http requests from client to renderer server in development mode.
-    app.use(proxy({
-      changeOrigin: false,
-      target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
-      // TODO: make that work
-      // logLevel: GSConfig.proxyLogLevel,
-      // logProvider: () => logger,
-      onError: (err: Object, req: Object, res: Object): void => {
-        // When the client is restarting, show our polling message
-        res.status(200).sendFile('poll.html', { root: path.join(__dirname, '../lib') });
-      },
-    }));
-
-    // TODO: add hook
-    app.listen(GSConfig.ports.client, GSConfig.host, (error: string) => {
+  const app: Object = express();
+  app.engine('html', (filePath: string, opts: { [key: string]: any }, next: Function) => {
+    fs.readFile(filePath, (error, template: Buffer) => {
       if (error) {
-        logger.error(error);
-        return; // eslint-disable-line
+        return next(error);
       }
-
-      logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+      return next(null, template.toString().replace(/{{ ?(\w+) ?}}/g, (match, key) => {
+        return opts[key];
+      }));
     });
-  } else {
-    compiler.run((error: string) => {
-      if (error) {
-        throw new Error(error);
-      }
+  });
+  app.set('view engine', 'html');
+  const devMiddleware = require('webpack-dev-middleware')(compiler, developmentServerOptions);
+  devMiddleware.waitUntilValid(() => {
+    progressHandler.markValid('client');
+  });
+  app.use(devMiddleware);
+  app.use(require('webpack-hot-middleware')(compiler, { log: () => {} }));
+  // Proxy http requests from client to renderer server in development mode.
+  app.use(proxy({
+    changeOrigin: false,
+    target: `${GSConfig.protocol}://${GSConfig.host}:${GSConfig.ports.server}`,
+    logLevel: GSConfig.proxyLogLevel,
+    logProvider: () => logger,
+    onError: (err: Object, req: Object, res: Object): void => {
+      // When the client is restarting, show our polling message
+      res.render(path.join(__dirname, '../lib/poll.html'), { port: GSConfig.ports.server });
+    },
+  }));
 
-      logger.success('Client bundle successfully built.');
-    });
-  }
+  // TODO: add hook
+  app.listen(GSConfig.ports.client, GSConfig.host, (error: string) => {
+    if (error) {
+      logger.error(error);
+      return; // eslint-disable-line
+    }
+
+    logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+  });
 };

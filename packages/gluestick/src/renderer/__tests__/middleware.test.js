@@ -4,7 +4,7 @@ import type {
   Context,
   Request,
   Response,
-  Logger,
+  BaseLogger,
   EntriesConfig,
   Entries,
   GSHooks,
@@ -41,7 +41,7 @@ const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
 const hooksHelper = require('../helpers/hooks').call;
 
-const logger: Logger = {
+const logger: BaseLogger = {
   info: jest.fn(),
   debug: jest.fn(),
   success: jest.fn(),
@@ -99,6 +99,7 @@ const getEntries = (routes): Entries => ({
 const entriesConfig: EntriesConfig = mocks.entriesConfig;
 
 const assets = {};
+const loadjsConfig = {};
 const EntryWrapper = {};
 const BodyWrapper = {};
 const entriesPlugins = [];
@@ -137,7 +138,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
       [],
@@ -166,7 +167,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -192,7 +193,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -214,7 +215,7 @@ describe('renderer/middleware', () => {
       response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
-      assets,
+      { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
@@ -237,7 +238,7 @@ describe('renderer/middleware', () => {
         response,
         { entries, entriesConfig, entriesPlugins },
         { EntryWrapper, BodyWrapper },
-        assets,
+        { assets, loadjsConfig },
         options,
         { hooks, hooksHelper },
       );

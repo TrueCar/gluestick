@@ -1,10 +1,10 @@
 /* @flow */
 
-export type Logger = LoggerTypes & {
+export type Logger = BaseLogger & {
   level?: string;
 };
 
-export type LoggerTypes = {
+export type BaseLogger = {
   success: Function;
   info: Function;
   warn: Function;

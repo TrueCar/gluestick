@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../../types.js';
+import type { CLIContext } from '../../types.js';
 
 const { spawn } = require('cross-spawn');
 const fetch = require('node-fetch');
@@ -25,7 +25,7 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
   return child;
 };
 
-module.exports = ({ config, logger }: Context) => {
+module.exports = ({ config, logger }: CLIContext) => {
   const entryPointPath = config.webpackConfig.universalSettings.server.output;
   const args = JSON.stringify(config);
 
@@ -37,7 +37,7 @@ module.exports = ({ config, logger }: Context) => {
     child.on('message', (msg: { type: string, value: any[] }): void => {
       if (msg.value.includes('Renderer listening')) {
         resolve();
-      } else {
+      } else if (msg.type === 'ERROR') {
         reject('Renderer failed to start');
       }
     });

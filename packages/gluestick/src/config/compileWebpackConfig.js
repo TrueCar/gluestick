@@ -4,7 +4,6 @@ import type {
   ConfigPlugin,
   Plugin,
   GSConfig,
-  ProjectConfig,
   WebpackConfig,
   UniversalWebpackConfigurator,
   Logger,
@@ -22,6 +21,7 @@ const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const hookHelper = require('../renderer/helpers/hooks');
+const { requireModule } = require('../utils');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -32,7 +32,6 @@ type CompilationOptions = {
 module.exports = (
   logger: Logger,
   plugins: ConfigPlugin[],
-  projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
   {
     skipClientEntryGeneration,
@@ -49,14 +48,20 @@ module.exports = (
       input: path.join(__dirname, '../renderer/entry.js'),
       output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
     },
+    silent: true,
   };
 
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
   // code for client and serverEntries for server.
-  const entries: Object = skipClientEntryGeneration && skipServerEntryGeneration
-    ? {}
-    : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  let entries: Object = {};
+  try {
+    entries = skipClientEntryGeneration && skipServerEntryGeneration
+      ? {}
+      : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  } catch (error) {
+    logger.fatal(error.message);
+  }
 
   // Get runtime plugins that will be applied to project code and bundled together.
   const runtimePlugins: Plugin[] = skipClientEntryGeneration && skipServerEntryGeneration
@@ -85,6 +90,7 @@ module.exports = (
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
     clientConfig,
     gluestickConfig.ports.client,
+    gluestickConfig.host,
   );
 
   // Get runtime and server plugins, both runtime and server plugins in this case
@@ -143,7 +149,7 @@ module.exports = (
   let webpackConfigHooks: WebpackHooks = {};
 
   try {
-    webpackConfigHooks = require(pathToWebpackConfigHooks).default;
+    webpackConfigHooks = requireModule(pathToWebpackConfigHooks);
   } catch (e) {
     logger.warn(e);
   }

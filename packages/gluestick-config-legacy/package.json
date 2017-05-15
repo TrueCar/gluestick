@@ -1,8 +1,8 @@
 {
   "name": "gluestick-config-legacy",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Apply legacy config to new gluestick and webpack configs",
-  "main": "config.js",
+  "main": "build/config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",

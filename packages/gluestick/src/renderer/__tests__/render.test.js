@@ -1,7 +1,7 @@
 /* @flow */
 
 import type {
-  Logger,
+  BaseLogger,
   Config,
   Context,
   Request,
@@ -39,7 +39,7 @@ class BodyWrapper extends React.Component {
 }
 
 describe('renderer/render', () => {
-  const logger: Logger = {
+  const logger: BaseLogger = {
     success: () => {},
     info: () => {},
     warn: () => {},
@@ -102,7 +102,7 @@ describe('renderer/render', () => {
       { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
       { renderProps, currentRoute },
       { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables, entriesPlugins },
-      { assets, cacheManager },
+      { assets, loadjsConfig, cacheManager },
       { renderMethod });
     return results;
   };
@@ -132,6 +132,7 @@ describe('renderer/render', () => {
   const entryWrapperConfig = {};
   const envVariables = [];
   const assets = {};
+  const loadjsConfig = {};
   const cacheManager = { setCacheIfProd: jest.fn() };
 
   describe('without a custom render method and cache set to true', () => {
@@ -189,7 +190,7 @@ describe('renderer/render', () => {
           envVariables,
           entriesPlugins: entriesRuntimePlugins,
         },
-        { assets, cacheManager },
+        { assets, loadjsConfig, cacheManager },
         {},
       );
       expect(MockEntryWrapper.plugins).toEqual([entriesRuntimePlugins[0].plugin]);

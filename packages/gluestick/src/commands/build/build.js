@@ -1,18 +1,25 @@
 /* @flow */
-import type { Context } from '../../types.js';
+import type { Logger, CommandAPI } from '../../types.js';
 
-const webpackProgressHandler = require('../../config/webpack/progressHandler');
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 const compile = require('./compile');
 
-const printAndExit = (error: Error) => {
-  console.error(error);
-  process.exit(1);
-};
+type CommandOptions = {
+  stats: boolean;
+  client: boolean;
+  server: boolean;
+  static: boolean;
+}
 
-module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
-  const options: Object = commandArgs[commandArgs.length - 1];
+module.exports = (
+  { getOptions, getLogger, getContextConfig }: CommandAPI, commandArgs: any[],
+): void => {
+  const options: CommandOptions = getOptions(commandArgs);
+  const logger: Logger = getLogger();
+  logger.clear();
+  logger.printCommandInfo();
+
   // If neither server not client flag is passed
   // set them both to true to compile both client and server.
   if (!options.client && !options.server) {
@@ -20,26 +27,34 @@ module.exports = ({ logger, config }: Context, ...commandArgs: any[]): void => {
     options.server = true;
   }
 
-  if (options.static && !options.server) {
-    logger.warn('--static options should be used with server build');
+  if (options.static && (!options.client || !options.server)) {
+    logger.fatal('--static options must be used with both client and server build');
   }
 
+  const config = getContextConfig(logger, {
+    skipClientEntryGeneration: !options.client,
+    skipServerEntryGeneration: !options.server,
+  });
+
+  const compilationErrorHandler = (type: string) => error => {
+    logger.clear();
+    logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
+  };
+
+  let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    compile({ logger, config }, options, 'client').catch(printAndExit);
-  }
-
-  // If only server flag is passed, unmute server compilation - by default it's muted.
-  if (options.server && !options.client) {
-    webpackProgressHandler.toggleMute('server');
+    clientCompilation = compile({ logger, config }, options, 'client')
+      .catch(compilationErrorHandler('client'));
   }
 
   if (options.server) {
     clearBuildDirectory(config.GSConfig, 'server');
-    compile({ logger, config }, options, 'server')
-      .then(() => {
-        return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
-      })
-      .catch(printAndExit);
+    Promise.all([
+      compile({ logger, config }, options, 'server').catch(compilationErrorHandler('server')),
+      clientCompilation,
+    ]).then(() => {
+      return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
+    });
   }
 };

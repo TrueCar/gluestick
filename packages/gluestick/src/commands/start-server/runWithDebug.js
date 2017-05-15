@@ -1,9 +1,11 @@
 /* @flow */
-import type { Context, WebpackConfigEntry } from '../../types';
+import type { CLIContext, WebpackConfigEntry } from '../../types';
 
 const { spawn } = require('cross-spawn');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
+const fs = require('fs');
+const path = require('path');
 const logMessage = require('./logMessage');
 
 type Process = {
@@ -32,7 +34,7 @@ const watchSource = (watchDirectories: string[], callback: Function): void => {
 /**
  * Compile server bundle and execute given callback.
  */
-const compile = ({ config, logger }: Context, cb: Function): void => {
+const compile = ({ config, logger }: CLIContext, cb: Function): void => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   logger.info('Compiling server bundle...');
   webpack(webpackConfig).run(error => {
@@ -47,11 +49,12 @@ const compile = ({ config, logger }: Context, cb: Function): void => {
  * Spawn debugger process and print help messages.
  */
 const debug = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,
 ): Process => {
+  logger.clear();
   logger.warn('If you encouter problems, press ENTER to respawn debug process.');
   logger.warn('Alternatively, press CTRL + C and re-run command.');
 
@@ -77,11 +80,21 @@ const debug = (
 };
 
 module.exports = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,
 ) => {
+  // Check if `webpack-chunks.json` is present
+  if (!fs.existsSync(
+    path.join(process.cwd(), config.GSConfig.buildAssetsPath, config.GSConfig.webpackChunks),
+  )) {
+    logger.warn(
+      '`build/assets/webpack-chunks.json` is not present. Run `gluestick build --client`'
+      + ' to generare it, otherwise renderer won\'t work properly.',
+    );
+  }
+
   let debugProcess: ?Process = null;
   try {
     // Recompile and respawn debug process on ENTER.

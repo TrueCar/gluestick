@@ -65,8 +65,8 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
               'transform-flow-strip-types',
             ],
             presets: [
-              'react',
               'es2015',
+              'react',
               'stage-0',
             ],
             babelrc: false,
