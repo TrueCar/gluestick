@@ -81,12 +81,16 @@ module.exports = (options, { logger }) => {
 Exported function is a factory for two groups of overwrites: `preOverwrites` and `postOverwrites`.
 This factory function accepts options that are defined in plugins declaration file inside project,
 by default `src/gluestick.plugins.js`. Second argument is an object with utilities provided by
-gluestick, currently the only one is logger, that you can use to print messages using:
-- `logger.debug(...args)`
-- `logger.info(...args)`
-- `logger.success(...args)`
-- `logger.warn(...args)`
-- `logger.error(...args)`
+gluestick:
+- `logger` - logger instance
+  - `logger.debug(...args)`
+  - `logger.info(...args)`
+  - `logger.success(...args)`
+  - `logger.warn(...args)`
+  - `logger.error(...args)`
+- `requireModule` - safe require function, which will transform module with babel (`es2015`, `stage-0`, `transform-flow-strip-types`) then noralizes module with `getDefaultExport`
+- `requireWithInterop` - require and normalize module using `getDefaultExport`
+- `getDefaultExport` - normalize CJS and ESM exported value
 
 `preOverwrites` are executed before specific configs are prepared. This is the place for modification
 that should be considered by universal-webpack, for example aliases, which can define if file

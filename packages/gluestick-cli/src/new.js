@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const mkdir = require('mkdirp');
-const { execSync } = require('child_process');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');

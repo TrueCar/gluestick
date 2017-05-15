@@ -17,7 +17,7 @@ ${args => args.entries.reduce((prev, curr) => {
 ${args => args.plugins.reduce((prev, curr) => {
   const info = '// Workaround for external modules not being compiled\n';
   const pluginImport = `import ${getPluginName(curr.name, curr.meta.type)} `
-    + `from "compiled/${curr.name}/${curr.meta.type}";\n`;
+    + `from "${curr.name}/build/${curr.meta.type}";\n`;
   return prev.concat(info, pluginImport);
 }, '')}
 

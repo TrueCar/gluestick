@@ -5,11 +5,11 @@ const getProp = (source, name) => {
   return source.default ? source.default[name] : source[name];
 };
 
-module.exports = () => {
-  const applicationServer = require(
+module.exports = (opts, { requireModule }) => {
+  const applicationServer = requireModule(
     path.join(process.cwd(), 'src/config/application.server.js'),
   );
-  const webpackAdditions = require(
+  const webpackAdditions = requireModule(
     path.join(process.cwd(), 'src/config/webpack-additions.js'),
   );
 

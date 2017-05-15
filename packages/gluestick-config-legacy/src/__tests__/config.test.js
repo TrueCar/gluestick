@@ -1,19 +1,3 @@
-jest.mock('app.js', () => ({
-  protocol: 'http',
-  host: '0.0.0.0',
-  port: '7777',
-  assetPort: '7778',
-  test: true,
-}), { virtual: true });
-jest.mock('add.js', () => ({
-  additionalAliases: {
-    aliasName: ['alias'],
-  },
-  additionalLoaders: ['loader'],
-  plugins: ['plugin'],
-  vendor: ['vendor'],
-}), { virtual: true });
-
 const path = require('path');
 
 const originalPathJoin = path.join.bind(path);
@@ -31,7 +15,24 @@ describe('plugin', () => {
         return 'add.js';
       },
     );
-    plugin = pluginFactory();
+    plugin = pluginFactory({}, {
+      requireModule: (filename) => {
+        return filename === 'app.js' ? {
+          protocol: 'http',
+          host: '0.0.0.0',
+          port: '7777',
+          assetPort: '7778',
+          test: true,
+        } : {
+          additionalAliases: {
+            aliasName: ['alias'],
+          },
+          additionalLoaders: ['loader'],
+          plugins: ['plugin'],
+          vendor: ['vendor'],
+        };
+      },
+    });
   });
 
   afterAll(() => {

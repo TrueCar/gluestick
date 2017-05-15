@@ -12,7 +12,7 @@ ${args => args.config ? `import config from "${args.config}";` : 'const config =
 import "${args => args.component}";
 
 ${args => args.plugins.reduce((prev, curr) => {
-  return prev.concat(`import ${convertToCamelCase(curr.name)} from "${curr.name}/${curr.meta.type}";\n`);
+  return prev.concat(`import ${convertToCamelCase(curr.name)} from "${curr.name}/build/${curr.meta.type}";\n`);
 }, '')}
 
 export const getStore = (httpClient) => {
