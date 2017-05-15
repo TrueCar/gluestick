@@ -1,13 +1,12 @@
 /* @flow */
+jest.mock('../../utils', () => ({ requireModule: v => require(v) }));
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
 jest.mock('src/webpack.hooks.js', () => ({
-  default: {
-    webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
-    webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
-  },
+  webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
+  webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
 }), { virtual: true });
 
 const compileWebpackConfig = require('../compileWebpackConfig');

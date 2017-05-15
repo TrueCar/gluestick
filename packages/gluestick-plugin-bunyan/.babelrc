@@ -1,11 +1,11 @@
 {
-  "env": {
-    "test": {
-      "presets": [
-        "es2015",
-        "stage-0",
-        "react"
-      ]
-    }
-  }
+  "presets": [
+   ["env", {
+      "targets": {
+        "node": 6.3
+      }
+    }],
+    "stage-0",
+    "react"
+  ]
 }

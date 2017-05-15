@@ -1,15 +1,15 @@
 {
-  "env": {
-    "test": {
-      "presets": [
-        "react",
-        "es2015",
-        "stage-0"
-      ],
-      "plugins": [
-        "transform-decorators-legacy",
-        "transform-flow-strip-types"
-      ]
-    }
-  }
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": 6.3
+      }
+    }],
+    "react",
+    "stage-0"
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-flow-strip-types"
+  ]
 }

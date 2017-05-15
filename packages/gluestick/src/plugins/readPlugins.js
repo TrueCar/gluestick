@@ -1,7 +1,7 @@
 /* @flow */
 import type { Plugin, BaseLogger } from '../types';
 
-const { requireWithInterop } = require('../lib/utils');
+const { requireModule, requireWithInterop } = require('../utils');
 
 /**
  * Require plugin declaration file, ensue schema is valid and return normalized Plugin object.
@@ -9,7 +9,7 @@ const { requireWithInterop } = require('../lib/utils');
 module.exports = (logger: BaseLogger, pluginsConfigPath: string, pluginType: string): Plugin[] => {
   try {
     // Plugin declaration file can be ESM or CommonJS.
-    const pluginsDeclaration: any[] = requireWithInterop(pluginsConfigPath);
+    const pluginsDeclaration: any[] = requireModule(pluginsConfigPath);
 
     if (!Array.isArray(pluginsDeclaration)) {
       throw new Error('Invalid plugins configuration: must be an array');
@@ -37,7 +37,7 @@ module.exports = (logger: BaseLogger, pluginsConfigPath: string, pluginType: str
       // Try to read plugin source. If it doesn't exists, it will be filtered from list.
       let body = null;
       try {
-        body = requireWithInterop(`${name}/${pluginType}.js`);
+        body = requireWithInterop(`${name}/build/${pluginType}.js`);
       } catch (error) {
         // NOOP it is possible that give file does not exists and it's
         // perfectly fine.

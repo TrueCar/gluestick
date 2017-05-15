@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const Table = require('cli-table');
 const chalk = require('chalk');
+const babel = require('babel-core');
+const requireFromString = require('require-from-string');
 
 const convertToCamelCase =
   (value: string): string => `${
@@ -110,6 +112,34 @@ const printWebpackStats = (logger: Logger, stats: Object) => {
   logger.print(table.toString(), '\n');
 };
 
+const requireModule = (filename: string): any => {
+  const { code } = babel.transformFileSync(path.resolve(filename), {
+    presets: [
+      'es2015',
+      'stage-0',
+    ],
+    plugins: [
+      'transform-flow-strip-types',
+    ],
+  });
+  return getDefaultExport(requireFromString(code, filename));
+};
+
+const getDefaultExport = (input: any): any => {
+  if (input.__esModule) {
+    const output = input.default;
+    Object.keys(input).filter(key => key !== 'default').forEach(key => {
+      output[key] = input[key];
+    });
+    return output;
+  }
+  return input;
+};
+
+const requireWithInterop = (filename: string): any => {
+  return getDefaultExport(require(filename));
+};
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
@@ -118,4 +148,7 @@ module.exports = {
   convertToCamelCaseWithPrefix,
   throttle,
   printWebpackStats,
+  requireModule,
+  requireWithInterop,
+  getDefaultExport,
 };

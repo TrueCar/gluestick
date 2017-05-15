@@ -21,6 +21,7 @@ const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const hookHelper = require('../renderer/helpers/hooks');
+const { requireModule } = require('../utils');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -148,7 +149,7 @@ module.exports = (
   let webpackConfigHooks: WebpackHooks = {};
 
   try {
-    webpackConfigHooks = require(pathToWebpackConfigHooks).default;
+    webpackConfigHooks = requireModule(pathToWebpackConfigHooks);
   } catch (e) {
     logger.warn(e);
   }
