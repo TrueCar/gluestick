@@ -9,6 +9,6 @@ if (!__dirname.startsWith(process.cwd())) {
   process.exit(0);
 }
 
-// require('./compile');
+require('babel-polyfill');
 require('../build/cli');
 
