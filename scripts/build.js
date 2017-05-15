@@ -23,16 +23,24 @@ packageNames.forEach((packageName) => {
 
   rimraf.sync(path.join(process.cwd(), 'packages', packageName, 'build'));
 
-  glob.sync(`${path.join(process.cwd(), 'packages', packageName)}/src/**/*.js`, {
+  const globCommonOpts = {
     ignore: [
       '**/__tests__/**/*',
     ],
-  }).forEach((filename) => {
+  };
+  glob.sync(`${path.join(process.cwd(), 'packages', packageName)}/src/**/*.js`, globCommonOpts).forEach((filename) => {
     const outputFilename = filename.replace('src', 'build');
     console.log(`${filename.replace(process.cwd(), '')} -> ${outputFilename.replace(process.cwd(), '')}`);
     const { code } = babel.transformFileSync(filename, options);
     mkdir.sync(path.dirname(outputFilename));
     fs.writeFileSync(outputFilename, code, 'utf-8');
+  });
+
+  glob.sync(`${path.join(process.cwd(), 'packages', packageName)}/src/**/*.{html,hbs}`, globCommonOpts).forEach((filename) => {
+    const outputFilename = filename.replace('src', 'build');
+    console.log(`${filename.replace(process.cwd(), '')} -> ${outputFilename.replace(process.cwd(), '')}`);
+    fs.createReadStream(filename).pipe(fs.createWriteStream(filename.replace('src', 'build')))
+      .on('error', error => console.error(error));
   });
 
   if (packageName === 'gluestick-generators') {
