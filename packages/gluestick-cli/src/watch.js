@@ -37,18 +37,32 @@ module.exports = (exitWithError) => {
   });
 
   const babel = require(path.join(gsDependenciesPath[0], '../../node_modules/babel-core'));
-  const presets = [
-    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-es2015')),
-    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-stage-0')),
-    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-preset-react')),
-  ];
-  const plugins = [
-    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-plugin-transform-decorators-legacy')),
-    require.resolve(path.join(gsDependenciesPath[0], '../../node_modules/babel-plugin-transform-flow-strip-types')),
-  ];
+  const getPresets = presets => {
+    return presets.map(preset => {
+      if (Array.isArray(preset)) {
+        return [
+          require.resolve(
+            path.join(gsDependenciesPath[0], `../../node_modules/babel-preset-${preset[0]}`),
+          ),
+          preset[1],
+        ];
+      }
+      return require.resolve(
+        path.join(gsDependenciesPath[0], `../../node_modules/babel-preset-${preset}`),
+      );
+    });
+  };
+  const getPlugins = (plugins = []) => {
+    return plugins.map(plugin =>
+      require.resolve(
+        path.join(gsDependenciesPath[0], `../../node_modules/babel-plugin-${plugin}`),
+      ),
+    );
+  };
 
   gsDependenciesPath.forEach((e, i) => {
     const packageName = gsPackages[i];
+    const packageBabelRc = JSON.parse(fs.readFileSync(path.join(e, '.babelrc')).toString());
     const convertFilePath = filePath => {
       return path.join(
         process.cwd(),
@@ -68,18 +82,23 @@ module.exports = (exitWithError) => {
       .on('ready', () => {
         const copy = (filePath, type, typeColorFactory) => {
           const destPath = convertFilePath(filePath);
-          babel.transformFile(filePath, {
-            babelrc: false,
-            plugins,
-            presets,
-          }, (err, results) => {
-            if (err) {
-              console.error(chalk.red(err));
-            } else {
-              fs.writeFileSync(destPath, results.code);
-              console.log(`${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(`[${type}]`)}`);
-            }
-          });
+          console.log(`${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(`[${type}]`)}`);
+          if (path.extname(filePath) !== '.js') {
+            fs.copySync(filePath, destPath);
+          } else {
+            babel.transformFile(filePath, {
+              babelrc: false,
+              presets: getPresets(packageBabelRc.presets),
+              plugins: getPlugins(packageBabelRc.plugins),
+
+            }, (err, results) => {
+              if (err) {
+                console.error(chalk.red(err));
+              } else {
+                fs.writeFileSync(destPath, results.code);
+              }
+            });
+          }
         };
         const remove = (filePath, type, typeColorFactory) => {
           const destPath = convertFilePath(filePath);
