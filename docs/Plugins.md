@@ -60,7 +60,7 @@ Plugin must implement at least one type, but they can have multiple types specif
 To implement a type, you must create a file in top level of plugin directory and name
 it: `<type>.js` so it can be: `config.js`, `runtime.js`, `server.js`.
 
-__IMPORTANT__: GlueStick won't transpile your plugin, thus it's up to you to transpile it using for instance `babel` or `typescipt`.
+__IMPORTANT__: GlueStick won't transpile your plugin, thus it's up to you to transpile it using for instance `babel` or `typescript`.
 
 ## Config plugin
 Must export function that returns object will overwriters.
