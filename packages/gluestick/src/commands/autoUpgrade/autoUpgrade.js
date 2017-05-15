@@ -16,7 +16,7 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
   config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
     const generatorEntry: Object = getSingleEntryFromGenerator(
-      '../../../generator/predefined/new', path.basename(filePath), {},
+      '../../generator/predefined/new', path.basename(filePath), {},
     );
     const entryConfig = parseConfig({
       entry: generatorEntry,
@@ -37,7 +37,7 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
       const absolutePath: string = path.join(process.cwd(), filePath);
       logger.success(`File ${filePath} does not exist. Creating at path ${absolutePath}...`);
       const generatorEntry: Object = getSingleEntryFromGenerator(
-        '../../../generator/predefined/new', path.basename(filePath), {},
+        '../../generator/predefined/new', path.basename(filePath), {},
       );
       const entryConfig = parseConfig({
         entry: generatorEntry,

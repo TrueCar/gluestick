@@ -49,7 +49,7 @@ const checkForMismatch = (
   const pathToPackageGenerator: string = path.join(
     require.resolve('gluestick-generators').split('gluestick-generators')[0],
     'gluestick-generators',
-    'templates/package',
+    'build/templates/package',
   );
   const packageGeneratorEntry: Object = getSingleEntryFromGenerator(
     pathToPackageGenerator, 'package.json', { gluestickDependencies: { gluestick: version } },

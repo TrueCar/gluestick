@@ -11,8 +11,9 @@ import type {
 const path = require('path');
 const loggerFactory = require('./logger');
 const prepareConfigPlugins = require('../plugins/prepareConfigPlugins');
-const compileWebpackConfig = require('../config/compileWebpackConfig');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
+
+const getCompileWebpackConfig = () => require('../config/compileWebpackConfig');
 
 // Get options object from command arguments
 const getOptions = commandArguments => commandArguments[commandArguments.length - 1];
@@ -57,7 +58,7 @@ const getWebpackConfig = (
   gluestickConfig: GSConfig,
   options: Object,
 ): CompiledConfig => {
-  return compileWebpackConfig(logger, plugins, gluestickConfig, {
+  return getCompileWebpackConfig()(logger, plugins, gluestickConfig, {
     skipClientEntryGeneration: false,
     skipServerEntryGeneration: false,
     ...options,
