@@ -12,6 +12,7 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "test-coverage": "jest --coverage",
+    "prepublish": "./transpile.sh",
     "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js"
   },
   "keywords": [
