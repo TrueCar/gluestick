@@ -70,7 +70,6 @@ commander
   .alias('s')
   .description('start everything')
   .option('-T, --run-tests', 'run test hook')
-  .option('--dev', 'disable gluestick verion check')
   .option('-C --coverage', 'create test coverage')
   .option(...entrypointsOption)
   .option(...logLevelOption)
