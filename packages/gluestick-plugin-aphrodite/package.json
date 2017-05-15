@@ -27,11 +27,11 @@
     "aphrodite": "^1.1.0"
   },
   "devDependencies": {
-    "jest": "19.0.0",
     "babel-preset-es2015": "6.22.0",
+    "babel-preset-react": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
-    "react": "15.4.2",
+    "jest": "19.0.0",
     "react-dom": "15.4.2",
-    "babel-preset-react": "6.22.0"
+    "react": "15.4.2"
   }
 }
