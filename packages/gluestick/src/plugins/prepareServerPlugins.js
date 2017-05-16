@@ -2,6 +2,8 @@
 
 import type { ServerPlugin, Plugin, BaseLogger } from '../types';
 
+const { createArrowList } = require('../cli/helpers');
+
 type CopilationResults = {
   [key: string]: Function | Object;
   error?: Error;
@@ -58,7 +60,7 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
       return [];
     }
 
-    logger.info('Compiling server plugins:');
+    let logMessage: string = 'Compiling server plugins:\n';
     // Compile plugin, if compilation fails, further compilation is prevented.
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
       (value: PluginRef): ServerPlugin => {
@@ -74,7 +76,7 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
         if (compilationResults.error) {
           throw compilationResults.error;
         }
-        logger.success(`  ${normalizedPlugin.name} compiled successfully`);
+
         return {
           name: normalizedPlugin.name,
           meta: normalizedPlugin.meta,
@@ -84,6 +86,10 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
         };
       },
     );
+
+    logMessage += createArrowList(compiledPlugins.map(({ name }) => name), 9);
+    logger.info(logMessage);
+
     return compiledPlugins;
   } catch (error) {
     logger.warn(error);

@@ -107,6 +107,10 @@ const logger = {
 };
 
 describe('plugins/prepareConfigPlugins', () => {
+  beforeEach(() => {
+    prepareConfigPlugins.clearCache();
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });

@@ -19,8 +19,6 @@ test('plugins/readRuntimePlugins should get list of runtime plugins', () => {
     'plugins.js',
     'runtime',
   ]);
-  expect(logger.info.mock.calls).toEqual([
-    ['Including runtime plugins:'],
-    ['  testPlugin'],
-  ]);
+  expect(logger.info.mock.calls[0][0]).toContain('Including runtime plugins');
+  expect(logger.info.mock.calls[0][0]).toContain('testPlugin');
 });
