@@ -58,7 +58,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
   }
 
   const header: string = compilation(`  COMPILATION:${name.toUpperCase()}  `);
-  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;
+  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:passed seconds)`;
 
   const barOptions = {
     complete: '=',
@@ -72,7 +72,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
   const bar = new ProgressBar(barFormat, barOptions);
 
   let running = false;
-  // let startTime = 0;
+  let startTime = 0;
   let lastPercent = 0;
 
   return new webpack.ProgressPlugin((percent, msg) => {
@@ -127,13 +127,14 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
     if (lastPercent !== newPercent && shouldUpdate) {
       bar.update(percent, {
         msg,
+        passed: ((Date.now() - startTime) / 1000).toFixed(1),
       });
       lastPercent = newPercent;
     }
 
     if (!running) {
       running = true;
-      // startTime = new Date();
+      startTime = Date.now();
       lastPercent = 0;
     } else if (percent === 1 && compilations[name].status === 'running') {
       // const now = new Date();
