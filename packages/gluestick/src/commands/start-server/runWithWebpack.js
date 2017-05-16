@@ -33,7 +33,12 @@ const spawnServer = (
  * @param {string} entryPointPath Path to renderer server entry file
  * @param {Array<string>} args Arguments to pass to entry
  */
-module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: string[]) => {
+module.exports = (
+  { config, logger }: CLIContext,
+  entryPointPath: string,
+  args: string[],
+  delayStart: Promise<void>,
+) => {
   const webpackConfig: WebpackConfigEntry = config.webpackConfig.server;
   let child: ?Object = null;
   logger.info('Compiling renderer bundle');
@@ -43,10 +48,12 @@ module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: 
       return;
     }
 
-    if (child) {
-      child.kill();
-    }
+    delayStart.then(() => {
+      if (child) {
+        child.kill();
+      }
 
-    child = spawnServer({ config, logger }, entryPointPath, args);
+      child = spawnServer({ config, logger }, entryPointPath, args);
+    });
   });
 };

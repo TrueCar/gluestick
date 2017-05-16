@@ -84,12 +84,18 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
   }
 
   testCommand.then(() => {
+    let clientCompilationDonePromise: Promise<void> = Promise.resolve();
     if (!isProduction) {
-      startClient(commandApi, commandArguments, { printCommandInfo: false });
+      clientCompilationDonePromise = startClient(
+        commandApi, commandArguments, { printCommandInfo: false },
+      );
     }
 
     if (!isProduction || (isProduction && options.skipBuild)) {
-      startServer(commandApi, commandArguments, { printCommandInfo: false });
+      startServer(commandApi, commandArguments, {
+        printCommandInfo: false,
+        delayStart: clientCompilationDonePromise,
+      });
     }
   }).catch(() => {
     logger.fatal('Some tests have failed, client and server won\'t be compiled and executed');

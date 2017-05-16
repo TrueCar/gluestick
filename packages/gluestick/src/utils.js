@@ -52,7 +52,7 @@ const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
 const throttle = (fn: Function, threshold: number = 250): Function => {
   let last;
   let deferTimer;
-  return (...args) => {
+  return (...args: any[]) => {
     const now = +new Date();
     if (last && now < last + threshold) {
       clearTimeout(deferTimer);
@@ -64,6 +64,20 @@ const throttle = (fn: Function, threshold: number = 250): Function => {
       last = now;
       fn(...args);
     }
+  };
+};
+
+const debounce = (func: Function, wait: number, immediate: boolean = false) => {
+  let timeout;
+  return (...args: any[]) => {
+    const later = () => {
+      timeout = null;
+      if (!immediate) func(...args);
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func(...args);
   };
 };
 
@@ -147,6 +161,7 @@ module.exports = {
   convertToPascalCase,
   convertToCamelCaseWithPrefix,
   throttle,
+  debounce,
   printWebpackStats,
   requireModule,
   requireWithInterop,
