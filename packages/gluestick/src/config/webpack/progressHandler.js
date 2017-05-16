@@ -66,6 +66,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
     width: 20,
     total: 100,
     clear: true,
+    renderThrottle: 100,
     ...(options.barOptions || {}),
   };
 
@@ -122,14 +123,17 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
       && compilations[name].status === 'running'
       && !compilations[name].forceMute
     );
-    const newPercent = Math.ceil(percent * barOptions.width);
 
-    if (lastPercent !== newPercent && shouldUpdate) {
-      bar.update(percent, {
-        msg,
-        passed: ((Date.now() - startTime) / 1000).toFixed(1),
-      });
-      lastPercent = newPercent;
+    if (shouldUpdate) {
+      if (Math.ceil(lastPercent * barOptions.width) < Math.ceil(percent * barOptions.width)) {
+        lastPercent = percent;
+      }
+      if (lastPercent !== 0) {
+        bar.update(lastPercent, {
+          msg,
+          passed: ((Date.now() - startTime) / 1000).toFixed(1),
+        });
+      }
     }
 
     if (!running) {
