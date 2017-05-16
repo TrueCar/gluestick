@@ -22,6 +22,7 @@ const compilations = {
   },
   client: {
     muted: false,
+    forceMute: false,
     status: 'init',
     postprocessing: '',
   },
@@ -116,7 +117,11 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
       compilations.client.muted = false;
     }
 
-    const shouldUpdate = !compilations[name].muted && compilations[name].status === 'running';
+    const shouldUpdate = (
+      !compilations[name].muted
+      && compilations[name].status === 'running'
+      && !compilations[name].forceMute
+    );
     const newPercent = Math.ceil(percent * barOptions.width);
 
     if (lastPercent !== newPercent && shouldUpdate) {
@@ -158,4 +163,12 @@ module.exports = progressBarPlugin;
  */
 module.exports.markValid = (compilationName: string) => {
   compilations[compilationName].postprocessing = 'done';
+};
+
+/**
+ * In some cases, we wan't to manually toggle mute compilation, so logs from other places won't
+ * break progress bar.
+ */
+module.exports.toggleMute = (compilationName: string) => {
+  compilations[compilationName].forceMute = !compilations[compilationName].forceMute;
 };

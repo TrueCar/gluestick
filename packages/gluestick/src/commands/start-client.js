@@ -75,6 +75,7 @@ module.exports = (
   };
 
   const compiler: Compiler = webpack(configuration);
+  progressHandler.toggleMute('client');
   let printedWebpackStats: boolean = false;
   compiler.plugin('done', stats => {
     if (!printedWebpackStats) {
@@ -119,7 +120,7 @@ module.exports = (
       logger.error(error);
       return; // eslint-disable-line
     }
-
     logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+    progressHandler.toggleMute('client');
   });
 };
