@@ -19,8 +19,6 @@ test('plugins/readServerPlugins should get list of server plugins', () => {
     'plugins.js',
     'server',
   ]);
-  expect(logger.info.mock.calls).toEqual([
-    ['Including server plugins:'],
-    ['  testPlugin'],
-  ]);
+  expect(logger.info.mock.calls[0][0]).toContain('Including server plugins');
+  expect(logger.info.mock.calls[0][0]).toContain('testPlugin');
 });

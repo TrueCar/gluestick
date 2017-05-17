@@ -22,6 +22,7 @@ const compilations = {
   },
   client: {
     muted: false,
+    forceMute: false,
     status: 'init',
     postprocessing: '',
   },
@@ -57,7 +58,7 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
   }
 
   const header: string = compilation(`  COMPILATION:${name.toUpperCase()}  `);
-  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`;
+  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:passed seconds)`;
 
   const barOptions = {
     complete: '=',
@@ -65,13 +66,14 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
     width: 20,
     total: 100,
     clear: true,
+    renderThrottle: 100,
     ...(options.barOptions || {}),
   };
 
   const bar = new ProgressBar(barFormat, barOptions);
 
   let running = false;
-  // let startTime = 0;
+  let startTime = 0;
   let lastPercent = 0;
 
   return new webpack.ProgressPlugin((percent, msg) => {
@@ -116,19 +118,27 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
       compilations.client.muted = false;
     }
 
-    const shouldUpdate = !compilations[name].muted && compilations[name].status === 'running';
-    const newPercent = Math.ceil(percent * barOptions.width);
+    const shouldUpdate = (
+      !compilations[name].muted
+      && compilations[name].status === 'running'
+      && !compilations[name].forceMute
+    );
 
-    if (lastPercent !== newPercent && shouldUpdate) {
-      bar.update(percent, {
-        msg,
-      });
-      lastPercent = newPercent;
+    if (shouldUpdate) {
+      if (Math.ceil(lastPercent * barOptions.width) < Math.ceil(percent * barOptions.width)) {
+        lastPercent = percent;
+      }
+      if (lastPercent !== 0) {
+        bar.update(lastPercent, {
+          msg,
+          passed: ((Date.now() - startTime) / 1000).toFixed(1),
+        });
+      }
     }
 
     if (!running) {
       running = true;
-      // startTime = new Date();
+      startTime = Date.now();
       lastPercent = 0;
     } else if (percent === 1 && compilations[name].status === 'running') {
       // const now = new Date();
@@ -158,4 +168,12 @@ module.exports = progressBarPlugin;
  */
 module.exports.markValid = (compilationName: string) => {
   compilations[compilationName].postprocessing = 'done';
+};
+
+/**
+ * In some cases, we wan't to manually toggle mute compilation, so logs from other places won't
+ * break progress bar.
+ */
+module.exports.toggleMute = (compilationName: string) => {
+  compilations[compilationName].forceMute = !compilations[compilationName].forceMute;
 };

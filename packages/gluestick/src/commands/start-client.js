@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 const progressHandler = require('../config/webpack/progressHandler');
-const { printWebpackStats } = require('../utils');
+const { printWebpackStats, debounce } = require('../utils');
 const build = require('./build');
 
 type DevelopmentServerOptions = {
@@ -30,7 +30,7 @@ module.exports = (
   commandApi: CommandAPI,
   commandArguments: any[],
   { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
-): void => {
+) => new Promise((resolve, reject) => {
   const { getLogger, getContextConfig, getOptions } = commandApi;
   const logger: Logger = getLogger();
 
@@ -75,13 +75,16 @@ module.exports = (
   };
 
   const compiler: Compiler = webpack(configuration);
+  progressHandler.toggleMute('client');
   let printedWebpackStats: boolean = false;
-  compiler.plugin('done', stats => {
+
+  compiler.plugin('done', debounce(stats => {
     if (!printedWebpackStats) {
       printedWebpackStats = true;
       printWebpackStats(logger, stats);
     }
-  });
+    resolve();
+  }, 1000));
 
   const app: Object = express();
   app.engine('html', (filePath: string, opts: { [key: string]: any }, next: Function) => {
@@ -117,9 +120,10 @@ module.exports = (
   app.listen(GSConfig.ports.client, GSConfig.host, (error: string) => {
     if (error) {
       logger.error(error);
+      reject(error);
       return; // eslint-disable-line
     }
-
     logger.success(`Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`);
+    progressHandler.toggleMute('client');
   });
-};
+});

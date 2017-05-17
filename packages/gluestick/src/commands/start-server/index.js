@@ -17,6 +17,11 @@ type Entry = {
   args: string[],
 }
 
+type Settings = {
+  printCommandInfo: boolean;
+  delayStart: Promise<void>;
+}
+
 const getServerEntry = (config: Object): Entry => {
   return {
     path: config.webpackConfig.universalSettings.server.output,
@@ -34,7 +39,10 @@ const getServerEntry = (config: Object): Entry => {
 module.exports = (
   { getLogger, getOptions, getContextConfig }: CommandAPI,
   commandArguments: any[],
-  { printCommandInfo }: { printCommandInfo: boolean } = { printCommandInfo: true },
+  { printCommandInfo, delayStart }: Settings = {
+    printCommandInfo: true,
+    delayStart: Promise.resolve(),
+  },
 ): void => {
   const { debugServer, debugPort, logLevel, entrypoints }: Options = getOptions(commandArguments);
   const logger: Logger = getLogger(logLevel);
@@ -58,6 +66,6 @@ module.exports = (
   } else if (process.env.NODE_ENV === 'production') {
     runWithPM2({ config, logger }, entry.path, entry.args);
   } else {
-    runWithWebpack({ config, logger }, entry.path, entry.args);
+    runWithWebpack({ config, logger }, entry.path, entry.args, delayStart);
   }
 };
