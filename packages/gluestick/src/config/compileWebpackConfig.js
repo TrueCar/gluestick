@@ -22,6 +22,7 @@ const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const hookHelper = require('../renderer/helpers/hooks');
 const { requireModule } = require('../utils');
+const { extract_package_name } = require('universal-webpack/build/server configuration');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -161,6 +162,29 @@ module.exports = (
   // Applies server hooks provided by user
   const serverEnvConfigFinal: WebpackConfig =
     hookHelper.call(webpackConfigHooks.webpackServerConfig, serverEnvConfigOverwriten);
+
+  // We need to replace request handler added by universal-webpack
+  // because the original one doesn't take aliases added in plugins/hooks into the account.
+  if (serverEnvConfigFinal.externals) {
+    const handlerIndex: number = serverEnvConfigFinal.externals.findIndex(
+      external => typeof external === 'function',
+    );
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    const originalHandler: Function = serverEnvConfigFinal.externals[handlerIndex];
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.splice(handlerIndex, 1);
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.push((ctx, req, cb) => {
+      const packageName = extract_package_name(req);
+      return Object.keys(
+        typeof serverEnvConfigFinal.resolve === 'object' && !Array.isArray(serverEnvConfigFinal.resolve)
+          ? serverEnvConfigFinal.resolve.alias
+          : {},
+        ).filter(alias => alias === packageName).length
+          ? cb()
+          : originalHandler(ctx, req, cb);
+    });
+  }
 
   return {
     universalSettings: universalWebpackSettings,
