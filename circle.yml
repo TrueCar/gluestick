@@ -20,6 +20,9 @@ dependencies:
   override:
     - npm run install:yarn
 test:
+  pre:
+    - echo $CI_PULL_REQUEST
+    - echo $CI_PULL_REQUESTS
   override:
     - npm run lint
     - npm run flow
