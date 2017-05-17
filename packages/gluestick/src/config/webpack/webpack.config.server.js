@@ -49,7 +49,5 @@ module.exports = (
     process.cwd(), gluestickConfig.cachingConfigPath,
   );
   config.plugins.push(progressHandler(logger, 'server'));
-  // Mute progress handler so it dosn't interfeare with client's one
-  // progressHandler.toggleMute('server');
   return serverConfiguration(config, settings);
 };
