@@ -821,7 +821,7 @@ babel-preset-stage-3@^6.22.0:
     babel-plugin-transform-exponentiation-operator "^6.22.0"
     babel-plugin-transform-object-rest-spread "^6.22.0"
 
-babel-register@6.22.0, babel-register@^6.22.0:
+babel-register@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.22.0.tgz#a61dd83975f9ca4a9e7d6eff3059494cd5ea4c63"
   dependencies:
@@ -1387,9 +1387,9 @@ globals@^9.0.0:
   version "9.17.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.17.0.tgz#0c0ca696d9b9bb694d2e5470bd37777caad50286"
 
-gluestick-generators@^1.7.5:
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.7.5.tgz#dd6b72ee4c1cd6294391ab5958cd6b73cb0e02a0"
+gluestick-generators@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.8.0.tgz#f7f01b9a959ea57bf9b6415c4b2dbe3a7c7a0eb5"
   dependencies:
     babel-cli "6.22.2"
     babel-core "6.22.1"
