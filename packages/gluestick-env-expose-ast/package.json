@@ -19,15 +19,20 @@
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$"
   },
+  "peerDependencies": {
+    "babel-core": "6.x",
+    "babel-traverse": "6.x",
+    "webpack": "2.x"
+  },
   "dependencies": {
-    "babel-core": "6.22.1",
-    "babel-traverse": "^6.22.1",
-    "webpack": "2.2.1",
     "babel-plugin-gluestick": "0.0.1"
   },
   "devDependencies": {
-    "babel-preset-es2015": "6.22.0",
-    "babel-preset-stage-0": "6.22.0",
-    "jest": "18.1.0"
+    "babel-core": "^6.22.1",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-traverse": "^6.22.1",
+    "jest": "18.1.0",
+    "webpack": "^2.5.0"
   }
 }
