@@ -40,6 +40,7 @@ export type GSConfig = {
 export type WebpackConfigEntry = string | boolean | Object | any[];
 
 export type WebpackConfig = {
+  externals?: any[];
   [key: string]: WebpackConfigEntry;
 };
 

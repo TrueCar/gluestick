@@ -165,23 +165,26 @@ module.exports = (
 
   // We need to replace request handler added by universal-webpack
   // because the original one doesn't take aliases added in plugins/hooks into the account.
-  // $FlowIgnore `externals` is an array
-  const handlerIndex: number = serverEnvConfigFinal.externals.findIndex(
-    external => typeof external === 'function',
-  );
-  // $FlowIgnore `externals` is an array
-  const originalHandler: Function = serverEnvConfigFinal.externals[handlerIndex];
-  // $FlowIgnore `externals` is an array
-  serverEnvConfigFinal.externals.splice(handlerIndex, 1);
-  // $FlowIgnore `externals` is an array
-  serverEnvConfigFinal.externals.push((ctx, req, cb) => {
-    const packageName = extract_package_name(req);
-    // $FlowIgnore `resolve` is an object
-    return Object.keys(serverEnvConfigFinal.resolve.alias)
-      .filter(alias => alias === packageName).length
-        ? cb()
-        : originalHandler(ctx, req, cb);
-  });
+  if (serverEnvConfigFinal.externals) {
+    const handlerIndex: number = serverEnvConfigFinal.externals.findIndex(
+      external => typeof external === 'function',
+    );
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    const originalHandler: Function = serverEnvConfigFinal.externals[handlerIndex];
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.splice(handlerIndex, 1);
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.push((ctx, req, cb) => {
+      const packageName = extract_package_name(req);
+      return Object.keys(
+        typeof serverEnvConfigFinal.resolve === 'object' && !Array.isArray(serverEnvConfigFinal.resolve)
+          ? serverEnvConfigFinal.resolve.alias
+          : {},
+        ).filter(alias => alias === packageName).length
+          ? cb()
+          : originalHandler(ctx, req, cb);
+    });
+  }
 
   return {
     universalSettings: universalWebpackSettings,
