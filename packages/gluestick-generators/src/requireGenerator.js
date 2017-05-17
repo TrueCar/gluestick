@@ -29,7 +29,7 @@ const getPossiblePaths = (generatorName: string): string[] => {
     safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
     safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
     safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
-    path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
+    path.join(__dirname, INTERNAL, `${convertToCamelCase(generatorName)}.js`),
     path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
   ];
   return paths.filter((element: string): boolean => element.length > 0);
