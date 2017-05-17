@@ -27,6 +27,7 @@ spawnWithErrorHandling('npm', [
   version,
   '--yes',
   '--force-publish=*',
+  '--exact',
   ...process.argv.slice(3),
 ], { stdio: 'inherit' });
 
