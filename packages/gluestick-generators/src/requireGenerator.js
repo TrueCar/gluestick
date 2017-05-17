@@ -8,10 +8,10 @@ const { convertToCamelCase, convertToKebabCase } = require('./utils');
 // $FlowFixMe
 module.createTemplate = createTemplate;
 
-const PATH_TO_GLUESTICK_TEMPLATES: string = '../../generator/predefined';
+const PATH_TO_GLUESTICK_TEMPLATES: string = '../../build/generator/predefined';
 const PATH_TO_GLUESTICK_CLI_TEMPLATES: string = '../templates';
 const EXTERNAL: string = 'generators';
-const INTERNAL: string = '../templates';
+const INTERNAL: string = './templates';
 
 const safeResolve = (moduleToResolve: string, ...args: string[]): string => {
   try {
@@ -29,7 +29,7 @@ const getPossiblePaths = (generatorName: string): string[] => {
     safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
     safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
     safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
-    path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
+    path.join(__dirname, INTERNAL, `${convertToCamelCase(generatorName)}.js`),
     path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
   ];
   return paths.filter((element: string): boolean => element.length > 0);

@@ -2,11 +2,11 @@
 
 import type {
   ServerPlugin,
-  Logger,
+  BaseLogger,
   RenderMethod,
 } from '../types';
 
-const _getRenderMethod = (plugins: ServerPlugin[], logger: Logger): ?RenderMethod => {
+const _getRenderMethod = (plugins: ServerPlugin[], logger: BaseLogger): ?RenderMethod => {
   const renderMethods = plugins
   .filter((plugin) => typeof plugin.renderMethod === 'function')
   .map(({ renderMethod }) => renderMethod);
@@ -19,7 +19,7 @@ const _getRenderMethod = (plugins: ServerPlugin[], logger: Logger): ?RenderMetho
   return null;
 };
 
-const _getCustomLogger = (plugins: ServerPlugin[]): ?Logger => {
+const _getCustomLogger = (plugins: ServerPlugin[]): ?BaseLogger => {
   const loggers = plugins
   .filter((plugin) => plugin.logger)
   .map(({ logger }) => logger);
@@ -29,7 +29,7 @@ const _getCustomLogger = (plugins: ServerPlugin[]): ?Logger => {
   return null;
 };
 
-module.exports = (logger: Logger) => ({
+module.exports = (logger: BaseLogger) => ({
   getRenderMethod: (plugins: ServerPlugin[]) => _getRenderMethod(plugins, logger),
   getCustomLogger: _getCustomLogger,
 });

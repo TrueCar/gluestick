@@ -1,7 +1,9 @@
 /* @flow */
-import type { Context } from '../types.js';
+import type { CommandAPI, Logger } from '../types.js';
 
 const spawn = require('cross-spawn');
+const startClient = require('./start-client');
+const startServer = require('./start-server');
 const { filterArg } = require('./utils');
 
 const skippedOptions: string[] = [
@@ -11,6 +13,7 @@ const skippedOptions: string[] = [
 ];
 
 type StartOptions = {
+  logLevel?: string;
   runTests: boolean;
   skipBuild: boolean;
   parent: Object;
@@ -44,10 +47,14 @@ const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
   });
 };
 
-module.exports = ({ config, logger }: Context, options: StartOptions): Promise<any> => {
+module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
+  const options: StartOptions = commandApi.getOptions(commandArguments);
+  const logger: Logger = commandApi.getLogger(options.logLevel);
   const isProduction: boolean = process.env.NODE_ENV === 'production';
-
   const rawArgs: string[] = filterArg(options.parent.rawArgs, skippedOptions);
+
+  logger.clear();
+  logger.printCommandInfo();
 
   /* gluestick start
    *   -> spawn start-client (w/ build), spawn start-server (w/ build)
@@ -63,8 +70,9 @@ module.exports = ({ config, logger }: Context, options: StartOptions): Promise<a
    */
 
   // Start tests only they asked us to or we are in production mode
+  let testCommand = Promise.resolve();
   if (!isProduction && options.runTests) {
-    spawnFunc(
+    testCommand = spawnFunc(
       [
         'test',
         ...rawArgs.slice(4),
@@ -75,38 +83,32 @@ module.exports = ({ config, logger }: Context, options: StartOptions): Promise<a
     );
   }
 
-  if (!isProduction) {
-    spawnFunc([
-      'start-client',
-      ...rawArgs.slice(3),
-    ]);
-  }
+  testCommand.then(() => {
+    let clientCompilationDonePromise: Promise<void> = Promise.resolve();
+    if (!isProduction) {
+      clientCompilationDonePromise = startClient(
+        commandApi, commandArguments, { printCommandInfo: false },
+      );
+    }
 
-  if (!isProduction || (isProduction && options.skipBuild)) {
-    return spawnFunc([
-      'start-server',
-      ...rawArgs.slice(3),
-    ]);
-  }
+    if (!isProduction || (isProduction && options.skipBuild)) {
+      startServer(commandApi, commandArguments, {
+        printCommandInfo: false,
+        delayStart: clientCompilationDonePromise,
+      });
+    }
+  }).catch(() => {
+    logger.fatal('Some tests have failed, client and server won\'t be compiled and executed');
+  });
 
   if (isProduction && !options.skipBuild) {
-    return Promise.all([
-      spawnFunc([
-        'build',
-        ...rawArgs.slice(3),
-      ]),
+    spawnFunc([
+      'build',
+      ...rawArgs.slice(3),
     ]).then(() => {
-      spawnFunc([
-        'start-server',
-        ...rawArgs.slice(3),
-      ]);
-    }).catch((error) => {
-      logger.error(error);
-      process.exit(1);
+      startServer(commandApi, commandArguments);
+    }).catch(() => {
+      logger.fatal('Build have failed, server won\'t be executed');
     });
   }
-
-  return Promise.reject(
-    new Error('Start failed'),
-  );
 };

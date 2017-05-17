@@ -60,13 +60,7 @@ Plugin must implement at least one type, but they can have multiple types specif
 To implement a type, you must create a file in top level of plugin directory and name
 it: `<type>.js` so it can be: `config.js`, `runtime.js`, `server.js`.
 
-You don't need to worry about compilation, babel, loaders etc. because they will be
-compiled inside gluestick on the fly as long as you use features that are available in:
-- `babel-preset-es2015`,
-- `babel-preset-stage-0`,
-- `babel-preset-react`,
-- `babel-plugin-transform-decorators-legacy`,
-- `babel-plugins-transform-flow-strip-types`
+__IMPORTANT__: GlueStick won't transpile your plugin, thus it's up to you to transpile it using for instance `babel` or `typescript`.
 
 ## Config plugin
 Must export function that returns object will overwriters.
@@ -87,12 +81,16 @@ module.exports = (options, { logger }) => {
 Exported function is a factory for two groups of overwrites: `preOverwrites` and `postOverwrites`.
 This factory function accepts options that are defined in plugins declaration file inside project,
 by default `src/gluestick.plugins.js`. Second argument is an object with utilities provided by
-gluestick, currently the only one is logger, that you can use to print messages using:
-- `logger.debug(...args)`
-- `logger.info(...args)`
-- `logger.success(...args)`
-- `logger.warn(...args)`
-- `logger.error(...args)`
+gluestick:
+- `logger` - logger instance
+  - `logger.debug(...args)`
+  - `logger.info(...args)`
+  - `logger.success(...args)`
+  - `logger.warn(...args)`
+  - `logger.error(...args)`
+- `requireModule` - safe require function, which will transform module with babel (`es2015`, `stage-0`, `transform-flow-strip-types`) then noralizes module with `getDefaultExport`
+- `requireWithInterop` - require and normalize module using `getDefaultExport`
+- `getDefaultExport` - normalize CJS and ESM exported value
 
 `preOverwrites` are executed before specific configs are prepared. This is the place for modification
 that should be considered by universal-webpack, for example aliases, which can define if file

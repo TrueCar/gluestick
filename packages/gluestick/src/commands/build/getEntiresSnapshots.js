@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../../types.js';
+import type { CLIContext } from '../../types.js';
 
 const { spawn } = require('cross-spawn');
 const fetch = require('node-fetch');
@@ -25,7 +25,7 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
   return child;
 };
 
-module.exports = ({ config, logger }: Context) => {
+module.exports = ({ config, logger }: CLIContext) => {
   const entryPointPath = config.webpackConfig.universalSettings.server.output;
   const args = JSON.stringify(config);
 

@@ -2,23 +2,27 @@
 
 jest.mock('fs');
 
-jest.mock('../../cli/logger', () => () => ({
-  info: jest.fn(),
-  success: jest.fn(),
-  debug: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-}));
-jest.mock('../../utils');
-
 const fs = require('fs');
 const inquirer = require('inquirer');
 const path = require('path');
 const chalk = require('chalk');
 
+const utils = require('../../utils');
+
+utils.isValidEntryPoint = jest.fn();
+
 const destroy = require('../destroy');
-const logger = require('../../cli/logger')();
-const { isValidEntryPoint } = require('../../utils');
+
+const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
+
+const errorLogger = jest.fn();
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+    error: errorLogger,
+  }),
+};
 
 function createFiles(...filePaths) {
   filePaths.forEach((pathToFile) => {
@@ -26,15 +30,14 @@ function createFiles(...filePaths) {
   });
 }
 
-describe('cli: gluestick destroy', () => {
+describe('command/destroy', () => {
   const rootDir = path.resolve();
   const fileExists = filePath => fs.existsSync(path.join(rootDir, filePath));
-  const context = { config: { plugins: [] }, logger };
   // $FlowFixMe
-  isValidEntryPoint.mockReturnValue(true);
+  utils.isValidEntryPoint.mockReturnValue(true);
 
   beforeEach(() => {
-    logger.error.mockClear();
+    errorLogger.mockClear();
   });
 
   describe('when files are generated without sub-directories', () => {
@@ -57,24 +60,23 @@ describe('cli: gluestick destroy', () => {
 
     describe('when invalid arguments are provided', () => {
       it('reports an error when (container|component|reducer) is not specified', () => {
-        // $FlowIgnore flow detects this case but nothing prevents the user to type it
-        destroy(context, 'blah', '', { entryPoint: 'shared' });
-        expect(logger.error).toBeCalledWith(`${chalk.bold('blah')} is not a valid destroy command.`);
+        destroy(commandApi, ['blah', '', { entryPoint: 'shared' }]);
+        expect(errorLogger).toBeCalledWith(`${chalk.bold('blah')} is not a valid destroy command.`);
       });
 
       it('reports an error when a name only consists of whitespace', () => {
-        destroy(context, 'component', ' ', { entryPoint: 'shared' });
-        expect(logger.error).toBeCalledWith(`${chalk.bold(' ')} is not a valid name.`);
+        destroy(commandApi, ['component', ' ', { entryPoint: 'shared' }]);
+        expect(errorLogger).toBeCalledWith(`${chalk.bold(' ')} is not a valid name.`);
       });
 
       it('reports an error when the specified name does not exist', () => {
-        destroy(context, 'component', 'somethingthatdoesnotexist', { entryPoint: 'shared' });
-        expect(logger.error.mock.calls[0][0]).toContain('does not exist');
+        destroy(commandApi, ['component', 'somethingthatdoesnotexist', { entryPoint: 'shared' }]);
+        expect(errorLogger.mock.calls[0][0]).toContain('does not exist');
       });
 
       it('should ask whether to continue if the name does not match (case sensitive)', async () => {
         inquirer.prompt = jest.fn().mockImplementation(() => Promise.resolve({ confirm: true }));
-        await destroy(context, 'component', 'testComponent', { entryPoint: 'shared' });
+        await destroy(commandApi, ['component', 'testComponent', { entryPoint: 'shared' }]);
         expect(inquirer.prompt).toHaveBeenCalledTimes(1);
       });
     });
@@ -83,7 +85,7 @@ describe('cli: gluestick destroy', () => {
       it('removes the specified component and its associated test', () => {
         expect(fileExists('src/shared/components/TestComponent.js')).toEqual(true);
         expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(true);
-        destroy(context, 'component', 'TestComponent', { entryPoint: 'shared' });
+        destroy(commandApi, ['component', 'TestComponent', { entryPoint: 'shared' }]);
         expect(fileExists('src/shared/components/TestComponent.js')).toEqual(false);
         expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(false);
       });
@@ -91,7 +93,7 @@ describe('cli: gluestick destroy', () => {
       it('removes the specified reducer and its associated test', () => {
         expect(fileExists('src/shared/reducers/testReducer.js')).toEqual(true);
         expect(fileExists('src/shared/reducers/__tests__/testReducer.test.js')).toEqual(true);
-        destroy(context, 'reducer', 'testReducer', { entryPoint: 'shared' });
+        destroy(commandApi, ['reducer', 'testReducer', { entryPoint: 'shared' }]);
         expect(fileExists('src/shared/reducers/testReducer.js')).toEqual(false);
         expect(fileExists('src/shared/reducers/__tests__/testReducer.test.js')).toEqual(false);
       });
@@ -109,14 +111,14 @@ describe('cli: gluestick destroy', () => {
           + '};\n';
         const reducersIndexPath = path.join(rootDir, 'src/shared/reducers/index.js');
         fs.writeFileSync(reducersIndexPath, reducerIndexBefore);
-        destroy(context, 'reducer', 'testReducer', { entryPoint: 'shared' });
+        destroy(commandApi, ['reducer', 'testReducer', { entryPoint: 'shared' }]);
         expect(fs.readFileSync(reducersIndexPath)).toEqual(reducerIndexAfter);
       });
 
       it('removes the specified container and its associated test', () => {
         expect(fileExists('src/shared/containers/TestContainer.js')).toEqual(true);
         expect(fileExists('src/shared/containers/__tests__/TestContainer.test.js')).toEqual(true);
-        destroy(context, 'container', 'TestContainer', { entryPoint: 'shared' });
+        destroy(commandApi, ['container', 'TestContainer', { entryPoint: 'shared' }]);
         expect(fileExists('src/shared/containers/TestContainer.js')).toEqual(false);
         expect(fileExists('src/shared/containers/__tests__/TestContainer.test.js')).toEqual(false);
       });
@@ -133,8 +135,8 @@ describe('cli: gluestick destroy', () => {
     it('removes the files under the directory', () => {
       expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(true);
       expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(true);
-      destroy(context, 'component', 'dir/TestComponent', { entryPoint: 'shared' });
-      expect(logger.error).not.toHaveBeenCalled();
+      destroy(commandApi, ['component', 'dir/TestComponent', { entryPoint: 'shared' }]);
+      expect(errorLogger).not.toHaveBeenCalled();
       expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(false);
       expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(false);
     });

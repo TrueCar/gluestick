@@ -4,7 +4,6 @@ import type {
   ConfigPlugin,
   Plugin,
   GSConfig,
-  ProjectConfig,
   WebpackConfig,
   UniversalWebpackConfigurator,
   Logger,
@@ -22,6 +21,8 @@ const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const hookHelper = require('../renderer/helpers/hooks');
+const { requireModule } = require('../utils');
+const { extract_package_name } = require('universal-webpack/build/server configuration');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean;
@@ -32,7 +33,6 @@ type CompilationOptions = {
 module.exports = (
   logger: Logger,
   plugins: ConfigPlugin[],
-  projectConfig: ProjectConfig,
   gluestickConfig: GSConfig,
   {
     skipClientEntryGeneration,
@@ -49,14 +49,20 @@ module.exports = (
       input: path.join(__dirname, '../renderer/entry.js'),
       output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
     },
+    silent: true,
   };
 
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
   // code for client and serverEntries for server.
-  const entries: Object = skipClientEntryGeneration && skipServerEntryGeneration
-    ? {}
-    : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  let entries: Object = {};
+  try {
+    entries = skipClientEntryGeneration && skipServerEntryGeneration
+      ? {}
+      : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+  } catch (error) {
+    logger.fatal(error.message);
+  }
 
   // Get runtime plugins that will be applied to project code and bundled together.
   const runtimePlugins: Plugin[] = skipClientEntryGeneration && skipServerEntryGeneration
@@ -144,7 +150,7 @@ module.exports = (
   let webpackConfigHooks: WebpackHooks = {};
 
   try {
-    webpackConfigHooks = require(pathToWebpackConfigHooks).default;
+    webpackConfigHooks = requireModule(pathToWebpackConfigHooks);
   } catch (e) {
     logger.warn(e);
   }
@@ -156,6 +162,29 @@ module.exports = (
   // Applies server hooks provided by user
   const serverEnvConfigFinal: WebpackConfig =
     hookHelper.call(webpackConfigHooks.webpackServerConfig, serverEnvConfigOverwriten);
+
+  // We need to replace request handler added by universal-webpack
+  // because the original one doesn't take aliases added in plugins/hooks into the account.
+  if (serverEnvConfigFinal.externals) {
+    const handlerIndex: number = serverEnvConfigFinal.externals.findIndex(
+      external => typeof external === 'function',
+    );
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    const originalHandler: Function = serverEnvConfigFinal.externals[handlerIndex];
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.splice(handlerIndex, 1);
+    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    serverEnvConfigFinal.externals.push((ctx, req, cb) => {
+      const packageName = extract_package_name(req);
+      return Object.keys(
+        typeof serverEnvConfigFinal.resolve === 'object' && !Array.isArray(serverEnvConfigFinal.resolve)
+          ? serverEnvConfigFinal.resolve.alias
+          : {},
+        ).filter(alias => alias === packageName).length
+          ? cb()
+          : originalHandler(ctx, req, cb);
+    });
+  }
 
   return {
     universalSettings: universalWebpackSettings,

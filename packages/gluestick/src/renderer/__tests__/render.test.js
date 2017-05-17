@@ -1,7 +1,7 @@
 /* @flow */
 
 import type {
-  Logger,
+  BaseLogger,
   Config,
   Context,
   Request,
@@ -39,7 +39,7 @@ class BodyWrapper extends React.Component {
 }
 
 describe('renderer/render', () => {
-  const logger: Logger = {
+  const logger: BaseLogger = {
     success: () => {},
     info: () => {},
     warn: () => {},

@@ -1,5 +1,5 @@
 /* @flow */
-import type { Context } from '../../types';
+import type { CLIContext } from '../../types';
 
 const { spawn } = require('cross-spawn');
 const pm2 = require('pm2');
@@ -35,7 +35,7 @@ const checkIfPM2ProcessExists = (name: string, callback: Function) => {
 };
 
 const start = (
-  { config, logger }: Context,
+  { config, logger }: CLIContext,
   name: string,
   entryPointPath: string,
   args: string[],
@@ -75,6 +75,7 @@ const start = (
    * started up because of PM2 and we terminate them.
    */
   process.on('SIGINT', (): void => {
+    logger.print();
     logger.info(`Stopping pm2 instance: ${name}…`);
     checkIfPM2ProcessExists(name, (exists) => {
       if (exists) {
@@ -97,7 +98,7 @@ const start = (
   });
 };
 
-module.exports = ({ config, logger }: Context, entryPointPath: string, args: string[]) => {
+module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: string[]) => {
   const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
   pm2.connect((err: string) => {
     if (err) {

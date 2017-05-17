@@ -1,9 +1,9 @@
 /* @flow */
-import type { Logger } from '../../types';
+import type { BaseLogger } from '../../types';
 
 const MISSING_404_TEXT: string = 'MISSING_404_TEXT';
 
-const showMissing404Text = (logger: Logger): void => {
+const showMissing404Text = (logger: BaseLogger): void => {
   logger.info(`
 #########################################################################################
 Rendered a 404 Error but no custom 404 route detected.
@@ -20,11 +20,11 @@ You can create a custom 404 handler with the following steps:
 `);
 };
 
-const helpTextHandlers: { [key: string]: (logger: Logger) => void } = {
+const helpTextHandlers: { [key: string]: (logger: BaseLogger) => void } = {
   MISSING_404_TEXT: showMissing404Text,
 };
 
-const showHelpText = (key: string, logger: Logger): void => {
+const showHelpText = (key: string, logger: BaseLogger): void => {
   helpTextHandlers[key](logger);
 };
 

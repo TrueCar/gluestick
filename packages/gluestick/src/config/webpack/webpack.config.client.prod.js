@@ -21,7 +21,7 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
   });
   configuration.plugins.push(
     new ExtractTextPlugin('[name]-[chunkhash].css'),
-    new OptimizeCSSAssetsPlugin({ canPrint: true }),
+    new OptimizeCSSAssetsPlugin({ canPrint: false }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),

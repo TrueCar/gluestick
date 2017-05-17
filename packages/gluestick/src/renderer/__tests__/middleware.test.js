@@ -4,7 +4,7 @@ import type {
   Context,
   Request,
   Response,
-  Logger,
+  BaseLogger,
   EntriesConfig,
   Entries,
   GSHooks,
@@ -41,7 +41,7 @@ const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
 const hooksHelper = require('../helpers/hooks').call;
 
-const logger: Logger = {
+const logger: BaseLogger = {
   info: jest.fn(),
   debug: jest.fn(),
   success: jest.fn(),

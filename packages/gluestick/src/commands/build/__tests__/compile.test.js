@@ -5,7 +5,7 @@ jest.setMock('webpack', () => webpack);
 jest.mock('../../../config/createWebpackStats.js');
 
 const compile = require('../compile');
-const context = require('../../../__tests__/mocks/context');
+const context = require('../../../__tests__/mocks/context').cliContext;
 const createWebpackStats = require('../../../config/createWebpackStats');
 
 describe('commands/build/compile', () => {
