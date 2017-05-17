@@ -2,3 +2,4 @@
 **/__tests__/**
 src/**
 coverage/**
+.babelrc
