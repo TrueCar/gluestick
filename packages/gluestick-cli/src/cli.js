@@ -51,6 +51,7 @@ commander
   .command('new')
   .description('generate a new application')
   .arguments('<appName>')
+  .option('-p, --preset <preset>', 'specify preset to create project from')
   .option('-d, --dev <path>', 'relative path to development version of gluestick')
   .option('-s, --skip-main', 'gluestick will not generate main app')
   .option('-n, --npm', 'use npm instead of yarn')
