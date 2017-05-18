@@ -1,6 +1,6 @@
 {
   "name": "gluestick-generators",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Package with generator API used by GlueStick",
   "main": "build/index.js",
   "homepage": "https://github.com/TrueCar/gluestick",
