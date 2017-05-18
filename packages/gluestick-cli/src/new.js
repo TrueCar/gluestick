@@ -28,9 +28,9 @@ const ensureDevelopmentPathIsValid = (pathToGluestickRepo, exitWithError) => {
 const getDevelopmentDependencies = ({ dev }, pathToGluestickPackages) => {
   return glob.sync('*', { cwd: pathToGluestickPackages })
     .filter(name => name !== 'gluestick-cli')
-    .map(name => {
-      return `file:${path.join('..', dev, 'packages', name)}`;
-    });
+    .reduce((acc, key) => {
+      return { ...acc, [key]: `file:${path.join('..', dev, 'packages', key)}` };
+    }, {});
 };
 
 module.exports = (appName, options, exitWithError) => {
