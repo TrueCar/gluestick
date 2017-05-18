@@ -1,7 +1,7 @@
 /* @flow */
-import type { CreateTemplate } from '../../types';
+import type { CreateTemplate } from '../types';
 
-module.exports = (createTemplate: CreateTemplate) => createTemplate`
+module.exports.source = (createTemplate: CreateTemplate) => createTemplate`
 /* @flow */
 
 import React, { Component } from "react";
@@ -40,4 +40,21 @@ export default connect(
   (/* state */) => ({/** _INSERT_STATE_  **/}),
   (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
 )(NoMatchApp);
+`;
+
+module.exports.test = (createTemplate: CreateTemplate) => createTemplate`
+/* @flow */
+
+import React from "react";
+import { shallow } from "enzyme";
+
+import { NoMatchApp } from "../NoMatchApp";
+
+describe("containers/NoMatchApp", () => {
+  it("renders without an issue", () => {
+    const subject = <NoMatchApp />;
+    const wrapper = shallow(subject);
+    expect(wrapper).toBeDefined();
+  });
+});
 `;

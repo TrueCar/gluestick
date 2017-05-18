@@ -1,13 +1,10 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../../types';
+import type { PredefinedGeneratorOptions, GeneratorUtils } from '../types';
 
 const path = require('path');
-const { convertToPascalCase } = require('../../utils');
 
-const createTemplate = module.parent.createTemplate;
-
-const containerTemplate = createTemplate`
+const getContainerTemplate = createTemplate => createTemplate`
 /* @flow */
 
 import React, { Component } from "react";
@@ -48,7 +45,7 @@ export default connect(
 )(${args => args.name});
 `;
 
-const testTemplate = createTemplate`
+const getTestTemplate = createTemplate => createTemplate`
 /* @flow */
 
 import React from "react";
@@ -65,7 +62,9 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = (options: PredefinedGeneratorOptions) => {
+module.exports = (
+  { convertToPascalCase, createTemplate }: GeneratorUtils,
+) => (options: PredefinedGeneratorOptions) => {
   const rewrittenName = convertToPascalCase(options.name);
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
@@ -76,12 +75,12 @@ module.exports = (options: PredefinedGeneratorOptions) => {
       {
         path: path.join('src', options.entryPoint, 'containers', directoryPrefix),
         filename: rewrittenName,
-        template: containerTemplate,
+        template: getContainerTemplate(createTemplate),
       },
       {
         path: path.join('src', options.entryPoint, 'containers', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
-        template: testTemplate,
+        template: getTestTemplate(createTemplate),
         args: {
           path: path.join(options.entryPoint, 'containers', directoryPrefix, rewrittenName),
         },

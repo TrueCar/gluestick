@@ -1,26 +1,20 @@
 /* @flow */
-import type { GeneratorOptions } from '../../types';
+import type { PredefinedGeneratorOptions, GeneratorUtils } from '../types';
 
-/* DO NOT MODIFY */
-const createTemplate = module.parent.createTemplate;
-/* END OF DO NOT MODIFY */
+const templateIndex = require('../templates/Index');
+const templateEmpty = require('../templates/empty');
+const templateHomeCss = require('../templates/HomeCss.js');
+const templateRoutes = require('../templates/Routes');
+const templateHome = require('../templates/Home');
 
-const templateIndex = require('../templates/Index')(createTemplate);
-const templateHomeTest = require('../templates/HomeTest')(createTemplate);
-const templateMasterLayoutTest = require('../templates/MasterLayoutTest')(createTemplate);
-const templateContainerHomeTest = require('../templates/ContainerHomeTest')(createTemplate);
-const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(createTemplate);
-const templateEmpty = require('../templates/Empty')(createTemplate);
-const templateHome = require('../templates/Home')(createTemplate);
-const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
-const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
-const templateRoutes = require('../templates/Routes')(createTemplate);
-const templateHomeApp = require('../templates/HomeApp')(createTemplate);
-const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
-const templateReducer = require('../templates/Reducer')(createTemplate);
-const { convertToCamelCase, convertToKebabCase } = require('../../utils');
+const templateMasterLayout = require('../templates/MasterLayout');
+const templateHomeApp = require('../templates/HomeApp');
+const templateNoMatchApp = require('../templates/NoMatchApp');
+const templateReducer = require('../templates/reducersIndex');
 
-module.exports = (options: GeneratorOptions) => {
+module.exports = (
+  { convertToCamelCase, convertToKebabCase, createTemplate }: GeneratorUtils,
+) => (options: PredefinedGeneratorOptions) => {
   const appName = convertToKebabCase(options.name);
   return ({
     modify: [{
@@ -73,7 +67,7 @@ module.exports = (options: GeneratorOptions) => {
       {
         path: `src/apps/${options.name}`,
         filename: 'routes.js',
-        template: templateRoutes,
+        template: templateRoutes(createTemplate),
         args: {
           index: appName,
         },
@@ -81,72 +75,72 @@ module.exports = (options: GeneratorOptions) => {
       {
         path: `src/apps/${options.name}`,
         filename: 'Index.js',
-        template: templateIndex,
+        template: templateIndex(createTemplate),
       },
       {
         path: `src/apps/${options.name}/components`,
         filename: 'Home.js',
-        template: templateHome,
-      },
-      {
-        path: `src/apps/${options.name}/components`,
-        filename: 'Home.css',
-        template: templateHomeCss,
-      },
-      {
-        path: `src/apps/${options.name}/components`,
-        filename: 'MasterLayout.js',
-        template: templateMasterLayout,
-      },
-      {
-        path: `src/apps/${options.name}/containers`,
-        filename: 'HomeApp.js',
-        template: templateHomeApp,
-      },
-      {
-        path: `src/apps/${options.name}/containers`,
-        filename: 'NoMatchApp.js',
-        template: templateNoMatchApp,
-      },
-      {
-        path: `src/apps/${options.name}/actions`,
-        filename: '.gitkeep',
-        template: templateEmpty,
-      },
-      {
-        path: `src/apps/${options.name}/reducers`,
-        filename: 'index.js',
-        template: templateReducer,
+        template: templateHome.source(createTemplate),
       },
       {
         path: `src/apps/${options.name}/components/__tests__`,
         filename: 'Home.test.js',
-        template: templateHomeTest,
+        template: templateHome.test(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/components`,
+        filename: 'Home.css',
+        template: templateHomeCss(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/components`,
+        filename: 'MasterLayout.js',
+        template: templateMasterLayout.source(createTemplate),
       },
       {
         path: `src/apps/${options.name}/components/__tests__`,
         filename: 'MasterLayout.test.js',
-        template: templateMasterLayoutTest,
+        template: templateMasterLayout.test(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/containers`,
+        filename: 'HomeApp.js',
+        template: templateHomeApp.source(createTemplate),
       },
       {
         path: `src/apps/${options.name}/containers/__tests__`,
         filename: 'HomeApp.test.js',
-        template: templateContainerHomeTest,
+        template: templateHomeApp.test(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/containers`,
+        filename: 'NoMatchApp.js',
+        template: templateNoMatchApp.source(createTemplate),
       },
       {
         path: `src/apps/${options.name}/containers/__tests__`,
         filename: 'NoMatchApp.test.js',
-        template: templateNoMatchAppTest,
+        template: templateNoMatchApp.test(createTemplate),
       },
       {
-        path: `src/apps/${options.name}/reducers/__tests__`,
+        path: `src/apps/${options.name}/actions`,
         filename: '.gitkeep',
-        template: templateEmpty,
+        template: templateEmpty(createTemplate),
       },
       {
         path: `src/apps/${options.name}/actions/__tests__`,
         filename: '.gitkeep',
-        template: templateEmpty,
+        template: templateEmpty(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/reducers`,
+        filename: 'index.js',
+        template: templateReducer(createTemplate),
+      },
+      {
+        path: `src/apps/${options.name}/reducers/__tests__`,
+        filename: '.gitkeep',
+        template: templateEmpty(createTemplate),
       },
     ],
   });

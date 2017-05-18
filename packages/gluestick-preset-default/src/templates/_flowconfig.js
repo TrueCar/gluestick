@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { CreateTemplate } from '../../types';
+import type { CreateTemplate } from '../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 [ignore]

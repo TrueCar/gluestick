@@ -1,13 +1,10 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../../types';
+import type { PredefinedGeneratorOptions, GeneratorUtils } from '../types';
 
 const path = require('path');
-const { convertToCamelCase, convertToCamelCaseWithPrefix } = require('../../utils');
 
-const createTemplate = module.parent.createTemplate;
-
-const reducerTemplate = createTemplate`
+const getReducerTemplate = createTemplate => createTemplate`
 /* @flow */
 
 type State = {
@@ -24,7 +21,7 @@ export default (state: State = INITIAL_STATE, action: { type: string, payload?: 
 };
 `;
 
-const testTemplate = createTemplate`
+const getTestTemplate = createTemplate => createTemplate`
 /* @flow */
 
 import reducer from "${args => args.path}";
@@ -43,7 +40,9 @@ describe("${args => args.path}", () => {
 
 const getReducerImport = (name, dir) => `import ${name} from "./${dir}";`;
 
-module.exports = (options: PredefinedGeneratorOptions) => {
+module.exports = (
+  { convertToCamelCase, convertToCamelCaseWithPrefix, createTemplate }: GeneratorUtils,
+) => (options: PredefinedGeneratorOptions) => {
   const rewrittenName = convertToCamelCase(options.name);
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
   return {
@@ -70,12 +69,12 @@ module.exports = (options: PredefinedGeneratorOptions) => {
       {
         path: path.join('src', options.entryPoint, 'reducers', directoryPrefix),
         filename: rewrittenName,
-        template: reducerTemplate,
+        template: getReducerTemplate(createTemplate),
       },
       {
         path: path.join('src', options.entryPoint, 'reducers', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
-        template: testTemplate,
+        template: getTestTemplate(createTemplate),
         args: {
           path: path.join(options.entryPoint, 'reducers', directoryPrefix, rewrittenName),
         },

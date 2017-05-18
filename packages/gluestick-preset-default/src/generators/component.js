@@ -1,13 +1,10 @@
 /* @flow */
 
-import type { PredefinedGeneratorOptions } from '../../types';
+import type { PredefinedGeneratorOptions, GeneratorUtils } from '../types';
 
 const path = require('path');
-const { convertToPascalCase } = require('../../utils');
 
-const createTemplate = module.parent.createTemplate;
-
-const classComponentTemplate = createTemplate`
+const getClassComponentTemplate = createTemplate => createTemplate`
 /* @flow */
 
 import React, { Component } from "react";
@@ -23,7 +20,7 @@ export default class ${args => args.name} extends Component {
 }
 `;
 
-const functionalComponentTemplate = createTemplate`
+const getFunctionalComponentTemplate = createTemplate => createTemplate`
 /* @flow */
 
 import React from "react";
@@ -37,7 +34,7 @@ export default function ${args => args.name} () {
 }
 `;
 
-const testTemplate = createTemplate`
+const getTestTemplate = createTemplate => createTemplate`
 import React from "react";
 import { shallow } from "enzyme";
 
@@ -52,7 +49,9 @@ describe("${args => args.path}", () => {
 });
 `;
 
-module.exports = (options: PredefinedGeneratorOptions) => {
+module.exports = (
+  { convertToPascalCase, createTemplate }: GeneratorUtils,
+) => (options: PredefinedGeneratorOptions) => {
   const rewrittenName = convertToPascalCase(options.name);
   const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
 
@@ -64,12 +63,14 @@ module.exports = (options: PredefinedGeneratorOptions) => {
       {
         path: path.join('src', options.entryPoint, 'components', directoryPrefix),
         filename: rewrittenName,
-        template: options.functional ? functionalComponentTemplate : classComponentTemplate,
+        template: options.functional
+          ? getFunctionalComponentTemplate(createTemplate)
+          : getClassComponentTemplate(createTemplate),
       },
       {
         path: path.join('src', options.entryPoint, 'components', directoryPrefix, '__tests__'),
         filename: `${rewrittenName}.test.js`,
-        template: testTemplate,
+        template: getTestTemplate(createTemplate),
         args: {
           path: path.join(options.entryPoint, 'components', directoryPrefix, rewrittenName),
         },

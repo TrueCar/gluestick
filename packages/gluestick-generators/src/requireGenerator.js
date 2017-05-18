@@ -8,7 +8,7 @@ const { convertToCamelCase, convertToKebabCase } = require('./utils');
 // $FlowFixMe
 module.createTemplate = createTemplate;
 
-const PATH_TO_GLUESTICK_TEMPLATES: string = '../../build/generator/predefined';
+const PATH_TO_GLUESTICK_TEMPLATES: string = '../../build/generators/predefined';
 const EXTERNAL: string = 'generators';
 const INTERNAL: string = './generators';
 
