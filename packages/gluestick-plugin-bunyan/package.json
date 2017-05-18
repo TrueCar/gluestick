@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-bunyan",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Plugin for supporting Bunyan in GlueStick project",
   "main": "build/server.js",
   "homepage": "https://github.com/TrueCar/gluestick",
