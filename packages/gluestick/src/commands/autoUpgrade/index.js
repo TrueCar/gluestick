@@ -14,7 +14,7 @@ module.exports = async ({ getLogger, getGluestickConfig, getPlugins }: CommandAP
     await autoUpgrade({
       logger,
       config: {
-        GSConfig: getGluestickConfig(logger, getPlugins()),
+        GSConfig: getGluestickConfig(logger, getPlugins(logger)),
       },
     });
   } catch (error) {
