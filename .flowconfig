@@ -3,6 +3,7 @@
 .*/node_modules/fbjs/.*
 # radium lib problems
 .*/node_modules/radium/.*
+.*/node_modules/.*/\(test\).*\.json$
 
 [include]
 
