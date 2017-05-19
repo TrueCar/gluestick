@@ -19,6 +19,9 @@
     "notify": true,
     "testRegex": ".*/__tests__/.*\\.test\\.js$"
   },
+  "peerDependencies": {
+    "gluestick": "1.9.2"
+  },
   "dependencies": {
     "bunyan": "^1.8.8"
   },

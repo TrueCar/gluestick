@@ -22,6 +22,7 @@
   "peerDependencies": {
     "babel-core": "6.x",
     "babel-traverse": "6.x",
+    "gluestick": "1.9.2",
     "webpack": "2.x"
   },
   "dependencies": {
