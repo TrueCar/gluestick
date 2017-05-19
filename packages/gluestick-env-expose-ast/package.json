@@ -33,6 +33,7 @@
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-traverse": "^6.22.1",
+    "gluestick": "1.9.2",
     "jest": "18.1.0",
     "webpack": "^2.5.0"
   }
