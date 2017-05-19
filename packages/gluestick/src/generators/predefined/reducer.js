@@ -5,13 +5,20 @@ import type { GeneratorOptions } from '../../types';
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
 
-const { convertToCamelCase, convertToKebabCase } = require('../../utils');
+const {
+  convertToCamelCase,
+  convertToKebabCase,
+  convertToPascalCase,
+  convertToCamelCaseWithPrefix,
+} = require('../../utils');
 const { getGeneratorPath } = require('../getDataFromPreset');
 
 module.exports = (options: GeneratorOptions) => {
   return require(getGeneratorPath('reducer'))({
     convertToCamelCase,
     convertToKebabCase,
+    convertToPascalCase,
+    convertToCamelCaseWithPrefix,
     createTemplate,
   })(options);
 };

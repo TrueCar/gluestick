@@ -5,6 +5,14 @@ import type { GeneratorOptions } from '../../types';
 const createTemplate = module.parent.createTemplate;
 /* END OF DO NOT MODIFY */
 
+const {
+  convertToCamelCase,
+  convertToKebabCase,
+  convertToPascalCase,
+  convertToCamelCaseWithPrefix,
+} = require('../../utils');
+const { getGeneratorPath } = require('../getDataFromPreset');
+
 const templateGitignore = require('../templates/gitignore')(createTemplate);
 const templateDockerignore = require('../templates/dockerignore')(createTemplate);
 const tag = require('../../../package.json').version;
@@ -22,6 +30,14 @@ const templateWebpackHooks = require('../templates/webpack.hooks')(createTemplat
 const templateCachingServer = require('../templates/caching.server')(createTemplate);
 
 module.exports = (options: GeneratorOptions) => {
+  const presetNewGenerator = require(getGeneratorPath('new'))({
+    convertToCamelCase,
+    convertToKebabCase,
+    convertToPascalCase,
+    convertToCamelCaseWithPrefix,
+    createTemplate,
+  })(options);
+
   const entries = [
     {
       path: '/',
@@ -96,7 +112,12 @@ module.exports = (options: GeneratorOptions) => {
       template: templateCachingServer,
     },
   ];
+
   return {
-    entries: options.skipMain ? entries.filter(o => !o.path.includes('apps/main')) : entries,
+    ...presetNewGenerator,
+    entries: [
+      ...presetNewGenerator.entries,
+      ...entries,
+    ],
   };
 };
