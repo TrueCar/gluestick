@@ -8,6 +8,6 @@ module.exports = (createTemplate: CreateTemplate, tag: String) => createTemplate
   # docker setup.
   FROM truecar/gluestick:${tag}
   ADD . /app
-  RUN yarn
+  RUN npm install
   RUN ASSET_URL=__GS_ASSET_URL__ gluestick build
 `;
