@@ -1,6 +1,6 @@
 {
   "name": "gluestick-preset-default",
-  "version": "1.9.1",
+  "version": "1.9.3",
   "description": "The default preset for GlueStick project",
   "main": "build/index.js",
   "homepage": "https://github.com/TrueCar/gluestick",

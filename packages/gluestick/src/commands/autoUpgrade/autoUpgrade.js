@@ -11,11 +11,10 @@ const updateDependencies = require('./updateDependencies');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 
-module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
+module.exports = ({ config, logger }: CLIContext) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
   const changedFiles: string[] = config.GSConfig.autoUpgrade.changed;
   const addedFiles: string[] = config.GSConfig.autoUpgrade.added;
-
   changedFiles.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
     const generatorEntry: Object = getSingleEntryFromGenerator(
@@ -50,9 +49,8 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
-
   // Update dependencies
-  return checkForMismatch(projectPackage, dev).then((results: UpdateDepsPromptResults): void => {
+  return checkForMismatch(projectPackage).then((results: UpdateDepsPromptResults): void => {
     if (results.shouldFix) {
       updateDependencies(logger, projectPackage, results.mismatchedModules);
     }
