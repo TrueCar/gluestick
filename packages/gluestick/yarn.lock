@@ -1667,9 +1667,9 @@ globals@^9.0.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
-gluestick-generators@1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.9.1.tgz#414bfccb87ddfc1b56894dbbebecb2619a6e1aee"
+gluestick-generators@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.9.2.tgz#77a772e54a864562c7eb4dc6d9cbf10849ad8a74"
   dependencies:
     mkdirp "^0.5.1"
 
@@ -3461,6 +3461,10 @@ process@^0.11.0:
 process@~0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
+
+progress@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
 
 promise@^7.0.3, promise@^7.1.1:
   version "7.1.1"
