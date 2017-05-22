@@ -9,7 +9,7 @@ module.exports = (generatorPath: string, entryFileName: string, options: Object)
   const compiledGenerator = generator(options);
   return compiledGenerator.entry
     ? compiledGenerator.entry
-    : generator(options).entries.find((entry: Object) => {
+    : compiledGenerator.entries.find((entry: Object) => {
       return (
         entry.filename === entryFileName ||
         `${entry.filename}${path.extname(entryFileName)}` === entryFileName

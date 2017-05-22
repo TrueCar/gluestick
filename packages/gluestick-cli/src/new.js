@@ -124,7 +124,7 @@ module.exports = (appName, options, exitWithError) => {
     .catch(error => {
       console.error(chalk.red(error.message));
       console.error('This error may occur due to the following reasons:');
-      console.error(' -> Cannot connect or make request to `registry.npmjs.org`');
+      console.error(` -> Cannot connect or make request to '${api}'`);
       console.error(' -> Specified preset was not found');
       process.exit(1);
     });

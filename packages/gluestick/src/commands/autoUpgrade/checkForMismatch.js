@@ -1,7 +1,6 @@
 /* @flow */
 import type { MismatchedModules, UpdateDepsPromptResults } from '../../types';
 
-const path = require('path');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 const utils = require('./utils');
@@ -46,13 +45,19 @@ const checkForMismatch = (
     devDependencies: {},
     ...requiredPackage,
   };
-  const pathToPackageGenerator: string = path.join(
-    require.resolve('gluestick-generators').split('gluestick-generators')[0],
-    'gluestick-generators',
-    'build/templates/package',
+  const pathToPackageJsonGenerator: string = require.resolve(
+    'gluestick-generators/build/generators/packageJson',
   );
   const packageGeneratorEntry: Object = getSingleEntryFromGenerator(
-    pathToPackageGenerator, 'package.json', { gluestickDependencies: { gluestick: version } },
+    pathToPackageJsonGenerator,
+    'package.json',
+    {
+      gluestickDependencies: { gluestick: version },
+      presetDependencies: {
+        dependencies: {},
+        devDependencies: {},
+      },
+    },
   );
   const templatePackage: ProjectPackage = JSON.parse(
     // $FlowIgnore template at this point will be a string
