@@ -104,7 +104,6 @@ module.exports = async (projectPackage: ProjectPackage): Promise<UpdateDepsPromp
       entry: packageJsonGeneratorEntry,
     }, {}).entry.template,
   );
-
   const mismatchedModules: MismatchedModules = {};
   const markMissing = (dep, type) => {
     mismatchedModules[dep] = {
@@ -113,21 +112,25 @@ module.exports = async (projectPackage: ProjectPackage): Promise<UpdateDepsPromp
       type,
     };
   };
-  Object.keys(packageJsonTemplate.dependencies).forEach((dep: string): void => {
+  Object.keys(normalizedProjectPackageJson.dependencies).forEach((dep: string): void => {
     if (dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])) {
       return;
     }
     if (
-      !projectPackage.dependencies[dep] ||
-      !isValidVersion(projectPackage.dependencies[dep], packageJsonTemplate.dependencies[dep])
+      !normalizedProjectPackageJson.dependencies[dep] ||
+      !isValidVersion(
+        normalizedProjectPackageJson.dependencies[dep], packageJsonTemplate.dependencies[dep],
+      )
     ) {
       markMissing(dep, 'dependencies');
     }
   });
   Object.keys(packageJsonTemplate.devDependencies).forEach((dep: string): void => {
     if (
-      !projectPackage.devDependencies[dep] ||
-      !isValidVersion(projectPackage.devDependencies[dep], packageJsonTemplate.devDependencies[dep])
+      !normalizedProjectPackageJson.devDependencies[dep] ||
+      !isValidVersion(
+        normalizedProjectPackageJson.devDependencies[dep], packageJsonTemplate.devDependencies[dep],
+      )
     ) {
       markMissing(dep, 'devDependencies');
     }

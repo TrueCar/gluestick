@@ -1,21 +1,29 @@
 /* @flow */
-jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
+jest.mock('../getSingleEntryFromGenerator.js', () => (path, name, options) => {
+  return {
+    dependencies: {
+      ...options.gluestickDependencies,
+      ...options.presetDependencies.dependencies,
+    },
+    devDependencies: options.presetDependencies.devDependencies,
+  };
+});
 jest.mock('gluestick-generators', () => ({
-  parseConfig: jest.fn(
-    () => ({
-      entry: {
-        template: JSON.stringify({
-          dependencies: {
-            depA: '2.0.0',
-            depB: '1.0.0',
-          },
-          devDependencies: {
-            depC: '1.0.0',
-          },
-        }),
+  parseConfig: v => ({ entry: { template: JSON.stringify(v.entry) } }),
+}));
+jest.mock('fs', () => ({
+  readFileSync: () => JSON.stringify({
+    version: '1.9.3',
+    gsProjectDependencies: {
+      dependencies: {
+        depA: '2.0.0',
+        depB: '1.0.0',
       },
-    }),
-  ),
+      devDependencies: {
+        depC: '1.0.0',
+      },
+    },
+  }),
 }));
 
 const utils = require('../utils');
@@ -33,9 +41,9 @@ describe('autoUpgrade/checkForMismatch', () => {
     utils.promptModulesUpdate = orignialPromptModulesUpdate;
   });
 
-  it('should detect mismatched modules', (done) => {
+  it('should detect mismatched modules from preset module', () => {
     // $FlowIgnore
-    checkForMismatch({
+    return checkForMismatch({
       dependencies: {
         depA: '1.0.0',
         depB: '1.0.0',
@@ -55,7 +63,10 @@ describe('autoUpgrade/checkForMismatch', () => {
           type: 'devDependencies',
         },
       });
-      done();
     });
+  });
+
+  it('should detect mismatched modules from api request', () => {
+
   });
 });
