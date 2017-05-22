@@ -11,7 +11,7 @@ type Options = {
   hideMissingConfigWarning: boolean;
 };
 
-const getConfigHook = (logger: Logger, { hideMissingConfigWarning }: Options): Function => {
+const getConfigHook = (logger: Logger, { hideMissingConfigWarning }: Options = {}): Function => {
   try {
     const configHooks: Function = requireModule(
       path.join(process.cwd(), defaultConfig.gluestickConfigPath),
@@ -26,7 +26,7 @@ const getConfigHook = (logger: Logger, { hideMissingConfigWarning }: Options): F
 };
 
 module.exports = (
-  logger: Logger, plugins: ConfigPlugin[], { hideMissingConfigWarning }: Options,
+  logger: Logger, plugins: ConfigPlugin[], { hideMissingConfigWarning }: Options = {},
 ): GSConfig => {
   if (!Array.isArray(plugins)) {
     throw new Error('Invalid plugins argument');
