@@ -164,6 +164,10 @@ describe('commands/test/test', () => {
           ['woff', 'css', 'alias1', 'alias2', 'html'].find((alias) => mapper.includes(alias)),
         ).not.toBeUndefined();
       });
+      
+      // Expect "html" (our custom mapper) to be the first regex to be evaluated
+      expect(Object.keys(jestConfig.moduleNameMapper)[0]).toEqual('html');
+      
       expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);
       expect(jestConfig.verbose).toBeTruthy();
     });

@@ -24,7 +24,9 @@ const mergeCustomConfig = (defaultConfig: Object): Object => {
     } else if (Object.prototype.toString.call(customConfig[curr]) !== '[object Object]') {
       value = customConfig[curr];
     } else {
-      value = { ...defaultConfig[curr], ...customConfig[curr] };
+      // Custom keys will take precedence (regex)
+      // Which will also mean we won't override exact same keys
+      value = { ...customConfig[curr], ...defaultConfig[curr] };
     }
     return {
       ...prev,
