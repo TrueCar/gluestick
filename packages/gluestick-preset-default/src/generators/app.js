@@ -4,7 +4,7 @@ import type { PredefinedGeneratorOptions, GeneratorUtils } from '../types';
 const templateIndex = require('../templates/Index');
 const templateEmpty = require('../templates/empty');
 const templateHomeCss = require('../templates/HomeCss.js');
-const templateRoutes = require('../templates/Routes');
+const templateRoutes = require('../templates/routes');
 const templateHome = require('../templates/Home');
 
 const templateMasterLayout = require('../templates/MasterLayout');
