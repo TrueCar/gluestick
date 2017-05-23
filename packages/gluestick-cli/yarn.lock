@@ -385,9 +385,9 @@ glob@7.1.1, glob@^7.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-gluestick-generators@1.9.2:
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.9.2.tgz#77a772e54a864562c7eb4dc6d9cbf10849ad8a74"
+gluestick-generators@1.9.3:
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.9.3.tgz#24b73d013ed22f7f6fffa319936eb48aa155d1c3"
   dependencies:
     mkdirp "^0.5.1"
 
