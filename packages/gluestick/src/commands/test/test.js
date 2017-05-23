@@ -11,7 +11,7 @@ const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
 const JEST_DEBUG_CONFIG_PATH = path.join(__dirname, 'jestEnvironmentNodeDebug.js');
 const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
-const mergeCustomConfig = (defaultConfig: Object): Object => {
+const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
   const customConfig: Object = require(path.join(process.cwd(), 'package.json')).jest;
   if (!customConfig) {
     return defaultConfig;
@@ -25,6 +25,13 @@ const mergeCustomConfig = (defaultConfig: Object): Object => {
       value = customConfig[curr];
     } else {
       value = { ...defaultConfig[curr], ...customConfig[curr] };
+      if (curr === 'moduleNameMapper') {
+        // Make sure aliases go always at the end of moduleNameMapper
+        // as Jest checks precedence inside this object
+        Object.keys(aliases).forEach((key) => {
+          value[`^${key}(.*)$`] = `${aliases[key]}$1`;
+        });
+      }
     }
     return {
       ...prev,
@@ -41,12 +48,6 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$'
   ] = `${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper['\\.(css|scss|sass|less)$'] = `${TEST_MOCKS_PATH}/styleMock.js`;
-
-  // We map webpack aliases from webpack-isomorphic-tools-config file
-  // so Jest can detect them in tests too
-  Object.keys(aliases).forEach((key) => {
-    moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
-  });
 
   const roots: string[] = ['src'];
   if (fs.existsSync(path.join(process.cwd(), 'test'))) {
@@ -69,7 +70,7 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
   };
 
   const argv: string[] = [];
-  argv.push('--config', JSON.stringify(mergeCustomConfig(config)));
+  argv.push('--config', JSON.stringify(mergeCustomConfig(config, aliases)));
   return argv;
 };
 

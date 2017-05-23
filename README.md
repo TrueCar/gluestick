@@ -48,6 +48,20 @@ gluestick start
 * [Plugins](docs/Plugins.md)
 * [Configuration](docs/Configuration.md)
 
+## Terms & Definitions
+
+* [`Gluestick`](https://github.com/TrueCar/gluestick) is a monorepo. It is published to npm with `Lerna` and contains depdent modules or "packages" for building Gluestick apps. The Gluestick repo uses Lerna [1](https://www.npmjs.com/package/lerna),[2](https://lernajs.io/) to help break what would otherwise be a potentially large code base in to smaller, versioned packages.
+* [`gluestick-cli`](https://github.com/TrueCar/gluestick/tree/next/packages/gluestick-cli) - A package in the Gluestick monorepo that acts as a thin wrapper for managing Gluestick apps from the command-line. With it you can create an app, destroy it, auto upgrade all of its dependent packages, etc... It has a few commands of its own, but several are proxied to your local Gluestick package.
+* [`gluestick`](https://github.com/TrueCar/gluestick/tree/next/packages/gluestick) - A package in the Gluestick monorepo that provides additional command line functionality for building for universal-React apps as well as the internals (guts) for driving the Gluestickm Universal React apps themselves.
+* [`Lerna`](https://github.com/lerna/lerna) - "A tool for managing JavaScript projects with multiple packages", or put another way: "Lerna is a tool that optimizes the workflow around managing multi-package repositories with git and npm." Packages are independent codebases that can be versioned and published to `npm`.
+
+## F.A.Q.s
+
+Q: *The main project is called "Gluestick", but the binary is called "gluestick-cli", but there's a package in the main project called "gluestick". What's up with that?*
+
+A: Gluestick is a monorepo. `gluestick-cli` is a sub-package in that repo that is deployed to `npm` and is used to manage Gluestick apps. `gluestick` (little 'g') is also a sub-package and contains the guts of Gluestick applications.
+
+
 ## Contributing
 
 For contributing instructions please see [contributon guide](CONTRIBUTING.md).
