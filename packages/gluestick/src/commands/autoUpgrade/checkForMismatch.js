@@ -112,8 +112,9 @@ module.exports = async (projectPackage: ProjectPackage): Promise<UpdateDepsPromp
       type,
     };
   };
-  Object.keys(normalizedProjectPackageJson.dependencies).forEach((dep: string): void => {
-    if (dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])) {
+
+  Object.keys(packageJsonTemplate.dependencies).forEach((dep: string): void => {
+    if (dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(normalizedProjectPackageJson.dependencies[dep])) {
       return;
     }
     if (
