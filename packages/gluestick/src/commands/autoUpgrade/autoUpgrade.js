@@ -53,6 +53,9 @@ module.exports = ({ config, logger }: CLIContext) => {
   return checkForMismatch(projectPackage).then((results: UpdateDepsPromptResults): void => {
     if (results.shouldFix) {
       updateDependencies(logger, projectPackage, results.mismatchedModules);
+      logger.success('Project updated');
+    } else {
+      logger.success('Project is already up-to-date');
     }
   });
 };
