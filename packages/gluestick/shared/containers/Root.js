@@ -89,6 +89,8 @@ export default class Root extends Component<DefaultProps, Props, State> {
 
         if (typeof customScrollBehavior === 'function') {
           return customScrollBehavior(prevRouterProps, location);
+        } else if (customScrollBehavior) {
+          throw new Error('useScroll prop must be a function');
         }
 
         // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
