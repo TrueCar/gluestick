@@ -129,6 +129,9 @@ module.exports = ({ config, logger }: Context) => {
       });
   });
 
+  // Call express App Hook which accept app as param.
+  hooksHelper.call(hooks.postServerRun, app);
+
   // 404 handler
   // @TODO: support custom 404 error page
   app.use((req: Request, res: Response) => {
@@ -137,9 +140,6 @@ module.exports = ({ config, logger }: Context) => {
   });
 
   const server: Object = app.listen(config.GSConfig.ports.server);
-
-  // Call express App Hook which accept app as param.
-  hooksHelper.call(hooks.postServerRun, app);
 
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
