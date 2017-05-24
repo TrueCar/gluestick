@@ -73,27 +73,40 @@ export default class Root extends Component<DefaultProps, Props, State> {
   }
 
   _renderRouter(props: Props): Object | Component<*, *, *> {
-    const {
-      routes,
-      routerContext,
-      routerHistory,
-    } = props;
-
     // server rendering
-    if (routerContext) return routerContext;
+    if (props.routerContext) return props.routerContext;
 
     // router middleware
     const render: Function = applyRouterMiddleware(
-      useScroll((prevRouterProps, results) => {
+      useScroll((prevRouterProps, { location, routes }) => {
+        // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
+        // behaviour.
+        const { useScroll: customScrollBehavior } = routes.find(route => (
+          route.useScroll &&
+          prevRouterProps &&
+          prevRouterProps.location.pathname !== location.pathname
+        )) || {};
+
+        if (typeof customScrollBehavior === 'function') {
+          return customScrollBehavior(prevRouterProps, location);
+        } else if (customScrollBehavior) {
+          throw new Error('useScroll prop must be a function');
+        }
+
         // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
         // route components in the app. e.g.
         // <Route ignoreScrollBehavior={true} path="mypage" component={MyComponent} />
-        if (results.routes.some(route => route.ignoreScrollBehavior)) {
+        if (routes.some(route => route.ignoreScrollBehavior)) {
           return false;
         }
         return true;
       }),
     );
+
+    const {
+      routes,
+      routerHistory,
+    } = props;
 
     return (
       <Router history={routerHistory} render={render}>
