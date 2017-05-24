@@ -74,7 +74,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
 
   _renderRouter(props: Props): Object | Component<*, *, *> {
     // server rendering
-    if (props.routerContext) return routerContext;
+    if (props.routerContext) return props.routerContext;
 
     // router middleware
     const render: Function = applyRouterMiddleware(
@@ -103,7 +103,6 @@ export default class Root extends Component<DefaultProps, Props, State> {
 
     const {
       routes,
-      routerContext,
       routerHistory,
     } = props;
 
