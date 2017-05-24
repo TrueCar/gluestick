@@ -16,6 +16,10 @@ jest.mock('cwd/custom/package.json', () => ({
     },
   },
 }), { virtual: true });
+jest.mock('cwd/custom2/package.json', () => ({
+  jest: {},
+}), { virtual: true });
+
 
 const commandApi = require('../../../__tests__/mocks/context').commandApi;
 const testCommand = require('../test');
@@ -178,6 +182,35 @@ describe('commands/test/test', () => {
 
       expect(Object.keys(jestConfig.globals).length).toBe(1);
       expect(jestConfig.globals.__DEV__).toBe(true);
+    });
+
+    it('should run jest directly with merged default and custom config (no custom moduleNameMapper)', () => {
+      path.join = () => 'cwd/empty/package.json';
+      fs.existsSync = jest.fn(() => true);
+      testCommand(getMockedCommandApi({
+        alias1: 'path/to/alias1',
+        alias2: 'path/to/alias2',
+      }, [
+        { test: /\.js$/ },
+        { test: /\.scss$/ },
+        { test: /\.css$/ },
+        { test: /\.woff$/ },
+        { test: /\.png$/ },
+        { test: /\.ttf$/ },
+      ]), [{
+        debugTest: false,
+        parent: {
+          rawArgs: ['', '', ''],
+        },
+      }]);
+      path.join = originalPathJoin;
+      const jestConfig = JSON.parse(jestMock.run.mock.calls[0][0][1]);
+
+      const moduleMapperKeys = Object.keys(jestConfig.moduleNameMapper);
+      console.log(moduleMapperKeys);
+      expect(moduleMapperKeys[2]).toEqual('^alias1(.*)$');
+      expect(moduleMapperKeys[3]).toEqual('^alias2(.*)$');
+      expect(moduleMapperKeys.length).toBe(4);
     });
   });
 });
