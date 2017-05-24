@@ -17,7 +17,7 @@ const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
     return defaultConfig;
   }
 
-  return Object.keys(customConfig).reduce((prev: Object, curr: string): Object => {
+  const config = Object.keys(customConfig).reduce((prev: Object, curr: string): Object => {
     let value: any = null;
     if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
       value = defaultConfig[curr].concat(customConfig[curr]);
@@ -25,19 +25,20 @@ const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
       value = customConfig[curr];
     } else {
       value = { ...defaultConfig[curr], ...customConfig[curr] };
-      if (curr === 'moduleNameMapper') {
-        // Make sure aliases go always at the end of moduleNameMapper
-        // as Jest checks precedence inside this object
-        Object.keys(aliases).forEach((key) => {
-          value[`^${key}(.*)$`] = `${aliases[key]}$1`;
-        });
-      }
     }
     return {
       ...prev,
       [curr]: value,
     };
   }, defaultConfig);
+
+  // Make sure aliases go always at the end of moduleNameMapper
+  // as Jest checks precedence inside this object
+  Object.keys(aliases).forEach((key) => {
+    config.moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
+  });
+
+  return config;
 };
 
 const getJestDefaultConfig = (aliases: Object): string[] => {

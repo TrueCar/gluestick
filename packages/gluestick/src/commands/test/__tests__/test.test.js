@@ -16,6 +16,15 @@ jest.mock('cwd/custom/package.json', () => ({
     },
   },
 }), { virtual: true });
+jest.mock('cwd/custom2/package.json', () => ({
+  jest: {
+    roots: ['customRoot'],
+    verbose: true,
+    globals: {
+      __DEV__: true,
+    },
+  },
+}), { virtual: true });
 
 const commandApi = require('../../../__tests__/mocks/context').commandApi;
 const testCommand = require('../test');
@@ -172,6 +181,47 @@ describe('commands/test/test', () => {
       expect(moduleMapperKeys[3]).toEqual('^alias1(.*)$');
       expect(moduleMapperKeys[4]).toEqual('^alias2(.*)$');
       expect(moduleMapperKeys.length).toBe(5);
+
+      expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);
+      expect(jestConfig.verbose).toBeTruthy();
+
+      expect(Object.keys(jestConfig.globals).length).toBe(1);
+      expect(jestConfig.globals.__DEV__).toBe(true);
+    });
+
+    it('should run jest directly with merged default and custom config (no custom moduleNameMapper)', () => {
+      path.join = () => 'cwd/custom2/package.json';
+      fs.existsSync = jest.fn(() => true);
+      testCommand(getMockedCommandApi({
+        alias1: 'path/to/alias1',
+        alias2: 'path/to/alias2',
+      }, [
+        { test: /\.js$/ },
+        { test: /\.scss$/ },
+        { test: /\.css$/ },
+        { test: /\.woff$/ },
+        { test: /\.png$/ },
+        { test: /\.ttf$/ },
+      ]), [{
+        debugTest: false,
+        parent: {
+          rawArgs: ['', '', ''],
+        },
+      }]);
+      path.join = originalPathJoin;
+      expect(jestMock.run.mock.calls.length).toBe(1);
+      const jestConfig = JSON.parse(jestMock.run.mock.calls[0][0][1]);
+      expect(jestMock.run.mock.calls[0][0].indexOf('--config')).toBeGreaterThan(-1);
+
+      // Precedence before aliases
+      const moduleMapperKeys = Object.keys(jestConfig.moduleNameMapper);
+      expect(moduleMapperKeys[0]).toEqual(
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$',
+      );
+      expect(moduleMapperKeys[1]).toEqual('\\.(css|scss|sass|less)$');
+      expect(moduleMapperKeys[2]).toEqual('^alias1(.*)$');
+      expect(moduleMapperKeys[3]).toEqual('^alias2(.*)$');
+      expect(moduleMapperKeys.length).toBe(4);
 
       expect(jestConfig.roots).toEqual(['src', 'test', 'customRoot']);
       expect(jestConfig.verbose).toBeTruthy();
