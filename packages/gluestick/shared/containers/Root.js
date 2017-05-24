@@ -82,9 +82,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
         // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
         // behaviour.
         const { useScroll: customScrollBehavior } = routes.find(route => (
-          route.useScroll &&
-          prevRouterProps &&
-          prevRouterProps.location.pathname !== location.pathname
+          route.useScroll
         )) || {};
 
         if (typeof customScrollBehavior === 'function') {
