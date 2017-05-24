@@ -13,11 +13,8 @@ const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
   const customConfig: Object = require(path.join(process.cwd(), 'package.json')).jest;
-  if (!customConfig) {
-    return defaultConfig;
-  }
 
-  return Object.keys(customConfig).reduce((prev: Object, curr: string): Object => {
+  const config = Object.keys(customConfig || {}).reduce((prev: Object, curr: string): Object => {
     let value: any = null;
     if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
       value = defaultConfig[curr].concat(customConfig[curr]);
@@ -25,19 +22,20 @@ const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
       value = customConfig[curr];
     } else {
       value = { ...defaultConfig[curr], ...customConfig[curr] };
-      if (curr === 'moduleNameMapper') {
-        // Make sure aliases go always at the end of moduleNameMapper
-        // as Jest checks precedence inside this object
-        Object.keys(aliases).forEach((key) => {
-          value[`^${key}(.*)$`] = `${aliases[key]}$1`;
-        });
-      }
     }
     return {
       ...prev,
       [curr]: value,
     };
   }, defaultConfig);
+
+  // Make sure aliases go always at the end of moduleNameMapper
+  // as Jest checks precedence inside this object
+  Object.keys(aliases).forEach((key) => {
+    config.moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
+  });
+
+  return config;
 };
 
 const getJestDefaultConfig = (aliases: Object): string[] => {
