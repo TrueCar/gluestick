@@ -13,11 +13,8 @@ const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
   const customConfig: Object = require(path.join(process.cwd(), 'package.json')).jest;
-  if (!customConfig) {
-    return defaultConfig;
-  }
 
-  const config = Object.keys(customConfig).reduce((prev: Object, curr: string): Object => {
+  const config = Object.keys(customConfig || {}).reduce((prev: Object, curr: string): Object => {
     let value: any = null;
     if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
       value = defaultConfig[curr].concat(customConfig[curr]);
