@@ -34,7 +34,6 @@ module.exports = (
     return Object.assign(prev, {
       [curr]: [
         'babel-polyfill',
-        'eventsource-polyfill',
         config.entry[curr],
       ],
     });

@@ -23,6 +23,7 @@ module.exports = (
   configuration.entry = Object.keys(configuration.entry).reduce((prev, curr) => {
     return Object.assign(prev, {
       [curr]: [
+        'eventsource-polyfill',
         'react-hot-loader/patch',
         `webpack-hot-middleware/client?path=http://${devServerHost}:${devServerPort}/__webpack_hmr`,
         'webpack/hot/only-dev-server',
