@@ -11,7 +11,7 @@ import type {
 const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
-const DeplicatePackageChecker = require('duplicate-package-checker-webpack-plugin')
+const DeplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
