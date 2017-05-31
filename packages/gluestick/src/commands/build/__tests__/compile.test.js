@@ -35,6 +35,7 @@ describe('commands/build/compile', () => {
     webpack.run.mock.calls[0][0](null, { toJson: jest.fn(() => ({ time: 0 })) });
     return promise.then(() => {
       expect(context.logger.success).toHaveBeenCalledWith('Test bundle has been prepared for test in 0.00s');
+      // $FlowIgnore createWebpackStats is mocked
       expect(createWebpackStats.mock.calls[0][0]).toEqual('-test');
     });
   });
