@@ -43,7 +43,7 @@ commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
-  .option('-E --entry-point <entryPoint>', 'entry point for generated files (same as -A)')
+  .option('-E --entrypoint <entryPoint>', 'entry point for generated files (same as -A)')
   .option('-A --app <appName>', 'app in which to generate files (same as -E)')
   .option(...statelessFunctionalOption)
   .option('-O, --gen-options <value>', 'options to pass to the generator')
@@ -55,7 +55,7 @@ commander
   .command('destroy <container|component|reducer>')
   .description('destroy a generated container')
   .arguments('<name>')
-  .option('-E --entry-point <entryPoint>', 'entry point (app) from which entity should be removed (same as -A)')
+  .option('-E --entrypoint <entryPoint>', 'entry point (app) from which entity should be removed (same as -A)')
   .option('-A --app <appName>', 'app from which entity should be removed (same as -E)')
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/destroy')(commandApi, commandArguments);
