@@ -11,7 +11,7 @@ import type {
 const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
-const DeplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
+const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
@@ -57,7 +57,7 @@ module.exports = (
     // Make it so *.server.js files return null in client
     new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
     progressHandler(logger, 'client'),
-    new DeplicatePackageChecker(),
+    new DuplicatePackageChecker(),
   );
   return () => config;
 };
