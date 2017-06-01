@@ -11,7 +11,7 @@ const getAliasesForApps = require('./getAliasesForApps');
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
 
-module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
+module.exports = (gluestickConfig: GSConfig, publicPath = '/assets/'): WebpackConfig => {
   const appRoot: string = process.cwd();
   const {
     buildAssetsPath,
@@ -45,7 +45,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       path: outputPath,
 
       // network path for static files
-      publicPath: '/assets/',
+      publicPath,
 
       // file name pattern for entry scripts
       filename: '[name].[chunkhash].js',

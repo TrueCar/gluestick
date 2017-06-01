@@ -69,8 +69,21 @@ module.exports = (
     ? []
     : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
+  const { assetPath: publicPath } = requireModule(
+    path.join(
+      process.cwd(),
+      gluestickConfig.sourcePath,
+      gluestickConfig.configPath,
+      `${gluestickConfig.applicationConfigPath}.js`,
+    ),
+  );
+
   // Get shared config between client and server.
-  const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
+  const sharedConfig: WebpackConfig = getSharedConfig(
+    gluestickConfig,
+    `${publicPath}/`.replace('//', '/'),
+  );
+  logger.warn(sharedConfig.output);
 
   // Apply pre overwriters from config plugins to shared webpack config.
   const sharedConfigFinal: WebpackConfig = plugins
@@ -93,7 +106,6 @@ module.exports = (
     gluestickConfig.ports.client,
     gluestickConfig.host,
   );
-
   // Get runtime and server plugins, both runtime and server plugins in this case
   // won't be included in client bundles but in server aka renderer bundle.
   // `./webpack/buildServerEntries.js` will invoke generator that will output
@@ -185,6 +197,8 @@ module.exports = (
           : originalHandler(ctx, req, cb);
     });
   }
+
+  // logger.info(clientEnvConfigFinal);
 
   return {
     universalSettings: universalWebpackSettings,
