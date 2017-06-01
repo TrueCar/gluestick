@@ -12,7 +12,7 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
   const child: Object = spawn(
     'node',
     [entryPointPath].concat(args),
-    { stdio: ['ipc', 'inherit', 'inherit'] },
+    { stdio: ['ipc', 'pipe', 'inherit'] },
   );
   child.on('error', (error) => {
     throw new Error(error);
@@ -41,6 +41,15 @@ module.exports = ({ config, logger }: CLIContext) => {
         reject('Renderer failed to start');
       }
     });
+    if (process.env.NODE_ENV === 'production') {
+      child.stdout.on('data', data => {
+        if (data.toString().includes('Renderer listening')) {
+          resolve();
+        } else if (data.toString().includes('ERROR')) {
+          reject('Renderer failed to start');
+        }
+      });
+    }
   }).then(() => {
     clearBuildDirectory(config.GSConfig, 'static');
     mkdir.sync(path.join(process.cwd(), config.GSConfig.buildStaticPath));
