@@ -11,7 +11,7 @@ const getAliasesForApps = require('./getAliasesForApps');
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
 
-module.exports = (gluestickConfig: GSConfig, publicPath = '/assets/'): WebpackConfig => {
+module.exports = (gluestickConfig: GSConfig, publicPath?: string = '/assets/'): WebpackConfig => {
   const appRoot: string = process.cwd();
   const {
     buildAssetsPath,

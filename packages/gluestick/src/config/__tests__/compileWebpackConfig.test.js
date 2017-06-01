@@ -8,6 +8,7 @@ jest.mock('src/webpack.hooks.js', () => ({
   webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
   webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
 }), { virtual: true });
+jest.mock('src/config/application.js', () => ({}), { virtual: true });
 
 const compileWebpackConfig = require('../compileWebpackConfig');
 const defaultGSConfig = require('../defaults/glueStickConfig');
