@@ -55,7 +55,7 @@ module.exports = (
 
   const { webpackConfig, GSConfig } = getContextConfig(logger, {
     skipServerEntryGeneration: true,
-    entryOrGroupToBuild: options.entrypoints,
+    entryOrGroupToBuild: options.entrypoints || options.app,
   });
 
   const configuration: WebpackConfig = webpackConfig.client;

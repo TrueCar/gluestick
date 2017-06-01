@@ -23,10 +23,18 @@ jest.mock('entries.json', () => ({
     reducers: 'path/to/profile/reducers',
     group: ['test-group-3'],
   },
+  '/awesome-shop': {
+    name: 'shop',
+    component: 'path/to/shop/component',
+    routes: 'path/to/shop/routes',
+    reducers: 'path/to/shop/reducers',
+  },
 }), { virtual: true });
 jest.mock('entries-invalid.json', () => ({
   '/main': {},
 }), { virtual: true });
+
+const gluestickConfig = require('../../../__tests__/mocks/context').gsConfig;
 
 const path = require('path');
 const prepareEntries = require('../prepareEntries');
@@ -45,65 +53,61 @@ describe('config/webpack/prepareEntries', () => {
 
   it('should return every entry', () => {
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({})),
+      Object.keys(prepareEntries(gluestickConfig)),
     ).toEqual([
       '/',
       '/home',
       '/user',
       '/profile',
+      '/awesome-shop',
     ]);
   });
 
   it('should return single entry', () => {
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, '/')),
+      Object.keys(prepareEntries(gluestickConfig, '/main')),
     ).toEqual([
       '/',
     ]);
+
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, '/main')),
-    ).toEqual([
-      '/',
-    ]);
-    expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, '/home')),
+      Object.keys(prepareEntries(gluestickConfig, '/home')),
     ).toEqual([
       '/home',
     ]);
+
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, '/profile')),
+      Object.keys(prepareEntries(gluestickConfig, '/profile')),
     ).toEqual([
       '/profile',
     ]);
+
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, '/user')),
+      Object.keys(prepareEntries(gluestickConfig, '/user')),
     ).toEqual([
       '/user',
+    ]);
+
+    expect(
+      Object.keys(prepareEntries(gluestickConfig, '/shop')),
+    ).toEqual([
+      '/awesome-shop',
     ]);
   });
 
   it('should return entries matching group', () => {
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, 'test-group-1')),
+      Object.keys(prepareEntries(gluestickConfig, 'test-group-1')),
     ).toEqual([
       '/home',
     ]);
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, 'test-group-2')),
+      Object.keys(prepareEntries(gluestickConfig, 'test-group-2')),
     ).toEqual([
       '/user',
     ]);
     expect(
-      // $FlowIgnore
-      Object.keys(prepareEntries({}, 'test-group-3')),
+      Object.keys(prepareEntries(gluestickConfig, 'test-group-3')),
     ).toEqual([
       '/home',
       '/profile',
@@ -113,8 +117,13 @@ describe('config/webpack/prepareEntries', () => {
   it('should throw error is entry key is `/main`', () => {
     path.join = jest.fn(() => 'entries-invalid.json');
     expect(() => {
-      // $FlowIgnore
-      prepareEntries({});
+      prepareEntries(gluestickConfig);
     }).toThrowError('`/main` cannot be used as entry key, as `main` is a reserved word');
+  });
+
+  it('should throw error if no entry is mathing specified app or group', () => {
+    expect(() => {
+      prepareEntries(gluestickConfig, '/should-not-find');
+    }).toThrowError('No matching entry found');
   });
 });
