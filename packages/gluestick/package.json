@@ -85,6 +85,7 @@
     "commander": "2.9.0",
     "compression": "1.6.2",
     "cross-spawn": "5.0.1",
+    "duplicate-package-checker-webpack-plugin": "1.2.4",
     "electrode-react-ssr-caching": "^0.1.5",
     "enzyme": "2.7.1",
     "eventsource-polyfill": "0.9.6",
