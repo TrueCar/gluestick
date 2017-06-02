@@ -60,23 +60,23 @@ describe('command/destroy', () => {
 
     describe('when invalid arguments are provided', () => {
       it('reports an error when (container|component|reducer) is not specified', () => {
-        destroy(commandApi, ['blah', '', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['blah', '', { entrypoint: 'shared' }]);
         expect(errorLogger).toBeCalledWith(`${chalk.bold('blah')} is not a valid destroy command.`);
       });
 
       it('reports an error when a name only consists of whitespace', () => {
-        destroy(commandApi, ['component', ' ', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['component', ' ', { entrypoint: 'shared' }]);
         expect(errorLogger).toBeCalledWith(`${chalk.bold(' ')} is not a valid name.`);
       });
 
       it('reports an error when the specified name does not exist', () => {
-        destroy(commandApi, ['component', 'somethingthatdoesnotexist', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['component', 'somethingthatdoesnotexist', { entrypoint: 'shared' }]);
         expect(errorLogger.mock.calls[0][0]).toContain('does not exist');
       });
 
       it('should ask whether to continue if the name does not match (case sensitive)', async () => {
         inquirer.prompt = jest.fn().mockImplementation(() => Promise.resolve({ confirm: true }));
-        await destroy(commandApi, ['component', 'testComponent', { entryPoint: 'shared' }]);
+        await destroy(commandApi, ['component', 'testComponent', { entrypoint: 'shared' }]);
         expect(inquirer.prompt).toHaveBeenCalledTimes(1);
       });
     });
@@ -85,7 +85,15 @@ describe('command/destroy', () => {
       it('removes the specified component and its associated test', () => {
         expect(fileExists('src/shared/components/TestComponent.js')).toEqual(true);
         expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(true);
-        destroy(commandApi, ['component', 'TestComponent', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['component', 'TestComponent', { entrypoint: 'shared' }]);
+        expect(fileExists('src/shared/components/TestComponent.js')).toEqual(false);
+        expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(false);
+      });
+
+      it('removes the specified component and its associated test unsing app option', () => {
+        expect(fileExists('src/shared/components/TestComponent.js')).toEqual(true);
+        expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(true);
+        destroy(commandApi, ['component', 'TestComponent', { app: 'shared' }]);
         expect(fileExists('src/shared/components/TestComponent.js')).toEqual(false);
         expect(fileExists('src/shared/components/__tests__/TestComponent.test.js')).toEqual(false);
       });
@@ -93,7 +101,7 @@ describe('command/destroy', () => {
       it('removes the specified reducer and its associated test', () => {
         expect(fileExists('src/shared/reducers/testReducer.js')).toEqual(true);
         expect(fileExists('src/shared/reducers/__tests__/testReducer.test.js')).toEqual(true);
-        destroy(commandApi, ['reducer', 'testReducer', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['reducer', 'testReducer', { entrypoint: 'shared' }]);
         expect(fileExists('src/shared/reducers/testReducer.js')).toEqual(false);
         expect(fileExists('src/shared/reducers/__tests__/testReducer.test.js')).toEqual(false);
       });
@@ -111,14 +119,14 @@ describe('command/destroy', () => {
           + '};\n';
         const reducersIndexPath = path.join(rootDir, 'src/shared/reducers/index.js');
         fs.writeFileSync(reducersIndexPath, reducerIndexBefore);
-        destroy(commandApi, ['reducer', 'testReducer', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['reducer', 'testReducer', { entrypoint: 'shared' }]);
         expect(fs.readFileSync(reducersIndexPath)).toEqual(reducerIndexAfter);
       });
 
       it('removes the specified container and its associated test', () => {
         expect(fileExists('src/shared/containers/TestContainer.js')).toEqual(true);
         expect(fileExists('src/shared/containers/__tests__/TestContainer.test.js')).toEqual(true);
-        destroy(commandApi, ['container', 'TestContainer', { entryPoint: 'shared' }]);
+        destroy(commandApi, ['container', 'TestContainer', { entrypoint: 'shared' }]);
         expect(fileExists('src/shared/containers/TestContainer.js')).toEqual(false);
         expect(fileExists('src/shared/containers/__tests__/TestContainer.test.js')).toEqual(false);
       });
@@ -135,7 +143,7 @@ describe('command/destroy', () => {
     it('removes the files under the directory', () => {
       expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(true);
       expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(true);
-      destroy(commandApi, ['component', 'dir/TestComponent', { entryPoint: 'shared' }]);
+      destroy(commandApi, ['component', 'dir/TestComponent', { entrypoint: 'shared' }]);
       expect(errorLogger).not.toHaveBeenCalled();
       expect(fileExists('src/shared/components/dir/TestComponent.js')).toEqual(false);
       expect(fileExists('src/shared/components/dir/__tests__/TestComponent.test.js')).toEqual(false);

@@ -25,7 +25,8 @@ const availableCommands = {
 type Command = 'container' | 'component' | 'reducer';
 
 type Options = {
-  entryPoint?: string;
+  entrypoint?: string;
+  app?: string;
 }
 
 module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]) => {
