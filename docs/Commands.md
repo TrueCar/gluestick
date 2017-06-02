@@ -27,7 +27,7 @@ gluestick generate <ENTITY_TYPE> <ENTITY_NAME>
 
 Available options:
 
-* `-E --entry-point <entryPoint>` - Entry point for generated files
+* `-A --app <appName>` - App in which to generate files (eg: `main`, `shared`)
 * `-F, --functional` - Generate stateless functional component
 * `-O, --gen-options <value>` - Options to pass to the generator (see [generators](Generators.md))
 
@@ -45,7 +45,7 @@ gluestick destory <ENTITY_TYPE> <ENTITY_NAME>
 
 Available options:
 
-* `-E --entry-point <entryPoint>` - Entry point (app) from which entity should be removed
+* `-A --app <appName>` - App from which entity should be removed (eg: `main`, `shared`)s
 
 ### `gluestick start`
 
@@ -71,7 +71,7 @@ Available options:
 * `-T, --run-tests` - Run test hook
 * `-L, --log-level <level>` - Set the logging level
   * Valid options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent`
-* `-E, --entry-point <entryPoint>` - Specify which entry (or group of them) to build and run, entry must match it's key (eg: `/home`) in `src/entries.json` or group it is assigned to (eg: `profile-apps`)
+* `-A, --app <appName>` - Specify which app (or group of them) to build and run (see [resolving apps to build and run](#resolving-apps-to-build-and-run))
 * `-D, --debug-server` - Debug server side rendering with built-in node inspector
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
@@ -220,3 +220,12 @@ To switch to _machine friendly_ mode, one of the folling condition must be met:
 * `CD` must be set (to whatever value)
 
 However, if you want to overwrite this behaviour pass `GS_LOG_PRETTY=true` when running a command.
+
+## Resolving apps to build and run
+When you run `start` command you can specify which app or which group of apps to build and run. It's worth knowing how resolving algorithm works:
+
+If passed value (`appName`) starts with `/`, it will build and run single app, which has `name` property equal to passed value. If `name` property is not defined, it will camelCase app key and check if it equals passed value.
+
+To run app with `/` key in `src/entries.json`, you need to pass `/main`.
+
+If passed value doesn't start with `/` it will check `group` property to check if the app is assigned to any group then if it's assigned to passed group name. Please not that, all group names will be converted to camelCase.

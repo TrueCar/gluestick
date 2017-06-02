@@ -19,9 +19,11 @@ module.exports = (
 
       const buildName: string = `${buildType[0].toUpperCase()}${buildType.slice(1)}`;
 
+      const buildTime = stats.toJson({ timing: true }).time;
+
       logger.success(
         `${buildName} bundle has been prepared `
-        + `for ${process.env.NODE_ENV || 'development'}`,
+        + `for ${process.env.NODE_ENV || 'development'} in ${(buildTime / 1000).toFixed(2)}s`,
       );
 
       if (buildType === 'client') {
