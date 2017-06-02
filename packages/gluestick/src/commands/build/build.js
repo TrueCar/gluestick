@@ -4,12 +4,16 @@ import type { Logger, CommandAPI } from '../../types.js';
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 const compile = require('./compile');
+const vendorDll = require('../../config/vendorDll');
 
 type CommandOptions = {
   stats: boolean;
   client: boolean;
   server: boolean;
   static: boolean;
+  app?: string;
+  buildVendor: boolean;
+  excludeVendor: boolean;
 }
 
 module.exports = (
@@ -24,17 +28,26 @@ module.exports = (
   // set them both to true to compile both client and server.
   if (!options.client && !options.server) {
     options.client = true;
-    options.server = true;
+    // If app is passed by default disable server compilation.
+    if (options.app) {
+      logger.info('Disabling server compilation, you can enable it by passing `--server`');
+    }
+    options.server = !options.app;
   }
 
   if (options.static && (!options.client || !options.server)) {
     logger.fatal('--static options must be used with both client and server build');
   }
 
-  const config = getContextConfig(logger, {
+  const webpackOptions: Object = {
     skipClientEntryGeneration: !options.client,
     skipServerEntryGeneration: !options.server,
-  });
+  }
+  if (options.app) {
+    webpackOptions.entryOrGroupToBuild = options.app;
+  }
+
+  const config = getContextConfig(logger, webpackOptions);
 
   const compilationErrorHandler = (type: string) => error => {
     logger.clear();
@@ -44,7 +57,12 @@ module.exports = (
   let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    clientCompilation = compile({ logger, config }, options, 'client')
+    if (options.buildVendor || !vendorDll.isValid()) {
+      config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
+      clientCompilation = compile({ logger, config }, options, 'vendor')
+    }
+    clientCompilation
+      .then(() => compile({ logger, config }, options, 'client'))
       .catch(compilationErrorHandler('client'));
   }
 

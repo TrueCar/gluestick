@@ -87,6 +87,7 @@ commander
 commander
   .command('build')
   .description('create production asset build')
+  .option('-A, --app', '@TODO')
   .option('-S, --stats', 'create webpack stats file')
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
