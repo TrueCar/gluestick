@@ -11,9 +11,9 @@ type CommandOptions = {
   client: boolean;
   server: boolean;
   static: boolean;
+  vendor: boolean;
+  bailIfOk: boolean;
   app?: string;
-  buildVendor: boolean;
-  excludeVendor: boolean;
 }
 
 module.exports = (
@@ -57,10 +57,10 @@ module.exports = (
   let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    if (options.buildVendor || !vendorDll.isValid()) {
-      config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
-      clientCompilation = compile({ logger, config }, options, 'vendor')
-    }
+    // if (options.buildVendor || !vendorDll.isValid()) {
+    //   config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
+    //   clientCompilation = compile({ logger, config }, options, 'vendor')
+    // }
     clientCompilation
       .then(() => compile({ logger, config }, options, 'client'))
       .catch(compilationErrorHandler('client'));
