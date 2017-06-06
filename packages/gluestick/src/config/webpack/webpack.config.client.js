@@ -63,8 +63,11 @@ module.exports = (
   );
 
   // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
-  const vendorDllManifestPath = path.join(process.cwd(), gluestickConfig.buildDllPath, manifestFilename);
+  const vendorDllManifestPath: string = path.join(
+    process.cwd(), gluestickConfig.buildDllPath, manifestFilename,
+  );
   if (fs.existsSync(vendorDllManifestPath)) {
+    logger.info('Vendor DLL bundle found, using DllReferencePlugin');
     config.plugins.unshift(
       new webpack.DllReferencePlugin({
         context: configuration.context,
@@ -72,6 +75,7 @@ module.exports = (
       }),
     );
   } else {
+    logger.info('Vendor DLL bundle not found, using CommonsChunkPlugin');
     config.plugins.push(
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
