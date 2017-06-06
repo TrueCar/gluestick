@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 
+const manifestFilename: string = 'vendor-manifest.json';
+
 const isValid = ({ logger, config }) => {
   // @TODO
   return false;
@@ -31,7 +33,7 @@ const getConfig = ({ logger, config }) => {
       }),
       new webpack.DllPlugin({
         // The manifest we will use to reference the libraries
-        path: path.join(buildDllPath, '[name]-manifest.json'),
+        path: path.join(buildDllPath, manifestFilename.replace('vendor', '[name]')),
         name: '[name]_[hash]',
       }),
       new webpack.optimize.UglifyJsPlugin({
@@ -46,14 +48,18 @@ const getConfig = ({ logger, config }) => {
 
 const getBundleName = ({ config }): string => {
   const { buildDllPath } = config.GSConfig;
-  const manifestPath: string = path.join(process.cwd(), buildDllPath, 'vendor-manifest.json');
+  const manifestPath: string = path.join(process.cwd(), buildDllPath, manifestFilename);
   // Can't require it, because it will throw an error on server
   const { name } = JSON.parse(fs.readFileSync(manifestPath));
-  return `/assets/dlls/${name.replace('_', '-')}.dll.js`;
+  // It will be used by server thus compiled by webpack, so then we have access to
+  // webpack's public path
+  const publicPath: string = __webpack_public_path__ || '/assets/'; // eslint-disable-line
+  return `${publicPath}dlls/${name.replace('_', '-')}.dll.js`;
 };
 
 module.exports = {
   isValid,
   getConfig,
   getBundleName,
+  manifestFilename,
 };

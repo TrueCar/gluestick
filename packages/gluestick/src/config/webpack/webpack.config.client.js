@@ -17,6 +17,7 @@ const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
 const { updateBabelLoaderConfig } = require('./utils');
+const { manifestFilename } = require('../vendorDll');
 
 module.exports = (
   logger: Logger,
@@ -62,7 +63,7 @@ module.exports = (
   );
 
   // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
-  const vendorDllManifestPath = path.join(process.cwd(), gluestickConfig.buildDllPath, 'vendor-manifest.json');
+  const vendorDllManifestPath = path.join(process.cwd(), gluestickConfig.buildDllPath, manifestFilename);
   if (fs.existsSync(vendorDllManifestPath)) {
     config.plugins.unshift(
       new webpack.DllReferencePlugin({
