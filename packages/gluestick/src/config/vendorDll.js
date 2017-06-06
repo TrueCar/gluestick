@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const progressHandler = require('./webpack/progressHandler');
 
 const manifestFilename: string = 'vendor-manifest.json';
 
@@ -41,6 +42,7 @@ const getConfig = ({ logger, config }) => {
           warnings: false,
         },
       }),
+      progressHandler(logger, 'vendor'),
     ],
     bail: true,
   };
