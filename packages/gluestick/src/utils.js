@@ -126,6 +126,11 @@ const printWebpackStats = (logger: Logger, stats: Object) => {
   compilationStats.warnings.forEach(warning => {
     logger.warn(warning);
   });
+
+  compilationStats.errors.forEach(error => {
+    logger.error(error);
+  });
+
   logger.print(table.toString(), '\n');
 };
 
