@@ -11,12 +11,14 @@ const updateDependencies = require('./updateDependencies');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 
-module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
+module.exports = ({ config, logger }: CLIContext) => {
   const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
-  config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
+  const changedFiles: string[] = config.GSConfig.autoUpgrade.changed;
+  const addedFiles: string[] = config.GSConfig.autoUpgrade.added;
+  changedFiles.forEach((filePath: string): void => {
     const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
     const generatorEntry: Object = getSingleEntryFromGenerator(
-      '../../generator/predefined/new', path.basename(filePath), {},
+      '../../generators/predefined/new', path.basename(filePath), {},
     );
     const entryConfig = parseConfig({
       entry: generatorEntry,
@@ -25,19 +27,19 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
     const templateHash: string = sha1(entryConfig.entry.template);
     if (currentHash !== templateHash) {
       const absolutePath: string = path.join(process.cwd(), filePath);
-      logger.success(`${filePath} file is out of date. Updating at path ${absolutePath}...`);
+      logger.success(`File ${filePath} is out of date. Updating at path ${absolutePath}...`);
       mkdirp.sync(path.dirname(filePath));
       // $FlowIgnore template will be a string
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
 
-  config.GSConfig.autoUpgrade.added.forEach((filePath: string): void => {
+  addedFiles.forEach((filePath: string): void => {
     if (!fs.existsSync(path.join(process.cwd(), filePath))) {
       const absolutePath: string = path.join(process.cwd(), filePath);
       logger.success(`File ${filePath} does not exist. Creating at path ${absolutePath}...`);
       const generatorEntry: Object = getSingleEntryFromGenerator(
-        '../../generator/predefined/new', path.basename(filePath), {},
+        '../../generators/predefined/new', path.basename(filePath), {},
       );
       const entryConfig = parseConfig({
         entry: generatorEntry,
@@ -47,11 +49,13 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
     }
   });
-
   // Update dependencies
-  return checkForMismatch(projectPackage, dev).then((results: UpdateDepsPromptResults): void => {
+  return checkForMismatch(projectPackage).then((results: UpdateDepsPromptResults): void => {
     if (results.shouldFix) {
       updateDependencies(logger, projectPackage, results.mismatchedModules);
+      logger.success('Project updated');
+    } else {
+      logger.success('Project is already up-to-date');
     }
   });
 };

@@ -9,35 +9,49 @@ const generate = require('gluestick-generators').default;
 const fetch = require('node-fetch');
 const rimraf = require('rimraf');
 
+const ensureDevelopmentPathIsValid = (pathToGluestickRepo, exitWithError) => {
+  let gluestickPackage = {};
+  try {
+    gluestickPackage = require(path.join(pathToGluestickRepo, 'package.json'));
+  } catch (error) {
+    exitWithError(
+      `Development GlueStick path ${pathToGluestickRepo} is not valid`,
+    );
+  }
+  if (gluestickPackage.name !== 'gluestick-packages') {
+    exitWithError(
+      `${pathToGluestickRepo} is not a path to GlueStick`,
+    );
+  }
+};
+
+const getDevelopmentDependencies = ({ dev }, pathToGluestickPackages) => {
+  return glob.sync('*', { cwd: pathToGluestickPackages })
+    .filter(name => name !== 'gluestick-cli')
+    .reduce((acc, key) => {
+      return { ...acc, [key]: `file:${path.join('..', dev, 'packages', key)}` };
+    }, {});
+};
+
 module.exports = (appName, options, exitWithError) => {
-  fetch('http://registry.npmjs.org/gluestick')
-    .then(res => res.json())
-    .then(json => {
-      const packageDeps = {
-        dependencies: {
-          gluestick: json['dist-tags'].latest,
-        },
+  const preset = options.preset || 'default';
+  const api = 'http://registry.npmjs.org';
+  Promise.all([
+    fetch(`${api}/gluestick`),
+    fetch(`${api}/gluestick-preset-${preset}`),
+  ]).then(responses => Promise.all(responses.map(res => res.json())))
+    .then(payloads => {
+      const latestGluestickVersion = payloads[0]['dist-tags'].latest;
+      const presetDependencies = payloads[1].versions[latestGluestickVersion].gsProjectDependencies;
+      let gluestickDependencies = {
+        gluestick: latestGluestickVersion,
       };
+
       if (options.dev) {
         const pathToGluestickRepo = path.join(process.cwd(), appName, '..', options.dev);
         const pathToGluestickPackages = path.join(pathToGluestickRepo, 'packages');
-        let gluestickPackage = {};
-        const packages = glob.sync('*', { cwd: pathToGluestickPackages }).filter((e) => e !== 'gluestick-cli');
-        try {
-          gluestickPackage = require(path.join(pathToGluestickRepo, 'package.json'));
-        } catch (error) {
-          exitWithError(
-            `Development GlueStick path ${pathToGluestickRepo} is not valid`,
-          );
-        }
-        if (gluestickPackage.name !== 'gluestick-packages') {
-          exitWithError(
-            `${pathToGluestickRepo} is not a path to GlueStick`,
-          );
-        }
-        packages.forEach(e => {
-          packageDeps.dependencies[e] = `file:${path.join('..', options.dev, 'packages', e)}`;
-        });
+        ensureDevelopmentPathIsValid(pathToGluestickRepo, exitWithError);
+        gluestickDependencies = getDevelopmentDependencies(options, pathToGluestickPackages);
       }
 
       const pathToApp = path.join(process.cwd(), appName);
@@ -50,17 +64,23 @@ module.exports = (appName, options, exitWithError) => {
       mkdir.sync(path.join(process.cwd(), appName));
 
       const generatorOptions = {
-        gluestickDependencies: packageDeps.dependencies,
         appName,
+        preset,
+        gluestickDependencies,
+        presetDependencies,
       };
 
       process.chdir(appName);
       try {
         generate(
           {
-            generatorName: 'package',
+            generatorName: 'packageJson',
             entityName: 'package',
             options: generatorOptions,
+          },
+          undefined,
+          {
+            successMessageHandler: () => {},
           },
         );
 
@@ -100,5 +120,12 @@ module.exports = (appName, options, exitWithError) => {
         console.error(error);
         process.exit(1);
       }
+    })
+    .catch(error => {
+      console.error(chalk.red(error.message));
+      console.error('This error may occur due to the following reasons:');
+      console.error(` -> Cannot connect or make request to '${api}'`);
+      console.error(' -> Specified preset was not found');
+      process.exit(1);
     });
 };

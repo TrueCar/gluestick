@@ -43,9 +43,9 @@ const getPlugins = (
 
 // Compile gluestick config
 const getGluestickConfig = (
-  logger: Logger, plugins: ConfigPlugin[],
+  logger: Logger, plugins: ConfigPlugin[], options: { [key: string]: any } = {},
 ): GSConfig => {
-  const config: GSConfig = compileGlueStickConfig(logger, plugins);
+  const config: GSConfig = compileGlueStickConfig(logger, plugins, options);
   // $FlowIgnore get additional data from a property
   config.pluginsConfigPath = plugins.pluginsConfigPath;
   return config;
