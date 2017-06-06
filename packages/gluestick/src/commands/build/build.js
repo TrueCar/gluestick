@@ -72,9 +72,16 @@ module.exports = (
   };
 
   if (options.vendor) {
-    clearBuildDirectory(config.GSConfig, 'dlls');
-    config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
-    compile({ logger, config }, options, 'vendor').catch(compilationErrorHandler('vendor'));
+    const vendorDllConfig = vendorDll.getConfig({ logger, config });
+    if (!options.bailIfOk || !vendorDll.isValid({ logger, config }, vendorDllConfig)) {
+      clearBuildDirectory(config.GSConfig, 'dlls');
+      config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
+      compile({ logger, config }, options, 'vendor')
+        .then(() => {
+          vendorDll.injectValidationMetadata({ config }, vendorDllConfig);
+        })
+        .catch(compilationErrorHandler('vendor'));
+    }
   }
 
   let clientCompilation = Promise.resolve();
