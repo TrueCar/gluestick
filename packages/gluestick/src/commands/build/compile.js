@@ -19,7 +19,7 @@ module.exports = (
 
       const buildName: string = `${buildType[0].toUpperCase()}${buildType.slice(1)}`;
 
-      const buildTime = stats.toJson({ timing: true }).time;
+      const { time: buildTime, errors, warnings } = stats.toJson({ timing: true });
 
       logger.success(
         `${buildName}${buildName === 'vendor' ? ' DLL' : ''} bundle has been prepared `
@@ -28,6 +28,9 @@ module.exports = (
 
       if (buildType === 'client' || buildType === 'vendor') {
         printWebpackStats(logger, stats);
+      } else {
+        errors.forEach(error => logger.error(error));
+        warnings.forEach(warning => logger.warn(warning));
       }
 
       if (options.stats) {
