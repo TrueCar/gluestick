@@ -21,9 +21,13 @@ module.exports = (
     buildServerEntries(gluestickConfig, logger, entries, runtimeAndServerPlugins);
   }
   const config = deepClone(configuration);
-  // Disable warning for `getVersion` function from `cli/helpers.js`, which has dynamic require,
-  // but it's not used by server.
-  config.module.noParse = [/cli\/helpers/];
+  // Disable warning for `getVersion` function from `cli/helpers.js` and `getBundleName` from
+  // `config/vendorDll.js`, which both hve dynamic requires,
+  // but they're not used by server.
+  config.module.noParse = [
+    /cli\/helpers/,
+    /config\/vendorDll/,
+  ];
   config.module.rules[1].use = 'ignore-loader';
   config.module.rules[2].use = 'ignore-loader';
   config.resolve.alias['project-entries'] = path.join(
