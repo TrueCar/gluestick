@@ -4,6 +4,7 @@ import type { Context } from '../../types';
 
 const React = require('react');
 const getAssetsLoader = require('./getAssetsLoader');
+const vendorDll = require('../../config/vendorDll');
 
 const getAssetPathForFile = (filename: string, section: string, webpackAssets: Object): string => {
   const assets: Object = webpackAssets[section] || {};
@@ -18,6 +19,7 @@ const filterEntryName = (name: string): string => {
   const match = /\/(.*)/.exec(name);
   return match ? match[1] : name;
 };
+
 
 module.exports = (
   { config, logger }: Context, entryPoint: string, assets: Object, loadjsConfig: Object,
@@ -41,7 +43,9 @@ module.exports = (
     }
   }
 
-  const vendorBundleHref: string = getAssetPathForFile('vendor', 'javascript', assets);
+  const vendorBundleHref: string = (
+    getAssetPathForFile('vendor', 'javascript', assets) || vendorDll.getBundleName({ config })
+  );
   const entryPointBundleHref: string = getAssetPathForFile(entryPointName, 'javascript', assets);
   const assetsLoader: string = getAssetsLoader(
     { before: () => {}, ...loadjsConfig },

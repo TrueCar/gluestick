@@ -18,12 +18,17 @@ module.exports = {
         break;
       case 'client':
         rimraf.sync(
-          path.join(process.cwd(), gluestickConfig.buildAssetsPath, '*'),
+          path.join(process.cwd(), gluestickConfig.buildAssetsPath, '!(dlls)'),
         );
         break;
       case 'static':
         rimraf.sync(
           path.join(process.cwd(), gluestickConfig.buildStaticPath, '*'),
+        );
+        break;
+      case 'dlls':
+        rimraf.sync(
+          path.join(process.cwd(), gluestickConfig.buildDllPath, '*'),
         );
         break;
       default:

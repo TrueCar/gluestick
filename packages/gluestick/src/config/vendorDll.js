@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 
 const isValid = ({ logger, config }) => {
@@ -8,27 +9,51 @@ const isValid = ({ logger, config }) => {
 
 const getConfig = ({ logger, config }) => {
   // do we need loaders??
+  const appRoot: string = process.cwd();
+  const buildDllPath: string = path.join(process.cwd(), config.GSConfig.buildDllPath);
+  const { vendorSourcePath }: { vendorSourcePath: string } = config.GSConfig;
   return {
-    extensions: ['.js', '.css', '.json'],
+    context: appRoot,
+    resolve: {
+      extensions: ['.js', '.css', '.json'],
+    },
     entry: {
-      vendor: [path.join(process.cwd(), 'src/vendor.js')],
+      vendor: [path.join(process.cwd(), vendorSourcePath)],
     },
     output: {
-      path: path.join(process.cwd(), 'build/assets'),
-      filename: '[name].dll.js',
-      library: '[name]_[hash]',
+      path: buildDllPath,
+      filename: '[name]-[hash].dll.js',
+      library: '[name]_[hash]', // or libraryTarget
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
       new webpack.DllPlugin({
         // The manifest we will use to reference the libraries
-        path: path.join('vendor', '[name]-manifest.json'),
-        name: '[name]-[hash]',
+        path: path.join(buildDllPath, '[name]-manifest.json'),
+        name: '[name]_[hash]',
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false,
+        },
       }),
     ],
+    bail: true,
   };
+};
+
+const getBundleName = ({ config }): string => {
+  const { buildDllPath } = config.GSConfig;
+  const manifestPath: string = path.join(process.cwd(), buildDllPath, 'vendor-manifest.json');
+  // Can't require it, because it will throw an error on server
+  const { name } = JSON.parse(fs.readFileSync(manifestPath));
+  return `/assets/dlls/${name.replace('_', '-')}.dll.js`;
 };
 
 module.exports = {
   isValid,
   getConfig,
+  getBundleName,
 };

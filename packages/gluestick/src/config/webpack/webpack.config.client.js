@@ -11,6 +11,7 @@ import type {
 const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
+const fs = require('fs');
 const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
@@ -59,5 +60,24 @@ module.exports = (
     progressHandler(logger, 'client'),
     new DuplicatePackageChecker(),
   );
+
+  // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
+  const vendorDllManifestPath = path.join(process.cwd(), gluestickConfig.buildDllPath, 'vendor-manifest.json');
+  if (fs.existsSync(vendorDllManifestPath)) {
+    config.plugins.unshift(
+      new webpack.DllReferencePlugin({
+        context: configuration.context,
+        manifest: require(vendorDllManifestPath),
+      }),
+    );
+  } else {
+    config.plugins.push(
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
+      }),
+    );
+  }
+
   return () => config;
 };

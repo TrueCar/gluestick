@@ -14,6 +14,7 @@ const config: GSConfig = {
   buildStaticPath: 'build/static',
   buildAssetsPath: 'build/assets',
   buildRendererPath: 'build/server',
+  buildDllPath: 'build/assets/dlls',
   assetsPath: 'assets',
   sourcePath: 'src',
   appsPath: 'apps',
@@ -38,6 +39,7 @@ const config: GSConfig = {
   hooksPath: 'src/gluestick.hooks.js',
   webpackHooksPath: 'src/webpack.hooks.js',
   cachingConfigPath: 'src/config/caching.server',
+  vendorSourcePath: 'src/vendor.js',
   nodeModulesPath: 'node_modules',
   autoUpgrade: {
     added: [

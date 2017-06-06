@@ -14,6 +14,7 @@ export type GSConfig = {
   buildStaticPath: string;
   buildAssetsPath: string;
   buildRendererPath: string;
+  buildDllPath: string;
   assetsPath: string;
   sourcePath: string;
   sharedPath: string;
@@ -30,6 +31,7 @@ export type GSConfig = {
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;
   customErrorTemplatePath: string;
+  vendorSourcePath: string;
   autoUpgrade: {
     added: string[],
     changed: string[],
