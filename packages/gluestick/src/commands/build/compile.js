@@ -22,11 +22,11 @@ module.exports = (
       const buildTime = stats.toJson({ timing: true }).time;
 
       logger.success(
-        `${buildName} bundle has been prepared `
+        `${buildName}${buildName === 'vendor' ? ' DLL' : ''} bundle has been prepared `
         + `for ${process.env.NODE_ENV || 'development'} in ${(buildTime / 1000).toFixed(2)}s`,
       );
 
-      if (buildType === 'client') {
+      if (buildType === 'client' || buildType === 'vendor') {
         printWebpackStats(logger, stats);
       }
 

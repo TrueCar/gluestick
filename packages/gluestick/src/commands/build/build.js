@@ -35,6 +35,22 @@ module.exports = (
     options.server = !options.app;
   }
 
+  // If it's vendor compilation disable everything
+  if (options.vendor) {
+    if (options.client) {
+      options.client = false;
+      logger.info('Disabling client compilation');
+    }
+    if (options.server) {
+      options.server = false;
+      logger.info('Disabling server compilation');
+    }
+    if (options.static) {
+      options.static = false;
+      logger.info('Disabling static markup build');
+    }
+  }
+
   if (options.static && (!options.client || !options.server)) {
     logger.fatal('--static options must be used with both client and server build');
   }
@@ -47,6 +63,7 @@ module.exports = (
     webpackOptions.entryOrGroupToBuild = options.app;
   }
 
+
   const config = getContextConfig(logger, webpackOptions);
 
   const compilationErrorHandler = (type: string) => error => {
@@ -54,13 +71,15 @@ module.exports = (
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
   };
 
+  if (options.vendor) {
+    clearBuildDirectory(config.GSConfig, 'dlls');
+    config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
+    compile({ logger, config }, options, 'vendor').catch(compilationErrorHandler('vendor'));
+  }
+
   let clientCompilation = Promise.resolve();
   if (options.client) {
     clearBuildDirectory(config.GSConfig, 'client');
-    // if (options.buildVendor || !vendorDll.isValid()) {
-    //   config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
-    //   clientCompilation = compile({ logger, config }, options, 'vendor')
-    // }
     clientCompilation
       .then(() => compile({ logger, config }, options, 'client'))
       .catch(compilationErrorHandler('client'));
