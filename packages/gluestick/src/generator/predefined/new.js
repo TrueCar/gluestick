@@ -37,6 +37,7 @@ const templateGluestickHooks = require('../templates/gluestick.hooks')(createTem
 const templateGluestickConfig = require('../templates/gluestick.config')(createTemplate);
 const templateWebpackHooks = require('../templates/webpack.hooks')(createTemplate);
 const templateCachingServer = require('../templates/caching.server')(createTemplate);
+const templateVendor = require('../templates/vendor')(createTemplate);
 
 const { flowVersion, flowMapper } = require('../constants');
 
@@ -103,6 +104,11 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src',
       filename: 'webpack.hooks.js',
       template: templateWebpackHooks,
+    },
+    {
+      path: 'src',
+      filename: 'vendor.js',
+      template: templateVendor,
     },
     {
       path: 'src/config',

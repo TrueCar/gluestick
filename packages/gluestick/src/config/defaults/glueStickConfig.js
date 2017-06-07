@@ -58,6 +58,7 @@ const config: GSConfig = {
       'src/config/caching.server.js',
       // 1.x
       'src/gluestick.config.js',
+      'src/vendor.js',
     ],
     changed: [
       'src/config/.Dockerfile',   // -> last updated in 0.2.0
