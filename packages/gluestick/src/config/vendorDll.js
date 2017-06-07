@@ -138,7 +138,6 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
   const appRoot: string = process.cwd();
   const buildDllPath: string = path.join(process.cwd(), config.GSConfig.buildDllPath);
   const vendorSourcePath: string = path.join(process.cwd(), config.GSConfig.vendorSourcePath);
-
   if (!fs.existsSync(vendorSourcePath)) {
     logger.fatal(
       `${vendorSourcePath} does not exists, consider running 'gluestick auto-upgrade' `

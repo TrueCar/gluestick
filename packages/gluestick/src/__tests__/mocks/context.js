@@ -35,6 +35,7 @@ const gsConfig: GSConfig = {
   buildRendererPath: '',
   buildDllPath: '',
   vendorSourcePath: '',
+  webpackHooksPath: '',
   assetsPath: '',
   sourcePath: '',
   sharedPath: '',
