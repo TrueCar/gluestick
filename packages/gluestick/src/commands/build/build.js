@@ -17,7 +17,7 @@ type CommandOptions = {
 }
 
 module.exports = (
-  { getOptions, getLogger, getContextConfig }: CommandAPI, commandArgs: any[],
+  { getOptions, getLogger, getContextConfig, getGluestickConfig, getPlugins }: CommandAPI, commandArgs: any[],
 ): void => {
   const options: CommandOptions = getOptions(commandArgs);
   const logger: Logger = getLogger();
@@ -64,7 +64,12 @@ module.exports = (
   }
 
 
-  const config = getContextConfig(logger, webpackOptions);
+  const config: Object = options.client || options.server
+    ? getContextConfig(logger, webpackOptions)
+    : {
+      GSConfig: getGluestickConfig(logger, getPlugins(logger)),
+      webpackConfig: {} // Don't need client and server configs, since we will add vendor config
+    }
 
   const compilationErrorHandler = (type: string) => error => {
     logger.clear();
