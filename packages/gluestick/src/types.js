@@ -57,6 +57,7 @@ export type CompiledConfig = {
   universalSettings: UniversalSettings;
   client: WebpackConfig;
   server: WebpackConfig;
+  vendor?: WebpackConfig;
 }
 
 export type Config = {

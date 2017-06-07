@@ -73,11 +73,11 @@ module.exports = (
     };
     const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins);
     config.webpackConfig.vendor = vendorDllConfig;
-    if (!options.bailIfOk || !vendorDll.isValid({ logger, config }, vendorDllConfig)) {
+    if (!options.bailIfOk || !vendorDll.isValid({ logger, config })) {
       clearBuildDirectory(config.GSConfig, 'dlls');
       compile({ logger, config }, options, 'vendor')
         .then(() => {
-          vendorDll.injectValidationMetadata({ config }, vendorDllConfig);
+          vendorDll.injectValidationMetadata({ logger, config });
         })
         .catch(compilationErrorHandler('vendor'));
     }
