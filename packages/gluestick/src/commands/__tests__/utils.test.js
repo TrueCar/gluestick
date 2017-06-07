@@ -21,7 +21,7 @@ describe('commands/utils#clearBuildDirecotry', () => {
       buildAssetsPath: 'clientBuildPath',
     }, 'client');
     expect(rimraf.sync).toHaveBeenCalled();
-    expect(rimraf.sync.mock.calls[0][0].includes('clientBuildPath/*')).toBeTruthy();
+    expect(rimraf.sync.mock.calls[0][0].includes('clientBuildPath/!(dlls)')).toBeTruthy();
   });
 
   it('should clear server build dir', () => {
