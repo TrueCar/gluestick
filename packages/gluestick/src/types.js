@@ -255,6 +255,7 @@ export type GSHooks = {
 export type WebpackHooks = {
   webpackClientConfig?: Hook;
   webpackServerConfig?: Hook;
+  webpackVendorDllConfig?: Hook;
 };
 
 export type Plugin = {
@@ -278,6 +279,7 @@ export type ConfigPlugin = {
     gluestickConfig?: (config: GSConfig) => void;
     clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
     serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
+    vendorDllWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
   };
 };
 

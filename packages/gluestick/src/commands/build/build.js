@@ -63,24 +63,23 @@ module.exports = (
     webpackOptions.entryOrGroupToBuild = options.app;
   }
 
-
+  const plugins = getPlugins(logger);
   const config: Object = options.client || options.server
     ? getContextConfig(logger, webpackOptions)
     : {
-      GSConfig: getGluestickConfig(logger, getPlugins(logger)),
+      GSConfig: getGluestickConfig(logger, plugins),
       webpackConfig: {} // Don't need client and server configs, since we will add vendor config
     }
-
   const compilationErrorHandler = (type: string) => error => {
     logger.clear();
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
   };
 
   if (options.vendor) {
-    const vendorDllConfig = vendorDll.getConfig({ logger, config });
+    const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins);
     if (!options.bailIfOk || !vendorDll.isValid({ logger, config }, vendorDllConfig)) {
       clearBuildDirectory(config.GSConfig, 'dlls');
-      config.webpackConfig.vendor = vendorDll.getConfig({ logger, config });
+      config.webpackConfig.vendor = vendorDllConfig;
       compile({ logger, config }, options, 'vendor')
         .then(() => {
           vendorDll.injectValidationMetadata({ config }, vendorDllConfig);

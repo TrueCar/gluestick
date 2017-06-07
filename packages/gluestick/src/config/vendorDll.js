@@ -1,8 +1,17 @@
+import type {
+  ConfigPlugin,
+  WebpackConfig,
+  WebpackHooks,
+} from '../types';
+
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const sha1 = require('sha1');
+const clone = require('clone');
 const progressHandler = require('./webpack/progressHandler');
+const { requireModule } = require('../utils');
+const hookHelper = require('../renderer/helpers/hooks');
 
 const manifestFilename: string = 'vendor-manifest.json';
 // Need to set env variable, so that server can access it
@@ -110,18 +119,26 @@ const injectValidationMetadata = ({ config }, vendorWebpackConfig) => {
   fs.writeFileSync(manifestPath, JSON.stringify(manifestContent, null, '  '));
 };
 
-const getConfig = ({ logger, config }) => {
+const getConfig = ({ logger, config }, plugins: ConfigPlugin[]) => {
   // do we need loaders??
   const appRoot: string = process.cwd();
   const buildDllPath: string = path.join(process.cwd(), config.GSConfig.buildDllPath);
-  const { vendorSourcePath }: { vendorSourcePath: string } = config.GSConfig;
-  return {
+  const vendorSourcePath = path.join(process.cwd(), config.GSConfig.vendorSourcePath);
+
+  if (!fs.existsSync(vendorSourcePath)) {
+    logger.fatal(
+      `${vendorSourcePath} does not exists, consider running 'gluestick auto-upgrade' `
+      + 'or create the file manually',
+    );
+  }
+
+  const baseConfig = {
     context: appRoot,
     resolve: {
       extensions: ['.js', '.json'],
     },
     entry: {
-      vendor: [path.join(process.cwd(), vendorSourcePath)],
+      vendor: [vendorSourcePath],
     },
     output: {
       path: buildDllPath,
@@ -146,6 +163,28 @@ const getConfig = ({ logger, config }) => {
     ],
     bail: true,
   };
+
+  const intermediateConfig: WebpackConfig = plugins
+    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.vendorDllWebpackConfig)
+    .reduce((modifiedConfig: Object, plugin: ConfigPlugin) => {
+      return plugin.postOverwrites.vendorDllWebpackConfig
+        // $FlowIgnore
+        ? plugin.postOverwrites.vendorDllWebpackConfig(clone(modifiedConfig))
+        : modifiedConfig;
+    }, baseConfig);
+
+  const pathToWebpackConfigHooks: string =
+    path.join(process.cwd(), config.GSConfig.webpackHooksPath);
+
+  let webpackConfigHooks: WebpackHooks = {};
+
+  try {
+    webpackConfigHooks = requireModule(pathToWebpackConfigHooks);
+  } catch (e) {
+    logger.warn(e);
+  }
+
+  return hookHelper.call(webpackConfigHooks.webpackVendorDllConfig, intermediateConfig);
 };
 
 module.exports = {
