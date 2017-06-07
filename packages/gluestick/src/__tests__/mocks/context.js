@@ -33,6 +33,8 @@ const gsConfig: GSConfig = {
   buildStaticPath: '',
   buildAssetsPath: '',
   buildRendererPath: '',
+  buildDllPath: '',
+  vendorSourcePath: '',
   assetsPath: '',
   sourcePath: '',
   sharedPath: '',

@@ -12,6 +12,8 @@ import type {
   RenderMethod,
 } from '../../types';
 
+jest.mock('../helpers/linkAssets.js', () => () => ({ scriptTags: [], styleTags: [] }));
+
 const React = require('react');
 const clone = require('clone');
 const render = require('../render');
