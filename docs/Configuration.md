@@ -2,6 +2,7 @@
 
 There are few files which allows to configure GleuStick:
 * [`src/entires.json`](./Apps.md) - define entries (apps)
+* [`src/vendor.js`](#vendoring) - Define vendored modules/packages
 * [`src/gluestick.hooks.js`](./CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
 * [`src/gluestick.plugins.js`](./Plugins.md) - specify which plugins to use
 * [`src/gluestick.config.js`](#gluestick-config) - overwrite gluestick config
@@ -105,3 +106,22 @@ export default config => ({
 })
 ```
 To see how the default GlueStick config looks like navigate [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
+
+# Vendoring
+
+Some packages or modules like `React` don't change frequently, so they can me vendored.
+To do so, import desired module/file in `src/vendor.js`. This file will be used as a separate entry
+for webpack.
+
+There are 2 types of using vendor bundle:
+* `CommonsChunkPlugin` - will build vendor as a normal bundle, rebuild it automatically when changed, preferd for code that changes frequently at a cost of build time
+* `DllPlugin` - will use vendor DLL bundle, won't be rebuilded, prefered for code that change rerely
+
+`CommonsChunkPlugin` is a default mode, since it doesn't require any changes to be made or commands
+to be run.
+
+`DllPlugin`, requires `gluestick build --vendor` command to be run, before building any other app.
+This command will create files under `build/assets/dlls`. Now if you `build` or `start` some app, it will
+use vendor DLL bundle. It can be ueeful for parallelizing builds: first you need to build vendor DLL bundle, which should
+be shared across all parallel builds. To build a single app use `gluestick build --client -A /<appName>`.
+Also remember to build server/renderer bundle as well - `gluestick build --server`.

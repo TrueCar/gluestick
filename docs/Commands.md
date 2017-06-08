@@ -113,6 +113,8 @@ Available options:
 * `--server` - Build only server bundle
 * `-Z, --static` - Prepare static HTML for each entry
 * `-S, --stats` - Output webpack stats
+* `-A, --app` - Build only specific app or a group of them
+* `-D, --vendor` - Build Vendor DLL bundle
 
 ### `gluestick bin`
 
