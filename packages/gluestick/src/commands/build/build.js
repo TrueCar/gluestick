@@ -85,7 +85,9 @@ module.exports = (
     const config = getContextConfig(logger, webpackOptions);
     let clientCompilation = Promise.resolve();
     if (options.client) {
-      clearBuildDirectory(config.GSConfig, 'client');
+      if (!options.app) {
+        clearBuildDirectory(config.GSConfig, 'client');
+      }
       clientCompilation = compile({ logger, config }, options, 'client')
         .catch(compilationErrorHandler('client'));
     }
