@@ -15,7 +15,7 @@ const fs = require('fs');
 const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
-const chunksPlugin = require('universal-webpack/build/chunks plugin').default;
+const ChunksPlugin = require('./ChunksPlugin');
 const { updateBabelLoaderConfig } = require('./utils');
 const { manifestFilename } = require('../vendorDll');
 
@@ -52,10 +52,6 @@ module.exports = (
     };
   });
   config.plugins.push(
-    new chunksPlugin(
-      deepClone(configuration),
-      { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },
-    ),
     // Make it so *.server.js files return null in client
     new webpack.NormalModuleReplacementPlugin(/\.server(\.js)?$/, path.join(__dirname, './mocks/serverFileMock.js')),
     progressHandler(logger, 'client'),
@@ -74,6 +70,7 @@ module.exports = (
         manifest: require(vendorDllManifestPath),
       }),
     );
+    config.plugins.push(new ChunksPlugin(deepClone(configuration), { appendChunkInfo: true }));
   } else {
     logger.info('Vendor DLL bundle not found, using CommonsChunkPlugin');
     config.plugins.push(
@@ -81,6 +78,7 @@ module.exports = (
         name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
+      new ChunksPlugin(deepClone(configuration)),
     );
   }
 
