@@ -136,7 +136,7 @@ describe('commands/build/build', () => {
   it('should build vendor bundle only and bail', () => {
     // $FlowIgnore vendorDll is mocked
     vendorDll.isValid.mockImplementationOnce(() => true);
-    build(commandApi, [{ client: false, server: false, vendor: true, bailIfOk: true }]);
+    build(commandApi, [{ client: false, server: false, vendor: true, skipIfOk: true }]);
     expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
     expect(compile).toHaveBeenCalledTimes(0);
   });
