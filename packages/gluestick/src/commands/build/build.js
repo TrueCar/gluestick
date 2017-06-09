@@ -12,7 +12,7 @@ type CommandOptions = {
   server: boolean;
   static: boolean;
   vendor: boolean;
-  bailIfOk: boolean;
+  skipIfOk: boolean;
   app?: string;
 }
 
@@ -73,7 +73,7 @@ module.exports = (
     };
     const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins);
     config.webpackConfig.vendor = vendorDllConfig;
-    if (!options.bailIfOk || !vendorDll.isValid({ logger, config })) {
+    if (!options.skipIfOk || !vendorDll.isValid({ logger, config })) {
       clearBuildDirectory(config.GSConfig, 'dlls');
       compile({ logger, config }, options, 'vendor')
         .then(() => {

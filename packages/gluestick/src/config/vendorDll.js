@@ -55,7 +55,7 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
   try {
     manifestContent = require(vendorDllBundleManifestPath);
   } catch (e) {
-    logger.info('Vendor DLL manifest does not exists, recompiling');
+    logger.info('Vendor DLL manifest does not exist, recompiling');
     return false;
   }
 
@@ -66,14 +66,14 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
     `${manifestContent.name.replace('_', '-')}.dll.js`,
   );
   if (!fs.existsSync(vendorDllBundlePath)) {
-    logger.info('Vendor DLL bundle does not exists, recompiling');
+    logger.info('Vendor DLL bundle does not exist, recompiling');
     return false;
   }
 
   // Check if manifest has validation metadata, if doesn't, it means bundle is not valid, since
   // we cannot perform other checks
   if (!manifestContent.validationMetadata) {
-    logger.info('Validation metadata are not defined, recompiling');
+    logger.info('Validation metadata is not defined, recompiling');
     return false;
   }
 
@@ -107,7 +107,7 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
     return false;
   }
 
-  logger.success('Vendor DLL bundle is valid, bailing from recompilation');
+  logger.success('Vendor DLL bundle is valid, skipping recompilation');
   return true;
 };
 
