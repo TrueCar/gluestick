@@ -134,7 +134,7 @@ describe('config/vendorDll', () => {
         { info: infoLogger },
         { buildDllPath: 'non-exstent' },
       ))).toBeFalsy();
-      expect(infoLogger).toHaveBeenCalledWith('Vendor DLL manifest does not exists, recompiling');
+      expect(infoLogger).toHaveBeenCalledWith('Vendor DLL manifest does not exist, recompiling');
     });
 
     it('should return false if vendor dll bundle does not exists', () => {
@@ -143,7 +143,7 @@ describe('config/vendorDll', () => {
         { info: infoLogger },
         { buildDllPath: path.relative(process.cwd(), __dirname) },
       ))).toBeFalsy();
-      expect(infoLogger).toHaveBeenCalledWith('Vendor DLL bundle does not exists, recompiling');
+      expect(infoLogger).toHaveBeenCalledWith('Vendor DLL bundle does not exist, recompiling');
     });
 
     it('should return false if manifest does not have validation metadata', () => {
@@ -153,7 +153,7 @@ describe('config/vendorDll', () => {
         { info: infoLogger },
         { buildDllPath: path.relative(process.cwd(), __dirname) },
       ))).toBeFalsy();
-      expect(infoLogger).toHaveBeenCalledWith('Validation metadata are not defined, recompiling');
+      expect(infoLogger).toHaveBeenCalledWith('Validation metadata is not defined, recompiling');
     });
 
     it('should return false if vendor entry parts mismatch', () => {
