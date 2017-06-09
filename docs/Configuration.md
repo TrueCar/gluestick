@@ -109,19 +109,37 @@ To see how the default GlueStick config looks like navigate [here](https://githu
 
 # Vendoring
 
-Some packages or modules like `React` don't change frequently, so they can me vendored.
-To do so, import desired module/file in `src/vendor.js`. This file will be used as a separate entry
-for webpack.
+Some packages or modules like `React` don't change frequently, so they can be vendored.
+In order to do so, import the desired module/file in `src/vendor.js`. This file will become a separate entry
+used by either:
+* `CommonsChunkPlugin`:
+  * build vendor as a normal bundle
+  * rebuild automatically when changed
+  * preferd for code that changes _kind of_ frequently at a cost of increased build time
+  * automatic common modules extraction to vendor bundle
+  * great for smaller and medium sized projects
 
-There are 2 types of using vendor bundle:
-* `CommonsChunkPlugin` - will build vendor as a normal bundle, rebuild it automatically when changed, preferd for code that changes frequently at a cost of build time
-* `DllPlugin` - will use vendor DLL bundle, won't be rebuilded, prefered for code that change rerely
+or
 
-`CommonsChunkPlugin` is a default mode, since it doesn't require any changes to be made or commands
+* `DllPlugin`:
+  * create Dynamicaly Linked Library with vendored modules
+  * no automatic rebuilds
+  * prefered for code that change rerely
+  * shared between parallel builds
+  * great for bigger projects
+
+`CommonsChunkPlugin` is the default used plugin, since it doesn't require any changes to be made or commands
 to be run.
 
-`DllPlugin`, requires `gluestick build --vendor` command to be run, before building any other app.
-This command will create files under `build/assets/dlls`. Now if you `build` or `start` some app, it will
-use vendor DLL bundle. It can be ueeful for parallelizing builds: first you need to build vendor DLL bundle, which should
-be shared across all parallel builds. To build a single app use `gluestick build --client -A /<appName>`.
+> Please note, that `CommonsChunkPlugin` and `DllPlugin` are __not interoperable__, so it's up to you to decide
+which one suits your project better.
+
+If you want to use `DllPlugin`, you firstly need to execute `gluestick build --vendor`, before building any other app.
+This command will create files (including your vendor DLL bundle) under `build/assets/dlls`. Now if you `build` or `start` an app or whole project, it will use vendor DLL bundle.
+
+`DllPlugin` is the essential part that allows for app builds parallelisation.
+In order to split app builds you, firstly need to have vendor DLL bundle compiled and available for each
+build thread/process, then to build a single app use `gluestick build --client -A /<appName>` command.
+
 Also remember to build server/renderer bundle as well - `gluestick build --server`.
+
