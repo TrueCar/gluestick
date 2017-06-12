@@ -1,4 +1,4 @@
-# `gluestick-plugin-no-foucs`
+# `gluestick-plugin-no-fouc`
 
 Removes Flash of Unstyled Content (FOUC) in development.
 
