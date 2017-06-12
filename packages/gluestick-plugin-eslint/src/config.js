@@ -2,17 +2,15 @@ const path = require('path');
 const fs = require('fs');
 
 class ReorderLintWarningsPlugin {
-  constructor() {
-
-  }
-
   apply(compiler) {
     compiler.plugin('after-compile', (compilation, callback) => {
       compilation.warnings.sort((w1, w2) => {
         if (!w1._lastModifiedDate) {
+          // eslint-disable-next-line no-param-reassign
           w1._lastModifiedDate = fs.statSync(w1.module.resource).mtime;
         }
         if (!w2._lastModifiedDate) {
+          // eslint-disable-next-line no-param-reassign
           w2._lastModifiedDate = fs.statSync(w2.module.resource).mtime;
         }
         return w1._lastModifiedDate < w2._lastModifiedDate ? 1 : -1;
