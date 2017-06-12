@@ -5,7 +5,7 @@ Adds `eslint-loader` to lint files when compiling them with Webpack.
 ## How to use
 * Install plugin
 ```
-npm install --save gluestick-plugin-eslint
+npm install --save eslint-loader gluestick-plugin-eslint
 ```
 * Define (and configure) plugin in `src/gluestick.plugins.js`:
 ```javascript
