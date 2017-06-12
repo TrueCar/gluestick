@@ -18,7 +18,6 @@ const clientWebpackConfig = (filename = '[name]-[contenthash].init-no-fouc.css')
   if (process.env.NODE_ENV !== 'production') {
     modifyLoader(config.module, /\.(scss)$/);
     modifyLoader(config.module, /\.(css)$/);
-    console.log(config.module.rules);
     config.plugins.push(
       new ExtractTextPlugin({
         filename,
@@ -29,7 +28,7 @@ const clientWebpackConfig = (filename = '[name]-[contenthash].init-no-fouc.css')
   return config;
 };
 
-module.exports = options => ({
+module.exports = (options = {}) => ({
   postOverwrites: {
     clientWebpackConfig: clientWebpackConfig(options.filename),
   },
