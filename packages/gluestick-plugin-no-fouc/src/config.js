@@ -1,32 +1,36 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const clientWebpackConfig = config => {
+const modifyLoader = ({ rules }, test) => {
+  const styleLoader = { loader: 'style-loader' };
+  const index = rules.findIndex(rule => rule.test.source === test.source);
+  if (index >= 0) {
+    const loaders = rules[index].use;
+    // eslint-disable-next-line no-param-reassign
+    rules[index].use = [styleLoader].concat(ExtractTextPlugin.extract({
+      fallback: loaders[0],
+      use: loaders.slice(1),
+      remove: false,
+    }));
+  }
+};
+
+const clientWebpackConfig = (filename = '[name]-[contenthash].init-no-fouc.css') => config => {
   if (process.env.NODE_ENV !== 'production') {
-    const scssLoaders = config.module.rules[1].use;
-    const styleLoader = { loader: 'style-loader' };
-    config.module.rules[1].use = [styleLoader].concat(ExtractTextPlugin.extract({
-      fallback: scssLoaders[0],
-      use: scssLoaders.slice(1),
-      remove: false,
-    }));
-    const cssLoaders = config.module.rules[2].use;
-    config.module.rules[2].use = [styleLoader].concat(ExtractTextPlugin.extract({
-      fallback: cssLoaders[0],
-      use: cssLoaders.slice(1),
-      remove: false,
-    }));
+    modifyLoader(config.module, /\.(scss)$/);
+    modifyLoader(config.module, /\.(css)$/);
+    console.log(config.module.rules);
     config.plugins.push(
       new ExtractTextPlugin({
-        filename: '[name]-[contenthash].fouc-reducer.css',
-        allChunks: true
-      })
+        filename,
+        allChunks: true,
+      }),
     );
-  };
+  }
   return config;
 };
 
-module.exports = () => ({
+module.exports = options => ({
   postOverwrites: {
-    clientWebpackConfig,
+    clientWebpackConfig: clientWebpackConfig(options.filename),
   },
 });
