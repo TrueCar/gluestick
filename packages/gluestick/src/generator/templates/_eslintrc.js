@@ -35,7 +35,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "prefer-const": 2,
 
     "react/display-name": 0,
-    "react/wrap-multilines": 2
+    "react/jsx-wrap-multilines": 2
   },
   "env": {
     "es6": true,
