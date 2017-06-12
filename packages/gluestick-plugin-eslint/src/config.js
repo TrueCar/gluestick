@@ -21,8 +21,8 @@ class ReorderLintWarningsPlugin {
   }
 }
 
-const clientWebpackConfig = ({ loaderOptions }) => config => {
-  if (process.env.NODE_ENV !== 'production') {
+const clientWebpackConfig = ({ loaderOptions, enableInProduction }) => config => {
+  if (process.env.NODE_ENV !== 'production' || enableInProduction) {
     return {
       ...config,
       module: {
