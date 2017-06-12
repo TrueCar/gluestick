@@ -2,8 +2,9 @@
 import type { GSConfig } from '../../types';
 
 const path = require('path');
+const { convertToCamelCase } = require('../../utils');
 
-module.exports = (gluestickConfig: GSConfig, entryOrGroupToBuild?: string): Object => {
+module.exports = (gluestickConfig: GSConfig, appOrGroupToBuild?: string): Object => {
   const entries = require(path.join(process.cwd(), gluestickConfig.entriesPath));
 
   // `/main` is a alias for `/` so it must not be used, as this will create
@@ -11,20 +12,31 @@ module.exports = (gluestickConfig: GSConfig, entryOrGroupToBuild?: string): Obje
   if (entries['/main']) {
     throw new Error('`/main` cannot be used as entry key, as `main` is a reserved word');
   }
-  if (!entryOrGroupToBuild) {
+
+  if (!appOrGroupToBuild) {
     return entries;
   }
-  const useEntryKey: boolean = entryOrGroupToBuild[0] === '/';
-  const entriesToBuild: string[] = Object.keys(entries).filter((entryName: string): boolean => {
-    return useEntryKey
-      // Match by entry key eg: `/home`
-      // `/main` should be the alias for `/`
-      ? entryName === entryOrGroupToBuild || (entryName === '/' && entryOrGroupToBuild === '/main')
-      // Match by group eg: `group1`
-      : (
-        Array.isArray(entries[entryName].group)
-        && entries[entryName].group.indexOf(entryOrGroupToBuild) > -1
-      );
+
+  const singleApp: boolean = appOrGroupToBuild[0] === '/';
+  const appOrGroupName: string = convertToCamelCase(appOrGroupToBuild.replace(/^\//, ''));
+  const entriesToBuild: string[] = Object.keys(entries).filter((entryKey: string): boolean => {
+    if (singleApp && entries[entryKey].name) {
+      // If `name` property is defined
+      return entries[entryKey].name === appOrGroupName;
+    } else if (singleApp && entryKey === '/') {
+      // If `name` is not defined, check if entry is a index entry
+      return appOrGroupName === 'main';
+    } else if (singleApp) {
+      // Fallback: convert entryKey to camelCase and compare with passed value
+      return convertToCamelCase(entryKey.replace(/^\//, '')) === appOrGroupName;
+    }
+
+    return (
+      Array.isArray(entries[entryKey].group) &&
+      entries[entryKey].group.findIndex((groupName: string) => {
+        return convertToCamelCase(groupName) === appOrGroupName;
+      }) > -1
+    );
   });
 
   if (!entriesToBuild.length) {
@@ -32,6 +44,6 @@ module.exports = (gluestickConfig: GSConfig, entryOrGroupToBuild?: string): Obje
   }
 
   return entriesToBuild.reduce((prev: Object, curr: string): Object => {
-    return Object.assign(prev, { [curr]: entries[curr] });
+    return { ...prev, [curr]: entries[curr] };
   }, {});
 };

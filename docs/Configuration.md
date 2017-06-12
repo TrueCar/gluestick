@@ -2,6 +2,7 @@
 
 There are few files which allows to configure GleuStick:
 * [`src/entires.json`](./Apps.md) - define entries (apps)
+* [`src/vendor.js`](#vendoring) - Define vendored modules/packages
 * [`src/gluestick.hooks.js`](./CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
 * [`src/gluestick.plugins.js`](./Plugins.md) - specify which plugins to use
 * [`src/gluestick.config.js`](#gluestick-config) - overwrite gluestick config
@@ -105,3 +106,40 @@ export default config => ({
 })
 ```
 To see how the default GlueStick config looks like navigate [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
+
+# Vendoring
+
+Some packages or modules like `React` don't change frequently, so they can be vendored.
+In order to do so, import the desired module/file in `src/vendor.js`. This file will become a separate entry
+used by either:
+* `CommonsChunkPlugin`:
+  * build vendor as a normal bundle
+  * rebuild automatically when changed
+  * preferd for code that changes _kind of_ frequently at a cost of increased build time
+  * automatic common modules extraction to vendor bundle
+  * great for smaller and medium sized projects
+
+or
+
+* `DllPlugin`:
+  * create Dynamicaly Linked Library with vendored modules
+  * no automatic rebuilds
+  * prefered for code that change rerely
+  * shared between parallel builds
+  * great for bigger projects
+
+`CommonsChunkPlugin` is the default used plugin, since it doesn't require any changes to be made or commands
+to be run.
+
+> Please note, that `CommonsChunkPlugin` and `DllPlugin` are __not interoperable__, so it's up to you to decide
+which one suits your project better.
+
+If you want to use `DllPlugin`, you firstly need to execute `gluestick build --vendor`, before building any other app.
+This command will create files (including your vendor DLL bundle) under `build/assets/dlls`. Now if you `build` or `start` an app or whole project, it will use vendor DLL bundle.
+
+`DllPlugin` is the essential part that allows for app builds parallelisation.
+In order to split app builds you, firstly need to have vendor DLL bundle compiled and available for each
+build thread/process, then to build a single app use `gluestick build --client -A /<appName>` command.
+
+Also remember to build server/renderer bundle as well - `gluestick build --server`.
+

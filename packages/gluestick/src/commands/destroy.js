@@ -25,7 +25,8 @@ const availableCommands = {
 type Command = 'container' | 'component' | 'reducer';
 
 type Options = {
-  entryPoint?: string;
+  entrypoint?: string;
+  app?: string;
 }
 
 module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]) => {
@@ -47,8 +48,8 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
     return;
   }
 
-  const { entryPoint = 'apps/main' } = options;
-  if (!isValidEntryPoint(entryPoint, logger)) {
+  const entrypoint = options.entrypoint || options.app || 'apps/main';
+  if (!isValidEntryPoint(entrypoint, logger)) {
     return;
   }
 
@@ -73,7 +74,7 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
 
   // Remove the file
   const CWD: string = process.cwd();
-  const generateRoot: string = path.join(CWD, 'src', entryPoint, availableCommands[command]);
+  const generateRoot: string = path.join(CWD, 'src', entrypoint, availableCommands[command]);
   const destinationRoot: string = path.resolve(generateRoot, dirname);
   const destinationPath: string = path.join(destinationRoot, `${generatedFileName}.js`);
   let fileExists: boolean = true;
@@ -112,7 +113,7 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
 
   // If we destroyed a reducer, remove it from the reducers index
   if (command === 'reducer') {
-    const reducerIndexPath = path.join(CWD, 'src', entryPoint, 'reducers', 'index.js');
+    const reducerIndexPath = path.join(CWD, 'src', entrypoint, 'reducers', 'index.js');
     try {
       const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
       const reducerName: string = dirname === '.'
@@ -134,7 +135,7 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
 
   // Remove the test file
   const testFolder: string = path.resolve(
-    path.join(CWD, 'src', entryPoint, availableCommands[command]),
+    path.join(CWD, 'src', entrypoint, availableCommands[command]),
     dirname,
     '__tests__',
   );

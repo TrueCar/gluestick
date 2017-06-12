@@ -13,18 +13,21 @@ module.exports = (opts, { requireModule }) => {
     path.join(process.cwd(), 'src/config/webpack-additions.js'),
   );
 
+  const vendor = getProp(webpackAdditions, 'vendor');
+
   const applyWebpackAdditions = (webpackConfig, isClient = false) => {
     const additionalLoaders = getProp(webpackAdditions, 'additionalLoaders');
     const additionalPlugins = getProp(webpackAdditions, 'plugins');
-    const vendor = getProp(webpackAdditions, 'vendor');
 
     const config = webpackConfig;
     config.module.rules = config.module.rules.concat(additionalLoaders);
     config.plugins = config.plugins.concat(additionalPlugins);
-    if (isClient && config.entry.vendor && vendor.length) {
-      config.entry.vendor.unshift(...vendor);
-    } else if (isClient && vendor.length) {
-      config.entry.vendor = vendor;
+    if (config.plugins.filter(plugin => plugin.constructor.name === 'CommonsChunkPlugin').length) {
+      if (isClient && config.entry.vendor && vendor.length) {
+        config.entry.vendor.unshift(...vendor);
+      } else if (isClient && vendor.length) {
+        config.entry.vendor = vendor;
+      }
     }
     return config;
   };
@@ -57,6 +60,12 @@ module.exports = (opts, { requireModule }) => {
       },
       clientWebpackConfig: (config) => applyWebpackAdditions(config, true),
       serverWebpackConfig: (config) => applyWebpackAdditions(config),
+      vendorDllWebpackConfig: (config) => ({
+        ...config,
+        entry: {
+          vendor: [...vendor, ...config.entry.vendor],
+        },
+      }),
     },
   };
 };

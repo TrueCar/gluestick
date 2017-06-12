@@ -33,7 +33,7 @@ The file's schema looks like this:
 - `routes`: The path to the routes declaration file.
 - `reducer`: The path to reducers file that exports an object**.
 - `config`: The path to the application configuration file. If not specified, `config/application` will be used as a default. It is not common to specify this value.
-- `group`: (Optional) Assign the entry to a group, see: [gluestick](../packages/gluestick/README.md) `--entrypoints` option.
+- `group`: (Optional) Assign the entry to a group, see: [gluestick](../packages/gluestick/README.md) `--app` option.
 
 ** **Please note** that the reducer should `export` by (`default`) an object with key-value pairs,
 when the value is a reducer function. Do not use `combineReducer`, it will be used later internally

@@ -10,6 +10,7 @@ type Options = {
   logLevel?: string;
   debugServer?: boolean;
   debugPort: number;
+  app?: string;
 }
 
 type Entry = {
@@ -44,7 +45,9 @@ module.exports = (
     delayStart: Promise.resolve(),
   },
 ): void => {
-  const { debugServer, debugPort, logLevel, entrypoints }: Options = getOptions(commandArguments);
+  const {
+    debugServer, debugPort, logLevel, entrypoints, app,
+  }: Options = getOptions(commandArguments);
   const logger: Logger = getLogger(logLevel);
 
   if (printCommandInfo) {
@@ -57,7 +60,7 @@ module.exports = (
     // Performance tweak: if NODE_ENV is production start-server will only run server bundle
     // without creating bundle
     skipServerEntryGeneration: process.env.NODE_ENV === 'production',
-    entryOrGroupToBuild: entrypoints,
+    entryOrGroupToBuild: entrypoints || app,
   });
 
   const entry: Entry = getServerEntry(config);

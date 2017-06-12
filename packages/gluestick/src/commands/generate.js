@@ -7,7 +7,8 @@ const { createArrowList } = require('../cli/helpers');
 const generator = require('gluestick-generators').default;
 
 export type Options = {
-  entryPoint?: string;
+  entrypoint?: string;
+  app?: string;
   functional?: boolean;
   genOptions?: string;
 }
@@ -21,11 +22,10 @@ module.exports = ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]
   const options: Options = getOptions(commandArguments);
   const generatorName: string = commandArguments[0];
   const entityName: string = commandArguments[1];
-
   const filteredOptions = {
     ...JSON.parse(options.genOptions ? options.genOptions : '{}'),
     functional: options.functional,
-    entryPoint: options.entryPoint,
+    entryPoint: options.entrypoint || options.app,
   };
 
   const successMessageHandler = (

@@ -9,7 +9,8 @@ const debugServerPortOption = ['-p, --debug-port <n>', 'port on which to run nod
 const skipBuildOption = ['-P, --skip-build', 'skip build when running in production mode'];
 const statelessFunctionalOption = ['-F, --functional', '(generate component) stateless functional component'];
 const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
-const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group'];
+const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group (same as -A)'];
+const appOption = ['-A, --app <appName>', 'Build and run only specified app or a group (same as -E)'];
 
 const safelyExecCommand = (commandFn) => (...commandArguments) => {
   try {
@@ -42,7 +43,8 @@ commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
-  .option('-E --entry-point <entryPoint>', 'entry point for generated files')
+  .option('-E --entrypoint <entryPoint>', 'entry point for generated files (same as -A)')
+  .option('-A --app <appName>', 'app in which to generate files (same as -E)')
   .option(...statelessFunctionalOption)
   .option('-O, --gen-options <value>', 'options to pass to the generator')
   .action(safelyExecCommand((...commandArguments) => {
@@ -53,7 +55,8 @@ commander
   .command('destroy <container|component|reducer>')
   .description('destroy a generated container')
   .arguments('<name>')
-  .option('-E --entry-point <entryPoint>', 'entry point (app) from which entity should be removed')
+  .option('-E --entrypoint <entryPoint>', 'entry point (app) from which entity should be removed (same as -A)')
+  .option('-A --app <appName>', 'app from which entity should be removed (same as -E)')
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/destroy')(commandApi, commandArguments);
   }));
@@ -72,6 +75,7 @@ commander
   .option('-T, --run-tests', 'run test hook')
   .option('-C --coverage', 'create test coverage')
   .option(...entrypointsOption)
+  .option(...appOption)
   .option(...logLevelOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
@@ -83,9 +87,12 @@ commander
 commander
   .command('build')
   .description('create production asset build')
+  .option('-A, --app <name>', 'app or a group of apps to build')
   .option('-S, --stats', 'create webpack stats file')
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
+  .option('-D, --vendor', 'build vendor DLL bundle')
+  .option('-B, --skip-if-ok', 'skip vendor DLL recompilation if the bundle is valid')
   .option('-Z, --static', 'prepare html file for static hosting')
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/build')(commandApi, commandArguments);
@@ -112,6 +119,7 @@ commander
   .description('start client')
   .option(...logLevelOption)
   .option(...entrypointsOption)
+  .option(...appOption)
   .action((...commandArguments) => {
     require('../commands/start-client')(commandApi, commandArguments);
   });
@@ -121,6 +129,7 @@ commander
   .description('start server')
   .option(...logLevelOption)
   .option(...entrypointsOption)
+  .option(...appOption)
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .action(safelyExecCommand((...commandArguments) => {
