@@ -27,18 +27,17 @@ module.exports = (
   let key: number = 0;
   const entryPointName: string = filterEntryName(entryPoint);
 
-  if (process.env.NODE_ENV === 'production') {
-    const stylesHref: string = getAssetPathForFile(entryPointName, 'styles', assets);
+  const stylesHref: ?string = getAssetPathForFile(entryPointName, 'styles', assets);
+  if (stylesHref) {
     styleTags.push(
       <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
     );
-    // Need to explicitly check if there is CSS vendor bundle and include it
-    const vendorStylesHref: string = getAssetPathForFile('vendor', 'styles', assets);
-    if (vendorStylesHref) {
-      styleTags.push(
-        <link key={key++} rel="stylesheet" type="text/css" href={vendorStylesHref} />,
-      );
-    }
+  }
+  const vendorStylesHref: ?string = getAssetPathForFile('vendor', 'styles', assets);
+  if (vendorStylesHref) {
+    styleTags.push(
+      <link key={key++} rel="stylesheet" type="text/css" href={vendorStylesHref} />,
+    );
   }
 
   const vendorBundleHref: string = getAssetPathForFile('vendor', 'javascript', assets);
