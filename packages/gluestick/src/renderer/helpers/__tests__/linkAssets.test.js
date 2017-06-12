@@ -12,21 +12,7 @@ const assets = {
 };
 
 describe('renderer/helpers/linkAssets', () => {
-  it('should return only script tag in development', () => {
-    const {
-      styleTags,
-      scriptTags,
-    } = linkAssets({}, 'main', assets, {});
-    expect(styleTags.length).toBe(0);
-    expect(scriptTags.length).toBe(1);
-    expect(scriptTags[0].type).toEqual('script');
-    expect(scriptTags[0].props.dangerouslySetInnerHTML.__html.includes('main-js')).toBeTruthy();
-    expect(scriptTags[0].props.dangerouslySetInnerHTML.__html.includes('vendor-js')).toBeTruthy();
-  });
-
-  it('should return scripts and style tags in production', () => {
-    const originalENV = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
+  it('should return scripts and style tags', () => {
     const {
       styleTags,
       scriptTags,
@@ -37,7 +23,6 @@ describe('renderer/helpers/linkAssets', () => {
     expect(scriptTags[0].props.dangerouslySetInnerHTML.__html.includes('main-js')).toBeTruthy();
     expect(scriptTags[0].props.dangerouslySetInnerHTML.__html.includes('vendor-js')).toBeTruthy();
     expect(styleTags[0].type).toEqual('link');
-    process.env.NODE_ENV = originalENV;
   });
 
   it('should resolve / entry name', () => {
