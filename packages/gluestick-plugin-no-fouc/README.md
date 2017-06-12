@@ -22,7 +22,7 @@ export default [
 
 export default [
   {
-    plugin: 'gluestick-env-expose-ast',
+    plugin: 'gluestick-plugin-no-fouc',
     options: {
       filename: '[name].fouc-reducer.css'
     },
