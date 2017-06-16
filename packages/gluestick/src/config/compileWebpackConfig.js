@@ -69,20 +69,8 @@ module.exports = (
     ? []
     : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
-  const { assetPath: publicPath } = requireModule(
-    path.join(
-      process.cwd(),
-      gluestickConfig.sourcePath,
-      gluestickConfig.configPath,
-      `${gluestickConfig.applicationConfigPath}.js`,
-    ),
-  );
-
   // Get shared config between client and server.
-  const sharedConfig: WebpackConfig = getSharedConfig(
-    gluestickConfig,
-    `${publicPath}/`.replace('//', '/'),
-  );
+  const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
   logger.warn(sharedConfig.output);
 
   // Apply pre overwriters from config plugins to shared webpack config.
