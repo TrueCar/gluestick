@@ -14,7 +14,7 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
   const child: Object = spawn(
     'node',
     [entryPointPath].concat(args),
-    { stdio: ['inherit', 'pipe', 'inherit', 'ipc']/*, env: process.env*/ },
+    { stdio: ['inherit', 'pipe', 'inherit', 'ipc'] },
   );
   child.on('error', (error) => {
     throw new Error(error);
