@@ -93,7 +93,7 @@ commander
   .option('--server', 'gluestick builds only server bundle')
   .option('-D, --vendor', 'build vendor DLL bundle')
   .option('-B, --skip-if-ok', 'skip vendor DLL recompilation if the bundle is valid')
-  .option('-Z, --static', 'prepare html file for static hosting')
+  .option('-Z, --static [url]', 'prepare html file for static hosting')
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/build')(commandApi, commandArguments);
   }));

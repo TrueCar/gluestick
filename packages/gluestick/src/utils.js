@@ -162,6 +162,28 @@ const requireWithInterop = (filename: string): any => {
   return getDefaultExport(require(filename));
 };
 
+const promiseEach = (promiseFactories: (() => Promise<*>)[]): Promise<any[]> => new Promise(
+  (resolve: Function, reject: Function): void => {
+    const buffer: any[] = [];
+    const thenHandlerFactory = (remainingPromiseFactories: (() => Promise<*>)[]) =>
+      (value: any) => {
+        buffer.push(value);
+        if (remainingPromiseFactories.length > 0) {
+          return remainingPromiseFactories[0]().then(
+            thenHandlerFactory(remainingPromiseFactories.slice(1)),
+          ).catch(catchHandler);
+        }
+        return resolve(buffer);
+      };
+    const catchHandler = error => {
+      reject({ error, buffer });
+    };
+    promiseFactories[0]().then(
+      thenHandlerFactory(promiseFactories.slice(1)),
+    ).catch(catchHandler);
+  },
+);
+
 module.exports = {
   isValidEntryPoint,
   convertToCamelCase,
@@ -174,4 +196,5 @@ module.exports = {
   requireModule,
   requireWithInterop,
   getDefaultExport,
+  promiseEach,
 };
