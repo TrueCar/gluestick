@@ -23,7 +23,7 @@ describe('renderer/helpers/linkAssets', () => {
     const {
       styleTags,
       scriptTags,
-    } = linkAssets({}, 'main', assets, {});
+    } = linkAssets(context, 'main', assets, {});
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
