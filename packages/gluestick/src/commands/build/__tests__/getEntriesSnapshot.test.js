@@ -1,50 +1,113 @@
 jest.mock('../../utils.js');
 jest.mock('mkdirp');
-jest.mock('fs', () => ({ writeFile: (f, b, o, cb) => { cb(null); } }));
-jest.mock('node-fetch');
-const handlers = [];
-jest.setMock('cross-spawn', ({
-  spawn: () => ({ on: (evt, cb) => { handlers.push({ evt, cb }); }, kill: jest.fn() }),
-}));
+jest.mock('fs');
+jest.mock('cross-spawn');
+jest.mock('../../../config/webpack/prepareEntries', () => () => ({
+  '/': '',
+  '/test-0': '',
+  '/test-1': '',
+}))
 
-jest.setMock('node-fetch', () => Promise.resolve(
-  { text: () => Promise.resolve('body') },
-));
+jest.mock('node-fetch', () => () =>  Promise.resolve({ text: () => Promise.resolve('body') }));
 
+const fs = require('fs');
+const spawn = require('cross-spawn');
+const path = require('path');
 const getEntriesSnapshot = require('../getEntiresSnapshots');
 
-const context = require('../../../__tests__/mocks/context');
+const { cliContext } = require('../../../__tests__/mocks/context');
+const getMockedCliContext = (customLogger) => ({
+  ...cliContext,
+  logger: {
+    ...cliContext.logger,
+    ...customLogger,
+  },
+});
 
 describe('commands/build/getEntriesSnapshot', () => {
-  beforeEach(() => {
-    while (handlers.length > 0) {
-      handlers.shift();
-    }
-  });
 
   it('should prepare static markups', () => {
-    const promise = getEntriesSnapshot(context);
-    handlers.filter(h => h.evt === 'message')[0].cb({ type: 'test', value: 'Renderer listening' });
-    return promise;
-  });
-
-  it('should reject promise if spawning renderer fails', () => {
-    const promise = getEntriesSnapshot(context);
-    handlers.filter(h => h.evt === 'message')[0].cb({ type: 'ERROR', value: '' });
-    return promise.catch(error => {
-      expect(error).toEqual('Renderer failed to start');
+    const callbacks = [];
+    spawn.sync.mockImplementationOnce(() => {
+      return {
+        kill() {},
+        on(event, callback) {
+          callbacks.push({ event, callback });
+          callbacks
+            .filter(({ event }) => event === 'message')
+            .forEach(({ callback }) => callback({ type: 'SUCCESS', value: 'Renderer listening' }));
+        },
+      };
+    });
+    return getEntriesSnapshot(getMockedCliContext()).then(() => {
+      const getPath = name => path.join(
+        process.cwd(),
+        cliContext.config.GSConfig.buildStaticPath,
+        `${name}.html`
+      );
+      expect(fs.existsSync(getPath('main'))).toBeTruthy();
+      expect(fs.existsSync(getPath('test-0'))).toBeTruthy();
+      expect(fs.existsSync(getPath('test-1'))).toBeTruthy();
     });
   });
 
-  it('should reject if there is a problem running renderer', () => {
-    expect(() => {
-      getEntriesSnapshot(context);
-      handlers.filter(h => h.evt === 'error')[0].cb(new Error('test error'));
-    }).toThrowError('test error');
+  it('should reject promise if spawning renderer fails', (done) => {
+    const fatalLogger = jest.fn((error) => {
+      expect(error).toEqual('Renderer failed to start');
+      done();
+    });
+    const callbacks = [];
+    spawn.sync.mockImplementationOnce(() => {
+      return {
+        kill() {},
+        on(event, callback) {
+          callbacks.push({ event, callback });
+          callbacks
+            .filter(({ event }) => event === 'message')
+            .forEach(({ callback }) => callback({ type: 'ERROR', value: '' }));
+        },
+      };
+    });
+    const promise = getEntriesSnapshot(getMockedCliContext({ fatal: fatalLogger }));
+  });
 
-    expect(() => {
-      getEntriesSnapshot(context);
-      handlers.filter(h => h.evt === 'exit')[0].cb(1);
-    }).toThrowError('Renderer process exited with code 1');
+  it('should reject if there is a problem running renderer', (done) => {
+    const fatalLogger = jest.fn((error) => {
+      expect(error).toEqual(new Error('test error'));
+      done();
+    });
+    const callbacks = [];
+    spawn.sync.mockImplementationOnce(() => {
+      return {
+        kill() {},
+        on(event, callback) {
+          callbacks.push({ event, callback });
+          callbacks
+            .filter(({ event }) => event === 'error')
+            .forEach(({ callback }) => callback('test error'));
+        },
+      };
+    });
+    const promise = getEntriesSnapshot(getMockedCliContext({ fatal: fatalLogger }));
+  });
+
+  it('should reject if renderer exited with non-zero code', (done) => {
+    const fatalLogger = jest.fn((error) => {
+      expect(error).toEqual(new Error('Renderer process exited with code 1'));
+      done();
+    });
+    const callbacks = [];
+    spawn.sync.mockImplementationOnce(() => {
+      return {
+        kill() {},
+        on(event, callback) {
+          callbacks.push({ event, callback });
+          callbacks
+            .filter(({ event }) => event === 'exit')
+            .forEach(({ callback }) => callback(1));
+        },
+      };
+    });
+    const promise = getEntriesSnapshot(getMockedCliContext({ fatal: fatalLogger }));
   });
 });

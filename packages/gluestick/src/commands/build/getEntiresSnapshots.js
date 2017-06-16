@@ -1,7 +1,7 @@
 /* @flow */
 import type { CLIContext } from '../../types.js';
 
-const { spawn } = require('cross-spawn');
+const spawn = require('cross-spawn');
 const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
@@ -11,7 +11,7 @@ const { promiseEach } = require('../../utils');
 const prepareEntries = require('../../config/webpack/prepareEntries');
 
 const spawnRenderer = (entryPointPath: string, args: string) => {
-  const child: Object = spawn(
+  const child: Object = spawn.sync(
     'node',
     [entryPointPath].concat(args),
     { stdio: ['inherit', 'pipe', 'inherit', 'ipc'] },
@@ -32,33 +32,29 @@ module.exports = ({ config, logger }: CLIContext, app?: string, url: ?string) =>
 
   const entryPointPath = config.webpackConfig.universalSettings.server.output;
   const args = JSON.stringify(config);
-
   let child: Object;
 
   // Hack: wait for `Renderer listening on port xxxx.` message,
   // otherwise we won't know if it started yet or not.
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      child = spawnRenderer(entryPointPath, args);
+    child = spawnRenderer(entryPointPath, args);
+    child.on('message', (msg: { type: string, value: any[] }): void => {
+      if (msg.value.includes('Renderer listening')) {
+        resolve();
+      } else if (msg.type === 'ERROR') {
+        reject('Renderer failed to start');
+      }
+    });
 
-      child.on('message', (msg: { type: string, value: any[] }): void => {
-        if (msg.value.includes('Renderer listening')) {
+    if (process.env.NODE_ENV === 'production') {
+      child.stdout.on('data', data => {
+        if (data.toString().includes('Renderer listening')) {
           resolve();
-        } else if (msg.type === 'ERROR') {
+        } else if (data.toString().includes('ERROR')) {
           reject('Renderer failed to start');
         }
       });
-
-      if (process.env.NODE_ENV === 'production') {
-        child.stdout.on('data', data => {
-          if (data.toString().includes('Renderer listening')) {
-            resolve();
-          } else if (data.toString().includes('ERROR')) {
-            reject('Renderer failed to start');
-          }
-        });
-      }
-    }, 2000);
+    }
   }).then(() => {
     clearBuildDirectory(config.GSConfig, 'static');
     mkdir.sync(path.join(process.cwd(), config.GSConfig.buildStaticPath));
@@ -90,7 +86,9 @@ module.exports = ({ config, logger }: CLIContext, app?: string, url: ?string) =>
   }).then(() => {
     child.kill();
   }).catch(error => {
-    child.kill();
+    if (child) {
+      child.kill();
+    }
     logger.fatal(error);
   });
 };
