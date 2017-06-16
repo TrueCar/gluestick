@@ -22,10 +22,10 @@ module.exports = {
   writeFileSync: (file: string, data: string) => {
     _files[file] = data;
   },
-  writeFile: (file: string, data: string, opts: string | Object, callback) => {
+  writeFile: (file: string, data: string, opts: string | Object, callback: Function) => {
     _files[file] = data;
     process.nextTick(() => {
-      callback();
+      callback(null);
     });
   },
   readFileSync: (file: string) => {
