@@ -30,6 +30,7 @@ const gsConfig: GSConfig = {
     client: 0,
     server: 0,
   },
+  publicPath: '',
   buildStaticPath: '',
   buildAssetsPath: '',
   buildRendererPath: '',
