@@ -16,7 +16,7 @@
     "build": "node ./scripts/build.js"
   },
   "dependencies": {
-    "lerna": "2.0.0-rc.4"
+    "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
