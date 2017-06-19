@@ -71,7 +71,7 @@ module.exports = async (
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
-      return null;
+      return Promise.resolve();
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
@@ -115,7 +115,7 @@ module.exports = async (
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return null;
+      return Promise.resolve();
     }
 
     if (!renderPropsAfterHooks) {
@@ -123,7 +123,7 @@ module.exports = async (
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return null;
+      return Promise.resolve();
     }
 
     await runBeforeRoutes(store, renderPropsAfterHooks, { isServer: true, request: req });
@@ -164,7 +164,7 @@ module.exports = async (
     );
     const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
     res.status(statusCode).send(output.responseString);
-    return null;
+    return Promise.resolve();
   } catch (error) {
     hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
@@ -175,5 +175,5 @@ module.exports = async (
       error,
     );
   }
-  return null;
+  return Promise.resolve();
 };
