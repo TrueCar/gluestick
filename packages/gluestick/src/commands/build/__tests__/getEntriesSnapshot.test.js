@@ -11,7 +11,7 @@ jest.mock('../../../config/webpack/prepareEntries', () => () => ({
 jest.mock('node-fetch', () => () =>  Promise.resolve({ text: () => Promise.resolve('body') }));
 
 const fs = require('fs');
-const spawn = require('cross-spawn');
+const crossSpawn = require('cross-spawn');
 const path = require('path');
 const getEntriesSnapshot = require('../getEntiresSnapshots');
 
@@ -28,7 +28,7 @@ describe('commands/build/getEntriesSnapshot', () => {
 
   it('should prepare static markups', () => {
     const callbacks = [];
-    spawn.sync.mockImplementationOnce(() => {
+    crossSpawn.spawn.mockImplementationOnce(() => {
       return {
         kill() {},
         on(event, callback) {
@@ -57,7 +57,7 @@ describe('commands/build/getEntriesSnapshot', () => {
       done();
     });
     const callbacks = [];
-    spawn.sync.mockImplementationOnce(() => {
+    crossSpawn.spawn.mockImplementationOnce(() => {
       return {
         kill() {},
         on(event, callback) {
@@ -77,7 +77,7 @@ describe('commands/build/getEntriesSnapshot', () => {
       done();
     });
     const callbacks = [];
-    spawn.sync.mockImplementationOnce(() => {
+    crossSpawn.spawn.mockImplementationOnce(() => {
       return {
         kill() {},
         on(event, callback) {
@@ -97,7 +97,7 @@ describe('commands/build/getEntriesSnapshot', () => {
       done();
     });
     const callbacks = [];
-    spawn.sync.mockImplementationOnce(() => {
+    crossSpawn.spawn.mockImplementationOnce(() => {
       return {
         kill() {},
         on(event, callback) {

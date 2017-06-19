@@ -71,7 +71,6 @@ module.exports = (
 
   // Get shared config between client and server.
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
-  logger.warn(sharedConfig.output);
 
   // Apply pre overwriters from config plugins to shared webpack config.
   const sharedConfigFinal: WebpackConfig = plugins

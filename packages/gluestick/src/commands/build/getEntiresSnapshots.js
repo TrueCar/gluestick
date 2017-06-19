@@ -1,7 +1,7 @@
 /* @flow */
 import type { CLIContext } from '../../types.js';
 
-const spawn = require('cross-spawn');
+const { spawn } = require('cross-spawn');
 const fetch = require('node-fetch');
 const path = require('path');
 const fs = require('fs');
@@ -11,7 +11,7 @@ const { promiseEach } = require('../../utils');
 const prepareEntries = require('../../config/webpack/prepareEntries');
 
 const spawnRenderer = (entryPointPath: string, args: string) => {
-  const child: Object = spawn.sync(
+  const child: Object = spawn(
     'node',
     [entryPointPath].concat(args),
     { stdio: ['inherit', 'pipe', 'inherit', 'ipc'] },
