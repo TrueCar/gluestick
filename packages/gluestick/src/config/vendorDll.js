@@ -174,6 +174,7 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
   };
 
   if (process.env.NODE_ENV === 'production') {
+    // $FlowIgnore `plugins` is an Array
     baseConfig.plugins.push(
       new webpack.optimize.UglifyJsPlugin({
         compress: {
