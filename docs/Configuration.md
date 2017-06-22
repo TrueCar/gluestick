@@ -134,7 +134,7 @@ to be run.
 > Please note, that `CommonsChunkPlugin` and `DllPlugin` are __not interoperable__, so it's up to you to decide
 which one suits your project better.
 
-If you want to use `DllPlugin`, you firstly need to execute `gluestick build --vendor`, before building any other app.
+If you want to use `DllPlugin`, you firstly need to execute `gluestick build --vendor` (for production add `NODE_ENV=production` when running the command), before building any other app.
 This command will create files (including your vendor DLL bundle) under `build/assets/dlls`. Now if you `build` or `start` an app or whole project, it will use vendor DLL bundle.
 
 `DllPlugin` is the essential part that allows for app builds parallelisation.
