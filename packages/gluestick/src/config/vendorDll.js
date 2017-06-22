@@ -146,6 +146,7 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
   }
 
   const baseConfig: WebpackConfig = {
+    devtool: 'cheap-source-map',
     context: appRoot,
     resolve: {
       extensions: ['.js', '.json'],
@@ -167,15 +168,20 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
         path: path.join(buildDllPath, manifestFilename.replace('vendor', '[name]')),
         name: '[name]_[hash]',
       }),
+      progressHandler(logger, 'vendor'),
+    ],
+    bail: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    baseConfig.plugins.push(
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
         },
       }),
-      progressHandler(logger, 'vendor'),
-    ],
-    bail: true,
-  };
+    );
+  }
 
   const intermediateConfig: WebpackConfig = plugins
     .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.vendorDllWebpackConfig)
