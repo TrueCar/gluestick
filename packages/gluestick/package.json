@@ -117,7 +117,7 @@
     "shelljs": "0.7.6",
     "sorted-object": "2.0.1",
     "universal-webpack": "0.3.9",
-    "webpack": "2.5.0",
+    "webpack": "^3.0.0",
     "webpack-dev-middleware": "1.9.0",
     "webpack-hot-middleware": "2.15.0"
   },

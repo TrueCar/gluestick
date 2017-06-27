@@ -50,6 +50,10 @@ module.exports = (
     };
   });
   config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
+    }),
     new chunksPlugin(
       deepClone(configuration),
       { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename },

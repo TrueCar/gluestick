@@ -130,10 +130,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           context: appRoot,
         },
       }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
-      }),
     ],
     node: {
       net: 'empty',
