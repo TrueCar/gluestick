@@ -77,14 +77,20 @@ describe('plugin', () => {
     expect(webpackConfig.resolve.alias).toEqual({});
     expect(webpackConfig.module.rules).toEqual(['loader']);
     expect(webpackConfig.plugins).toEqual(['plugin']);
-    expect(webpackConfig.entry.vendor).toEqual(['vendor']);
+    expect(webpackConfig.entry.vendor).toBeUndefined();
+    expect(plugin.postOverwrites.clientWebpackConfig({
+      resolve: { alias: {} },
+      module: { rules: [] },
+      plugins: [new (class CommonsChunkPlugin {})()],
+      entry: {},
+    }).entry.vendor).toEqual(['vendor']);
   });
 
   it('should overwrite unshift new value to vendor in client webpack config', () => {
     const webpackConfig = {
       resolve: { alias: {} },
       module: { rules: [] },
-      plugins: [],
+      plugins: [new (class CommonsChunkPlugin {})()],
       entry: { vendor: ['file.js'] },
     };
     plugin.postOverwrites.clientWebpackConfig(webpackConfig);
@@ -103,5 +109,13 @@ describe('plugin', () => {
     expect(webpackConfig.module.rules).toEqual(['loader']);
     expect(webpackConfig.plugins).toEqual(['plugin']);
     expect(webpackConfig.entry.vendor).toBeUndefined();
+  });
+
+  it('should overwrite vendor dll webpack config', () => {
+    expect(plugin.postOverwrites.vendorDllWebpackConfig({
+      entry: { vendor: ['entry.js'] },
+    }).entry.vendor).toEqual([
+      'vendor', 'entry.js',
+    ]);
   });
 });

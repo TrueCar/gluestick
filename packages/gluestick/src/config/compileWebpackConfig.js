@@ -61,7 +61,7 @@ module.exports = (
       ? {}
       : prepareEntries(gluestickConfig, entryOrGroupToBuild);
   } catch (error) {
-    logger.fatal(error.message);
+    logger.fatal(error);
   }
 
   // Get runtime plugins that will be applied to project code and bundled together.

@@ -26,6 +26,12 @@ const compilations = {
     status: 'init',
     postprocessing: '',
   },
+  vendor: {
+    muted: false,
+    forceMute: false,
+    status: 'init',
+    postprocessing: '',
+  },
 };
 
 /**
