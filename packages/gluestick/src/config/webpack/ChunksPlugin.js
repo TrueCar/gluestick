@@ -3,6 +3,7 @@ import type { WebpackConfig } from '../../types';
 
 const path = require('path');
 const fs = require('fs');
+const mkdir = require('mkdirp');
 
 type ChunksInfo = {
   javascript: {
@@ -86,11 +87,10 @@ module.exports = class ChunksPlugin {
         chunkModules: true,
       });
 
-      // $FlowIgnore `devServer.publicPath` is a string
       const publicPath: string = (
         process.env.NODE_ENV !== 'production' &&
         this.configuration.devServer &&
-        this.configuration.devServer.publicPath
+        typeof this.configuration.devServer.publicPath === 'string'
       ) ? this.configuration.devServer.publicPath : json.publicPath;
 
       const chunksInfoFile: ChunksInfo = getChunksInfoBody(json, publicPath);
@@ -109,6 +109,7 @@ module.exports = class ChunksPlugin {
           },
         };
       }
+      mkdir.sync(path.dirname(outputFilePath));
       fs.writeFileSync(outputFilePath, JSON.stringify(outputChunkInfo, null, '  '));
     });
   }
