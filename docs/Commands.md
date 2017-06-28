@@ -111,7 +111,7 @@ gluestick build
 Available options:
 * `--client` - Build only client bundle
 * `--server` - Build only server bundle
-* `-Z, --static` - Prepare static HTML for each entry
+* `-Z, --static [url]` - Prepare static HTML for each entry (and use provided `url` to fetch HTML from renderer, by default it is `localhost`)
 * `-S, --stats` - Output webpack stats
 * `-A, --app` - Build only specific app or a group of them
 * `-D, --vendor` - Build Vendor DLL bundle

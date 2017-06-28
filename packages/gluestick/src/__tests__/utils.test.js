@@ -72,7 +72,7 @@ describe('utils', () => {
     });
   });
 
-  it('should return default export if ESM or module.exports if CJS', () => {
+  it('getDefaultExport should return default export if ESM or module.exports if CJS', () => {
     expect(utils.getDefaultExport({
       isTest: true,
     })).toEqual({
@@ -93,6 +93,34 @@ describe('utils', () => {
       __esModule: true,
       named: 'export',
       isTest: true,
+    });
+  });
+
+  describe('promiseEach', () => {
+    it('should execute promises serially', () => {
+      return utils.promiseEach([
+        () => Promise.resolve(1),
+        () => Promise.resolve(2),
+        () => new Promise(resolve => { setTimeout(() => { resolve(3); }, 100); }),
+        () => new Promise(resolve => { setTimeout(() => { resolve(4); }, 50); }),
+        () => Promise.resolve(5),
+      ]).then(buffer => {
+        expect(buffer).toEqual([1, 2, 3, 4, 5]);
+      });
+    });
+
+    it('should reject if any of passed promises rejects', () => {
+      const testError = new Error('test');
+      return utils.promiseEach([
+        () => Promise.resolve(1),
+        () => Promise.reject(testError),
+        () => Promise.resolve(2),
+      ]).then(buffer => {
+        expect(buffer).toBeUndefined();
+      }).catch(({ error, buffer }) => {
+        expect(error).toEqual(testError);
+        expect(buffer).toEqual([1]);
+      });
     });
   });
 });

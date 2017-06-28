@@ -75,7 +75,7 @@ describe('renderer/helpers/linkAssets', () => {
       .toContain('console.log(\'LoadJSBefore\')');
   });
 
-  it('', () => {
+  it('should link vendor DLL bundle', () => {
     global.__webpack_public_path__ = null;
     path.join.mockImplementationOnce(() => 'vendor-manifest.json');
     fs.writeFileSync('vendor-manifest.json', JSON.stringify({ name: 'vendor_hash' }));

@@ -35,7 +35,6 @@ GlueStick itself will look only for those properties:
 * `httpClient` - configure htt client
 * `headContent` - configure page `<title>` element
 * `logger` - configure logger
-* `assetPath` - set path to static assets directory
 
 However, you can put your onw properties here and read them by importing this files via alias `config/application`.
 
@@ -53,7 +52,6 @@ type Logger = {
 }
 
 type EnvConfig = {
-  assetPath: string;
   head: HeadContent;
   logger: Logger;
   httpClient?: Object;
@@ -66,7 +64,6 @@ type EnvConfig = {
 }
 
 const config: EnvConfig = {
-  assetPath: '/assets',
   head: {
     title: 'My Gluestick App',
     titleTemplate: '%s | Gluestick Application',
@@ -105,6 +102,14 @@ export default config => ({
   }
 })
 ```
+To modofy path to asset files (previously known as `assetPath`), define `publicPath` and assign a value in Gluestick config, for example:
+```
+export default config => ({
+  ...config,
+  publicPath: process.env.ASSET_URL || '/assets/',
+});
+``` 
+
 To see how the default GlueStick config looks like navigate [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
 
 # Vendoring

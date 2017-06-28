@@ -10,7 +10,7 @@ type CommandOptions = {
   stats: boolean;
   client: boolean;
   server: boolean;
-  static: boolean;
+  static: boolean | string;
   vendor: boolean;
   skipIfOk: boolean;
   app?: string;
@@ -98,7 +98,13 @@ module.exports = (
         compile({ logger, config }, options, 'server').catch(compilationErrorHandler('server')),
         clientCompilation,
       ]).then(() => {
-        return options.static ? getEntiresSnapshots({ config, logger }) : Promise.resolve();
+        return options.static
+          ? getEntiresSnapshots(
+              { config, logger },
+              options.app,
+              typeof options.static === 'string' ? options.static : null,
+            )
+          : Promise.resolve();
       });
     }
   }

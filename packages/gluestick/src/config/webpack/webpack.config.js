@@ -21,6 +21,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     sharedPath,
     configPath,
     nodeModulesPath,
+    publicPath,
   } = gluestickConfig;
   const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
@@ -45,7 +46,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       path: outputPath,
 
       // network path for static files
-      publicPath: '/assets/',
+      publicPath: `/${publicPath}/`.replace(/\/\//g, '/'),
 
       // file name pattern for entry scripts
       filename: '[name].[hash].js',
