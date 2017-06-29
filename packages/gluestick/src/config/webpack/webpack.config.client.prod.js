@@ -20,7 +20,8 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
     use: cssLoaders.slice(1),
   });
   configuration.plugins.push(
-    new webpack.optimize.ModuleConcatenationPlugin(),
+    // Bug: some chunks are not ouptputted
+    // new webpack.optimize.ModuleConcatenationPlugin(),
     new ExtractTextPlugin('[name]-[chunkhash].css'),
     new OptimizeCSSAssetsPlugin({ canPrint: false }),
     new webpack.DefinePlugin({
