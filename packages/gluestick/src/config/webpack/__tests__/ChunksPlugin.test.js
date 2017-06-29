@@ -1,4 +1,5 @@
 jest.mock('fs');
+jest.mock('mkdirp');
 jest.mock('path/webpack-chunks', () => ({
   javascript: {
     main: 'publicPath/main.js',

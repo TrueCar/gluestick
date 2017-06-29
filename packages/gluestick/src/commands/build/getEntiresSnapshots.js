@@ -72,7 +72,8 @@ module.exports = ({ config, logger }: CLIContext, app?: string, url: ?string) =>
         ).then(response => response.text()).then(body => new Promise((resolve, reject) => {
           fs.writeFile(filename, body, 'utf-8', error => {
             if (error) {
-              reject(error);
+              logger.error(error);
+              resolve();
             } else {
               logger.success(`Static for '${key}' created at ${filename}`);
               resolve();

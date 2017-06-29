@@ -125,9 +125,11 @@ describe('commands/build/build', () => {
 
   it('should build vendor bundle only', () => {
     build(commandApi, [{ client: true, server: true, static: true, vendor: true }]);
-    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(1);
+    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(2);
     // $FlowIgnore donesn't know about jest mock
-    expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('dlls');
+    expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
+    // $FlowIgnore donesn't know about jest mock
+    expect(utils.clearBuildDirectory.mock.calls[1][1]).toEqual('dlls');
     expect(compile).toHaveBeenCalledTimes(1);
     // $FlowIgnore donesn't know about jest mock
     expect(compile.mock.calls[0][2]).toEqual('vendor');
