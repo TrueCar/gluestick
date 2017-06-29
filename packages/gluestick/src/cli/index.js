@@ -87,10 +87,13 @@ commander
 commander
   .command('build')
   .description('create production asset build')
+  .option('-A, --app <name>', 'app or a group of apps to build')
   .option('-S, --stats', 'create webpack stats file')
   .option('--client', 'gluestick builds only client bundle')
   .option('--server', 'gluestick builds only server bundle')
-  .option('-Z, --static', 'prepare html file for static hosting')
+  .option('-D, --vendor', 'build vendor DLL bundle')
+  .option('-B, --skip-if-ok', 'skip vendor DLL recompilation if the bundle is valid')
+  .option('-Z, --static [url]', 'prepare html file for static hosting')
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/build')(commandApi, commandArguments);
   }));

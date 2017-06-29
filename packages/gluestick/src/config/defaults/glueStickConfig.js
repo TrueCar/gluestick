@@ -11,9 +11,11 @@ const config: GSConfig = {
     client: 8888,
     server: 8880,
   },
+  publicPath: '/assets/',
   buildStaticPath: 'build/static',
   buildAssetsPath: 'build/assets',
   buildRendererPath: 'build/server',
+  buildDllPath: 'build/assets/dlls',
   assetsPath: 'assets',
   sourcePath: 'src',
   appsPath: 'apps',
@@ -38,6 +40,7 @@ const config: GSConfig = {
   hooksPath: 'src/gluestick.hooks.js',
   webpackHooksPath: 'src/webpack.hooks.js',
   cachingConfigPath: 'src/config/caching.server',
+  vendorSourcePath: 'src/vendor.js',
   nodeModulesPath: 'node_modules',
   autoUpgrade: {
     added: [
@@ -56,6 +59,7 @@ const config: GSConfig = {
       'src/config/caching.server.js',
       // 1.x
       'src/gluestick.config.js',
+      'src/vendor.js',
     ],
     changed: [
       'src/config/.Dockerfile',   // -> last updated in 0.2.0

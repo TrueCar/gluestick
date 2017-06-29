@@ -21,6 +21,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     sharedPath,
     configPath,
     nodeModulesPath,
+    publicPath,
   } = gluestickConfig;
   const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
@@ -45,10 +46,10 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       path: outputPath,
 
       // network path for static files
-      publicPath: '/assets/',
+      publicPath: `/${publicPath}/`.replace(/\/\//g, '/'),
 
       // file name pattern for entry scripts
-      filename: '[name].[chunkhash].js',
+      filename: '[name].[hash].js',
 
       // file name pattern for chunk scripts
       chunkFilename: '[name].[hash].js',
@@ -129,10 +130,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           // Can also supply `query.context` parameter.
           context: appRoot,
         },
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: `vendor${process.env.NODE_ENV === 'production' ? '-[hash]' : ''}.bundle.js`,
       }),
     ],
     node: {

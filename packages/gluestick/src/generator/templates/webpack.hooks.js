@@ -5,5 +5,6 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 export default {
   webpackClientConfig: [],
   webpackServerConfig: [],
+  webpackVendorDllConfig: [],
 };
 `;

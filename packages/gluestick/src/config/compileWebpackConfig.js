@@ -61,7 +61,7 @@ module.exports = (
       ? {}
       : prepareEntries(gluestickConfig, entryOrGroupToBuild);
   } catch (error) {
-    logger.fatal(error.message);
+    logger.fatal(error);
   }
 
   // Get runtime plugins that will be applied to project code and bundled together.
@@ -93,7 +93,6 @@ module.exports = (
     gluestickConfig.ports.client,
     gluestickConfig.host,
   );
-
   // Get runtime and server plugins, both runtime and server plugins in this case
   // won't be included in client bundles but in server aka renderer bundle.
   // `./webpack/buildServerEntries.js` will invoke generator that will output
@@ -185,6 +184,8 @@ module.exports = (
           : originalHandler(ctx, req, cb);
     });
   }
+
+  // logger.info(clientEnvConfigFinal);
 
   return {
     universalSettings: universalWebpackSettings,

@@ -11,9 +11,11 @@ export type GSConfig = {
     client: number;
     server: number;
   };
+  publicPath: string;
   buildStaticPath: string;
   buildAssetsPath: string;
   buildRendererPath: string;
+  buildDllPath: string;
   assetsPath: string;
   sourcePath: string;
   sharedPath: string;
@@ -30,6 +32,7 @@ export type GSConfig = {
   debugWatchDirectories: string[];
   defaultErrorTemplatePath: string;
   customErrorTemplatePath: string;
+  vendorSourcePath: string;
   autoUpgrade: {
     added: string[],
     changed: string[],
@@ -55,6 +58,7 @@ export type CompiledConfig = {
   universalSettings: UniversalSettings;
   client: WebpackConfig;
   server: WebpackConfig;
+  vendor?: WebpackConfig;
 }
 
 export type Config = {
@@ -253,6 +257,7 @@ export type GSHooks = {
 export type WebpackHooks = {
   webpackClientConfig?: Hook;
   webpackServerConfig?: Hook;
+  webpackVendorDllConfig?: Hook;
 };
 
 export type Plugin = {
@@ -276,6 +281,7 @@ export type ConfigPlugin = {
     gluestickConfig?: (config: GSConfig) => void;
     clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
     serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
+    vendorDllWebpackConfig?: (config: WebpackConfig) => WebpackConfig;
   };
 };
 

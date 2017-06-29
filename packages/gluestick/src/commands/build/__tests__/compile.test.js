@@ -24,7 +24,9 @@ describe('commands/build/compile', () => {
 
   it('should resolve promise on successfull compilation', () => {
     const promise = compile(context, {}, 'test');
-    webpack.run.mock.calls[0][0](null, { toJson: jest.fn(() => ({ time: 0 })) });
+    webpack.run.mock.calls[0][0](null, { toJson: jest.fn(() => ({
+      time: 0, errors: [], warnings: [],
+    })) });
     return promise.then(() => {
       expect(context.logger.success).toHaveBeenCalledWith('Test bundle has been prepared for test in 0.00s');
     });
@@ -32,7 +34,9 @@ describe('commands/build/compile', () => {
 
   it('should create webpack stats', () => {
     const promise = compile(context, { stats: true }, 'test');
-    webpack.run.mock.calls[0][0](null, { toJson: jest.fn(() => ({ time: 0 })) });
+    webpack.run.mock.calls[0][0](null, { toJson: jest.fn(() => ({
+      time: 0,  errors: [], warnings: [],
+    })) });
     return promise.then(() => {
       expect(context.logger.success).toHaveBeenCalledWith('Test bundle has been prepared for test in 0.00s');
       // $FlowIgnore createWebpackStats is mocked

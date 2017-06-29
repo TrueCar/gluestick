@@ -19,7 +19,6 @@ type Logger = {
 }
 
 type EnvConfig = {
-  assetPath: string;
   head: HeadContent;
   logger: Logger;
   httpClient?: Object;
@@ -46,7 +45,6 @@ const headContent: HeadContent = {
 
 const config: Config = {
   development: {
-    assetPath: "/assets",
     head: headContent,
     logger: {
       pretty: true,
@@ -54,8 +52,6 @@ const config: Config = {
     }
   },
   production: {
-    // This should be a CDN in development
-    assetPath: process.env.ASSET_URL || "/assets",
     head: headContent,
     logger: {
       pretty: false,
