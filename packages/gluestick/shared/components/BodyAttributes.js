@@ -33,7 +33,11 @@ function reducePropsToState(propsList: Object[]) {
 function handleStateChangeOnClient(attrs: Object) {
   for (const key in attrs) {
     if (document.body) {
-      document.body.setAttribute(key, attrs[key]);
+      if (key === 'className') {
+        document.body.setAttribute('class', attrs[key]);
+      } else {
+        document.body.setAttribute(key, attrs[key]);
+      }
     }
   }
 }
