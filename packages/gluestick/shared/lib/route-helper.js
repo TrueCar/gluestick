@@ -55,6 +55,13 @@ export function runBeforeRoutes(
 export function createTransitionHook(store: Object, routes: Object[]): Function {
   return function checkLocation(location: Object, cb: Function): void {
     match({ routes, location }, async (error, redirectLocation, renderProps) => {
+      // If `redirectLocation` is not empty, we need to check it again with new location,
+      // otherwise `runBeforeRoutes` will throw error since `renderProps` is undefined
+      if (redirectLocation) {
+        checkLocation(redirectLocation, cb);
+        return;
+      }
+
       try {
         await runBeforeRoutes(store, renderProps);
       } catch (err) {
