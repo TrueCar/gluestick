@@ -26,6 +26,11 @@ jest.mock('./mismatch-deps/vendor-manifest.json', () => ({
   },
 }), { virtual: true });
 
+const originalProcessCwd = process.cwd.bind(process);
+// $FlowIgnore
+process.cwd = () => {
+  return `${originalProcessCwd()}/packages/gluestick`;
+};
 
 const path = require('path');
 const fs = require('fs');
@@ -52,6 +57,11 @@ const getMockedConext = (customLoggingFns = {}, customGsConfig = {}, customWebpa
 });
 
 describe('config/vendorDll', () => {
+  afterAll(() => {
+    // $FlowIgnore
+    process.cwd = originalProcessCwd;
+  });
+
   describe('getConfig', () => {
     beforeEach(() => {
       // $FlowIgnore `utils.requireModule` is mocked
