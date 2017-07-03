@@ -2131,15 +2131,15 @@ globals@^9.0.0:
   version "9.18.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
 
-gluestick-generators@1.13.0-beta.0:
-  version "1.13.0-beta.0"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.13.0-beta.0.tgz#22d6b189960ccf456064db890c73d4d173ededb4"
+gluestick-generators@1.13.0-beta.1:
+  version "1.13.0-beta.1"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.13.0-beta.1.tgz#5bff10234446d3c4a2f62fd15c9c85c6f402b56a"
   dependencies:
     mkdirp "^0.5.1"
 
-gluestick@1.13.0-beta.0:
-  version "1.13.0-beta.0"
-  resolved "https://registry.yarnpkg.com/gluestick/-/gluestick-1.13.0-beta.0.tgz#40aae63ec74f71d0d98b895ec8609d86b1400292"
+gluestick@1.13.0-beta.1:
+  version "1.13.0-beta.1"
+  resolved "https://registry.yarnpkg.com/gluestick/-/gluestick-1.13.0-beta.1.tgz#b71df1542d63146120a60c1c164a3d6badeca487"
   dependencies:
     axios "0.15.3"
     babel-core "^6.24.1"
@@ -2157,7 +2157,7 @@ gluestick@1.13.0-beta.0:
     eventsource-polyfill "0.9.6"
     express "4.14.0"
     fs-extra "2.0.0"
-    gluestick-generators "1.13.0-beta.0"
+    gluestick-generators "1.13.0-beta.1"
     handlebars "4.0.6"
     http-proxy-middleware "0.17.3"
     ignore-loader "0.1.2"
