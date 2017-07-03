@@ -16,6 +16,7 @@
     "build": "node ./scripts/build.js"
   },
   "dependencies": {
+    "jest": "20.0.4",
     "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
@@ -38,5 +39,9 @@
     "mkdirp": "0.5.1",
     "node-fetch": "1.6.3",
     "rimraf": "2.6.1"
+  },
+  "jest": {
+    "notify": true,
+    "testRegex": ".*/src/.*/__tests__/.*\\.test\\.js$"
   }
 }
