@@ -11,6 +11,7 @@ const statelessFunctionalOption = ['-F, --functional', '(generate component) sta
 const logLevelOption = ['-L, --log-level <level>', 'set the logging level', /^(error|warn|success|info|debug)$/, null];
 const entrypointsOption = ['-E, --entrypoints <entrypoints>', 'Enter specific entrypoint or a group (same as -A)'];
 const appOption = ['-A, --app <appName>', 'Build and run only specified app or a group (same as -E)'];
+const noDepCheck = ['-N, --no-dep-check', 'skip check for congruency between package.json and node_module versions'];
 
 const safelyExecCommand = (commandFn) => (...commandArguments) => {
   try {
@@ -80,6 +81,7 @@ commander
   .option(...debugServerOption)
   .option(...debugServerPortOption)
   .option(...skipBuildOption)
+  .option(...noDepCheck)
   .action(safelyExecCommand((...commandArguments) => {
     require('../commands/start')(commandApi, commandArguments);
   }));

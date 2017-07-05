@@ -8,7 +8,6 @@ const { filterArg } = require('./utils');
 const path = require('path');
 const compareModuleVersions = require('./compareVersions/compareModuleVersions');
 
-const packagePath = require(path.join(process.cwd(), 'package.json'));
 const modulePath = path.join(process.cwd(), 'node_modules');
 
 const skippedOptions: string[] = [
@@ -21,6 +20,7 @@ type StartOptions = {
   logLevel?: string;
   runTests: boolean;
   skipBuild: boolean;
+  noDepCheck: boolean;
   parent: Object;
   dev: boolean;
 };
@@ -89,17 +89,20 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
   }
 
   testCommand.then(() => {
+    if (!options.noDepCheck) {
+      const packageJson = require(path.join(process.cwd(), 'package.json'));
+      try {
+        compareModuleVersions(packageJson, modulePath, logger);
+      } catch (e) {
+        logger.error(e);
+      }
+    }
+
     let clientCompilationDonePromise: Promise<void> = Promise.resolve();
     if (!isProduction) {
       clientCompilationDonePromise = startClient(
         commandApi, commandArguments, { printCommandInfo: false },
       );
-    }
-
-    try {
-      compareModuleVersions(packagePath, modulePath);
-    } catch (e) {
-      console.log(e);
     }
 
     if (!isProduction || (isProduction && options.skipBuild)) {

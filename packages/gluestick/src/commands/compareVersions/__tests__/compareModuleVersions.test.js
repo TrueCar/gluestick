@@ -1,9 +1,19 @@
+/* @flow */
+import type { Logger } from '../types.js';
 
+const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
 const compareModuleVersions = require('../compareModuleVersions');
 const path = require('path');
 
 const projectPath = require(path.join(process.cwd(), 'package.json'));
 
+const commandApi = {
+  ...mockedCommandApi,
+  getLogger: () => ({
+    ...mockedCommandApi.getLogger(),
+  }),
+};
+const logger: Logger = commandApi.getLogger();
 const modulePath = path.join(process.cwd(), 'node_modules');
 
 // Test package.jsons
@@ -46,18 +56,18 @@ const projectPackageIncorrect =
 
 describe('compareVersions/compareModuleVersions', () => {
   it('should return an empty array if package is empty', () => {
-    expect(compareModuleVersions(emptyPackage, modulePath)).toEqual([]);
+    expect(compareModuleVersions(emptyPackage, modulePath, logger)).toEqual([]);
   });
 
   it('should return an array with only devDependencies', () => {
-    expect(compareModuleVersions(devDependencyPackage, modulePath)).toEqual([' eslint', ' glob', ' mkdirp']);
+    expect(compareModuleVersions(devDependencyPackage, modulePath, logger)).toEqual([' eslint', ' glob', ' mkdirp']);
   });
 
   it('should detect no mismatched modules', () => {
-    expect(compareModuleVersions(projectPackageCorrect, modulePath)).toEqual([]);
+    expect(compareModuleVersions(projectPackageCorrect, modulePath, logger)).toEqual([]);
   });
 
   it('should detect 3 mismatched modules', () => {
-    expect(compareModuleVersions(projectPackageIncorrect, modulePath)).toEqual([' eslint', ' glob', ' mkdirp']);
+    expect(compareModuleVersions(projectPackageIncorrect, modulePath, logger)).toEqual([' eslint', ' glob', ' mkdirp']);
   });
 });
