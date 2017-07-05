@@ -49,10 +49,9 @@ const compareModuleVersions = (projectPackage, modulePath, logger) => {
       return;
     }
 
-    if (!tempPackage || !semver.satisfies(tempPackage.version, allDependencies[dep])) {
-      const fileVersion = allDependencies[dep].match(/\d+\.\d+\.\d+/)[0];
-      if (allDependencies[dep].split(':')[0] !== 'file' || (allDependencies[dep].split(':')[0] === 'file' &&
-      tempPackage._from.search(fileVersion) === -1)) {
+    if (!semver.satisfies(tempPackage.version, allDependencies[dep])) {
+      const fileVersionMatch = allDependencies[dep].match(/\d+\.\d+\.\d+/);
+      if (tempPackage._from.search(fileVersionMatch) === -1) {
         logger.error(`${chalk.red('The node_module ')}`, `${chalk.yellow(dep)}`, `${chalk.red(' does not satisfy the required version in your package.json')}`);
         const name = ' '.concat(dep.toString());
         discrepancies.push(name);
