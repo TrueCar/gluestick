@@ -16,6 +16,15 @@ const spawnWithErrorHandling = (...args) => {
   }
 };
 
+let tagname = 'latest';
+if (version.includes('alpha')) {
+  tagname = 'alpha';
+} else if (version.includes('beta')) {
+  tagname = 'beta';
+} else if (version.includes('-')) {
+  tagname = 'pre';
+}
+
 // Publish packages to npm registry
 spawnWithErrorHandling('npm', [
   'run',
@@ -25,6 +34,8 @@ spawnWithErrorHandling('npm', [
   '--skip-git',
   '--repo-version',
   version,
+  '--npm-tag',
+  tagname,
   '--yes',
   '--force-publish=*',
   '--exact',
