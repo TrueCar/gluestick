@@ -16,13 +16,16 @@ const spawnWithErrorHandling = (...args) => {
   }
 };
 
-let tagname = 'latest';
-if (version.includes('alpha')) {
-  tagname = 'alpha';
-} else if (version.includes('beta')) {
-  tagname = 'beta';
-} else if (version.includes('-')) {
-  tagname = 'pre';
+// Set dist-tag
+let tagname = 'latest'; // stable
+
+if (version.includes('-')) { // pre-release
+  const regex = version.match(/-(.+)\./);
+  if (regex) {
+    tagname = regex[1]; // parse type of pre-release
+  } else {
+    tagname = 'pre'; // default to `pre` if no match
+  }
 }
 
 // Publish packages to npm registry
