@@ -7,7 +7,7 @@
     "install:yarn": "yarn && npm run build && npm run yarn:install && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "jest --bail",
-    "test-coverage": "lerna exec --concurrency=1 -- npm run test -- --bail --coverage",
+    "test-coverage": "npm run test -- --coverage",
     "lint": "eslint .",
     "flow": "flow",
     "ci": "npm run lint && npm run flow && npm run test-coverage",
