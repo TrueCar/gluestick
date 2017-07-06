@@ -1,4 +1,5 @@
 /* @flow */
+const Logger = require('../../types.js');
 const semver = require('semver');
 const chalk = require('chalk');
 const path = require('path');
@@ -17,7 +18,7 @@ const packageName = '/package.json';
  *
  * Return - returns array of dependencies that are missing or out of date.
  */
-const compareModuleVersions = (projectPackage, modulePath, logger) => {
+const compareModuleVersions = (projectPackage: Object, modulePath: String, logger: Logger) => {
   const discrepancies = [];
   let devDepDifference = false;
   let allDependencies = projectPackage;
@@ -37,22 +38,21 @@ const compareModuleVersions = (projectPackage, modulePath, logger) => {
   }
 
   Object.keys(allDependencies).forEach(dep => {
-    // const tempPath = modulePath.concat('/', dep, packageName);
     const tempPath = path.join(modulePath, dep, packageName);
     let tempPackage;
     try {
       tempPackage = require(tempPath);
     } catch (e) {
-      logger.error(`${chalk.red('The node_module ')}`, `${chalk.yellow(dep)}`, `${chalk.red(' does not exist')}`);
+      logger.error('The node_module ', `${chalk.yellow(dep)}`, ' does not exist.');
       const name = ' '.concat(dep);
       discrepancies.push(name);
       return;
     }
 
-    if (!semver.satisfies(tempPackage.version, allDependencies[dep])) {
+    if (allDependencies[dep] && !semver.satisfies(tempPackage.version, allDependencies[dep])) {
       const fileVersionMatch = allDependencies[dep].match(/\d+\.\d+\.\d+/);
       if (tempPackage._from.search(fileVersionMatch) === -1) {
-        logger.error(`${chalk.red('The node_module ')}`, `${chalk.yellow(dep)}`, `${chalk.red(' does not satisfy the required version in your package.json')}`);
+        logger.error('The node_module ', `${chalk.yellow(dep)}`, ' does not satisfy the required version in your package.json.');
         const name = ' '.concat(dep.toString());
         discrepancies.push(name);
       }
@@ -60,11 +60,11 @@ const compareModuleVersions = (projectPackage, modulePath, logger) => {
   });
 
   if (discrepancies.length === 0) {
-    logger.success(`${chalk.green('\nNo problems! All node_module versions currently satisfy your package.json.\n')}`);
+    logger.success('\nNo problems! All node_module versions currently satisfy your package.json.\n');
   } else {
-    logger.error((devDepDifference) ? `${chalk.red('\nOne or more of these node_modules may have a discrepancy between their dependency and devDependency in package.json.\n')}` : '',
-    `${chalk.red('\nThe node_module(s)')}`, `${chalk.yellow(discrepancies)}`, `${chalk.red(' is(are) either missing or out of date.\n')}`,
-    `${chalk.red('\nRun')}`, `${chalk.yellow('npm install')}`, `${chalk.red('to resolve this discrepancy.\n')}`);
+    logger.error((devDepDifference) ? 'One or more of these node_modules may have a discrepancy between their dependency and devDependency in package.json.\n' : '',
+    '\nThe node_module(s)', `${chalk.yellow(discrepancies)}`, ' is(are) either missing or out of date.\n',
+    '\nRun', `${chalk.yellow('npm install')}`, 'to resolve this discrepancy.\n');
   }
   return discrepancies;
 };

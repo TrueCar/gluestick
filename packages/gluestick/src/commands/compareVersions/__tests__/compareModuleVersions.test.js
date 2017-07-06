@@ -1,5 +1,5 @@
 /* @flow */
-import type { Logger } from '../types.js';
+import type { Logger } from '../../../types.js';
 
 const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
 const compareModuleVersions = require('../compareModuleVersions');
