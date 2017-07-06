@@ -5,8 +5,6 @@ const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
 const compareModuleVersions = require('../compareModuleVersions');
 const path = require('path');
 
-const projectPath = require(path.join(process.cwd(), 'package.json'));
-
 const commandApi = {
   ...mockedCommandApi,
   getLogger: () => ({
@@ -14,7 +12,7 @@ const commandApi = {
   }),
 };
 const logger: Logger = commandApi.getLogger();
-const modulePath = path.join(process.cwd(), 'node_modules');
+const modulePath = path.join(process.cwd(), 'packages/gluestick/src/commands/compareVersions/__tests__/node_modules');
 
 // Test package.jsons
 const emptyPackage = {};
@@ -31,26 +29,26 @@ const devDependencyPackage =
 const projectPackageCorrect =
   { // assumes that node_modules are up to date with package.json
     dependencies: {
-      lerna: projectPath.dependencies.lerna,
+      lerna: '2.0.0-rc.5',
     },
     devDependencies: {
-      eslint: projectPath.devDependencies.eslint,
-      glob: projectPath.devDependencies.glob,
-      mkdirp: projectPath.devDependencies.mkdirp,
-      rimraf: projectPath.devDependencies.rimraf,
+      eslint: '^3.19.0',
+      glob: '7.1.1',
+      mkdirp: '0.5.1',
+      rimraf: '2.6.1',
     },
   };
 
 const projectPackageIncorrect =
   {
     dependencies: {
-      lerna: projectPath.dependencies.lerna,
+      lerna: '2.0.0-rc.5',
     },
     devDependencies: {
       eslint: '0.0.0',
       glob: '7.1.0',
       mkdirp: '25.5.2',
-      rimraf: projectPath.devDependencies.rimraf,
+      rimraf: '2.6.1',
     },
   };
 

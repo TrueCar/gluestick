@@ -14,7 +14,7 @@ jest.mock('../compareVersions/compareModuleVersions');
 const startCommand = require('../start');
 const startClient = require('../start-client');
 const startServer = require('../start-server');
-const compareVersions = require('../compareVersions/compareModuleVersions');
+const compareModuleVersions = require('../compareVersions/compareModuleVersions');
 const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
 
 const fatalLogger = jest.fn();
@@ -43,7 +43,7 @@ describe('commands/start', () => {
       // $FlowIgnore startServer is mocked
       startServer.mockClear();
       // $FlowIgnore compareVersions is mocked
-      compareVersions.mockClear();
+      compareModuleVersions.mockClear();
     });
 
     afterAll(() => {
@@ -76,7 +76,8 @@ describe('commands/start', () => {
 
       return startServerPromise.then(args => {
         expect(args.length).toBeGreaterThan(0);
-        expect(compareVersions.mock.calls.length).toBe(1);
+        // $FlowIgnore compareModuleVersions is mocked
+        expect(compareModuleVersions.mock.calls.length).toBe(1);
       });
     });
 
@@ -125,6 +126,7 @@ describe('commands/start', () => {
 
     it('should not call compareModuleVersions', () => {
       const promise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
         startServer.mockImplementationOnce((...args) => { resolve(args); });
       });
       process.env.NODE_ENV = originalNodeEnv;
@@ -139,7 +141,8 @@ describe('commands/start', () => {
       }]);
 
       return promise.then(() => {
-        expect(compareVersions.mock.calls.length).toBe(0);
+        // $FlowIgnore compareModuleVersions is mocked
+        expect(compareModuleVersions.mock.calls.length).toBe(0);
       });
     });
 

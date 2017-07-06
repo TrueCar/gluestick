@@ -1,5 +1,6 @@
 /* @flow */
-const Logger = require('../../types.js');
+import type { Logger } from '../../types.js';
+
 const semver = require('semver');
 const chalk = require('chalk');
 const path = require('path');
@@ -18,13 +19,13 @@ const packageName = '/package.json';
  *
  * Return - returns array of dependencies that are missing or out of date.
  */
-const compareModuleVersions = (projectPackage: Object, modulePath: String, logger: Logger) => {
+const compareModuleVersions = (projectPackage: Object, modulePath: string, logger: Logger) => {
   const discrepancies = [];
   let devDepDifference = false;
-  let allDependencies = projectPackage;
+  let allDependencies;
 
   if (!projectPackage.dependencies || !projectPackage.devDependencies) {
-    if (!projectPackage.dependencies || !projectPackage.devDependencies) {
+    if (!projectPackage.dependencies && !projectPackage.devDependencies) {
       return discrepancies;
     }
     allDependencies = projectPackage.dependencies || projectPackage.devDependencies;
