@@ -42,6 +42,9 @@
   },
   "jest": {
     "notify": true,
-    "testRegex": ".*/src/.*/__tests__/.*\\.test\\.js$"
+    "roots": [
+      "packages"
+    ],
+    "testRegex": "src/(.*/)?__tests__/.*\\.test\\.js$"
   }
 }
