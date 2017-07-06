@@ -12,7 +12,7 @@ const commandApi = {
   }),
 };
 const logger: Logger = commandApi.getLogger();
-const modulePath = path.join(process.cwd(), 'packages/gluestick/src/commands/compareVersions/__tests__/node_modules');
+const modulePath = path.join(process.cwd(), 'packages/gluestick/src/commands/compareVersions/__tests__/modules');
 
 // Test package.jsons
 const emptyPackage = {};
