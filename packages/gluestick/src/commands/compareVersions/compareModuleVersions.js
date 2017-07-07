@@ -2,8 +2,10 @@
 import type { Logger } from '../../types.js';
 
 const semver = require('semver');
-const chalk = require('chalk');
 const path = require('path');
+const chalk = require('chalk');
+const { createArrowList } = require('../../cli/helpers');
+const { highlight } = require('../../cli/colorScheme');
 
 const packageName = '/package.json';
 
@@ -19,55 +21,79 @@ const packageName = '/package.json';
  *
  * Return - returns array of dependencies that are missing or out of date.
  */
-const compareModuleVersions = (projectPackage: Object, modulePath: string, logger: Logger) => {
-  const discrepancies = [];
-  let devDepDifference = false;
-  let allDependencies;
 
-  if (!projectPackage.dependencies || !projectPackage.devDependencies) {
-    if (!projectPackage.dependencies && !projectPackage.devDependencies) {
-      return discrepancies;
-    }
-    allDependencies = projectPackage.dependencies || projectPackage.devDependencies;
-  } else {
-    const totalNumDependencies = Object.keys(projectPackage.dependencies).length +
-      Object.keys(projectPackage.devDependencies).length;
-    allDependencies = { ...projectPackage.dependencies, ...projectPackage.devDependencies };
-    if (Object.keys(allDependencies).length < totalNumDependencies) {
-      devDepDifference = true;
-    }
-  }
+type Discrepancy = {
+  name: string,
+  required: string,
+  found: ?string,
+};
 
-  Object.keys(allDependencies).forEach(dep => {
-    const tempPath = path.join(modulePath, dep, packageName);
-    let tempPackage;
+const checkVersions = (dependencies: Object, modulePath: string, discrepancies: Discrepancy[],
+  requireCall: Function) => {
+  Object.keys(dependencies).forEach((depName: string) => {
+    const depVersion: string = dependencies[depName];
+    const tempPath: string = path.join(modulePath, depName, packageName);
+    let tempPackage: Object;
+    let tempDiscrepancy: Discrepancy;
+
     try {
-      tempPackage = require(tempPath);
+      tempPackage = requireCall(tempPath);
     } catch (e) {
-      logger.error('The node_module ', `${chalk.yellow(dep)}`, ' does not exist.');
-      const name = ' '.concat(dep);
-      discrepancies.push(name);
+      tempDiscrepancy = {
+        name: depName,
+        required: depVersion,
+        found: 'N/A - missing',
+      };
+      discrepancies.push(tempDiscrepancy);
       return;
     }
 
-    if (allDependencies[dep] && !semver.satisfies(tempPackage.version, allDependencies[dep])) {
-      const fileVersionMatch = allDependencies[dep].match(/\d+\.\d+\.\d+/);
-      if (tempPackage._from.search(fileVersionMatch) === -1) {
-        logger.error('The node_module ', `${chalk.yellow(dep)}`, ' does not satisfy the required version in your package.json.');
-        const name = ' '.concat(dep.toString());
-        discrepancies.push(name);
+    if (depVersion && !semver.satisfies(tempPackage.version, depVersion)) {
+      const versionMatch = depVersion.match(/\d+\.\d+\.\d+.*/);
+
+      if ((versionMatch && depVersion.includes('file:') && !tempPackage._from.includes(versionMatch)) ||
+          (versionMatch && (!depVersion.includes('file:') && !path.isAbsolute(depVersion) && !/^\.\.?\//.test(depVersion)))) {
+        tempDiscrepancy = {
+          name: depName,
+          required: versionMatch ? versionMatch[0] : depVersion,
+          found: tempPackage.version,
+        };
+        discrepancies.push(tempDiscrepancy);
       }
     }
   });
-
-  if (discrepancies.length === 0) {
-    logger.success('\nNo problems! All node_module versions currently satisfy your package.json.\n');
-  } else {
-    logger.error((devDepDifference) ? 'One or more of these node_modules may have a discrepancy between their dependency and devDependency in package.json.\n' : '',
-    '\nThe node_module(s)', `${chalk.yellow(discrepancies)}`, ' is(are) either missing or out of date.\n',
-    '\nRun', `${chalk.yellow('npm install')}`, 'to resolve this discrepancy.\n');
-  }
   return discrepancies;
 };
 
-module.exports = compareModuleVersions;
+module.exports = (projectPackage: Object, modulePath: string, logger: Logger,
+  requireCall: Function) => {
+  const discrepancies: Discrepancy[] = [];
+
+  if (projectPackage.dependencies) {
+    checkVersions(projectPackage.dependencies, modulePath, discrepancies, requireCall);
+  }
+  if (projectPackage.devDependencies) {
+    checkVersions(projectPackage.devDependencies, modulePath, discrepancies, requireCall);
+  }
+
+  if (discrepancies.length === 0) {
+    logger.success('No problems found: all dependencies are valid.');
+  } else {
+    logger.error(
+      `Found problems with the following dependencies:\n${
+        createArrowList(
+          discrepancies.map(({ name, required, found }) => `${
+            highlight(name)
+          }: required version ${
+            highlight(required)
+          }, found ${
+            highlight(found)
+          }`),
+          10,
+        )
+      }`,
+    );
+    logger.error('Run', `${chalk.yellow('npm install')}`, 'to resolve this issue.');
+  }
+  return discrepancies;
+};

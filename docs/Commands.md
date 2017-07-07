@@ -76,7 +76,7 @@ Available options:
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
 * `-P, --skip-build` - Skip build when running in production mode
-* `-N, --no-dep-check` - Skips the check for version discrepancies between package.json and node_modules
+* `-S, --skip-dep-check` - Skips the check for version discrepancies between package.json and node_modules
 
 ### `gluestick start-client`
 

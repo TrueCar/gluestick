@@ -59,7 +59,7 @@ describe('commands/start', () => {
         dev: false,
         skipBuild: false,
         runTests: false,
-        noDepCheck: false,
+        skipDepCheck: false,
         parent: {
           rawArgs: [],
         },
@@ -134,9 +134,9 @@ describe('commands/start', () => {
         dev: false,
         skipBuild: false,
         runTests: false,
-        noDepCheck: true,
+        skipDepCheck: true,
         parent: {
-          rawArgs: ['--no-dep-check'],
+          rawArgs: ['--skip-dep-check'],
         },
       }]);
 

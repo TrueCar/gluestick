@@ -20,7 +20,7 @@ type StartOptions = {
   logLevel?: string;
   runTests: boolean;
   skipBuild: boolean;
-  noDepCheck: boolean;
+  skipDepCheck: boolean;
   parent: Object;
   dev: boolean;
 };
@@ -89,10 +89,10 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
   }
 
   testCommand.then(() => {
-    if (!options.noDepCheck) {
+    if (!options.skipDepCheck) {
       const packageJson = require(path.join(process.cwd(), 'package.json'));
       try {
-        compareModuleVersions(packageJson, modulePath, logger);
+        compareModuleVersions(packageJson, modulePath, logger, require);
       } catch (e) {
         logger.error(e);
       }
