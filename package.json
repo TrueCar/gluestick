@@ -45,6 +45,9 @@
     "roots": [
       "packages"
     ],
+    "transform": {
+      "\\.js$": "<rootDir>/jestTransform.js"
+    },
     "testRegex": "src/(.*/)?__tests__/.*\\.test\\.js$"
   }
 }
