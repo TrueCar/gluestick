@@ -92,7 +92,7 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
     if (!options.skipDepCheck) {
       const packageJson = require(path.join(process.cwd(), 'package.json'));
       try {
-        compareModuleVersions(packageJson, modulePath, logger, require);
+        compareModuleVersions(packageJson, modulePath, logger);
       } catch (e) {
         logger.error(e);
       }

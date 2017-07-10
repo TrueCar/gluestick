@@ -28,45 +28,50 @@ type Discrepancy = {
   found: ?string,
 };
 
-const checkVersions = (dependencies: Object, modulePath: string, discrepancies: Discrepancy[],
-  requireCall: Function) => {
+const checkVersions = (
+  dependencies: Object,
+  modulePath: string,
+  discrepancies: Discrepancy[],
+  requireCall: Function,
+) => {
   Object.keys(dependencies).forEach((depName: string) => {
     const depVersion: string = dependencies[depName];
     const tempPath: string = path.join(modulePath, depName, packageName);
     let tempPackage: Object;
-    let tempDiscrepancy: Discrepancy;
 
     try {
       tempPackage = requireCall(tempPath);
     } catch (e) {
-      tempDiscrepancy = {
+      discrepancies.push({
         name: depName,
         required: depVersion,
         found: 'N/A - missing',
-      };
-      discrepancies.push(tempDiscrepancy);
+      });
       return;
     }
 
     if (depVersion && !semver.satisfies(tempPackage.version, depVersion)) {
       const versionMatch = depVersion.match(/\d+\.\d+\.\d+.*/);
-
-      if ((versionMatch && depVersion.includes('file:') && !tempPackage._from.includes(versionMatch)) ||
-          (versionMatch && (!depVersion.includes('file:') && !path.isAbsolute(depVersion) && !/^\.\.?\//.test(depVersion)))) {
-        tempDiscrepancy = {
+      if (
+        versionMatch &&
+        !semver.satisfies(tempPackage.version, versionMatch[0])
+      ) {
+        discrepancies.push({
           name: depName,
           required: versionMatch ? versionMatch[0] : depVersion,
           found: tempPackage.version,
-        };
-        discrepancies.push(tempDiscrepancy);
+        });
       }
     }
   });
-  return discrepancies;
 };
 
-module.exports = (projectPackage: Object, modulePath: string, logger: Logger,
-  requireCall: Function) => {
+module.exports = (
+  projectPackage: Object,
+  modulePath: string,
+  logger: Logger,
+  requireCall?: Function = require,
+) => {
   const discrepancies: Discrepancy[] = [];
 
   if (projectPackage.dependencies) {
@@ -93,7 +98,7 @@ module.exports = (projectPackage: Object, modulePath: string, logger: Logger,
         )
       }`,
     );
-    logger.error('Run', `${chalk.yellow('npm install')}`, 'to resolve this issue.');
+    logger.error(`Run ${chalk.yellow('npm install')} to resolve this issue`);
   }
   return discrepancies;
 };
