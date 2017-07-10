@@ -1,34 +1,23 @@
 {
   "name": "gluestick-plugin-eslint",
-  "version": "1.12.0",
+  "version": "1.13.0-beta.2",
   "description": "",
   "main": "build/config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
-  "scripts": {
-    "test": "jest",
-    "test-coverage": "jest --coverage"
-  },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "repository": {
     "type": "git",
     "url": "git@github.com:TrueCar/gluestick.git"
   },
-  "jest": {
-    "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$"
-  },
   "peerDependencies": {
     "eslint-loader": "1.x",
-    "gluestick": "1.12.0"
+    "gluestick": "1.13.0-beta.2"
   },
   "devDependencies": {
-    "babel-preset-es2015": "6.22.0",
-    "babel-preset-stage-0": "6.22.0",
     "eslint-loader": "1.7.1",
     "extract-text-webpack-plugin": "2.1.2",
-    "gluestick": "1.12.0",
-    "jest": "18.1.0"
+    "gluestick": "1.13.0-beta.2"
   }
 }

@@ -1,4 +1,4 @@
-jest.mock('fs');
+jest.mock('fs', () => ({ statSync: jest.fn() }));
 
 const path = require('path');
 const fs = require('fs');

@@ -74,6 +74,8 @@ module.exports = (
     const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins);
     config.webpackConfig.vendor = vendorDllConfig;
     if (!options.skipIfOk || !vendorDll.isValid({ logger, config })) {
+      clearBuildDirectory(config.GSConfig, 'client');
+      logger.info('Clearing assets directory');
       clearBuildDirectory(config.GSConfig, 'dlls');
       compile({ logger, config }, options, 'vendor')
         .then(() => {
