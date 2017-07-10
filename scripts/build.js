@@ -31,6 +31,7 @@ packageNames.forEach((packageName) => {
   const globCommonOpts = {
     ignore: [
       '**/__tests__/**/*',
+      '**/__mocks__/**/*',
     ],
   };
   glob.sync(`${path.join(process.cwd(), 'packages', packageName)}/src/**/*.js`, globCommonOpts).forEach((filename) => {

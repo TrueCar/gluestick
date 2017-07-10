@@ -1,8 +1,7 @@
-const newApp = require('../new');
-
 jest.mock('cross-spawn');
 jest.mock('gluestick-generators');
 
+const newApp = require('../new');
 const spawn = require('cross-spawn');
 const generate = require('gluestick-generators').default;
 

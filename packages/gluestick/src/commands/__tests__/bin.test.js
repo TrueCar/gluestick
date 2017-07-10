@@ -18,7 +18,7 @@ const commandApi = {
 const spawnOptions = { stdio: 'inherit' };
 
 const getDependencyPath = name =>
-  path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', name);
+  path.join(process.cwd(), 'node_modules', '.bin', name);
 
 describe('cli: gluestick bin', () => {
   it('runs the dependency without any options', () => {

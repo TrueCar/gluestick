@@ -6,18 +6,10 @@
   "homepage": "https://github.com/TrueCar/gluestick",
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
-  "scripts": {
-    "test": "jest",
-    "test-coverage": "jest --coverage"
-  },
   "author": "Todd Williams <toddsurfs@icloud.com>",
   "repository": {
     "type": "git",
     "url": "git@github.com:TrueCar/gluestick.git"
-  },
-  "jest": {
-    "notify": true,
-    "testRegex": ".*/__tests__/.*\\.test\\.js$"
   },
   "peerDependencies": {
     "babel-core": "6.x",
@@ -30,11 +22,8 @@
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-stage-0": "^6.22.0",
     "babel-traverse": "^6.22.1",
     "gluestick": "1.13.0-beta.2",
-    "jest": "18.1.0",
     "webpack": "^3.0.0"
   }
 }
