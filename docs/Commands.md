@@ -76,6 +76,7 @@ Available options:
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
 * `-P, --skip-build` - Skip build when running in production mode
+* `-S, --skip-dep-check` - Skips the check for version discrepancies between package.json and node_modules
 
 ### `gluestick start-client`
 
@@ -216,7 +217,7 @@ For better CI/CD and other build tools support, GlueStick will switch to _machin
 ```
 [GleuStick][<command>][<headerTitle>] <message>
 ```
-To switch to _machine friendly_ mode, one of the folling condition must be met: 
+To switch to _machine friendly_ mode, one of the folling condition must be met:
 
 * `NODE_ENV` must be set to `production`
 * `CI` must be set (to whatever value)

@@ -10,9 +10,11 @@ const spawnFn = jest.fn(
 jest.setMock('cross-spawn', spawnFn);
 jest.mock('../start-client');
 jest.mock('../start-server');
+jest.mock('../compareVersions/compareModuleVersions');
 const startCommand = require('../start');
 const startClient = require('../start-client');
 const startServer = require('../start-server');
+const compareModuleVersions = require('../compareVersions/compareModuleVersions');
 const mockedCommandApi = require('../../__tests__/mocks/context').commandApi;
 
 const fatalLogger = jest.fn();
@@ -40,6 +42,8 @@ describe('commands/start', () => {
       startClient.mockClear();
       // $FlowIgnore startServer is mocked
       startServer.mockClear();
+      // $FlowIgnore compareVersions is mocked
+      compareModuleVersions.mockClear();
     });
 
     afterAll(() => {
@@ -55,6 +59,7 @@ describe('commands/start', () => {
         dev: false,
         skipBuild: false,
         runTests: false,
+        skipDepCheck: false,
         parent: {
           rawArgs: [],
         },
@@ -71,6 +76,8 @@ describe('commands/start', () => {
 
       return startServerPromise.then(args => {
         expect(args.length).toBeGreaterThan(0);
+        // $FlowIgnore compareModuleVersions is mocked
+        expect(compareModuleVersions.mock.calls.length).toBe(1);
       });
     });
 
@@ -114,6 +121,28 @@ describe('commands/start', () => {
 
       return promise.then((msg) => {
         expect(msg.includes('Some tests have failed')).toBeTruthy();
+      });
+    });
+
+    it('should not call compareModuleVersions', () => {
+      const promise = new Promise((resolve) => {
+        // $FlowIgnore mocking implementation
+        startServer.mockImplementationOnce((...args) => { resolve(args); });
+      });
+      process.env.NODE_ENV = originalNodeEnv;
+      startCommand(commandApi, [{
+        dev: false,
+        skipBuild: false,
+        runTests: false,
+        skipDepCheck: true,
+        parent: {
+          rawArgs: ['--skip-dep-check'],
+        },
+      }]);
+
+      return promise.then(() => {
+        // $FlowIgnore compareModuleVersions is mocked
+        expect(compareModuleVersions.mock.calls.length).toBe(0);
       });
     });
 

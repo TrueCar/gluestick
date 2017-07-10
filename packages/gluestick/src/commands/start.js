@@ -5,6 +5,10 @@ const spawn = require('cross-spawn');
 const startClient = require('./start-client');
 const startServer = require('./start-server');
 const { filterArg } = require('./utils');
+const path = require('path');
+const compareModuleVersions = require('./compareVersions/compareModuleVersions');
+
+const modulePath = path.join(process.cwd(), 'node_modules');
 
 const skippedOptions: string[] = [
   '--dev',
@@ -16,6 +20,7 @@ type StartOptions = {
   logLevel?: string;
   runTests: boolean;
   skipBuild: boolean;
+  skipDepCheck: boolean;
   parent: Object;
   dev: boolean;
 };
@@ -84,6 +89,15 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
   }
 
   testCommand.then(() => {
+    if (!options.skipDepCheck) {
+      const packageJson = require(path.join(process.cwd(), 'package.json'));
+      try {
+        compareModuleVersions(packageJson, modulePath, logger);
+      } catch (e) {
+        logger.error(e);
+      }
+    }
+
     let clientCompilationDonePromise: Promise<void> = Promise.resolve();
     if (!isProduction) {
       clientCompilationDonePromise = startClient(
