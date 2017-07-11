@@ -5,7 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const sO = require('sorted-object');
 
-const { install: installDeps, cleanSync: cleanDeps } = require('../../lib/npmDependencies');
+const {
+  install: installDeps,
+  cleanSync: cleanDeps,
+} = require('../../lib/npmDependencies');
 
 /**
  * Given an object of mismatched modules, load up the project's package.json
@@ -15,7 +18,9 @@ const { install: installDeps, cleanSync: cleanDeps } = require('../../lib/npmDep
  * top to see what the object looks like
  */
 const updateDependencies = (
-  logger: Logger, projectPackage: ProjectPackage, mismatchedModules: MismatchedModules,
+  logger: Logger,
+  projectPackage: ProjectPackage,
+  mismatchedModules: MismatchedModules,
 ) => {
   const updatedPackage: ProjectPackage = projectPackage;
   if (!updatedPackage.dependencies) {

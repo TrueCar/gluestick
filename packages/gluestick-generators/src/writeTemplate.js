@@ -6,8 +6,8 @@ const path = require('path');
 const mkdir = require('mkdirp');
 
 type Modification = {
-  file: string;
-  modifier: (content: string | null, file: string) => string;
+  file: string,
+  modifier: (content: string | null, file: string) => string,
 };
 
 /**
@@ -18,8 +18,14 @@ type Modification = {
  * @returns {string}
  */
 const writeEntry = (entryConfig: Object): string => {
-  const destinationDirectory: string = path.join(process.cwd(), entryConfig.path);
-  const outputPath: string = path.join(destinationDirectory, entryConfig.filename);
+  const destinationDirectory: string = path.join(
+    process.cwd(),
+    entryConfig.path,
+  );
+  const outputPath: string = path.join(
+    destinationDirectory,
+    entryConfig.filename,
+  );
   if (!entryConfig.overwrite && fs.existsSync(outputPath)) {
     throw new Error(`File ${outputPath} alredy exists\n`);
   }
@@ -38,7 +44,10 @@ const writeEntry = (entryConfig: Object): string => {
 const applyModification = (modification: Modification): string => {
   let absolutePath: string = path.join(process.cwd(), modification.file);
 
-  if (!modification.file.startsWith('.') && !path.extname(absolutePath).length) {
+  if (
+    !modification.file.startsWith('.') &&
+    !path.extname(absolutePath).length
+  ) {
     absolutePath += '.js';
   }
 

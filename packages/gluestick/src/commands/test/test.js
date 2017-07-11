@@ -8,17 +8,28 @@ const path = require('path');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
-const JEST_DEBUG_CONFIG_PATH = path.join(__dirname, 'jestEnvironmentNodeDebug.js');
+const JEST_DEBUG_CONFIG_PATH = path.join(
+  __dirname,
+  'jestEnvironmentNodeDebug.js',
+);
 const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
-  const customConfig: Object = require(path.join(process.cwd(), 'package.json')).jest;
+  const customConfig: Object = require(path.join(process.cwd(), 'package.json'))
+    .jest;
 
-  const config = Object.keys(customConfig || {}).reduce((prev: Object, curr: string): Object => {
+  const config = Object.keys(
+    customConfig || {},
+  ).reduce((prev: Object, curr: string): Object => {
     let value: any = null;
-    if (Array.isArray(customConfig[curr]) && Array.isArray(defaultConfig[curr])) {
+    if (
+      Array.isArray(customConfig[curr]) &&
+      Array.isArray(defaultConfig[curr])
+    ) {
       value = defaultConfig[curr].concat(customConfig[curr]);
-    } else if (Object.prototype.toString.call(customConfig[curr]) !== '[object Object]') {
+    } else if (
+      Object.prototype.toString.call(customConfig[curr]) !== '[object Object]'
+    ) {
       value = customConfig[curr];
     } else {
       value = { ...defaultConfig[curr], ...customConfig[curr] };
@@ -31,7 +42,7 @@ const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
 
   // Make sure aliases go always at the end of moduleNameMapper
   // as Jest checks precedence inside this object
-  Object.keys(aliases).forEach((key) => {
+  Object.keys(aliases).forEach(key => {
     config.moduleNameMapper[`^${key}(.*)$`] = `${aliases[key]}$1`;
   });
 
@@ -45,7 +56,9 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
   moduleNameMapper[
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$'
   ] = `${TEST_MOCKS_PATH}/fileMock.js`;
-  moduleNameMapper['\\.(css|scss|sass|less)$'] = `${TEST_MOCKS_PATH}/styleMock.js`;
+  moduleNameMapper[
+    '\\.(css|scss|sass|less)$'
+  ] = `${TEST_MOCKS_PATH}/styleMock.js`;
 
   const roots: string[] = ['src'];
   if (fs.existsSync(path.join(process.cwd(), 'test'))) {
@@ -58,9 +71,7 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
     testRegex: '\\/__tests__\\/.*\\.(test|spec)\\.jsx?$',
     moduleNameMapper,
     roots,
-    transformIgnorePatterns: [
-      '/node_modules/(?!gluestick)',
-    ],
+    transformIgnorePatterns: ['/node_modules/(?!gluestick)'],
     // Clear watchman warnings (including the one of `test` folder non-existing for new projects)
     // Might be worth in the future to come back here and see if there is a really difference
     // using watchman or not
@@ -73,7 +84,9 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
 };
 
 const getDebugDefaultConfig = (
-  logger: Logger, aliases: Object, options: string[],
+  logger: Logger,
+  aliases: Object,
+  options: string[],
 ): string[] => {
   const argv = [];
   argv.push('--inspect');
@@ -96,19 +109,24 @@ const getDebugDefaultConfig = (
   ];
   return argv.concat(
     options.filter((option: string): boolean => {
-      return optionsToExclude.findIndex((optionToExclude: Object): boolean => {
-        const check = new RegExp(`^${optionToExclude.value}.*`).test(option);
-        if (check && optionToExclude.printMsg) {
-          logger.info(`Option '${optionToExclude.value}' is always set by default in debug mode`);
-        }
-        return check;
-      }) === -1;
+      return (
+        optionsToExclude.findIndex((optionToExclude: Object): boolean => {
+          const check = new RegExp(`^${optionToExclude.value}.*`).test(option);
+          if (check && optionToExclude.printMsg) {
+            logger.info(
+              `Option '${optionToExclude.value}' is always set by default in debug mode`,
+            );
+          }
+          return check;
+        }) === -1
+      );
     }),
   );
 };
 
 module.exports = (
-  { getLogger, getOptions, getContextConfig }: CommandAPI, commandArguments: any[],
+  { getLogger, getOptions, getContextConfig }: CommandAPI,
+  commandArguments: any[],
 ) => {
   const spawnOptions = {
     stdio: 'inherit',
@@ -128,7 +146,9 @@ module.exports = (
   const rawOptions: string[] = options.parent.rawArgs.slice(3);
   if (options.debugTest) {
     const argvDebug: string[] = getDebugDefaultConfig(
-      logger, aliases, rawOptions,
+      logger,
+      aliases,
+      rawOptions,
     );
     spawn.sync('node', argvDebug, spawnOptions);
   } else {

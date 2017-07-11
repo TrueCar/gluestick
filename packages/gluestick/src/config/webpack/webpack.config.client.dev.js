@@ -1,13 +1,22 @@
 /* @flow */
-import type { WebpackConfig, UniversalWebpackConfigurator, BabelOptions } from '../../types';
+import type {
+  WebpackConfig,
+  UniversalWebpackConfigurator,
+  BabelOptions,
+} from '../../types';
 
 const webpack = require('webpack');
 const { updateBabelLoaderConfig } = require('./utils');
 
 module.exports = (
-  clientConfig: UniversalWebpackConfigurator, devServerPort: number, devServerHost: string,
+  clientConfig: UniversalWebpackConfigurator,
+  devServerPort: number,
+  devServerHost: string,
 ): WebpackConfig => {
-  const configuration: Object = clientConfig({ development: true, css_bundle: true });
+  const configuration: Object = clientConfig({
+    development: true,
+    css_bundle: true,
+  });
   configuration.devtool = 'cheap-module-eval-source-map';
   configuration.plugins.push(
     new webpack.DefinePlugin({
@@ -20,7 +29,9 @@ module.exports = (
       debug: true,
     }),
   );
-  configuration.entry = Object.keys(configuration.entry).reduce((prev, curr) => {
+  configuration.entry = Object.keys(
+    configuration.entry,
+  ).reduce((prev, curr) => {
     return Object.assign(prev, {
       [curr]: [
         'eventsource-polyfill',
@@ -31,19 +42,19 @@ module.exports = (
     });
   }, {});
   // Add react transformation to babel-loader plugins.
-  updateBabelLoaderConfig(configuration, (options: BabelOptions): BabelOptions => {
-    return {
-      ...options,
-      plugins: [
-        ...options.plugins,
-        'react-hot-loader/babel',
-      ],
-    };
-  });
+  updateBabelLoaderConfig(
+    configuration,
+    (options: BabelOptions): BabelOptions => {
+      return {
+        ...options,
+        plugins: [...options.plugins, 'react-hot-loader/babel'],
+      };
+    },
+  );
   // configuration.module.rules[0].use[0].options.presets.push('react-hmre');
-  configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration.output.publicPath}`;
+  configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration
+    .output.publicPath}`;
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
   return configuration;
 };
-

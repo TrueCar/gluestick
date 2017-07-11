@@ -33,7 +33,10 @@ class ReorderLintWarningsPlugin {
   }
 }
 
-const clientWebpackConfig = ({ loaderOptions, enableInProduction }) => config => {
+const clientWebpackConfig = ({
+  loaderOptions,
+  enableInProduction,
+}) => config => {
   if (process.env.NODE_ENV !== 'production' || enableInProduction) {
     return {
       ...config,
@@ -53,10 +56,7 @@ const clientWebpackConfig = ({ loaderOptions, enableInProduction }) => config =>
           ...config.module.rules,
         ],
       },
-      plugins: [
-        ...config.plugins,
-        new ReorderLintWarningsPlugin(),
-      ],
+      plugins: [...config.plugins, new ReorderLintWarningsPlugin()],
     };
   }
   return config;

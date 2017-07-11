@@ -23,14 +23,18 @@ describe('gluestick no-fouc plugin', () => {
       const webpackClientConfig = {
         plugins: [],
         module: {
-          rules: [{
-            test: /\.(css)$/,
-            use: [],
-          }],
+          rules: [
+            {
+              test: /\.(css)$/,
+              use: [],
+            },
+          ],
         },
       };
       const { postOverwrites } = noFoucPlugin();
-      expect(postOverwrites.clientWebpackConfig(webpackClientConfig)).toEqual(webpackClientConfig);
+      expect(postOverwrites.clientWebpackConfig(webpackClientConfig)).toEqual(
+        webpackClientConfig,
+      );
       expect(ExtractTextWebpackPlugin.calledTimes()).toBe(0);
       process.env.NODE_ENV = nodeEnv;
     });
@@ -45,24 +49,22 @@ describe('gluestick no-fouc plugin', () => {
       const webpackClientConfig = {
         plugins: [],
         module: {
-          rules: [{
-            test: /\.(scss)$/,
-            use: [
-              'style-loader',
-              'css-loader',
-              'sass-loader',
-            ],
-          }, {
-            test: /\.(css)$/,
-            use: [
-              'style-loader',
-              'css-loader',
-            ],
-          }],
+          rules: [
+            {
+              test: /\.(scss)$/,
+              use: ['style-loader', 'css-loader', 'sass-loader'],
+            },
+            {
+              test: /\.(css)$/,
+              use: ['style-loader', 'css-loader'],
+            },
+          ],
         },
       };
       const { postOverwrites } = noFoucPlugin();
-      const modifiedConfig = postOverwrites.clientWebpackConfig(webpackClientConfig);
+      const modifiedConfig = postOverwrites.clientWebpackConfig(
+        webpackClientConfig,
+      );
       expect(modifiedConfig.plugins.length).toBe(1);
       expect(modifiedConfig.plugins[0].opts.filename).toBeDefined();
       expect(modifiedConfig.plugins[0].opts.allChunks).toBeTruthy();
@@ -71,10 +73,7 @@ describe('gluestick no-fouc plugin', () => {
         {
           fallback: 'style-loader',
           remove: false,
-          use: [
-            'css-loader',
-            'sass-loader',
-          ],
+          use: ['css-loader', 'sass-loader'],
         },
       ]);
       expect(modifiedConfig.module.rules[1].use).toEqual([
@@ -82,9 +81,7 @@ describe('gluestick no-fouc plugin', () => {
         {
           fallback: 'style-loader',
           remove: false,
-          use: [
-            'css-loader',
-          ],
+          use: ['css-loader'],
         },
       ]);
     });
@@ -92,10 +89,12 @@ describe('gluestick no-fouc plugin', () => {
     it('shuld use provided filename from options', () => {
       const filename = 'my-filename.css';
       const { postOverwrites } = noFoucPlugin({ filename });
-      expect(postOverwrites.clientWebpackConfig({
-        plugins: [],
-        module: { rules: [] },
-      }).plugins[0].opts.filename).toEqual(filename);
+      expect(
+        postOverwrites.clientWebpackConfig({
+          plugins: [],
+          module: { rules: [] },
+        }).plugins[0].opts.filename,
+      ).toEqual(filename);
     });
   });
 });

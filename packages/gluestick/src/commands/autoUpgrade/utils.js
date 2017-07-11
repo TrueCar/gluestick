@@ -1,5 +1,10 @@
 /* @flow */
-import type { Logger, Question, MismatchedModules, UpdateDepsPromptResults } from '../../types';
+import type {
+  Logger,
+  Question,
+  MismatchedModules,
+  UpdateDepsPromptResults,
+} from '../../types';
 
 const path = require('path');
 const fs = require('fs');
@@ -21,7 +26,6 @@ const replaceFile = (logger: Logger, name: string, data: string): void => {
   fs.writeFileSync(filePath, data);
 };
 
-
 /**
  * Determine a version meets or exceeds a requirement.
  *
@@ -42,8 +46,8 @@ const isValidVersion = (version: string, requiredVersion: string): boolean => {
   }
 
   const result: boolean =
-    semver.satisfies(trimmedVersion, requiredVersion)
-    || semver.gte(trimmedVersion, requiredVersion);
+    semver.satisfies(trimmedVersion, requiredVersion) ||
+    semver.gte(trimmedVersion, requiredVersion);
 
   return result;
 };
@@ -59,20 +63,29 @@ const isValidVersion = (version: string, requiredVersion: string): boolean => {
 const promptModulesUpdate = (
   mismatchedModules: MismatchedModules,
 ): Promise<UpdateDepsPromptResults> => {
-  const mismatchedModuleOutput: string = JSON.stringify(mismatchedModules, null, ' ');
+  const mismatchedModuleOutput: string = JSON.stringify(
+    mismatchedModules,
+    null,
+    ' ',
+  );
 
   const question: Question = {
     type: 'confirm',
     name: 'confirm',
-    message: `${chalk.red('The `gluestick` project template and your project have mismatching')} `
-      + `${chalk.red('versions of the following modules: ')}`
-      + `${chalk.yellow(mismatchedModuleOutput)}\n`
-      + 'Would you like to automatically update your project\'s dependencies to match the template?',
+    message:
+      `${chalk.red(
+        'The `gluestick` project template and your project have mismatching',
+      )} ` +
+      `${chalk.red('versions of the following modules: ')}` +
+      `${chalk.yellow(mismatchedModuleOutput)}\n` +
+      "Would you like to automatically update your project's dependencies to match the template?",
   };
-  return inquirer.prompt([question]).then((answers) => Promise.resolve({
-    shouldFix: !!answers.confirm,
-    mismatchedModules,
-  }));
+  return inquirer.prompt([question]).then(answers =>
+    Promise.resolve({
+      shouldFix: !!answers.confirm,
+      mismatchedModules,
+    }),
+  );
 };
 
 module.exports = {

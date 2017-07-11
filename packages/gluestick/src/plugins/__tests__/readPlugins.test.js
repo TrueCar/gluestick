@@ -1,6 +1,6 @@
 /* @flow */
 jest.mock('../../utils.js', () => ({
-  requireModule: (filename) => {
+  requireModule: filename => {
     switch (filename) {
       case 'throw-0':
         return {};
@@ -20,7 +20,7 @@ jest.mock('../../utils.js', () => ({
         return null;
     }
   },
-  requireWithInterop: (val) => {
+  requireWithInterop: val => {
     switch (val) {
       case 'plugin-1/build/config.js':
       case 'plugin-3/build/config.js':
@@ -45,15 +45,17 @@ describe('plugins/readPlugin', () => {
   it('should throw error if plugins decl is invalid', () => {
     // $FlowIgnore
     expect(readPlugins(logger, 'throw-0', 'config')).toEqual([]);
-    expect(logger.error.mock.calls[0])
-      .toEqual([new Error('Invalid plugins configuration: must be an array')]);
+    expect(logger.error.mock.calls[0]).toEqual([
+      new Error('Invalid plugins configuration: must be an array'),
+    ]);
   });
 
   it('should throw error if plugin decl is invalid', () => {
     // $FlowIgnore
     expect(readPlugins(logger, 'throw-1', 'config')).toEqual([]);
-    expect(logger.error.mock.calls[0])
-      .toEqual([new Error('Invalid plugin declaration element: 11')]);
+    expect(logger.error.mock.calls[0]).toEqual([
+      new Error('Invalid plugin declaration element: 11'),
+    ]);
   });
 
   it('should read plugins', () => {

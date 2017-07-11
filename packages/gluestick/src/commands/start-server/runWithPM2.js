@@ -17,7 +17,7 @@ type PM2Config = {
   no_autorestart: boolean,
   merge_logs: boolean,
   watch: boolean,
-}
+};
 
 /**
  * Checks if given pm2 process exists.
@@ -46,7 +46,9 @@ const start = (
     args,
     cwd: process.cwd(),
     exec_mode: 'cluster',
-    instances: process.env.MAX_INSTANCES || (process.env.NODE_ENV === 'production' ? 0 : 1),
+    instances:
+      process.env.MAX_INSTANCES ||
+      (process.env.NODE_ENV === 'production' ? 0 : 1),
     max_memory_restart: process.env.MAX_MEMORY_RESTART || '200M',
     environment_name: process.env.NODE_ENV,
     no_autorestart: false,
@@ -77,10 +79,10 @@ const start = (
   process.on('SIGINT', (): void => {
     logger.print();
     logger.info(`Stopping pm2 instance: ${name}…`);
-    checkIfPM2ProcessExists(name, (exists) => {
+    checkIfPM2ProcessExists(name, exists => {
       if (exists) {
         logger.info(`Deleting process ${name}.`);
-        pm2.delete(name, (deleteError) => {
+        pm2.delete(name, deleteError => {
           if (deleteError) {
             logger.error(deleteError);
             pm2.disconnect();
@@ -98,8 +100,15 @@ const start = (
   });
 };
 
-module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: string[]) => {
-  const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(0, 7)}`;
+module.exports = (
+  { config, logger }: CLIContext,
+  entryPointPath: string,
+  args: string[],
+) => {
+  const instanceName: string = `gluestick-server-${sha1(process.cwd()).substr(
+    0,
+    7,
+  )}`;
   pm2.connect((err: string) => {
     if (err) {
       logger.error(err);
@@ -109,8 +118,10 @@ module.exports = ({ config, logger }: CLIContext, entryPointPath: string, args: 
 
     checkIfPM2ProcessExists(instanceName, (exists: boolean): void => {
       if (exists) {
-        logger.info(`PM2 process ${instanceName} already running, stopping the process`);
-        pm2.stop(instanceName, (stopError) => {
+        logger.info(
+          `PM2 process ${instanceName} already running, stopping the process`,
+        );
+        pm2.stop(instanceName, stopError => {
           if (stopError) {
             logger.error(stopError);
             process.exit(1);

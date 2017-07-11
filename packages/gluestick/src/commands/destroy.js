@@ -25,11 +25,14 @@ const availableCommands = {
 type Command = 'container' | 'component' | 'reducer';
 
 type Options = {
-  entrypoint?: string;
-  app?: string;
-}
+  entrypoint?: string,
+  app?: string,
+};
 
-module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]) => {
+module.exports = async (
+  { getLogger, getOptions }: CommandAPI,
+  commandArguments: any[],
+) => {
   const logger: Logger = getLogger();
 
   logger.clear();
@@ -42,9 +45,11 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
   // Validate the command type by verifying that it exists in `availableCommands`
   if (!availableCommands[command]) {
     logger.error(`${highlight(command)} is not a valid destroy command.`);
-    logger.info(`Available destroy commands: ${
-      Object.keys(availableCommands).map(c => highlight(c)).join(', ')
-    }`);
+    logger.info(
+      `Available destroy commands: ${Object.keys(availableCommands)
+        .map(c => highlight(c))
+        .join(', ')}`,
+    );
     return;
   }
 
@@ -74,9 +79,17 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
 
   // Remove the file
   const CWD: string = process.cwd();
-  const generateRoot: string = path.join(CWD, 'src', entrypoint, availableCommands[command]);
+  const generateRoot: string = path.join(
+    CWD,
+    'src',
+    entrypoint,
+    availableCommands[command],
+  );
   const destinationRoot: string = path.resolve(generateRoot, dirname);
-  const destinationPath: string = path.join(destinationRoot, `${generatedFileName}.js`);
+  const destinationPath: string = path.join(
+    destinationRoot,
+    `${generatedFileName}.js`,
+  );
   let fileExists: boolean = true;
   try {
     fs.statSync(destinationPath);
@@ -91,9 +104,12 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
       const question = {
         type: 'confirm',
         name: 'confirm',
-        message: `You wanted to destroy ${filename(originalName)} but the generated name is `
-          + `${filename(generatedFileName)}.\nWould you like to continue with `
-          + `destroying ${filename(generatedFileName)}?`,
+        message:
+          `You wanted to destroy ${filename(
+            originalName,
+          )} but the generated name is ` +
+          `${filename(generatedFileName)}.\nWould you like to continue with ` +
+          `destroying ${filename(generatedFileName)}?`,
       };
       // @NOTE: We are using await so that we can wait for the result
       // of the promise before moving on
@@ -113,23 +129,42 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
 
   // If we destroyed a reducer, remove it from the reducers index
   if (command === 'reducer') {
-    const reducerIndexPath = path.join(CWD, 'src', entrypoint, 'reducers', 'index.js');
+    const reducerIndexPath = path.join(
+      CWD,
+      'src',
+      entrypoint,
+      'reducers',
+      'index.js',
+    );
     try {
-      const indexLines = fs.readFileSync(reducerIndexPath, { encoding: 'utf8' }).split('\n');
-      const reducerName: string = dirname === '.'
-        ? basename
-        : convertToCamelCaseWithPrefix(dirname.replace('/', ''), basename);
+      const indexLines = fs
+        .readFileSync(reducerIndexPath, { encoding: 'utf8' })
+        .split('\n');
+      const reducerName: string =
+        dirname === '.'
+          ? basename
+          : convertToCamelCaseWithPrefix(dirname.replace('/', ''), basename);
       const searchPatterns: RegExp[] = [
         new RegExp(`^import\\s+${reducerName}\\s+from.*;`),
         new RegExp(`^  ${reducerName},`),
       ];
       const newIndexLines = indexLines.filter((line: string): boolean => {
-        return searchPatterns.filter((pattern: RegExp): boolean => pattern.test(line)).length === 0;
+        return (
+          searchPatterns.filter((pattern: RegExp): boolean =>
+            pattern.test(line),
+          ).length === 0
+        );
       });
       fs.writeFileSync(reducerIndexPath, newIndexLines.join('\n'));
-      logger.success(`${highlight(reducerName)} removed from reducer index ${filename(reducerIndexPath)}`);
+      logger.success(
+        `${highlight(reducerName)} removed from reducer index ${filename(
+          reducerIndexPath,
+        )}`,
+      );
     } catch (e) {
-      logger.error('Unable to modify reducers index. Reducer not removed from index');
+      logger.error(
+        'Unable to modify reducers index. Reducer not removed from index',
+      );
     }
   }
 
@@ -139,7 +174,10 @@ module.exports = async ({ getLogger, getOptions }: CommandAPI, commandArguments:
     dirname,
     '__tests__',
   );
-  const testPath: string = path.join(testFolder, `${generatedFileName}.test.js`);
+  const testPath: string = path.join(
+    testFolder,
+    `${generatedFileName}.test.js`,
+  );
   let testFileExists: boolean = true;
   try {
     fs.statSync(testPath);

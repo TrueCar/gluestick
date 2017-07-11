@@ -6,7 +6,9 @@ const webpack = require('webpack');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => {
+module.exports = (
+  clientConfig: UniversalWebpackConfigurator,
+): WebpackConfig => {
   const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'source-map';
   const scssLoaders = configuration.module.rules[1].use;
@@ -40,4 +42,3 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
   configuration.bail = true;
   return configuration;
 };
-

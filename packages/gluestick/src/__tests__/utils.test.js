@@ -1,7 +1,7 @@
 /* @flow */
 
 jest.mock('fs', () => ({
-  existsSync: (value) => ['src/shared', 'src/apps/main'].indexOf(value) > -1,
+  existsSync: value => ['src/shared', 'src/apps/main'].indexOf(value) > -1,
 }));
 
 const utils = require('../utils');
@@ -21,9 +21,15 @@ describe('utils', () => {
   });
 
   it('covertToCamelCaseWithPrefix should convert to camel case and add prefix', () => {
-    expect(utils.convertToCamelCaseWithPrefix('prefix', 'someValue')).toEqual('prefixSomeValue');
-    expect(utils.convertToCamelCaseWithPrefix('prefix', 'some-value')).toEqual('prefixSomeValue');
-    expect(utils.convertToCamelCaseWithPrefix('prefix', 'SomeValue')).toEqual('prefixSomeValue');
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'someValue')).toEqual(
+      'prefixSomeValue',
+    );
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'some-value')).toEqual(
+      'prefixSomeValue',
+    );
+    expect(utils.convertToCamelCaseWithPrefix('prefix', 'SomeValue')).toEqual(
+      'prefixSomeValue',
+    );
   });
 
   it('covertToPascalCase should convert to pascal case', () => {
@@ -51,7 +57,7 @@ describe('utils', () => {
     const promises = [];
     for (let i = 0; i < 100; i++) {
       promises.push(
-        new Promise((resolve) => {
+        new Promise(resolve => {
           setTimeout(() => {
             throttledFn(true);
             resolve();
@@ -73,23 +79,29 @@ describe('utils', () => {
   });
 
   it('getDefaultExport should return default export if ESM or module.exports if CJS', () => {
-    expect(utils.getDefaultExport({
-      isTest: true,
-    })).toEqual({
-      isTest: true,
-    });
-    expect(utils.getDefaultExport({
-      __esModule: true,
-      default: { isTest: true },
-    })).toEqual({
-      __esModule: true,
+    expect(
+      utils.getDefaultExport({
+        isTest: true,
+      }),
+    ).toEqual({
       isTest: true,
     });
-    expect(utils.getDefaultExport({
+    expect(
+      utils.getDefaultExport({
+        __esModule: true,
+        default: { isTest: true },
+      }),
+    ).toEqual({
       __esModule: true,
-      named: 'export',
-      default: { isTest: true },
-    })).toEqual({
+      isTest: true,
+    });
+    expect(
+      utils.getDefaultExport({
+        __esModule: true,
+        named: 'export',
+        default: { isTest: true },
+      }),
+    ).toEqual({
       __esModule: true,
       named: 'export',
       isTest: true,
@@ -98,29 +110,44 @@ describe('utils', () => {
 
   describe('promiseEach', () => {
     it('should execute promises serially', () => {
-      return utils.promiseEach([
-        () => Promise.resolve(1),
-        () => Promise.resolve(2),
-        () => new Promise(resolve => { setTimeout(() => { resolve(3); }, 100); }),
-        () => new Promise(resolve => { setTimeout(() => { resolve(4); }, 50); }),
-        () => Promise.resolve(5),
-      ]).then(buffer => {
-        expect(buffer).toEqual([1, 2, 3, 4, 5]);
-      });
+      return utils
+        .promiseEach([
+          () => Promise.resolve(1),
+          () => Promise.resolve(2),
+          () =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve(3);
+              }, 100);
+            }),
+          () =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve(4);
+              }, 50);
+            }),
+          () => Promise.resolve(5),
+        ])
+        .then(buffer => {
+          expect(buffer).toEqual([1, 2, 3, 4, 5]);
+        });
     });
 
     it('should reject if any of passed promises rejects', () => {
       const testError = new Error('test');
-      return utils.promiseEach([
-        () => Promise.resolve(1),
-        () => Promise.reject(testError),
-        () => Promise.resolve(2),
-      ]).then(buffer => {
-        expect(buffer).toBeUndefined();
-      }).catch(({ error, buffer }) => {
-        expect(error).toEqual(testError);
-        expect(buffer).toEqual([1]);
-      });
+      return utils
+        .promiseEach([
+          () => Promise.resolve(1),
+          () => Promise.reject(testError),
+          () => Promise.resolve(2),
+        ])
+        .then(buffer => {
+          expect(buffer).toBeUndefined();
+        })
+        .catch(({ error, buffer }) => {
+          expect(error).toEqual(testError);
+          expect(buffer).toEqual([1]);
+        });
     });
   });
 });

@@ -7,7 +7,11 @@ const path = require('path');
 const fs = require('fs');
 const getAssetsLoader = require('./getAssetsLoader');
 
-const getAssetPathForFile = (filename: string, section: string, webpackAssets: Object): string => {
+const getAssetPathForFile = (
+  filename: string,
+  section: string,
+  webpackAssets: Object,
+): string => {
   const assets: Object = webpackAssets[section] || {};
   const webpackPath: string = assets[filename];
   return webpackPath;
@@ -22,7 +26,8 @@ const filterEntryName = (name: string): string => {
 };
 
 const getBundleName = ({ config }): string => {
-  const manifestFilename: string = process.env.GS_VENDOR_MANIFEST_FILENAME || '';
+  const manifestFilename: string =
+    process.env.GS_VENDOR_MANIFEST_FILENAME || '';
   const { buildDllPath } = config.GSConfig;
   const manifestPath: string = path.join(
     process.cwd(),
@@ -37,30 +42,50 @@ const getBundleName = ({ config }): string => {
 };
 
 module.exports = (
-  { config, logger }: Context, entryPoint: string, assets: Object, loadjsConfig: Object,
+  { config, logger }: Context,
+  entryPoint: string,
+  assets: Object,
+  loadjsConfig: Object,
 ): { styleTags: Object[], scriptTags: Object[] } => {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
   let key: number = 0;
   const entryPointName: string = filterEntryName(entryPoint);
 
-  const stylesHref: ?string = getAssetPathForFile(entryPointName, 'styles', assets);
+  const stylesHref: ?string = getAssetPathForFile(
+    entryPointName,
+    'styles',
+    assets,
+  );
   if (stylesHref) {
     styleTags.push(
       <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
     );
   }
-  const vendorStylesHref: ?string = getAssetPathForFile('vendor', 'styles', assets);
+  const vendorStylesHref: ?string = getAssetPathForFile(
+    'vendor',
+    'styles',
+    assets,
+  );
   if (vendorStylesHref) {
     styleTags.push(
-      <link key={key++} rel="stylesheet" type="text/css" href={vendorStylesHref} />,
+      <link
+        key={key++}
+        rel="stylesheet"
+        type="text/css"
+        href={vendorStylesHref}
+      />,
     );
   }
 
-  const vendorBundleHref: string = (
-    getAssetPathForFile('vendor', 'javascript', assets) || getBundleName({ config })
+  const vendorBundleHref: string =
+    getAssetPathForFile('vendor', 'javascript', assets) ||
+    getBundleName({ config });
+  const entryPointBundleHref: string = getAssetPathForFile(
+    entryPointName,
+    'javascript',
+    assets,
   );
-  const entryPointBundleHref: string = getAssetPathForFile(entryPointName, 'javascript', assets);
   const assetsLoader: string = getAssetsLoader(
     { before: () => {}, ...loadjsConfig },
     entryPointBundleHref,

@@ -1,13 +1,21 @@
 /* @flow */
 
-jest.mock('../../plugins/prepareConfigPlugins', () => () => [{ name: 'testPlugin' }]);
-jest.mock('../../config/compileGlueStickConfig', () => () => ({ protocol: 'http' }));
+jest.mock('../../plugins/prepareConfigPlugins', () => () => [
+  { name: 'testPlugin' },
+]);
+jest.mock('../../config/compileGlueStickConfig', () => () => ({
+  protocol: 'http',
+}));
 jest.mock('../../config/compileWebpackConfig.js', () => () => ({
   client: {},
   server: {},
   universalSettings: {},
 }));
-jest.mock('cwd/ok/package.json', () => ({ dependencies: { gluestick: 'x.x.x' } }), { virtual: true });
+jest.mock(
+  'cwd/ok/package.json',
+  () => ({ dependencies: { gluestick: 'x.x.x' } }),
+  { virtual: true },
+);
 jest.mock('cwd/invalid/package.json', () => ({}), { virtual: true });
 
 const path = require('path');
@@ -17,7 +25,9 @@ const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger
 
 describe('cli/commandApi', () => {
   it('getOptions should return options object', () => {
-    expect(commandApi.getOptions(['test', 'test', { client: true }])).toEqual({ client: true });
+    expect(commandApi.getOptions(['test', 'test', { client: true }])).toEqual({
+      client: true,
+    });
   });
 
   it('getLogger should return logger instance', () => {

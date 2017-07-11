@@ -22,12 +22,14 @@ const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const hookHelper = require('../renderer/helpers/hooks');
 const { requireModule } = require('../utils');
-const { extract_package_name } = require('universal-webpack/build/server configuration');
+const {
+  extract_package_name,
+} = require('universal-webpack/build/server configuration');
 
 type CompilationOptions = {
-  skipClientEntryGeneration: boolean;
-  skipServerEntryGeneration: boolean;
-  entryOrGroupToBuild?: string;
+  skipClientEntryGeneration: boolean,
+  skipServerEntryGeneration: boolean,
+  entryOrGroupToBuild?: string,
 };
 
 module.exports = (
@@ -47,7 +49,11 @@ module.exports = (
   const universalWebpackSettings: UniversalSettings = {
     server: {
       input: path.join(__dirname, '../renderer/entry.js'),
-      output: path.join(process.cwd(), gluestickConfig.buildRendererPath, 'renderer.js'),
+      output: path.join(
+        process.cwd(),
+        gluestickConfig.buildRendererPath,
+        'renderer.js',
+      ),
     },
     silent: true,
   };
@@ -57,34 +63,44 @@ module.exports = (
   // code for client and serverEntries for server.
   let entries: Object = {};
   try {
-    entries = skipClientEntryGeneration && skipServerEntryGeneration
-      ? {}
-      : prepareEntries(gluestickConfig, entryOrGroupToBuild);
+    entries =
+      skipClientEntryGeneration && skipServerEntryGeneration
+        ? {}
+        : prepareEntries(gluestickConfig, entryOrGroupToBuild);
   } catch (error) {
     logger.fatal(error);
   }
 
   // Get runtime plugins that will be applied to project code and bundled together.
-  const runtimePlugins: Plugin[] = skipClientEntryGeneration && skipServerEntryGeneration
-    ? []
-    : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
+  const runtimePlugins: Plugin[] =
+    skipClientEntryGeneration && skipServerEntryGeneration
+      ? []
+      : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
   // Get shared config between client and server.
   const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
 
   // Apply pre overwriters from config plugins to shared webpack config.
   const sharedConfigFinal: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.preOverwrites.sharedWebpackConfig)
+    .filter(
+      (plugin: ConfigPlugin): boolean =>
+        !!plugin.preOverwrites.sharedWebpackConfig,
+    )
     .reduce((prev: Object, plugin: ConfigPlugin) => {
       return plugin.preOverwrites.sharedWebpackConfig
-        // $FlowIgnore
-        ? plugin.preOverwrites.sharedWebpackConfig(clone(prev))
+        ? // $FlowIgnore
+          plugin.preOverwrites.sharedWebpackConfig(clone(prev))
         : prev;
     }, sharedConfig);
 
   // Get client non-env specific webpack config.
   const clientConfig: UniversalWebpackConfigurator = getClientConfig(
-    logger, sharedConfigFinal, universalWebpackSettings, gluestickConfig, entries, runtimePlugins,
+    logger,
+    sharedConfigFinal,
+    universalWebpackSettings,
+    gluestickConfig,
+    entries,
+    runtimePlugins,
     { skipEntryGeneration: skipClientEntryGeneration },
   );
   // Get client env specific webpack config.
@@ -102,8 +118,8 @@ module.exports = (
   // be known in advance.
   const runtimeAndServerPlugins: Plugin[] = runtimePlugins.concat(
     skipClientEntryGeneration && skipServerEntryGeneration
-     ? []
-     : readServerPlugins(logger, gluestickConfig.pluginsConfigPath),
+      ? []
+      : readServerPlugins(logger, gluestickConfig.pluginsConfigPath),
   );
 
   // Get server non-env specific webpack config.
@@ -124,27 +140,34 @@ module.exports = (
 
   // Apply post overwriters from config plugins to final client webpack config.
   const clientEnvConfigOverwriten: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.clientWebpackConfig)
+    .filter(
+      (plugin: ConfigPlugin): boolean =>
+        !!plugin.postOverwrites.clientWebpackConfig,
+    )
     .reduce((prev: Object, plugin: ConfigPlugin) => {
       return plugin.postOverwrites.clientWebpackConfig
-        // $FlowIgnore
-        ? plugin.postOverwrites.clientWebpackConfig(clone(prev))
+        ? // $FlowIgnore
+          plugin.postOverwrites.clientWebpackConfig(clone(prev))
         : prev;
     }, clientEnvConfig);
 
   // Apply post overwriters from config plugins to final server webpack config.
   const serverEnvConfigOverwriten: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.serverWebpackConfig)
+    .filter(
+      (plugin: ConfigPlugin): boolean =>
+        !!plugin.postOverwrites.serverWebpackConfig,
+    )
     .reduce((prev: Object, plugin: ConfigPlugin) => {
       return plugin.postOverwrites.serverWebpackConfig
-        // $FlowIgnore
-        ? plugin.postOverwrites.serverWebpackConfig(clone(prev))
+        ? // $FlowIgnore
+          plugin.postOverwrites.serverWebpackConfig(clone(prev))
         : prev;
     }, serverEnvConfig);
 
-  const pathToWebpackConfigHooks: string =
-    path.join(process.cwd(), gluestickConfig.webpackHooksPath);
-
+  const pathToWebpackConfigHooks: string = path.join(
+    process.cwd(),
+    gluestickConfig.webpackHooksPath,
+  );
 
   let webpackConfigHooks: WebpackHooks = {};
 
@@ -155,12 +178,16 @@ module.exports = (
   }
 
   // Applies client hooks provided by user
-  const clientEnvConfigFinal: WebpackConfig =
-    hookHelper.call(webpackConfigHooks.webpackClientConfig, clientEnvConfigOverwriten);
+  const clientEnvConfigFinal: WebpackConfig = hookHelper.call(
+    webpackConfigHooks.webpackClientConfig,
+    clientEnvConfigOverwriten,
+  );
 
   // Applies server hooks provided by user
-  const serverEnvConfigFinal: WebpackConfig =
-    hookHelper.call(webpackConfigHooks.webpackServerConfig, serverEnvConfigOverwriten);
+  const serverEnvConfigFinal: WebpackConfig = hookHelper.call(
+    webpackConfigHooks.webpackServerConfig,
+    serverEnvConfigOverwriten,
+  );
 
   // We need to replace request handler added by universal-webpack
   // because the original one doesn't take aliases added in plugins/hooks into the account.
@@ -169,19 +196,21 @@ module.exports = (
       external => typeof external === 'function',
     );
     // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
-    const originalHandler: Function = serverEnvConfigFinal.externals[handlerIndex];
+    const originalHandler: Function =
+      serverEnvConfigFinal.externals[handlerIndex];
     // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
     serverEnvConfigFinal.externals.splice(handlerIndex, 1);
     // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
     serverEnvConfigFinal.externals.push((ctx, req, cb) => {
       const packageName = extract_package_name(req);
       return Object.keys(
-        typeof serverEnvConfigFinal.resolve === 'object' && !Array.isArray(serverEnvConfigFinal.resolve)
+        typeof serverEnvConfigFinal.resolve === 'object' &&
+        !Array.isArray(serverEnvConfigFinal.resolve)
           ? serverEnvConfigFinal.resolve.alias
           : {},
-        ).filter(alias => alias === packageName).length
-          ? cb()
-          : originalHandler(ctx, req, cb);
+      ).filter(alias => alias === packageName).length
+        ? cb()
+        : originalHandler(ctx, req, cb);
     });
   }
 

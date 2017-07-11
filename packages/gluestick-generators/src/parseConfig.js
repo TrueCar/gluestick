@@ -2,21 +2,21 @@
 const path = require('path');
 
 type Entry = {
-  path: string;
-  filename: string;
-  template: ((args?: Object) => string) | string;
-  args?: Object;
-  overwrite: boolean;
-}
+  path: string,
+  filename: string,
+  template: ((args?: Object) => string) | string,
+  args?: Object,
+  overwrite: boolean,
+};
 
 type Config = {
-  entry?: Entry;
-  entries?: Entry[];
-  args?: Object;
-  modify?: Object[];
-}
+  entry?: Entry,
+  entries?: Entry[],
+  args?: Object,
+  modify?: Object[],
+};
 
-type UserConfig = Config | (options: Object) => Config;
+type UserConfig = Config | ((options: Object) => Config);
 
 /**
  * Parses single entry.
@@ -27,18 +27,25 @@ type UserConfig = Config | (options: Object) => Config;
  * @param {Object} options Options to pass to functional entry
  * @returns {Entry}
  */
-const parseEntry = (entry: Entry, commonArgs?: Object, options: Object): Entry => {
+const parseEntry = (
+  entry: Entry,
+  commonArgs?: Object,
+  options: Object,
+): Entry => {
   const parsedEntry: Entry = { ...entry };
 
   if (
-    !parsedEntry
-    || typeof parsedEntry.path !== 'string'
-    || typeof parsedEntry.filename !== 'string'
-    || typeof parsedEntry.template !== 'function'
+    !parsedEntry ||
+    typeof parsedEntry.path !== 'string' ||
+    typeof parsedEntry.filename !== 'string' ||
+    typeof parsedEntry.template !== 'function'
   ) {
     throw new Error(`Entry in generator ${options.generator} is not valid`);
   }
-  if (!path.extname(parsedEntry.filename).length && parsedEntry.filename[0] !== '.') {
+  if (
+    !path.extname(parsedEntry.filename).length &&
+    parsedEntry.filename[0] !== '.'
+  ) {
     parsedEntry.filename += '.js';
   }
 
@@ -56,17 +63,22 @@ const parseEntry = (entry: Entry, commonArgs?: Object, options: Object): Entry =
  * @returns {Config}
  */
 const parseConfig = (config: UserConfig, options: Object): Config => {
-  const parsedConfig: Config = typeof config === 'function' ? config(options) : { ...config };
+  const parsedConfig: Config =
+    typeof config === 'function' ? config(options) : { ...config };
   if (!parsedConfig.entries && !parsedConfig.entry) {
     throw new Error(`No entry defined for generator ${options.generator}`);
   }
   if (Array.isArray(parsedConfig.entries)) {
-    parsedConfig.entries = parsedConfig.entries.map(
-      entry => parseEntry(entry, parsedConfig.args, options),
+    parsedConfig.entries = parsedConfig.entries.map(entry =>
+      parseEntry(entry, parsedConfig.args, options),
     );
   } else {
     // $FlowFixMe entry is overwritten with parsed entry
-    parsedConfig.entry = parseEntry(parsedConfig.entry, parsedConfig.args, options);
+    parsedConfig.entry = parseEntry(
+      parsedConfig.entry,
+      parsedConfig.args,
+      options,
+    );
   }
   return parsedConfig;
 };

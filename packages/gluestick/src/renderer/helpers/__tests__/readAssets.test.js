@@ -18,50 +18,62 @@ describe('renderer/helpers/readAssets', () => {
     process.cwd = originalProcessCwd;
   });
 
-  it('should read and return assets', (done) => {
+  it('should read and return assets', done => {
     fs.readFile = (filename, cb) => {
       // $FlowIgnore
-      cb(null, new Buffer(JSON.stringify({
-        javascript: {
-          main: 'path',
-        },
-      })));
+      cb(
+        null,
+        new Buffer(
+          JSON.stringify({
+            javascript: {
+              main: 'path',
+            },
+          }),
+        ),
+      );
     };
-    readAssets('assets').then((assets) => {
+    readAssets('assets').then(assets => {
       expect(assets).toEqual({ javascript: { main: 'path' } });
       done();
     });
   });
 
-  it('should assets from cache in production', (done) => {
+  it('should assets from cache in production', done => {
     process.env.NODE_ENV = 'production';
     let called = 0;
     fs.readFile = (filename, cb) => {
       called++;
       // $FlowIgnore
-      cb(null, new Buffer(
-        called === 1
-          ? JSON.stringify({
-            javascript: {
-              main: 'path',
-            },
-          })
-          : '{}',
-      ));
+      cb(
+        null,
+        new Buffer(
+          called === 1
+            ? JSON.stringify({
+                javascript: {
+                  main: 'path',
+                },
+              })
+            : '{}',
+        ),
+      );
     };
-    readAssets('assets').then(() => {
-      return readAssets('assets');
-    }).then((assets) => {
-      expect(assets).toEqual({ javascript: { main: 'path' } });
-      done();
-      process.env.NODE_ENV = originaNodeEnv;
-    });
+    readAssets('assets')
+      .then(() => {
+        return readAssets('assets');
+      })
+      .then(assets => {
+        expect(assets).toEqual({ javascript: { main: 'path' } });
+        done();
+        process.env.NODE_ENV = originaNodeEnv;
+      });
   });
 
-  it('should reject promise', (done) => {
+  it('should reject promise', done => {
     // $FlowIgnore
-    fs.readFile = (filename, cb) => { cb(new Error('test')); };
-    readAssets('not/found').catch((error) => {
+    fs.readFile = (filename, cb) => {
+      cb(new Error('test'));
+    };
+    readAssets('not/found').catch(error => {
       expect(error.message).toEqual('test');
       done();
     });

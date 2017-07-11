@@ -3,9 +3,7 @@ import { StyleRoot } from 'radium';
 
 const plugin = (component, rootWrapperOptions) => {
   return (
-    <StyleRoot
-      radiumConfig={{ userAgent: rootWrapperOptions.userAgent }}
-    >
+    <StyleRoot radiumConfig={{ userAgent: rootWrapperOptions.userAgent }}>
       {component}
     </StyleRoot>
   );

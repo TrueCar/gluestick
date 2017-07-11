@@ -14,7 +14,9 @@ const getConfigHook = (logger: Logger): Function => {
     );
     return config => hooksHelper.call(configHooks, config);
   } catch (e) {
-    logger.warn('GlueStick config hook was not found. Consider running `gluestick auto-upgrade`.');
+    logger.warn(
+      'GlueStick config hook was not found. Consider running `gluestick auto-upgrade`.',
+    );
     return config => config;
   }
 };
@@ -26,11 +28,20 @@ module.exports = (logger: Logger, plugins: ConfigPlugin[]): GSConfig => {
 
   return getConfigHook(logger)(
     plugins
-      .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.gluestickConfig)
+      .filter(
+        (plugin: ConfigPlugin): boolean =>
+          !!plugin.postOverwrites.gluestickConfig,
+      )
       // $FlowIgnore filter above ensures `gluestickConfig` won't be undefinfed/null
-      .map((plugin: ConfigPlugin): Function => plugin.postOverwrites.gluestickConfig)
-      .reduce((prev: GSConfig, curr: (config: GSConfig) => GSConfig): GSConfig => {
-        return curr(clone(prev));
-      }, defaultConfig),
+      .map(
+        (plugin: ConfigPlugin): Function =>
+          plugin.postOverwrites.gluestickConfig,
+      )
+      .reduce(
+        (prev: GSConfig, curr: (config: GSConfig) => GSConfig): GSConfig => {
+          return curr(clone(prev));
+        },
+        defaultConfig,
+      ),
   );
 };

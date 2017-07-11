@@ -2,7 +2,9 @@ jest.mock('../main', () => jest.fn());
 const main = require('../main');
 
 const original = process.argv[2];
-const originalProcessSend = process.send ? process.send.bind(process) : process.send;
+const originalProcessSend = process.send
+  ? process.send.bind(process)
+  : process.send;
 
 describe('renderer/entry', () => {
   beforeEach(() => {

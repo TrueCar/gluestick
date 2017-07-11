@@ -8,8 +8,8 @@ import { useScroll } from 'react-router-scroll';
 import prepareRoutesWithTransitionHooks from '../lib/prepareRoutesWithTransitionHooks';
 
 type DefaultProps = {
-  routerHistory: ?Object;
-}
+  routerHistory: ?Object,
+};
 
 type Props = {
   /* eslint-disable */
@@ -21,8 +21,8 @@ type Props = {
 };
 
 type State = {
-  mounted: boolean;
-}
+  mounted: boolean,
+};
 
 export default class Root extends Component<DefaultProps, Props, State> {
   static propTypes = {
@@ -61,9 +61,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
   }
 
   render() {
-    const {
-      store,
-    } = this.props;
+    const { store } = this.props;
 
     return (
       <Provider store={store}>
@@ -81,9 +79,8 @@ export default class Root extends Component<DefaultProps, Props, State> {
       useScroll((prevRouterProps, { location, routes }) => {
         // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
         // behaviour.
-        const { useScroll: customScrollBehavior } = routes.find(route => (
-          route.useScroll
-        )) || {};
+        const { useScroll: customScrollBehavior } =
+          routes.find(route => route.useScroll) || {};
 
         if (typeof customScrollBehavior === 'function') {
           return customScrollBehavior(prevRouterProps, location);
@@ -101,10 +98,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
       }),
     );
 
-    const {
-      routes,
-      routerHistory,
-    } = props;
+    const { routes, routerHistory } = props;
 
     return (
       <Router history={routerHistory} render={render}>

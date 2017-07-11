@@ -56,58 +56,58 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     },
 
     module: {
-      rules: [{
-        test: /\.js$/,
-        exclude: new RegExp(`(node_modules/(?!gluestick))|(${buildAssetsPath})`),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            plugins: [
-              'transform-flow-strip-types',
-            ],
-            presets: [
-              'es2015',
-              'react',
-              'stage-0',
-            ],
-            babelrc: false,
-          },
-        }],
-      },
-      {
-        test: /\.(scss)$/,
-        use: [
-          'style-loader',
-          `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
-          'postcss-loader',
-          `sass-loader${isProduction ? '' : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
-        ],
-      },
-      {
-        test: /\.(css)$/,
-        use: [
-          'style-loader',
-          `css-loader?importLoaders=1${isProduction ? '' : '&sourceMap'}`,
-          'postcss-loader',
-        ],
-      },
-      {
-        test: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          'file-loader?name=[name]-[hash].[ext]',
-          {
-            loader: 'image-webpack-loader',
-            // Workaround https://github.com/tcoopman/image-webpack-loader/issues/88#issuecomment-289454242
-            options: {},
-          },
-        ],
-      },
-      {
-        test: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          'file-loader?name=[name]-[hash].[ext]',
-        ],
-      }],
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: new RegExp(
+            `(node_modules/(?!gluestick))|(${buildAssetsPath})`,
+          ),
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                plugins: ['transform-flow-strip-types'],
+                presets: ['es2015', 'react', 'stage-0'],
+                babelrc: false,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(scss)$/,
+          use: [
+            'style-loader',
+            `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
+            'postcss-loader',
+            `sass-loader${isProduction
+              ? ''
+              : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
+          ],
+        },
+        {
+          test: /\.(css)$/,
+          use: [
+            'style-loader',
+            `css-loader?importLoaders=1${isProduction ? '' : '&sourceMap'}`,
+            'postcss-loader',
+          ],
+        },
+        {
+          test: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            'file-loader?name=[name]-[hash].[ext]',
+            {
+              loader: 'image-webpack-loader',
+              // Workaround https://github.com/tcoopman/image-webpack-loader/issues/88#issuecomment-289454242
+              options: {},
+            },
+          ],
+        },
+        {
+          test: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+          use: ['file-loader?name=[name]-[hash].[ext]'],
+        },
+      ],
     },
 
     plugins: [

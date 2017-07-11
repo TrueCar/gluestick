@@ -39,14 +39,19 @@ describe('cli: gluestick new', () => {
 
   it('should logs that project is being generated', () => {
     newApp(commandApi, [validProjectName]);
-    expect(infoLogger.mock.calls[0][0]).toEqual(`${filename(validProjectName)} is being generated...`);
+    expect(infoLogger.mock.calls[0][0]).toEqual(
+      `${filename(validProjectName)} is being generated...`,
+    );
   });
 
   it('should not generate a project if gluestick dependency is missing in package.json', () => {
-    newApp({
-      ...commandApi,
-      isGluestickProject: () => false,
-    }, [validProjectName]);
+    newApp(
+      {
+        ...commandApi,
+        isGluestickProject: () => false,
+      },
+      [validProjectName],
+    );
     expect(generate).not.toBeCalled();
   });
 
@@ -82,12 +87,11 @@ describe('cli: gluestick new', () => {
     expect(successLogger.mock.calls[0][0]).toContain(
       `${highlight('New GlueStick project created')} at ${newAppPath}`,
     );
-    expect(infoLogger.mock.calls[1][0])
-      .toEqual(
-        'To run your app and start developing\n'
-        + `         -> cd ${validProjectName}\n`
-        + '         -> gluestick start\n'
-        + '         -> Point the browser to http://localhost:8888',
-      );
+    expect(infoLogger.mock.calls[1][0]).toEqual(
+      'To run your app and start developing\n' +
+        `         -> cd ${validProjectName}\n` +
+        '         -> gluestick start\n' +
+        '         -> Point the browser to http://localhost:8888',
+    );
   });
 });

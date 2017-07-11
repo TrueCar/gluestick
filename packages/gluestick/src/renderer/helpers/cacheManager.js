@@ -19,12 +19,18 @@ const lruOptions: { maxAge: number, max: number } = {
 };
 const _cache: Object = LRU(lruOptions);
 
-const getCacheKey = ({ hostname, url }: { hostname: string, url: string}): string => {
+const getCacheKey = ({
+  hostname,
+  url,
+}: {
+  hostname: string,
+  url: string,
+}): string => {
   return `${hostname}${url}`;
 };
 
 module.exports = (logger: BaseLogger, isProduction: boolean): CacheManager => {
-  const enableComponentCaching: EnableComponentCaching = (config) => {
+  const enableComponentCaching: EnableComponentCaching = config => {
     if (isProduction && config && config.components) {
       // only enable caching if componentCacheConfig has an object
       SSRCaching.enableCaching(true);
@@ -43,7 +49,10 @@ module.exports = (logger: BaseLogger, isProduction: boolean): CacheManager => {
     return null;
   };
   const setCacheIfProd: SetCacheIfProd = (
-    req, value, maxAge = DEFAULT_TTL, cache = _cache,
+    req,
+    value,
+    maxAge = DEFAULT_TTL,
+    cache = _cache,
   ) => {
     if (isProduction) {
       const key: string = getCacheKey(req);

@@ -16,25 +16,28 @@ const plugin0Ref = () => ({
   hooks: {},
 });
 plugin0Ref.meta = { type: 'server', name: 'testPlugin0' };
-const plugin1Ref = (options) => ({
+const plugin1Ref = options => ({
   renderMethod: () => options,
   hooks: {},
 });
 plugin1Ref.meta = { type: 'server', name: 'testPlugin1' };
 const plugin2Ref = () => {};
 plugin2Ref.meta = { type: 'runtime' };
-const validPlugins = [{
-  ref: plugin0Ref,
-  type: 'server',
-},
-{
-  ref: plugin1Ref,
-  options: { prop: true },
-  type: 'server',
-}, {
-  ref: plugin2Ref,
-  type: 'runtime',
-}];
+const validPlugins = [
+  {
+    ref: plugin0Ref,
+    type: 'server',
+  },
+  {
+    ref: plugin1Ref,
+    options: { prop: true },
+    type: 'server',
+  },
+  {
+    ref: plugin2Ref,
+    type: 'runtime',
+  },
+];
 
 describe('plugins/prepareServerPlugins', () => {
   afterEach(() => {
@@ -56,9 +59,11 @@ describe('plugins/prepareServerPlugins', () => {
 
   it('should fail to compile plugin - fn export', () => {
     // $FlowIgnore
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [{
-      ref: 'abc',
-    }]);
+    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [
+      {
+        ref: 'abc',
+      },
+    ]);
     expect(plugins.length).toBe(0);
     expect(logger.warn.mock.calls.length).toBe(1);
     expect(logger.warn.mock.calls[0][0].message).toEqual(
@@ -67,11 +72,16 @@ describe('plugins/prepareServerPlugins', () => {
   });
 
   it('should catch error being throw from inside plugin', () => {
-    const invalidPlugin = () => { throw new Error('test'); };
+    const invalidPlugin = () => {
+      throw new Error('test');
+    };
     invalidPlugin.meta = { type: 'server', name: 'invalidPlugin' };
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [{
-      ref: invalidPlugin, type: 'server',
-    }]);
+    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [
+      {
+        ref: invalidPlugin,
+        type: 'server',
+      },
+    ]);
     expect(plugins.length).toBe(0);
     expect(logger.warn.mock.calls.length).toBe(1);
     expect(logger.warn.mock.calls[0][0].message).toEqual(

@@ -9,36 +9,35 @@ const chalk = require('chalk');
 const babel = require('babel-core');
 const requireFromString = require('require-from-string');
 
-const convertToCamelCase =
-  (value: string): string => `${
-    value[0].toLowerCase()
-  }${
-    value.substr(1).replace(/(-\w)/g, match => match[1].toUpperCase())
-  }`;
+const convertToCamelCase = (value: string): string =>
+  `${value[0].toLowerCase()}${value
+    .substr(1)
+    .replace(/(-\w)/g, match => match[1].toUpperCase())}`;
 
 const convertToKebabCase = (value: string): string => {
-  const parsedValue = value.replace(/([A-Z])/g, match => `-${match[0].toLowerCase()}`);
+  const parsedValue = value.replace(
+    /([A-Z])/g,
+    match => `-${match[0].toLowerCase()}`,
+  );
   return parsedValue[0] === '-' ? parsedValue.substring(1) : parsedValue;
 };
 
-const convertToPascalCase = (value: string): string => `${
-  value[0].toUpperCase()
-}${
-  convertToCamelCase(value.slice(1))
-}`;
+const convertToPascalCase = (value: string): string =>
+  `${value[0].toUpperCase()}${convertToCamelCase(value.slice(1))}`;
 
-const convertToCamelCaseWithPrefix = (prefix: string, value: string): string => {
-  return `${
-    convertToCamelCase(prefix)
-  }${
-    convertToPascalCase(value)
-  }`;
+const convertToCamelCaseWithPrefix = (
+  prefix: string,
+  value: string,
+): string => {
+  return `${convertToCamelCase(prefix)}${convertToPascalCase(value)}`;
 };
 
 const isValidEntryPoint = (entryPoint: string, logger: Logger) => {
   if (!/^(shared|apps\/.+)$/.test(entryPoint)) {
     logger.error(`${entryPoint} is not a valid entry point`);
-    logger.info('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
+    logger.info(
+      "Pass -E and a valid entry point: 'shared' or 'apps/{validAppName}'",
+    );
     return false;
   }
   const entryPath = path.join('src', entryPoint);
@@ -116,11 +115,16 @@ const printWebpackStats = (logger: Logger, stats: Object) => {
       return `${size} B`;
     }
     const kb = size / 1024;
-    return kb > 1024 ? chalk.yellow(`${(kb / 1024).toFixed(2)} MB`) : `${kb.toFixed(2)} KB`;
+    return kb > 1024
+      ? chalk.yellow(`${(kb / 1024).toFixed(2)} MB`)
+      : `${kb.toFixed(2)} KB`;
   };
 
   table.push(
-    ...compilationStats.assets.map(({ name, size }) => [name, formatSize(size)]),
+    ...compilationStats.assets.map(({ name, size }) => [
+      name,
+      formatSize(size),
+    ]),
   );
 
   compilationStats.errors.forEach(error => {
@@ -136,13 +140,8 @@ const printWebpackStats = (logger: Logger, stats: Object) => {
 
 const requireModule = (filename: string): any => {
   const { code } = babel.transformFileSync(path.resolve(filename), {
-    presets: [
-      'es2015',
-      'stage-0',
-    ],
-    plugins: [
-      'transform-flow-strip-types',
-    ],
+    presets: ['es2015', 'stage-0'],
+    plugins: ['transform-flow-strip-types'],
   });
   return getDefaultExport(requireFromString(code, filename));
 };
@@ -162,27 +161,29 @@ const requireWithInterop = (filename: string): any => {
   return getDefaultExport(require(filename));
 };
 
-const promiseEach = (promiseFactories: (() => Promise<*>)[]): Promise<any[]> => new Promise(
-  (resolve: Function, reject: Function): void => {
+const promiseEach = (promiseFactories: () => Promise<*>[]): Promise<any[]> =>
+  new Promise((resolve: Function, reject: Function): void => {
     const buffer: any[] = [];
-    const thenHandlerFactory = (remainingPromiseFactories: (() => Promise<*>)[]) =>
-      (value: any) => {
-        buffer.push(value);
-        if (remainingPromiseFactories.length > 0) {
-          return remainingPromiseFactories[0]().then(
-            thenHandlerFactory(remainingPromiseFactories.slice(1)),
-          ).catch(catchHandler);
-        }
-        return resolve(buffer);
-      };
+    const thenHandlerFactory = (
+      remainingPromiseFactories: () => Promise<*>[],
+    ) => (value: any) => {
+      buffer.push(value);
+      if (remainingPromiseFactories.length > 0) {
+        return remainingPromiseFactories
+          [0]()
+          .then(thenHandlerFactory(remainingPromiseFactories.slice(1)))
+          .catch(catchHandler);
+      }
+      return resolve(buffer);
+    };
     const catchHandler = error => {
       reject({ error, buffer });
     };
-    promiseFactories[0]().then(
-      thenHandlerFactory(promiseFactories.slice(1)),
-    ).catch(catchHandler);
-  },
-);
+    promiseFactories
+      [0]()
+      .then(thenHandlerFactory(promiseFactories.slice(1)))
+      .catch(catchHandler);
+  });
 
 module.exports = {
   isValidEntryPoint,

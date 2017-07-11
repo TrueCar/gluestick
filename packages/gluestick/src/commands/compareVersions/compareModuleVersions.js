@@ -75,28 +75,35 @@ module.exports = (
   const discrepancies: Discrepancy[] = [];
 
   if (projectPackage.dependencies) {
-    checkVersions(projectPackage.dependencies, modulePath, discrepancies, requireCall);
+    checkVersions(
+      projectPackage.dependencies,
+      modulePath,
+      discrepancies,
+      requireCall,
+    );
   }
   if (projectPackage.devDependencies) {
-    checkVersions(projectPackage.devDependencies, modulePath, discrepancies, requireCall);
+    checkVersions(
+      projectPackage.devDependencies,
+      modulePath,
+      discrepancies,
+      requireCall,
+    );
   }
 
   if (discrepancies.length === 0) {
     logger.success('No problems found: all dependencies are valid.');
   } else {
     logger.error(
-      `Found problems with the following dependencies:\n${
-        createArrowList(
-          discrepancies.map(({ name, required, found }) => `${
-            highlight(name)
-          }: required version ${
-            highlight(required)
-          }, found ${
-            highlight(found)
-          }`),
-          10,
-        )
-      }`,
+      `Found problems with the following dependencies:\n${createArrowList(
+        discrepancies.map(
+          ({ name, required, found }) =>
+            `${highlight(name)}: required version ${highlight(
+              required,
+            )}, found ${highlight(found)}`,
+        ),
+        10,
+      )}`,
     );
     logger.error(`Run ${chalk.yellow('npm install')} to resolve this issue`);
   }
