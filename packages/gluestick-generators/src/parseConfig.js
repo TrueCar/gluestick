@@ -73,8 +73,8 @@ const parseConfig = (config: UserConfig, options: Object): Config => {
       parseEntry(entry, parsedConfig.args, options),
     );
   } else {
-    // $FlowFixMe entry is overwritten with parsed entry
     parsedConfig.entry = parseEntry(
+      // $FlowFixMe entry is overwritten with parsed entry
       parsedConfig.entry,
       parsedConfig.args,
       options,

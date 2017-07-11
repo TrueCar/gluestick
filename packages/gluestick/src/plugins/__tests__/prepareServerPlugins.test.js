@@ -58,8 +58,8 @@ describe('plugins/prepareServerPlugins', () => {
   });
 
   it('should fail to compile plugin - fn export', () => {
-    // $FlowIgnore
     const plugins: ServerPlugin[] = prepareServerPlugins(logger, [
+      // $FlowIgnore
       {
         ref: 'abc',
       },

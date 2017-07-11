@@ -103,9 +103,9 @@ module.exports = async (
       httpClient,
       () => requirements.reducers,
       reduxOptions.middlewares,
-      // $FlowFixMe
       cb =>
         module.hot &&
+        // $FlowFixMe
         module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,

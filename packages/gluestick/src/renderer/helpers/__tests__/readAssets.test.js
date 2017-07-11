@@ -69,8 +69,8 @@ describe('renderer/helpers/readAssets', () => {
   });
 
   it('should reject promise', done => {
-    // $FlowIgnore
     fs.readFile = (filename, cb) => {
+      // $FlowIgnore
       cb(new Error('test'));
     };
     readAssets('not/found').catch(error => {

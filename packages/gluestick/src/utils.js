@@ -161,16 +161,18 @@ const requireWithInterop = (filename: string): any => {
   return getDefaultExport(require(filename));
 };
 
-const promiseEach = (promiseFactories: () => Promise<*>[]): Promise<any[]> =>
+const promiseEach = (
+  promiseFactories: Array<() => Promise<*>>,
+): Promise<any[]> =>
   new Promise((resolve: Function, reject: Function): void => {
     const buffer: any[] = [];
     const thenHandlerFactory = (
-      remainingPromiseFactories: () => Promise<*>[],
+      remainingPromiseFactories: Array<() => Promise<*>>,
     ) => (value: any) => {
       buffer.push(value);
       if (remainingPromiseFactories.length > 0) {
-        return remainingPromiseFactories
-          [0]()
+        // prettier-ignore
+        return remainingPromiseFactories[0]()
           .then(thenHandlerFactory(remainingPromiseFactories.slice(1)))
           .catch(catchHandler);
       }
@@ -179,8 +181,8 @@ const promiseEach = (promiseFactories: () => Promise<*>[]): Promise<any[]> =>
     const catchHandler = error => {
       reject({ error, buffer });
     };
-    promiseFactories
-      [0]()
+    // prettier-ignore
+    promiseFactories[0]()
       .then(thenHandlerFactory(promiseFactories.slice(1)))
       .catch(catchHandler);
   });

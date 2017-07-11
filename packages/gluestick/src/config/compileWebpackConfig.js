@@ -195,8 +195,8 @@ module.exports = (
     const handlerIndex: number = serverEnvConfigFinal.externals.findIndex(
       external => typeof external === 'function',
     );
-    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
     const originalHandler: Function =
+      // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
       serverEnvConfigFinal.externals[handlerIndex];
     // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
     serverEnvConfigFinal.externals.splice(handlerIndex, 1);

@@ -174,8 +174,7 @@ describe('command/destroy', () => {
           'export default {\n' +
           '  testReducer,\n' +
           '};\n';
-        const reducerIndexAfter =
-          '/* @flow */\n' + '\n' + 'export default {\n' + '};\n';
+        const reducerIndexAfter = `/* @flow */\n\nexport default {\n};\n`;
         const reducersIndexPath = path.join(
           rootDir,
           'src/shared/reducers/index.js',
