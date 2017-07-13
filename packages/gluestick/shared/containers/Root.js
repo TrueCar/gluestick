@@ -79,6 +79,11 @@ export default class Root extends Component<DefaultProps, Props, State> {
     // router middleware
     const render: Function = applyRouterMiddleware(
       useScroll((prevRouterProps, { location, routes }) => {
+        // Initial render - skip scrolling
+        if (!prevRouterProps) {
+          return false;
+        }
+
         // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
         // behaviour.
         const { useScroll: customScrollBehavior } = routes.find(route => (
