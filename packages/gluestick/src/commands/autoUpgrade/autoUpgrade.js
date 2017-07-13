@@ -1,5 +1,9 @@
 /* @flow */
-import type { CLIContext, UpdateDepsPromptResults, ProjectPackage } from '../../types';
+import type {
+  CLIContext,
+  UpdateDepsPromptResults,
+  ProjectPackage,
+} from '../../types';
 
 const fs = require('fs');
 const path = require('path');
@@ -12,20 +16,32 @@ const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
 
 module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
-  const projectPackage: ProjectPackage = require(path.join(process.cwd(), 'package.json'));
+  const projectPackage: ProjectPackage = require(path.join(
+    process.cwd(),
+    'package.json',
+  ));
   config.GSConfig.autoUpgrade.changed.forEach((filePath: string): void => {
-    const currentHash: string = sha1(fs.readFileSync(path.join(process.cwd(), filePath)));
-    const generatorEntry: Object = getSingleEntryFromGenerator(
-      '../../generator/predefined/new', path.basename(filePath), {},
+    const currentHash: string = sha1(
+      fs.readFileSync(path.join(process.cwd(), filePath)),
     );
-    const entryConfig = parseConfig({
-      entry: generatorEntry,
-    }, {});
+    const generatorEntry: Object = getSingleEntryFromGenerator(
+      '../../generator/predefined/new',
+      path.basename(filePath),
+      {},
+    );
+    const entryConfig = parseConfig(
+      {
+        entry: generatorEntry,
+      },
+      {},
+    );
     // $FlowIgnore
     const templateHash: string = sha1(entryConfig.entry.template);
     if (currentHash !== templateHash) {
       const absolutePath: string = path.join(process.cwd(), filePath);
-      logger.success(`${filePath} file is out of date. Updating at path ${absolutePath}...`);
+      logger.success(
+        `${filePath} file is out of date. Updating at path ${absolutePath}...`,
+      );
       mkdirp.sync(path.dirname(filePath));
       // $FlowIgnore template will be a string
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
@@ -35,13 +51,20 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
   config.GSConfig.autoUpgrade.added.forEach((filePath: string): void => {
     if (!fs.existsSync(path.join(process.cwd(), filePath))) {
       const absolutePath: string = path.join(process.cwd(), filePath);
-      logger.success(`File ${filePath} does not exist. Creating at path ${absolutePath}...`);
-      const generatorEntry: Object = getSingleEntryFromGenerator(
-        '../../generator/predefined/new', path.basename(filePath), {},
+      logger.success(
+        `File ${filePath} does not exist. Creating at path ${absolutePath}...`,
       );
-      const entryConfig = parseConfig({
-        entry: generatorEntry,
-      }, {});
+      const generatorEntry: Object = getSingleEntryFromGenerator(
+        '../../generator/predefined/new',
+        path.basename(filePath),
+        {},
+      );
+      const entryConfig = parseConfig(
+        {
+          entry: generatorEntry,
+        },
+        {},
+      );
       mkdirp.sync(path.dirname(filePath));
       // $FlowIgnore template will be a string
       fs.writeFileSync(absolutePath, entryConfig.entry.template, 'utf-8');
@@ -49,7 +72,10 @@ module.exports = ({ config, logger }: CLIContext, dev: boolean = false) => {
   });
 
   // Update dependencies
-  return checkForMismatch(projectPackage, dev).then((results: UpdateDepsPromptResults): void => {
+  return checkForMismatch(
+    projectPackage,
+    dev,
+  ).then((results: UpdateDepsPromptResults): void => {
     if (results.shouldFix) {
       updateDependencies(logger, projectPackage, results.mismatchedModules);
     }

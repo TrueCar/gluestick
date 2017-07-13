@@ -43,13 +43,17 @@ const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 
-const envVariables: string[] = process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
-  ? process.env.ENV_VARIABLES
-  : [];
+const envVariables: string[] =
+  process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
+    ? process.env.ENV_VARIABLES
+    : [];
 
 module.exports = ({ config, logger }: Context) => {
   const pluginUtils = createPluginUtils(logger);
-  const serverPlugins: ServerPlugin[] = prepareServerPlugins(logger, entriesPlugins);
+  const serverPlugins: ServerPlugin[] = prepareServerPlugins(
+    logger,
+    entriesPlugins,
+  );
 
   // Use custom logger from plugins or default logger.
   const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);
@@ -70,9 +74,10 @@ module.exports = ({ config, logger }: Context) => {
 
   const app: Object = express();
   app.use(compression());
-  app.use('/assets', express.static(
-    path.join(process.cwd(), config.GSConfig.buildAssetsPath),
-  ));
+  app.use(
+    '/assets',
+    express.static(path.join(process.cwd(), config.GSConfig.buildAssetsPath)),
+  );
 
   setProxies(app, applicationConfig.proxies, logger);
 
@@ -80,14 +85,21 @@ module.exports = ({ config, logger }: Context) => {
     app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
       // allow requests from our client side loading page
       res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept',
+      );
       res.status(200).json({ up: true });
     });
   }
 
   app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
-    if (!Object.keys(entries).find((key: string): boolean => req.url.startsWith(key))) {
+    if (
+      !Object.keys(entries).find((key: string): boolean =>
+        req.url.startsWith(key),
+      )
+    ) {
       next();
       return;
     }
@@ -103,11 +115,14 @@ module.exports = ({ config, logger }: Context) => {
       });
     }
 
-    readAssets(`${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`)
+    readAssets(
+      `${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`,
+    )
       .then((assets: Object): Promise<void> => {
         return middleware(
           { config, logger },
-          req, res,
+          req,
+          res,
           { entries, entriesConfig, entriesPlugins: runtimePlugins },
           { EntryWrapper, BodyWrapper },
           { assets, loadjsConfig: applicationConfig.loadjs || {} },

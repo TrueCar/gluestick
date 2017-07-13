@@ -12,7 +12,10 @@ import type {
   RenderMethod,
 } from '../../types';
 
-jest.mock('../helpers/linkAssets.js', () => () => ({ scriptTags: [], styleTags: [] }));
+jest.mock('../helpers/linkAssets.js', () => () => ({
+  scriptTags: [],
+  styleTags: [],
+}));
 
 const React = require('react');
 const clone = require('clone');
@@ -26,17 +29,13 @@ class Index extends React.Component {
 // eslint-disable-next-line react/no-multi-comp
 class EntryWrapper extends React.Component {
   render() {
-    return (
-      <div>EntryWrapper</div>
-    );
+    return <div>EntryWrapper</div>;
   }
 }
 // eslint-disable-next-line react/no-multi-comp
 class BodyWrapper extends React.Component {
   render() {
-    return (
-      <div>BodyWrapper</div>
-    );
+    return <div>BodyWrapper</div>;
   }
 }
 
@@ -49,7 +48,8 @@ describe('renderer/render', () => {
     error: () => {},
   };
 
-  const gsConfig: GSConfig = require('../../__tests__/mocks/context').config.GSConfig;
+  const gsConfig: GSConfig = require('../../__tests__/mocks/context').config
+    .GSConfig;
 
   const universalSettings: UniversalSettings = {
     server: {
@@ -87,25 +87,40 @@ describe('renderer/render', () => {
   const store = {
     getState: jest.fn(() => {}),
   };
-  const getRoutes = () => [
-    { path: 'hola' },
-  ];
+  const getRoutes = () => [{ path: 'hola' }];
   const renderProps = {
     routes: getRoutes(),
   };
 
-  const renderResult = async (email: boolean, cache: boolean, renderMethod):Object => {
+  const renderResult = async (
+    email: boolean,
+    cache: boolean,
+    renderMethod,
+  ): Object => {
     const currentRoute = clone(renderProps);
     currentRoute.email = email;
     currentRoute.cache = cache;
     const results = await render(
       context,
       request,
-      { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
+      {
+        EntryPoint: Index,
+        entryName: 'main',
+        store,
+        routes: getRoutes,
+        httpClient,
+      },
       { renderProps, currentRoute },
-      { EntryWrapper, BodyWrapper, entryWrapperConfig, envVariables, entriesPlugins },
+      {
+        EntryWrapper,
+        BodyWrapper,
+        entryWrapperConfig,
+        envVariables,
+        entriesPlugins,
+      },
       { assets, loadjsConfig, cacheManager },
-      { renderMethod });
+      { renderMethod },
+    );
     return results;
   };
 
@@ -114,12 +129,16 @@ describe('renderer/render', () => {
     const results = await renderResult(email, cache, renderMethod);
     if (email) {
       expect(results.rootElement.props.head).toBeNull();
-      expect(results.rootElement.props.body.props.html).not.toContain('data-reactid');
+      expect(results.rootElement.props.body.props.html).not.toContain(
+        'data-reactid',
+      );
       expect(results.rootElement.props.body.props.html).toBeDefined();
     } else {
       expect(results.rootElement.props.head).not.toBeNull();
       if (!renderMethod) {
-        expect(results.rootElement.props.body.props.html).toContain('data-reactid');
+        expect(results.rootElement.props.body.props.html).toContain(
+          'data-reactid',
+        );
       }
     }
     if (cache) {
@@ -183,7 +202,13 @@ describe('renderer/render', () => {
       render(
         context,
         request,
-        { EntryPoint: Index, entryName: 'main', store, routes: getRoutes, httpClient },
+        {
+          EntryPoint: Index,
+          entryName: 'main',
+          store,
+          routes: getRoutes,
+          httpClient,
+        },
         { renderProps, currentRoute },
         {
           EntryWrapper: MockEntryWrapper,
@@ -195,7 +220,9 @@ describe('renderer/render', () => {
         { assets, loadjsConfig, cacheManager },
         {},
       );
-      expect(MockEntryWrapper.plugins).toEqual([entriesRuntimePlugins[0].plugin]);
+      expect(MockEntryWrapper.plugins).toEqual([
+        entriesRuntimePlugins[0].plugin,
+      ]);
     });
 
     describe('when the route is an email route', () => {
@@ -230,7 +257,7 @@ describe('renderer/render', () => {
       expect(component).toBeDefined();
       expect(styleTags).toBeDefined();
       return {
-        head: [(<meta name="hi" />)],
+        head: [<meta name="hi" />],
         body: '<div>That body!</div>',
       };
     };

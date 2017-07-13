@@ -12,13 +12,11 @@ const logger = {
 };
 
 test('plugins/readServerPlugins should get list of server plugins', () => {
-  expect(readServerlugins(logger, 'plugins.js')).toEqual([{ name: 'testPlugin' }]);
-  // $FlowIgnore flow doesn't know that readPlugins is mocked
-  expect(readPlugins.mock.calls[0]).toEqual([
-    logger,
-    'plugins.js',
-    'server',
+  expect(readServerlugins(logger, 'plugins.js')).toEqual([
+    { name: 'testPlugin' },
   ]);
+  // $FlowIgnore flow doesn't know that readPlugins is mocked
+  expect(readPlugins.mock.calls[0]).toEqual([logger, 'plugins.js', 'server']);
   expect(logger.info.mock.calls[0][0]).toContain('Including server plugins');
   expect(logger.info.mock.calls[0][0]).toContain('testPlugin');
 });

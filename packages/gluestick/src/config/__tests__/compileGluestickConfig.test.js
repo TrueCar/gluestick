@@ -43,26 +43,33 @@ describe('config/compileGluestickConfig', () => {
     const originalProcessCwd = process.cwd.bind(process);
     // $FlowIgnore
     process.cwd = () => 'cwd';
-    expect(compileGluestickConfig(logger, [
-      // $FlowIgnore
-      {
-        name: 'testPlugin',
-        postOverwrites: {
-          gluestickConfig: (config) => {
-            return { ...config, protocol: 'https' };
+    expect(
+      compileGluestickConfig(logger, [
+        // $FlowIgnore
+        {
+          name: 'testPlugin',
+          postOverwrites: {
+            gluestickConfig: config => {
+              return { ...config, protocol: 'https' };
+            },
           },
         },
-      },
-      // $FlowIgnore
-      {
-        name: 'testPlugin',
-        postOverwrites: {
-          gluestickConfig: (config) => {
-            return { ...config, host: 'test' };
+        // $FlowIgnore
+        {
+          name: 'testPlugin',
+          postOverwrites: {
+            gluestickConfig: config => {
+              return { ...config, host: 'test' };
+            },
           },
         },
-      },
-    ])).toEqual({ ...defaultConfig, protocol: 'https', host: 'test', buildStaticPath: 'test' });
+      ]),
+    ).toEqual({
+      ...defaultConfig,
+      protocol: 'https',
+      host: 'test',
+      buildStaticPath: 'test',
+    });
     // $FlowIgnore
     process.cwd = originalProcessCwd;
   });

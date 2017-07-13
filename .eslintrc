@@ -1,6 +1,14 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
+  ],
+  "plugins": [
+    "prettier"
+  ],
   "env": {
     "browser": true,
     "node": true,
@@ -18,6 +26,14 @@
   },
   "rules": {
     "strict": 0,
+
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "all",
+        "singleQuote": true
+      }
+    ],
 
     "arrow-body-style": 0,
     "arrow-parens": 0,

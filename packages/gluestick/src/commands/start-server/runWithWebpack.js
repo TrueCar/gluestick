@@ -17,11 +17,9 @@ const spawnServer = (
   entryPointPath: string,
   args: string[],
 ): Object => {
-  const child: Object = spawn(
-    'node',
-    [entryPointPath].concat(args),
-    { stdio: ['ipc', 'inherit', 'inherit'] },
-  );
+  const child: Object = spawn('node', [entryPointPath].concat(args), {
+    stdio: ['ipc', 'inherit', 'inherit'],
+  });
   logMessage(logger, child);
   return child;
 };

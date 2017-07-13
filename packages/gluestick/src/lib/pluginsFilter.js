@@ -5,7 +5,7 @@ module.exports = (
   flag: string,
   invert: boolean = false,
 ): Array<Object> => {
-  return plugins.filter((plugin) => {
+  return plugins.filter(plugin => {
     const baseCheck = typeof plugin !== 'string' && plugin[flag];
     return invert ? !baseCheck : baseCheck;
   });

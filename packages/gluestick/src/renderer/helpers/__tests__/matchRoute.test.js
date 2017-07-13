@@ -24,9 +24,13 @@ const httpClient = {};
 
 describe('renerer/helpers/matchRoute', () => {
   describe('when a matching route (not a redirect) exists', () => {
-    it('should return the renderProps', (done) => {
+    it('should return the renderProps', done => {
       matchRoute(
-        context, request, getRoutes, store, httpClient,
+        context,
+        request,
+        getRoutes,
+        store,
+        httpClient,
       ).then(({ redirectLocation, renderProps }) => {
         expect(redirectLocation).toBeNull();
         expect(renderProps).toBeDefined();
@@ -36,14 +40,18 @@ describe('renerer/helpers/matchRoute', () => {
   });
 
   describe('when a matching redirect exists', () => {
-    it('should return the redirectLocation', (done) => {
+    it('should return the redirectLocation', done => {
       matchRoute(
-        context, {
+        context,
+        {
           url: '/a',
           headers: {
             host: 'localhost',
           },
-        }, getRoutes, store, httpClient,
+        },
+        getRoutes,
+        store,
+        httpClient,
       ).then(({ redirectLocation, renderProps }) => {
         expect(redirectLocation).not.toBeNull();
         expect(redirectLocation.pathname).toEqual('/b');
@@ -54,14 +62,18 @@ describe('renerer/helpers/matchRoute', () => {
   });
 
   describe('when no matching route exists', () => {
-    it('should forward to the promise `catch` with an error', (done) => {
+    it('should forward to the promise `catch` with an error', done => {
       matchRoute(
-        context, {
+        context,
+        {
           url: 'zzzz',
           headers: {
             host: 'localhost',
           },
-        }, getRoutes, store, httpClient,
+        },
+        getRoutes,
+        store,
+        httpClient,
       ).then(({ redirectLocation, renderProps }) => {
         expect(redirectLocation).toBeUndefined();
         expect(renderProps).toBeUndefined();

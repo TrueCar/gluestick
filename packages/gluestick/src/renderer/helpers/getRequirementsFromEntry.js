@@ -1,10 +1,14 @@
 /* @flow */
 
-import type { Context, Request, Entries, RenderRequirements } from '../../types';
+import type {
+  Context,
+  Request,
+  Entries,
+  RenderRequirements,
+} from '../../types';
 
 const parseURL = require('url').parse;
-const isChildPath = require('./isChildPath')
-;
+const isChildPath = require('./isChildPath');
 /**
  * Sort through all of the entry points based on the number of `/` characters
  * found in the url. It will test the most deeply nested entry points first
@@ -28,7 +32,9 @@ const getSortedEntries = (entries: Entries): string[] => {
  * store, getRoutes and fileName.
  */
 module.exports = (
-  { config, logger }: Context, req: Request, entries: Entries,
+  { config, logger }: Context,
+  req: Request,
+  entries: Entries,
 ): RenderRequirements => {
   const { path: urlPath } = parseURL(req.url);
   const sortedEntries: string[] = getSortedEntries(entries);
@@ -37,7 +43,9 @@ module.exports = (
    * Loop through the sorted entry points and return the variables that the
    * server needs to render based on the best matching entry point.
    */
-  const entryName: string | void = sortedEntries.find((entryPath: string): boolean => {
+  const entryName:
+    | string
+    | void = sortedEntries.find((entryPath: string): boolean => {
     return isChildPath(entryPath, urlPath || '');
   });
 

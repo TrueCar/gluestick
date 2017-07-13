@@ -8,8 +8,8 @@ const supportedHTML4Attributes: { bgColor: string } = {
 };
 
 type Props = {
-  children: any;
-}
+  children: any,
+};
 
 class BodyAttributes extends Component<void, Props, void> {
   render() {
@@ -57,14 +57,15 @@ function transformHTML4Props(props: Object) {
     if (Object.prototype.hasOwnProperty.call(props, propName)) {
       const name: string = supportedHTML4Attributes[propName];
       const value: string = props[propName];
-      const transformedProp: { [key: string]: string } = { [`data-oy-${name}`]: value };
+      const transformedProp: { [key: string]: string } = {
+        [`data-oy-${name}`]: value,
+      };
       Object.assign(transformedProps, transformedProp);
     }
   });
   return transformedProps;
 }
 
-export default withSideEffect(
-  reducePropsToState,
-  handleStateChangeOnClient,
-)(BodyAttributes);
+export default withSideEffect(reducePropsToState, handleStateChangeOnClient)(
+  BodyAttributes,
+);

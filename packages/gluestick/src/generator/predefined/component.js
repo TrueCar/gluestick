@@ -54,7 +54,8 @@ describe("${args => args.path}", () => {
 
 module.exports = (options: PredefinedGeneratorOptions) => {
   const rewrittenName = convertToPascalCase(options.name);
-  const directoryPrefix = options.dir && options.dir !== '.' ? `${options.dir}/` : '';
+  const directoryPrefix =
+    options.dir && options.dir !== '.' ? `${options.dir}/` : '';
 
   return {
     args: {
@@ -62,16 +63,34 @@ module.exports = (options: PredefinedGeneratorOptions) => {
     },
     entries: [
       {
-        path: path.join('src', options.entryPoint, 'components', directoryPrefix),
+        path: path.join(
+          'src',
+          options.entryPoint,
+          'components',
+          directoryPrefix,
+        ),
         filename: rewrittenName,
-        template: options.functional ? functionalComponentTemplate : classComponentTemplate,
+        template: options.functional
+          ? functionalComponentTemplate
+          : classComponentTemplate,
       },
       {
-        path: path.join('src', options.entryPoint, 'components', directoryPrefix, '__tests__'),
+        path: path.join(
+          'src',
+          options.entryPoint,
+          'components',
+          directoryPrefix,
+          '__tests__',
+        ),
         filename: `${rewrittenName}.test.js`,
         template: testTemplate,
         args: {
-          path: path.join(options.entryPoint, 'components', directoryPrefix, rewrittenName),
+          path: path.join(
+            options.entryPoint,
+            'components',
+            directoryPrefix,
+            rewrittenName,
+          ),
         },
       },
     ],

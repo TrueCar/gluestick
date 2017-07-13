@@ -1,35 +1,51 @@
 /* @flow */
 jest.mock('cwd/noEntries.json', () => ({}), { virtual: true });
-jest.mock('cwd/entryName.json', () => ({
-  '/test1': {
-    component: '',
-  },
-}), { virtual: true });
-jest.mock('cwd/entryPathMatch.json', () => ({
-  '/': {
-    component: 'src/apps/main/Index.js',
-  },
-}), { virtual: true });
-jest.mock('cwd/entriesFilter.json', () => ({
-  '/test2': {
-    component: '',
-  },
-  '/home': {
-    name: 'Home',
-    component: 'src/apps/home/Index.js',
-  },
-}), { virtual: true });
-jest.mock('cwd/entries.json', () => ({
-  '/home': {
-    name: 'Home',
-    component: 'src/apps/home/Index.js',
-  },
-  '/profile': {
-    component: 'src/external/profile/Index.js',
-  },
-}), { virtual: true });
+jest.mock(
+  'cwd/entryName.json',
+  () => ({
+    '/test1': {
+      component: '',
+    },
+  }),
+  { virtual: true },
+);
+jest.mock(
+  'cwd/entryPathMatch.json',
+  () => ({
+    '/': {
+      component: 'src/apps/main/Index.js',
+    },
+  }),
+  { virtual: true },
+);
+jest.mock(
+  'cwd/entriesFilter.json',
+  () => ({
+    '/test2': {
+      component: '',
+    },
+    '/home': {
+      name: 'Home',
+      component: 'src/apps/home/Index.js',
+    },
+  }),
+  { virtual: true },
+);
+jest.mock(
+  'cwd/entries.json',
+  () => ({
+    '/home': {
+      name: 'Home',
+      component: 'src/apps/home/Index.js',
+    },
+    '/profile': {
+      component: 'src/external/profile/Index.js',
+    },
+  }),
+  { virtual: true },
+);
 jest.mock('fs', () => ({
-  existsSync: (value) => {
+  existsSync: value => {
     if (value.includes('test2')) {
       return false;
     }
@@ -42,7 +58,7 @@ const orignalProcessCwd = process.cwd.bind(process);
 const defaultGluesticConfig = require('../../defaults/glueStickConfig');
 const getAliasesForApps = require('../getAliasesForApps');
 
-const mockGSConfig = (mockedConfig) => {
+const mockGSConfig = mockedConfig => {
   return {
     ...defaultGluesticConfig,
     ...mockedConfig,
@@ -62,9 +78,7 @@ describe('config/webpack/getAliasesForApps', () => {
 
   it('should return empty object', () => {
     expect(
-      getAliasesForApps(
-        mockGSConfig({ entriesPath: 'noEntries.json' }),
-      ),
+      getAliasesForApps(mockGSConfig({ entriesPath: 'noEntries.json' })),
     ).toEqual({});
   });
 

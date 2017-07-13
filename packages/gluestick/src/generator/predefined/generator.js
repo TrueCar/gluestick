@@ -114,7 +114,7 @@ module.exports = exports = options => ({
 });
 `;
 
-module.exports = (options) => ({
+module.exports = options => ({
   entry: {
     path: 'generators',
     filename: options.name,

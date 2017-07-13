@@ -10,25 +10,32 @@ const { createArrowList } = require('../cli/helpers');
 const packageJSON = require('../../package.json');
 
 module.exports = (
-  { getLogger, getOptions, isGluestickProject }: CommandAPI, commandArguments: any[],
+  { getLogger, getOptions, isGluestickProject }: CommandAPI,
+  commandArguments: any[],
 ) => {
   const logger: Logger = getLogger();
   const appName: string = commandArguments[0];
   const options = getOptions(commandArguments);
 
-  const successMessageHandler = () => {
-
-  };
+  const successMessageHandler = () => {};
 
   if (isGluestickProject()) {
     logger.print('');
     logger.info(`${filename(appName)} is being generated...`);
 
-    generate({
-      generatorName: 'new',
-      entityName: appName,
-      options: { dev: options.dev || null, appName, skipMain: options.skipMain },
-    }, logger, { successMessageHandler });
+    generate(
+      {
+        generatorName: 'new',
+        entityName: appName,
+        options: {
+          dev: options.dev || null,
+          appName,
+          skipMain: options.skipMain,
+        },
+      },
+      logger,
+      { successMessageHandler },
+    );
 
     // Install necessary flow-typed definitions
     spawn.sync(
@@ -38,13 +45,20 @@ module.exports = (
     );
 
     logger.print('');
-    logger.success(`${highlight('New GlueStick project created')} at ${filename(process.cwd())}`);
+    logger.success(
+      `${highlight('New GlueStick project created')} at ${filename(
+        process.cwd(),
+      )}`,
+    );
     logger.info(
-      `To run your app and start developing\n${createArrowList([
-        `cd ${appName}`,
-        'gluestick start',
-        'Point the browser to http://localhost:8888',
-      ], 9)}`,
+      `To run your app and start developing\n${createArrowList(
+        [
+          `cd ${appName}`,
+          'gluestick start',
+          'Point the browser to http://localhost:8888',
+        ],
+        9,
+      )}`,
     );
     // process.exit(0);
   }

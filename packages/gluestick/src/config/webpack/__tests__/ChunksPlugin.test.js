@@ -1,14 +1,18 @@
 jest.mock('fs');
 jest.mock('mkdirp');
-jest.mock('path/webpack-chunks', () => ({
-  javascript: {
-    main: 'publicPath/main.js',
-    profile: 'publicPath/profile.js',
-  },
-  styles: {
-    main: 'publicPath/main.css',
-  },
-}), { virtual: true });
+jest.mock(
+  'path/webpack-chunks',
+  () => ({
+    javascript: {
+      main: 'publicPath/main.js',
+      profile: 'publicPath/profile.js',
+    },
+    styles: {
+      main: 'publicPath/main.css',
+    },
+  }),
+  { virtual: true },
+);
 
 const fs = require('fs');
 const ChunksPlugin = require('../ChunksPlugin');

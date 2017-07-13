@@ -10,7 +10,7 @@ describe('renderer/helpers/isChildPath', () => {
       ['/', '/anything'],
       ['/this/one/is/really/long', '/this/one/is/really/long/too'],
     ];
-    shouldBeTrue.forEach((pair) => {
+    shouldBeTrue.forEach(pair => {
       expect(isChildPath(pair[0], pair[1])).toEqual(true);
     });
   });
@@ -23,7 +23,7 @@ describe('renderer/helpers/isChildPath', () => {
       ['/this/one/is/really/long', '/this/one'],
       ['/this/shouldnotmatch', '/this/shouldnot'],
     ];
-    shouldBeFalse.forEach((pair) => {
+    shouldBeFalse.forEach(pair => {
       expect(isChildPath(pair[0], pair[1])).toEqual(false);
     });
   });

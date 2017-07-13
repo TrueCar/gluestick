@@ -17,24 +17,31 @@ jest.mock('../../../shared', () => ({
   getHttpClient: jest.fn(),
   createStore: jest.fn(() => ({})),
   prepareRoutesWithTransitionHooks: jest.fn(val => val),
-  runBeforeRoutes: jest.fn(() => new Promise((r) => r())),
+  runBeforeRoutes: jest.fn(() => new Promise(r => r())),
 }));
-jest.mock('../helpers/matchRoute.js', () => jest.fn(
-  (ctx, req, routes) => ({
-    redirectLocation: routes().mockBehaviour.redirect ? {
-      pathname: 'pathname', search: 'search',
-    } : null,
+jest.mock('../helpers/matchRoute.js', () =>
+  jest.fn((ctx, req, routes) => ({
+    redirectLocation: routes().mockBehaviour.redirect
+      ? {
+          pathname: 'pathname',
+          search: 'search',
+        }
+      : null,
     renderProps: routes().mockBehaviour.renderProps,
-  }),
-));
+  })),
+);
 jest.mock('../helpers/errorHandler.js', () => jest.fn());
-jest.mock('../render.js', () => jest.fn(() => ({
-  responseString: 'output',
-})));
-jest.mock('../helpers/cacheManager.js', () => jest.fn(() => ({
-  getCachedIfProd: jest.fn((req) => req.url === '/cached' ? 'cached' : null),
-  enableComponentCaching: jest.fn(),
-})));
+jest.mock('../render.js', () =>
+  jest.fn(() => ({
+    responseString: 'output',
+  })),
+);
+jest.mock('../helpers/cacheManager.js', () =>
+  jest.fn(() => ({
+    getCachedIfProd: jest.fn(req => (req.url === '/cached' ? 'cached' : null)),
+    enableComponentCaching: jest.fn(),
+  })),
+);
 jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 const React = require('react');
 const middleware = require('../middleware');
@@ -86,11 +93,11 @@ const options = {
 
 const getEntries = (routes): Entries => ({
   '/': {
-    component: (class extends React.Component {
+    component: class extends React.Component {
       render() {
         return <div>Index</div>;
       }
-    }),
+    },
     reducers: {},
     routes: () => routes,
   },

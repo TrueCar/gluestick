@@ -5,22 +5,27 @@ import type { ServerPlugin, Plugin, BaseLogger } from '../types';
 const { createArrowList } = require('../cli/helpers');
 
 type CopilationResults = {
-  [key: string]: Function | Object;
-  error?: Error;
+  [key: string]: Function | Object,
+  error?: Error,
 };
 
 type PluginRef = {
-  ref: Function;
-  type: string;
-  options?: Object;
-}
+  ref: Function,
+  type: string,
+  options?: Object,
+};
 
 /**
  * Compile plugin.
  */
-const compilePlugin = (pluginSpec: Plugin, pluginOptions: Object): CopilationResults => {
+const compilePlugin = (
+  pluginSpec: Plugin,
+  pluginOptions: Object,
+): CopilationResults => {
   try {
-    const pluginBody = pluginSpec.body ? pluginSpec.body(pluginSpec.options, pluginOptions) : {};
+    const pluginBody = pluginSpec.body
+      ? pluginSpec.body(pluginSpec.options, pluginOptions)
+      : {};
 
     // Currently server plugin can overwrite renderMethod and provide hooks and logger.
     return {
@@ -50,7 +55,10 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(
       (plugin: PluginRef, index: number): boolean => {
-        if (typeof plugin.ref !== 'function' && typeof plugin.ref.plugin !== 'function') {
+        if (
+          typeof plugin.ref !== 'function' &&
+          typeof plugin.ref.plugin !== 'function'
+        ) {
           throw new Error(`Plugin at position ${index} must export a function`);
         }
         return plugin.type === 'server';
@@ -65,14 +73,18 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
       (value: PluginRef): ServerPlugin => {
         const normalizedPlugin: Plugin = {
-          name: value.ref.meta ? value.ref.meta.name : value.ref.name || 'unknown',
+          name: value.ref.meta
+            ? value.ref.meta.name
+            : value.ref.name || 'unknown',
           meta: value.ref.meta || {},
           body: value.ref,
           options: value.options || {},
         };
         // Second `compilePlugin` argument is an object with gluestick utilities that
         // will be available for plugins to use.
-        const compilationResults: Object = compilePlugin(normalizedPlugin, { logger });
+        const compilationResults: Object = compilePlugin(normalizedPlugin, {
+          logger,
+        });
         if (compilationResults.error) {
           throw compilationResults.error;
         }

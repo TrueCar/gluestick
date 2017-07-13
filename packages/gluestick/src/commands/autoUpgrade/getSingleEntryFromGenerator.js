@@ -2,7 +2,11 @@
 
 const path = require('path');
 
-module.exports = (generatorPath: string, entryFileName: string, options: Object): Object => {
+module.exports = (
+  generatorPath: string,
+  entryFileName: string,
+  options: Object,
+): Object => {
   // $FlowFixMe
   module.createTemplate = require('gluestick-generators').createTemplate;
   const generator: Function = require(generatorPath);
@@ -10,9 +14,9 @@ module.exports = (generatorPath: string, entryFileName: string, options: Object)
   return compiledGenerator.entry
     ? compiledGenerator.entry
     : generator(options).entries.find((entry: Object) => {
-      return (
-        entry.filename === entryFileName ||
-        `${entry.filename}${path.extname(entryFileName)}` === entryFileName
-      );
-    });
+        return (
+          entry.filename === entryFileName ||
+          `${entry.filename}${path.extname(entryFileName)}` === entryFileName
+        );
+      });
 };

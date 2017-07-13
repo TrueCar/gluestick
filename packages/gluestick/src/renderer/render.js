@@ -18,30 +18,30 @@ const getRenderer = (
 };
 
 type EntryRequirements = {
-  EntryPoint: Object;
-  entryName: string;
-  store: Object;
-  routes: Function;
-  httpClient: Object;
+  EntryPoint: Object,
+  entryName: string,
+  store: Object,
+  routes: Function,
+  httpClient: Object,
 };
 type WrappersRequirements = {
-  EntryWrapper: Object;
-  BodyWrapper: Object;
-  entryWrapperConfig: Object;
-  envVariables: any[];
-  entriesPlugins: { plugin: Function; meta: Object; }[];
+  EntryWrapper: Object,
+  BodyWrapper: Object,
+  entryWrapperConfig: Object,
+  envVariables: any[],
+  entriesPlugins: { plugin: Function, meta: Object }[],
 };
 type AssetsCacheOpts = {
-  assets: Object;
-  loadjsConfig: Object;
-  cacheManager: Object;
+  assets: Object,
+  loadjsConfig: Object,
+  cacheManager: Object,
 };
 
 module.exports = (
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
-  { renderProps, currentRoute }: { renderProps: Object; currentRoute: Object },
+  { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
   {
     EntryWrapper,
     BodyWrapper,
@@ -52,11 +52,16 @@ module.exports = (
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput => {
-  const { styleTags, scriptTags } = linkAssets(context, entryName, assets, loadjsConfig);
+  const { styleTags, scriptTags } = linkAssets(
+    context,
+    entryName,
+    assets,
+    loadjsConfig,
+  );
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const rootWrappers = entriesPlugins
-    .filter((plugin) => plugin.meta.wrapper)
+    .filter(plugin => plugin.meta.wrapper)
     .map(({ plugin }) => plugin);
   const entryWrapper = (
     <EntryWrapper
@@ -76,8 +81,13 @@ module.exports = (
   // script tag that hooks up the client side react code.
   const currentState: Object = store.getState();
 
-  const renderResults: Object = getRenderer(isEmail, renderMethod)(entryWrapper, styleTags);
-  const bodyWrapperContent: String = renderMethod ? renderResults.body : renderResults;
+  const renderResults: Object = getRenderer(isEmail, renderMethod)(
+    entryWrapper,
+    styleTags,
+  );
+  const bodyWrapperContent: String = renderMethod
+    ? renderResults.body
+    : renderResults;
   const bodyWrapper = (
     <BodyWrapper
       html={bodyWrapperContent}
@@ -87,7 +97,6 @@ module.exports = (
       scriptTags={scriptTags}
     />
   );
-
 
   // Grab the html from the project which is stored in the root
   // folder named Index.js. Pass the body and the head to that
@@ -107,7 +116,9 @@ module.exports = (
 
   let responseString: string;
   if (isEmail) {
-    const generateCustomTemplate = ({ bodyContent }) => { return `${docType}${bodyContent}`; };
+    const generateCustomTemplate = ({ bodyContent }) => {
+      return `${docType}${bodyContent}`;
+    };
     responseString = Oy.renderTemplate(rootElement, {}, generateCustomTemplate);
   } else {
     responseString = `${docType}${renderToStaticMarkup(rootElement)}`;

@@ -3,7 +3,7 @@ type Interpolation = any;
 type TemplateCreator = (args: Object) => string;
 type TemplateCreatorFactory = (
   strings: string[],
-  interpolations: Interpolation[]
+  interpolations: Interpolation[],
 ) => TemplateCreator;
 
 const tag = (
@@ -30,27 +30,32 @@ const tag = (
       }
       return '';
     };
-    const entries: string[] =
-      interpolations.reduce((previous: string[], current: any, index: number) => {
+    const entries: string[] = interpolations.reduce(
+      (previous: string[], current: any, index: number) => {
         const interpolatedCurrentValue: string = interpolate(current);
         return previous.concat(
-        index < strings.length - 1
-          ? [interpolatedCurrentValue, strings[index + 1]]
-          : [interpolatedCurrentValue],
+          index < strings.length - 1
+            ? [interpolatedCurrentValue, strings[index + 1]]
+            : [interpolatedCurrentValue],
         );
-      }, [strings[0]]);
+      },
+      [strings[0]],
+    );
 
-    const finalString: string = entries.join('').split('\n').map((line: string): string => {
-      if (new RegExp(`[^\\S\\n]{${spacesToRemove}}`, 'i').test(line)) {
-        return line.substring(spacesToRemove);
-      }
-      return line;
-    }).join('\n');
+    const finalString: string = entries
+      .join('')
+      .split('\n')
+      .map((line: string): string => {
+        if (new RegExp(`[^\\S\\n]{${spacesToRemove}}`, 'i').test(line)) {
+          return line.substring(spacesToRemove);
+        }
+        return line;
+      })
+      .join('\n');
 
     return finalString[0] === '\n' ? finalString.substring(1) : finalString;
   };
 };
-
 
 /**
  * Creates factory function that returns string from given template.
@@ -60,10 +65,14 @@ const tag = (
  * @returns {Function} TemplateCreator returns string
  */
 
-module.exports = (...params: Array<any>): TemplateCreator | TemplateCreatorFactory => {
+module.exports = (
+  ...params: Array<any>
+): TemplateCreator | TemplateCreatorFactory => {
   if (typeof params[0] === 'number') {
-    return (strings: string[], ...interpolations: Array<any>): TemplateCreator =>
-      tag(params[0], strings, ...interpolations);
+    return (
+      strings: string[],
+      ...interpolations: Array<any>
+    ): TemplateCreator => tag(params[0], strings, ...interpolations);
   } else if (Array.isArray(params[0])) {
     return tag(0, ...params);
   }

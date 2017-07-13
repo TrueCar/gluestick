@@ -13,9 +13,12 @@ module.exports = (logger: BaseLogger, pluginsConfigPath: string): Plugin[] => {
 
   const plugins = readPlugins(logger, pluginsConfigPath, 'runtime');
   if (plugins.length) {
-    logger.info(`Including runtime plugins:\n${
-      createArrowList(plugins.map(({ name }) => name), 9)
-    }`);
+    logger.info(
+      `Including runtime plugins:\n${createArrowList(
+        plugins.map(({ name }) => name),
+        9,
+      )}`,
+    );
   }
 
   runtimePluginsCache = plugins;

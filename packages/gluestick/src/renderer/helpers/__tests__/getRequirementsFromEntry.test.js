@@ -29,16 +29,14 @@ const entries = {
 describe('renderer/helpers/getRequirementsFromEntry', () => {
   it('should throw error if entry definition was not found', () => {
     expect(() => {
-      getRequirementsFromEntry(
-        context, { url: '/' }, entries,
-      );
+      getRequirementsFromEntry(context, { url: '/' }, entries);
     }).toThrowError('No matching entry definition found');
   });
 
   it('should return entry', () => {
-    expect(getRequirementsFromEntry(
-      context, { url: '/home/abc' }, entries,
-    )).toEqual({
+    expect(
+      getRequirementsFromEntry(context, { url: '/home/abc' }, entries),
+    ).toEqual({
       Component: 'component',
       reducers: 'reducers',
       routes: 'routes',
@@ -52,9 +50,13 @@ describe('renderer/helpers/getRequirementsFromEntry', () => {
     const entriesWithCustomName = clone(entries);
     entriesWithCustomName['/home/abc'].name = 'custom';
     entriesWithCustomName['/home/abc'].config = { test: true };
-    expect(getRequirementsFromEntry(
-      context, { url: '/home/abc' }, entriesWithCustomName,
-    )).toEqual({
+    expect(
+      getRequirementsFromEntry(
+        context,
+        { url: '/home/abc' },
+        entriesWithCustomName,
+      ),
+    ).toEqual({
       Component: 'component',
       reducers: 'reducers',
       routes: 'routes',

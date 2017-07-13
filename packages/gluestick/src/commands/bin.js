@@ -9,7 +9,10 @@ const getDependencyPath = name =>
   path.join(process.cwd(), 'node_modules/.bin/', name);
 
 // `opts` is array of options with Command object attached as last element
-module.exports = ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]) => {
+module.exports = (
+  { getLogger, getOptions }: CommandAPI,
+  commandArguments: any[],
+) => {
   const logger: Logger = getLogger();
 
   logger.clear();
@@ -23,13 +26,9 @@ module.exports = ({ getLogger, getOptions }: CommandAPI, commandArguments: any[]
     logger.error('Syntax for this command is `gluestick bin <binaryName>`');
     return;
   }
-  spawn(
-    getDependencyPath(dependencyName),
-    opts.parent.rawArgs.slice(4),
-    {
-      stdio: 'inherit',
-    },
-  ).on('error', (error) => {
+  spawn(getDependencyPath(dependencyName), opts.parent.rawArgs.slice(4), {
+    stdio: 'inherit',
+  }).on('error', error => {
     if (error.code === 'ENOENT') {
       logger.fatal(`No binary found for ${dependencyName}`);
     } else {

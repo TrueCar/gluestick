@@ -13,9 +13,12 @@ module.exports = (logger: BaseLogger, pluginsConfigPath: string): Plugin[] => {
 
   const plugins = readPlugins(logger, pluginsConfigPath, 'server');
   if (plugins.length) {
-    logger.info(`Including server plugins:\n${
-      createArrowList(plugins.map(({ name }) => name), 9)
-    }`);
+    logger.info(
+      `Including server plugins:\n${createArrowList(
+        plugins.map(({ name }) => name),
+        9,
+      )}`,
+    );
   }
 
   serverPluginsCache = plugins;

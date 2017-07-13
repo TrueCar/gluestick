@@ -4,13 +4,21 @@ import type { GSConfig } from '../../types';
 const path = require('path');
 const { convertToCamelCase } = require('../../utils');
 
-module.exports = (gluestickConfig: GSConfig, appOrGroupToBuild?: string): Object => {
-  const entries = require(path.join(process.cwd(), gluestickConfig.entriesPath));
+module.exports = (
+  gluestickConfig: GSConfig,
+  appOrGroupToBuild?: string,
+): Object => {
+  const entries = require(path.join(
+    process.cwd(),
+    gluestickConfig.entriesPath,
+  ));
 
   // `/main` is a alias for `/` so it must not be used, as this will create
   // a bunch of errors down the road
   if (entries['/main']) {
-    throw new Error('`/main` cannot be used as entry key, as `main` is a reserved word');
+    throw new Error(
+      '`/main` cannot be used as entry key, as `main` is a reserved word',
+    );
   }
 
   if (!appOrGroupToBuild) {
@@ -18,8 +26,12 @@ module.exports = (gluestickConfig: GSConfig, appOrGroupToBuild?: string): Object
   }
 
   const singleApp: boolean = appOrGroupToBuild[0] === '/';
-  const appOrGroupName: string = convertToCamelCase(appOrGroupToBuild.replace(/^\//, ''));
-  const entriesToBuild: string[] = Object.keys(entries).filter((entryKey: string): boolean => {
+  const appOrGroupName: string = convertToCamelCase(
+    appOrGroupToBuild.replace(/^\//, ''),
+  );
+  const entriesToBuild: string[] = Object.keys(
+    entries,
+  ).filter((entryKey: string): boolean => {
     if (singleApp && entries[entryKey].name) {
       // If `name` property is defined
       return entries[entryKey].name === appOrGroupName;

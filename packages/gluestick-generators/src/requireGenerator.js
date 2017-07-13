@@ -23,12 +23,34 @@ const safeResolve = (moduleToResolve: string, ...args: string[]): string => {
 
 const getPossiblePaths = (generatorName: string): string[] => {
   const paths: string[] = [
-    path.join(process.cwd(), `${EXTERNAL}/${convertToCamelCase(generatorName)}.js`),
-    path.join(process.cwd(), `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`),
-    safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
-    safeResolve('gluestick', PATH_TO_GLUESTICK_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
-    safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToCamelCase(generatorName)}.js`),
-    safeResolve('gluestick-cli', PATH_TO_GLUESTICK_CLI_TEMPLATES, `${convertToKebabCase(generatorName)}.js`),
+    path.join(
+      process.cwd(),
+      `${EXTERNAL}/${convertToCamelCase(generatorName)}.js`,
+    ),
+    path.join(
+      process.cwd(),
+      `${EXTERNAL}/${convertToKebabCase(generatorName)}.js`,
+    ),
+    safeResolve(
+      'gluestick',
+      PATH_TO_GLUESTICK_TEMPLATES,
+      `${convertToCamelCase(generatorName)}.js`,
+    ),
+    safeResolve(
+      'gluestick',
+      PATH_TO_GLUESTICK_TEMPLATES,
+      `${convertToKebabCase(generatorName)}.js`,
+    ),
+    safeResolve(
+      'gluestick-cli',
+      PATH_TO_GLUESTICK_CLI_TEMPLATES,
+      `${convertToCamelCase(generatorName)}.js`,
+    ),
+    safeResolve(
+      'gluestick-cli',
+      PATH_TO_GLUESTICK_CLI_TEMPLATES,
+      `${convertToKebabCase(generatorName)}.js`,
+    ),
     path.join(__dirname, INTERNAL, `${convertToCamelCase(generatorName)}.js`),
     path.join(__dirname, INTERNAL, `${convertToKebabCase(generatorName)}.js`),
   ];
@@ -47,12 +69,13 @@ const requireGeneratorConfig = (
 ): Generator => {
   const paths: string[] = getPossiblePaths(generatorName);
   const pathToGenerator: ?string =
-    validPathToGenerator || paths.find(generatorPath => fs.existsSync(generatorPath));
+    validPathToGenerator ||
+    paths.find(generatorPath => fs.existsSync(generatorPath));
 
   if (!pathToGenerator) {
     throw new Error(
-      `Generator ${generatorName} was not found at paths:\n`
-      + `  ${paths.join('\n  ')}`,
+      `Generator ${generatorName} was not found at paths:\n` +
+        `  ${paths.join('\n  ')}`,
     );
   }
   return {

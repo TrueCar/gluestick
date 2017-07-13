@@ -22,10 +22,15 @@ const manifestFilename: string = 'vendor-manifest.json';
 process.env.GS_VENDOR_MANIFEST_FILENAME = manifestFilename;
 
 const getVendorSource = (config: Config): string => {
-  return fs.readFileSync(path.join(process.cwd(), config.GSConfig.vendorSourcePath)).toString();
+  return fs
+    .readFileSync(path.join(process.cwd(), config.GSConfig.vendorSourcePath))
+    .toString();
 };
 
-const getDependenciesHash = (vendorEntryParts: string[], vendorSource: string): string => {
+const getDependenciesHash = (
+  vendorEntryParts: string[],
+  vendorSource: string,
+): string => {
   const projectPackage = require(path.join(process.cwd(), 'package.json'));
   const projectDependencies = {
     ...projectPackage.devDependencies,
@@ -33,13 +38,13 @@ const getDependenciesHash = (vendorEntryParts: string[], vendorSource: string): 
   };
   return sha1(
     Object.keys(projectDependencies)
-      .filter((name) => {
+      .filter(name => {
         return (
-          vendorEntryParts.find((part) => part.includes(name)) ||
+          vendorEntryParts.find(part => part.includes(name)) ||
           vendorSource.includes(name)
         );
       })
-      .map((name) => `${name}@${projectDependencies[name]}`)
+      .map(name => `${name}@${projectDependencies[name]}`)
       .join('|'),
   );
 };
@@ -49,7 +54,9 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
 
   // Check if manifest exists
   const vendorDllBundleManifestPath: string = path.join(
-    process.cwd(), buildDllPath, manifestFilename,
+    process.cwd(),
+    buildDllPath,
+    manifestFilename,
   );
   let manifestContent: string;
   try {
@@ -79,7 +86,8 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
 
   // Compare elements from vendor entry array stored in manifest against config
   // which would be used to build DLL bundle
-  const vendorEntryParts: string[] = manifestContent.validationMetadata.entryParts;
+  const vendorEntryParts: string[] =
+    manifestContent.validationMetadata.entryParts;
   // $FlowIgnore `entry.vendor` is an array
   const currentEntryParts: string[] = config.webpackConfig.vendor.entry.vendor;
   if (
@@ -93,7 +101,8 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
   }
 
   // Check if vendor source file's hash is the same as stored in manifest
-  const vendorSourceHash: string = manifestContent.validationMetadata.sourceHash;
+  const vendorSourceHash: string =
+    manifestContent.validationMetadata.sourceHash;
   const vendorSource: string = getVendorSource(config);
   if (vendorSourceHash !== sha1(vendorSource)) {
     logger.info('Vendor source hash mismatch, recompiling');
@@ -101,8 +110,11 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
   }
 
   // Check if dependencies version from project `package.json` has changed
-  const dependenciesHash: string = manifestContent.validationMetadata.dependenciesHash;
-  if (getDependenciesHash(vendorEntryParts, vendorSource) !== dependenciesHash) {
+  const dependenciesHash: string =
+    manifestContent.validationMetadata.dependenciesHash;
+  if (
+    getDependenciesHash(vendorEntryParts, vendorSource) !== dependenciesHash
+  ) {
     logger.info('Vendor dependencies hash mismatch, recompiling');
     return false;
   }
@@ -114,7 +126,11 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
 const injectValidationMetadata = ({ logger, config }: CLIContext): void => {
   const { buildDllPath }: { buildDllPath: string } = config.GSConfig;
 
-  const manifestPath: string = path.join(process.cwd(), buildDllPath, manifestFilename);
+  const manifestPath: string = path.join(
+    process.cwd(),
+    buildDllPath,
+    manifestFilename,
+  );
   const manifestContent = JSON.parse(fs.readFileSync(manifestPath).toString());
 
   // $FlowIgnore `entry.vendor` is an array
@@ -133,15 +149,24 @@ const injectValidationMetadata = ({ logger, config }: CLIContext): void => {
   fs.writeFileSync(manifestPath, JSON.stringify(manifestContent, null, '  '));
 };
 
-const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): WebpackConfig => {
+const getConfig = (
+  { logger, config }: CLIContext,
+  plugins: ConfigPlugin[],
+): WebpackConfig => {
   // TODO: check if loaders are necessary, bundle CSS/SASS
   const appRoot: string = process.cwd();
-  const buildDllPath: string = path.join(process.cwd(), config.GSConfig.buildDllPath);
-  const vendorSourcePath: string = path.join(process.cwd(), config.GSConfig.vendorSourcePath);
+  const buildDllPath: string = path.join(
+    process.cwd(),
+    config.GSConfig.buildDllPath,
+  );
+  const vendorSourcePath: string = path.join(
+    process.cwd(),
+    config.GSConfig.vendorSourcePath,
+  );
   if (!fs.existsSync(vendorSourcePath)) {
     logger.fatal(
-      `${vendorSourcePath} does not exist, consider running 'gluestick auto-upgrade' `
-      + 'or create the file manually',
+      `${vendorSourcePath} does not exist, consider running 'gluestick auto-upgrade' ` +
+        'or create the file manually',
     );
   }
 
@@ -165,7 +190,10 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
       }),
       new webpack.DllPlugin({
         // The manifest we will use to reference the libraries
-        path: path.join(buildDllPath, manifestFilename.replace('vendor', '[name]')),
+        path: path.join(
+          buildDllPath,
+          manifestFilename.replace('vendor', '[name]'),
+        ),
         name: '[name]_[hash]',
       }),
       progressHandler(logger, 'vendor'),
@@ -185,16 +213,21 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
   }
 
   const intermediateConfig: WebpackConfig = plugins
-    .filter((plugin: ConfigPlugin): boolean => !!plugin.postOverwrites.vendorDllWebpackConfig)
+    .filter(
+      (plugin: ConfigPlugin): boolean =>
+        !!plugin.postOverwrites.vendorDllWebpackConfig,
+    )
     .reduce((modifiedConfig: Object, plugin: ConfigPlugin) => {
       return plugin.postOverwrites.vendorDllWebpackConfig
-        // $FlowIgnore
-        ? plugin.postOverwrites.vendorDllWebpackConfig(clone(modifiedConfig))
+        ? // $FlowIgnore
+          plugin.postOverwrites.vendorDllWebpackConfig(clone(modifiedConfig))
         : modifiedConfig;
     }, baseConfig);
 
-  const pathToWebpackConfigHooks: string =
-    path.join(process.cwd(), config.GSConfig.webpackHooksPath);
+  const pathToWebpackConfigHooks: string = path.join(
+    process.cwd(),
+    config.GSConfig.webpackHooksPath,
+  );
 
   let webpackConfigHooks: WebpackHooks = {};
 
@@ -204,7 +237,10 @@ const getConfig = ({ logger, config }: CLIContext, plugins: ConfigPlugin[]): Web
     logger.warn(e);
   }
 
-  return hookHelper.call(webpackConfigHooks.webpackVendorDllConfig, intermediateConfig);
+  return hookHelper.call(
+    webpackConfigHooks.webpackVendorDllConfig,
+    intermediateConfig,
+  );
 };
 
 module.exports = {
