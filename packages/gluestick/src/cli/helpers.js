@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
   parseBooleanFlag: value => ['false', '0', 'no'].includes(value),
-  getVersion: () => require(path.join(__dirname, '../../', 'package.json')).version,
+  getVersion: () =>
+    require(path.join(__dirname, '../../', 'package.json')).version,
   createArrowList: (elements: string[], leftOffset: number): string => {
     const offsetWithArrow: string = `${' '.repeat(leftOffset)}-> `;
     return `${offsetWithArrow}${elements.join(`\n${offsetWithArrow}`)}`;

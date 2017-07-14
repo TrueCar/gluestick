@@ -13,7 +13,11 @@ const COOKIE_OPTS: CookieOptions = {
   signed: () => true,
 };
 
-function Cookie(name: ?string = null, value: ?string = null, options: ?Object = {}) {
+function Cookie(
+  name: ?string = null,
+  value: ?string = null,
+  options: ?Object = {},
+) {
   this.name = name;
   this.value = value;
   this.options = options;
@@ -35,9 +39,9 @@ Cookie.prototype.toString = function toString(incoming: boolean = true) {
   Object.keys(COOKIE_OPTS).forEach((attr: string) => {
     const value: ?string | ?boolean = this.options[attr];
 
-    if (typeof (value) === 'boolean') {
+    if (typeof value === 'boolean') {
       bvs.push(attr.charAt(0).toUpperCase() + attr.slice(1));
-    } else if (typeof (value) !== 'undefined' && value) {
+    } else if (typeof value !== 'undefined' && value) {
       kvs.push(`${attr}=${value}`);
     }
   });
@@ -46,7 +50,7 @@ Cookie.prototype.toString = function toString(incoming: boolean = true) {
 };
 
 function camelCase(string: string): string {
-  return string.replace(/-([a-z])/ig, (match, l) => {
+  return string.replace(/-([a-z])/gi, (match, l) => {
     return l.toUpperCase();
   });
 }
@@ -64,10 +68,14 @@ export function parse(cookieString: string): Object[] {
       [k, v] = m.splice(1);
     }
 
-    const optionName: string = camelCase(k.charAt(0).toLowerCase() + k.slice(1));
+    const optionName: string = camelCase(
+      k.charAt(0).toLowerCase() + k.slice(1),
+    );
 
     if (Object.hasOwnProperty.call(COOKIE_OPTS, optionName)) {
-      const value: number | string| boolean | Date = COOKIE_OPTS[optionName](v);
+      const value: number | string | boolean | Date = COOKIE_OPTS[optionName](
+        v,
+      );
       c.options[optionName] = value;
     } else {
       if (c.name !== null) {
@@ -83,7 +91,10 @@ export function parse(cookieString: string): Object[] {
   return cookies;
 }
 
-export function merge(oldCookieString: string, newCookieString: string): string {
+export function merge(
+  oldCookieString: string,
+  newCookieString: string,
+): string {
   const oldCookieJar: Object[] = oldCookieString ? parse(oldCookieString) : [];
   const newCookieJar: Object[] = newCookieString ? parse(newCookieString) : [];
 

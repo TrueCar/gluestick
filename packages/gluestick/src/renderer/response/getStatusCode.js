@@ -5,7 +5,10 @@ const { ROUTE_NAME_404_NOT_FOUND } = require('../../../shared');
 module.exports = (store: Object, currentRoute: Object): number => {
   const state = store.getState();
   // Check if status code was set in redux
-  if (state._gluestick.statusCode && typeof state._gluestick.statusCode === 'number') {
+  if (
+    state._gluestick.statusCode &&
+    typeof state._gluestick.statusCode === 'number'
+  ) {
     return state._gluestick.statusCode;
   } else if (state._gluestick.statusCode) {
     throw new Error('_gluestick.statusCode must be a number');

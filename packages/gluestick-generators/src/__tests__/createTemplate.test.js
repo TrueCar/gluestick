@@ -18,9 +18,7 @@ describe('generator/createTemplate tag function', () => {
   });
 
   it('should render results of function', () => {
-    const bakedTemplate = createTemplate`${
-      args => args.someNumber
-    }`({
+    const bakedTemplate = createTemplate`${args => args.someNumber}`({
       someNumber: 10,
     });
     expect(bakedTemplate).toEqual('10');

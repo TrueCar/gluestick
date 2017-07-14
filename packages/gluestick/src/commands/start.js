@@ -12,41 +12,40 @@ const modulePath = path.join(process.cwd(), 'node_modules');
 
 const skippedOptions: string[] = [
   '--dev',
-  '-P', '--skip-build',
-  '-T', '--run-tests',
+  '-P',
+  '--skip-build',
+  '-T',
+  '--run-tests',
 ];
 
 type StartOptions = {
-  logLevel?: string;
-  runTests: boolean;
-  skipBuild: boolean;
-  skipDepCheck: boolean;
-  parent: Object;
-  dev: boolean;
+  logLevel?: string,
+  runTests: boolean,
+  skipBuild: boolean,
+  skipDepCheck: boolean,
+  parent: Object,
+  dev: boolean,
 };
 
 const spawnFunc = (args: string[], customEnv: Object = {}): Promise<any> => {
   return new Promise((resolve, reject) => {
     const childProcess = spawn(
       'node',
-      [
-        './node_modules/.bin/gluestick',
-        ...args,
-      ],
+      ['./node_modules/.bin/gluestick', ...args],
       {
         stdio: 'inherit',
         env: { ...process.env, ...customEnv },
       },
     );
 
-    childProcess.on('exit', (code) => {
+    childProcess.on('exit', code => {
       if (code === 0) {
         resolve();
       } else {
         reject(new Error(`Command ${args.join(' ')} returned code ${code}`));
       }
     });
-    childProcess.on('error', (error) => {
+    childProcess.on('error', error => {
       reject(error);
     });
   });
@@ -77,52 +76,51 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
   // Start tests only they asked us to or we are in production mode
   let testCommand = Promise.resolve();
   if (!isProduction && options.runTests) {
-    testCommand = spawnFunc(
-      [
-        'test',
-        ...rawArgs.slice(4),
-      ],
-      {
-        NODE_ENV: 'test',
-      },
-    );
+    testCommand = spawnFunc(['test', ...rawArgs.slice(4)], {
+      NODE_ENV: 'test',
+    });
   }
 
-  testCommand.then(() => {
-    if (!options.skipDepCheck) {
-      const packageJson = require(path.join(process.cwd(), 'package.json'));
-      try {
-        compareModuleVersions(packageJson, modulePath, logger);
-      } catch (e) {
-        logger.error(e);
+  testCommand
+    .then(() => {
+      if (!options.skipDepCheck) {
+        const packageJson = require(path.join(process.cwd(), 'package.json'));
+        try {
+          compareModuleVersions(packageJson, modulePath, logger);
+        } catch (e) {
+          logger.error(e);
+        }
       }
-    }
 
-    let clientCompilationDonePromise: Promise<void> = Promise.resolve();
-    if (!isProduction) {
-      clientCompilationDonePromise = startClient(
-        commandApi, commandArguments, { printCommandInfo: false },
+      let clientCompilationDonePromise: Promise<void> = Promise.resolve();
+      if (!isProduction) {
+        clientCompilationDonePromise = startClient(
+          commandApi,
+          commandArguments,
+          { printCommandInfo: false },
+        );
+      }
+
+      if (!isProduction || (isProduction && options.skipBuild)) {
+        startServer(commandApi, commandArguments, {
+          printCommandInfo: false,
+          delayStart: clientCompilationDonePromise,
+        });
+      }
+    })
+    .catch(() => {
+      logger.fatal(
+        "Some tests have failed, client and server won't be compiled and executed",
       );
-    }
-
-    if (!isProduction || (isProduction && options.skipBuild)) {
-      startServer(commandApi, commandArguments, {
-        printCommandInfo: false,
-        delayStart: clientCompilationDonePromise,
-      });
-    }
-  }).catch(() => {
-    logger.fatal('Some tests have failed, client and server won\'t be compiled and executed');
-  });
+    });
 
   if (isProduction && !options.skipBuild) {
-    spawnFunc([
-      'build',
-      ...rawArgs.slice(3),
-    ]).then(() => {
-      startServer(commandApi, commandArguments);
-    }).catch(() => {
-      logger.fatal('Build have failed, server won\'t be executed');
-    });
+    spawnFunc(['build', ...rawArgs.slice(3)])
+      .then(() => {
+        startServer(commandApi, commandArguments);
+      })
+      .catch(() => {
+        logger.fatal("Build have failed, server won't be executed");
+      });
   }
 };

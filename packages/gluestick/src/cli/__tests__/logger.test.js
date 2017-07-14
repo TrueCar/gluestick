@@ -3,7 +3,11 @@
 const loggerFactory = require('../logger');
 const colorScheme = require('../colorScheme');
 
-const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: Object) => {
+const logAndAssert = (
+  message: string,
+  shouldNotLog: string[],
+  loggerInstance: Object,
+) => {
   Object.keys(loggerFactory.levels).forEach((level: string): void => {
     console.log.mockClear();
     loggerInstance[level](message);
@@ -12,17 +16,9 @@ const logAndAssert = (message: string, shouldNotLog: string[], loggerInstance: O
       : colorScheme[level](`  ${level.toUpperCase()}  `);
     const postfix = process.env.CI ? '' : '\n';
     if (shouldNotLog.indexOf(level) > -1) {
-      expect(console.log).not.toBeCalledWith(
-        header,
-        message,
-        postfix,
-      );
+      expect(console.log).not.toBeCalledWith(header, message, postfix);
     } else {
-      expect(console.log).toHaveBeenCalledWith(
-        header,
-        message,
-        postfix,
-      );
+      expect(console.log).toHaveBeenCalledWith(header, message, postfix);
     }
   });
 };

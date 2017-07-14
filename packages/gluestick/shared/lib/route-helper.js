@@ -8,7 +8,9 @@ const getBeforeRoute: GetBeforeRoute = (component = {}) => {
   // @deprecated since 0.0.1
   // check for deprecated fetchData method
   if (c.fetchData) {
-    console.warn('`fetchData` is deprecated. Please use `gsBeforeRoute` instead.');
+    console.warn(
+      '`fetchData` is deprecated. Please use `gsBeforeRoute` instead.',
+    );
   }
 
   return c.gsBeforeRoute || c.fetchData;
@@ -41,34 +43,42 @@ export function runBeforeRoutes(
   renderProps: Object,
   serverProps: Object = { isServer: false },
 ): Promise<any[]> {
-  const { params, location: query } : {params: Object, location: Object } = renderProps;
+  const {
+    params,
+    location: query,
+  }: { params: Object, location: Object } = renderProps;
 
   const promises: Promise<any>[] = getRouteComponents(renderProps.routes)
-  .map(getBeforeRoute).filter(f => f) // only look at ones with a static gsBeforeRoute()
-  .map(beforeRoute => beforeRoute(
-    store, params, query || {}, serverProps,
-  ));  // call fetch data methods and save promises
+    .map(getBeforeRoute)
+    .filter(f => f) // only look at ones with a static gsBeforeRoute()
+    .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps)); // call fetch data methods and save promises
 
   return Promise.all(promises);
 }
 
-export function createTransitionHook(store: Object, routes: Object[]): Function {
+export function createTransitionHook(
+  store: Object,
+  routes: Object[],
+): Function {
   return function checkLocation(location: Object, cb: Function): void {
-    match({ routes, location }, async (error, redirectLocation, renderProps) => {
-      // If `redirectLocation` is not empty, we need to check it again with new location,
-      // otherwise `runBeforeRoutes` will throw error since `renderProps` is undefined
-      if (redirectLocation) {
-        checkLocation(redirectLocation, cb);
-        return;
-      }
+    match(
+      { routes, location },
+      async (error, redirectLocation, renderProps) => {
+        // If `redirectLocation` is not empty, we need to check it again with new location,
+        // otherwise `runBeforeRoutes` will throw error since `renderProps` is undefined
+        if (redirectLocation) {
+          checkLocation(redirectLocation, cb);
+          return;
+        }
 
-      try {
-        await runBeforeRoutes(store, renderProps);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        cb();
-      }
-    });
+        try {
+          await runBeforeRoutes(store, renderProps);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          cb();
+        }
+      },
+    );
   };
 }

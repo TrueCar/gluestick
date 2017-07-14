@@ -6,29 +6,27 @@ const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
 
 type Options = {
-  entrypoints?: string;
-  logLevel?: string;
-  debugServer?: boolean;
-  debugPort: number;
-  app?: string;
-}
+  entrypoints?: string,
+  logLevel?: string,
+  debugServer?: boolean,
+  debugPort: number,
+  app?: string,
+};
 
 type Entry = {
   path: string,
   args: string[],
-}
+};
 
 type Settings = {
-  printCommandInfo: boolean;
-  delayStart: Promise<void>;
-}
+  printCommandInfo: boolean,
+  delayStart: Promise<void>,
+};
 
 const getServerEntry = (config: Object): Entry => {
   return {
     path: config.webpackConfig.universalSettings.server.output,
-    args: [
-      JSON.stringify(config),
-    ],
+    args: [JSON.stringify(config)],
   };
 };
 
@@ -46,7 +44,11 @@ module.exports = (
   },
 ): void => {
   const {
-    debugServer, debugPort, logLevel, entrypoints, app,
+    debugServer,
+    debugPort,
+    logLevel,
+    entrypoints,
+    app,
   }: Options = getOptions(commandArguments);
   const logger: Logger = getLogger(logLevel);
 

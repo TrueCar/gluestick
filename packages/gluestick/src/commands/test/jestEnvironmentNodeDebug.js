@@ -2,7 +2,6 @@
  * Source: https://www.npmjs.com/package/jest-environment-node-debug
  */
 
-
 const FakeTimers = require('jest-util').FakeTimers;
 const ModuleMocker = require('jest-mock');
 

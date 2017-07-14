@@ -2,7 +2,8 @@
 import type { BabelOptions } from '../../types';
 
 const updateBabelLoaderConfig = (
-  config: Object, modifier: (config: BabelOptions) => BabelOptions,
+  config: Object,
+  modifier: (config: BabelOptions) => BabelOptions,
 ): void => {
   let jsRuleIndex: number = -1;
   const jsRule = config.module.rules.find(({ test }, i) => {
@@ -22,9 +23,10 @@ const updateBabelLoaderConfig = (
     return false;
   });
   // eslint-disable-next-line no-param-reassign
-  config.module.rules[jsRuleIndex].use[babelLoaderIndex].options = modifier(babelLoader.options);
+  config.module.rules[jsRuleIndex].use[babelLoaderIndex].options = modifier(
+    babelLoader.options,
+  );
 };
-
 
 module.exports = {
   updateBabelLoaderConfig,

@@ -18,17 +18,19 @@ type Process = {
  */
 const watchSource = (watchDirectories: string[], callback: Function): void => {
   let timeout: number = -1;
-  const watcher: Object = chokidar.watch(watchDirectories, {
-    ignored: /[/\\]\./,
-    persistent: true,
-  }).on('ready', () => {
-    watcher.on('all', () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        callback();
-      }, 250);
+  const watcher: Object = chokidar
+    .watch(watchDirectories, {
+      ignored: /[/\\]\./,
+      persistent: true,
+    })
+    .on('ready', () => {
+      watcher.on('all', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          callback();
+        }, 250);
+      });
     });
-  });
 };
 
 /**
@@ -55,7 +57,9 @@ const debug = (
   debugPort: number,
 ): Process => {
   logger.clear();
-  logger.warn('If you encouter problems, press ENTER to respawn debug process.');
+  logger.warn(
+    'If you encouter problems, press ENTER to respawn debug process.',
+  );
   logger.warn('Alternatively, press CTRL + C and re-run command.');
 
   const debugProcess = spawn(
@@ -86,12 +90,18 @@ module.exports = (
   debugPort: number,
 ) => {
   // Check if `webpack-chunks.json` is present
-  if (!fs.existsSync(
-    path.join(process.cwd(), config.GSConfig.buildAssetsPath, config.GSConfig.webpackChunks),
-  )) {
+  if (
+    !fs.existsSync(
+      path.join(
+        process.cwd(),
+        config.GSConfig.buildAssetsPath,
+        config.GSConfig.webpackChunks,
+      ),
+    )
+  ) {
     logger.warn(
-      '`build/assets/webpack-chunks.json` is not present. Run `gluestick build --client`'
-      + ' to generare it, otherwise renderer won\'t work properly.',
+      '`build/assets/webpack-chunks.json` is not present. Run `gluestick build --client`' +
+        " to generare it, otherwise renderer won't work properly.",
     );
   }
 
@@ -105,7 +115,12 @@ module.exports = (
           debugProcess.kill();
         }
         compile({ config, logger }, () => {
-          debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+          debugProcess = debug(
+            { config, logger },
+            serverEntrypointPath,
+            args,
+            debugPort,
+          );
         });
       }
     });
@@ -117,13 +132,23 @@ module.exports = (
         }
 
         process.nextTick(() => {
-          debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+          debugProcess = debug(
+            { config, logger },
+            serverEntrypointPath,
+            args,
+            debugPort,
+          );
         });
       });
     });
 
     compile({ config, logger }, () => {
-      debugProcess = debug({ config, logger }, serverEntrypointPath, args, debugPort);
+      debugProcess = debug(
+        { config, logger },
+        serverEntrypointPath,
+        args,
+        debugPort,
+      );
     });
   } catch (error) {
     // Kill process if exist to prevent it hanging in system

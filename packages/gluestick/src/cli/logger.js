@@ -25,9 +25,9 @@ const levels = {
 //   }
 // };
 
-const raw = (
-  process.env.NODE_ENV === 'production' || process.env.CI || process.env.CD
-) && !process.env.GS_LOG_PRETTY;
+const raw =
+  (process.env.NODE_ENV === 'production' || process.env.CI || process.env.CD) &&
+  !process.env.GS_LOG_PRETTY;
 
 const logMessage = ({ type, level, title }, ...args: any[]) => {
   if (levels[level] > levels[type]) {
@@ -37,17 +37,23 @@ const logMessage = ({ type, level, title }, ...args: any[]) => {
   const enhancer: Function = colorScheme[type];
 
   const header: string = raw
-    ? `[GlueStick][${process.argv[2]}][${title.length ? title : type.toUpperCase()}]`
+    ? `[GlueStick][${process.argv[2]}][${title.length
+        ? title
+        : type.toUpperCase()}]`
     : enhancer(`  ${title.length ? title : type.toUpperCase()}  `);
 
   console.log(
-      header,
-      ...args.map(arg => typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
-      raw ? '' : '\n',
-    );
+    header,
+    ...args.map(
+      arg => (typeof arg === 'string' ? arg : util.inspect(arg, { depth: 4 })),
+    ),
+    raw ? '' : '\n',
+  );
 };
 
-const loggerFactory = (type: string, level: string, title: string = '') => (...args) => {
+const loggerFactory = (type: string, level: string, title: string = '') => (
+  ...args
+) => {
   logMessage({ type, level, title }, ...args);
 };
 
@@ -84,10 +90,12 @@ module.exports = (level: string): Logger => {
         `gluestick ${process.argv.slice(2).join(' ')}`,
       );
     },
-    resetLine: raw ? () => {} : () => {
-      readline.clearLine(process.stdout, 0);
-      readline.cursorTo(process.stdout, 0);
-    },
+    resetLine: raw
+      ? () => {}
+      : () => {
+          readline.clearLine(process.stdout, 0);
+          readline.cursorTo(process.stdout, 0);
+        },
   };
 };
 

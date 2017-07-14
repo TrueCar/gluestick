@@ -9,34 +9,63 @@ const templateIndex = require('../templates/Index')(createTemplate);
 const templateGitignore = require('../templates/gitignore')(createTemplate);
 const templateEslintrc = require('../templates/_eslintrc')(createTemplate);
 const templateFlowConfig = require('../templates/_flowconfig')(createTemplate);
-const templateDockerignore = require('../templates/dockerignore')(createTemplate);
+const templateDockerignore = require('../templates/dockerignore')(
+  createTemplate,
+);
 const templateBabelrc = require('../templates/babelrc')(createTemplate);
 const templateHomeTest = require('../templates/HomeTest')(createTemplate);
-const templateMasterLayoutTest = require('../templates/MasterLayoutTest')(createTemplate);
-const templateContainerHomeTest = require('../templates/ContainerHomeTest')(createTemplate);
-const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(createTemplate);
+const templateMasterLayoutTest = require('../templates/MasterLayoutTest')(
+  createTemplate,
+);
+const templateContainerHomeTest = require('../templates/ContainerHomeTest')(
+  createTemplate,
+);
+const templateNoMatchAppTest = require('../templates/NoMatchAppTest')(
+  createTemplate,
+);
 const templateEmpty = require('../templates/Empty')(createTemplate);
 const templateHome = require('../templates/Home')(createTemplate);
 const templateHomeCss = require('../templates/HomeCss.js')(createTemplate);
-const templateMasterLayout = require('../templates/MasterLayout')(createTemplate);
+const templateMasterLayout = require('../templates/MasterLayout')(
+  createTemplate,
+);
 const tag = require('../../../package.json').version;
-const templateDockerfile = require('../templates/Dockerfile')(createTemplate, tag);
-const templateEntryWrapper = require('../templates/EntryWrapper')(createTemplate);
+const templateDockerfile = require('../templates/Dockerfile')(
+  createTemplate,
+  tag,
+);
+const templateEntryWrapper = require('../templates/EntryWrapper')(
+  createTemplate,
+);
 const templateApp = require('../templates/App')(createTemplate);
 const templateAppServer = require('../templates/AppServer')(createTemplate);
 const templateInitBrowser = require('../templates/InitBrowser')(createTemplate);
-const templateReduxMiddleware = require('../templates/ReduxMiddleware')(createTemplate);
+const templateReduxMiddleware = require('../templates/ReduxMiddleware')(
+  createTemplate,
+);
 const templateRoutes = require('../templates/Routes')(createTemplate);
-const templateWebpackAdditions = require('../templates/WebpackAdditions')(createTemplate);
+const templateWebpackAdditions = require('../templates/WebpackAdditions')(
+  createTemplate,
+);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateReducer = require('../templates/Reducer')(createTemplate);
 const templateEntries = require('../templates/entries')(createTemplate);
-const templateGluestickPlugins = require('../templates/gluestick.plugins')(createTemplate);
-const templateGluestickHooks = require('../templates/gluestick.hooks')(createTemplate);
-const templateGluestickConfig = require('../templates/gluestick.config')(createTemplate);
-const templateWebpackHooks = require('../templates/webpack.hooks')(createTemplate);
-const templateCachingServer = require('../templates/caching.server')(createTemplate);
+const templateGluestickPlugins = require('../templates/gluestick.plugins')(
+  createTemplate,
+);
+const templateGluestickHooks = require('../templates/gluestick.hooks')(
+  createTemplate,
+);
+const templateGluestickConfig = require('../templates/gluestick.config')(
+  createTemplate,
+);
+const templateWebpackHooks = require('../templates/webpack.hooks')(
+  createTemplate,
+);
+const templateCachingServer = require('../templates/caching.server')(
+  createTemplate,
+);
 const templateVendor = require('../templates/vendor')(createTemplate);
 
 const { flowVersion, flowMapper } = require('../constants');
@@ -279,6 +308,8 @@ module.exports = (options: GeneratorOptions) => {
     },
   ];
   return {
-    entries: options.skipMain ? entries.filter(o => !o.path.includes('apps/main')) : entries,
+    entries: options.skipMain
+      ? entries.filter(o => !o.path.includes('apps/main'))
+      : entries,
   };
 };

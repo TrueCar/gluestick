@@ -49,10 +49,14 @@ const compilations = {
  * multiple times.
  */
 type Options = {
-  pretty?: boolean;
-  barOptions?: Object;
-}
-const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) => {
+  pretty?: boolean,
+  barOptions?: Object,
+};
+const progressBarPlugin = (
+  logger: Logger,
+  name: string,
+  options: Options = {},
+) => {
   const stream: any = options.stream || process.stderr;
   const enabled = stream && stream.isTTY;
 
@@ -64,7 +68,9 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
   }
 
   const header: string = compilation(`  COMPILATION:${name.toUpperCase()}  `);
-  const barFormat: string = `${header} [:bar] ${chalk.green.bold(':percent')} (:passed seconds)`;
+  const barFormat: string = `${header} [:bar] ${chalk.green.bold(
+    ':percent',
+  )} (:passed seconds)`;
 
   const barOptions = {
     complete: '=',
@@ -93,19 +99,20 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
     // so log appropriate message unless start-client is running. In that case don't log
     // the message, as it will break client's progress bar.
     if (
-      name === 'server'
-      && compilations[name].status === 'done'
-      && compilations[name].postprocessing === 'init'
-      && compilations.client.status === 'init'
+      name === 'server' &&
+      compilations[name].status === 'done' &&
+      compilations[name].postprocessing === 'init' &&
+      compilations.client.status === 'init'
     ) {
       compilations[name].postprocessing = 'running';
-      stream.write(
-        `${header} Postprocessing...`,
-      );
+      stream.write(`${header} Postprocessing...`);
     }
 
     // If compilation is finished and done postprocessing, it means it's in rebuild state.
-    if (compilations[name].status === 'done' && compilations[name].postprocessing === 'done') {
+    if (
+      compilations[name].status === 'done' &&
+      compilations[name].postprocessing === 'done'
+    ) {
       if (msg === 'compiling') {
         stream.cursorTo(0);
         stream.write(`${header} Rebuilding...`);
@@ -124,14 +131,16 @@ const progressBarPlugin = (logger: Logger, name: string, options: Options = {}) 
       compilations.client.muted = false;
     }
 
-    const shouldUpdate = (
-      !compilations[name].muted
-      && compilations[name].status === 'running'
-      && !compilations[name].forceMute
-    );
+    const shouldUpdate =
+      !compilations[name].muted &&
+      compilations[name].status === 'running' &&
+      !compilations[name].forceMute;
 
     if (shouldUpdate) {
-      if (Math.ceil(lastPercent * barOptions.width) < Math.ceil(percent * barOptions.width)) {
+      if (
+        Math.ceil(lastPercent * barOptions.width) <
+        Math.ceil(percent * barOptions.width)
+      ) {
         lastPercent = percent;
       }
       if (lastPercent !== 0) {
@@ -181,5 +190,6 @@ module.exports.markValid = (compilationName: string) => {
  * break progress bar.
  */
 module.exports.toggleMute = (compilationName: string) => {
-  compilations[compilationName].forceMute = !compilations[compilationName].forceMute;
+  compilations[compilationName].forceMute = !compilations[compilationName]
+    .forceMute;
 };

@@ -15,16 +15,19 @@ test('renderer/helpers/hooks should merge hooks', () => {
     hook1: [fn],
     hook2: [fn],
   };
-  const plugins = [{
-    hooks: {
-      hook1: fn,
-      hook3: fn,
+  const plugins = [
+    {
+      hooks: {
+        hook1: fn,
+        hook3: fn,
+      },
     },
-  }, {
-    hooks: {
-      hook3: fn,
+    {
+      hooks: {
+        hook3: fn,
+      },
     },
-  }];
+  ];
   expect(hooks.merge(projectHooks, plugins)).toEqual({
     hook1: [fn, fn],
     hook2: [fn],

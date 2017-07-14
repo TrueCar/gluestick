@@ -2,7 +2,10 @@
 
 jest.mock('fs', () => ({
   readFile: (file, cb) => {
-    cb(file === 'fail.html' ? new Error('test error') : null, new Buffer('This is a {{ test }}!'));
+    cb(
+      file === 'fail.html' ? new Error('test error') : null,
+      new Buffer('This is a {{ test }}!'),
+    );
   },
 }));
 
@@ -20,10 +23,14 @@ let middlewares = [];
 let listenCallback = () => {};
 let engineHandler = () => {};
 jest.setMock('express', () => ({
-  engine: (ext, hdl) => { engineHandler = hdl; },
+  engine: (ext, hdl) => {
+    engineHandler = hdl;
+  },
   set: () => {},
-  use: (middleware) => middlewares.push(middleware),
-  listen: (port, host, cb) => { listenCallback = cb; },
+  use: middleware => middlewares.push(middleware),
+  listen: (port, host, cb) => {
+    listenCallback = cb;
+  },
 }));
 
 let waitUntilValidCallback = () => {};
@@ -35,18 +42,20 @@ jest.mock('webpack-dev-middleware', () => (compiler, settings) => {
     throw new Error('settings not defined');
   }
   return {
-    waitUntilValid: (cb) => { waitUntilValidCallback = cb; },
+    waitUntilValid: cb => {
+      waitUntilValidCallback = cb;
+    },
   };
 });
 
-jest.setMock('webpack-hot-middleware', () => (compiler) => {
+jest.setMock('webpack-hot-middleware', () => compiler => {
   if (!compiler) {
     throw new Error('compiler not defined');
   }
 });
 
 let proxyOnErrorCallback = () => {};
-jest.setMock('http-proxy-middleware', (opts) => {
+jest.setMock('http-proxy-middleware', opts => {
   proxyOnErrorCallback = opts.onError;
 });
 
@@ -78,15 +87,15 @@ describe('commands/start-client', () => {
   it('should respond with compilated template using render engine', () => {
     startClientCommand(commandApi, [{}]);
     return Promise.all([
-      new Promise((resolve) => {
+      new Promise(resolve => {
         engineHandler('test.html', { test: 'test' }, (error, data) => {
           expect(error).toBeNull();
           expect(data).toEqual('This is a test!');
           resolve();
         });
       }),
-      new Promise((resolve) => {
-        engineHandler('fail.html', { test: 'test' }, (error) => {
+      new Promise(resolve => {
+        engineHandler('fail.html', { test: 'test' }, error => {
           expect(error).toEqual(new Error('test error'));
           resolve();
         });
@@ -114,8 +123,9 @@ describe('commands/start-client', () => {
       port: commandApi.getContextConfig().GSConfig.ports.server,
     });
     listenCallback('');
-    expect(successLogger.mock.calls[0][0].includes('Client server running on'))
-      .toBeTruthy();
+    expect(
+      successLogger.mock.calls[0][0].includes('Client server running on'),
+    ).toBeTruthy();
   });
 
   it('should throw error if express fails to listen for requests', () => {

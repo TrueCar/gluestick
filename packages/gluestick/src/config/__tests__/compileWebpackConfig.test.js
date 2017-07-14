@@ -4,10 +4,14 @@ jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
 jest.mock('../webpack/prepareEntries.js', () => jest.fn());
 jest.mock('../webpack/getAliasesForApps.js', () => () => ({}));
-jest.mock('src/webpack.hooks.js', () => ({
-  webpackClientConfig: (config) => Object.assign(config, { mutated: true }),
-  webpackServerConfig: (config) => Object.assign(config, { mutated: true }),
-}), { virtual: true });
+jest.mock(
+  'src/webpack.hooks.js',
+  () => ({
+    webpackClientConfig: config => Object.assign(config, { mutated: true }),
+    webpackServerConfig: config => Object.assign(config, { mutated: true }),
+  }),
+  { virtual: true },
+);
 jest.mock('src/config/application.js', () => ({}), { virtual: true });
 
 const compileWebpackConfig = require('../compileWebpackConfig');
@@ -16,27 +20,36 @@ const defaultGSConfig = require('../defaults/glueStickConfig');
 const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
 
 const originalProcessCwd = process.cwd.bind(process);
-const compileMockedWebpackConfig = () => compileWebpackConfig(loggerMock, [
-  {
-    name: 'test',
-    meta: {},
-    preOverwrites: {},
-    postOverwrites: {
-      clientWebpackConfig: (config) => Object.assign(config, { testProp: true }),
-      serverWebpackConfig: (config) => Object.assign(config, { testProp: true }),
-    },
-  },
-  {
-    name: 'test',
-    meta: {},
-    preOverwrites: {
-      sharedWebpackConfig: (config) => Object.assign(config, { preTestProp: true }),
-    },
-    postOverwrites: {
-      clientWebpackConfig: (config) => Object.assign(config, { testPropNew: true }),
-    },
-  },
-], defaultGSConfig);
+const compileMockedWebpackConfig = () =>
+  compileWebpackConfig(
+    loggerMock,
+    [
+      {
+        name: 'test',
+        meta: {},
+        preOverwrites: {},
+        postOverwrites: {
+          clientWebpackConfig: config =>
+            Object.assign(config, { testProp: true }),
+          serverWebpackConfig: config =>
+            Object.assign(config, { testProp: true }),
+        },
+      },
+      {
+        name: 'test',
+        meta: {},
+        preOverwrites: {
+          sharedWebpackConfig: config =>
+            Object.assign(config, { preTestProp: true }),
+        },
+        postOverwrites: {
+          clientWebpackConfig: config =>
+            Object.assign(config, { testPropNew: true }),
+        },
+      },
+    ],
+    defaultGSConfig,
+  );
 
 describe('config/compileWebpackConfig', () => {
   beforeAll(() => {

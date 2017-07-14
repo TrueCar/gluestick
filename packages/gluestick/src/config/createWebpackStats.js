@@ -9,7 +9,11 @@ const path = require('path');
  * @param statsObject {Object} Webpack stats instance https://webpack.js.org/api/node/#stats-object
  * @param statsOptions {Object} Webpack stats options https://webpack.js.org/configuration/stats/
  */
-module.exports = (statsFilename: string, statsObject: Object, statsOptions: Object = {}): void => {
+module.exports = (
+  statsFilename: string,
+  statsObject: Object,
+  statsOptions: Object = {},
+): void => {
   fs.writeFileSync(
     path.join(process.cwd(), `${statsFilename}.json`),
     JSON.stringify(statsObject.toJson(statsOptions)),

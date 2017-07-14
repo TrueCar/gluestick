@@ -7,12 +7,12 @@ const mkdir = require('mkdirp');
 
 type ChunksInfo = {
   javascript: {
-    [key: ?string]: string;
+    [key: ?string]: string,
   },
   styles: {
-    [key: ?string]: string;
-  }
-}
+    [key: ?string]: string,
+  },
+};
 
 const chunkInfoFilePath = (
   webpackConfiguration: WebpackConfig,
@@ -65,9 +65,9 @@ const getChunksInfoBody = (json: Object, publicPath: string): ChunksInfo => {
 module.exports = class ChunksPlugin {
   configuration: WebpackConfig;
   options: {
-    appendChunkInfo?: boolean;
-    chunkInfoFilename?: string;
-  }
+    appendChunkInfo?: boolean,
+    chunkInfoFilename?: string,
+  };
 
   constructor(configuration: WebpackConfig, options: Object = {}) {
     // Webpack configuration from `compiler` has wrong `output.path`,
@@ -78,7 +78,8 @@ module.exports = class ChunksPlugin {
 
   apply(compiler: Object): void {
     const outputFilePath: string = chunkInfoFilePath(
-      this.configuration, this.options.chunkInfoFilename,
+      this.configuration,
+      this.options.chunkInfoFilename,
     );
 
     compiler.plugin('done', (stats: Object) => {
@@ -87,11 +88,12 @@ module.exports = class ChunksPlugin {
         chunkModules: true,
       });
 
-      const publicPath: string = (
+      const publicPath: string =
         process.env.NODE_ENV !== 'production' &&
         this.configuration.devServer &&
         typeof this.configuration.devServer.publicPath === 'string'
-      ) ? this.configuration.devServer.publicPath : json.publicPath;
+          ? this.configuration.devServer.publicPath
+          : json.publicPath;
 
       const chunksInfoFile: ChunksInfo = getChunksInfoBody(json, publicPath);
 
@@ -110,7 +112,10 @@ module.exports = class ChunksPlugin {
         };
       }
       mkdir.sync(path.dirname(outputFilePath));
-      fs.writeFileSync(outputFilePath, JSON.stringify(outputChunkInfo, null, '  '));
+      fs.writeFileSync(
+        outputFilePath,
+        JSON.stringify(outputChunkInfo, null, '  '),
+      );
     });
   }
 };

@@ -17,7 +17,11 @@ module.exports = (pathToFile, logger) => {
         const node = path.node;
         try {
           const target = node.object;
-          if (!!target.object && target.object.name === 'process' && target.property.name === 'env') {
+          if (
+            !!target.object &&
+            target.object.name === 'process' &&
+            target.property.name === 'env'
+          ) {
             environmentVariables.add(node.property.name);
           }
         } catch (e) {

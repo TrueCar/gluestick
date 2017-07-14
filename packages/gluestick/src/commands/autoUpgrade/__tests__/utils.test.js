@@ -2,8 +2,14 @@
 jest.mock('fs', () => ({
   writeFileSync: jest.fn(),
 }));
-jest.mock('inquirer', () => ({ prompt: () => Promise.resolve({ confirm: true }) }));
-const { isValidVersion, replaceFile, promptModulesUpdate } = require('../utils');
+jest.mock('inquirer', () => ({
+  prompt: () => Promise.resolve({ confirm: true }),
+}));
+const {
+  isValidVersion,
+  replaceFile,
+  promptModulesUpdate,
+} = require('../utils');
 const fs = require('fs');
 const path = require('path');
 
@@ -49,17 +55,22 @@ describe('autoUpgrade/utils.isValidVersion', () => {
 describe('autoUpgrade/utils.replaceFile', () => {
   it('should replace file', () => {
     // $FlowIgnore only info from logger is used
-    replaceFile({
-      info: jest.fn(),
-    }, 'test', 'data');
+    replaceFile(
+      {
+        info: jest.fn(),
+      },
+      'test',
+      'data',
+    );
     expect(fs.writeFileSync.mock.calls[0]).toEqual([
-      path.join(process.cwd(), 'test'), 'data',
+      path.join(process.cwd(), 'test'),
+      'data',
     ]);
   });
 });
 
 describe('autoUpgrade/utils.promptModulesUpdate', () => {
-  it('should replace file', (done) => {
+  it('should replace file', done => {
     const mismatchedModules = {
       dep0: {
         required: '1.0.0',
@@ -67,7 +78,7 @@ describe('autoUpgrade/utils.promptModulesUpdate', () => {
         type: 'dependency',
       },
     };
-    promptModulesUpdate(mismatchedModules).then((results) => {
+    promptModulesUpdate(mismatchedModules).then(results => {
       expect(results).toEqual({
         shouldFix: true,
         mismatchedModules,

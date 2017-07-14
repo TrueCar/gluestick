@@ -3,9 +3,9 @@
 import type { SetStatusCode } from '../types';
 
 type SetStatusCodeAction = {
-  type: SetStatusCode;
-  statusCode: number;
-}
+  type: SetStatusCode,
+  statusCode: number,
+};
 
 export const SET_STATUS_CODE: SetStatusCode = 'SET_STATUS_CODE';
 

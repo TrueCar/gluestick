@@ -31,11 +31,15 @@ describe('lib/cookies', () => {
     });
 
     it("parses a cookie's date from a string", () => {
-      const cookieJar = parse('foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT');
+      const cookieJar = parse(
+        'foo=true; expires=Fri, 31 Dec 9999 23:59:59 GMT',
+      );
       expect(cookieJar.length).toEqual(1);
       const cookie = cookieJar[0];
       expect(cookie.name).toEqual('foo');
-      expect(cookie.options.expires.getTime()).toEqual(new Date('Fri, 31 Dec 9999 23:59:59 GMT').getTime());
+      expect(cookie.options.expires.getTime()).toEqual(
+        new Date('Fri, 31 Dec 9999 23:59:59 GMT').getTime(),
+      );
     });
 
     it("parses a cookie's domain from a string", () => {
@@ -75,9 +79,12 @@ describe('lib/cookies', () => {
   describe('merge', () => {
     it('merges cookie strings containing unique cookies', () => {
       const oldCookies = 'foo=baz==';
-      const newCookies = 'some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly';
+      const newCookies =
+        'some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly';
       const result = merge(oldCookies, newCookies);
-      expect(result).toEqual('foo=baz%3D%3D; some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly');
+      expect(result).toEqual(
+        'foo=baz%3D%3D; some-thing-a=true; path=/; some_thing_b=false; path=/; some_thing_c=hi; path=/; HttpOnly',
+      );
     });
 
     it('uses the newest value of a cookie if one exists', () => {
@@ -104,13 +111,17 @@ describe('lib/cookies', () => {
 
   describe('Cookie => toString', () => {
     it('should return a cookie string with option attributes when incoming', () => {
-      const cookies = parse('some-thing-a=true; path=/; foo=hi; path=/ HttpOnly');
+      const cookies = parse(
+        'some-thing-a=true; path=/; foo=hi; path=/ HttpOnly',
+      );
       expect(`${cookies[0]}`).toEqual('some-thing-a=true; path=/');
       expect(`${cookies[1]}`).toEqual('foo=hi; path=/ HttpOnly');
     });
 
     it('should return a cookie string without option attributes when outgoing', () => {
-      const cookies = parse('some-thing-a=true; path=/; foo=hi; path=/ HttpOnly');
+      const cookies = parse(
+        'some-thing-a=true; path=/; foo=hi; path=/ HttpOnly',
+      );
       expect(cookies[0].toString(false)).toEqual('some-thing-a=true');
       expect(cookies[1].toString(false)).toEqual('foo=hi');
     });

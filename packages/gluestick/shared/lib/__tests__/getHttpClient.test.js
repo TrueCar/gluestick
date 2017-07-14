@@ -9,13 +9,13 @@ describe('lib/getHttpClient', () => {
       const i = {
         interceptors: {
           response: {
-            use: (middleware) => {
+            use: middleware => {
               i.interceptors.response.middleware.push(middleware);
             },
             middleware: [],
           },
           request: {
-            use: (middleware) => {
+            use: middleware => {
               i.interceptors.request.middleware.push(middleware);
             },
             middleware: [],
@@ -24,10 +24,12 @@ describe('lib/getHttpClient', () => {
         config: {
           headers: {},
         },
-        get: (fakeResponse) => {
+        get: fakeResponse => {
           return {
             request: i.interceptors.request.middleware.map(m => m(i.config)),
-            response: i.interceptors.response.middleware.map(m => m(fakeResponse)),
+            response: i.interceptors.response.middleware.map(m =>
+              m(fakeResponse),
+            ),
           };
         },
         defaults: {
@@ -124,7 +126,9 @@ describe('lib/getHttpClient', () => {
       secure: true,
     };
     getHttpClient({}, req, {}, axiosMock);
-    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(`https://${req.headers.host}`);
+    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(
+      `https://${req.headers.host}`,
+    );
   });
 
   it('should set baseURL with http if req.secure is false', () => {
@@ -136,7 +140,9 @@ describe('lib/getHttpClient', () => {
       secure: false,
     };
     getHttpClient({}, req, {}, axiosMock);
-    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(`http://${req.headers.host}`);
+    expect(axiosMock.create.mock.calls[0][0].baseURL).toEqual(
+      `http://${req.headers.host}`,
+    );
   });
 
   it('should forward along cookies back to the browser', () => {
@@ -161,7 +167,10 @@ describe('lib/getHttpClient', () => {
       },
     });
 
-    expect(mockServerResponse.append.mock.calls[0]).toEqual(['Set-Cookie', 'oh=hai']);
+    expect(mockServerResponse.append.mock.calls[0]).toEqual([
+      'Set-Cookie',
+      'oh=hai',
+    ]);
   });
 
   it('should send received cookies in subsequent requests with the same instance', () => {
@@ -192,7 +201,9 @@ describe('lib/getHttpClient', () => {
       headers: {},
     });
 
-    expect(request[0].headers.cookie).toEqual('name=Lincoln; _some_cookie=abc; another_cookie=something');
+    expect(request[0].headers.cookie).toEqual(
+      'name=Lincoln; _some_cookie=abc; another_cookie=something',
+    );
   });
 
   it('should not send received cookies in subsequent requests with a new instance', () => {
@@ -231,7 +242,7 @@ describe('lib/getHttpClient', () => {
   it('should allow you to modify the axios instance with `modifyInstance`', () => {
     const calledInsideModify = jest.fn();
     const options = {
-      modifyInstance: (client) => {
+      modifyInstance: client => {
         calledInsideModify();
         return {
           ...client,
@@ -250,7 +261,7 @@ describe('lib/getHttpClient', () => {
     expect(client.modifiedClient).toEqual(true);
   });
 
-  it('should merge headers from 3 sources when in the browser', (done) => {
+  it('should merge headers from 3 sources when in the browser', done => {
     // Mock axios by specifying an adapter:
     // https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
     // Would like to use github.com/mzabriskie/moxios
@@ -267,15 +278,13 @@ describe('lib/getHttpClient', () => {
       return Promise.resolve(response);
     }
     function modifyInstance(client) {
-      client.interceptors.request.use(
-        (config) => ({
-          ...config,
-          headers: {
-            ...config.headers,
-            header3: 'from modifyInstance',
-          },
-        }),
-      );
+      client.interceptors.request.use(config => ({
+        ...config,
+        headers: {
+          ...config.headers,
+          header3: 'from modifyInstance',
+        },
+      }));
       return client;
     }
     const optionsForGetHttpClient = {
@@ -291,7 +300,7 @@ describe('lib/getHttpClient', () => {
       },
     };
     const client = getHttpClient(optionsForGetHttpClient);
-    client.get('/test/url', optionsForGet).then((response) => {
+    client.get('/test/url', optionsForGet).then(response => {
       const { headers } = response.config;
       expect(headers.header1).toEqual('from optionsForGetHttpClient');
       expect(headers.header2).toEqual('from optionsForGet');
@@ -300,7 +309,7 @@ describe('lib/getHttpClient', () => {
     });
   });
 
-  it('should merge headers from 4 sources when on the server', (done) => {
+  it('should merge headers from 4 sources when on the server', done => {
     // Mock axios by specifying an adapter:
     // https://github.com/mzabriskie/axios/blob/v0.12.0/lib/core/dispatchRequest.js#L17
     // Would like to use github.com/mzabriskie/moxios
@@ -317,15 +326,13 @@ describe('lib/getHttpClient', () => {
       return Promise.resolve(response);
     }
     function modifyInstance(client) {
-      client.interceptors.request.use(
-        (config) => ({
-          ...config,
-          headers: {
-            ...config.headers,
-            header4: 'from modifyInstance',
-          },
-        }),
-      );
+      client.interceptors.request.use(config => ({
+        ...config,
+        headers: {
+          ...config.headers,
+          header4: 'from modifyInstance',
+        },
+      }));
       return client;
     }
     const optionsForGetHttpClient = {
@@ -350,8 +357,12 @@ describe('lib/getHttpClient', () => {
         header3: 'from optionsForGet',
       },
     };
-    const client = getHttpClient(optionsForGetHttpClient, req, mockServerResponse);
-    client.get('/test/url', optionsForGet).then((response) => {
+    const client = getHttpClient(
+      optionsForGetHttpClient,
+      req,
+      mockServerResponse,
+    );
+    client.get('/test/url', optionsForGet).then(response => {
       const { headers } = response.config;
       expect(headers.header1).toEqual('from req');
       expect(headers.header2).toEqual('from optionsForGetHttpClient');
