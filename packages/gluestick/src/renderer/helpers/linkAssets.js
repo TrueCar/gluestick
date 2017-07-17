@@ -42,7 +42,7 @@ const getBundleName = ({ config }): string => {
 };
 
 module.exports = (
-  { config, logger }: Context,
+  { config }: Context,
   entryPoint: string,
   assets: Object,
   loadjsConfig: Object,

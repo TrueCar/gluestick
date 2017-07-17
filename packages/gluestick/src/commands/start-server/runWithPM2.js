@@ -35,7 +35,7 @@ const checkIfPM2ProcessExists = (name: string, callback: Function) => {
 };
 
 const start = (
-  { config, logger }: CLIContext,
+  { logger }: CLIContext,
   name: string,
   entryPointPath: string,
   args: string[],
