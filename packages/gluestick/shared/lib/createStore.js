@@ -29,7 +29,7 @@ export default function(
   // Include middleware that will warn when you mutate the state object
   // but only include it in dev mode
   if (devMode) {
-    middleware.push(require('redux-immutable-state-invariant')());
+    middleware.push(require('redux-immutable-state-invariant').default());
   }
 
   // When `customMiddleware` is of type `function`, pass it current
