@@ -6,7 +6,7 @@ import _gluestick from './reducers';
 import promiseMiddleware from '../lib/promiseMiddleware';
 
 type Store = Object;
-type CreateStore = () => Store;
+type CreateStore = (reducer: Object, initialState: Object) => Store;
 
 export default function(
   client: () => Object,
