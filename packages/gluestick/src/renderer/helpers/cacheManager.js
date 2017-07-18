@@ -12,9 +12,9 @@ const LRU = require('lru-cache');
 const SSRCaching = require('electrode-react-ssr-caching');
 
 // Creating cache
-const DEFAULT_TTL: number = 60 * 60 * 1000;
+const DEFAULT_TTL: number = 60 * 60;
 const lruOptions: { maxAge: number, max: number } = {
-  maxAge: DEFAULT_TTL,
+  maxAge: DEFAULT_TTL * 1000,
   max: 50,
 };
 const _cache: Object = LRU(lruOptions);
@@ -57,7 +57,7 @@ module.exports = (logger: BaseLogger, isProduction: boolean): CacheManager => {
     if (isProduction) {
       const key: string = getCacheKey(req);
       logger.debug(`Set cache: ${key}`);
-      cache.set(key, value, maxAge);
+      cache.set(key, value, maxAge * 1000);
     }
   };
   return {
