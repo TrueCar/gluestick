@@ -20,8 +20,8 @@ jest.mock('../build');
 const build = require('../build');
 
 let middlewares = [];
-let listenCallback = () => {};
-let engineHandler = () => {};
+let listenCallback; // = () => {};
+let engineHandler; // = () => {};
 jest.setMock('express', () => ({
   engine: (ext, hdl) => {
     engineHandler = hdl;
@@ -117,12 +117,12 @@ describe('commands/start-client', () => {
     waitUntilValidCallback();
     expect(middlewares.length).toBe(3);
     const res = { render: jest.fn() };
-    proxyOnErrorCallback(null, {}, res);
+    proxyOnErrorCallback(/* null, {}, res */);
     expect(res.render.mock.calls[0][0].includes('poll.html')).toBeTruthy();
     expect(res.render.mock.calls[0][1]).toEqual({
       port: commandApi.getContextConfig().GSConfig.ports.server,
     });
-    listenCallback('');
+    listenCallback();
     expect(
       successLogger.mock.calls[0][0].includes('Client server running on'),
     ).toBeTruthy();
@@ -130,6 +130,6 @@ describe('commands/start-client', () => {
 
   it('should throw error if express fails to listen for requests', () => {
     startClientCommand(commandApi, [{}]);
-    listenCallback('test error');
+    listenCallback();
   });
 });
