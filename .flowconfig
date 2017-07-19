@@ -5,7 +5,6 @@
 .*/node_modules/radium/.*
 .*/node_modules/.*/\(test\).*\.json$
 .*/node_modules/promise/.*
-.*/node_modules/kefir/.*
 
 [include]
 
