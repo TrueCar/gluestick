@@ -32,7 +32,7 @@ const getSortedEntries = (entries: Entries): string[] => {
  * store, getRoutes and fileName.
  */
 module.exports = (
-  { config, logger }: Context,
+  { logger }: Context,
   req: Request,
   entries: Entries,
 ): RenderRequirements => {

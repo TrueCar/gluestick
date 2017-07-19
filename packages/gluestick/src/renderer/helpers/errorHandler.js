@@ -24,7 +24,7 @@ const tryReadFile = (filePath: string): Promise<string | boolean> =>
   );
 
 module.exports = async (
-  { config, logger }: Context,
+  { config }: Context,
   req: Request,
   res: Response,
   error: { status?: number },
