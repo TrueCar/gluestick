@@ -8,21 +8,9 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
     "es2015",
     "stage-0"
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        ["react-transform", {
-          "transforms": [{
-            "transform": "react-transform-hmr",
-            "imports": ["react"],
-            "locals": ["module"]
-          }, {
-            "transform": "react-transform-catch-errors",
-            "imports": ["react", "redbox-react"]
-          }]
-        }]
-      ]
-    }
-  }
+  "plugins": [
+    "babel-plugin-transform-decorators-legacy",
+    "babel-plugin-transform-flow-strip-types"
+  ]
 }
 `;
