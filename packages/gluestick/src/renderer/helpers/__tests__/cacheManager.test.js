@@ -74,7 +74,7 @@ describe('renderer/helpers/cacheManager', () => {
       expect(cache.set.mock.calls[0]).toEqual([
         'localhost/test',
         'cache',
-        1000,
+        1000000,
       ]);
     });
   });
