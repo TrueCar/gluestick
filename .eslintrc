@@ -61,6 +61,8 @@
     "import/no-dynamic-require": 0,
     "import/prefer-default-export": 0,
 
+    "jsx-a11y/href-no-hash": 0,
+
     "react/jsx-no-bind": 0,
     "react/jsx-filename-extension": 0,
     "react/forbid-prop-types": 0,

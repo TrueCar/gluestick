@@ -20,8 +20,8 @@ jest.mock('../build');
 const build = require('../build');
 
 let middlewares = [];
-let listenCallback = () => {};
-let engineHandler = () => {};
+let listenCallback = jest.fn();
+let engineHandler = jest.fn();
 jest.setMock('express', () => ({
   engine: (ext, hdl) => {
     engineHandler = hdl;
@@ -54,7 +54,7 @@ jest.setMock('webpack-hot-middleware', () => compiler => {
   }
 });
 
-let proxyOnErrorCallback = () => {};
+let proxyOnErrorCallback = jest.fn();
 jest.setMock('http-proxy-middleware', opts => {
   proxyOnErrorCallback = opts.onError;
 });
@@ -76,11 +76,11 @@ const commandApi = {
 describe('commands/start-client', () => {
   beforeEach(() => {
     middlewares = [];
-    listenCallback = () => {};
+    listenCallback = jest.fn();
     successLogger.mockClear();
     errorLogger.mockClear();
     waitUntilValidCallback = () => {};
-    proxyOnErrorCallback = () => {};
+    proxyOnErrorCallback = jest.fn();
     build.mockClear();
   });
 
