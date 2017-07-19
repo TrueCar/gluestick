@@ -43,8 +43,6 @@ const templateReduxMiddleware = require('../templates/ReduxMiddleware')(
   createTemplate,
 );
 const templateRoutes = require('../templates/Routes')(createTemplate);
-  createTemplate,
-);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateReducer = require('../templates/Reducer')(createTemplate);
