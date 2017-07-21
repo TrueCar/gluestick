@@ -51,7 +51,7 @@ const compile = ({ config, logger }: CLIContext, cb: Function): void => {
  * Spawn debugger process and print help messages.
  */
 const debug = (
-  { config, logger }: CLIContext,
+  { logger }: CLIContext,
   serverEntrypointPath: string,
   args: string[],
   debugPort: number,

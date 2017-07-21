@@ -13,7 +13,7 @@ const logMessage = require('./logMessage');
  * @param {Array<string>} args Arguments to pass to entry
  */
 const spawnServer = (
-  { config, logger }: CLIContext,
+  { logger }: CLIContext,
   entryPointPath: string,
   args: string[],
 ): Object => {

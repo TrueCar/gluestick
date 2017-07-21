@@ -5,7 +5,7 @@ const { match } = require('react-router');
 const { prepareRoutesWithTransitionHooks } = require('../../../shared');
 
 module.exports = (
-  { config, logger }: Context,
+  context: Context,
   req: Request,
   getRoutes: (store: Object, httpClient: Object) => Object,
   store: Object,

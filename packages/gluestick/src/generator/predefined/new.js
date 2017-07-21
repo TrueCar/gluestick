@@ -38,15 +38,11 @@ const templateEntryWrapper = require('../templates/EntryWrapper')(
   createTemplate,
 );
 const templateApp = require('../templates/App')(createTemplate);
-const templateAppServer = require('../templates/AppServer')(createTemplate);
 const templateInitBrowser = require('../templates/InitBrowser')(createTemplate);
 const templateReduxMiddleware = require('../templates/ReduxMiddleware')(
   createTemplate,
 );
 const templateRoutes = require('../templates/Routes')(createTemplate);
-const templateWebpackAdditions = require('../templates/WebpackAdditions')(
-  createTemplate,
-);
 const templateHomeApp = require('../templates/HomeApp')(createTemplate);
 const templateNoMatchApp = require('../templates/NoMatchApp')(createTemplate);
 const templateReducer = require('../templates/Reducer')(createTemplate);
@@ -151,11 +147,6 @@ module.exports = (options: GeneratorOptions) => {
     },
     {
       path: 'src/config',
-      filename: 'application.server.js',
-      template: templateAppServer,
-    },
-    {
-      path: 'src/config',
       filename: 'init.browser.js',
       template: templateInitBrowser,
     },
@@ -163,11 +154,6 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src/config',
       filename: 'redux-middleware.js',
       template: templateReduxMiddleware,
-    },
-    {
-      path: 'src/config',
-      filename: 'webpack-additions.js',
-      template: templateWebpackAdditions,
     },
     {
       path: 'src/config',
