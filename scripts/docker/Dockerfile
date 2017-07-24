@@ -51,6 +51,7 @@ ENV BUILD_PACKAGES "autoconf \
                     procps \
                     python-dev \
                     subversion \
+                    unzip \
                     xz-utils \
                     zlib1g-dev"
 
