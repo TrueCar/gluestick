@@ -17,10 +17,11 @@ describe('config/webpack/buildEntries', () => {
     jest.resetAllMocks();
   });
 
-  it('should build client entries', () => {
+  it('should build all client entries', () => {
     // $FlowIgnore
     expect(buildEntries(defaultGSConfig, {}, entries, [])).toEqual({
-      entry: 'path/to/main/entry.js',
+      main: `./${defaultGSConfig.clientEntryInitPath}/main`,
+      home: `./${defaultGSConfig.clientEntryInitPath}/home`,
     });
     // $FlowIgnore
     expect(generate.mock.calls[0][0]).toEqual({
@@ -37,6 +38,29 @@ describe('config/webpack/buildEntries', () => {
     });
     // $FlowIgnore
     expect(generate.mock.calls[1][0]).toEqual({
+      generatorName: 'clientEntryInit',
+      entityName: 'home',
+      options: {
+        component: 'path/to/home/component',
+        routes: 'path/to/home/routes',
+        reducers: 'path/to/home/reducers',
+        config: 'path/to/home/config',
+        clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
+        plugins: [],
+      },
+    });
+  });
+
+  it('should build only a signle client entry', () => {
+    const homeEntry = Object.keys(entries)
+      .filter(k => k === '/home')
+      .reduce((acc, key) => ({ ...acc, [key]: entries[key] }), {});
+    // $FlowIgnore
+    expect(buildEntries(defaultGSConfig, {}, homeEntry, [])).toEqual({
+      home: `./${defaultGSConfig.clientEntryInitPath}/home`,
+    });
+    // $FlowIgnore
+    expect(generate.mock.calls[0][0]).toEqual({
       generatorName: 'clientEntryInit',
       entityName: 'home',
       options: {
