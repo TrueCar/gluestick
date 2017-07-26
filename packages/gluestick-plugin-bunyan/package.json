@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-bunyan",
-  "version": "1.13.0-beta.5",
+  "version": "1.13.0-beta.6",
   "description": "Plugin for supporting Bunyan in GlueStick project",
   "main": "build/server.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -12,12 +12,12 @@
     "url": "git@github.com:TrueCar/gluestick.git"
   },
   "peerDependencies": {
-    "gluestick": "1.13.0-beta.5"
+    "gluestick": "1.13.0-beta.6"
   },
   "dependencies": {
     "bunyan": "^1.8.8"
   },
   "devDependencies": {
-    "gluestick": "1.13.0-beta.5"
+    "gluestick": "1.13.0-beta.6"
   }
 }
