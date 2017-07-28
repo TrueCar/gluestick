@@ -24,7 +24,7 @@ module.exports = (
   configuration.plugins.push(
     // Bug: some chunks are not ouptputted
     // new webpack.optimize.ModuleConcatenationPlugin(),
-    new ExtractTextPlugin('[name]-[chunkhash].css'),
+    new ExtractTextPlugin({filename: '[name]-[chunkhash].css', allChunks: true}),
     new OptimizeCSSAssetsPlugin({ canPrint: false }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
