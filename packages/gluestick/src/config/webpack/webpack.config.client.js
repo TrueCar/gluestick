@@ -82,7 +82,26 @@ module.exports = (
         name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production'
           ? '-[hash]'
-          : ''}.bundle.js`,
+            : ''}.bundle.js`,
+        minChunks: function (module, count) {
+          if (!module.resource) {
+            return false;
+          }
+
+          const { resource } = module;
+
+          // https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/456#issuecomment-314548636
+          const shouldExclude = ["css-loader", "style-loader"].some(m => resource.includes(m));
+
+          if (shouldExclude) {
+            return false;
+          }
+          else if (count === 3) {
+            return true;
+          }
+          return false;
+        }
+
       }),
       new ChunksPlugin(deepClone(configuration)),
     );
