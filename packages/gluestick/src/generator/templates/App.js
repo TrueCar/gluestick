@@ -22,12 +22,12 @@ type EnvConfig = {
   head: HeadContent;
   logger: Logger;
   httpClient?: Object;
-  proxies?: [{
+  proxies?: Array<{
     path: string;
     destination: string;
     options?: Object;
     filter?: Function;
-  }];
+  }>
 }
 
 type Config = {
