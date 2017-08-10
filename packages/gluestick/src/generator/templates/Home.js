@@ -18,7 +18,7 @@ export default class Home extends Component {
           <div className="Home-box">
             <h2>Quick Start</h2>
             <p>
-              Edit and save <code>src/components/Home.js</code> This page will automatically update.
+              Edit and save <code>src/apps/main/components/Home.js</code> This page will automatically update.
             </p>
           </div>
         </div>
