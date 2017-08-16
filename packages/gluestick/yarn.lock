@@ -1830,9 +1830,9 @@ globals@^9.0.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
-gluestick-generators@1.13.0-beta.5:
-  version "1.13.0-beta.5"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.13.0-beta.5.tgz#f9cbcf4976586cb22dc4a538ccb96331266b3478"
+gluestick-generators@1.13.0-beta.6:
+  version "1.13.0-beta.6"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.13.0-beta.6.tgz#08990326154156bde3515a852d53ea4c5a402371"
   dependencies:
     mkdirp "^0.5.1"
 
