@@ -45,7 +45,6 @@ const config: GSConfig = {
   autoUpgrade: {
     added: [
       'src/config/application.js', // -> prior to 0.1.6
-      'src/config/webpack-additions.js', // -> prior to 0.1.12
       'src/config/redux-middleware.js', // -> prior to 0.1.12
       'src/config/.Dockerfile', // -> prior to 0.2.0
       '.dockerignore', // -> prior to 0.3.6
