@@ -32,11 +32,11 @@ All project-wide configuration lives here in `src/config/application.js`.
 
 GlueStick itself will look only for those properties:
 * `proxies` - setup additional proxies
-* `httpClient` - configure htt client
+* `httpClient` - configure http client
 * `headContent` - configure page `<title>` element
 * `logger` - configure logger
 
-However, you can put your onw properties here and read them by importing this files via alias `config/application`.
+However, you can put your own properties here and read them by importing this files via alias `config/application`.
 
 In a nutshell, this configuration file have the following structure:
 ```typescript
@@ -86,7 +86,7 @@ To modify GlueStick config use `src/gluestick.config.js` file. It must return fu
 as a `default` export:
 ```
 export default config => config;
-// or 
+// or
 export default [config => config];
 ```
 This function accepts gluestick config (`object`) as a first argument and must return modified
@@ -108,7 +108,7 @@ export default config => ({
   ...config,
   publicPath: process.env.ASSET_URL || '/assets/',
 });
-``` 
+```
 
 To see how the default GlueStick config looks like navigate [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
 
