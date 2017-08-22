@@ -93,6 +93,9 @@ module.exports = ({ config, logger }: Context) => {
     });
   }
 
+  // Call express App Hook which accept app as param.
+  hooksHelper.call(hooks.postServerRun, app);
+
   app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
     if (
@@ -143,9 +146,6 @@ module.exports = ({ config, logger }: Context) => {
         res.sendStatus(500);
       });
   });
-
-  // Call express App Hook which accept app as param.
-  hooksHelper.call(hooks.postServerRun, app);
 
   // 404 handler
   // @TODO: support custom 404 error page
