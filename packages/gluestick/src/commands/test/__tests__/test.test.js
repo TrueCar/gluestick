@@ -91,13 +91,6 @@ describe('commands/test/test', () => {
       expect(spawnMock.mock.calls[0][1].indexOf('--inspect')).toBeGreaterThan(
         -1,
       );
-      expect(spawnMock.mock.calls[0][1].indexOf('--debug-brk')).toBeGreaterThan(
-        -1,
-      );
-      expect(spawnMock.mock.calls[0][1].indexOf('--env')).toBeGreaterThan(-1);
-      expect(spawnMock.mock.calls[0][1].indexOf('--config')).toBeGreaterThan(
-        -1,
-      );
       expect(spawnMock.mock.calls[0][1].indexOf('-i')).toBeGreaterThan(-1);
       expect(spawnMock.mock.calls[0][1].indexOf('--watch')).toBeGreaterThan(-1);
       expect(spawnMock.mock.calls[0][0]).toEqual('node');
