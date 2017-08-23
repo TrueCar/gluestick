@@ -8,10 +8,6 @@ const path = require('path');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
 const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
-const JEST_DEBUG_CONFIG_PATH = path.join(
-  __dirname,
-  'jestEnvironmentNodeDebug.js',
-);
 const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
@@ -90,10 +86,7 @@ const getDebugDefaultConfig = (
 ): string[] => {
   const argv = [];
   argv.push('--inspect');
-  argv.push('--debug-brk');
   argv.push(JEST_PATH);
-  argv.push('--env');
-  argv.push(JEST_DEBUG_CONFIG_PATH);
   argv.push(...getJestDefaultConfig(aliases));
   argv.push('-i');
   argv.push('--watch');
