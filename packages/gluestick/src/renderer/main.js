@@ -15,6 +15,7 @@ import type {
 } from '../types';
 
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
@@ -49,6 +50,19 @@ const envVariables: string[] =
     : [];
 
 module.exports = ({ config, logger }: Context) => {
+  const assetsFilename = path.join(
+    process.cwd(),
+    config.GSConfig.buildAssetsPath,
+    config.GSConfig.webpackChunks,
+  );
+  if (!fs.existsSync(assetsFilename)) {
+    console.log('\n');
+    logger.error(
+      `File ${assetsFilename} does not exists. Did you forgot to compile client bundle? ` +
+        `Run 'gluestick build --client', then try again.`,
+    );
+  }
+
   const pluginUtils = createPluginUtils(logger);
   const serverPlugins: ServerPlugin[] = prepareServerPlugins(
     logger,
@@ -118,9 +132,7 @@ module.exports = ({ config, logger }: Context) => {
       });
     }
 
-    readAssets(
-      `${config.GSConfig.buildAssetsPath}/${config.GSConfig.webpackChunks}`,
-    )
+    readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
         return middleware(
           { config, logger },
