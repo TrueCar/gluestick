@@ -13,8 +13,8 @@ module.exports = (assetsPath: string): Promise<Object> => {
           reject(
             `Failed to read ${assetsPath} ${error.code
               ? `(${error.code})`
-              : ''}. Did you forgot to compile client bundle? ` +
-              `Run 'gluestick build --client', then try again.`,
+              : ''}. Did you forget to compile client bundle? ` +
+              `Run 'gluestick build --client' and try again.`,
           );
         } else {
           cache = JSON.parse(assetsBuffer.toString());
