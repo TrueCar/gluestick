@@ -1,5 +1,4 @@
 /* @flow */
-const path = require('path');
 const fs = require('fs');
 
 let cache: ?Object = null;
@@ -9,17 +8,19 @@ module.exports = (assetsPath: string): Promise<Object> => {
     if (process.env.NODE_ENV === 'production' && cache) {
       resolve(cache);
     } else {
-      fs.readFile(
-        path.join(process.cwd(), assetsPath),
-        (error, assetsBuffer) => {
-          if (error) {
-            reject(error);
-          } else {
-            cache = JSON.parse(assetsBuffer.toString());
-            resolve(cache);
-          }
-        },
-      );
+      fs.readFile(assetsPath, (error, assetsBuffer) => {
+        if (error) {
+          reject(
+            `Failed to read ${assetsPath} ${error.code
+              ? `(${error.code})`
+              : ''}. Did you forget to compile the client bundle? ` +
+              `Run 'gluestick build --client' and try again.`,
+          );
+        } else {
+          cache = JSON.parse(assetsBuffer.toString());
+          resolve(cache);
+        }
+      });
     }
   });
 };
