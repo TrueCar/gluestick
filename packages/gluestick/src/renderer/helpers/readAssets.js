@@ -13,7 +13,7 @@ module.exports = (assetsPath: string): Promise<Object> => {
           reject(
             `Failed to read ${assetsPath} ${error.code
               ? `(${error.code})`
-              : ''}. Did you forget to compile client bundle? ` +
+              : ''}. Did you forget to compile the client bundle? ` +
               `Run 'gluestick build --client' and try again.`,
           );
         } else {
