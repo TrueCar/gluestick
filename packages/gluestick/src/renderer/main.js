@@ -58,8 +58,8 @@ module.exports = ({ config, logger }: Context) => {
   if (!fs.existsSync(assetsFilename)) {
     console.log('\n');
     logger.error(
-      `File ${assetsFilename} does not exists. Did you forgot to compile client bundle? ` +
-        `Run 'gluestick build --client', then try again.`,
+      `File ${assetsFilename} does not exists. Did you forget to compile client bundle? ` +
+        `Run 'gluestick build --client' and try again.`,
     );
   }
 
