@@ -3,6 +3,7 @@
 import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
 const { serverConfiguration } = require('universal-webpack');
+const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
 const progressHandler = require('./progressHandler');
@@ -64,5 +65,10 @@ module.exports = (
     gluestickConfig.cachingConfigPath,
   );
   config.plugins.push(progressHandler(logger, 'server'));
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+  );
   return serverConfiguration(config, settings);
 };
