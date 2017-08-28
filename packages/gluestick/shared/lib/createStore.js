@@ -16,9 +16,8 @@ export default function(
   devMode: Boolean,
   thunkMiddleware: Function,
 ): Store {
-  const reducer: Object = combineReducers(
-    Object.assign({}, { _gluestick }, customRequire()),
-  );
+  const reducers = Object.assign({}, { _gluestick }, customRequire());
+  const reducer: Object = combineReducers(reducers);
 
   let middleware: Function[] = [
     promiseMiddleware(client),
@@ -55,11 +54,13 @@ export default function(
     typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {},
   );
 
+  // Useful for adding reducers dynamically
+  store.reducers = reducers;
+  store.injectedReducerKeys = [];
+
   if (hotCallback) {
     hotCallback((): void => {
-      const nextReducer: Object = combineReducers(
-        Object.assign({}, { _gluestick }, customRequire()),
-      );
+      const nextReducer: Object = combineReducers(store.reducers);
       store.replaceReducer(nextReducer);
     });
   }
