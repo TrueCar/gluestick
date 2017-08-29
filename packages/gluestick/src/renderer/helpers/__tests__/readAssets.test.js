@@ -1,5 +1,6 @@
 /* @flow */
 jest.mock('fs');
+const path = require('path');
 const readAssets = require('../readAssets');
 const fs = require('fs');
 
@@ -32,7 +33,7 @@ describe('renderer/helpers/readAssets', () => {
         ),
       );
     };
-    readAssets('assets').then(assets => {
+    readAssets(path.join(process.cwd(), 'assets')).then(assets => {
       expect(assets).toEqual({ javascript: { main: 'path' } });
       done();
     });
@@ -57,9 +58,9 @@ describe('renderer/helpers/readAssets', () => {
         ),
       );
     };
-    readAssets('assets')
+    readAssets(path.join(process.cwd(), 'assets'))
       .then(() => {
-        return readAssets('assets');
+        return readAssets(path.join(process.cwd(), 'assets'));
       })
       .then(assets => {
         expect(assets).toEqual({ javascript: { main: 'path' } });
@@ -73,8 +74,8 @@ describe('renderer/helpers/readAssets', () => {
       // $FlowIgnore
       cb(new Error('test'));
     };
-    readAssets('not/found').catch(error => {
-      expect(error.message).toEqual('test');
+    readAssets(path.join(process.cwd(), 'not/found')).catch(error => {
+      expect(error).toBeDefined();
       done();
     });
   });
