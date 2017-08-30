@@ -4,6 +4,7 @@
 
 GlueStick is a command line interface for quickly developing universal web
 applications using React and Redux.
+Testing bot
 
 ## Why your project or boilerplate isn't enough?
 1. **You need integrated updates.** Without integrated updates, you are forced to manually merge in new features/fixes.
