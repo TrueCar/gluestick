@@ -7,7 +7,13 @@ const spawn = require('cross-spawn').spawn;
 const path = require('path');
 
 // This is a necessary hack to find Jest depending if node_modules has flatten dependencies or not
-const JEST_PATH = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
+function getJestPath() {
+  const binPath = `${require.resolve('jest').split('jest')[0]}.bin/jest`;
+  return fs.existsSync(binPath)
+    ? binPath
+    : `${require.resolve('jest-cli').split('jest-cli')[0]}jest-cli/bin/jest`;
+}
+
 const TEST_MOCKS_PATH = `${path.join(__dirname)}`;
 
 const mergeCustomConfig = (defaultConfig: Object, aliases: Object): Object => {
@@ -86,7 +92,7 @@ const getDebugDefaultConfig = (
 ): string[] => {
   const argv = [];
   argv.push('--inspect');
-  argv.push(JEST_PATH);
+  argv.push(getJestPath());
   argv.push(...getJestDefaultConfig(aliases));
   argv.push('-i');
   argv.push('--watch');
