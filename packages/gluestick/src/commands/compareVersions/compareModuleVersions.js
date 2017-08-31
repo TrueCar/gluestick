@@ -28,6 +28,8 @@ type Discrepancy = {
   found: ?string,
 };
 
+const versionRegex = /\d+\.\d+\.\d+(-[a-z]+\.\d+)?/;
+
 const checkVersions = (
   dependencies: Object,
   modulePath: string,
@@ -35,31 +37,38 @@ const checkVersions = (
   requireCall: Function,
 ) => {
   Object.keys(dependencies).forEach((depName: string) => {
-    const depVersion: string = dependencies[depName];
-    const tempPath: string = path.join(modulePath, depName, packageName);
-    let tempPackage: Object;
+    const requiredVersion: string = dependencies[depName];
+    const packageJsonPath: string = path.join(modulePath, depName, packageName);
+    let installedPackage: Object;
 
     try {
-      tempPackage = requireCall(tempPath);
+      installedPackage = requireCall(packageJsonPath);
     } catch (e) {
       discrepancies.push({
         name: depName,
-        required: depVersion,
+        required: requiredVersion,
         found: 'N/A - missing',
       });
       return;
     }
 
-    if (depVersion && !semver.satisfies(tempPackage.version, depVersion)) {
-      const versionMatch = depVersion.match(/\d+\.\d+\.\d+.*/);
+    if (
+      requiredVersion &&
+      !semver.satisfies(installedPackage.version, requiredVersion)
+    ) {
+      const requiredVersionMatch = requiredVersion.match(versionRegex);
+      const installedVersionMatch = installedPackage.version.match(
+        versionRegex,
+      );
       if (
-        versionMatch &&
-        !semver.satisfies(tempPackage.version, versionMatch[0])
+        requiredVersionMatch &&
+        installedVersionMatch &&
+        !semver.satisfies(installedVersionMatch[0], requiredVersionMatch[0])
       ) {
         discrepancies.push({
           name: depName,
-          required: versionMatch ? versionMatch[0] : depVersion,
-          found: tempPackage.version,
+          required: requiredVersionMatch[0],
+          found: installedVersionMatch[0],
         });
       }
     }
