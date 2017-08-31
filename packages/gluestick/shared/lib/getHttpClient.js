@@ -1,6 +1,7 @@
 /* @flow */
 
 import axios from 'axios';
+import type { Axios, AxiosExport } from 'axios';
 import { merge, parse } from './cookies';
 
 /**
@@ -14,8 +15,8 @@ export default function getHttpClient(
   options: Object = {},
   req: Object,
   res: Object,
-  httpClient: () => Object = axios,
-) {
+  httpClient: AxiosExport = axios,
+): Axios {
   const {
     headers,
     modifyInstance,
