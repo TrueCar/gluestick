@@ -24,6 +24,7 @@ function complete (cwd, words) {
   let options = [];
 
   const bases = [
+    "bin",
     "build",
     "destroy",
     "dockerize",
@@ -35,6 +36,7 @@ function complete (cwd, words) {
     "start-client",
     "start-server",
     "test",
+    "watch",
   ];
   
   if (words.length === 0){
