@@ -4,18 +4,7 @@
   source ../bin/completion.js && GS_COMP=$PWD
 */
 
-const { appendFileSync } = require("fs");
 const path = require("path");
-
-const OUT_FILE = __dirname + "/comp.out";
-
-function log (){
-  // console output would break the completion. tail -f OUT_FILE instead.
-  Array.prototype.slice.call(arguments).forEach((item) => {
-    appendFileSync(OUT_FILE, item.toString());
-  });
-  appendFileSync(OUT_FILE, "\n");
-}
 
 function subcommand (command, words) {
   switch (command) {
@@ -32,11 +21,6 @@ function subcommand (command, words) {
 
 function complete (cwd, words) {
  
-  log("\n\nrunning completion.js\n-------");
-  log("CWD: \n\t", cwd);
-  log("words:");
-  words.forEach((arg, i) => log("\t", i, " ", arg));
-  
   let options = [];
 
   const bases = [
@@ -57,10 +41,8 @@ function complete (cwd, words) {
     options = bases;
   } else if (words.length === 1){
     if ( ! bases.includes( words[0] ) ){
-      log("returning all base commands");
       options = bases;
     } else {
-      log("returning subcommands for ", words[0]);
       options = subcommand( words[0], [] ); 
     }
   } else {
@@ -68,16 +50,15 @@ function complete (cwd, words) {
       options = subcommand( words[0], words.slice(1) );
     }
   }
-
   
   return options;
 }
+
 if (require.main === module) {
-  
+  // discard nodejs bin path, script name, and the first cli word "gluestick"
   const [, , cwd, , ...words] = process.argv;
   const options = complete(cwd, words);
   process.stdout.write(options.join("\n")+"\n");
-  log("result:\n\t", options.join("\n\t"));
 } else {
   module.exports.default = complete;
 }

@@ -2,10 +2,10 @@
 
 const completion = require("../completion").default;
 
-const cli = (line, cwd = ".") => {
-  const argvMimic = line.replace(/^gluestick/,"").trim().split(" ");
-  console.log("argv mimick:", argvMimic);
-  return completion(cwd, argvMimic);
+const cliTab = (line, cwd = ".") => {
+  const argvMimic = line.replace(/^gluestick /,"").trim();
+  // console.log("argv mimic:", argvMimic.split(" "));
+  return completion(cwd, argvMimic ? argvMimic.split(" ") : []);
 }
 
 describe("gluestick-cli/src/completion.js", () => {
@@ -14,7 +14,7 @@ describe("gluestick-cli/src/completion.js", () => {
   });
 
   it("should return the commands", () => {
-    const options = cli("gluestick ");
+    const options = cliTab("gluestick ");
     expect(options).toEqual(expect.arrayContaining([
       "build",
       "destroy",
