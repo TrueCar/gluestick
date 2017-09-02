@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/** for dev testing:
+  source ../bin/completion.js && GS_COMP=$PWD
+*/
+
 const { appendFileSync } = require("fs");
 const path = require("path");
 
@@ -75,6 +79,6 @@ if (require.main === module) {
   process.stdout.write(options.join("\n")+"\n");
   log("result:\n\t", options.join("\n\t"));
 } else {
-  module.exports = complete;
+  module.exports.default = complete;
 }
 
