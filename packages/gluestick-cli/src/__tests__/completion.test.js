@@ -1,5 +1,13 @@
 /* @flow */
 
+jest.mock("fs", () => {
+  const _fs = {
+    existsReturn: false,
+    existsSync: function(){ return _fs.existsReturn },
+  };
+  return _fs;
+});
+const fs = require("fs");
 const completion = require("../completion").default;
 
 const cliTab = (line, cwd = ".") => {
@@ -11,17 +19,17 @@ const cliTab = (line, cwd = ".") => {
 const CLI_COMMANDS = [
   "new",
   "reinstall-dev",
-  "watch",
   "reset-hard",
+  "watch",
 ];
 
 const PROJECT_COMMANDS = [
-  "generate",
-  "destroy",
-  "start",
-  "build",
   "bin",
+  "build",
+  "destroy",
   "dockerize",
+  "generate",
+  "start",
   "start-client",
   "start-server",
   "test",
@@ -32,13 +40,25 @@ describe("gluestick-cli/src/completion.js", () => {
     completion(".", []);
   });
 
-  it("should return the commands", () => {
-    const options = cliTab("gluestick ");
-    expect(options).toEqual(
-      expect.arrayContaining(
-        CLI_COMMANDS.concat(PROJECT_COMMANDS).sort()
-      )
-    );
+  describe("when CWD is a gluestick project", () => {
+    beforeEach(() => {
+      fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
+    });
+    it("should return global commands", () => {
+      const options = cliTab("gluestick ");
+      expect(options).toEqual(PROJECT_COMMANDS);
+    });
+  });
+
+  describe("when CWD is _not_ a gluestick project", () => {
+    beforeEach(() => {
+      fs.existsReturn = false; // ./node_modules/.bin/gluestick absent
+    });
+    it("should return project commands", () => {
+      const options = cliTab("gluestick ");
+      expect(options).toEqual(CLI_COMMANDS);
+    });
+
   });
 
 });
