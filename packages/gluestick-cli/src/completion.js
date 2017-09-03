@@ -5,6 +5,15 @@
 */
 const { join } = require("path");
 const { existsSync } = require("fs");
+const commanderGlobal = require("./cli").default;
+
+function globalBases() {
+  return commanderGlobal.commands
+    .map((comm) => comm._name)
+    .filter((name) => name !== "*")
+    .sort();
+}
+
 
 function subcommand (command, words) {
   switch (command) {
@@ -23,12 +32,6 @@ function complete (cwd, words) {
  
   let options = [];
 
-  const global = [
-    "new",
-    "reinstall-dev",
-    "reset-hard",
-    "watch",
-  ];
   const project = [
     "bin",
     "build",
@@ -41,7 +44,7 @@ function complete (cwd, words) {
     "test",
   ];
   
-  const bases = existsSync(join(cwd, "node_modules", ".bin", "gluestick")) ? project : global;
+  const bases = existsSync(join(cwd, "node_modules", ".bin", "gluestick")) ? project : globalBases();
   
   if (words.length === 0){
     options = bases;
