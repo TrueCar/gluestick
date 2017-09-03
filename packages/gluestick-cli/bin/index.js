@@ -1,3 +1,4 @@
 #!/usr/bin/env node
 
-require('../build/cli');
+const commander = require('../build/cli').default;
+commander.parse(process.argv);

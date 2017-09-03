@@ -99,4 +99,4 @@ commander.command('*', null, { noHelp: true }).action(() => {
   });
 });
 
-commander.parse(process.argv);
+module.exports.default = commander;
