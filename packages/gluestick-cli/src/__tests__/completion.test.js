@@ -7,6 +7,18 @@ jest.mock("fs", () => {
   return _fs;
 });
 const fs = require("fs");
+
+jest.mock(
+  "node_modules/gluestick/package.json",
+  () => ( { version: "1.14.0" } ), //enable the check for updated local dependency
+  { virtual: true }
+);
+jest.mock(
+  "node_modules/gluestick/build/cli",
+  () => ( require("../../../gluestick/src/cli") ),
+  { virtual: true }
+);
+
 const completion = require("../completion").default;
 
 const cliTab = (line, cwd = ".") => {
@@ -47,6 +59,12 @@ describe("gluestick-cli/src/completion.js", () => {
       const options = cliTab("gluestick ");
       expect(options).toEqual(PROJECT_COMMANDS);
     });
+    it("should work even if the project dependency is less than required", () => {
+      const projectPDJ = require("node_modules/gluestick/package.json");
+      projectPDJ.version = "1.13";
+      const options = cliTab("gluestick ");
+      expect(options).toEqual(expect.arrayContaining(PROJECT_COMMANDS));
+   });
   });
 
   describe("when CWD is _not_ a gluestick project", () => {
