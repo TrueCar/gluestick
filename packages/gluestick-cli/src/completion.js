@@ -45,7 +45,7 @@ function loadCommanderProject(cwd) {
     if (localInstalledVersion !== "n/a" && localInstalledVersion >= completionVersion){
       try {
         const reqPath = join(cwd, "node_modules", "gluestick", "build", "cli");
-        commanderProject = require(reqPath).default
+        commanderProject = require(reqPath).default;
       } catch (e) {
       }
     }
@@ -59,7 +59,8 @@ function subcommand (command, words) {
       return [
         "component",
 	"container",
-	"reducer"
+	"reducer",
+	"generator",
       ];
     default:
       return [];

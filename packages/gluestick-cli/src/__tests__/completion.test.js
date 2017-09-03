@@ -109,18 +109,18 @@ describe("gluestick-cli/src/completion.js", () => {
 
     describe("completing gluestick generate", () => {
       it("completes arguments", () => {
-        const options = clieTab("gluestick generate ");
+        const options = cliTab("gluestick generate ");
         expect(options).toEqual([
-	  "container",
-	  "component",
-	  "reducer",
-	  "generator",
+          "component",
+          "container",
+          "reducer",
+          "generator",
         ]);
       });
       it("completes flags", () => {
-        const options = cliTab("gluestick generate container");
-        const options2 = cliTab("gluestick generate reducer");
-        const options3 = cliTab("gluestick generate generator");
+        const options = cliTab("gluestick generate container ");
+        const options2 = cliTab("gluestick generate reducer ");
+        const options3 = cliTab("gluestick generate generator ");
         expect(options).toEqual([
           "-E", "--entrypoints",
           "-A", "--app",
