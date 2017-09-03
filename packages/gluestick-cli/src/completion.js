@@ -19,6 +19,7 @@ function loadCommanderProject(cwd) {
   if (!commanderProject){
     const completionVersion = "1.14"; //TODO: update me
     const project = [
+      "auto-upgrade",
       "bin",
       "build",
       "destroy",
@@ -98,6 +99,7 @@ if (require.main === module) {
   const options = complete(cwd, words);
   process.stdout.write(options.join("\n")+"\n");
 } else {
-  module.exports.default = complete;
+  exports.default = complete;
+  exports.reload = () => { commanderProject = null; } // test support for un-memoizing
 }
 

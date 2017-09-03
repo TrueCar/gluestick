@@ -19,12 +19,12 @@ jest.mock(
   { virtual: true }
 );
 
-const completion = require("../completion").default;
+const completion = require("../completion");
 
 const cliTab = (line, cwd = ".") => {
   const argvMimic = line.replace(/^gluestick /,"").trim();
   // console.log("argv mimic:", argvMimic.split(" "));
-  return completion(cwd, argvMimic ? argvMimic.split(" ") : []);
+  return completion.default(cwd, argvMimic ? argvMimic.split(" ") : []);
 }
 
 const CLI_COMMANDS = [
@@ -49,23 +49,35 @@ const PROJECT_COMMANDS = [
 
 describe("gluestick-cli/src/completion.js", () => {
   it("should be callable", () => {
-    completion(".", []);
+    completion.default(".", []);
   });
 
+  describe("when CWD is a project with gluestick < 1.14", () => {
+    beforeAll(() => {
+      const projectPDJ = require("node_modules/gluestick/package.json");
+      projectPDJ.version = "1.13";
+      fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
+    });
+    it("should return base commands anyway", () => {
+      const options = cliTab("gluestick ");
+      expect(options).toEqual(expect.arrayContaining(PROJECT_COMMANDS));
+    });
+  });
   describe("when CWD is a gluestick project", () => {
-    beforeEach(() => {
+    beforeAll(() => {
+      const projectPDJ = require("node_modules/gluestick/package.json");
+      projectPDJ.version = "1.14";
+      completion.reload();
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
     });
     it("should return global commands", () => {
       const options = cliTab("gluestick ");
       expect(options).toEqual(PROJECT_COMMANDS);
     });
-    it("should work even if the project dependency is less than required", () => {
-      const projectPDJ = require("node_modules/gluestick/package.json");
-      projectPDJ.version = "1.13";
-      const options = cliTab("gluestick ");
-      expect(options).toEqual(expect.arrayContaining(PROJECT_COMMANDS));
-   });
+    it("should return options while typeing the base command", () => {
+      const options = cliTab("gluestick s");
+      expect(options).toEqual(PROJECT_COMMANDS);
+    });
   });
 
   describe("when CWD is _not_ a gluestick project", () => {
