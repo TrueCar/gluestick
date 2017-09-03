@@ -3,8 +3,8 @@
 /** for dev testing:
   source ../bin/completion.js && GS_COMP=$PWD
 */
-
-const path = require("path");
+const { join } = require("path");
+const { existsSync } = require("fs");
 
 function subcommand (command, words) {
   switch (command) {
@@ -23,21 +23,25 @@ function complete (cwd, words) {
  
   let options = [];
 
-  const bases = [
+  const global = [
+    "new",
+    "reinstall-dev",
+    "reset-hard",
+    "watch",
+  ];
+  const project = [
     "bin",
     "build",
     "destroy",
     "dockerize",
     "generate",
-    "new",
-    "reinstall-dev",
-    "reset-hard",
     "start",
     "start-client",
     "start-server",
     "test",
-    "watch",
   ];
+  
+  const bases = existsSync(join(cwd, "node_modules", ".bin", "gluestick")) ? project : global;
   
   if (words.length === 0){
     options = bases;
