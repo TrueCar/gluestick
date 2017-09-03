@@ -35,6 +35,7 @@ const CLI_COMMANDS = [
 ];
 
 const PROJECT_COMMANDS = [
+  "auto-upgrade",
   "bin",
   "build",
   "destroy",

@@ -56,18 +56,6 @@ commander.option('-l, --light', 'use light color schema for logging', () => {
 });
 
 commander
-  .command('new')
-  .description('generate a new application')
-  .arguments('<appName>')
-  .option('-d, --dev <path>', 'path to dev version of gluestick')
-  .option('-s, --skip-main', 'gluestick will not generate main app')
-  .action(
-    safelyExecCommand((...commandArguments) => {
-      require('../commands/new')(commandApi, commandArguments);
-    }),
-  );
-
-commander
   .command('generate <container|component|reducer|generator>')
   .description('generate a new entity from given template')
   .arguments('<name>')
