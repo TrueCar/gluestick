@@ -56,6 +56,7 @@ describe("gluestick-cli/src/completion.js", () => {
     beforeAll(() => {
       const projectPDJ = require("node_modules/gluestick/package.json");
       projectPDJ.version = "1.13";
+      completion.reload();
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
     });
     it("should return base commands anyway", () => {
@@ -78,6 +79,74 @@ describe("gluestick-cli/src/completion.js", () => {
       const options = cliTab("gluestick s");
       expect(options).toEqual(PROJECT_COMMANDS);
     });
+
+    describe("completing gluestick start", () => {
+
+      it("completes flags", () => {
+        const options = cliTab("gluestick start ");
+        expect(options).toEqual([
+          "-T", "--run-tests",
+          "-C", "--coverage",
+          "-E", "--entrypoints",
+          "-A", "--app",
+          "-L", "--log-level",
+          "-D", "--debug-server",
+          "-p", "--debug-port",
+          "-P", "--skip-build",
+          "-S", "--skip-dep-check"
+        ]);
+      });
+
+      it("completes entry points", () => {
+        const options = cliTab("gluestick start -E ");
+	const options2 = clieTabl("gluestick start -A ");
+	expect(options).toEqual(options2);
+	expect(options).toEqual([
+          // contents of entries.json
+	]);
+      });
+    });
+
+    describe("completing gluestick generate", () => {
+      it("completes arguments", () => {
+        const options = clieTab("gluestick generate ");
+        expect(options).toEqual([
+	  "container",
+	  "component",
+	  "reducer",
+	  "generator",
+        ]);
+      });
+      it("completes flags", () => {
+        const options = cliTab("gluestick generate container");
+        const options2 = cliTab("gluestick generate reducer");
+        const options3 = cliTab("gluestick generate generator");
+        expect(options).toEqual([
+          "-E", "--entrypoints",
+          "-A", "--app",
+          "-O", "--gen-options",
+        ]);
+      });
+      it("completes component flags", () => {
+        const options = cliTab("gluestick generate component");
+        expect(options).toEqual([
+          "-E", "--entrypoints",
+          "-A", "--app",
+          "-F", "--function", // but only for "component"
+          "-O", "--gen-options",
+        ]);
+      });
+
+      it("completes entry points", () => {
+        const options = cliTab("gluestick generate component -E ");
+	const options2 = clieTabl("gluestick generate component -A ");
+	expect(options).toEqual(options2);
+	expect(options).toEqual([
+          // contents of entries.json
+	]);
+      });
+    });
+
   });
 
   describe("when CWD is _not_ a gluestick project", () => {
