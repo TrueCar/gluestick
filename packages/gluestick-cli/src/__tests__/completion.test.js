@@ -1,10 +1,9 @@
 /* @flow */
 
 jest.mock("fs", () => {
-  const _fs = {
-    existsReturn: false,
-    existsSync: function(){ return _fs.existsReturn },
-  };
+  const _fs = require.requireActual("fs");
+  _fs.existsReturn = false;
+  _fs.existsSync = function(){ return _fs.existsReturn };
   return _fs;
 });
 const fs = require("fs");
