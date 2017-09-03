@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /** for dev testing:
-  source ../bin/completion.js && GS_COMP=$PWD
+  source ../bin/completion.sh && GS_COMP=$PWD
 */
 const { join } = require("path");
 const { existsSync } = require("fs");
