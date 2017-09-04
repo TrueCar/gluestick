@@ -13,4 +13,5 @@ if (!__dirname.startsWith(process.cwd())) {
 
 require('babel-polyfill');
 const commander = require('../build/cli').default;
+
 commander.parse(process.argv);
