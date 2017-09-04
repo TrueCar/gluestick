@@ -1,6 +1,7 @@
 /* @flow */
 
 jest.mock('fs', () => {
+  // $FlowIgnore:
   const _fs = require.requireActual('fs');
   _fs.existsReturn = false;
   _fs.existsSync = function() {
@@ -54,6 +55,7 @@ describe('gluestick-cli/src/completion.js', () => {
       const projectPDJ = require('node_modules/gluestick/package.json');
       projectPDJ.version = '1.13';
       completion.reload();
+      // $FlowIgnore:
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
     });
     it('should return base commands anyway', () => {
@@ -63,9 +65,11 @@ describe('gluestick-cli/src/completion.js', () => {
   });
   describe('when CWD is a gluestick project', () => {
     beforeAll(() => {
+      // $FlowIgnore:
       const projectPDJ = require('node_modules/gluestick/package.json');
       projectPDJ.version = '1.14';
       completion.reload();
+      // $FlowIgnore:
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
     });
     it('should return global commands', () => {
@@ -104,7 +108,7 @@ describe('gluestick-cli/src/completion.js', () => {
 
       it('completes entry points', () => {
         const options = cliTab('gluestick start -E ');
-        const options2 = clieTabl('gluestick start -A ');
+        const options2 = cliTab('gluestick start -A ');
         expect(options).toEqual(options2);
         expect(options).toEqual(
           [
@@ -153,7 +157,7 @@ describe('gluestick-cli/src/completion.js', () => {
 
       it('completes entry points', () => {
         const options = cliTab('gluestick generate component -E ');
-        const options2 = clieTabl('gluestick generate component -A ');
+        const options2 = cliTab('gluestick generate component -A ');
         expect(options).toEqual(options2);
         expect(options).toEqual(
           [
@@ -166,6 +170,7 @@ describe('gluestick-cli/src/completion.js', () => {
 
   describe('when CWD is _not_ a gluestick project', () => {
     beforeEach(() => {
+      // $FlowIgnore:
       fs.existsReturn = false; // ./node_modules/.bin/gluestick absent
     });
     it('should return project commands', () => {
