@@ -121,6 +121,7 @@ describe('gluestick-cli/src/completion.js', () => {
       it('completes entry points', () => {
         const options = cliTab('gluestick start -E ');
         const options2 = cliTab('gluestick start -A ');
+        const options3 = cliTab('gluestick start -A a');
         expect(options).toEqual(options2);
         expect(options).toEqual(
           Object.keys(entriesJson).map(appPath => entriesJson[appPath].name)
@@ -184,6 +185,8 @@ describe('gluestick-cli/src/completion.js', () => {
         expect(options3).toEqual(options);
         const options4 = cliTab('gluestick generate -E ');
         expect(options4).toEqual(options);
+        const options5 = cliTab('gluestick generate -E a');
+        expect(options5).toEqual(options);
         expect(options).toEqual(
 	  Object.keys(entriesJson).map(appPath => `apps${appPath}`)
         );

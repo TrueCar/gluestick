@@ -118,7 +118,8 @@ function subcommand(command, words) {
 	}
       } else {
         const last = words.slice(-1)[0];
-        if (appFlags.includes(last)){
+	const prev = words.slice(-2)[0];
+        if (appFlags.includes(last) || appFlags.includes(prev)){
           return apps;
 	} else if (last.match(/^-/)) {
 	  if (!words.includes("component")) {
