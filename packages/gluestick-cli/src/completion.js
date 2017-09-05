@@ -8,12 +8,30 @@ const { existsSync } = require('fs');
 const commanderGlobal = require('./cli').default;
 
 let commanderProject = null;
+let entriesJson = null;
 
 function commanderBases(commander) {
   return commander.commands
     .map(comm => comm._name)
     .filter(name => name !== '*')
     .sort();
+}
+
+function commanderArgs(commander, name) {
+  const command = commander.commands
+    .find(comm => comm._name === name);
+  return command ? command._args : [];    
+}
+
+function commanderOpts(commander, name) {
+  const command = commander.commands
+    .find(comm => comm._name === name);
+  return command ? 
+    command.options.reduce(
+      (opts, curr) => opts.concat([curr.short, curr.long]),
+      []
+    )
+    : [];
 }
 
 function loadCommanderProject(cwd) {
@@ -51,16 +69,73 @@ function loadCommanderProject(cwd) {
       try {
         const reqPath = join(cwd, 'node_modules', 'gluestick', 'build', 'cli');
         commanderProject = require(reqPath).default;
+	////console.log(commanderProject.commands.find(c => c._name === "generate"));
       } catch (e) {}
     }
   }
   return commanderProject;
 }
 
+function loadEntries(cwd) {
+  if (!entriesJson) {
+    entriesJson = {};
+    try {
+      const reqPath = join(cwd, 'src', 'entries.json');
+      entriesJson = require(reqPath);
+    } catch (e) {}
+  }
+}
+
 function subcommand(command, words) {
+  const args = commanderArgs(commanderProject, command);
+  const opts = commanderOpts(commanderProject, command);
+  const appFlags = ['-E', '--entryPoints', '-A', '--app'];
+  let apps;
+  //console.log(command, "stuff", words, args);
   switch (command) {
     case 'generate':
-      return ['component', 'container', 'reducer', 'generator'];
+      apps = Object.keys(entriesJson).map(appPath => `apps${appPath}`);
+      const genArg = args.length ? args[0].name.split("|") : [];
+      if (words.length === 0) {
+        return genArg;
+      } else if (words.length === 1 ) {
+        if ( genArg.includes(words[0]) ){
+	  if (words[0] !== "component") {
+            opts.splice(opts.indexOf('-F'), 1)
+	    opts.splice(opts.indexOf('--functional'), 1);
+	  }
+          return opts;
+	} else if (appFlags.includes(words[0])) {
+          return apps;
+	} else if (opts.includes(words[0])) {
+	  const i = opts.indexOf(words[0]);
+	  words[0].match('^--') ? opts.splice(i - 1, 2) : opts.splice(i, 2);
+          return opts;
+	} else if (words[0].match(/^-/)) {
+          return opts;
+	} else {
+	  return genArg;
+	}
+      } else {
+        const last = words.slice(-1)[0];
+        if (appFlags.includes(last)){
+          return apps;
+	} else if (last.match(/^-/)) {
+	  if (!words.includes("component")) {
+            opts.splice(opts.indexOf('-F'), 1)
+	    opts.splice(opts.indexOf('--functional'), 1);
+	  }
+          return opts;
+	} else {
+          return genArg;
+	}
+      }
+    case 'start':
+      apps = Object.keys(entriesJson).map(appPath => entriesJson[appPath].name);
+      if (words.length === 1 && appFlags.includes(words[0])) {
+        return apps;
+      }
+      return opts;
     default:
       return [];
   }
@@ -68,12 +143,14 @@ function subcommand(command, words) {
 
 function complete(cwd, words) {
   let options = [];
-
-  const bases = commanderBases(
-    existsSync(join(cwd, 'node_modules', '.bin', 'gluestick'))
+  const local = existsSync(join(cwd, 'node_modules', '.bin', 'gluestick'));
+  const bases = commanderBases( local
       ? loadCommanderProject(cwd)
       : commanderGlobal,
   );
+  if (local) { 
+    loadEntries(cwd);
+  }
 
   if (words.length === 0) {
     options = bases;

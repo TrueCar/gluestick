@@ -21,7 +21,19 @@ jest.mock(
   () => require('../../../gluestick/src/cli'),
   { virtual: true },
 );
-
+const entriesJson = {
+  "/app1Path": {
+    name: "app1"
+  },
+  "/app2Path2": { 
+    name: "app2"
+  },
+};
+jest.mock(
+  'src/entries.json',
+  () => entriesJson,
+  { virtual: true},
+);
 const completion = require('../completion');
 
 const cliTab = (line, cwd = '.') => {
@@ -111,9 +123,7 @@ describe('gluestick-cli/src/completion.js', () => {
         const options2 = cliTab('gluestick start -A ');
         expect(options).toEqual(options2);
         expect(options).toEqual(
-          [
-            // contents of entries.json
-          ],
+          Object.keys(entriesJson).map(appPath => entriesJson[appPath].name)
         );
       });
     });
@@ -121,20 +131,27 @@ describe('gluestick-cli/src/completion.js', () => {
     describe('completing gluestick generate', () => {
       it('completes arguments', () => {
         const options = cliTab('gluestick generate ');
+        const options2 = cliTab('gluestick generate c');
+	expect(options2).toEqual(options);
         expect(options).toEqual([
-          'component',
           'container',
+          'component',
           'reducer',
           'generator',
         ]);
       });
       it('completes flags', () => {
+      
         const options = cliTab('gluestick generate container ');
         const options2 = cliTab('gluestick generate reducer ');
+	expect(options2).toEqual(options);
         const options3 = cliTab('gluestick generate generator ');
+	expect(options3).toEqual(options);
+        const options4 = cliTab('gluestick generate container -');
+	expect(options4).toEqual(options);
         expect(options).toEqual([
           '-E',
-          '--entrypoints',
+          '--entrypoint',
           '-A',
           '--app',
           '-O',
@@ -142,14 +159,18 @@ describe('gluestick-cli/src/completion.js', () => {
         ]);
       });
       it('completes component flags', () => {
-        const options = cliTab('gluestick generate component');
+        const options = cliTab('gluestick generate component ');
+        const options2 = cliTab('gluestick generate component -');
+	expect(options2).toEqual(options);
+	const options3 = cliTab('gluestick generate -');
+	expect(options3).toEqual(options);
         expect(options).toEqual([
           '-E',
-          '--entrypoints',
+          '--entrypoint',
           '-A',
           '--app',
           '-F',
-          '--function', // but only for "component"
+          '--functional', // but only for "component"
           '-O',
           '--gen-options',
         ]);
@@ -158,11 +179,13 @@ describe('gluestick-cli/src/completion.js', () => {
       it('completes entry points', () => {
         const options = cliTab('gluestick generate component -E ');
         const options2 = cliTab('gluestick generate component -A ');
-        expect(options).toEqual(options2);
+        expect(options2).toEqual(options);
+        const options3 = cliTab('gluestick generate -A ');
+        expect(options3).toEqual(options);
+        const options4 = cliTab('gluestick generate -E ');
+        expect(options4).toEqual(options);
         expect(options).toEqual(
-          [
-            // contents of entries.json
-          ],
+	  Object.keys(entriesJson).map(appPath => `apps${appPath}`)
         );
       });
     });
