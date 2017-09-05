@@ -52,7 +52,7 @@ function loadCommanderProject(cwd) {
     ];
     // set this default in case reflection fails.
     commanderProject = {
-      commands: project.map(command => ({ _name: command })),
+      commands: project.map(command => ({ _name: command, options: [], _args: [] })),
     };
     let localInstalledVersion = 'n/a';
     try {
