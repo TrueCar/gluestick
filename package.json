@@ -16,6 +16,7 @@
     "build": "node ./scripts/build.js"
   },
   "dependencies": {
+    "flow-typed": "2.1.5",
     "jest": "20.0.4",
     "lerna": "2.0.0-rc.5"
   },
