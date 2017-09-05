@@ -18,19 +18,17 @@ function commanderBases(commander) {
 }
 
 function commanderArgs(commander, name) {
-  const command = commander.commands
-    .find(comm => comm._name === name);
-  return command ? command._args : [];    
+  const command = commander.commands.find(comm => comm._name === name);
+  return command ? command._args : [];
 }
 
 function commanderOpts(commander, name) {
-  const command = commander.commands
-    .find(comm => comm._name === name);
-  return command ? 
-    command.options.reduce(
-      (opts, curr) => opts.concat([curr.short, curr.long]),
-      []
-    )
+  const command = commander.commands.find(comm => comm._name === name);
+  return command
+    ? command.options.reduce(
+        (opts, curr) => opts.concat([curr.short, curr.long]),
+        [],
+      )
     : [];
 }
 
@@ -52,13 +50,19 @@ function loadCommanderProject(cwd) {
     ];
     // set this default in case reflection fails.
     commanderProject = {
-      commands: project.map(command => ({ _name: command, options: [], _args: [] })),
+      commands: project.map(command => ({
+        _name: command,
+        options: [],
+        _args: [],
+      })),
     };
     let localInstalledVersion = 'n/a';
     try {
       const reqPath = join(cwd, 'node_modules', 'gluestick', 'package.json');
       localInstalledVersion = require(reqPath).version;
-    } catch (e) {}
+    } catch (e) {
+      // noop
+    }
     // If we attempt to require() the cli before this version, we will execute this line:
     // commander.parse(process.argv)
     // ...which would be very bad.  So only require this file if gluestick has been updated.
@@ -69,8 +73,10 @@ function loadCommanderProject(cwd) {
       try {
         const reqPath = join(cwd, 'node_modules', 'gluestick', 'build', 'cli');
         commanderProject = require(reqPath).default;
-	////console.log(commanderProject.commands.find(c => c._name === "generate"));
-      } catch (e) {}
+        // //console.log(commanderProject.commands.find(c => c._name === "generate"));
+      } catch (e) {
+        // noop
+      }
     }
   }
   return commanderProject;
@@ -82,7 +88,9 @@ function loadEntries(cwd) {
     try {
       const reqPath = join(cwd, 'src', 'entries.json');
       entriesJson = require(reqPath);
-    } catch (e) {}
+    } catch (e) {
+      // noop
+    }
   }
 }
 
@@ -91,46 +99,44 @@ function subcommand(command, words) {
   const opts = commanderOpts(commanderProject, command);
   const appFlags = ['-E', '--entryPoints', '-A', '--app'];
   let apps;
-  //console.log(command, "stuff", words, args);
+  // console.log(command, "stuff", words, args);
   switch (command) {
-    case 'generate':
+    case 'generate': // eslint-disable-line no-case-declarations
       apps = Object.keys(entriesJson).map(appPath => `apps${appPath}`);
-      const genArg = args.length ? args[0].name.split("|") : [];
+      const genArg = args.length ? args[0].name.split('|') : [];
       if (words.length === 0) {
         return genArg;
-      } else if (words.length === 1 ) {
-        if ( genArg.includes(words[0]) ){
-	  if (words[0] !== "component") {
-            opts.splice(opts.indexOf('-F'), 1)
-	    opts.splice(opts.indexOf('--functional'), 1);
-	  }
+      } else if (words.length === 1) {
+        if (genArg.includes(words[0])) {
+          if (words[0] !== 'component') {
+            opts.splice(opts.indexOf('-F'), 1);
+            opts.splice(opts.indexOf('--functional'), 1);
+          }
           return opts;
-	} else if (appFlags.includes(words[0])) {
+        } else if (appFlags.includes(words[0])) {
           return apps;
-	} else if (opts.includes(words[0])) {
-	  const i = opts.indexOf(words[0]);
-	  words[0].match('^--') ? opts.splice(i - 1, 2) : opts.splice(i, 2);
+        } else if (opts.includes(words[0])) {
+          const i = opts.indexOf(words[0]);
+          words[0].match('^--') ? opts.splice(i - 1, 2) : opts.splice(i, 2); // eslint-disable-line no-unused-expressions
           return opts;
-	} else if (words[0].match(/^-/)) {
+        } else if (words[0].match(/^-/)) {
           return opts;
-	} else {
-	  return genArg;
-	}
-      } else {
-        const last = words.slice(-1)[0];
-	const prev = words.slice(-2)[0];
-        if (appFlags.includes(last) || appFlags.includes(prev)){
-          return apps;
-	} else if (last.match(/^-/)) {
-	  if (!words.includes("component")) {
-            opts.splice(opts.indexOf('-F'), 1)
-	    opts.splice(opts.indexOf('--functional'), 1);
-	  }
-          return opts;
-	} else {
-          return genArg;
-	}
+        }
+        return genArg;
       }
+      const last = words.slice(-1)[0];
+      const prev = words.slice(-2)[0];
+      if (appFlags.includes(last) || appFlags.includes(prev)) {
+        return apps;
+      } else if (last.match(/^-/)) {
+        if (!words.includes('component')) {
+          opts.splice(opts.indexOf('-F'), 1);
+          opts.splice(opts.indexOf('--functional'), 1);
+        }
+        return opts;
+      }
+      return genArg;
+
     case 'start':
       apps = Object.keys(entriesJson).map(appPath => entriesJson[appPath].name);
       if (words.length === 1 && appFlags.includes(words[0])) {
@@ -145,11 +151,10 @@ function subcommand(command, words) {
 function complete(cwd, words) {
   let options = [];
   const local = existsSync(join(cwd, 'node_modules', '.bin', 'gluestick'));
-  const bases = commanderBases( local
-      ? loadCommanderProject(cwd)
-      : commanderGlobal,
+  const bases = commanderBases(
+    local ? loadCommanderProject(cwd) : commanderGlobal,
   );
-  if (local) { 
+  if (local) {
     loadEntries(cwd);
   }
 
