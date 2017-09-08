@@ -8,7 +8,8 @@ import type {
 } from '../../types';
 
 const parseURL = require('url').parse;
-const isChildPath = require('./isChildPath');
+const parseRoutePath = require('./parseRoutePath');
+
 /**
  * Sort through all of the entry points based on the number of `/` characters
  * found in the url. It will test the most deeply nested entry points first
@@ -46,7 +47,7 @@ module.exports = (
   const entryName:
     | string
     | void = sortedEntries.find((entryPath: string): boolean => {
-    return isChildPath(entryPath, urlPath || '');
+    return parseRoutePath(entryPath).test(urlPath || '');
   });
 
   if (entryName) {
