@@ -197,7 +197,7 @@ const getConfig = (
         ),
         name: '[name]_[hash]',
       }),
-    ].concat(noProgress ? {} : progressHandler(logger, 'vendor')),
+    ].concat(noProgress ? [] : [progressHandler(logger, 'vendor')]),
     bail: true,
   };
 
