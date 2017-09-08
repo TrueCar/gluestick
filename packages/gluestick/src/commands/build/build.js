@@ -25,7 +25,6 @@ module.exports = (
   const logger: Logger = getLogger();
   logger.clear();
   logger.printCommandInfo();
-  console.log(options.progress);
   const compilationErrorHandler = (type: string) => error => {
     logger.clear();
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
