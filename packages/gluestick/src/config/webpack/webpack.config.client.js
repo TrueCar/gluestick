@@ -26,7 +26,10 @@ module.exports = (
   gluestickConfig: GSConfig,
   entries: Object,
   runtimePlugins: Object[],
-  { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
+  {
+    skipEntryGeneration,
+    noProgress,
+  }: { skipEntryGeneration: boolean, noProgress: boolean } = {},
 ): UniversalWebpackConfigurator => {
   const config = deepClone(configuration);
   // https://webpack.github.io/docs/multiple-entry-points.html
@@ -54,9 +57,12 @@ module.exports = (
       /\.server(\.js)?$/,
       path.join(__dirname, './mocks/serverFileMock.js'),
     ),
-    progressHandler(logger, 'client'),
     new DuplicatePackageChecker(),
   );
+
+  if (!noProgress) {
+    config.plugins.push(progressHandler(logger, 'client'));
+  }
 
   // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
   const vendorDllManifestPath: string = path.join(

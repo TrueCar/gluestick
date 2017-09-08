@@ -143,6 +143,7 @@ commander
     'skip vendor DLL recompilation if the bundle is valid',
   )
   .option('-Z, --static [url]', 'prepare html file for static hosting')
+  .option('--no-progress', 'disable progress indicator')
   .action(
     safelyExecCommand((...commandArguments) => {
       require('../commands/build')(commandApi, commandArguments);

@@ -90,12 +90,13 @@ describe('config/vendorDll', () => {
           { vendorSourcePath: 'non-existent' },
         ),
         [],
+        true,
       );
       expect(fatalLogFn).toHaveBeenCalledTimes(1);
     });
 
     it('should return base config', () => {
-      const baseConfig = vendorDll.getConfig(getMockedConext(), []);
+      const baseConfig = vendorDll.getConfig(getMockedConext(), [], true);
       expect(baseConfig).toBeDefined();
       expect(baseConfig).not.toBeNull();
     });

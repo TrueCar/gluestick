@@ -152,6 +152,7 @@ const injectValidationMetadata = ({ logger, config }: CLIContext): void => {
 const getConfig = (
   { logger, config }: CLIContext,
   plugins: ConfigPlugin[],
+  noProgress: boolean,
 ): WebpackConfig => {
   // TODO: check if loaders are necessary, bundle CSS/SASS
   const appRoot: string = process.cwd();
@@ -196,8 +197,7 @@ const getConfig = (
         ),
         name: '[name]_[hash]',
       }),
-      progressHandler(logger, 'vendor'),
-    ],
+    ].concat(noProgress ? [] : [progressHandler(logger, 'vendor')]),
     bail: true,
   };
 

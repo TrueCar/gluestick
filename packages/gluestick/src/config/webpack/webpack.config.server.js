@@ -16,7 +16,10 @@ module.exports = (
   gluestickConfig: GSConfig,
   entries: Object,
   runtimeAndServerPlugins: Object[],
-  { skipEntryGeneration }: { skipEntryGeneration: boolean } = {},
+  {
+    skipEntryGeneration,
+    noProgress,
+  }: { skipEntryGeneration: boolean, noProgress: boolean } = {},
 ): WebpackConfig => {
   if (!skipEntryGeneration) {
     buildServerEntries(
@@ -64,7 +67,9 @@ module.exports = (
     process.cwd(),
     gluestickConfig.cachingConfigPath,
   );
-  config.plugins.push(progressHandler(logger, 'server'));
+  if (!noProgress) {
+    config.plugins.push(progressHandler(logger, 'server'));
+  }
   config.plugins.push(
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
