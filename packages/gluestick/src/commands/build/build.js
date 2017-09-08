@@ -13,6 +13,7 @@ type CommandOptions = {
   static: boolean | string;
   vendor: boolean;
   skipIfOk: boolean;
+  progress: boolean,
   app?: string;
 }
 
@@ -24,7 +25,7 @@ module.exports = (
   const logger: Logger = getLogger();
   logger.clear();
   logger.printCommandInfo();
-
+  console.log(options.progress);
   const compilationErrorHandler = (type: string) => error => {
     logger.clear();
     logger.fatal(`${type[0].toUpperCase()}${type.slice(1)} compilation failed`, error);
@@ -71,7 +72,7 @@ module.exports = (
       GSConfig: getGluestickConfig(logger, plugins),
       webpackConfig: {} // Don't need client and server configs, since we will add vendor config
     };
-    const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins);
+    const vendorDllConfig = vendorDll.getConfig({ logger, config }, plugins, !options.progress);
     config.webpackConfig.vendor = vendorDllConfig;
     if (!options.skipIfOk || !vendorDll.isValid({ logger, config })) {
       clearBuildDirectory(config.GSConfig, 'client');
@@ -84,7 +85,7 @@ module.exports = (
         .catch(compilationErrorHandler('vendor'));
     }
   } else {
-    const config = getContextConfig(logger, webpackOptions);
+    const config = getContextConfig(logger, webpackOptions, !options.progress);
     let clientCompilation = Promise.resolve();
     if (options.client) {
       if (!options.app) {

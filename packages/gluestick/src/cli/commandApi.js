@@ -72,18 +72,20 @@ const getWebpackConfig = (
 };
 
 // Compile both gluestick config and webpack configs
-const getContextConfig = (logger: Logger, webpackOptions = {}): Config => {
+const getContextConfig = (
+  logger: Logger,
+  webpackOptions = {},
+  noProgress: boolean,
+): Config => {
   const plugins = getPlugins(logger);
   const gluestickConfig = getGluestickConfig(logger, plugins);
 
   return {
     GSConfig: gluestickConfig,
-    webpackConfig: getWebpackConfig(
-      logger,
-      plugins,
-      gluestickConfig,
-      webpackOptions,
-    ),
+    webpackConfig: getWebpackConfig(logger, plugins, gluestickConfig, {
+      ...webpackOptions,
+      noProgress,
+    }),
   };
 };
 
