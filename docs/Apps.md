@@ -27,7 +27,8 @@ The file's schema looks like this:
   }
 ```
 
-- `key`: URL-like entry name for example `/vehicles`, must be kebab-case and __match top-level route__ `path` __property in specified routes__
+- `key`: URL-like entry name for example `/vehicles` (must be kebab-case and __match top-level route__ `path` __property in specified routes__),
+  express like path for example `/:make/:model` __or__ a regexp for example `/\/vehicle\/.*\/review$/`.
 - `name`: A custom, user-friendly entry name (optional), must be camelCase
 - `component`: The path to the root entry component.
 - `routes`: The path to the routes declaration file.
