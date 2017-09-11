@@ -43,6 +43,7 @@ const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
+const parseRoutePath = require('./helpers/parseRoutePath');
 
 const envVariables: string[] =
   process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
@@ -114,7 +115,7 @@ module.exports = ({ config, logger }: Context) => {
     // Use SSR middleware only for entries/app routes
     if (
       !Object.keys(entries).find((key: string): boolean =>
-        req.url.startsWith(key),
+        parseRoutePath(key).test(req.url),
       )
     ) {
       next();
