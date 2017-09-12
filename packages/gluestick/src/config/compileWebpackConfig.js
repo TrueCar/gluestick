@@ -30,6 +30,7 @@ type CompilationOptions = {
   skipClientEntryGeneration: boolean,
   skipServerEntryGeneration: boolean,
   entryOrGroupToBuild?: string,
+  noProgress: boolean,
 };
 
 module.exports = (
@@ -40,6 +41,7 @@ module.exports = (
     skipClientEntryGeneration,
     skipServerEntryGeneration,
     entryOrGroupToBuild,
+    noProgress,
   }: CompilationOptions = {},
 ): CompiledConfig => {
   const env: string = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
@@ -101,7 +103,7 @@ module.exports = (
     gluestickConfig,
     entries,
     runtimePlugins,
-    { skipEntryGeneration: skipClientEntryGeneration },
+    { skipEntryGeneration: skipClientEntryGeneration, noProgress },
   );
   // Get client env specific webpack config.
   const clientEnvConfig: WebpackConfig = require(`./webpack/webpack.config.client.${env}`)(
@@ -130,7 +132,7 @@ module.exports = (
     gluestickConfig,
     entries,
     runtimeAndServerPlugins,
-    { skipEntryGeneration: skipServerEntryGeneration },
+    { skipEntryGeneration: skipServerEntryGeneration, noProgress },
   );
   // Get server env specific webpack config.
   const serverEnvConfig: WebpackConfig = require(`./webpack/webpack.config.server.${env}`)(

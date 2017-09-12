@@ -117,6 +117,7 @@ Available options:
 * `-A, --app` - Build only specific app or a group of them
 * `-D, --vendor` - Build Vendor DLL bundle
 * `-B, --skip-if-ok` - Skip vendor DLL recompilation if the bundle is valid
+* `--no-progress` - Disable progress indicator
 
 ### `gluestick bin`
 

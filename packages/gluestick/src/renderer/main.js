@@ -14,6 +14,11 @@ import type {
   BaseLogger,
 } from '../types';
 
+// Intentionally first require so things like require("newrelic") in
+// preInitHook get instantiated before anything else. This improves profiling
+// $FlowIgnore
+const projectHooks = require('gluestick-hooks').default;
+
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -28,8 +33,6 @@ const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
 // $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;
-// $FlowIgnore
-const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
@@ -43,6 +46,7 @@ const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
+const parseRoutePath = require('./helpers/parseRoutePath');
 
 const envVariables: string[] =
   process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
@@ -114,7 +118,7 @@ module.exports = ({ config, logger }: Context) => {
     // Use SSR middleware only for entries/app routes
     if (
       !Object.keys(entries).find((key: string): boolean =>
-        req.url.startsWith(key),
+        parseRoutePath(key).test(req.url),
       )
     ) {
       next();
