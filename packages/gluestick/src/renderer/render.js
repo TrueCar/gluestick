@@ -37,7 +37,7 @@ type AssetsCacheOpts = {
   cacheManager: Object,
 };
 
-module.exports = function renderOutput(
+module.exports = function render(
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
