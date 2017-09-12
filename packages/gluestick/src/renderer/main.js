@@ -14,6 +14,10 @@ import type {
   BaseLogger,
 } from '../types';
 
+// Intentionally first require so things like require("newrelic") in
+// preInitHook get instantiated before anything else. This improves profiling
+const projectHooks = require('gluestick-hooks').default;
+
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -29,7 +33,6 @@ const entriesConfig = require('project-entries-config');
 // $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;
 // $FlowIgnore
-const projectHooks = require('gluestick-hooks').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
