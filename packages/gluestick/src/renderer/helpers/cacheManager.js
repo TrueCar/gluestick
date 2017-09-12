@@ -29,7 +29,10 @@ const getCacheKey = ({
   return `${hostname}${url}`;
 };
 
-module.exports = (logger: BaseLogger, isProduction: boolean): CacheManager => {
+module.exports = function createCacheManager(
+  logger: BaseLogger,
+  isProduction: boolean,
+): CacheManager {
   const enableComponentCaching: EnableComponentCaching = config => {
     if (isProduction && config && config.components) {
       // only enable caching if componentCacheConfig has an object

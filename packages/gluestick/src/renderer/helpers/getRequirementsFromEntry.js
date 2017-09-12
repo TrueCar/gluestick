@@ -31,11 +31,11 @@ const getSortedEntries = (entries: Entries): string[] => {
  * variables that the server needs to render. These variables include Index,
  * store, getRoutes and fileName.
  */
-module.exports = (
+module.exports = function renderRequirements(
   { logger }: Context,
   req: Request,
   entries: Entries,
-): RenderRequirements => {
+): RenderRequirements {
   const { path: urlPath } = parseURL(req.url);
   const sortedEntries: string[] = getSortedEntries(entries);
 

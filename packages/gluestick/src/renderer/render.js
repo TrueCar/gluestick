@@ -37,7 +37,7 @@ type AssetsCacheOpts = {
   cacheManager: Object,
 };
 
-module.exports = (
+module.exports = function renderOutput(
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
@@ -51,7 +51,7 @@ module.exports = (
   }: WrappersRequirements,
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
-): RenderOutput => {
+): RenderOutput {
   const { styleTags, scriptTags } = linkAssets(
     context,
     entryName,
