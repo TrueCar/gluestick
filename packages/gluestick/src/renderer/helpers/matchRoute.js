@@ -10,7 +10,7 @@ module.exports = function matchRoute(
   getRoutes: (store: Object, httpClient: Object) => Object,
   store: Object,
   httpClient: Object,
-) {
+): Promise<*> {
   return new Promise((resolve, reject) => {
     const routes: Object = prepareRoutesWithTransitionHooks(
       getRoutes(store, httpClient),

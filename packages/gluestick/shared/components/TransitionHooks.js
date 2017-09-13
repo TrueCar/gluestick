@@ -8,7 +8,7 @@ type Props = {
   routes: Object[],
 };
 
-export default class TransitionHooks extends Component<void, Props, void> {
+export default class TransitionHooks extends Component<Props, void> {
   static contextTypes = {
     router: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,

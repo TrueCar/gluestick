@@ -24,7 +24,7 @@ type State = {
   mounted: boolean,
 };
 
-export default class Root extends Component<DefaultProps, Props, State> {
+export default class Root extends Component<Props, State> {
   static propTypes = {
     /* eslint-disable */
     routes: PropTypes.object,
@@ -70,7 +70,7 @@ export default class Root extends Component<DefaultProps, Props, State> {
     );
   }
 
-  _renderRouter(props: Props): Object | Component<*, *, *> {
+  _renderRouter(props: Props): Object | Component<*, *> {
     // server rendering
     if (props.routerContext) return props.routerContext;
 

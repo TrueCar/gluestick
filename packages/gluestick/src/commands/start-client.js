@@ -32,7 +32,7 @@ module.exports = (
   { printCommandInfo }: { printCommandInfo: boolean } = {
     printCommandInfo: true,
   },
-) =>
+): Promise<*> =>
   new Promise((resolve, reject) => {
     const { getLogger, getContextConfig, getOptions } = commandApi;
     const logger: Logger = getLogger();
