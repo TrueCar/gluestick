@@ -2,7 +2,10 @@
 
 const { ROUTE_NAME_404_NOT_FOUND } = require('../../../shared');
 
-module.exports = (store: Object, currentRoute: Object): number => {
+module.exports = function getStatusCode(
+  store: Object,
+  currentRoute: Object,
+): number {
   const state = store.getState();
   // Check if status code was set in redux
   if (
