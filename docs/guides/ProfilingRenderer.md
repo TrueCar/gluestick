@@ -2,7 +2,7 @@
 
 __Requirements: node 8.4.0+__
 
-In order to start profiling gluestick renderer (aka server), you need to capture the profile information firstly. Do do so follow the following steps:
+In order to start profiling gluestick renderer (aka server), the first thing you need to do is to capture the profile information firstly. Just follow these steps:
 
 1. Run `gluestick start-client` command.
 
@@ -33,7 +33,7 @@ You should see the profile chart now.
 
 Now you can see the trace and the time spent on each function call, so you can analyse, pinpoint the expensive functions and optimise them.
 
-__Tip:__ By clicking on the function call in the chart, you will be redirected to it's source.
+__Tip:__ By clicking on the function call in the chart, you will be redirected to its source.
 
 ## Other resources
 
