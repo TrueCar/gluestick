@@ -2,11 +2,11 @@
 
 __Requirements: node 8.4.0+__
 
-In order to start profiling gluestick renderer (aka server), the first thing you need to do is to capture the profile information firstly. Just follow these steps:
+In order to start profiling gluestick renderer (aka server), the first thing you need to do is to capture the profile information. Just follow these steps:
 
 1. Run `gluestick start-client` command.
 
-3. Run `gluestick start-server -D` command in separate terminal/tab.
+3. Run `gluestick start-server -D` command in a separate terminal/tab.
     > `-D` flag is used to run the server in debug mode.
 
 3. Open __Chrome Dev Tools__ (`cmd + alt + i` on MacOS)
@@ -19,7 +19,7 @@ In order to start profiling gluestick renderer (aka server), the first thing you
 
     ![Record profile](./img/record-profile.png)
 
-6. Open desired page served by GlueStick in a browser, for instance `http://localhost:8880`.
+6. Open the desired page served by GlueStick in a browser, for instance `http://localhost:8880`.
 
 7. Stop recording after the page is loaded.
 
