@@ -83,7 +83,11 @@ export function parse(cookieString: string): Object[] {
         c = new Cookie();
       }
       c.name = k;
-      c.value = v && decodeURIComponent(v);
+      try {
+        c.value = v && decodeURIComponent(v);
+      } catch (e) {
+        // NOOP
+      }
     }
   });
   cookies.push(c);
