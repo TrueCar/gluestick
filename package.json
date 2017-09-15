@@ -52,6 +52,6 @@
     "transform": {
       "\\.js$": "<rootDir>/jestTransform.js"
     },
-    "testRegex": "src/(.*/)?__tests__/.*\\.test\\.js$"
+    "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$"
   }
 }
