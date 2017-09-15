@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-radium",
-  "version": "1.13.6",
+  "version": "1.13.7",
   "description": "Plugin for supporting Radium in GlueStick project",
   "main": "build/runtime.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -12,14 +12,14 @@
     "url": "git@github.com:TrueCar/gluestick.git"
   },
   "peerDependencies": {
-    "gluestick": "1.13.6",
+    "gluestick": "1.13.7",
     "react": "15.x"
   },
   "dependencies": {
     "radium": "0.18.1"
   },
   "devDependencies": {
-    "gluestick": "1.13.6",
+    "gluestick": "1.13.7",
     "react": "15.4.2"
   }
 }
