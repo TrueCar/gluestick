@@ -18,7 +18,7 @@ module.exports = function parseRoutePath(routePath: string): PathRegexp {
   }
 
   const keys = [];
-  const results = pathToRegexp(routePath, keys);
+  const results = pathToRegexp(routePath, keys, { end: false });
   results.keys = keys;
   return results;
 };

@@ -27,4 +27,12 @@ describe('renderer/helpers/parseRoutePath', () => {
     testPath('/:var', ['/test'], ['/']);
     testPath('/test/:var', ['/test/index'], ['/', '/test']);
   });
+
+  it('should match routes that begin with regex on non regex paths', () => {
+    testPath(
+      '/x',
+      ['/x/123', '/x', '/x/123/abc/whatever'],
+      ['/', '/t', '/test1'],
+    );
+  });
 });
