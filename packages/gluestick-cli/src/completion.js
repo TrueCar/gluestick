@@ -94,7 +94,7 @@ function loadEntries(cwd) {
   }
 }
 
-function subcommand(command, words) {
+function projectSubcommand(command, words) {
   const args = commanderArgs(commanderProject, command);
   const opts = commanderOpts(commanderProject, command);
   const appFlags = ['-E', '--entryPoints', '-A', '--app'];
@@ -139,12 +139,75 @@ function subcommand(command, words) {
 
     case 'start':
       apps = Object.keys(entriesJson).map(appPath => entriesJson[appPath].name);
-      if (words.length === 1 && appFlags.includes(words[0])) {
+      if (words.length === 0) {
+        return opts;
+      } else if (words.length === 1 && appFlags.includes(words[0])) {
+        return apps;
+      } else if (appFlags.includes(words.slice(-2)[0])) {
         return apps;
       }
       return opts;
     default:
+      return opts;
+  }
+}
+
+function globalSubcommand(command, words) {
+  const args = commanderArgs(commanderGlobal, command);
+  const opts = commanderOpts(commanderGlobal, command);
+  const requiredCount = args.reduce(
+    (count, arg) => (arg.required ? count + 1 : count),
+    0,
+  );
+  let satisfiedCount = 0;
+  //  console.log("opts and args", opts, args);
+  switch (command) {
+    case 'new': // eslint-disable-line no-case-declarations
+      if (words.length === 0) {
+        return []; // appname required
+      }
+      for (let i = 0; i < words.length; ++i) {
+        if (words[i].match(/^-/)) {
+          if (words[i] === '-d') {
+            i++;
+          } else {
+            satisfiedCount++;
+          }
+        } else {
+          satisfiedCount++;
+        }
+      }
+
+      const word = words.pop();
+      const devs = ['-d', '--dev'];
+      if (
+        devs.includes(word) ||
+        (words.length && devs.includes(words.slice(-1)))
+      ) {
+        // completing a relative path
+        return [];
+      } else if (
+        words.reduce((devComplete, w) => devs.includes(w) || devComplete, false)
+      ) {
+        // --dev and option specified; complete others
+        opts.splice(opts.indexOf('-d'), 2); // eslint-disable-line no-unused-expression;
+      }
+
+      if (opts.includes(word)) {
+        // include required value
+        const i = opts.indexOf(word);
+        word.match('^--') ? opts.splice(i - 1, 2) : opts.splice(i, 2); // eslint-disable-line no-unused-expressions
+        return opts;
+      } else if (word.match(/^-/)) {
+        return opts;
+      } else if (satisfiedCount === requiredCount) {
+        return opts;
+      }
+
       return [];
+
+    default:
+      return opts;
   }
 }
 
@@ -157,6 +220,8 @@ function complete(cwd, words) {
   if (local) {
     loadEntries(cwd);
   }
+
+  const subcommand = local ? projectSubcommand : globalSubcommand;
 
   if (words.length === 0) {
     options = bases;

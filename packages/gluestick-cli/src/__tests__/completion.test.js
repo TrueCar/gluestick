@@ -199,5 +199,29 @@ describe('gluestick-cli/src/completion.js', () => {
       const options = cliTab('gluestick ');
       expect(options).toEqual(CLI_COMMANDS);
     });
+
+    describe('completing gluestick new', () => {
+      const flags = ['-d', '--dev', '-s', '--skip-main', '-n', '--npm'];
+      it('expects appname argument', () => {
+        const options = cliTab('gluestick new ');
+        expect(options).toEqual([]);
+      });
+      it('completes flags', () => {
+        const options = cliTab('gluestick new -');
+        expect(options).toEqual(flags);
+      });
+      it('does not suggest previous option', () => {
+        const options = cliTab('gluestick new -s ');
+        expect(options).toEqual(['-d', '--dev', '-n', '--npm']);
+      });
+      it('completes flags after appname is specified', () => {
+        const options = cliTab('gluestick new appyapp ');
+        expect(options).toEqual(flags);
+      });
+      it('expects value after -d', () => {
+        const options = cliTab('gluestick new appyapp -d ');
+        expect(options).toEqual([]);
+      });
+    });
   });
 });
