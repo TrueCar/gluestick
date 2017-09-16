@@ -241,7 +241,7 @@ function complete(cwd, words) {
   const local = existsSync(join(cwd, 'node_modules', '.bin', 'gluestick'));
   const bases = commanderBases(
     local ? loadCommanderProject(cwd) : commanderGlobal,
-  );
+  ).filter(name => name.indexOf('_') !== 0);
   if (local) {
     loadEntries(cwd);
   }
