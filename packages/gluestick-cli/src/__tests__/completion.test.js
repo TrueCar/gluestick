@@ -1,5 +1,15 @@
 /* @flow */
 
+const entriesJson = {
+  '/app1Path': {
+    name: 'app1',
+    component: '/src/apps/app-1/index.js',
+  },
+  '/app2Path2': {
+    name: 'app2',
+    component: '/src/apps/app-2/index.js',
+  },
+};
 jest.mock('fs', () => {
   // $FlowIgnore:
   const _fs = require.requireActual('fs');
@@ -7,6 +17,10 @@ jest.mock('fs', () => {
   _fs.existsSync = function _() {
     return _fs.existsReturn;
   };
+  _fs.readdirSync = () =>
+    Object.keys(entriesJson).map(
+      urlPath => entriesJson[urlPath].component.split('/').splice(3, 1)[0],
+    );
   return _fs;
 });
 const fs = require('fs');
@@ -21,14 +35,6 @@ jest.mock(
   () => require('../../../gluestick/src/cli'),
   { virtual: true },
 );
-const entriesJson = {
-  '/app1Path': {
-    name: 'app1',
-  },
-  '/app2Path2': {
-    name: 'app2',
-  },
-};
 jest.mock('src/entries.json', () => entriesJson, { virtual: true });
 const completion = require('../completion');
 
@@ -186,6 +192,41 @@ describe('gluestick-cli/src/completion.js', () => {
         expect(options).toEqual(
           Object.keys(entriesJson).map(appPath => `apps${appPath}`),
         );
+      });
+    });
+
+    describe('completing gluestick build', () => {
+      const flags = [
+        '-A',
+        '--app',
+        '-S',
+        '--stats',
+        '--client',
+        '--server',
+        '-D',
+        '--vendor',
+        '-B',
+        '--skip-if-ok',
+        '-Z',
+        '--static',
+      ];
+      it('expects an argument for -Z and --static', () => {
+        const options = cliTab('gluestick build -Z ');
+        const options2 = cliTab('gluestick build --static ');
+        expect(options2).toEqual(options);
+        expect(options).toEqual([]);
+      });
+      it('completes app names for -A and --app', () => {
+        const options = cliTab('gluestick build -A ');
+        const options2 = cliTab('gluestick build --app ');
+        const options3 = cliTab('gluestick build -A /a');
+        expect(options2).toEqual(options);
+        expect(options3).toEqual(options);
+        expect(options).toEqual(['/app-1', '/app-2']);
+      });
+      it('completes flags', () => {
+        const options = cliTab('gluestick build -');
+        expect(options).toEqual(flags);
       });
     });
   });

@@ -4,11 +4,12 @@
   source ../bin/completion.sh && GS_COMP=$PWD
 */
 const { join } = require('path');
-const { existsSync } = require('fs');
+const { existsSync, readdirSync } = require('fs');
 const commanderGlobal = require('./cli').default;
 
 let commanderProject = null;
 let entriesJson = null;
+let entriesPaths = [];
 
 function commanderBases(commander) {
   return commander.commands
@@ -26,7 +27,7 @@ function commanderOpts(commander, name) {
   const command = commander.commands.find(comm => comm._name === name);
   return command
     ? command.options.reduce(
-        (opts, curr) => opts.concat([curr.short, curr.long]),
+        (opts, curr) => opts.concat([curr.short, curr.long].filter(v => !!v)),
         [],
       )
     : [];
@@ -92,6 +93,9 @@ function loadEntries(cwd) {
       // noop
     }
   }
+  if (!entriesPaths.length) {
+    entriesPaths = readdirSync(join(cwd, 'src', 'apps')).map(dir => `/${dir}`);
+  }
 }
 
 function projectSubcommand(command, words) {
@@ -145,6 +149,27 @@ function projectSubcommand(command, words) {
         return apps;
       } else if (appFlags.includes(words.slice(-2)[0])) {
         return apps;
+      }
+      return opts;
+    case 'build': // eslint-disable-line no-case-declarations
+      const withArgs = ['-Z', '--static'];
+      if (words.length > 1) {
+        if (appFlags.includes(words.slice(-2, 1)[0])) {
+          if (entriesPaths.includes(words.slice(-1)[0])) {
+            return opts;
+          }
+          return entriesPaths;
+        } else if (appFlags.includes(words.slice(-1)[0])) {
+          return entriesPaths;
+        } else if (withArgs.includes(words.slice(-2, 1)[0])) {
+          return [];
+        }
+      } else if (words.length === 1) {
+        if (appFlags.includes(words[0])) {
+          return entriesPaths;
+        } else if (withArgs.includes(words[0])) {
+          return [];
+        }
       }
       return opts;
     default:
