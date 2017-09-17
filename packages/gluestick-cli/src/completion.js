@@ -5,7 +5,7 @@
 */
 const { join } = require('path');
 const { existsSync, readdirSync } = require('fs');
-const commanderGlobal = require('./cli').default;
+const commanderGlobal = require('./cli');
 
 let commanderProject = null;
 let entriesJson = null;
@@ -73,7 +73,7 @@ function loadCommanderProject(cwd) {
     ) {
       try {
         const reqPath = join(cwd, 'node_modules', 'gluestick', 'build', 'cli');
-        commanderProject = require(reqPath).default;
+        commanderProject = require(reqPath);
         // //console.log(commanderProject.commands.find(c => c._name === "generate"));
       } catch (e) {
         // noop

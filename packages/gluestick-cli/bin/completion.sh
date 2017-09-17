@@ -9,8 +9,7 @@ _gluestick ()
   COMPREPLY=()
   cur=${COMP_WORDS[COMP_CWORD]}
   prev=${COMP_WORDS[$(expr $COMP_CWORD - 1)]}
-  echo -- running -- >> out.o
-  echo $prev >> out.o
+
   if [ -f $GS_COMP/completion.js ]; then
     if [ "$prev" = "-d" -o "$prev" = "--dev" ]; then 
       compopt -o filenames

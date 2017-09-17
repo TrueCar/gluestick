@@ -99,4 +99,4 @@ commander.command('*', null, { noHelp: true }).action(() => {
   });
 });
 
-module.exports.default = commander;
+module.exports = commander;
