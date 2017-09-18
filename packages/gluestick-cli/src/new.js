@@ -4,7 +4,6 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
-const chalk = require('chalk');
 const generate = require('gluestick-generators').default;
 const fetch = require('node-fetch');
 const rimraf = require('rimraf');
@@ -77,13 +76,6 @@ module.exports = (appName, options, exitWithError) => {
         });
 
         const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
-        if (!options.npm && !isYarnAvailable) {
-          console.log(
-            chalk.yellow.bgBlack(
-              'You are installing dependencies using npm, consider using yarn.',
-            ),
-          );
-        }
 
         spawn.sync(
           !options.npm && isYarnAvailable ? 'yarn' : 'npm',
