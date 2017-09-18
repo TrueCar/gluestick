@@ -41,12 +41,12 @@ const getBundleName = ({ config }): string => {
   return `${publicPath}dlls/${name.replace('_', '-')}.dll.js`;
 };
 
-module.exports = (
+module.exports = function linkAssets(
   { config }: Context,
   entryPoint: string,
   assets: Object,
   loadjsConfig: Object,
-): { styleTags: Object[], scriptTags: Object[] } => {
+): { styleTags: Object[], scriptTags: Object[] } {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
   let key: number = 0;

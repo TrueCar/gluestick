@@ -42,7 +42,7 @@ type EntriesArgs = {
   entriesPlugins: Object[],
 };
 
-module.exports = async (
+module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
@@ -59,7 +59,7 @@ module.exports = async (
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
   cachingConfig: ?ComponentsCachingConfig,
-) => {
+) {
   /**
    * TODO: better logging
    */

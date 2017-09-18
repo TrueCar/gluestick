@@ -23,11 +23,11 @@ const proxy = require('http-proxy-middleware');
  * @param {Array<ProxyConfig>} proxyConfigs array of proxy objects that will be applied
  *
  */
-module.exports = (
+module.exports = function setProxies(
   app: Object,
   proxyConfigs: Object[] = [],
   logger: BaseLogger,
-) => {
+) {
   proxyConfigs.forEach((proxyConfig: Object): void => {
     const { filter, path, destination, options } = proxyConfig;
     const actualConfig = {
