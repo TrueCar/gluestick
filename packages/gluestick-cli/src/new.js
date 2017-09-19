@@ -75,7 +75,7 @@ module.exports = (appName, options, exitWithError) => {
           options: generatorOptions,
         });
 
-        const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
+        const isYarnAvailable = !spawn.sync('yarn', ['-v']).error;
 
         spawn.sync(
           !options.npm && isYarnAvailable ? 'yarn' : 'npm',
