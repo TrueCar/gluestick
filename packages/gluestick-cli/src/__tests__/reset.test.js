@@ -15,12 +15,14 @@ jest.mock('child_process', () => {
 const reset = require('../reset');
 const { execSync } = require('child_process');
 
-it('calls npm cache clean only for versions previous to npm@5', () => {
+it('calls npm cache clean with ---force for npm@5', () => {
   // < 5.x.x
   reset();
   expect(execSync).toBeCalledWith(`npm cache clean`, { stdio: 'inherit' });
   // >= 5.x.x
   execSync.mockClear();
   reset();
-  expect(execSync).not.toBeCalledWith(`npm cache clean`, { stdio: 'inherit' });
+  expect(execSync).toBeCalledWith(`npm cache clean --force`, {
+    stdio: 'inherit',
+  });
 });

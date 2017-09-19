@@ -3,11 +3,10 @@ const { execSync } = require('child_process');
 const _cleanCache = () => {
   const npmVersion = execSync('npm -v').toString().trim();
   const majorVersion = npmVersion.split('.')[0];
-  // As of npm@5, the npm cache self-heals from corruption issues and data extracted from the cache
-  // is guaranteed to be valid.
-  if (majorVersion < 5) {
-    execSync('npm cache clean', { stdio: 'inherit' });
-  }
+  // Force npm@5
+  execSync(`npm cache clean${majorVersion >= 5 ? ' --force' : ''}`, {
+    stdio: 'inherit',
+  });
 };
 
 module.exports = () => {
