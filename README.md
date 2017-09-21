@@ -48,10 +48,6 @@ gluestick start
 * [Plugins](docs/Plugins.md)
 * [Configuration](docs/Configuration.md)
 
-## Guides
-
-* [Profiling GlueStick server](docs/guides/ProfilingRenderer.md)
-
 ## Terms & Definitions
 
 * [`Gluestick`](https://github.com/TrueCar/gluestick) is a monorepo. It is published to npm with `Lerna` and contains depdent modules or "packages" for building Gluestick apps. The Gluestick repo uses Lerna [1](https://www.npmjs.com/package/lerna),[2](https://lernajs.io/) to help break what would otherwise be a potentially large code base in to smaller, versioned packages.
@@ -69,3 +65,5 @@ A: Gluestick is a monorepo. `gluestick-cli` is a sub-package in that repo that i
 ## Contributing
 
 For contributing instructions please see [contributon guide](CONTRIBUTING.md).
+
+++for test
