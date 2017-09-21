@@ -127,7 +127,8 @@ jobs:
       - restore_cache: *restore-repo-cache
 
       - run: |
-          if [[ $(git diff --name-only HEAD~1 HEAD) =~ ^docs ]]; then
+          git diff --name-only HEAD~1 HEAD
+          if [[ $(git diff --name-only HEAD~1 HEAD) =~ docs ]]; then
             # Build gitbook and move it to root directory
             yarn run docs:build
             rm -rf ./docs
