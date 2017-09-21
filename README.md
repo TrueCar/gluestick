@@ -45,8 +45,9 @@ gluestick start
 
 * [Commands](docs/Commands.md)
 * [Development](docs/Development.md)
-* [Plugins](docs/Plugins.md)
+* [Plugins](docs/configuration/Plugins.md)
 * [Configuration](docs/Configuration.md)
+* [Styles](docs/configuration/Styles.md)
 
 ## Guides
 
