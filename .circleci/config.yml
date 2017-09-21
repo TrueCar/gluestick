@@ -167,12 +167,12 @@ workflows:
           filters:
             branches:
               ignore: staging
-      - e2e:
-          requires:
-            - build
-          filters:
-            branches:
-              only: next
+      #- e2e:
+      #    requires:
+      #      - build
+      #    filters:
+      #      branches:
+      #        only: next
       - docs:
           requires:
             - build
