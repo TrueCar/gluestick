@@ -4,7 +4,7 @@
     "lerna": "lerna",
     "yarn:install": "lerna exec --concurrency=1 -- yarn",
     "install:npm": "npm install && npm run build && lerna bootstrap",
-    "install:yarn": "yarn && npm run build && npm run yarn:install && lerna bootstrap --concurrency=1",
+    "install:yarn": "yarn && yarn run build && yarn run yarn:install && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "jest --bail --no-cache -i",
     "test-coverage": "npm run test -- --coverage",
@@ -12,7 +12,7 @@
     "flow": "flow",
     "ci": "npm run lint && npm run flow && npm run test-coverage",
     "publish": "npm run build && ./scripts/deploy.js",
-    "e2e": "CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH ./scripts/e2e/runner.js",
+    "e2e": "./scripts/e2e/runner.js",
     "build": "node ./scripts/build.js"
   },
   "dependencies": {

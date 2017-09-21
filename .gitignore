@@ -7,3 +7,4 @@ new/src/config/.Dockerfile
 lerna-debug.log
 .DS_Store
 build
+packages_checksum
