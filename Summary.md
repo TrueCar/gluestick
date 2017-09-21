@@ -17,7 +17,7 @@
         * [Hook up your action creator](/docs/gettingStarted/HookUpActionCreator.md)
         * [Asynchronous action creators](/docs/gettingStarted/AsynchronousActionCreators.md)
         * [Prefetching data with fetchData](/docs/gettingStarted/PrefetchingWithFetchData.md)
-    * [1.0 Migration Guide](/docs/guides/MigrationGuide.md)
+    * [1.x Migration Guide](/docs/guides/MigrationGuide.md)
 * [Commands](/docs/Commands.md)
 * [Configuration](/docs/Configuration.md)
     * [Apps](/docs/configuration/Apps.md)
