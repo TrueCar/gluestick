@@ -1,9 +1,9 @@
 # Summary
 
-* [Quickstart](/docs/Readme.md)
-* [Guides]()
-    * [Profiling renderer](/docs/guides/ProfilingRendered.md)
-    * [Getting started]()
+* [Introduction](/README.md)
+* Guides
+    * [Profiling renderer](/docs/guides/ProfilingRenderer.md)
+    * Getting started
         * [Creating a new application](/docs/gettingStarted/CreatingNewApp.md)
         * [Running your application](/docs/gettingStarted/RunningApp.md)
         * [Hot Module Replacement](/docs/gettingStarted/HotModuleReplacement.md)
@@ -19,7 +19,7 @@
         * [Prefetching data with fetchData](/docs/gettingStarted/PrefetchingWithFetchData.md)
     * [1.0 Migration Guide](/docs/guides/MigrationGuide.md)
 * [Commands](/docs/Commands.md)
-* [Configuration]()
+* [Configuration](/docs/Configuration.md)
     * [Apps](/docs/configuration/Apps.md)
     * [Caching & hooks](/docs/configuration/CachingAndHooks.md)
     * [Environment details](/docs/configuration/EnvDetails.md)
@@ -27,4 +27,4 @@
     * [Styles](/docs/configuration/Styles.md)
 * [Generators](/docs/Generators.md)
 * [Development](/docs/Development.md)
-* [Contributing](/docs/Contributing.md)
+* [Contributing](/CONTRIBUTING.md)
