@@ -1,6 +1,6 @@
 # Configuration
 
-There are few files which allows to configure GleuStick:
+There are few files which allows to configure GlueStick:
 * [`src/entires.json`](./Apps.md) - define entries (apps)
 * [`src/vendor.js`](#vendoring) - Define vendored modules/packages
 * [`src/gluestick.hooks.js`](./CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
