@@ -8,3 +8,4 @@ lerna-debug.log
 .DS_Store
 build
 packages_checksum
+_book/
