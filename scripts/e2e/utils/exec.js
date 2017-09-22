@@ -18,7 +18,7 @@ module.exports = (command, cwd = process.cwd(), customEnv = {}) => {
     try {
       stdout = execSync(command, {
         cwd,
-        stdio: 'pipe',
+        stdio: ['ignore', 'inherit', 'pipe'],
         env: Object.assign({}, process.env, customEnv),
       });
     } catch (e) {

@@ -7,7 +7,7 @@ const assertions = require('./utils/assertions');
 
 const CWD = path.join(process.cwd(), '../', 'e2eApp');
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   console.error(error);
   process.exit(1);
 });
@@ -19,8 +19,17 @@ module.exports = () => {
     '/usr/local/lib/node_modules/gluestick-cli'
   );
 
-  // New project with npm
-  exec('gluestick new e2eApp --npm --dev ./gluestick', path.join(process.cwd(), '../'));
+  // New project
+  exec(
+    'gluestick new e2eApp --dev ./gluestick',
+    path.join(process.cwd(), '../')
+  );
+  // Manually remove .babelrc from gluestick directory, because of yarn's bug,
+  // where in dev mode it omits .npmignore
+  exec(
+    'rm ./node_modules/gluestick/.babelrc',
+    path.join(process.cwd(), '../e2eApp')
+  );
   // New apps (camel and kebab case)
   exec('gluestick generate app secondApp', CWD);
   exec('gluestick generate app third-app', CWD);
@@ -83,10 +92,7 @@ module.exports = () => {
   );
   // Generate generator
   exec('gluestick generate generator myGenerator', CWD);
-  assertions.exists(
-    `${CWD}/generators`,
-    'myGenerator.js'
-  );
+  assertions.exists(`${CWD}/generators`, 'myGenerator.js');
   // Lint, flow, test
   exec('npm run lint', CWD);
   exec('npm run flow', CWD);
@@ -159,18 +165,21 @@ module.exports = () => {
   exec('gluestick build', CWD);
   exec('gluestick build', CWD, { NODE_ENV: 'production' });
   // Run bin command
-  spawn('gluestick bin gluestick -V', CWD, {}, 'pipe').then(({ stdout }) => {
-    console.log(stdout);
-    if (!stdout.includes(require('../../lerna.json').version)) {
-      throw new Error('gluestick version from `bin` command does not contain version from `lerna.json`');
-    }
-    return Promise.resolve();
-  })
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  spawn('gluestick bin gluestick -V', CWD, {}, 'pipe')
+    .then(({ stdout }) => {
+      console.log(stdout);
+      if (!stdout.includes(require('../../lerna.json').version)) {
+        throw new Error(
+          'gluestick version from `bin` command does not contain version from `lerna.json`'
+        );
+      }
+      return Promise.resolve();
+    })
+    .then(() => {
+      process.exit(0);
+    })
+    .catch(error => {
+      console.error(error);
+      process.exit(1);
+    });
 };
