@@ -17,7 +17,14 @@ module.exports = (appName, options, exitWithError) => {
           gluestick: json['dist-tags'].latest,
         },
       };
+
+      const isYarnAvailable = !spawn.sync('yarn', ['-v']).error;
+
       if (options.dev) {
+        if (!isYarnAvailable) {
+          exitWithError(`Yarn is a requirement for local developing.`);
+        }
+
         const pathToGluestickRepo = path.join(
           process.cwd(),
           appName,
@@ -74,8 +81,6 @@ module.exports = (appName, options, exitWithError) => {
           entityName: 'package',
           options: generatorOptions,
         });
-
-        const isYarnAvailable = !spawn.sync('yarn', ['-v']).error;
 
         spawn.sync(
           !options.npm && isYarnAvailable ? 'yarn' : 'npm',
