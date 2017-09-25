@@ -56,7 +56,7 @@ const matchRouteAndRender = (
     if (process.env.NODE_ENV === 'production') {
       start();
     } else {
-      const { runWithErrorUtils } = require('compiled/gluestick');
+      const { runWithErrorUtils } = require('compiled/gluestick/shared/lib/errorUtils');
 
       runWithErrorUtils(start)
     }
