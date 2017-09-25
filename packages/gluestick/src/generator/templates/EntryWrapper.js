@@ -27,29 +27,39 @@ const matchRouteAndRender = (
   { rootWrappers, rootWrappersOptions, preRenderHooks }
 ) => {
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
-    const entry = (
-      <AppContainer>
-        <EntryWrapper
-          radiumConfig={{userAgent: window.navigator.userAgent}}
-          store={store}
-          getRoutes={getRoutes}
-          httpClient={httpClient}
-          rootWrappers={rootWrappers}
-          rootWrappersOptions={{
-            userAgent: window.navigator.userAgent,
-            ...rootWrappersOptions
-          }}
-          {...renderProps}
-        />
-      </AppContainer>
-    );
+    function start() {
+      const entry = (
+        <AppContainer>
+          <EntryWrapper
+            radiumConfig={{userAgent: window.navigator.userAgent}}
+            store={store}
+            getRoutes={getRoutes}
+            httpClient={httpClient}
+            rootWrappers={rootWrappers}
+            rootWrappersOptions={{
+              userAgent: window.navigator.userAgent,
+              ...rootWrappersOptions
+            }}
+            {...renderProps}
+          />
+        </AppContainer>
+      );
 
-    if (preRenderHooks && preRenderHooks.length > 0) {
-      preRenderHooks.forEach((hook) => {
-        if (typeof hook === "function") { hook(); }
-      });
+      if (preRenderHooks && preRenderHooks.length > 0) {
+        preRenderHooks.forEach((hook) => {
+          if (typeof hook === "function") { hook(); }
+        });
+      }
+      render(entry, document.getElementById("main"));
     }
-    render(entry, document.getElementById("main"));
+
+    if (process.env.NODE_ENV === 'production') {
+      start();
+    } else {
+      const { runWithErrorUtils } = require('compiled/gluestick');
+
+      runWithErrorUtils(start)
+    }
   });
 };
 
