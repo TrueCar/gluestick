@@ -22,7 +22,7 @@ const config: GSConfig = {
   sharedPath: 'shared',
   configPath: 'config',
   applicationConfigPath: 'application',
-  entryWrapperPath: 'gluestick/EntryWrapper',
+  BodyPath: 'gluestick/Body',
   clientEntryInitPath: 'gluestick/clientEntryInit',
   serverEntriesPath: 'gluestick/entries',
   entriesPath: 'src/entries.json',

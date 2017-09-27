@@ -4,8 +4,8 @@ const createTemplate = module.parent.createTemplate;
 
 const template = createTemplate`
 import getRoutes from "${args => args.routes}";
-import EntryWrapper from "../EntryWrapper";
-import { createStore } from "compiled/gluestick";
+import Body from "../Body";
+import { createStore, getHttpClient } from "compiled/gluestick";
 import globalMiddlewares, { thunkMiddleware as globalThunkMiddleware } from "config/redux-middleware";
 ${args =>
   args.config ? `import config from "${args.config}";` : 'const config = {};'}
@@ -63,16 +63,20 @@ if (typeof window === "object") {
         }, '')}
   ];
 
-  EntryWrapper.start(
-    config,
-    getRoutes,
-    getStore,
+  const httpClient = getHttpClient(config.httpClient);
+  const store = getStore(httpClient);
+  const routes = getRoutes(store, httpClient);
+
+  Body.start(
+    routes,
+    store,
+    httpClient,
     { rootWrappers, rootWrappersOptions: [], preRenderHooks },
   );
 
   if (module.hot) {
     module.hot.accept("${args => args.routes}", () => {
-      EntryWrapper.rerender(require("${args => args.routes}").default);
+      Body.rerender(require("${args => args.routes}").default);
     });
   }
 }

@@ -21,7 +21,7 @@ export type GSConfig = {
   sharedPath: string,
   appsPath: string,
   configPath: string,
-  entryWrapperPath: string,
+  BodyPath: string,
   clientEntryInitPath: string,
   serverEntriesPath: string,
   entriesPath: string,

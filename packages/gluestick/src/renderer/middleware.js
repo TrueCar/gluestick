@@ -47,7 +47,7 @@ module.exports = async function gluestickMiddleware(
   req: Request,
   res: Response,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
-  { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
+  { Body, BodyWrapper }: { Body: Object, BodyWrapper: Object },
   { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
   options: Options = {
     envVariables: [],
@@ -166,6 +166,8 @@ module.exports = async function gluestickMiddleware(
 
     const statusCode: number = getStatusCode(store, currentRoute);
 
+    const routes = requirements.routes(store, httpClient);
+
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },
       req,
@@ -173,12 +175,12 @@ module.exports = async function gluestickMiddleware(
         EntryPoint: requirements.Component,
         entryName: requirements.name,
         store,
-        routes: requirements.routes,
+        routes,
         httpClient,
       },
       { renderProps: renderPropsAfterHooks, currentRoute },
       {
-        EntryWrapper,
+        Body,
         BodyWrapper,
         entriesPlugins,
         entryWrapperConfig: options.entryWrapperConfig,

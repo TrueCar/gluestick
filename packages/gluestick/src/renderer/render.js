@@ -21,11 +21,11 @@ type EntryRequirements = {
   EntryPoint: Object,
   entryName: string,
   store: Object,
-  routes: Function,
+  routes: Object[],
   httpClient: Object,
 };
 type WrappersRequirements = {
-  EntryWrapper: Object,
+  Body: Object,
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
@@ -43,7 +43,7 @@ module.exports = function render(
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
   { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
   {
-    EntryWrapper,
+    Body,
     BodyWrapper,
     entryWrapperConfig,
     envVariables,
@@ -64,12 +64,12 @@ module.exports = function render(
     .filter(plugin => plugin.meta.wrapper)
     .map(({ plugin }) => plugin);
   const entryWrapper = (
-    <EntryWrapper
-      store={store}
-      routerContext={routerContext}
+    <Body
       config={entryWrapperConfig}
-      getRoutes={routes}
+      store={store}
+      routes={routes}
       httpClient={httpClient}
+      serverProps={{ location: req.url, context: routerContext }}
       rootWrappers={rootWrappers}
       rootWrappersOptions={{
         userAgent: req.headers['user-agent'],

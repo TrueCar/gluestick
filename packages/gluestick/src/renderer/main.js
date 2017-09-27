@@ -33,7 +33,7 @@ const entries = require('project-entries').default;
 // $FlowIgnore
 const entriesConfig = require('project-entries-config');
 // $FlowIgnore
-const EntryWrapper = require('entry-wrapper').default;
+const Body = require('Body').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 // $FlowIgnore
@@ -148,7 +148,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
           req,
           res,
           { entries, entriesConfig, entriesPlugins: runtimePlugins },
-          { EntryWrapper, BodyWrapper },
+          { Body, BodyWrapper },
           { assets, loadjsConfig: applicationConfig.loadjs || {} },
           {
             reduxMiddlewares,
