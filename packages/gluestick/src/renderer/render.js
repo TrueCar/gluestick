@@ -2,20 +2,10 @@
 import type { Context, Request, RenderOutput, RenderMethod } from '../types';
 
 const React = require('react');
-const { RouterContext } = require('react-router');
 const Oy = require('oy-vey').default;
-const { renderToString, renderToStaticMarkup } = require('react-dom/server');
+const { renderToStaticMarkup } = require('react-dom/server');
 const linkAssets = require('./helpers/linkAssets');
-
-const getRenderer = (
-  isEmail: boolean,
-  renderMethod?: RenderMethod,
-): Function => {
-  if (renderMethod) {
-    return renderMethod;
-  }
-  return isEmail ? renderToStaticMarkup : renderToString;
-};
+const { getRenderer } = require('./lib/renderUtils');
 
 type EntryRequirements = {
   EntryPoint: Object,
@@ -23,6 +13,7 @@ type EntryRequirements = {
   store: Object,
   routes: Object[],
   httpClient: Object,
+  currentRoute: Object,
 };
 type WrappersRequirements = {
   Body: Object,
@@ -40,8 +31,14 @@ type AssetsCacheOpts = {
 module.exports = function render(
   context: Context,
   req: Request,
-  { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
-  { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
+  {
+    EntryPoint,
+    entryName,
+    store,
+    routes,
+    httpClient,
+    currentRoute,
+  }: EntryRequirements,
   {
     Body,
     BodyWrapper,
@@ -59,11 +56,16 @@ module.exports = function render(
     loadjsConfig,
   );
   const isEmail = !!currentRoute.email;
-  const routerContext = <RouterContext {...renderProps} />;
+  const routerContext = {};
   const rootWrappers = entriesPlugins
     .filter(plugin => plugin.meta.wrapper)
     .map(({ plugin }) => plugin);
-  const entryWrapper = (
+
+  // grab the react generated body stuff. This includes the
+  // script tag that hooks up the client side react code.
+  const currentState: Object = store.getState();
+
+  const renderedBody: Object = getRenderer(isEmail, renderMethod)(
     <Body
       config={entryWrapperConfig}
       store={store}
@@ -74,28 +76,8 @@ module.exports = function render(
       rootWrappersOptions={{
         userAgent: req.headers['user-agent'],
       }}
-    />
-  );
-
-  // grab the react generated body stuff. This includes the
-  // script tag that hooks up the client side react code.
-  const currentState: Object = store.getState();
-
-  const renderResults: Object = getRenderer(isEmail, renderMethod)(
-    entryWrapper,
+    />,
     styleTags,
-  );
-  const bodyWrapperContent: String = renderMethod
-    ? renderResults.body
-    : renderResults;
-  const bodyWrapper = (
-    <BodyWrapper
-      html={bodyWrapperContent}
-      initialState={currentState}
-      isEmail={isEmail}
-      envVariables={envVariables}
-      scriptTags={scriptTags}
-    />
   );
 
   // Grab the html from the project which is stored in the root
@@ -106,8 +88,16 @@ module.exports = function render(
   // Bundle it all up into a string, add the doctype and deliver
   const rootElement = (
     <EntryPoint
-      body={bodyWrapper}
-      head={isEmail ? null : renderResults.head || styleTags}
+      body={
+        <BodyWrapper
+          html={renderMethod ? renderedBody.body : renderedBody}
+          initialState={currentState}
+          isEmail={isEmail}
+          envVariables={envVariables}
+          scriptTags={scriptTags}
+        />
+      }
+      head={isEmail ? null : renderedBody.head || styleTags}
       req={req}
     />
   );
@@ -127,6 +117,7 @@ module.exports = function render(
     cacheManager.setCacheIfProd(req, responseString, currentRoute.cacheTTL);
   }
   return {
+    routerContext,
     responseString,
     rootElement, // only for testing
   };

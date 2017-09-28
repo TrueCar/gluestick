@@ -1,5 +1,7 @@
 /* @flow */
 
+import type React from 'react';
+
 export type SetStatusCode = 'SET_STATUS_CODE';
 
 export type RouteName404NotFound = 'ROUTE_NAME_404_NOT_FOUND';
@@ -15,7 +17,24 @@ export type CookieOptions = {
   signed: () => boolean,
 };
 
-export type GetBeforeRoute = (component: Object) => Function;
+export type RouteConfig = {
+  component: React.Component<*, *, *>,
+  exact: boolean,
+  location: Location,
+  path: string,
+  routes: RouteConfig[],
+  strict: boolean,
+};
+
+export type MatchedRoute = {
+  match: {
+    isExact: boolean,
+    params: any,
+    path: string,
+    url: string,
+  },
+  route: RouteConfig,
+};
 
 export type GetRouteComponents = (routes: Object[]) => Object[];
 

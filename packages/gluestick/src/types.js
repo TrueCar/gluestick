@@ -197,6 +197,7 @@ export type RenderRequirements = {
 };
 
 export type RenderOutput = {
+  routerContext: Object,
   responseString: string,
   rootElement: Object,
 };
