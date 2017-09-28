@@ -197,7 +197,15 @@ export type RenderRequirements = {
 };
 
 export type RenderOutput = {
-  routerContext: Object,
+  routerContext: {
+    action: string,
+    location: {
+      pathname: string,
+      search: string,
+      hash: string,
+    },
+    url: string,
+  },
   responseString: string,
   rootElement: Object,
 };
