@@ -3,9 +3,12 @@
 import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
-export function withRoutes(RouteComponent: *) {
+export function withRoutes(
+  RouteComponent: *,
+  dependencies: { [key: string]: any },
+) {
   const RouteComponentWrapper = ({ route, children, ...rest }: *) =>
-    <RouteComponent {...rest}>
+    <RouteComponent {...rest} {...dependencies}>
       {children}
       {renderRoutes(route.routes)}
     </RouteComponent>;
@@ -15,19 +18,26 @@ export function withRoutes(RouteComponent: *) {
   return RouteComponentWrapper;
 }
 
-export default function wrapRouteComponents(routes: *) {
+export default function wrapRouteComponents(
+  routes: *,
+  dependencies: { [key: string]: any },
+) {
+  if (!routes) {
+    return routes;
+  }
+
   return Array.isArray(routes)
     ? routes.map(route => {
         return route.component
           ? {
               ...route,
-              component: withRoutes(route.component),
-              routes: wrapRouteComponents(route.routes),
+              component: withRoutes(route.component, dependencies),
+              routes: wrapRouteComponents(route.routes, dependencies),
             }
           : {
               ...route,
-              routes: wrapRouteComponents(route.routes),
+              routes: wrapRouteComponents(route.routes, dependencies),
             };
       })
-    : routes;
+    : wrapRouteComponents([routes], dependencies);
 }

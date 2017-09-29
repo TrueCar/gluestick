@@ -1,6 +1,7 @@
 /* @flow */
 
 import React from 'react';
+import { getDisplayName } from './utils';
 
 function isInitialRender({ history }: any, DataLoader) {
   const output =
@@ -62,9 +63,7 @@ export default function withDataLoader(config: DataLoaderConfig) {
       }
     }
 
-    DataLoader.displayName = `${Component.displayName ||
-      Component.name ||
-      ''}DataLoader`;
+    DataLoader.displayName = `${getDisplayName(Component)}DataLoader`;
 
     return DataLoader;
   };

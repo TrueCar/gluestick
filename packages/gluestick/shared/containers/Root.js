@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { Provider } from 'react-redux';
 import wrapRouteComponents from '../lib/wrapRouteComponents';
-// import { useScroll } from 'react-router-scroll';
 
 type Props = {
   // httpClient: Object
@@ -14,6 +13,17 @@ type Props = {
   store: Object,
   // eslint-disable-next-line
   serverProps?: { location: string, context: Object },
+};
+
+const location = {
+  prev: typeof window !== 'undefined' ? { ...window.location } : {},
+  next: {},
+};
+
+const routeDependencies = {
+  getLocationDiff() {
+    return { prev: { ...location.prev }, next: { ...location.next } };
+  },
 };
 
 export default class Root extends Component<void, Props, void> {
@@ -34,6 +44,29 @@ export default class Root extends Component<void, Props, void> {
     }
   }
 
+  updateLocation = () => {
+    location.prev = location.next;
+    location.next = { ...window.location };
+  };
+
+  componentDidMount() {
+    ['pushState', 'replaceState', 'go', 'back', 'forward'].forEach(name => {
+      window.history[name] = new Proxy(window.history[name], {
+        apply(target, thisArg, args) {
+          location.prev = { ...window.location };
+          target.apply(thisArg, args);
+          location.next = { ...window.location };
+        },
+      });
+    });
+
+    window.addEventListener('popstate', this.updateLocation);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', this.updateLocation);
+  }
+
   render() {
     const { Router, routerProps, props: { routes, store, serverProps } } = this;
 
@@ -42,48 +75,13 @@ export default class Root extends Component<void, Props, void> {
       routerProps.context = serverProps.context;
     }
 
-    // @TODO: scrolling
     return (
       <Provider store={store}>
         {/* $FlowIgnore */}
         <Router {...routerProps}>
-          {renderRoutes(wrapRouteComponents(routes))}
+          {renderRoutes(wrapRouteComponents(routes, routeDependencies))}
         </Router>
       </Provider>
     );
   }
-
-  // _renderRouter(props: Props): Object | Component<*, *, *> {
-  // server rendering
-  // if (props.routerContext) return props.routerContext;
-
-  // router middleware
-  // const render: Function = applyRouterMiddleware(
-  //   useScroll((prevRouterProps, { location, routes }) => {
-  //     // Initial render - skip scrolling
-  //     if (!prevRouterProps) {
-  //       return false;
-  //     }
-
-  //     // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
-  //     // behaviour.
-  //     const { useScroll: customScrollBehavior } =
-  //       routes.find(route => route.useScroll) || {};
-
-  //     if (typeof customScrollBehavior === 'function') {
-  //       return customScrollBehavior(prevRouterProps, location);
-  //     } else if (customScrollBehavior) {
-  //       throw new Error('useScroll prop must be a function');
-  //     }
-
-  //     // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
-  //     // route components in the app. e.g.
-  //     // <Route ignoreScrollBehavior={true} path="mypage" component={MyComponent} />
-  //     if (routes.some(route => route.ignoreScrollBehavior)) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }),
-  // );
-  // }
 }

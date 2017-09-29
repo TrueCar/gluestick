@@ -7,4 +7,5 @@ export getHttpClient from './lib/getHttpClient';
 export { set404StatusCode, setStatusCode } from './lib/actions';
 export * from './lib/errorUtils';
 export withDataLoader from './hocs/withDataLoader';
+export withScrollBehavior from './hocs/withScrollBehavior';
 export redirect from './hocs/redirect';
