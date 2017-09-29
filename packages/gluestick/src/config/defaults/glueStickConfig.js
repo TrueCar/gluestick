@@ -50,7 +50,7 @@ const config: GSConfig = {
       '.dockerignore', // -> prior to 0.3.6
       'src/config/init.browser.js', // -> prior to 0.9.26
       // From V2
-      'gluestick/EntryWrapper.js',
+      'gluestick/Body.js',
       'src/entries.json',
       'src/gluestick.plugins.js',
       'src/gluestick.hooks.js',
@@ -62,7 +62,7 @@ const config: GSConfig = {
     ],
     changed: [
       'src/config/.Dockerfile', // -> last updated in 0.2.0
-      'gluestick/EntryWrapper.js',
+      'gluestick/Body.js',
     ],
   },
 };

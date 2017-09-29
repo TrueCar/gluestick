@@ -16,7 +16,7 @@ type Props = {
   serverProps?: { location: string, context: Object },
 };
 
-export default class AppBodyRoot extends Component<void, Props, void> {
+export default class Root extends Component<void, Props, void> {
   props: Props;
   Router: React.Component<*, *, *>;
   routerProps: {
