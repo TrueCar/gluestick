@@ -191,6 +191,7 @@ module.exports = async function gluestickMiddleware(
     if (output.routerContext && output.routerContext.url) {
       res.redirect(
         /^3/.test(statusCode.toString()) ? statusCode : 301,
+        // $FlowFixMe
         output.routerContext.url,
       );
     } else {

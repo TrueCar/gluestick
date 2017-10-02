@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import * as React from 'react';
 import { StaticRouter } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
@@ -26,9 +26,9 @@ const routeDependencies = {
   },
 };
 
-export default class Root extends Component<void, Props, void> {
+export default class Root extends React.Component<Props> {
   props: Props;
-  Router: React.Component<*, *, *>;
+  Router: React.ComponentType<any>;
   routerProps: {
     location?: string,
     context?: {},

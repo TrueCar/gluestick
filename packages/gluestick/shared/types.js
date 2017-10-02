@@ -1,6 +1,6 @@
 /* @flow */
 
-import type React from 'react';
+import * as React from 'react';
 
 export type SetStatusCode = 'SET_STATUS_CODE';
 
@@ -18,7 +18,7 @@ export type CookieOptions = {
 };
 
 export type RouteConfig = {
-  component: React.Component<*, *, *>,
+  component: React.ComponentType<*>,
   exact: boolean,
   location: Location,
   path: string,
