@@ -57,7 +57,7 @@ export default class Root extends React.Component<Props> {
         location.next = { ...window.location };
       }
 
-      if (typeof Proxy !== 'undefined') {
+      if (typeof window.Proxy !== 'undefined') {
         window.history[name] = new Proxy(window.history[name], {
           apply,
         });
