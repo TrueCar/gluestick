@@ -4,7 +4,6 @@ const mkdir = require('mkdirp');
 const spawn = require('cross-spawn');
 const commander = require('commander');
 const glob = require('glob');
-const chalk = require('chalk');
 const generate = require('gluestick-generators').default;
 const fetch = require('node-fetch');
 const rimraf = require('rimraf');
@@ -18,7 +17,14 @@ module.exports = (appName, options, exitWithError) => {
           gluestick: json['dist-tags'].latest,
         },
       };
+
+      const isYarnAvailable = !spawn.sync('yarn', ['-v']).error;
+
       if (options.dev) {
+        if (!isYarnAvailable) {
+          exitWithError(`Yarn is a requirement for local developing.`);
+        }
+
         const pathToGluestickRepo = path.join(
           process.cwd(),
           appName,
@@ -75,15 +81,6 @@ module.exports = (appName, options, exitWithError) => {
           entityName: 'package',
           options: generatorOptions,
         });
-
-        const isYarnAvailable = !spawn.sync('yarn', ['-V']).error;
-        if (!options.npm && !isYarnAvailable) {
-          console.log(
-            chalk.yellow.bgBlack(
-              'You are installing dependencies using npm, consider using yarn.',
-            ),
-          );
-        }
 
         spawn.sync(
           !options.npm && isYarnAvailable ? 'yarn' : 'npm',

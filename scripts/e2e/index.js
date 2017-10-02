@@ -13,10 +13,10 @@ process.on('uncaughtException', (error) => {
 });
 
 module.exports = () => {
-  exec('npm install -g ./packages/gluestick-cli');
+  exec('sudo npm install -g ./packages/gluestick-cli');
   exec(
-    'npm install /home/ubuntu/gluestick/packages/gluestick-generators',
-    '/opt/circleci/nodejs/v6.9.0/lib/node_modules/gluestick-cli'
+    'sudo npm install ~/gluestick/packages/gluestick-generators',
+    '/usr/local/lib/node_modules/gluestick-cli'
   );
 
   // New project with npm

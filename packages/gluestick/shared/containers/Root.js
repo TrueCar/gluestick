@@ -1,114 +1,87 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
+import React, { Component } from 'react';
+import { StaticRouter } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
 import { Provider } from 'react-redux';
-import { useScroll } from 'react-router-scroll';
-
-import prepareRoutesWithTransitionHooks from '../lib/prepareRoutesWithTransitionHooks';
-
-type DefaultProps = {
-  routerHistory: ?Object,
-};
+import wrapRouteComponents from '../lib/wrapRouteComponents';
 
 type Props = {
-  /* eslint-disable */
-  routes: Object;
-  routerHistory: any;
-  routerContext: Object;
-  store: Object;
-  /* eslint-enable */
+  // httpClient: Object
+  routes: any[],
+  store: Object,
+  // eslint-disable-next-line
+  serverProps?: { location: string, context: Object },
 };
 
-type State = {
-  mounted: boolean,
+const location = {
+  prev: typeof window !== 'undefined' ? { ...window.location } : {},
+  next: {},
 };
 
-export default class Root extends Component<Props, State> {
-  static propTypes = {
-    /* eslint-disable */
-    routes: PropTypes.object,
-    routerHistory: PropTypes.any,
-    routerContext: PropTypes.object,
-    store: PropTypes.object,
-    /* eslint-enable */
-  };
+const routeDependencies = {
+  getLocationDiff() {
+    return { prev: { ...location.prev }, next: { ...location.next } };
+  },
+};
 
-  static defaultProps: DefaultProps = {
-    routerHistory: typeof window !== 'undefined' ? browserHistory : null,
-  };
-
-  state: State;
+export default class Root extends Component<void, Props, void> {
   props: Props;
-
-  router: Object;
+  Router: React.Component<*, *, *>;
+  routerProps: {
+    location?: string,
+    context?: {},
+  };
 
   constructor(props: Props) {
     super(props);
-    this.state = {
-      mounted: false,
-    };
 
-    this.router = this._renderRouter(props);
+    this.Router = StaticRouter;
+    this.routerProps = {};
+    if (typeof window !== 'undefined') {
+      this.Router = BrowserRouter;
+    }
   }
 
-  _setMounted() {
-    this.setState({ mounted: true });
-  }
+  updateLocation = () => {
+    location.prev = location.next;
+    location.next = { ...window.location };
+  };
 
   componentDidMount() {
-    this._setMounted();
+    ['pushState', 'replaceState', 'go', 'back', 'forward'].forEach(name => {
+      window.history[name] = new Proxy(window.history[name], {
+        apply(target, thisArg, args) {
+          location.prev = { ...window.location };
+          target.apply(thisArg, args);
+          location.next = { ...window.location };
+        },
+      });
+    });
+
+    window.addEventListener('popstate', this.updateLocation);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', this.updateLocation);
   }
 
   render() {
-    const { store } = this.props;
+    const { Router, routerProps, props: { routes, store, serverProps } } = this;
+
+    if (serverProps) {
+      routerProps.location = serverProps.location;
+      routerProps.context = serverProps.context;
+    }
 
     return (
       <Provider store={store}>
-        {this.router}
+        {/* $FlowIgnore */}
+        <Router {...routerProps}>
+          {renderRoutes(wrapRouteComponents(routes, routeDependencies))}
+        </Router>
       </Provider>
-    );
-  }
-
-  _renderRouter(props: Props): Object | Component<*, *> {
-    // server rendering
-    if (props.routerContext) return props.routerContext;
-
-    // router middleware
-    const render: Function = applyRouterMiddleware(
-      useScroll((prevRouterProps, { location, routes }) => {
-        // Initial render - skip scrolling
-        if (!prevRouterProps) {
-          return false;
-        }
-
-        // If the user provides custom scroll behaviour, use it, otherwise fallback to the default
-        // behaviour.
-        const { useScroll: customScrollBehavior } =
-          routes.find(route => route.useScroll) || {};
-
-        if (typeof customScrollBehavior === 'function') {
-          return customScrollBehavior(prevRouterProps, location);
-        } else if (customScrollBehavior) {
-          throw new Error('useScroll prop must be a function');
-        }
-
-        // Do not scroll on route change if a `ignoreScrollBehavior` prop is set to true on
-        // route components in the app. e.g.
-        // <Route ignoreScrollBehavior={true} path="mypage" component={MyComponent} />
-        if (routes.some(route => route.ignoreScrollBehavior)) {
-          return false;
-        }
-        return true;
-      }),
-    );
-
-    const { routes, routerHistory } = props;
-
-    return (
-      <Router history={routerHistory} render={render}>
-        {prepareRoutesWithTransitionHooks(routes)}
-      </Router>
     );
   }
 }

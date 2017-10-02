@@ -8,9 +8,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
-import { Root, getHttpClient } from "compiled/gluestick";
-import originalMatch from "react-router/lib/match";
-import browserHistory from "react-router/lib/browserHistory";
+import { Root } from "compiled/gluestick";
 
 // Cache for HMR to store data between multiple rerenders.
 const hotReloadCache: Object = {
@@ -21,47 +19,47 @@ const hotReloadCache: Object = {
   preRenderHooks: null,
 };
 
-const matchRouteAndRender = (
-  { match, history },
-  { getRoutes, store, httpClient },
+function startRender(
+  { routes, store, httpClient },
   { rootWrappers, rootWrappersOptions, preRenderHooks }
-) => {
-  match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
-    const entry = (
-      <AppContainer>
-        <EntryWrapper
-          radiumConfig={{userAgent: window.navigator.userAgent}}
-          store={store}
-          getRoutes={getRoutes}
-          httpClient={httpClient}
-          rootWrappers={rootWrappers}
-          rootWrappersOptions={{
-            userAgent: window.navigator.userAgent,
-            ...rootWrappersOptions
-          }}
-          {...renderProps}
-        />
-      </AppContainer>
-    );
+) {
 
+  function _startRender() {
     if (preRenderHooks && preRenderHooks.length > 0) {
       preRenderHooks.forEach((hook) => {
         if (typeof hook === "function") { hook(); }
       });
     }
-    render(entry, document.getElementById("main"));
-  });
-};
+    render(
+      <Root
+        store={store}
+        routes={routes}
+        httpClient={httpClient}
+        rootWrappers={rootWrappers}
+        rootWrappersOptions={{
+          userAgent: window.navigator.userAgent,
+          ...rootWrappersOptions
+        }}
+      />,
+      document.getElementById("main")
+    );
+  }
 
-// Rerender whole app (for HMR purpose).
-const rerender = (updatedGetRoutes) => {
+  if (process.env.NODE_ENV === "production") {
+    _startRender();
+  } else {
+    const { runWithErrorUtils } = require("compiled/gluestick/shared/lib/errorUtils");
+
+    runWithErrorUtils(_startRender);
+  }
+}
+
+// Re-render whole app (for HMR purpose).
+function renderClientApp(updatedGetRoutes) {
   const { httpClient, store, rootWrappers, rootWrappersOptions, preRenderHooks } = hotReloadCache;
 
-  matchRouteAndRender({
-    match: originalMatch,
-    history: browserHistory,
-  }, {
-    getRoutes: updatedGetRoutes,
+  startRender({
+    routes: updatedGetRoutes(store, httpClient),
     store,
     httpClient,
   }, {
@@ -69,23 +67,18 @@ const rerender = (updatedGetRoutes) => {
     rootWrappersOptions,
     preRenderHooks,
   });
-};
+}
 
 // This function is called only on client on initial render.
-const start = (
-  config,
-  getRoutes,
-  getStore,
+function startClientApp(
+  routes,
+  store,
+  httpClient,
   { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
-  match = originalMatch,
-  history = browserHistory
-) => {
+) {
   // Allow developers to include code that will be executed before the app is
   // set up in the browser.
   require("config/init.browser");
-
-  const httpClient = getHttpClient(config.httpClient);
-  const store = getStore(httpClient);
 
   if (process.env.NODE_ENV !== "production") {
     hotReloadCache.httpClient = httpClient;
@@ -95,11 +88,8 @@ const start = (
     hotReloadCache.preRenderHooks = preRenderHooks;
   }
 
-  matchRouteAndRender({
-    match,
-    history,
-  }, {
-    getRoutes,
+  startRender({
+    routes,
     store,
     httpClient,
   }, {
@@ -107,22 +97,21 @@ const start = (
     rootWrappersOptions,
     preRenderHooks,
   });
-};
+}
 
-export default class EntryWrapper extends Component {
-  static start = start;
-  static rerender = rerender;
+export default class Body extends Component {
+  static start = startClientApp;
+  static rerender = renderClientApp;
   static defaultProps = {
     rootWrappers: [],
   }
 
   render () {
     const {
-      routerContext,
-      getRoutes,
-      radiumConfig,
+      routes,
       store,
       httpClient,
+      serverProps,
       rootWrappers,
       rootWrappersOptions,
     } = this.props;
@@ -130,11 +119,14 @@ export default class EntryWrapper extends Component {
     return rootWrappers.reduce((prev, curr) => {
       return curr(prev, rootWrappersOptions);
     }, (
-      <Root
-        routerContext={routerContext}
-        routes={getRoutes(store, httpClient)}
-        store={store}
-      />
+      <AppContainer>
+        <Root
+          routes={routes}
+          store={store}
+          httpClient={httpClient}
+          serverProps={serverProps}
+        />
+      </AppContainer>
     ));
   }
 }

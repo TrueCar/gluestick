@@ -4,7 +4,7 @@
     "lerna": "lerna",
     "yarn:install": "lerna exec --concurrency=1 -- yarn",
     "install:npm": "npm install && npm run build && lerna bootstrap",
-    "install:yarn": "yarn && npm run build && npm run yarn:install && lerna bootstrap --concurrency=1",
+    "install:yarn": "yarn && yarn run build && yarn run yarn:install && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "jest --bail --no-cache -i",
     "test-coverage": "npm run test -- --coverage",
@@ -12,11 +12,21 @@
     "flow": "flow",
     "ci": "npm run lint && npm run flow && npm run test-coverage",
     "publish": "npm run build && ./scripts/deploy.js",
-    "e2e": "CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH ./scripts/e2e/runner.js",
-    "build": "node ./scripts/build.js"
+    "e2e": "./scripts/e2e/runner.js",
+    "build": "node ./scripts/build.js",
+    "docs:clean": "rm -rf _book",
+    "docs:prepare": "gitbook install",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:build": "npm run docs:prepare && gitbook build -g TrueCar/gluestick"
   },
   "dependencies": {
     "flow-typed": "2.1.5",
+    "gitbook": "^3.2.3",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-anchorjs": "^1.1.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-github": "2.0.0",
+    "gitbook-plugin-prism": "^2.3.0",
     "jest": "20.0.4",
     "lerna": "2.0.0-rc.5"
   },
@@ -52,6 +62,6 @@
     "transform": {
       "\\.js$": "<rootDir>/jestTransform.js"
     },
-    "testRegex": "src/(.*/)?__tests__/.*\\.test\\.js$"
+    "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$"
   }
 }

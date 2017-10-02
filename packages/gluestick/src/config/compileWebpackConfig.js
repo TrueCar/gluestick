@@ -208,7 +208,7 @@ module.exports = (
       return Object.keys(
         typeof serverEnvConfigFinal.resolve === 'object' &&
         !Array.isArray(serverEnvConfigFinal.resolve)
-          ? serverEnvConfigFinal.resolve.alias
+          ? serverEnvConfigFinal.resolve.alias || {}
           : {},
       ).filter(alias => alias === packageName).length
         ? cb()

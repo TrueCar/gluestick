@@ -21,7 +21,7 @@ export type GSConfig = {
   sharedPath: string,
   appsPath: string,
   configPath: string,
-  entryWrapperPath: string,
+  BodyPath: string,
   clientEntryInitPath: string,
   serverEntriesPath: string,
   entriesPath: string,
@@ -44,6 +44,12 @@ export type WebpackConfigEntry = string | boolean | Object | any[];
 
 export type WebpackConfig = {
   externals?: any[],
+  resolve?: {
+    extensions?: string[],
+    alias?: {
+      [key: string]: string,
+    },
+  },
   [key: string]: WebpackConfigEntry,
 };
 
@@ -191,6 +197,15 @@ export type RenderRequirements = {
 };
 
 export type RenderOutput = {
+  routerContext: {
+    action: string,
+    location: {
+      pathname: string,
+      search: string,
+      hash: string,
+    },
+    url: string,
+  },
   responseString: string,
   rootElement: Object,
 };

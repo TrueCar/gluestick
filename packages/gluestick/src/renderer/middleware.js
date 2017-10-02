@@ -11,20 +11,21 @@ import type {
   CacheManager,
   GSHooks,
   ServerPlugin,
-  RenderMethod,
   ComponentsCachingConfig,
 } from '../types';
 
+const React = require('react');
+const { matchRoutes } = require('react-router-config');
+
 const render = require('./render');
 const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
-const matchRoute = require('./helpers/matchRoute');
-const { getHttpClient, createStore, runBeforeRoutes } = require('../../shared');
+const { getHttpClient, createStore, runRouteHook } = require('../../shared');
 const { showHelpText, MISSING_404_TEXT } = require('./helpers/helpText');
 const setHeaders = require('./response/setHeaders');
 const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
-const createPluginUtils = require('../plugins/utils');
+const { getRenderMethod } = require('./lib/renderUtils');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -42,12 +43,31 @@ type EntriesArgs = {
   entriesPlugins: Object[],
 };
 
+type RouteConfig = {
+  component: React.Component<*>,
+  exact: boolean,
+  location: Location,
+  path: string,
+  routes: RouteConfig[],
+  strict: boolean,
+};
+
+type MatchedRoute = {
+  match: {
+    isExact: boolean,
+    params: any,
+    path: string,
+    url: string,
+  },
+  route: RouteConfig,
+};
+
 module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
-  { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
+  { Body, BodyWrapper }: { Body: Object, BodyWrapper: Object },
   { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
   options: Options = {
     envVariables: [],
@@ -71,7 +91,7 @@ module.exports = async function gluestickMiddleware(
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
-      return Promise.resolve();
+      return;
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
@@ -112,57 +132,33 @@ module.exports = async function gluestickMiddleware(
       reduxOptions.thunk,
     );
 
-    const {
-      redirectLocation,
-      renderProps,
-    }: { redirectLocation: Object, renderProps: Object } = await matchRoute(
-      { config, logger },
-      req,
-      requirements.routes,
-      store,
-      httpClient,
-    );
-    const renderPropsAfterHooks: Object = hooksHelper(
-      hooks.postRenderProps,
-      renderProps,
-    );
-    if (redirectLocation) {
-      hooksHelper(hooks.preRedirect, redirectLocation);
-      res.redirect(
-        301,
-        `${redirectLocation.pathname}${redirectLocation.search}`,
-      );
-      return Promise.resolve();
-    }
+    const routes = requirements.routes(store, httpClient);
 
-    if (!renderPropsAfterHooks) {
+    const branch: MatchedRoute[] = matchRoutes(routes, req.url);
+    if (!branch.length) {
       // This is only hit if there is no 404 handler in the react routes. A
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return Promise.resolve();
+      return;
     }
 
-    await runBeforeRoutes(store, renderPropsAfterHooks, {
-      isServer: true,
-      request: req,
-    });
+    // TODO: rename it
+    // const renderPropsAfterHooks: Object = hooksHelper(
+    //   hooks.postRenderProps,
+    //   renderProps,
+    // );
 
-    const currentRouteBeforeHooks: Object =
-      renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
+    await runRouteHook('onEnter', branch, req);
+
     const currentRoute: Object = hooksHelper(
       hooks.postGetCurrentRoute,
-      currentRouteBeforeHooks,
+      branch[branch.length - 1].route,
     );
+    // @TODO: might need a refactor
     setHeaders(res, currentRoute);
 
-    let renderMethod: RenderMethod;
-    const pluginUtils = createPluginUtils(logger);
-    const renderMethodFromPlugins =
-      serverPlugins && pluginUtils.getRenderMethod(serverPlugins);
-    if (renderMethodFromPlugins) {
-      renderMethod = renderMethodFromPlugins;
-    }
+    const renderMethod = getRenderMethod(logger, serverPlugins);
 
     const statusCode: number = getStatusCode(store, currentRoute);
 
@@ -173,12 +169,12 @@ module.exports = async function gluestickMiddleware(
         EntryPoint: requirements.Component,
         entryName: requirements.name,
         store,
-        routes: requirements.routes,
+        routes,
         httpClient,
+        currentRoute,
       },
-      { renderProps: renderPropsAfterHooks, currentRoute },
       {
-        EntryWrapper,
+        Body,
         BodyWrapper,
         entriesPlugins,
         entryWrapperConfig: options.entryWrapperConfig,
@@ -191,12 +187,18 @@ module.exports = async function gluestickMiddleware(
       hooks.postRender,
       outputBeforeHooks,
     );
-    res.status(statusCode).send(output.responseString);
-    return Promise.resolve();
+
+    if (output.routerContext && output.routerContext.url) {
+      res.redirect(
+        /^3/.test(statusCode.toString()) ? statusCode : 301,
+        output.routerContext.url,
+      );
+    } else {
+      res.status(statusCode).send(output.responseString);
+    }
   } catch (error) {
     hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler({ config, logger }, req, res, error);
   }
-  return Promise.resolve();
 };

@@ -3,6 +3,7 @@
 import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
 const webpack = require('webpack');
+const path = require('path');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -38,6 +39,10 @@ module.exports = (
         warnings: false,
       },
     }),
+    new webpack.NormalModuleReplacementPlugin(
+      /gluestick\/shared\/lib\/errorUtils/,
+      path.join(__dirname, './mocks/serverFileMock.js'),
+    ),
   );
   configuration.bail = true;
   return configuration;

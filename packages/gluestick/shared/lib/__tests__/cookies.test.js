@@ -74,6 +74,10 @@ describe('lib/cookies', () => {
       expect(cookieJar[1].name).toEqual('a');
       expect(cookieJar[1].value).toEqual('bcdef');
     });
+
+    it("doesn't crash on invalid cookie value", () => {
+      expect(() => parse('name=asdf%asdf==; path=/xyz; a=bcdef')).not.toThrow();
+    });
   });
 
   describe('merge', () => {

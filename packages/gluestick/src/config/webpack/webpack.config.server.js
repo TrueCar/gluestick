@@ -43,9 +43,9 @@ module.exports = (
     process.cwd(),
     gluestickConfig.entriesPath,
   );
-  config.resolve.alias['entry-wrapper'] = path.join(
+  config.resolve.alias.Body = path.join(
     process.cwd(),
-    gluestickConfig.entryWrapperPath,
+    gluestickConfig.BodyPath,
   );
   config.resolve.alias['gluestick-hooks'] = path.join(
     process.cwd(),

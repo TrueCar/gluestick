@@ -7,6 +7,9 @@
 .*/node_modules/promise/.*
 .*/node_modules/kefir/.*
 
+# TODO: remove
+.*/__tests__/.*
+
 [include]
 
 [libs]

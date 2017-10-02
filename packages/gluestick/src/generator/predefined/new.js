@@ -34,9 +34,7 @@ const templateDockerfile = require('../templates/Dockerfile')(
   createTemplate,
   tag,
 );
-const templateEntryWrapper = require('../templates/EntryWrapper')(
-  createTemplate,
-);
+const templateBody = require('../templates/Body')(createTemplate);
 const templateApp = require('../templates/App')(createTemplate);
 const templateInitBrowser = require('../templates/InitBrowser')(createTemplate);
 const templateReduxMiddleware = require('../templates/ReduxMiddleware')(
@@ -106,8 +104,8 @@ module.exports = (options: GeneratorOptions) => {
     // Gluestick directory
     {
       path: 'gluestick',
-      filename: 'EntryWrapper',
-      template: templateEntryWrapper,
+      filename: 'Body',
+      template: templateBody,
     },
     // Config
     {
