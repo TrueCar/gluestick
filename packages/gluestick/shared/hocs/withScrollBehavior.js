@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { getDisplayName } from './utils';
 
 type ScrollBehaviorConfig = {
@@ -21,7 +21,7 @@ const defaults = {
 export default function withScrollBehavior(config: ScrollBehaviorConfig = {}) {
   const { ignore, behavior } = { ...defaults, ...config };
   return (Component: React.ComponentType<any>) => {
-    class ScrollBehavior extends React.Component {
+    class ScrollBehavior extends React.Component<*, *> {
       componentDidMount() {
         setTimeout(() => {
           const { prev, next } = this.props.getLocationDiff();

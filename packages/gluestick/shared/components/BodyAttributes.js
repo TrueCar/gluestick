@@ -11,7 +11,7 @@ type Props = {
   children: any,
 };
 
-class BodyAttributes extends Component<void, Props, void> {
+class BodyAttributes extends Component<Props, void> {
   render() {
     return Children.only(this.props.children);
   }

@@ -93,7 +93,7 @@ const options = {
 
 const getEntries = (routes): Entries => ({
   '/': {
-    component: class extends React.Component {
+    component: class extends React.Component<*> {
       render() {
         return <div>Index</div>;
       }

@@ -21,19 +21,19 @@ const React = require('react');
 const clone = require('clone');
 const render = require('../render');
 
-class Index extends React.Component {
+class Index extends React.Component<*> {
   render() {
     return <div>Index</div>;
   }
 }
 // eslint-disable-next-line react/no-multi-comp
-class EntryWrapper extends React.Component {
+class EntryWrapper extends React.Component<*> {
   render() {
     return <div>EntryWrapper</div>;
   }
 }
 // eslint-disable-next-line react/no-multi-comp
-class BodyWrapper extends React.Component {
+class BodyWrapper extends React.Component<*> {
   render() {
     return <div>BodyWrapper</div>;
   }
@@ -186,7 +186,7 @@ describe('renderer/render', () => {
         { plugin: () => {}, meta: {} },
       ];
       // eslint-disable-next-line react/no-multi-comp
-      class MockEntryWrapper extends React.Component {
+      class MockEntryWrapper extends React.Component<*> {
         static plugins = [];
         constructor(props) {
           super(props);

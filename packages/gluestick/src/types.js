@@ -198,13 +198,13 @@ export type RenderRequirements = {
 
 export type RenderOutput = {
   routerContext: {
-    action: string,
-    location: {
+    action?: string,
+    location?: {
       pathname: string,
       search: string,
       hash: string,
     },
-    url: string,
+    url?: string,
   },
   responseString: string,
   rootElement: Object,

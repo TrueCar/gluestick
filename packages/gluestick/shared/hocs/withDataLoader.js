@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import * as React from 'react';
 import { getDisplayName } from './utils';
 
 function isInitialRender({ history }: any, DataLoader) {
@@ -24,17 +24,17 @@ type DataLoaderProps = {
   match: any,
 };
 
+type DataLoaderState = {
+  loaded: boolean,
+};
+
 export default function withDataLoader(config: DataLoaderConfig) {
   const { Loading, onEnter, shouldReloadData } = config;
 
   return (Component: React.ComponentType<any>) => {
-    class DataLoader extends React.Component {
+    class DataLoader extends React.Component<DataLoaderProps, DataLoaderState> {
       static onEnter = onEnter;
       static isRendered = false;
-
-      state: {
-        loaded: boolean,
-      };
 
       constructor(props: DataLoaderProps) {
         super(props);
