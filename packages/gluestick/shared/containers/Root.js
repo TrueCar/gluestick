@@ -51,13 +51,22 @@ export default class Root extends React.Component<Props> {
 
   componentDidMount() {
     ['pushState', 'replaceState', 'go', 'back', 'forward'].forEach(name => {
-      window.history[name] = new Proxy(window.history[name], {
-        apply(target, thisArg, args) {
-          location.prev = { ...window.location };
-          target.apply(thisArg, args);
-          location.next = { ...window.location };
-        },
-      });
+      function apply(target: Function, thisArg: any, args: any[]) {
+        location.prev = { ...window.location };
+        target.apply(thisArg, args);
+        location.next = { ...window.location };
+      }
+
+      if (typeof Proxy !== 'undefined') {
+        window.history[name] = new Proxy(window.history[name], {
+          apply,
+        });
+      } else {
+        const target = window.history[name];
+        window.history[name] = function(...args: any[]) {
+          apply(target, this || window.history, args);
+        };
+      }
     });
 
     window.addEventListener('popstate', this.updateLocation);

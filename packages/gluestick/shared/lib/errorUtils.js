@@ -1,3 +1,5 @@
+/* @flow */
+
 import React from 'react';
 import { render } from 'react-dom';
 
@@ -55,7 +57,9 @@ function dismissErrorOverlay() {
 }
 
 function showErrorOverlay() {
-  errorRoot.style.display = 'block';
+  if (errorRoot) {
+    errorRoot.style.display = 'block';
+  }
 }
 
 function crash(error: Error, filename: ?string) {
@@ -72,8 +76,8 @@ function crash(error: Error, filename: ?string) {
 function reportBuildError(error: Error) {
   logError(error);
   const [, trace] = error.stack.split('\n');
-  const filename = trace.match(/webpack-internal:\/{3}([^:]+)/)[1];
-  crash(error, filename);
+  const filenameMatch = trace.match(/webpack-internal:\/{3}([^:]+)/);
+  crash(error, filenameMatch ? filenameMatch[1] : null);
 }
 
 function stopReportingRuntimeErrors() {
@@ -82,9 +86,10 @@ function stopReportingRuntimeErrors() {
 }
 
 function startReportingRuntimeErrors() {
+  // $FlowFixMe
   console.error = value => {
     logError(value);
-    crash(value instanceof Error ? value : { message: value.toString() });
+    crash(value instanceof Error ? value : new Error(value.toString()));
   };
 
   window.addEventListener('error', crash);
