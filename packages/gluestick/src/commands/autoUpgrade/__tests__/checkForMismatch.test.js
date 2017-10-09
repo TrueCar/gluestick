@@ -23,7 +23,9 @@ const orignialPromptModulesUpdate = utils.promptModulesUpdate;
 
 describe('autoUpgrade/checkForMismatch', () => {
   beforeEach(() => {
-    utils.promptModulesUpdate = jest.fn(() => Promise.resolve(true));
+    utils.promptModulesUpdate = jest.fn(() =>
+      Promise.resolve({ shouldFix: true, mismatchedModules: {} }),
+    );
   });
 
   afterEach(() => {

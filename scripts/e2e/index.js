@@ -5,7 +5,7 @@ const spawn = require('./utils/spawn');
 const exec = require('./utils/exec');
 const assertions = require('./utils/assertions');
 
-const CWD = path.join(process.cwd(), '../', 'e2eApp');
+const CWD = path.join(process.cwd(), '../e2eApp');
 
 process.on('uncaughtException', (error) => {
   console.error(error);
@@ -20,7 +20,8 @@ module.exports = () => {
   );
 
   // New project with npm
-  exec('gluestick new e2eApp --npm --dev ./gluestick', path.join(process.cwd(), '../'));
+  exec('gluestick new e2eApp --dev ./gluestick', path.dirname(CWD));
+  exec('rm node_modules/gluestick/.babelrc', CWD);
   // New apps (camel and kebab case)
   exec('gluestick generate app secondApp', CWD);
   exec('gluestick generate app third-app', CWD);
