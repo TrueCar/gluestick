@@ -5,6 +5,7 @@
  *   root, src, actions, assets, components, containers, reducers, config
  * To import/require renderer server file use relative paths.
  */
+/* eslint-disable prefer-arrow-callback */
 
 import type {
   Context,
@@ -53,7 +54,7 @@ const envVariables: string[] =
     ? process.env.ENV_VARIABLES
     : [];
 
-module.exports = ({ config, logger }: Context) => {
+module.exports = function startRenderer({ config, logger }: Context) {
   const assetsFilename = path.join(
     process.cwd(),
     config.GSConfig.buildAssetsPath,
@@ -114,7 +115,11 @@ module.exports = ({ config, logger }: Context) => {
   // Call express App Hook which accept app as param.
   hooksHelper.call(hooks.postServerRun, app);
 
-  app.use((req: Request, res: Response, next: Function) => {
+  app.use(function gluestickRequestHandler(
+    req: Request,
+    res: Response,
+    next: Function,
+  ) {
     // Use SSR middleware only for entries/app routes
     if (
       !Object.keys(entries).find((key: string): boolean =>

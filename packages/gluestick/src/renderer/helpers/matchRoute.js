@@ -4,13 +4,13 @@ import type { Context, Request } from '../../types';
 const { match } = require('react-router');
 const { prepareRoutesWithTransitionHooks } = require('../../../shared');
 
-module.exports = (
+module.exports = function matchRoute(
   context: Context,
   req: Request,
   getRoutes: (store: Object, httpClient: Object) => Object,
   store: Object,
   httpClient: Object,
-) => {
+) {
   return new Promise((resolve, reject) => {
     const routes: Object = prepareRoutesWithTransitionHooks(
       getRoutes(store, httpClient),

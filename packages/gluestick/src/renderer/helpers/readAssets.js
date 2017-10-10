@@ -3,7 +3,7 @@ const fs = require('fs');
 
 let cache: ?Object = null;
 
-module.exports = (assetsPath: string): Promise<Object> => {
+module.exports = function readAssets(assetsPath: string): Promise<Object> {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production' && cache) {
       resolve(cache);

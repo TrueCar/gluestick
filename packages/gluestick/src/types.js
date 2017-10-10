@@ -44,6 +44,12 @@ export type WebpackConfigEntry = string | boolean | Object | any[];
 
 export type WebpackConfig = {
   externals?: any[],
+  resolve?: {
+    extensions?: string[],
+    alias?: {
+      [key: string]: string,
+    },
+  },
   [key: string]: WebpackConfigEntry,
 };
 

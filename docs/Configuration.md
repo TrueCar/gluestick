@@ -1,14 +1,14 @@
 # Configuration
 
-There are few files which allows to configure GleuStick:
-* [`src/entires.json`](./Apps.md) - define entries (apps)
+There are few files which allows to configure GlueStick:
+* [`src/entires.json`](./configuration/Apps.md) - define entries (apps)
 * [`src/vendor.js`](#vendoring) - Define vendored modules/packages
-* [`src/gluestick.hooks.js`](./CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
-* [`src/gluestick.plugins.js`](./Plugins.md) - specify which plugins to use
+* [`src/gluestick.hooks.js`](./configuration/CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
+* [`src/gluestick.plugins.js`](./configuration/Plugins.md) - specify which plugins to use
 * [`src/gluestick.config.js`](#gluestick-config) - overwrite gluestick config
-* [`src/webpack.hooks.js`](./CachingAndHooks.md#webpack-hooks) - overwrite webpack client and server configuation
+* [`src/webpack.hooks.js`](./configuration/CachingAndHooks.md#webpack-hooks) - overwrite webpack client and server configuation
 * [`src/config/application.js`](#global-project-config) - global project configuration
-* [`src/config/caching.server.js`](./CachingAndHooks.md#caching) - setup component caching
+* [`src/config/caching.server.js`](./configuration/CachingAndHooks.md#caching) - setup component caching
 * `src/config/init.browser.js` - specify code which will run right before client bundle is run in browser
 * [`src/config/redux-middleware.js`](#redux-config) - specify additional redux middleware and overwrite thunk middleware
 
@@ -25,7 +25,7 @@ This allows you to [inject custom argument](https://github.com/gaearon/redux-thu
 
 **IMPORTANT**: This configuration is project wide, meaning it will be used for every app/entrypoint.
 If you need to overwrite it for specific app/entrypoint, you must create configuration file for this
-app/entrypoint, update `src/entries.json` to use that file (more on this [here](./Apps.md)) and write additional property `reduxOptions: { middlewares: Function[], thunk: ?Function }`.
+app/entrypoint, update `src/entries.json` to use that file (more on this [here](./configuration/Apps.md)) and write additional property `reduxOptions: { middlewares: Function[], thunk: ?Function }`.
 
 ## Global project config
 All project-wide configuration lives here in `src/config/application.js`.
