@@ -119,7 +119,7 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
       - run: docker pull node:6.10-slim
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run: BRANCH=$CIRCLE_BRANCH yarn run publish -- $CIRCLE_TAG  
 
   docs:
