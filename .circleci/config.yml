@@ -175,7 +175,7 @@ workflows:
             - build
           filters:
             branches:
-              only: enable-e2e
+              only: next
       - docs:
           requires:
             - build
