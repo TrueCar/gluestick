@@ -186,8 +186,8 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              only: staging
             tags:
-              only: /v\d+\.\d+\.\d+.*/
+              only: /.*/
+          branches:
+              only: /.*/
   
