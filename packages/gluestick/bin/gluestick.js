@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-if (!process.env.GS_SKIP_GLOBAL_CHECK && !__dirname.startsWith(process.cwd())) {
+if (!__dirname.startsWith(process.cwd())) {
   const red = require('chalk').red;
   // prettier-ignore
   console.log(red("It looks like you've installed the `gluestick` package globally,"));

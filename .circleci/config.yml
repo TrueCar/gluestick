@@ -107,8 +107,7 @@ jobs:
       - restore_cache: *restore-repo-cache
 
       - run: yarn run build
-
-      - run: CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH GS_SKIP_GLOBAL_CHECK=true && yarn run e2e
+      - run: yarn run e2e
 
   deploy:
     <<: *job-defaults
