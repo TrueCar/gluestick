@@ -151,7 +151,12 @@ workflows:
   version: 2
   default:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
       - lint:
           requires:
             - build
@@ -187,7 +192,7 @@ workflows:
             - build
           filters:
             tags:
-              only: /.*/
-          branches:
-              only: /.*/
+              only: /v\d+\.\d+\.\d+.*/
+            branches:
+              only: staging
   
