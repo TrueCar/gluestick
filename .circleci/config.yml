@@ -102,9 +102,12 @@ jobs:
   e2e:
     <<: *job-defaults
     steps:
+      - checkout
+
       - restore_cache: *restore-repo-cache
 
-      - run: CI_PULL_REQUEST=$CI_PULL_REQUEST CIRCLE_BRANCH=$CIRCLE_BRANCH yarn run e2e
+      - run: yarn run build
+      - run: yarn run e2e
 
   deploy:
     <<: *job-defaults
@@ -167,12 +170,12 @@ workflows:
           filters:
             branches:
               ignore: staging
-      #- e2e:
-      #    requires:
-      #      - build
-      #    filters:
-      #      branches:
-      #        only: next
+      - e2e:
+          requires:
+            - build
+          filters:
+            branches:
+              only: next
       - docs:
           requires:
             - build
