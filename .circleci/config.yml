@@ -114,9 +114,11 @@ jobs:
     steps:
       - restore_cache: *restore-repo-cache
 
+      - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
       - setup_remote_docker
 
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      #- run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
       - run: docker pull node:6.10-slim
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
