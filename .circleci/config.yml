@@ -114,13 +114,16 @@ jobs:
     steps:
       - restore_cache: *restore-repo-cache
 
+      - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
       - setup_remote_docker
 
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: git config --global user.email $DOCKER_EMAIL
+      - run: git config --global user.name "CircleCI"
 
       - run: docker pull node:6.10-slim
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
-      - run: BRANCH=$CIRCLE_BRANCH yarn run publish -- $CIRCLE_TAG  
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run: BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG  
 
   docs:
     <<: *job-defaults
@@ -151,7 +154,12 @@ workflows:
   version: 2
   default:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
       - lint:
           requires:
             - build
@@ -186,8 +194,8 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              only: staging
             tags:
               only: /v\d+\.\d+\.\d+.*/
+            branches:
+              only: staging
   
