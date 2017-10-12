@@ -9,7 +9,7 @@ import type {
 } from '../../types';
 
 const LRU = require('lru-cache');
-// const SSRCaching = require('electrode-react-ssr-caching');
+const SSRCaching = require('electrode-react-ssr-caching');
 
 // Creating cache
 const DEFAULT_TTL: number = 60 * 60;
@@ -36,8 +36,8 @@ module.exports = function createCacheManager(
   const enableComponentCaching: EnableComponentCaching = config => {
     if (isProduction && config && config.components) {
       // only enable caching if componentCacheConfig has an object
-      // SSRCaching.enableCaching(true);
-      // SSRCaching.setCachingConfig(config);
+      SSRCaching.enableCaching(true);
+      SSRCaching.setCachingConfig(config);
     }
   };
   const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
