@@ -9,7 +9,7 @@ Follow these four simple steps to use Radium with your component.
 1) Import Radium
 
 
-```bash
+```js
 import Radium from "radium"
 ```
 
@@ -17,7 +17,7 @@ import Radium from "radium"
 2) Decorate your class using the Radium decorator
 
 
-```bash
+```js
 @Radium
 export default class Home extends Component {
 ```
@@ -26,7 +26,7 @@ export default class Home extends Component {
 3) Define your styles in an object.
 
 
-```bash
+```js
 const styles = {
     header: {
         color: "green"
@@ -38,32 +38,32 @@ const styles = {
 4) Apply the style to an element
 
 
-```bash
+```js
 <div style={styles.header}>Hello World!</div>
 ```
 
 
 So your entire component should now look like this:
 
-```bash
-import React, { Component, PropTypes } from "react";
+```js
+import React, { Component } from "react";
 import Radium from "radium";
 
 @Radium
 export default class Home extends Component {
-    render () {
-        return (
-            <div style={styles.header}>
-                Hello World!
-            </div>
-        );
-    }
+  render () {
+    return (
+      <div style={styles.header}>
+        Hello World!
+      </div>
+    );
+  }
 }
 
 const styles = {
-    header: {
-        color: "green"
-    }
+  header: {
+    color: "green"
+  }
 };
 
 ```

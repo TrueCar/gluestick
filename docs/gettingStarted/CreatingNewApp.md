@@ -8,7 +8,7 @@ Time to create a new project: to create a new project, run the following command
 gluestick new ExampleApp
 ```
 
-This is will create a folder named ExampleApp in the folder on which you just ran the command. GlueStick sets up the folder structure and installs all of the ```node_modules `` that you will need for the base application.
+This is will create a folder named ExampleApp in the folder on which you just ran the command. GlueStick sets up the folder structure and installs all of the `node_modules` that you will need for the base application.
 Here is an example of what you can expect to see in the newly created ExampleApp folder:
 
 ```bash

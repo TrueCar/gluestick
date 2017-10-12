@@ -1,6 +1,7 @@
 /* @flow */
 
-import { Component, Children, PropTypes } from 'react';
+import { Component, Children } from 'react';
+import PropTypes from 'prop-types';
 import withSideEffect from 'react-side-effect';
 
 const supportedHTML4Attributes: { bgColor: string } = {
