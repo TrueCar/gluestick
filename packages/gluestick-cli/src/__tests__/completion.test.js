@@ -44,7 +44,13 @@ const cliTab = (line, cwd = '.') => {
   return completion.default(cwd, argvMimic ? argvMimic.split(' ') : []);
 };
 
-const CLI_COMMANDS = ['completion', 'new', 'reinstall-dev', 'reset-hard', 'watch'];
+const CLI_COMMANDS = [
+  'completion',
+  'new',
+  'reinstall-dev',
+  'reset-hard',
+  'watch',
+];
 
 const PROJECT_COMMANDS = [
   'auto-upgrade',

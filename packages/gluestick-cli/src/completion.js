@@ -274,8 +274,8 @@ if (require.main === module) {
     commanderProject = null;
   }; // test support for un-memoizing
   exports.template = () => {
-    const shellScriptPath = path.join(__dirname, '..', 'bin', 'completion.sh');
+    const shellScriptPath = join(__dirname, '..', 'bin', 'completion.sh');
     process.stdout.write(`export GS_COMP=${__dirname}\n`);
     process.stdout.write(readFileSync(shellScriptPath));
-  }
+  };
 }
