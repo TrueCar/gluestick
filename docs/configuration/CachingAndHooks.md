@@ -83,7 +83,7 @@ export default {
 | preRenderFromCache     |        true        | before we render output from cache       |
 | postRenderRequirements |        true        | after we get requirements for entrypoint |
 | preRedirect            |        false       | before redirect                          |
-| postRenderProps        |        true        | after we get render props                |
+| postRouteMatch        |        true        | after the routes are matched                |
 | postGetCurrentRoute    |        true        | after we get current route               |
 | postRender             |        true        | after render                             |
 | error                  |        false       | before we render error template          |
