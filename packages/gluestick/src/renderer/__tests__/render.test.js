@@ -27,9 +27,9 @@ class Index extends React.Component<*> {
   }
 }
 // eslint-disable-next-line react/no-multi-comp
-class EntryWrapper extends React.Component<*> {
+class Body extends React.Component<*> {
   render() {
-    return <div>EntryWrapper</div>;
+    return <div>Body</div>;
   }
 }
 // eslint-disable-next-line react/no-multi-comp
@@ -87,19 +87,14 @@ describe('renderer/render', () => {
   const store = {
     getState: jest.fn(() => {}),
   };
-  const getRoutes = () => [{ path: 'hola' }];
-  const renderProps = {
-    routes: getRoutes(),
-  };
+  const routes = [{ path: 'hola' }];
 
   const renderResult = async (
     email: boolean,
     cache: boolean,
     renderMethod,
   ): Object => {
-    const currentRoute = clone(renderProps);
-    currentRoute.email = email;
-    currentRoute.cache = cache;
+    const currentRoute = { email, cache };
     const results = await render(
       context,
       request,
@@ -107,12 +102,12 @@ describe('renderer/render', () => {
         EntryPoint: Index,
         entryName: 'main',
         store,
-        routes: getRoutes,
+        routes,
         httpClient,
+        currentRoute,
       },
-      { renderProps, currentRoute },
       {
-        EntryWrapper,
+        Body,
         BodyWrapper,
         entryWrapperConfig,
         envVariables,
@@ -180,25 +175,23 @@ describe('renderer/render', () => {
       };
     };
 
-    it('should prepare plugins and pass it to EntryWrapper', () => {
+    it('should prepare plugins and pass it to Body', () => {
       const entriesRuntimePlugins = [
         { plugin: v => v, meta: { wrapper: true } },
         { plugin: () => {}, meta: {} },
       ];
       // eslint-disable-next-line react/no-multi-comp
-      class MockEntryWrapper extends React.Component<*> {
+      class MockBody extends React.Component<*> {
         static plugins = [];
         constructor(props) {
           super(props);
-          MockEntryWrapper.plugins = props.rootWrappers;
+          MockBody.plugins = props.rootWrappers;
         }
         render() {
           return null;
         }
       }
-      const currentRoute = clone(renderProps);
-      currentRoute.email = false;
-      currentRoute.cache = false;
+      const currentRoute = { email: false, cache: false };
       render(
         context,
         request,
@@ -206,12 +199,12 @@ describe('renderer/render', () => {
           EntryPoint: Index,
           entryName: 'main',
           store,
-          routes: getRoutes,
+          routes,
           httpClient,
+          currentRoute,
         },
-        { renderProps, currentRoute },
         {
-          EntryWrapper: MockEntryWrapper,
+          Body: MockBody,
           BodyWrapper,
           entryWrapperConfig,
           envVariables,
@@ -220,9 +213,7 @@ describe('renderer/render', () => {
         { assets, loadjsConfig, cacheManager },
         {},
       );
-      expect(MockEntryWrapper.plugins).toEqual([
-        entriesRuntimePlugins[0].plugin,
-      ]);
+      expect(MockBody.plugins).toEqual([entriesRuntimePlugins[0].plugin]);
     });
 
     describe('when the route is an email route', () => {
