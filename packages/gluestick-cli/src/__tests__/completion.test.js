@@ -27,7 +27,7 @@ const fs = require('fs');
 
 jest.mock(
   'node_modules/gluestick/package.json',
-  () => ({ version: '1.14.0' }), // enable the check for updated local dependency
+  () => ({ version: '1.15.0' }), // enable the check for updated local dependency
   { virtual: true },
 );
 jest.mock(
@@ -64,10 +64,10 @@ describe('gluestick-cli/src/completion.js', () => {
     completion.default('.', []);
   });
 
-  describe('when CWD is a project with gluestick < 1.14', () => {
+  describe('when CWD is a project with gluestick < 1.15', () => {
     beforeAll(() => {
       const projectPDJ = require('node_modules/gluestick/package.json');
-      projectPDJ.version = '1.13';
+      projectPDJ.version = '1.14';
       completion.reload();
       // $FlowIgnore:
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists
@@ -81,7 +81,7 @@ describe('gluestick-cli/src/completion.js', () => {
     beforeAll(() => {
       // $FlowIgnore:
       const projectPDJ = require('node_modules/gluestick/package.json');
-      projectPDJ.version = '1.14';
+      projectPDJ.version = '1.15';
       completion.reload();
       // $FlowIgnore:
       fs.existsReturn = true; // ./node_modules/.bin/gluestick exists

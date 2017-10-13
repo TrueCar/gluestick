@@ -35,7 +35,7 @@ function commanderOpts(commander, name) {
 
 function loadCommanderProject(cwd) {
   if (!commanderProject) {
-    const completionVersion = '1.14'; // TODO: update me
+    const completionVersion = '1.15';
     const project = [
       'auto-upgrade',
       'bin',
