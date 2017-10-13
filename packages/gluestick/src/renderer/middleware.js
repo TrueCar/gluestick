@@ -134,7 +134,11 @@ module.exports = async function gluestickMiddleware(
 
     const routes = requirements.routes(store, httpClient);
 
-    const branch: MatchedRoute[] = matchRoutes(routes, req.url);
+    const branch: MatchedRoute[] = hooksHelper(
+      hooks.postRouteMatch,
+      matchRoutes(routes, req.url),
+    );
+
     if (!branch.length) {
       // This is only hit if there is no 404 handler in the react routes. A
       // not found handler is included by default in new projects.
@@ -143,18 +147,13 @@ module.exports = async function gluestickMiddleware(
       return;
     }
 
-    // TODO: rename it
-    // const renderPropsAfterHooks: Object = hooksHelper(
-    //   hooks.postRenderProps,
-    //   renderProps,
-    // );
-
     await runRouteHook('onEnter', branch, req);
 
     const currentRoute: Object = hooksHelper(
       hooks.postGetCurrentRoute,
       branch[branch.length - 1].route,
     );
+
     // @TODO: might need a refactor
     setHeaders(res, currentRoute);
 
@@ -189,10 +188,11 @@ module.exports = async function gluestickMiddleware(
     );
 
     if (output.routerContext && output.routerContext.url) {
+      const { url } = hooksHelper(hooks.preRedirect, output.routerContext);
       res.redirect(
         /^3/.test(statusCode.toString()) ? statusCode : 301,
         // $FlowFixMe
-        output.routerContext.url,
+        url,
       );
     } else {
       res.status(statusCode).send(output.responseString);

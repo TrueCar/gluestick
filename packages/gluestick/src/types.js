@@ -268,7 +268,7 @@ export type GSHooks = {
   preRenderFromCache?: Hook,
   postRenderRequirements?: Hook,
   preRedirect?: Hook,
-  postRenderProps?: Hook,
+  postRouteMatch?: Hook,
   postGetCurrentRoute?: Hook,
   postRender?: Hook,
   error?: Hook,

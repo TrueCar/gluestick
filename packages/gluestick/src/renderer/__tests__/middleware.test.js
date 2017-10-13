@@ -17,19 +17,9 @@ jest.mock('../../../shared', () => ({
   getHttpClient: jest.fn(),
   createStore: jest.fn(() => ({})),
   prepareRoutesWithTransitionHooks: jest.fn(val => val),
-  runBeforeRoutes: jest.fn(() => new Promise(r => r())),
+  runRouteHook: jest.fn(() => Promise.resolve()),
 }));
-jest.mock('../helpers/matchRoute.js', () =>
-  jest.fn((ctx, req, routes) => ({
-    redirectLocation: routes().mockBehaviour.redirect
-      ? {
-          pathname: 'pathname',
-          search: 'search',
-        }
-      : null,
-    renderProps: routes().mockBehaviour.renderProps,
-  })),
-);
+
 jest.mock('../helpers/errorHandler.js', () => jest.fn());
 jest.mock('../render.js', () =>
   jest.fn(() => ({
@@ -47,6 +37,7 @@ const React = require('react');
 const middleware = require('../middleware');
 const errorHandler = require('../helpers/errorHandler');
 const hooksHelper = require('../helpers/hooks').call;
+const render = require('../render');
 
 const logger: BaseLogger = {
   info: jest.fn(),
@@ -77,7 +68,7 @@ const hooks: GSHooks = {
   preRenderFromCache: jest.fn(v => v),
   postRenderRequirements: jest.fn(v => v),
   preRedirect: jest.fn(v => v),
-  postRenderProps: jest.fn(v => v),
+  postRouteMatch: jest.fn(v => v),
   postGetCurrentRoute: jest.fn(v => v),
   postRender: jest.fn(v => v),
   error: jest.fn(v => v),
@@ -107,7 +98,7 @@ const entriesConfig: EntriesConfig = mocks.entriesConfig;
 
 const assets = {};
 const loadjsConfig = {};
-const EntryWrapper = {};
+const Body = {};
 const BodyWrapper = {};
 const entriesPlugins = [];
 
@@ -132,19 +123,13 @@ describe('renderer/middleware', () => {
   });
 
   it('should render output', async () => {
-    const entries: Entries = getEntries({
-      mockBehaviour: {
-        renderProps: {
-          routes: [{}],
-        },
-      },
-    });
+    const entries: Entries = getEntries([{ path: '/', component: {} }]);
     await middleware(
       context,
       request,
       response,
       { entries, entriesConfig, entriesPlugins },
-      { EntryWrapper, BodyWrapper },
+      { Body, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -154,7 +139,7 @@ describe('renderer/middleware', () => {
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
-    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
+    expect(hooks.postRouteMatch).toHaveBeenCalledTimes(1);
     expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(1);
     expect(hooks.postRender).toHaveBeenCalledTimes(1);
     expect(hooks.error).toHaveBeenCalledTimes(0);
@@ -163,43 +148,44 @@ describe('renderer/middleware', () => {
   });
 
   it('should redirect', async () => {
-    const entries = getEntries({
-      mockBehaviour: {
-        redirect: true,
+    render.mockImplementationOnce(() => ({
+      responseString: '',
+      routerContext: {
+        url: '/test',
       },
-    });
+    }));
+
+    const entries = getEntries([
+      {
+        path: '/',
+      },
+    ]);
+
     await middleware(
       context,
       request,
       response,
       { entries, entriesConfig, entriesPlugins },
-      { EntryWrapper, BodyWrapper },
+      { Body, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
     );
+
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
-    expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(1);
-    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
-    expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
-    expect(hooks.postRender).toHaveBeenCalledTimes(0);
     expect(hooks.error).toHaveBeenCalledTimes(0);
-    expect(response.redirect.mock.calls[0]).toEqual([301, 'pathnamesearch']);
+    expect(response.redirect.mock.calls[0]).toEqual([301, '/test']);
   });
 
   it('should send 404 status', async () => {
-    const entries = getEntries({
-      mockBehaviour: {
-        renderProps: null,
-      },
-    });
+    const entries = getEntries([]);
     await middleware(
       context,
       request,
       response,
       { entries, entriesConfig, entriesPlugins },
-      { EntryWrapper, BodyWrapper },
+      { Body, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -207,7 +193,7 @@ describe('renderer/middleware', () => {
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
-    expect(hooks.postRenderProps).toHaveBeenCalledTimes(1);
+    expect(hooks.postRouteMatch).toHaveBeenCalledTimes(1);
     expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
     expect(hooks.postRender).toHaveBeenCalledTimes(0);
     expect(hooks.error).toHaveBeenCalledTimes(0);
@@ -221,7 +207,7 @@ describe('renderer/middleware', () => {
       request,
       response,
       { entries, entriesConfig, entriesPlugins },
-      { EntryWrapper, BodyWrapper },
+      { Body, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -232,31 +218,17 @@ describe('renderer/middleware', () => {
 
   describe('in production', () => {
     it('should send cached output', async () => {
-      const entries = getEntries({
-        mockBehaviour: {
-          renderProps: {
-            routes: [{}],
-          },
-        },
-      });
       await middleware(
         context,
         Object.assign(request, { url: '/cached' }),
         response,
-        { entries, entriesConfig, entriesPlugins },
-        { EntryWrapper, BodyWrapper },
+        { entries: getEntries([]), entriesConfig, entriesPlugins },
+        { Body, BodyWrapper },
         { assets, loadjsConfig },
         options,
         { hooks, hooksHelper },
       );
       expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
-      expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
-      expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
-      expect(hooks.postRenderProps).toHaveBeenCalledTimes(0);
-      expect(hooks.postGetCurrentRoute).toHaveBeenCalledTimes(0);
-      expect(hooks.postRender).toHaveBeenCalledTimes(0);
-      expect(hooks.error).toHaveBeenCalledTimes(0);
-      expect(response.status.mock.calls[0]).toEqual([200]);
       expect(response.send.mock.calls[0]).toEqual(['cached']);
     });
   });
