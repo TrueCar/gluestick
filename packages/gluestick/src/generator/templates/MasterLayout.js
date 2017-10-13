@@ -4,7 +4,8 @@ import type { CreateTemplate } from '../../types';
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 /* @flow */
 
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import config from "config/application";
 
