@@ -93,8 +93,7 @@ module.exports = (appName, options, exitWithError) => {
         // Run the new project command gluestick _init; --npm or -n options are not used.
         const args = commander.rawArgs
           .slice(2)
-          .filter(v => !['new', '-n', '--npm'].includes(v));
-        args.unshift('_init');
+          .filter(v => v !== '--npm' && v !== '-n');
 
         spawn.sync('./node_modules/.bin/gluestick', args, {
           cwd: process.cwd(),
