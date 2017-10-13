@@ -120,6 +120,7 @@ jobs:
 
       - run: git config --global user.email $DOCKER_EMAIL
       - run: git config --global user.name "CircleCI"
+      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - run: docker pull node:6.10-slim
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
