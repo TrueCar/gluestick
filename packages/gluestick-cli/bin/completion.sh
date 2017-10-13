@@ -1,7 +1,8 @@
-
-export GS_COMP=$(dirname $(readlink -f $(which gluestick)))/../build
+# ^- $GS_COMP export should be prepended after installing:
+#  `gluestick completion > /etc/bash_completion.d/gluestick`
+#
 # dev testing:
-# source completion.sh && ch ../src && GS_COMP=$PWD 
+# source completion.sh && ch ../src && export GS_COMP=$PWD 
 
 _gluestick () 
 {

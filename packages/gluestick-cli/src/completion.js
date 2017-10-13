@@ -4,7 +4,7 @@
   source ../bin/completion.sh && GS_COMP=$PWD
 */
 const { join } = require('path');
-const { existsSync, readdirSync } = require('fs');
+const { existsSync, readdirSync, readFileSync } = require('fs');
 const commanderGlobal = require('./cli');
 
 let commanderProject = null;
@@ -273,4 +273,9 @@ if (require.main === module) {
   exports.reload = () => {
     commanderProject = null;
   }; // test support for un-memoizing
+  exports.template = () => {
+    const shellScriptPath = path.join(__dirname, '..', 'bin', 'completion.sh');
+    process.stdout.write(`export GS_COMP=${__dirname}\n`);
+    process.stdout.write(readFileSync(shellScriptPath));
+  }
 }

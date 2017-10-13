@@ -82,6 +82,18 @@ commander
     resetHard();
   });
 
+commander
+  .command('completion')
+  .description('output the bash_completion shell script contents')
+  .action(() => {
+    const __d = __dirname;
+    spawn(
+      'node',
+      ['-e', `require("${__d}/completion").template()`],
+      { stdio: 'inherit' },
+    );
+  });
+
 commander.command('*', null, { noHelp: true }).action(() => {
   const childProcess = spawn(
     './node_modules/.bin/gluestick',
