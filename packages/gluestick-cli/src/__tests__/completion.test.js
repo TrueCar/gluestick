@@ -44,7 +44,7 @@ const cliTab = (line, cwd = '.') => {
   return completion.default(cwd, argvMimic ? argvMimic.split(' ') : []);
 };
 
-const CLI_COMMANDS = ['new', 'reinstall-dev', 'reset-hard', 'watch'];
+const CLI_COMMANDS = ['completion', 'new', 'reinstall-dev', 'reset-hard', 'watch'];
 
 const PROJECT_COMMANDS = [
   'auto-upgrade',
@@ -209,6 +209,7 @@ describe('gluestick-cli/src/completion.js', () => {
         '--skip-if-ok',
         '-Z',
         '--static',
+        '--no-progress',
       ];
       it('expects an argument for -Z and --static', () => {
         const options = cliTab('gluestick build -Z ');
