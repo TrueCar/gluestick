@@ -27,6 +27,15 @@ gluestick new TestApp --dev ./gluestick
 
 Now, from within the project you can run `gluestick watch` to automatically watch for changes in `gluestick` monorepo and apply them to the project.
 
+__Tip__: If you reinstalled `node_modules`, but doesn't see your changes in `gluestick` reflected, it is likely that the old `gluestick` package is cached.
+In this case run the following commands:
+
+```bash
+yarn cache clean gluestick
+rm -rf node_modules
+yarn install
+```
+
 ### Contributing to the codebase
 
 GlueStick consist of multiple separate packages inside single monorepo, which is handled by [Lerna](https://github.com/lerna/lerna).
