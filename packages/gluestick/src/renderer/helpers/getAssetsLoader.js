@@ -20,12 +20,12 @@ module.exports = function getAssetsLoader(
 
     var loadVendorThenEntry = function() {
       loadjs(['${vendorBundle}', '${entryPointBundle}'], {
-        error: function() { throw new Error('Failed to load ${vendorBundle} or ${entryPointBundle}'); },
+        error: function(pathsNotFound) { throw new Error('Failed to load ${vendorBundle} or ${entryPointBundle}. Missing paths count: ${pathsNotFound.length}. First missing path: ${pathsNotFound}'); },
         async: false,
         numRetries: 10,
         before: config.before,
       });
-    }
+    };
 
     document.addEventListener('DOMContentLoaded', function() {
       loadVendorThenEntry();
