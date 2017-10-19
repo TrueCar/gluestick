@@ -20,7 +20,7 @@ module.exports = function getAssetsLoader(
 
     var loadVendorThenEntry = function() {
       loadjs(['${vendorBundle}', '${entryPointBundle}'], {
-        error: function(pathsNotFound) { throw new Error('Failed to load ${vendorBundle} or ${entryPointBundle}. Missing paths count: ' + pathsNotFound.length + '. First missing path: ' + pathsNotFound[0]); },
+        error: function(pathsNotFound) { throw new Error('Failed to load ' + pathsNotFound.join(", ")); },
         async: false,
         numRetries: 10,
         before: config.before,
