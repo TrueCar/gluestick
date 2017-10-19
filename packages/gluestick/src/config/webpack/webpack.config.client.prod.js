@@ -11,7 +11,7 @@ module.exports = (
   clientConfig: UniversalWebpackConfigurator,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: false });
-  configuration.devtool = 'source-map';
+  configuration.devtool = 'hidden-source-map';
   const scssLoaders = configuration.module.rules[1].use;
   configuration.module.rules[1].use = ExtractTextPlugin.extract({
     fallback: scssLoaders[0],
@@ -38,6 +38,7 @@ module.exports = (
       compress: {
         warnings: false,
       },
+      sourceMap: true,
     }),
     new webpack.NormalModuleReplacementPlugin(
       /gluestick\/shared\/lib\/errorUtils/,
