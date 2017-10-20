@@ -16,7 +16,7 @@
     "react": "16.x"
   },
   "dependencies": {
-    "radium": "0.18.1"
+    "radium": "0.19.5"
   },
   "devDependencies": {
     "gluestick": "1.13.6",
