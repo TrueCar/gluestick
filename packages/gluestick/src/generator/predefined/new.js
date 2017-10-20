@@ -59,9 +59,6 @@ const templateGluestickConfig = require('../templates/gluestick.config')(
 const templateWebpackHooks = require('../templates/webpack.hooks')(
   createTemplate,
 );
-const templateCachingServer = require('../templates/caching.server')(
-  createTemplate,
-);
 const templateVendor = require('../templates/vendor')(createTemplate);
 
 const { flowVersion, flowMapper } = require('../constants');
@@ -154,11 +151,6 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src/config',
       filename: 'redux-middleware.js',
       template: templateReduxMiddleware,
-    },
-    {
-      path: 'src/config',
-      filename: 'caching.server.js',
-      template: templateCachingServer,
     },
     // Shared
     {

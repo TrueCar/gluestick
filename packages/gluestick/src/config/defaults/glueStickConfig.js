@@ -39,7 +39,6 @@ const config: GSConfig = {
   gluestickConfigPath: 'src/gluestick.config.js',
   hooksPath: 'src/gluestick.hooks.js',
   webpackHooksPath: 'src/webpack.hooks.js',
-  cachingConfigPath: 'src/config/caching.server',
   vendorSourcePath: 'src/vendor.js',
   nodeModulesPath: 'node_modules',
   autoUpgrade: {

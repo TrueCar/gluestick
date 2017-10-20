@@ -12,7 +12,6 @@ import type {
   GSHooks,
   ServerPlugin,
   RenderMethod,
-  ComponentsCachingConfig,
 } from '../types';
 
 const render = require('./render');
@@ -58,15 +57,12 @@ module.exports = async function gluestickMiddleware(
   },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
-  cachingConfig: ?ComponentsCachingConfig,
 ) {
   /**
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
-    // If we have cached item then render it.
-    cacheManager.enableComponentCaching(cachingConfig);
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
