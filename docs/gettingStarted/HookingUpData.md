@@ -3,55 +3,55 @@
 Now that you have a reducer that is responsible for handling the todos part of your application-state, you can expose that state to the rest of your application through the container.
 In order to do so, update your todo container to the following:
 
-src/containers/Todos.js
+`src/containers/Todos.js`
 
-```bash
-import React, { Component, PropTypes } from "react";
+```js
+import React, { Component } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import TodoList from "../components/TodoList";
 
 @connect(
-    // Expose the part of the state that our todos reducer is reponsible for to our container
-    (state) => ({todos: state.todos}),
-    (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
+  // Expose the part of the state that our todos reducer is reponsible for to our container
+  (state) => ({todos: state.todos}),
+  (dispatch) => bindActionCreators({/** _INSERT_ACTION_CREATORS_ **/}, dispatch)
 )
 export default class Todos extends Component {
-    static fetchData ({dispatch}) {}
+  static fetchData ({dispatch}) {}
 
-    render () {
-        // Use our TodoList component and pass our todos to it
-        return (
-            <TodoList todos={this.props.todos} />
-        );
-    }
+  render () {
+    // Use our TodoList component and pass our todos to it
+    return (
+      <TodoList todos={this.props.todos} />
+    );
+  }
 }
 
 ```
 
 Next, you’ll need to get your TodoList component showing the items on your todo list. Update your TodoList component
 
-```bash
-import React, { Component, PropTypes } from "react";
+```js
+import React, { Component } from "react";
 
 export default class TodoList extends Component {
-    render () {
-        const todos = this.renderTodos();
-        return (
-            <div>
-                {todos}
-            </div>
-        );
-    }
+  render () {
+    const todos = this.renderTodos();
+    return (
+      <div>
+        {todos}
+      </div>
+    );
+  }
 
-    renderTodos () {
-        if (!this.props.todos) return;
+  renderTodos () {
+    if (!this.props.todos) return;
 
-        return this.props.todos.map((todo, index) => {
-            return <div key={index}>{todo}</div>;
-        });
-    }
+    return this.props.todos.map((todo, index) => {
+      return <div key={index}>{todo}</div>;
+    });
+  }
 }
 ```
 

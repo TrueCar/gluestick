@@ -2,7 +2,7 @@
 
 The reducer that you just created determines the new state based on an action that is passed to it. These actions are typically simple objects that include a type property and value and will include any additional data the reducer will need to perform the action. An action for creating a new todo might look like this:
 
-```bash
+```js
 {
     type: "ADD_TODO",
     text: "Write getting started guide"
@@ -10,38 +10,38 @@ The reducer that you just created determines the new state based on an action th
 ```
 Given that typing these objects out every time is inefficient, the typical flow in a Redux application uses “action creators.” These are very simple functions that return action objects. This will give us a nice place to expose the type as a constant for your reducer, as well. You don’t create a generator for action creators because, as you will see, there’s nothing to generate.
 
-Create a new file ```src/actions/todos.js```
+Create a new file `src/actions/todos.js`
 
-```bash
-
+```js
 export const ADD_TODO = "ADD_TODO";
 
 export function addTodo (text) {
-    return {
-        type: ADD_TODO,
-        text: text
-    };
+  return {
+    type: ADD_TODO,
+    text: text
+  };
 }
 ```
-Now tell the reducer what to do with this action. Edit ```src/reducers/todos.js```
 
-```bash
+Now tell the reducer what to do with this action. Edit `src/reducers/todos.js`
+
+```js
 import { ADD_TODO } from "../actions/todos";
 
 const INITIAL_STATE = ["First Item", "Second Item"];
 
 export default (state=INITIAL_STATE, action) => {
-    switch (action.type) {
-        case ADD_TODO:
-            return [action.text, ...state];
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case ADD_TODO:
+      return [action.text, ...state];
+    default:
+      return state;
+  }
 };
 ```
 
 
-First, import your ```ADD_TODO``` constant at the top.
+First, import your `ADD_TODO` constant at the top.
 
 Then, add a special case to a switch statement for actions of that type.
 
