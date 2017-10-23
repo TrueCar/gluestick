@@ -90,8 +90,7 @@ module.exports = (appName, options, exitWithError) => {
             stdio: 'inherit',
           },
         );
-        // Remove --npm or -n options cause this is no longer needed in
-        // gluestick new command.
+        // Run the new project command gluestick _init; --npm or -n options are not used.
         const args = commander.rawArgs
           .slice(2)
           .filter(v => v !== '--npm' && v !== '-n');

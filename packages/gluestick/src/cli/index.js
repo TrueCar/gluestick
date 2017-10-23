@@ -56,8 +56,8 @@ commander.option('-l, --light', 'use light color schema for logging', () => {
 });
 
 commander
-  .command('new')
-  .description('generate a new application')
+  .command('new', '', { noHelp: true })
+  .description('run the new project generator')
   .arguments('<appName>')
   .option('-d, --dev <path>', 'path to dev version of gluestick')
   .option('-s, --skip-main', 'gluestick will not generate main app')
@@ -213,4 +213,4 @@ commander.command('*', null, { noHelp: true }).action(cmd => {
   commander.help();
 });
 
-commander.parse(process.argv);
+module.exports = commander;
