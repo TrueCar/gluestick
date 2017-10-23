@@ -33,8 +33,6 @@ const hotReloadCache: Object = {
   preRenderHooks: null,
 };
 
-const 
-
 const matchRouteAndRender = (
   { match, history },
   { getRoutes, store, httpClient },
