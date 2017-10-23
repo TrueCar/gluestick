@@ -27,6 +27,7 @@
     "gitbook-plugin-edit-link": "^2.0.2",
     "gitbook-plugin-github": "2.0.0",
     "gitbook-plugin-prism": "^2.3.0",
+    "history": "^3.0.0",
     "jest": "20.0.4",
     "lerna": "2.0.0-rc.5"
   },

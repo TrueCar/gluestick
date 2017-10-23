@@ -1,5 +1,5 @@
 /* @flow */
-import type { CreateTemplate } from '../../types';
+import type { CreateTemplate } from "../../types";
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 /* @flow */
@@ -10,7 +10,19 @@ import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { Root, getHttpClient } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
-import browserHistory from "react-router/lib/browserHistory";
+import createBrowserHistory from "history/lib/createBrowserHistory";
+import createRouterHistory from "react-router/lib/createRouterHistory";
+
+const routerHistory = createRouterHistory(createBrowserHistory);
+const browserHistory = routerHistory && routerHistory({
+  parseQueryString: function () {
+    try {
+      return queryString.parse.apply(null, arguments);
+    } catch (e) {
+      return {};
+    }
+  }
+});
 
 // Cache for HMR to store data between multiple rerenders.
 const hotReloadCache: Object = {
@@ -20,6 +32,8 @@ const hotReloadCache: Object = {
   rootWrappersOptions: null,
   preRenderHooks: null,
 };
+
+const 
 
 const matchRouteAndRender = (
   { match, history },
