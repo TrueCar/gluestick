@@ -7,14 +7,12 @@
  */
 /* eslint-disable prefer-arrow-callback */
 
-import type {
-  Context,
-  Request,
-  Response,
-  ServerPlugin,
-  BaseLogger,
-} from '../types';
+import type { Context, Request, Response } from '../types';
 
+// This file should only do things required for production, not development,
+// in order to support webpack-hot-server-middleware.
+
+// I don't know if the comment below is still true
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
 // $FlowIgnore
@@ -25,8 +23,8 @@ const fs = require('fs');
 const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
+const loggerMiddleware = require('./loggerMiddleware');
 const readAssets = require('./helpers/readAssets');
-const onFinished = require('on-finished');
 // $FlowIgnore
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
@@ -45,7 +43,6 @@ const cachingConfig = require('caching-config').default;
 
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
-const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
 
@@ -55,6 +52,8 @@ const envVariables: string[] =
     : [];
 
 module.exports = function startRenderer({ config, logger }: Context) {
+  // Do this with readFileSync once after flush-chunks is in.
+  // This becomes production-only.
   const assetsFilename = path.join(
     process.cwd(),
     config.GSConfig.buildAssetsPath,
@@ -62,20 +61,14 @@ module.exports = function startRenderer({ config, logger }: Context) {
   );
   if (!fs.existsSync(assetsFilename)) {
     console.log('\n');
+    // Throw an error, don't continue!
     logger.error(
       `File ${assetsFilename} does not exist. Did you forget to compile the client bundle? ` +
         `Run 'gluestick build --client' and try again.`,
     );
   }
 
-  const pluginUtils = createPluginUtils(logger);
-  const serverPlugins: ServerPlugin[] = prepareServerPlugins(
-    logger,
-    entriesPlugins,
-  );
-
-  // Use custom logger from plugins or default logger.
-  const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);
+  const serverPlugins = prepareServerPlugins(logger, entriesPlugins);
 
   // Merge hooks from project and plugins' hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
@@ -92,7 +85,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
     .map((plugin: Object) => plugin.ref);
 
   const app: Object = express();
-  app.use(compression());
+  app.use(compression()); // done in both dev + production?
   app.use(
     '/assets',
     express.static(path.join(process.cwd(), config.GSConfig.buildAssetsPath)),
@@ -115,12 +108,14 @@ module.exports = function startRenderer({ config, logger }: Context) {
   // Call express App Hook which accept app as param.
   hooksHelper.call(hooks.postServerRun, app);
 
+  app.use(loggerMiddleware(logger));
   app.use(function gluestickRequestHandler(
     req: Request,
     res: Response,
     next: Function,
   ) {
     // Use SSR middleware only for entries/app routes
+    // Separate middleware or separate function?
     if (
       !Object.keys(entries).find((key: string): boolean =>
         parseRoutePath(key).test(req.url),
@@ -130,19 +125,10 @@ module.exports = function startRenderer({ config, logger }: Context) {
       return;
     }
 
-    if (customLogger) {
-      customLogger.info({ req });
-      onFinished(res, (err, response) => {
-        if (err) {
-          customLogger.error(err);
-        } else {
-          customLogger.info({ res: response });
-        }
-      });
-    }
-
+    // If this isn't done on every request, this becomes much simpler.
     readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
+        // Use a closure for most of this.
         return middleware(
           { config, logger },
           req,
@@ -162,6 +148,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
           cachingConfig,
         );
       })
+      // Do this inside middleware, not here.
       .catch((error: Error) => {
         logger.error(error);
         res.sendStatus(500);
