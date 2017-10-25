@@ -25,6 +25,8 @@ const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
+const parseRoutePath = require('./helpers/parseRoutePath');
+const readAssets = require('./helpers/readAssets');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -44,11 +46,12 @@ type EntriesArgs = {
 
 module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
-  req: Request,
-  res: Response,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
-  { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
+  {
+    assetsFilename,
+    loadjsConfig,
+  }: { assetsFilename: string, loadjsConfig: Object },
   options: Options = {
     envVariables: [],
     httpClient: {},
@@ -59,7 +62,22 @@ module.exports = async function gluestickMiddleware(
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
   cachingConfig: ?ComponentsCachingConfig,
+  req: Request,
+  res: Response,
+  next: () => void,
 ) {
+  // Use SSR middleware only for entries/app routes
+  if (
+    !Object.keys(entries).find((key: string): boolean =>
+      parseRoutePath(key).test(req.url),
+    )
+  ) {
+    next();
+    return;
+  }
+
+  const assets = await readAssets(assetsFilename);
+
   /**
    * TODO: better logging
    */
@@ -71,7 +89,7 @@ module.exports = async function gluestickMiddleware(
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
-      return Promise.resolve();
+      return;
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
@@ -132,7 +150,7 @@ module.exports = async function gluestickMiddleware(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return Promise.resolve();
+      return;
     }
 
     if (!renderPropsAfterHooks) {
@@ -140,7 +158,7 @@ module.exports = async function gluestickMiddleware(
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return Promise.resolve();
+      return;
     }
 
     await runBeforeRoutes(store, renderPropsAfterHooks, {
@@ -192,11 +210,14 @@ module.exports = async function gluestickMiddleware(
       outputBeforeHooks,
     );
     res.status(statusCode).send(output.responseString);
-    return Promise.resolve();
   } catch (error) {
     hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler({ config, logger }, req, res, error);
+    // Do we even need this now?
+    // .catch((error: Error) => {
+    //   logger.error(error);
+    //   res.sendStatus(500);
+    // });
   }
-  return Promise.resolve();
 };

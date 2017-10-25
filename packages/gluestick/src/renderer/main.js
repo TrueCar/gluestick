@@ -25,6 +25,8 @@ const compression = require('compression');
 const middleware = require('./middleware');
 const loggerMiddleware = require('./loggerMiddleware');
 const readAssets = require('./helpers/readAssets');
+// Fix these. Set up .flowconfig file to point to expected interface.
+// We're going to need something very similar for `import Header from "partner"`
 // $FlowIgnore
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
@@ -44,7 +46,6 @@ const cachingConfig = require('caching-config').default;
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const setProxies = require('./helpers/setProxies');
-const parseRoutePath = require('./helpers/parseRoutePath');
 
 const envVariables: string[] =
   process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
@@ -52,7 +53,7 @@ const envVariables: string[] =
     : [];
 
 module.exports = function startRenderer({ config, logger }: Context) {
-  // Do this with readFileSync once after flush-chunks is in.
+  // Do this with readFileSync once after webpack-flush-chunks is in.
   // This becomes production-only.
   const assetsFilename = path.join(
     process.cwd(),
@@ -114,45 +115,28 @@ module.exports = function startRenderer({ config, logger }: Context) {
     res: Response,
     next: Function,
   ) {
-    // Use SSR middleware only for entries/app routes
-    // Separate middleware or separate function?
-    if (
-      !Object.keys(entries).find((key: string): boolean =>
-        parseRoutePath(key).test(req.url),
-      )
-    ) {
-      next();
-      return;
-    }
-
     // If this isn't done on every request, this becomes much simpler.
-    readAssets(assetsFilename)
-      .then((assets: Object): Promise<void> => {
-        // Use a closure for most of this.
-        return middleware(
-          { config, logger },
-          req,
-          res,
-          { entries, entriesConfig, entriesPlugins: runtimePlugins },
-          { EntryWrapper, BodyWrapper },
-          { assets, loadjsConfig: applicationConfig.loadjs || {} },
-          {
-            reduxMiddlewares,
-            thunkMiddleware,
-            envVariables,
-            httpClient: applicationConfig.httpClient || {},
-            entryWrapperConfig: {},
-          },
-          { hooks, hooksHelper: hooksHelper.call },
-          serverPlugins,
-          cachingConfig,
-        );
-      })
-      // Do this inside middleware, not here.
-      .catch((error: Error) => {
-        logger.error(error);
-        res.sendStatus(500);
-      });
+    // Use a closure for most of this.
+    // Middleware is (configuration) => (req, res) => {}
+    return middleware(
+      { config, logger },
+      { entries, entriesConfig, entriesPlugins: runtimePlugins },
+      { EntryWrapper, BodyWrapper },
+      { assetsFilename, loadjsConfig: applicationConfig.loadjs || {} },
+      {
+        reduxMiddlewares,
+        thunkMiddleware,
+        envVariables,
+        httpClient: applicationConfig.httpClient || {},
+        entryWrapperConfig: {},
+      },
+      { hooks, hooksHelper: hooksHelper.call },
+      serverPlugins,
+      cachingConfig,
+      req,
+      res,
+      next,
+    );
   });
 
   // 404 handler

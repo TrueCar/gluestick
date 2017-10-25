@@ -141,8 +141,6 @@ describe('renderer/middleware', () => {
     });
     await middleware(
       context,
-      request,
-      response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
@@ -150,6 +148,9 @@ describe('renderer/middleware', () => {
       { hooks, hooksHelper },
       [],
       {},
+      request,
+      response,
+      () => {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -170,13 +171,16 @@ describe('renderer/middleware', () => {
     });
     await middleware(
       context,
-      request,
-      response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
+      undefined,
+      undefined,
+      request,
+      response,
+      () => {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -196,13 +200,16 @@ describe('renderer/middleware', () => {
     });
     await middleware(
       context,
-      request,
-      response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
+      undefined,
+      undefined,
+      request,
+      response,
+      () => {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -218,13 +225,16 @@ describe('renderer/middleware', () => {
     const entries = {};
     await middleware(
       context,
-      request,
-      response,
       { entries, entriesConfig, entriesPlugins },
       { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
+      undefined,
+      undefined,
+      request,
+      response,
+      () => {},
     );
     expect(hooks.error).toHaveBeenCalledTimes(1);
     expect(errorHandler).toHaveBeenCalledTimes(1);
@@ -241,13 +251,16 @@ describe('renderer/middleware', () => {
       });
       await middleware(
         context,
-        Object.assign(request, { url: '/cached' }),
-        response,
         { entries, entriesConfig, entriesPlugins },
         { EntryWrapper, BodyWrapper },
         { assets, loadjsConfig },
         options,
         { hooks, hooksHelper },
+        undefined,
+        undefined,
+        Object.assign(request, { url: '/cached' }),
+        response,
+        () => {},
       );
       expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
       expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
