@@ -44,7 +44,7 @@ type EntriesArgs = {
   entriesPlugins: Object[],
 };
 
-module.exports = async function gluestickMiddleware(
+module.exports = (
   { config, logger }: Context,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
@@ -62,10 +62,7 @@ module.exports = async function gluestickMiddleware(
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
   cachingConfig: ?ComponentsCachingConfig,
-  req: Request,
-  res: Response,
-  next: () => void,
-) {
+) => async (req: Request, res: Response, next: () => void) => {
   // Use SSR middleware only for entries/app routes
   if (
     !Object.keys(entries).find((key: string): boolean =>
@@ -76,13 +73,13 @@ module.exports = async function gluestickMiddleware(
     return;
   }
 
-  const assets = await readAssets(assetsFilename);
-
   /**
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
+    const assets = await readAssets(assetsFilename);
+
     // If we have cached item then render it.
     cacheManager.enableComponentCaching(cachingConfig);
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);

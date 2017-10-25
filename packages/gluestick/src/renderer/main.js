@@ -24,7 +24,6 @@ const express = require('express');
 const compression = require('compression');
 const middleware = require('./middleware');
 const loggerMiddleware = require('./loggerMiddleware');
-const readAssets = require('./helpers/readAssets');
 // Fix these. Set up .flowconfig file to point to expected interface.
 // We're going to need something very similar for `import Header from "partner"`
 // $FlowIgnore
@@ -110,15 +109,8 @@ module.exports = function startRenderer({ config, logger }: Context) {
   hooksHelper.call(hooks.postServerRun, app);
 
   app.use(loggerMiddleware(logger));
-  app.use(function gluestickRequestHandler(
-    req: Request,
-    res: Response,
-    next: Function,
-  ) {
-    // If this isn't done on every request, this becomes much simpler.
-    // Use a closure for most of this.
-    // Middleware is (configuration) => (req, res) => {}
-    return middleware(
+  app.use(
+    middleware(
       { config, logger },
       { entries, entriesConfig, entriesPlugins: runtimePlugins },
       { EntryWrapper, BodyWrapper },
@@ -133,11 +125,8 @@ module.exports = function startRenderer({ config, logger }: Context) {
       { hooks, hooksHelper: hooksHelper.call },
       serverPlugins,
       cachingConfig,
-      req,
-      res,
-      next,
-    );
-  });
+    ),
+  );
 
   // 404 handler
   // @TODO: support custom 404 error page
