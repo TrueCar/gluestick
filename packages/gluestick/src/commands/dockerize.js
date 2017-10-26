@@ -19,6 +19,7 @@ module.exports = ({ getLogger }: CommandAPI, commandArguments: any[]) => {
       'docker',
       [
         'build',
+        '--no-cache',
         '-t',
         name,
         '-f',
