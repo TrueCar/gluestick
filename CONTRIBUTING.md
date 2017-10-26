@@ -13,7 +13,7 @@ To minimize problems with symlinks, please use [Yarn](https://yarnpkg.com/lang/e
 1. `yarn run install:yarn`
 1. `yarn global add file:./packages/gluestick-cli` (If you haven't done it already)
 
-Now, your ready to go.
+Now, you're ready to go.
 
 If your contribution requires a GlueStick project to test it, run:
 ```bash
@@ -24,6 +24,11 @@ For example, if you want to create a project named `TestApp` next to `gluestick`
 ```bash
 gluestick new TestApp --dev ./gluestick
 ```
+
+If you would like to use a local copy of GlueStick with an existing project:
+1. Update your project's package.json file to point to your local copy of GlueStick. This should point to the "gluestick" subpackage _within_ the GlueStick repo, not the `"gluestick": "file:../path/to/gluestick/packages/gluestick"`.
+1. Remove the node_modules folder with `rm -rf node_modules`.
+1. Run `yarn`. Note that yarn is *required*, as npm's symlinks cause a variety of errors. If you see the error, "It looks like you've installed the `gluestick` package globally", you will need to repeat these instructions and use `yarn`.
 
 Now, from within the project you can run `gluestick watch` to automatically watch for changes in `gluestick` monorepo and apply them to the project.
 
