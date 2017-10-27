@@ -1,8 +1,9 @@
 /* @flow */
-import type { Context, Request } from '../../types';
-
-const { match } = require('react-router');
-const { prepareRoutesWithTransitionHooks } = require('../../../shared');
+import type { Context, Request } from "../../types";
+const queryString = require("query-string");
+const { match } = require("react-router");
+const { prepareRoutesWithTransitionHooks } = require("../../../shared");
+const parseUrl = require("url").parse;
 
 module.exports = function matchRoute(
   context: Context,
@@ -15,8 +16,17 @@ module.exports = function matchRoute(
     const routes: Object = prepareRoutesWithTransitionHooks(
       getRoutes(store, httpClient),
     );
+
+    let location;
+    try {
+      queryString.parse(req.url);
+      location = req.url;
+    } catch (e) {
+      location = parseUrl(req.url).pathname;
+    }
+
     match(
-      { routes, location: req.url },
+      { routes, location },
       (error: any, redirectLocation: Object, renderProps: Object) => {
         if (error) {
           reject(error);
