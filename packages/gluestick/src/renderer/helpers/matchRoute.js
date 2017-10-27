@@ -17,6 +17,9 @@ module.exports = function matchRoute(
       getRoutes(store, httpClient),
     );
 
+    // React Router v3 does not catch the exceptions thrown by query-string,
+    // which causes 500 errors on pages to be shown
+    // We are handling it gracefully by omitting the query instead
     let location: string;
     try {
       queryString.parse(req.url);
