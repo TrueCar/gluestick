@@ -1,9 +1,10 @@
 /* @flow */
-import type { Context, Request } from "../../types";
-const queryString = require("query-string");
-const { match } = require("react-router");
-const { prepareRoutesWithTransitionHooks } = require("../../../shared");
-const parseUrl = require("url").parse;
+import type { Context, Request } from '../../types';
+
+const queryString = require('query-string');
+const { match } = require('react-router');
+const { prepareRoutesWithTransitionHooks } = require('../../../shared');
+const parseUrl = require('url').parse;
 
 module.exports = function matchRoute(
   context: Context,
