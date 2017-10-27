@@ -17,12 +17,13 @@ module.exports = function matchRoute(
       getRoutes(store, httpClient),
     );
 
-    let location;
+    let location: string;
     try {
       queryString.parse(req.url);
       location = req.url;
     } catch (e) {
-      location = parseUrl(req.url).pathname;
+      const parsedUrl: Object = parseUrl(req.url);
+      location = parsedUrl && parsedUrl.pathname ? parsedUrl.pathname : '';
     }
 
     match(
