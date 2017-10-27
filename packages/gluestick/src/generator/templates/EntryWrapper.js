@@ -10,19 +10,7 @@ import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { Root, getHttpClient } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
-import createBrowserHistory from "history/lib/createBrowserHistory";
-import createRouterHistory from "react-router/lib/createRouterHistory";
-
-const routerHistory = createRouterHistory(createBrowserHistory);
-const browserHistory = routerHistory && routerHistory({
-  parseQueryString: function () {
-    try {
-      return queryString.parse.apply(null, arguments);
-    } catch (e) {
-      return {};
-    }
-  }
-});
+import browserHistory from "react-router/lib/browserHistory";
 
 // Cache for HMR to store data between multiple rerenders.
 const hotReloadCache: Object = {
