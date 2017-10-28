@@ -81,4 +81,30 @@ describe('renerer/helpers/matchRoute', () => {
       });
     });
   });
+
+  describe('when the route has an invalid queryParam', () => {
+    it('should forward to the promise `catch` with an error', () => {
+
+      const mockMatch = jest.fn();
+      jest.mock('react-router', () => ({
+        match: mockMatch,
+      }));
+
+      matchRoute(
+        context,
+        {
+          url: 'zzzz.com?badquery=*()!^%$#@“:”><',
+          headers: {
+            host: 'localhost',
+          },
+        },
+        getRoutes,
+        store,
+        httpClient,
+      ).then(() => {
+        expect(mockMatch).toHaveBeenCalled();
+        expect(mockMatch.mock.calls.location).toEqual('zzzz.com');
+      });
+    });
+  });
 });
