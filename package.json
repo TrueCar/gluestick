@@ -28,8 +28,7 @@
     "gitbook-plugin-github": "2.0.0",
     "gitbook-plugin-prism": "^2.3.0",
     "jest": "20.0.4",
-    "lerna": "2.0.0-rc.5",
-    "query-string": "^4.2.2"
+    "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
