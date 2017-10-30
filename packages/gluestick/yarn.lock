@@ -1809,9 +1809,9 @@ globals@^9.0.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
-gluestick-generators@1.13.6:
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.13.6.tgz#ab40c6fedbab2d5d5df8ce1dde74dd8ce9450550"
+gluestick-generators@1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.14.0.tgz#8a2f8cb2f4c8bf6e2bcce67b80887c967058de85"
   dependencies:
     mkdirp "^0.5.1"
 
@@ -4713,6 +4713,14 @@ webpack-hot-middleware@^2.18.2:
     html-entities "^1.2.0"
     querystring "^0.2.0"
     strip-ansi "^3.0.0"
+
+webpack-hot-server-middleware@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/webpack-hot-server-middleware/-/webpack-hot-server-middleware-0.2.0.tgz#898f2ac7edf9d9a4ac5162b89698948bc9bb8ee6"
+  dependencies:
+    debug "^2.2.0"
+    require-from-string "^1.2.1"
+    source-map-support "^0.4.2"
 
 webpack-sources@^0.1.0:
   version "0.1.4"

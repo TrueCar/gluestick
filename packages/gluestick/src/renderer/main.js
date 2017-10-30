@@ -45,6 +45,7 @@ const cachingConfig = require('caching-config').default;
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const setProxies = require('./helpers/setProxies');
+const webpack = require('webpack');
 
 const envVariables: string[] =
   process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
@@ -71,6 +72,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
   const serverPlugins = prepareServerPlugins(logger, entriesPlugins);
 
   // Merge hooks from project and plugins' hooks.
+  // This should 'await' or we have runaway async inside hooks.
   const hooks = hooksHelper.merge(projectHooks, serverPlugins);
 
   // Developers can add an optional hook that
@@ -81,10 +83,10 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
   // Get runtime plugins that will be passed to EntryWrapper.
   const runtimePlugins: Object[] = entriesPlugins
-    .filter((plugin: Object) => plugin.type === 'runtime')
-    .map((plugin: Object) => plugin.ref);
+    .filter((plugin) => plugin.type === 'runtime')
+    .map((plugin) => plugin.ref);
 
-  const app: Object = express();
+  const app = express();
   app.use(compression()); // done in both dev + production?
   app.use(
     '/assets',
@@ -93,40 +95,47 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
   setProxies(app, applicationConfig.proxies, logger);
 
-  if (process.env.NODE_ENV !== 'production') {
-    app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
-      // allow requests from our client side loading page
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept',
-      );
-      res.status(200).json({ up: true });
-    });
-  }
-
   // Call express App Hook which accept app as param.
+  // This should 'await' or we have runaway async inside hooks.
   hooksHelper.call(hooks.postServerRun, app);
 
   app.use(loggerMiddleware(logger));
-  app.use(
-    middleware(
-      { config, logger },
-      { entries, entriesConfig, entriesPlugins: runtimePlugins },
-      { EntryWrapper, BodyWrapper },
-      { assetsFilename, loadjsConfig: applicationConfig.loadjs || {} },
-      {
-        reduxMiddlewares,
-        thunkMiddleware,
-        envVariables,
-        httpClient: applicationConfig.httpClient || {},
-        entryWrapperConfig: {},
-      },
-      { hooks, hooksHelper: hooksHelper.call },
-      serverPlugins,
-      cachingConfig,
-    ),
+  const gluestickMiddleware = middleware(
+    { config, logger },
+    { entries, entriesConfig, entriesPlugins: runtimePlugins },
+    { EntryWrapper, BodyWrapper },
+    { assetsFilename, loadjsConfig: applicationConfig.loadjs || {} },
+    {
+      reduxMiddlewares,
+      thunkMiddleware,
+      envVariables,
+      httpClient: applicationConfig.httpClient || {},
+      entryWrapperConfig: {},
+    },
+    { hooks, hooksHelper: hooksHelper.call },
+    serverPlugins,
+    cachingConfig,
   );
+
+  if (process.env.NODE_ENV !== "production") {
+    const { server, client } = config.webpackConfig;
+    const hotConfig = {
+      ...server,
+      entry: {
+        renderer: server.entry.renderer.replace(/entry.js$/, "middleware.js"),
+      },
+    };
+    const compiler = webpack([clientConfig, serverConfig]);
+    const clientCompiler = compiler.compilers[0];
+    const publicPath = clientConfig.output.publicPath;
+    const options = { publicPath, stats: { colors: true } };
+
+    app.use(require("webpack-dev-middleware")(compiler, options));
+    app.use(require("webpack-hot-middleware")(clientCompiler));
+    app.use(require("webpack-hot-server-middleware")(compiler));
+  } else {
+    app.use(gluestickMiddleware);
+  }
 
   // 404 handler
   // @TODO: support custom 404 error page
@@ -135,7 +144,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
     res.sendStatus(404);
   });
 
-  const server: Object = app.listen(config.GSConfig.ports.server);
+  const server = app.listen(config.GSConfig.ports.server);
 
   logger.success(`Renderer listening on port ${config.GSConfig.ports.server}.`);
   process.on('exit', () => {
