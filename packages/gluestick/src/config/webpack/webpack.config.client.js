@@ -85,7 +85,7 @@ module.exports = (
     logger.info('Vendor DLL bundle not found, using CommonsChunkPlugin');
     config.plugins.push(
       new webpack.optimize.CommonsChunkPlugin({
-        name: ['vendor'],
+        name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production'
           ? '-[hash]'
           : ''}.bundle.js`,
