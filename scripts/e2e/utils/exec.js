@@ -12,5 +12,24 @@ module.exports = (command, cwd = process.cwd(), customEnv = {}) => {
   console.log(' * in directory:');
   console.log(` *   ${cwd}`);
   console.log(`/${'*'.repeat(80)}/`);
-  return execSync(command, { cwd, stdio: 'inherit', env: Object.assign({}, process.env, customEnv) });
+
+  if (process.env.CI) {
+    let stdout;
+    try {
+      stdout = execSync(command, {
+        cwd,
+        stdio: 'pipe',
+        env: Object.assign({}, process.env, customEnv),
+      });
+    } catch (e) {
+      throw new Error(e.stderr.toString());
+    }
+    return stdout;
+  }
+
+  return execSync(command, {
+    cwd,
+    stdio: 'inherit',
+    env: Object.assign({}, process.env, customEnv),
+  });
 };

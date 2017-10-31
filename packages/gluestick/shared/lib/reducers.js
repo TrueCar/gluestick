@@ -11,7 +11,10 @@ type State = typeof INITIAL_STATE;
  *
  * It also exists to prevent an error when no other reducers have been added.
  */
-export default function _gluestick(state: State = INITIAL_STATE, action: Object): State {
+export default function _gluestick(
+  state: State = INITIAL_STATE,
+  action: Object,
+): State {
   switch (action.type) {
     case SET_STATUS_CODE: {
       return {

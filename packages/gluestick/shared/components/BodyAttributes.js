@@ -1,6 +1,7 @@
 /* @flow */
 
-import { Component, Children, PropTypes } from 'react';
+import { Component, Children } from 'react';
+import PropTypes from 'prop-types';
 import withSideEffect from 'react-side-effect';
 
 const supportedHTML4Attributes: { bgColor: string } = {
@@ -8,8 +9,8 @@ const supportedHTML4Attributes: { bgColor: string } = {
 };
 
 type Props = {
-  children: any;
-}
+  children: any,
+};
 
 class BodyAttributes extends Component<void, Props, void> {
   render() {
@@ -33,7 +34,11 @@ function reducePropsToState(propsList: Object[]) {
 function handleStateChangeOnClient(attrs: Object) {
   for (const key in attrs) {
     if (document.body) {
-      document.body.setAttribute(key, attrs[key]);
+      if (key === 'className') {
+        document.body.setAttribute('class', attrs[key]);
+      } else {
+        document.body.setAttribute(key, attrs[key]);
+      }
     }
   }
 }
@@ -53,14 +58,15 @@ function transformHTML4Props(props: Object) {
     if (Object.prototype.hasOwnProperty.call(props, propName)) {
       const name: string = supportedHTML4Attributes[propName];
       const value: string = props[propName];
-      const transformedProp: { [key: string]: string } = { [`data-oy-${name}`]: value };
+      const transformedProp: { [key: string]: string } = {
+        [`data-oy-${name}`]: value,
+      };
       Object.assign(transformedProps, transformedProp);
     }
   });
   return transformedProps;
 }
 
-export default withSideEffect(
-  reducePropsToState,
-  handleStateChangeOnClient,
-)(BodyAttributes);
+export default withSideEffect(reducePropsToState, handleStateChangeOnClient)(
+  BodyAttributes,
+);

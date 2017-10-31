@@ -1,0 +1,202 @@
+aliases:
+  - &restore-monorepo-cache
+    keys:
+      - dependencies-{{ checksum "package.json" }}
+      - dependencies-
+
+  - &restore-gluestick-main-cache
+    keys:
+      - dependencies-gluestick-main-{{ checksum "packages/gluestick/package.json" }}
+      - dependencies-gluestick-main-
+
+  - &restore-gluestick-cache
+    keys:
+      - dependencies-gluestick-{{ checksum "packages_checksum" }}
+      - dependencies-gluestick-
+
+  - &restore-repo-cache
+    keys:
+      - repo-{{ .Environment.CIRCLE_SHA1 }}
+
+  - &save-monorepo-cache
+    paths:
+      - node_modules
+    key: dependencies-{{ checksum "package.json" }}
+
+  - &save-gluestick-main-cache
+    paths:
+      - packages/gluestick/node_modules
+    key: dependencies-gluestick-main-{{ checksum "packages/gluestick/package.json" }}
+  
+  - &save-gluestick-cache
+    paths:
+      - packages/gluestick-cli/node_modules
+      - packages/gluestick-config-legacy/node_modules
+      - packages/gluestick-env-expose-ast/node_modules
+      - packages/gluestick-generators/node_modules
+      - packages/gluestick-plugin-aphrodite/node_modules
+      - packages/gluestick-plugin-bunyan/node_modules
+      - packages/gluestick-plugin-eslint/node_modules
+      - packages/gluestick-plugin-no-fouc/node_modules
+      - packages/gluestick-plugin-radium/node_modules
+    key: dependencies-gluestick-{{ checksum "packages_checksum" }}
+
+  - &save-repo-cache
+    paths:
+      - ~/gluestick
+    key: repo-{{ .Environment.CIRCLE_SHA1 }}
+
+defaults:
+  - &job-defaults
+      working_directory: ~/gluestick
+      docker:
+        - image: circleci/node:6.11.3
+
+version: 2
+jobs:
+  build:
+    <<: *job-defaults
+    steps:
+      - checkout
+    
+      - run:
+          command: cat packages/gluestick-*/package.json > packages_checksum
+          name: Creating checksum file for gluesick-* packages
+
+      - restore_cache: *restore-monorepo-cache
+      - restore_cache: *restore-gluestick-main-cache
+      - restore_cache: *restore-gluestick-cache
+
+      - run: yarn run install:yarn
+
+      - save_cache: *save-monorepo-cache
+      - save_cache: *save-gluestick-main-cache
+      - save_cache: *save-gluestick-cache
+
+      - save_cache: *save-repo-cache
+  
+  lint:
+    <<: *job-defaults
+    steps:
+      - restore_cache: *restore-repo-cache
+
+      - run: yarn run lint
+  
+  flow:
+    <<: *job-defaults
+    steps:
+      - restore_cache: *restore-repo-cache
+
+      - run: yarn run flow
+
+  test:
+    <<: *job-defaults
+    steps:
+      - restore_cache: *restore-repo-cache
+
+      - run: yarn run test --coverage
+
+      - store_artifacts:
+          path: coverage
+
+  e2e:
+    <<: *job-defaults
+    steps:
+      - checkout
+
+      - restore_cache: *restore-repo-cache
+
+      - run: yarn run build
+      - run: yarn run e2e
+
+  deploy:
+    <<: *job-defaults
+    steps:
+      - restore_cache: *restore-repo-cache
+
+      - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
+      - setup_remote_docker
+
+      - run: git config --global user.email $DOCKER_EMAIL
+      - run: git config --global user.name "CircleCI"
+      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - run: docker pull node:6.10-slim
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run: BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG  
+
+  docs:
+    <<: *job-defaults
+    steps:
+      - checkout
+
+      - restore_cache: *restore-repo-cache
+
+      - run: |
+          git diff --name-only HEAD~1 HEAD
+          if [[ $(git diff --name-only HEAD~1 HEAD) =~ docs ]]; then
+            # Build gitbook and move it to root directory
+            yarn run docs:build
+            rm -rf ./docs
+            mv ./_book/* ./
+
+            git config user.name "CircleCI Docs"
+            git config user.email "$DOCKER_EMAIL"
+
+            git add .
+            git commit -am 'Update Book'
+
+            # Push generated files to gh-pages
+            git push origin $CIRCLE_BRANCH:gh-pages --force
+          fi
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
+      - lint:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:  staging
+      - flow:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: staging
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: staging
+      - e2e:
+          requires:
+            - build
+          filters:
+            branches:
+              only: next
+      - docs:
+          requires:
+            - build
+          filters:
+            branches:
+              only: next
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /v\d+\.\d+\.\d+.*/
+            branches:
+              only: staging
+  

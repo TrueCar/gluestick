@@ -5,7 +5,7 @@ const spawn = require('./utils/spawn');
 const exec = require('./utils/exec');
 const assertions = require('./utils/assertions');
 
-const CWD = path.join(process.cwd(), '../', 'e2eApp');
+const CWD = path.join(process.cwd(), '../e2eApp');
 
 process.on('uncaughtException', (error) => {
   console.error(error);
@@ -13,14 +13,15 @@ process.on('uncaughtException', (error) => {
 });
 
 module.exports = () => {
-  exec('npm install -g ./packages/gluestick-cli');
+  exec('sudo npm install -g ./packages/gluestick-cli');
   exec(
-    'npm install /home/ubuntu/gluestick/packages/gluestick-generators',
-    '/opt/circleci/nodejs/v6.9.0/lib/node_modules/gluestick-cli'
+    'sudo npm install ~/gluestick/packages/gluestick-generators',
+    '/usr/local/lib/node_modules/gluestick-cli'
   );
 
   // New project with npm
-  exec('gluestick new e2eApp --npm --dev ./gluestick', path.join(process.cwd(), '../'));
+  exec('gluestick new e2eApp --dev ./gluestick', path.dirname(CWD));
+  exec('rm node_modules/gluestick/.babelrc', CWD);
   // New apps (camel and kebab case)
   exec('gluestick generate app secondApp', CWD);
   exec('gluestick generate app third-app', CWD);

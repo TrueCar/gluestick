@@ -2,7 +2,7 @@ jest.mock('default-500.hbs', () => 'default', { virtual: true });
 jest.mock('custom-500.hbs', () => 'custom', { virtual: true });
 jest.mock('handlebars', () => ({
   registerHelper: jest.fn(),
-  compile: jest.fn((template) => () => template),
+  compile: jest.fn(template => () => template),
 }));
 
 const errorHandler = require('../errorHandler');

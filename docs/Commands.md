@@ -76,6 +76,7 @@ Available options:
 * `-p, --debug-port <number>` - Port on which to run node inspector
 * `-C --coverage` - Create test coverage report
 * `-P, --skip-build` - Skip build when running in production mode
+* `-S, --skip-dep-check` - Skips the check for version discrepancies between package.json and node_modules
 
 ### `gluestick start-client`
 
@@ -111,8 +112,12 @@ gluestick build
 Available options:
 * `--client` - Build only client bundle
 * `--server` - Build only server bundle
-* `-Z, --static` - Prepare static HTML for each entry
+* `-Z, --static [url]` - Prepare static HTML for each entry (and use provided `url` (`hostname`) to fetch HTML from renderer, by default it is `localhost`)
 * `-S, --stats` - Output webpack stats
+* `-A, --app` - Build only specific app or a group of them
+* `-D, --vendor` - Build Vendor DLL bundle
+* `-B, --skip-if-ok` - Skip vendor DLL recompilation if the bundle is valid
+* `--no-progress` - Disable progress indicator
 
 ### `gluestick bin`
 
@@ -213,7 +218,7 @@ For better CI/CD and other build tools support, GlueStick will switch to _machin
 ```
 [GleuStick][<command>][<headerTitle>] <message>
 ```
-To switch to _machine friendly_ mode, one of the folling condition must be met: 
+To switch to _machine friendly_ mode, one of the folling condition must be met:
 
 * `NODE_ENV` must be set to `production`
 * `CI` must be set (to whatever value)

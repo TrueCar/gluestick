@@ -1,12 +1,13 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createTransitionHook } from '../lib/route-helper';
 
 type Props = {
-  children: any;
-  routes: Object[];
-}
+  children: any,
+  routes: Object[],
+};
 
 export default class TransitionHooks extends Component<void, Props, void> {
   static contextTypes = {
@@ -19,7 +20,9 @@ export default class TransitionHooks extends Component<void, Props, void> {
   componentWillMount() {
     const { routes } = this.props;
     const { store, router } = this.context;
-    this.unListenBefore = router.listenBefore(createTransitionHook(store, routes));
+    this.unListenBefore = router.listenBefore(
+      createTransitionHook(store, routes),
+    );
   }
 
   componentWillUnmount() {

@@ -32,55 +32,68 @@ describe('generator/index', () => {
 
   it('should log an error if name is not alphanumerical', () => {
     fs.existsSync = jest.fn().mockReturnValueOnce(true);
-    generator({
-      generatorName: 'component',
-      entityName: '@',
-      options: {
-        entryPoint: 'shared',
+    generator(
+      {
+        generatorName: 'component',
+        entityName: '@',
+        options: {
+          entryPoint: 'shared',
+        },
       },
-    }, logger);
+      logger,
+    );
     expect(logger.error).toBeCalledWith('Invalid name specified');
   });
 
   describe('predefined generators', () => {
     it('should log an error if entryPoint does not exist', () => {
       fs.existsSync = jest.fn().mockReturnValueOnce(true);
-      generator({
-        generatorName: 'component',
-        entityName: 'MyComponent',
-        options: {
-          entryPoint: 'invalid',
+      generator(
+        {
+          generatorName: 'component',
+          entityName: 'MyComponent',
+          options: {
+            entryPoint: 'invalid',
+          },
         },
-      }, logger);
+        logger,
+      );
       expect(logger.error).toBeCalledWith('invalid is not a valid entry point');
-      expect(logger.info).toBeCalledWith('Pass -E and a valid entry point: \'shared\' or \'apps/{validAppName}\'');
+      expect(logger.info).toBeCalledWith(
+        "Pass -E and a valid entry point: 'shared' or 'apps/{validAppName}'",
+      );
     });
 
     it('should log an error if path does not exist', () => {
       fs.existsSync = jest.fn().mockReturnValueOnce(false);
-      generator({
-        generatorName: 'component',
-        entityName: 'MyComponent',
-        options: {
-          entryPoint: 'shared',
+      generator(
+        {
+          generatorName: 'component',
+          entityName: 'MyComponent',
+          options: {
+            entryPoint: 'shared',
+          },
         },
-      }, logger);
+        logger,
+      );
       expect(logger.error).toBeCalledWith('Path src/shared does not exist');
     });
   });
 
-
   it('should successfully generate files', () => {
-    generator({
-      generatorName: 'test',
-      entityName: 'test',
-    }, logger);
+    generator(
+      {
+        generatorName: 'test',
+        entityName: 'test',
+      },
+      logger,
+    );
     expect(logger.success).toBeCalledWith(
-      'test test generated successfully\n'
-      + 'Files written: \n'
-      + '  my-path/MyComponent\n'
-      + '  my-path/__tests__/MyComponent\n'
-      + 'Files modified: \n  --',
+      'test test generated successfully\n' +
+        'Files written: \n' +
+        '  my-path/MyComponent\n' +
+        '  my-path/__tests__/MyComponent\n' +
+        'Files modified: \n  --',
     );
   });
   // @TODO test success cases (requires several mocks)

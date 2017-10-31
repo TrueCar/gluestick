@@ -3,12 +3,15 @@
 import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
 const webpack = require('webpack');
+const path = require('path');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => {
+module.exports = (
+  clientConfig: UniversalWebpackConfigurator,
+): WebpackConfig => {
   const configuration: Object = clientConfig({ development: false });
-  configuration.devtool = 'source-map';
+  configuration.devtool = 'hidden-source-map';
   const scssLoaders = configuration.module.rules[1].use;
   configuration.module.rules[1].use = ExtractTextPlugin.extract({
     fallback: scssLoaders[0],
@@ -20,6 +23,8 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
     use: cssLoaders.slice(1),
   });
   configuration.plugins.push(
+    // Bug: some chunks are not ouptputted
+    // new webpack.optimize.ModuleConcatenationPlugin(),
     new ExtractTextPlugin('[name]-[chunkhash].css'),
     new OptimizeCSSAssetsPlugin({ canPrint: false }),
     new webpack.DefinePlugin({
@@ -33,9 +38,13 @@ module.exports = (clientConfig: UniversalWebpackConfigurator): WebpackConfig => 
       compress: {
         warnings: false,
       },
+      sourceMap: true,
     }),
+    new webpack.NormalModuleReplacementPlugin(
+      /gluestick\/shared\/lib\/errorUtils/,
+      path.join(__dirname, './mocks/serverFileMock.js'),
+    ),
   );
   configuration.bail = true;
   return configuration;
 };
-

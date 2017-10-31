@@ -10,7 +10,7 @@ const version = require('../../../package.json').version;
 type ProjectPackage = {
   dependencies: Object,
   devDependencies: Object,
-}
+};
 
 /**
  * Open the package.json file in both the project as well as the one used by
@@ -52,13 +52,18 @@ const checkForMismatch = (
     'build/templates/package',
   );
   const packageGeneratorEntry: Object = getSingleEntryFromGenerator(
-    pathToPackageGenerator, 'package.json', { gluestickDependencies: { gluestick: version } },
+    pathToPackageGenerator,
+    'package.json',
+    { gluestickDependencies: { gluestick: version } },
   );
   const templatePackage: ProjectPackage = JSON.parse(
     // $FlowIgnore template at this point will be a string
-    parseConfig({
-      entry: packageGeneratorEntry,
-    }, {}).entry.template,
+    parseConfig(
+      {
+        entry: packageGeneratorEntry,
+      },
+      {},
+    ).entry.template,
   );
   const mismatchedModules: MismatchedModules = {};
   const markMissing = (dep, type) => {
@@ -69,12 +74,19 @@ const checkForMismatch = (
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
-    if (dev && dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])) {
+    if (
+      dev &&
+      dep === 'gluestick' &&
+      !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])
+    ) {
       return;
     }
     if (
       !projectPackage.dependencies[dep] ||
-      !isValidVersion(projectPackage.dependencies[dep], templatePackage.dependencies[dep])
+      !isValidVersion(
+        projectPackage.dependencies[dep],
+        templatePackage.dependencies[dep],
+      )
     ) {
       markMissing(dep, 'dependencies');
     }
@@ -82,7 +94,10 @@ const checkForMismatch = (
   Object.keys(templatePackage.devDependencies).forEach((dep: string): void => {
     if (
       !projectPackage.devDependencies[dep] ||
-      !isValidVersion(projectPackage.devDependencies[dep], templatePackage.devDependencies[dep])
+      !isValidVersion(
+        projectPackage.devDependencies[dep],
+        templatePackage.devDependencies[dep],
+      )
     ) {
       markMissing(dep, 'devDependencies');
     }

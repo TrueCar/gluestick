@@ -33,15 +33,16 @@ describe('generator/writeTemplate', () => {
   });
 
   it('should write multiple entries', () => {
-    const secondEntry = Object.assign({}, entryFixture, { filename: 'example0.js' });
+    const secondEntry = Object.assign({}, entryFixture, {
+      filename: 'example0.js',
+    });
     writeTemplate({
-      entries: [
-        Object.assign({}, entryFixture),
-        secondEntry,
-      ],
+      entries: [Object.assign({}, entryFixture), secondEntry],
     });
     expect(fsMock[pathFixture]).toEqual('example');
-    expect(fsMock[path.join(process.cwd(), 'example/example0.js')]).toEqual('example');
+    expect(fsMock[path.join(process.cwd(), 'example/example0.js')]).toEqual(
+      'example',
+    );
   });
 
   it('should throw error if file already exists', () => {
@@ -85,13 +86,16 @@ describe('generator/writeTemplate', () => {
     fsMock[pathToIndex0] = 'index';
     fsMock[pathToIndex1] = 'index';
     writeTemplate({
-      modify: [{
-        file: 'example/index0.js',
-        modifier: content => `new 0 ${content}`,
-      }, {
-        file: 'example/index1.js',
-        modifier: content => `new 1 ${content}`,
-      }],
+      modify: [
+        {
+          file: 'example/index0.js',
+          modifier: content => `new 0 ${content}`,
+        },
+        {
+          file: 'example/index1.js',
+          modifier: content => `new 1 ${content}`,
+        },
+      ],
       entry: entryFixture,
     });
     expect(fsMock[pathToIndex0]).toEqual('new 0 index');

@@ -4,7 +4,7 @@ const createTemplate = module.parent.createTemplate;
 
 const templatePackage = createTemplate`
 {
-  "name": "${(args) => args.appName}",
+  "name": "${args => args.appName}",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -25,12 +25,19 @@ const templatePackage = createTemplate`
     "css-loader": "0.28.1",
     "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
-    ${(args) => Object.keys(args.gluestickDependencies).reverse().reduce(
-      (prev, key, i, arr) => prev.concat(
-        `"${key}": "${args.gluestickDependencies[key]}",${i === arr.length - 1 ? '' : '\n    '}`,
-      ),
-      '',
-    )}
+    ${args =>
+      Object.keys(args.gluestickDependencies)
+        .reverse()
+        .reduce(
+          (prev, key, i, arr) =>
+            prev.concat(
+              `"${key}": "${args.gluestickDependencies[key]}",${i ===
+              arr.length - 1
+                ? ''
+                : '\n    '}`,
+            ),
+          '',
+        )}
     "image-webpack-loader": "3.3.1",
     "node-sass": "4.5.1",
     "normalize.css": "^5.0.0",

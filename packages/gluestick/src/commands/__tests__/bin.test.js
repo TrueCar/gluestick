@@ -18,14 +18,18 @@ const commandApi = {
 const spawnOptions = { stdio: 'inherit' };
 
 const getDependencyPath = name =>
-  path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', name);
+  path.join(process.cwd(), 'node_modules', '.bin', name);
 
 describe('cli: gluestick bin', () => {
   it('runs the dependency without any options', () => {
     const dependencyName = 'fakeDep';
 
     bin(commandApi, [dependencyName, { parent: { rawArgs: [] } }]);
-    expect(spawnMock).toBeCalledWith(getDependencyPath(dependencyName), [], spawnOptions);
+    expect(spawnMock).toBeCalledWith(
+      getDependencyPath(dependencyName),
+      [],
+      spawnOptions,
+    );
   });
 
   it('runs the dependency with specified options options', () => {
@@ -37,12 +41,16 @@ describe('cli: gluestick bin', () => {
 
     bin(commandApi, [dependencyName, ...dependencyOptions, commanderObject]);
     expect(spawnMock).toBeCalledWith(
-      getDependencyPath(dependencyName), dependencyOptions, spawnOptions,
+      getDependencyPath(dependencyName),
+      dependencyOptions,
+      spawnOptions,
     );
   });
 
   it('should return permaturely if dependency name is invalid', () => {
     bin(commandApi, [1]);
-    expect(errorLogger.mock.calls[0]).toEqual(['No binary is specified or is invalid']);
+    expect(errorLogger.mock.calls[0]).toEqual([
+      'No binary is specified or is invalid',
+    ]);
   });
 });

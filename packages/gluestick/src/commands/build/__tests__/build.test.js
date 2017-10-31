@@ -3,12 +3,14 @@
 jest.mock('../../../config/webpack/progressHandler');
 jest.mock('../../utils.js');
 jest.mock('../getEntiresSnapshots');
+jest.mock('../../../config/vendorDll');
 jest.mock('../compile.js', () => jest.fn(() => Promise.resolve()));
 
 const compile = require('../compile');
 const getEntiresSnapshots = require('../getEntiresSnapshots');
 const utils = require('../../utils');
 const build = require('../build');
+const vendorDll = require('../../../config/vendorDll');
 
 const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
 
@@ -119,5 +121,25 @@ describe('commands/build/build', () => {
     build(commandApi, [{ client: true, server: false, static: true }]);
     expect(fatalLogger)
       .toHaveBeenCalledWith('--static options must be used with both client and server build');
+  });
+
+  it('should build vendor bundle only', () => {
+    build(commandApi, [{ client: true, server: true, static: true, vendor: true }]);
+    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(2);
+    // $FlowIgnore donesn't know about jest mock
+    expect(utils.clearBuildDirectory.mock.calls[0][1]).toEqual('client');
+    // $FlowIgnore donesn't know about jest mock
+    expect(utils.clearBuildDirectory.mock.calls[1][1]).toEqual('dlls');
+    expect(compile).toHaveBeenCalledTimes(1);
+    // $FlowIgnore donesn't know about jest mock
+    expect(compile.mock.calls[0][2]).toEqual('vendor');
+  });
+
+  it('should build vendor bundle only and bail', () => {
+    // $FlowIgnore vendorDll is mocked
+    vendorDll.isValid.mockImplementationOnce(() => true);
+    build(commandApi, [{ client: false, server: false, vendor: true, skipIfOk: true }]);
+    expect(utils.clearBuildDirectory).toHaveBeenCalledTimes(0);
+    expect(compile).toHaveBeenCalledTimes(0);
   });
 });

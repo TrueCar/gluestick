@@ -29,26 +29,26 @@ const createPluginUtils = require('../plugins/utils');
 const isProduction = process.env.NODE_ENV === 'production';
 
 type Options = {
-  envVariables: string[];
-  httpClient: Object;
-  entryWrapperConfig: Object;
-  reduxMiddlewares: any[];
-  thunkMiddleware: ?Function;
+  envVariables: string[],
+  httpClient: Object,
+  entryWrapperConfig: Object,
+  reduxMiddlewares: any[],
+  thunkMiddleware: ?Function,
 };
 
 type EntriesArgs = {
-  entries: Entries;
-  entriesConfig: EntriesConfig;
-  entriesPlugins: Object[];
+  entries: Entries,
+  entriesConfig: EntriesConfig,
+  entriesPlugins: Object[],
 };
 
-module.exports = async (
+module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
   { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
-  { assets, loadjsConfig }: { assets: Object; loadjsConfig: Object },
+  { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
   options: Options = {
     envVariables: [],
     httpClient: {},
@@ -57,9 +57,9 @@ module.exports = async (
     thunkMiddleware: null,
   },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
-  serverPlugins: ?ServerPlugin[],
+  serverPlugins: ?(ServerPlugin[]),
   cachingConfig: ?ComponentsCachingConfig,
-) => {
+) {
   /**
    * TODO: better logging
    */
@@ -71,31 +71,42 @@ module.exports = async (
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
-      return null;
+      return Promise.resolve();
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
       { config, logger },
-      req, entries,
+      req,
+      entries,
     );
-    const requirements = hooksHelper(hooks.postRenderRequirements, requirementsBeforeHooks);
+    const requirements = hooksHelper(
+      hooks.postRenderRequirements,
+      requirementsBeforeHooks,
+    );
 
-    const httpClientOptions = requirements.config && requirements.config.httpClient
-      ? requirements.config.httpClient
-      : options.httpClient;
+    const httpClientOptions =
+      requirements.config && requirements.config.httpClient
+        ? requirements.config.httpClient
+        : options.httpClient;
     const httpClient: Function = getHttpClient(httpClientOptions, req, res);
 
     // Allow to specify different redux config
-    const reduxOptions = requirements.config && requirements.config.reduxOptions
-      ? requirements.config.reduxOptions
-      : { middlewares: options.reduxMiddlewares, thunk: options.thunkMiddleware };
+    const reduxOptions =
+      requirements.config && requirements.config.reduxOptions
+        ? requirements.config.reduxOptions
+        : {
+            middlewares: options.reduxMiddlewares,
+            thunk: options.thunkMiddleware,
+          };
 
     const store: Object = createStore(
       httpClient,
       () => requirements.reducers,
       reduxOptions.middlewares,
-      // $FlowFixMe
-      (cb) => module.hot && module.hot.accept(entriesConfig[requirements.key].reducers, cb),
+      cb =>
+        module.hot &&
+        // $FlowFixMe
+        module.hot.accept(entriesConfig[requirements.key].reducers, cb),
       // $FlowFixMe
       !!module.hot,
       reduxOptions.thunk,
@@ -106,16 +117,22 @@ module.exports = async (
       renderProps,
     }: { redirectLocation: Object, renderProps: Object } = await matchRoute(
       { config, logger },
-      req, requirements.routes, store, httpClient,
+      req,
+      requirements.routes,
+      store,
+      httpClient,
     );
-    const renderPropsAfterHooks: Object = hooksHelper(hooks.postRenderProps, renderProps);
+    const renderPropsAfterHooks: Object = hooksHelper(
+      hooks.postRenderProps,
+      renderProps,
+    );
     if (redirectLocation) {
       hooksHelper(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return null;
+      return Promise.resolve();
     }
 
     if (!renderPropsAfterHooks) {
@@ -123,19 +140,26 @@ module.exports = async (
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return null;
+      return Promise.resolve();
     }
 
-    await runBeforeRoutes(store, renderPropsAfterHooks, { isServer: true, request: req });
+    await runBeforeRoutes(store, renderPropsAfterHooks, {
+      isServer: true,
+      request: req,
+    });
 
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
-    const currentRoute: Object = hooksHelper(hooks.postGetCurrentRoute, currentRouteBeforeHooks);
+    const currentRoute: Object = hooksHelper(
+      hooks.postGetCurrentRoute,
+      currentRouteBeforeHooks,
+    );
     setHeaders(res, currentRoute);
 
     let renderMethod: RenderMethod;
     const pluginUtils = createPluginUtils(logger);
-    const renderMethodFromPlugins = serverPlugins && pluginUtils.getRenderMethod(serverPlugins);
+    const renderMethodFromPlugins =
+      serverPlugins && pluginUtils.getRenderMethod(serverPlugins);
     if (renderMethodFromPlugins) {
       renderMethod = renderMethodFromPlugins;
     }
@@ -145,7 +169,8 @@ module.exports = async (
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },
       req,
-      { EntryPoint: requirements.Component,
+      {
+        EntryPoint: requirements.Component,
         entryName: requirements.name,
         store,
         routes: requirements.routes,
@@ -162,18 +187,16 @@ module.exports = async (
       { assets, loadjsConfig, cacheManager },
       { renderMethod },
     );
-    const output: RenderOutput = hooksHelper(hooks.postRender, outputBeforeHooks);
+    const output: RenderOutput = hooksHelper(
+      hooks.postRender,
+      outputBeforeHooks,
+    );
     res.status(statusCode).send(output.responseString);
-    return null;
+    return Promise.resolve();
   } catch (error) {
     hooksHelper(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
-    errorHandler(
-      { config, logger },
-      req,
-      res,
-      error,
-    );
+    errorHandler({ config, logger }, req, res, error);
   }
-  return null;
+  return Promise.resolve();
 };

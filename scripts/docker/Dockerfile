@@ -1,4 +1,4 @@
-FROM node:6.10-slim
+FROM node:8.7-slim
 
 ARG GLUESTICK_VERSION
 
@@ -51,6 +51,7 @@ ENV BUILD_PACKAGES "autoconf \
                     procps \
                     python-dev \
                     subversion \
+                    unzip \
                     xz-utils \
                     zlib1g-dev"
 

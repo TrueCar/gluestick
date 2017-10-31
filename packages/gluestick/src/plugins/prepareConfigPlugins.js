@@ -3,23 +3,30 @@
 import type { ConfigPlugin, Plugin, Logger } from '../types';
 
 const readPlugins = require('./readPlugins');
-const { requireModule, requireWithInterop, getDefaultExport } = require('../utils');
+const {
+  requireModule,
+  requireWithInterop,
+  getDefaultExport,
+} = require('../utils');
 const { createArrowList } = require('../cli/helpers');
 
 type CompilationResults = {
   preOverwrites: {
-    [key: string]: Function;
-  };
+    [key: string]: Function,
+  },
   postOverwrites: {
-    [key: string]: Function;
-  };
-  error?: Error;
+    [key: string]: Function,
+  },
+  error?: Error,
 };
 
 /**
  * Make necessary assertions and compile plugin.
  */
-const compilePlugin = (pluginData: Plugin, pluginOptions: Object): CompilationResults => {
+const compilePlugin = (
+  pluginData: Plugin,
+  pluginOptions: Object,
+): CompilationResults => {
   try {
     if (typeof pluginData.body !== 'function') {
       throw new Error('plugin must export function');
@@ -50,12 +57,19 @@ let pluginsCache = [];
  * Read and compile config plugins. Those plugins are compiled with provided by user
  * `options` object from plugin declaration file, and utilities from gluestick like logger.
  */
-module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => {
+module.exports = (
+  logger: Logger,
+  pluginsConfigPath: string,
+): ConfigPlugin[] => {
   if (pluginsCache.length) {
     return pluginsCache;
   }
 
-  const pluginsConfig: Plugin[] = readPlugins(logger, pluginsConfigPath, 'config');
+  const pluginsConfig: Plugin[] = readPlugins(
+    logger,
+    pluginsConfigPath,
+    'config',
+  );
   if (!pluginsConfig.length) {
     return [];
   }
@@ -63,23 +77,28 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
   let logMessage: string = 'Compiling config plugins:\n';
   try {
     // Compile plugin, if compilation fails, further compilation is prevented.
-    const compiledPlugins: ConfigPlugin[] = pluginsConfig.map((value: Plugin): ConfigPlugin => {
-      // Second `compilePlugin` argument is an object with gluestick utilities that
-      // will be available for plugins to use.
-      const compilationResults: CompilationResults = compilePlugin(value, {
-        logger, requireModule, requireWithInterop, getDefaultExport,
-      });
-      if (compilationResults.error) {
-        throw compilationResults.error;
-      }
+    const compiledPlugins: ConfigPlugin[] = pluginsConfig.map(
+      (value: Plugin): ConfigPlugin => {
+        // Second `compilePlugin` argument is an object with gluestick utilities that
+        // will be available for plugins to use.
+        const compilationResults: CompilationResults = compilePlugin(value, {
+          logger,
+          requireModule,
+          requireWithInterop,
+          getDefaultExport,
+        });
+        if (compilationResults.error) {
+          throw compilationResults.error;
+        }
 
-      return {
-        name: value.name,
-        preOverwrites: compilationResults.preOverwrites,
-        postOverwrites: compilationResults.postOverwrites,
-        meta: value.meta,
-      };
-    });
+        return {
+          name: value.name,
+          preOverwrites: compilationResults.preOverwrites,
+          postOverwrites: compilationResults.postOverwrites,
+          meta: value.meta,
+        };
+      },
+    );
 
     logMessage += createArrowList(compiledPlugins.map(({ name }) => name), 9);
     logger.info(logMessage);
@@ -92,4 +111,6 @@ module.exports = (logger: Logger, pluginsConfigPath: string): ConfigPlugin[] => 
   }
 };
 
-module.exports.clearCache = () => { pluginsCache = []; };
+module.exports.clearCache = () => {
+  pluginsCache = [];
+};

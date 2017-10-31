@@ -22,27 +22,27 @@ if (['-v', '-V', '--version'].indexOf(process.argv[2]) >= 0) {
   let localVersion = 'n/a';
   let localInstalledVersion = '';
   try {
-    localVersion = require(path.join(process.cwd(), 'package.json')).dependencies.gluestick;
+    localVersion = require(path.join(process.cwd(), 'package.json'))
+      .dependencies.gluestick;
   } catch (e) {
     // noop
   }
   try {
-    localInstalledVersion = require(
-      path.join(process.cwd(), 'node_modules/gluestick', 'package.json'),
-    ).version;
+    localInstalledVersion = require(path.join(
+      process.cwd(),
+      'node_modules/gluestick',
+      'package.json',
+    )).version;
   } catch (e) {
     // noop
   }
   console.log(
-    `${chalk.green('gluestick')}: ${localVersion}${
-      localVersion !== localInstalledVersion && localInstalledVersion.length
-        ? `, installed ${localInstalledVersion}`
-        : ''
-    } (${
-      localVersion !== 'n/a'
-        ? 'local dependency in current directory'
-        : 'not in gluestick project'
-    })`,
+    `${chalk.green('gluestick')}: ${localVersion}${localVersion !==
+      localInstalledVersion && localInstalledVersion.length
+      ? `, installed ${localInstalledVersion}`
+      : ''} (${localVersion !== 'n/a'
+      ? 'local dependency in current directory'
+      : 'not in gluestick project'})`,
   );
   process.exit(0);
 }
@@ -51,7 +51,10 @@ commander
   .command('new')
   .description('generate a new application')
   .arguments('<appName>')
-  .option('-d, --dev <path>', 'relative path to development version of gluestick')
+  .option(
+    '-d, --dev <path>',
+    'relative path to development version of gluestick',
+  )
   .option('-s, --skip-main', 'gluestick will not generate main app')
   .option('-n, --npm', 'use npm instead of yarn')
   .action((appName, options) => {
@@ -80,22 +83,30 @@ commander
   });
 
 commander
-  .command('*', null, { noHelp: true })
+  .command('completion')
+  .description('output the bash_completion shell script contents')
   .action(() => {
-    const childProcess = spawn(
-      './node_modules/.bin/gluestick',
-      commander.rawArgs.slice(2),
-      { stdio: 'inherit' },
-    );
-    childProcess.on('error', (error) => {
-      console.error(chalk.red(error));
-      process.exit(1);
-    });
-    childProcess.on('exit', (code) => {
-      if (code !== 0) {
-        process.exit(code);
-      }
+    const __d = __dirname;
+    spawn('node', ['-e', `require("${__d}/completion").template()`], {
+      stdio: 'inherit',
     });
   });
 
-commander.parse(process.argv);
+commander.command('*', null, { noHelp: true }).action(() => {
+  const childProcess = spawn(
+    './node_modules/.bin/gluestick',
+    commander.rawArgs.slice(2),
+    { stdio: 'inherit' },
+  );
+  childProcess.on('error', error => {
+    console.error(chalk.red(error));
+    process.exit(1);
+  });
+  childProcess.on('exit', code => {
+    if (code !== 0) {
+      process.exit(code);
+    }
+  });
+});
+
+module.exports = commander;

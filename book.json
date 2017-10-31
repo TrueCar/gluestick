@@ -1,0 +1,20 @@
+{
+  "gitbook": ">=3.2.3",
+  "title": "Gluestick",
+  "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs"],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/TrueCar/gluestick/tree/next",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/TrueCar/gluestick/"
+    },
+    "theme-default": {
+      "showLevel": true,
+      "styles": {
+        "website": "build/gitbook.css"
+      }
+    }
+  }
+}

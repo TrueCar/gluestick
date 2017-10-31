@@ -13,15 +13,13 @@ const logMessage = require('./logMessage');
  * @param {Array<string>} args Arguments to pass to entry
  */
 const spawnServer = (
-  { config, logger }: CLIContext,
+  { logger }: CLIContext,
   entryPointPath: string,
   args: string[],
 ): Object => {
-  const child: Object = spawn(
-    'node',
-    [entryPointPath].concat(args),
-    { stdio: ['ipc', 'inherit', 'inherit'] },
-  );
+  const child: Object = spawn('node', [entryPointPath].concat(args), {
+    stdio: ['ipc', 'inherit', 'inherit'],
+  });
   logMessage(logger, child);
   return child;
 };

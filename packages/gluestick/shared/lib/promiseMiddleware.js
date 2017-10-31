@@ -2,7 +2,7 @@
 
 import type { PromiseMiddleware } from '../types';
 
-const promiseMiddleware: PromiseMiddleware = (client) => () => next => action => {
+const promiseMiddleware: PromiseMiddleware = client => () => next => action => {
   const { promise, type, ...rest } = action;
 
   if (!promise) {
@@ -15,19 +15,19 @@ const promiseMiddleware: PromiseMiddleware = (client) => () => next => action =>
 
   next({ ...rest, type: INIT });
 
-  const getPromise: Function = typeof promise === 'function' ? promise : () => promise;
+  const getPromise: Function =
+    typeof promise === 'function' ? promise : () => promise;
 
-  return getPromise(client)
-    .then(
-      payload => {
-        next({ ...rest, payload, type: SUCCESS });
-        return payload || true;
-      },
-      error => {
-        next({ ...rest, error, type: FAILURE });
-        return false;
-      },
-    );
+  return getPromise(client).then(
+    payload => {
+      next({ ...rest, payload, type: SUCCESS });
+      return payload || true;
+    },
+    error => {
+      next({ ...rest, error, type: FAILURE });
+      return false;
+    },
+  );
 };
 
 export default promiseMiddleware;

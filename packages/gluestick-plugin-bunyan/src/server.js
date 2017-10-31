@@ -3,20 +3,20 @@
 import bunyan from 'bunyan';
 
 export type Options = {
-  name: string;
-  level?: string | number;
-  stream?: Object;
-  streams?: Object[];
-  serializers?: Object;
-  src?: boolean;
+  name: string,
+  level?: string | number,
+  stream?: Object,
+  streams?: Object[],
+  serializers?: Object,
+  src?: boolean,
 };
 
 export type Logger = {
-  success: Function;
-  info: Function;
-  warn: Function;
-  debug: Function;
-  error: Function;
+  success: Function,
+  info: Function,
+  warn: Function,
+  debug: Function,
+  error: Function,
 };
 
 const defaultSettings: Options = {

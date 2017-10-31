@@ -6,9 +6,9 @@ import _gluestick from './reducers';
 import promiseMiddleware from '../lib/promiseMiddleware';
 
 type Store = Object;
-type CreateStore = () => Store;
+type CreateStore = (reducer: Object, initialState: Object) => Store;
 
-export default function (
+export default function(
   client: () => Object,
   customRequire: () => Object,
   customMiddleware: (middlewares: any[]) => any[] | any[],
@@ -16,7 +16,8 @@ export default function (
   devMode: Boolean,
   thunkMiddleware: Function,
 ): Store {
-  const reducer: Object = combineReducers(Object.assign({}, { _gluestick }, customRequire()));
+  const reducers = Object.assign({}, { _gluestick }, customRequire());
+  const reducer: Object = combineReducers(reducers);
 
   let middleware: Function[] = [
     promiseMiddleware(client),
@@ -27,29 +28,39 @@ export default function (
   // Include middleware that will warn when you mutate the state object
   // but only include it in dev mode
   if (devMode) {
-    middleware.push(require('redux-immutable-state-invariant')());
+    middleware.push(require('redux-immutable-state-invariant').default());
   }
 
   // When `customMiddleware` is of type `function`, pass it current
   // array of `middlewares` and expect a new value in return.
   // Fallback to default behaviour.
-  middleware = typeof customMiddleware === 'function'
-    ? customMiddleware([...middleware])
-    : middleware.concat(customMiddleware);
+  middleware =
+    typeof customMiddleware === 'function'
+      ? customMiddleware([...middleware])
+      : middleware.concat(customMiddleware);
 
   const composeArgs: Function[] = [
     applyMiddleware.apply(this, middleware),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' && process.env.NODE_ENV !== 'production' ? window.devToolsExtension() : f => f,
+    typeof window === 'object' &&
+    typeof window.devToolsExtension !== 'undefined' &&
+    process.env.NODE_ENV !== 'production'
+      ? window.devToolsExtension()
+      : f => f,
   ];
 
   const finalCreateStore: CreateStore = compose(...composeArgs)(createStore);
-  const store: Store = finalCreateStore(reducer, typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {});
+  const store: Store = finalCreateStore(
+    reducer,
+    typeof window !== 'undefined' ? window.__INITIAL_STATE__ : {},
+  );
+
+  // Useful for adding reducers dynamically
+  store.reducers = reducers;
+  store.injectedReducerKeys = [];
 
   if (hotCallback) {
     hotCallback((): void => {
-      const nextReducer: Object = combineReducers(
-        Object.assign({}, { _gluestick }, customRequire()),
-      );
+      const nextReducer: Object = combineReducers(store.reducers);
       store.replaceReducer(nextReducer);
     });
   }

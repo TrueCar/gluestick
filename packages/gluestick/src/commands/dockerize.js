@@ -17,7 +17,14 @@ module.exports = ({ getLogger }: CommandAPI, commandArguments: any[]) => {
   if (which('docker') !== null) {
     spawn(
       'docker',
-      ['build', '-t', name, '-f', path.join(process.cwd(), 'src', 'config', '.Dockerfile'), process.cwd()],
+      [
+        'build',
+        '-t',
+        name,
+        '-f',
+        path.join(process.cwd(), 'src', 'config', '.Dockerfile'),
+        process.cwd(),
+      ],
       { stdio: 'inherit' },
     );
   } else {

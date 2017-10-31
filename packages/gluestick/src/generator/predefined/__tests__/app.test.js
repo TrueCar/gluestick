@@ -42,37 +42,55 @@ ${mapper}
 
 describe('generator/predefined/app', () => {
   it('should modify flowconfig', () => {
-    const modifier: Function = appGenerator({ name: 'appName' }).modify[1].modifier;
-    expect(modifier(mockFlowConfig())).toEqual(mockFlowConfig(
-      'module.name_mapper=\'^appName/\\(.*\\)\'->\'<PROJECT_ROOT>/src/apps/app-name/\\1\'\n\n',
-    ));
+    const modifier: Function = appGenerator({ name: 'appName' }).modify[1]
+      .modifier;
+    expect(modifier(mockFlowConfig())).toEqual(
+      mockFlowConfig(
+        "module.name_mapper='^appName/\\(.*\\)'->'<PROJECT_ROOT>/src/apps/app-name/\\1'\n\n",
+      ),
+    );
   });
 
   it('should not modify flowconfig', () => {
-    const modifier: Function = appGenerator({ name: 'appName' }).modify[1].modifier;
-    expect(modifier(mockFlowConfig(
-      'module.name_mapper=\'^appName/\\(.*\\)\'->\'<PROJECT_ROOT>/src/apps/app-name/\\1\'',
-    ))).toEqual(mockFlowConfig(
-      'module.name_mapper=\'^appName/\\(.*\\)\'->\'<PROJECT_ROOT>/src/apps/app-name/\\1\'',
-    ));
+    const modifier: Function = appGenerator({ name: 'appName' }).modify[1]
+      .modifier;
+    expect(
+      modifier(
+        mockFlowConfig(
+          "module.name_mapper='^appName/\\(.*\\)'->'<PROJECT_ROOT>/src/apps/app-name/\\1'",
+        ),
+      ),
+    ).toEqual(
+      mockFlowConfig(
+        "module.name_mapper='^appName/\\(.*\\)'->'<PROJECT_ROOT>/src/apps/app-name/\\1'",
+      ),
+    );
   });
 
   it('should throw error', () => {
-    const modifier: Function = appGenerator({ name: 'appName' }).modify[1].modifier;
+    const modifier: Function = appGenerator({ name: 'appName' }).modify[1]
+      .modifier;
     expect(() => {
       modifier();
     }).toThrowError('Generating new app without bootstraped project');
   });
 
   it('should modify entries.json', () => {
-    const modifier: Function = appGenerator({ name: 'appName' }).modify[0].modifier;
-    expect(modifier('{}')).toEqual(JSON.stringify({
-      '/app-name': {
-        name: 'appName',
-        component: 'src/apps/appName/Index.js',
-        routes: 'src/apps/appName/routes.js',
-        reducers: 'src/apps/appName/reducers',
-      },
-    }, null, '  '));
+    const modifier: Function = appGenerator({ name: 'appName' }).modify[0]
+      .modifier;
+    expect(modifier('{}')).toEqual(
+      JSON.stringify(
+        {
+          '/app-name': {
+            name: 'appName',
+            component: 'src/apps/appName/Index.js',
+            routes: 'src/apps/appName/routes.js',
+            reducers: 'src/apps/appName/reducers',
+          },
+        },
+        null,
+        '  ',
+      ),
+    );
   });
 });

@@ -16,6 +16,18 @@ const spawnWithErrorHandling = (...args) => {
   }
 };
 
+// Set dist-tag
+let tagname = 'latest'; // stable
+
+if (version.includes('-')) { // pre-release
+  const regex = version.match(/-(.+)\./);
+  if (regex) {
+    tagname = regex[1]; // parse type of pre-release
+  } else {
+    tagname = 'pre'; // default to `pre` if no match
+  }
+}
+
 // Publish packages to npm registry
 spawnWithErrorHandling('npm', [
   'run',
@@ -25,19 +37,21 @@ spawnWithErrorHandling('npm', [
   '--skip-git',
   '--repo-version',
   version,
+  '--npm-tag',
+  tagname,
   '--yes',
   '--force-publish=*',
   '--exact',
   ...process.argv.slice(3),
 ], { stdio: 'inherit' });
 
+// Create docker image and push to Docker Hub
+require('./docker/create-base-image')(spawnWithErrorHandling);
+
 console.log('Pushing commit...');
 exec('git checkout staging');
 exec('git add .');
 exec(`git commit -m v${version}`);
 exec(`git push origin ${process.env.BRANCH}`);
-
-// Create docker image and push to Docker Hub
-require('./docker/create-base-image')(spawnWithErrorHandling);
 
 console.log('Done!');

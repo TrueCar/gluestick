@@ -11,9 +11,11 @@ const config: GSConfig = {
     client: 8888,
     server: 8880,
   },
+  publicPath: '/assets/',
   buildStaticPath: 'build/static',
   buildAssetsPath: 'build/assets',
   buildRendererPath: 'build/server',
+  buildDllPath: 'build/assets/dlls',
   assetsPath: 'assets',
   sourcePath: 'src',
   appsPath: 'apps',
@@ -38,15 +40,15 @@ const config: GSConfig = {
   hooksPath: 'src/gluestick.hooks.js',
   webpackHooksPath: 'src/webpack.hooks.js',
   cachingConfigPath: 'src/config/caching.server',
+  vendorSourcePath: 'src/vendor.js',
   nodeModulesPath: 'node_modules',
   autoUpgrade: {
     added: [
-      'src/config/application.js',        // -> prior to 0.1.6
-      'src/config/webpack-additions.js',  // -> prior to 0.1.12
-      'src/config/redux-middleware.js',   // -> prior to 0.1.12
-      'src/config/.Dockerfile',           // -> prior to 0.2.0
-      '.dockerignore',                    // -> prior to 0.3.6
-      'src/config/init.browser.js',       // -> prior to 0.9.26
+      'src/config/application.js', // -> prior to 0.1.6
+      'src/config/redux-middleware.js', // -> prior to 0.1.12
+      'src/config/.Dockerfile', // -> prior to 0.2.0
+      '.dockerignore', // -> prior to 0.3.6
+      'src/config/init.browser.js', // -> prior to 0.9.26
       // From V2
       'gluestick/EntryWrapper.js',
       'src/entries.json',
@@ -56,9 +58,10 @@ const config: GSConfig = {
       'src/config/caching.server.js',
       // 1.x
       'src/gluestick.config.js',
+      'src/vendor.js',
     ],
     changed: [
-      'src/config/.Dockerfile',   // -> last updated in 0.2.0
+      'src/config/.Dockerfile', // -> last updated in 0.2.0
       'gluestick/EntryWrapper.js',
     ],
   },

@@ -1,6 +1,7 @@
 /* @flow */
 
 import axios from 'axios';
+import type { Axios, AxiosExport } from 'axios';
 import { merge, parse } from './cookies';
 
 /**
@@ -14,10 +15,13 @@ export default function getHttpClient(
   options: Object = {},
   req: Object,
   res: Object,
-  httpClient: () => Object = axios,
-) {
-  const { headers, modifyInstance, ...httpConfig }
-  : { headers: Object, modifyInstance: Function } = options;
+  httpClient: AxiosExport = axios,
+): Axios {
+  const {
+    headers,
+    modifyInstance,
+    ...httpConfig
+  }: { headers: Object, modifyInstance: Function } = options;
   let client;
 
   // If there is no request object then we are in the browser and we don't need
@@ -25,7 +29,10 @@ export default function getHttpClient(
   // give developers a chance to modify the instance
   if (!req) {
     const defaultHeaders: Object = httpClient.defaults.headers || {};
-    client = httpClient.create({ headers: { ...defaultHeaders, ...headers }, ...httpConfig });
+    client = httpClient.create({
+      headers: { ...defaultHeaders, ...headers },
+      ...httpConfig,
+    });
 
     if (modifyInstance) {
       client = modifyInstance(client);
@@ -56,20 +63,25 @@ export default function getHttpClient(
   client.interceptors.request.use((config: Object) => {
     // convert incoming cookies to outgoing cookies, strip off the options with
     // `toString(false)`
-    const newCookies: string = parse(incomingCookies).map(c => c.toString(false)).join('; ');
+    const newCookies: string = parse(incomingCookies)
+      .map(c => c.toString(false))
+      .join('; ');
     const output: Object = {
       ...config,
       headers: {
         ...config.headers,
-        cookie: merge(outgoingCookies, merge(config.headers.cookie, newCookies)),
+        cookie: merge(
+          outgoingCookies,
+          merge(config.headers.cookie, newCookies),
+        ),
       },
     };
 
     return output;
   });
 
-  client.interceptors.response.use((response) => {
-    const cookiejar: ?string[] = response.headers['set-cookie'];
+  client.interceptors.response.use(response => {
+    const cookiejar: ?(string[]) = response.headers['set-cookie'];
 
     if (Array.isArray(cookiejar)) {
       const cookieString: string = cookiejar.join('; ');

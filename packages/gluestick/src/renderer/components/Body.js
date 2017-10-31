@@ -1,5 +1,6 @@
 /* eslint-disable react/no-danger*/
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 
 export default class Body extends Component {
@@ -14,7 +15,9 @@ export default class Body extends Component {
   render() {
     const { isEmail } = this.props;
 
-    if (isEmail) { return this._renderWithoutScriptTags(); }
+    if (isEmail) {
+      return this._renderWithoutScriptTags();
+    }
     return this._renderWithScriptTags();
   }
 
@@ -35,11 +38,13 @@ export default class Body extends Component {
           {this._renderMainContent()}
         </div>
         {scriptTags.map(tag => tag)}
-        <script type="text/javascript" dangerouslySetInnerHTML={{ __html: windowVariables }} />
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{ __html: windowVariables }}
+        />
       </div>
     );
   }
-
 
   _renderMainContent() {
     return (
@@ -53,15 +58,19 @@ export default class Body extends Component {
     const { initialState, envVariables } = this.props;
 
     const envVarsValues = {};
-    envVariables.forEach((name) => {
+    envVariables.forEach(name => {
       const value = process.env[name];
-      if (typeof (value) !== 'undefined') {
+      if (typeof value !== 'undefined') {
         envVarsValues[name] = value;
       }
     });
 
-    const state = `window.__INITIAL_STATE__=${serialize(initialState, { isJSON: true })};`;
-    const gsEnvs = `window.__GS_ENV_VARS__=${serialize(envVarsValues, { isJSON: true })};`;
+    const state = `window.__INITIAL_STATE__=${serialize(initialState, {
+      isJSON: true,
+    })};`;
+    const gsEnvs = `window.__GS_ENV_VARS__=${serialize(envVarsValues, {
+      isJSON: true,
+    })};`;
     return state.concat(gsEnvs);
   }
 }

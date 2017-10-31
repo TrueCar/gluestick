@@ -11,17 +11,20 @@ test('renderer/setProxies should set proxies from config', () => {
     },
   };
   const filter = v => v;
-  const proxyConfig = [{
-    path: 'path0',
-    destination: 'dest0',
-  }, {
-    path: 'path1',
-    destination: 'dest1',
-    filter,
-    options: {
-      opt0: 'opt0',
+  const proxyConfig = [
+    {
+      path: 'path0',
+      destination: 'dest0',
     },
-  }];
+    {
+      path: 'path1',
+      destination: 'dest1',
+      filter,
+      options: {
+        opt0: 'opt0',
+      },
+    },
+  ];
   logger.error.mockClear();
   setProxies(app, proxyConfig, logger);
   expect(app.middlewares.length).toBe(2);
