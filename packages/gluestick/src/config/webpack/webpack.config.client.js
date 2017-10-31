@@ -38,7 +38,7 @@ module.exports = (
     : buildEntries(gluestickConfig, logger, entries, runtimePlugins);
   config.entry = Object.keys(config.entry).reduce((prev, curr) => {
     return Object.assign(prev, {
-      [curr]: ['babel-polyfill', config.entry[curr]],
+      [curr]: ['regenerator-runtime/runtime', config.entry[curr]],
     });
   }, {});
   // Modify 'es2015' preset in babel-loader plugins.
@@ -85,7 +85,7 @@ module.exports = (
     logger.info('Vendor DLL bundle not found, using CommonsChunkPlugin');
     config.plugins.push(
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
+        name: ['vendor'],
         filename: `vendor${process.env.NODE_ENV === 'production'
           ? '-[hash]'
           : ''}.bundle.js`,

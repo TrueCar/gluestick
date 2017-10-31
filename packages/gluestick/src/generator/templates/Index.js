@@ -29,7 +29,7 @@ export default class Index extends Component {
 
     const helmet = Helmet.rewind();
     const bodyAttributes = BodyAttributes.rewind();
-
+    const features = ["fetch", "Promise"];
     return (
       <html lang="en-US">
         <head>
@@ -43,6 +43,11 @@ export default class Index extends Component {
         </head>
         <body {...bodyAttributes}>
           {body /* DO NOT REMOVE */}
+          <script
+            type="text/javascript"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: \`var features = [\${features.map(e => \`'\${e}'\`).join()}]\` }}
+          />
         </body>
       </html>
     );
