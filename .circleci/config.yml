@@ -112,6 +112,8 @@ jobs:
   deploy:
     <<: *job-defaults
     steps:
+      - checkout
+
       - restore_cache: *restore-repo-cache
 
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
@@ -120,9 +122,8 @@ jobs:
 
       - run: git config --global user.email $DOCKER_EMAIL
       - run: git config --global user.name "CircleCI"
-      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - run: docker pull node:6.10-slim
+      - run: docker pull node:8.7-slim
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run: BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG  
 
