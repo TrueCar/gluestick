@@ -13,7 +13,6 @@ module.exports = function getAssetsLoader(
   loadjsConfig: LoadJSConfig,
   entryPointBundle: string,
   vendorBundle: string,
-  polyfillBundle?: string = 'https://cdn.polyfill.io/v2/polyfill.min.js',
 ): string {
   return `
     var config = ${serialize(loadjsConfig)};
@@ -29,19 +28,12 @@ module.exports = function getAssetsLoader(
     };
 
     function isPolyfillNeeded() {
-      var needed = false;
-      while (!needed && features.length) {
-        var feature = features.shift();
-        if (!window[feature]) {
-          needed = true;
-        }
-      }
-      return needed;
+      return !window['fetch'];
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       if (isPolyfillNeeded()) {
-        loadjs('${polyfillBundle}', {
+        loadjs('https://cdn.polyfill.io/v2/polyfill.min.js', {
           error: function(pathsNotFound) { throw new Error('Failed to load ' + pathsNotFound.join(', ')); },
           numRetries: 10,
           before: config.before,
