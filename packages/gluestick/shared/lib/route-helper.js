@@ -5,11 +5,28 @@ import type { GetBeforeRoute } from '../types';
 
 const getBeforeRoute: GetBeforeRoute = (component = {}) => {
   const c: Object = component.WrappedComponent || component;
+
+  if (c.onEnter) {
+    return typeof window === 'undefined'
+      ? c.onEnter
+      : (...args) => {
+          c.onEnter(...args);
+          return Promise.resolve();
+        };
+  }
+
   // @deprecated since 0.0.1
   // check for deprecated fetchData method
   if (c.fetchData) {
     console.warn(
       '`fetchData` is deprecated. Please use `gsBeforeRoute` instead.',
+    );
+  }
+
+  if (c.fetchData) {
+    console.warn(
+      '`gsBeforeRoute` is deprecated and will be removed in next versions.' +
+        'Please use `withDataLoader` HOC instead.',
     );
   }
 
