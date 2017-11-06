@@ -37,26 +37,30 @@ export default function withDataLoader(config: DataLoaderConfig) {
   return (Component: React.ComponentType<any>) => {
     let instance;
     async function instanceAwareOnEnter(...args) {
+      /**
+       * Skip loading the data if shouldReloadData returns false,
+       * and the data was previously loaded.
+       */
       if (
-        DataLoader.hasLoadedDataBefore &&
         !isInitialRender &&
         typeof shouldReloadData === 'function' &&
-        !shouldReloadData()
+        !shouldReloadData() &&
+        DataLoader.hasLoadedDataOnClientBefore
       ) {
         return;
       }
 
       await onEnter(...args);
 
+      DataLoader.hasLoadedDataOnClientBefore = true;
       if (instance) {
-        DataLoader.hasLoadedDataBefore = true;
         instance.setState({ loaded: true });
       }
     }
 
     class DataLoader extends React.Component<DataLoaderProps, DataLoaderState> {
       static onEnter = instanceAwareOnEnter;
-      static hasLoadedDataBefore = false;
+      static hasLoadedDataOnClientBefore = false;
 
       constructor(props: DataLoaderProps) {
         super(props);
@@ -65,15 +69,16 @@ export default function withDataLoader(config: DataLoaderConfig) {
           loaded:
             typeof window === 'undefined' ||
             isInitialRender ||
-            (DataLoader.hasLoadedDataBefore &&
-            typeof shouldReloadData === 'function'
-              ? !shouldReloadData()
+            (typeof shouldReloadData === 'function'
+              ? !shouldReloadData() && DataLoader.hasLoadedDataOnClientBefore
               : false),
         };
       }
 
       componentDidMount() {
         instance = this;
+        DataLoader.hasLoadedDataOnClientBefore =
+          DataLoader.hasLoadedDataOnClientBefore || isInitialRender;
       }
 
       render() {
