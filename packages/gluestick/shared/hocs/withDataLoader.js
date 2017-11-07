@@ -1,13 +1,13 @@
 /* @flow */
 
-import * as React from 'react';
+import React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import { getDisplayName } from './utils';
 
 type DataLoaderConfig = {
   onEnter: Function,
   shouldReloadData: Function,
-  Pending: React.ComponentType<any>,
+  Pending: *,
 };
 
 type DataLoaderProps = any;
@@ -34,7 +34,7 @@ if (typeof window !== 'undefined') {
 export default function withDataLoader(config: DataLoaderConfig) {
   const { Pending, onEnter, shouldReloadData } = config;
 
-  return (Component: React.ComponentType<any>) => {
+  return (Component: *) => {
     let instance;
     async function instanceAwareOnEnter(...args) {
       /**
@@ -58,9 +58,15 @@ export default function withDataLoader(config: DataLoaderConfig) {
       }
     }
 
-    class DataLoader extends React.Component<DataLoaderProps, DataLoaderState> {
+    class DataLoader extends React.Component<
+      void,
+      DataLoaderProps,
+      DataLoaderState,
+    > {
       static onEnter = instanceAwareOnEnter;
       static hasLoadedDataOnClientBefore = false;
+
+      state: DataLoaderState;
 
       constructor(props: DataLoaderProps) {
         super(props);
