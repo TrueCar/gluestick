@@ -26,5 +26,7 @@
     * [Plugins](/docs/configuration/Plugins.md)
     * [Styles](/docs/configuration/Styles.md)
 * [Generators](/docs/Generators.md)
+* API
+    * [withDataLoader](/docs/api/withDataLoader.md)
 * [Development](/docs/Development.md)
 * [Contributing](/CONTRIBUTING.md)
