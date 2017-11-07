@@ -90,6 +90,7 @@ module.exports = function linkAssets(
     { before: () => {}, ...loadjsConfig },
     entryPointBundleHref,
     vendorBundleHref,
+    config,
   );
   scriptTags.push(
     <script
