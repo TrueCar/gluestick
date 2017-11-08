@@ -29,6 +29,7 @@ export default class Index extends Component {
 
     const helmet = Helmet.rewind();
     const bodyAttributes = BodyAttributes.rewind();
+    
     return (
       <html lang="en-US">
         <head>
