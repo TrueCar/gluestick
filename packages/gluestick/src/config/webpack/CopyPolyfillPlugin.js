@@ -8,12 +8,15 @@ const polyfillContent = fs.readFileSync(
 );
 
 module.exports = class CopyPolyfillPlugin {
-  constructor(opts) {
+  outputPath: string;
+  chunksFilename: string;
+
+  constructor(opts: { outputPath: string }) {
     this.outputPath = opts.outputPath;
     this.chunksFilename = path.join(this.outputPath, 'webpack-chunks.json');
   }
 
-  apply(compiler) {
+  apply(compiler: { plugin: Function }) {
     compiler.plugin('done', stats => {
       const { publicPath } = stats.toJson();
       fs.writeFileSync(
