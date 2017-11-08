@@ -90,7 +90,7 @@ module.exports = function linkAssets(
     { before: () => {}, ...loadjsConfig },
     entryPointBundleHref,
     vendorBundleHref,
-    config,
+    getAssetPathForFile('polyfill', 'javascript', assets),
   );
   scriptTags.push(
     <script

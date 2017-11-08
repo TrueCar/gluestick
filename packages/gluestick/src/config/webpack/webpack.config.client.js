@@ -16,6 +16,7 @@ const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugi
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const ChunksPlugin = require('./ChunksPlugin');
+const CopyPolyfillPlugin = require('./CopyPolyfillPlugin');
 const { updateBabelLoaderConfig } = require('./utils');
 const { manifestFilename } = require('../vendorDll');
 
@@ -58,6 +59,9 @@ module.exports = (
       path.join(__dirname, './mocks/serverFileMock.js'),
     ),
     new DuplicatePackageChecker(),
+    new CopyPolyfillPlugin({
+      outputPath: config.output.path,
+    }),
   );
 
   if (!noProgress) {

@@ -115,15 +115,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
   // Call express App Hook which accept app as param.
   hooksHelper.call(hooks.postServerRun, app);
 
-  app.get('/polyfill.min.js', (req, res) => {
-    res.sendFile(
-      path.join(
-        process.cwd(),
-        'node_modules/babel-polyfill/dist/polyfill.min.js',
-      ),
-    );
-  });
-
   app.use(function gluestickRequestHandler(
     req: Request,
     res: Response,
