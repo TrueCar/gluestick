@@ -33,7 +33,17 @@ module.exports = function getAssetsLoader(
     };
 
     function isPolyfillNeeded() {
-      return !window['fetch'];
+      return (
+        !window.Symbol ||
+        !window.Promise ||
+        !window.Map ||
+        !window.Set ||
+        !String.raw ||
+        !Array.isArray ||
+        !Object.assign ||
+        !Object.values ||
+        !Object.entries
+      );
     }
 
     document.addEventListener('DOMContentLoaded', loadVendorThenEntry);
