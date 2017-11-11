@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import type { Axios, AxiosExport } from 'axios';
+import { URL } from 'url';
 import { merge, parse } from './cookies';
 
 /**
@@ -61,6 +62,13 @@ export default function getHttpClient(
   // along with any new cookies that we have received in API calls to fullfill
   // this request.
   client.interceptors.request.use((config: Object) => {
+    // If the client sends a request during SSR to a domain other than the
+    // hostname that was part of the original request. Don't forward cookies to
+    // the destination
+    if (notSameHost(config)) {
+      return config;
+    }
+
     // convert incoming cookies to outgoing cookies, strip off the options with
     // `toString(false)`
     const newCookies: string = parse(incomingCookies)
@@ -81,18 +89,18 @@ export default function getHttpClient(
   });
 
   client.interceptors.response.use(response => {
+    // If the client gets a response during SSR from a domain other than the
+    // hostname that was part of the original request. Don't forward cookies
+    // back to the browser.
+    if (notSameHost(response.config)) {
+      return response;
+    }
+
     const cookiejar: ?(string[]) = response.headers['set-cookie'];
 
     if (Array.isArray(cookiejar)) {
       const cookieString: string = cookiejar.join('; ');
 
-      // @TODO: This will append all of the cookies sent back from server side
-      // requests in the initial page load. There is a potential issue if you are
-      // hitting 3rd party APIs. If site A sets a cookie and site B sets a cookie
-      // with the same key, then it will overwrite A's cookie and possibly create
-      // undesired effects. Currently, the suggested solution for dealing with
-      // this problem is to make the API requests to A or B in the browser and
-      // not in gsBeforeRoute for apps where that is an issue.
       const mergedCookieString: string = merge(incomingCookies, cookieString);
       const cookies: Object[] = parse(mergedCookieString);
       res.removeHeader('Set-Cookie');
@@ -121,4 +129,14 @@ export default function getHttpClient(
   }
 
   return client;
+}
+
+function notSameHost(config) {
+  if (!config.baseURL || !config.url) {
+    return false;
+  }
+
+  const originalHostName = new URL(config.baseURL).hostname;
+  const outgoingRequestHostName = new URL(config.url).hostname;
+  return originalHostName !== outgoingRequestHostName;
 }
