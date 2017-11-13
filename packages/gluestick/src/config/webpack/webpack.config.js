@@ -74,6 +74,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
                       targets: {
                         browsers: 'ie 11',
                       },
+                      modules: false,
                     },
                   ],
                   'react',
