@@ -67,7 +67,18 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
               loader: 'babel-loader',
               options: {
                 plugins: ['transform-flow-strip-types'],
-                presets: ['es2015', 'react', 'stage-0'],
+                presets: [
+                  [
+                    'env',
+                    {
+                      targets: {
+                        browsers: 'ie 11',
+                      },
+                    },
+                  ],
+                  'react',
+                  'stage-0',
+                ],
                 babelrc: false,
               },
             },
