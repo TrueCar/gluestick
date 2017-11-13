@@ -19,7 +19,7 @@ const templatePackage = createTemplate`
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-polyfill": "6.23.0",
-    "babel-preset-es2015": "6.24.1",
+    "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
     "css-loader": "0.28.1",
