@@ -68,6 +68,12 @@ if (typeof window === "object") {
     getRoutes,
     getStore,
     { rootWrappers, rootWrappersOptions: [], preRenderHooks },
+    ${args =>
+      args.opts
+        ? `{ ${Object.keys(args.opts)
+            .map(key => `${key}: ${args.opts[key]}`)
+            .join(', ')} }`
+        : '{}'}
   );
 
   if (module.hot) {
@@ -86,6 +92,9 @@ module.exports = options => {
       reducers: options.reducers,
       config: options.config,
       plugins: options.plugins,
+      opts: {
+        enableErrorOverlay: options.enableErrorOverlay,
+      },
     },
     entry: {
       path: options.clientEntryInitPath,
