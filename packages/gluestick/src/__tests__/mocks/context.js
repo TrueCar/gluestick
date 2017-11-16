@@ -57,6 +57,7 @@ const gsConfig: GSConfig = {
     added: [],
     changed: [],
   },
+  enableErrorOverlay: true,
 };
 
 const client: WebpackConfig = {
