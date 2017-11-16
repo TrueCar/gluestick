@@ -10,9 +10,19 @@ function ErrorOverlay({ message, filename }) {
         padding: '30px',
       }}
     >
-      <h3 style={{ color: '#ff3030' }}>
+      <pre
+        style={{
+          color: '#ff3030',
+          maxHeight: '50%',
+          overflowY: 'auto',
+          whiteSpace: 'pre-wrap',
+          fontSize: '16px',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          border: '0',
+        }}
+      >
         Error: {message}
-      </h3>
+      </pre>
       {filename &&
         <h4
           style={{
@@ -26,10 +36,26 @@ function ErrorOverlay({ message, filename }) {
       <div style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '18px' }}>
         Please check the console for stack trace.
       </div>
+      <div style={{ textAlign: 'right', marginTop: '30px' }}>
+        <button
+          style={{
+            color: 'rgba(255, 255, 255, 0.9)',
+            fontSize: '18px',
+            backgroundColor: 'transparent',
+            textDecoration: 'underline',
+            border: '0',
+          }}
+          onClick={dismissErrorOverlay}
+        >
+          Dismiss
+        </button>
+      </div>
     </div>
   );
 }
 
+let awaitingErrors = [];
+let currentError = null;
 let errorRoot = null;
 const logError = console.error.bind(console);
 
@@ -49,7 +75,10 @@ function getErrorRoot() {
 }
 
 function dismissErrorOverlay() {
-  if (errorRoot) {
+  currentError = null;
+  if (awaitingErrors.length) {
+    crash();
+  } else if (errorRoot) {
     errorRoot.style.display = 'none';
   }
 }
@@ -58,15 +87,28 @@ function showErrorOverlay() {
   errorRoot.style.display = 'block';
 }
 
-function crash(error: Error, filename: ?string) {
-  const root = getErrorRoot();
-  render(
-    <ErrorOverlay message={error.message} filename={filename} />,
-    root,
-    () => {
-      showErrorOverlay();
-    },
-  );
+function crash(newError?: Error, filename: ?string) {
+  if (newError) {
+    awaitingErrors.push({ message: newError.message, filename });
+  }
+
+  if (awaitingErrors.length && !currentError) {
+    currentError = awaitingErrors.pop();
+    awaitingErrors = awaitingErrors.filter(
+      ({ message }) => message !== currentError.message,
+    );
+    const root = getErrorRoot();
+    render(
+      <ErrorOverlay
+        message={currentError.message}
+        filename={currentError.filename}
+      />,
+      root,
+      () => {
+        showErrorOverlay();
+      },
+    );
+  }
 }
 
 function reportBuildError(error: Error) {

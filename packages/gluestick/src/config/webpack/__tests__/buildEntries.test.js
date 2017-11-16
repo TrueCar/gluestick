@@ -34,6 +34,7 @@ describe('config/webpack/buildEntries', () => {
         config: `${defaultGSConfig.configPath}/${defaultGSConfig.applicationConfigPath}`,
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
         plugins: [],
+        enableErrorOverlay: true,
       },
     });
     // $FlowIgnore
@@ -47,6 +48,7 @@ describe('config/webpack/buildEntries', () => {
         config: 'path/to/home/config',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
         plugins: [],
+        enableErrorOverlay: true,
       },
     });
   });
@@ -70,6 +72,7 @@ describe('config/webpack/buildEntries', () => {
         config: 'path/to/home/config',
         clientEntryInitPath: defaultGSConfig.clientEntryInitPath,
         plugins: [],
+        enableErrorOverlay: true,
       },
     });
   });
