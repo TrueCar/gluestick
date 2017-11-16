@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-eslint",
-  "version": "1.14.2",
+  "version": "1.15.0",
   "description": "",
   "main": "build/config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -13,11 +13,11 @@
   },
   "peerDependencies": {
     "eslint-loader": "1.x",
-    "gluestick": "1.14.2"
+    "gluestick": "1.15.0"
   },
   "devDependencies": {
     "eslint-loader": "1.7.1",
     "extract-text-webpack-plugin": "2.1.2",
-    "gluestick": "1.14.2"
+    "gluestick": "1.15.0"
   }
 }
