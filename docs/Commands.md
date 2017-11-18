@@ -35,12 +35,12 @@ Available options:
 
 Removes entity created by `generate` command
 
-> `destory` command only removes files, meaning if entity generator modifies already existing file,
+> `destroy` command only removes files, meaning if entity generator modifies already existing file,
 you need to manually update that file, so this command works best with `component` and `container`,
 but for `reducer` generator it will only remove reducer and test for it, so any reference to that reducer in `reducers/index.js` must be removed manually
 
 ```bash
-gluestick destory <ENTITY_TYPE> <ENTITY_NAME>
+gluestick destroy <ENTITY_TYPE> <ENTITY_NAME>
 ```
 
 Available options:
