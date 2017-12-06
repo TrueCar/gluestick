@@ -13,7 +13,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 const sha1 = require('sha1');
 const clone = require('clone');
-const progressHandler = require('./webpack/progressHandler');
+const progressHandler = require('../webpack/plugins/progressHandler');
 const { requireModule } = require('../utils');
 const hookHelper = require('../renderer/helpers/hooks');
 
