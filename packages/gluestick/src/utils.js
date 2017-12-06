@@ -148,7 +148,7 @@ const requireModule = (filename: string): any => {
 
 const getDefaultExport = (input: any): any => {
   if (input.__esModule) {
-    const output = input.default;
+    const output = input.default || {};
     Object.keys(input).filter(key => key !== 'default').forEach(key => {
       output[key] = input[key];
     });

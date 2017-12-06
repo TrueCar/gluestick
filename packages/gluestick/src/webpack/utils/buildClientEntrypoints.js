@@ -6,12 +6,12 @@ const path = require('path');
 const { highlight } = require('../../cli/colorScheme');
 const generator = require('gluestick-generators').default;
 
-const buildEntries = (
+module.exports = function buildClientEntrypoints(
   gluestickConfig: GSConfig,
   logger: Logger,
   entries: Object,
   plugins: Object[],
-): Object => {
+): Object {
   const successMessageHandler = (generatorName, entityName) => {
     logger.info(`Client entry for ${highlight(entityName)} created`);
   };
@@ -49,5 +49,3 @@ const buildEntries = (
     };
   }, {});
 };
-
-module.exports = buildEntries;
