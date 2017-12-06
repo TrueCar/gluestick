@@ -56,7 +56,8 @@ const templatePackage = createTemplate`
     "redux-thunk": "2.2.0",
     "sass-loader": "6.0.3",
     "style-loader": "0.16.1",
-    "url-loader": "0.5.8"
+    "url-loader": "0.5.8",
+    "webpack-config": "7.5.0"
   },
   "author": "",
   "license": "ISC",
