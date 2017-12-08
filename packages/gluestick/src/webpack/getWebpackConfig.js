@@ -1,8 +1,29 @@
+/* @flow */
+
+import type {
+  ConfigPlugin,
+  Plugin,
+  GSConfig,
+  // WebpackConfig,
+  // UniversalWebpackConfigurator,
+  Logger,
+  // UniversalSettings,
+  // CompiledConfig,
+  // WebpackHooks,
+} from '../types';
+
 const path = require('path');
 
 const getBaseConfig = require('./getBaseConfig');
 const prepareEntries = require('./utils/prepareEntries');
 const { requireModule } = require('../utils');
+
+type CompilationOptions = {
+  skipClientEntryGeneration: boolean,
+  skipServerEntryGeneration: boolean,
+  entryOrGroupToBuild?: string,
+  noProgress: boolean,
+};
 
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 
@@ -21,15 +42,15 @@ function applyConfigPlugins({ type, phase, config, plugins }) {
 }
 
 module.exports = function getWebpackConfig(
-  logger,
-  plugins,
-  gluestickConfig,
+  logger: Logger,
+  plugins: ConfigPlugin[],
+  gluestickConfig: GSConfig,
   {
     skipClientEntryGeneration,
     skipServerEntryGeneration,
     entryOrGroupToBuild,
     noProgress,
-  } = {},
+  }: CompilationOptions = {},
 ) {
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
@@ -61,7 +82,7 @@ module.exports = function getWebpackConfig(
   }
 
   const config = getBaseConfig(
-    { entries, noProgress },
+    { entries, noProgress, plugins: runtimePlugins },
     { gluestickConfig, logger },
   );
 
@@ -80,6 +101,6 @@ module.exports = function getWebpackConfig(
   });
 
   return {
-    client: clientConfig,
+    client: clientConfig.toObject(),
   };
 };

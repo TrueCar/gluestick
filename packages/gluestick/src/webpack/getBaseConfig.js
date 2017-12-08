@@ -10,14 +10,14 @@ const clientConfig = require('./config/client');
  * @param {any} { entries } 
  */
 module.exports = function getBaseConfig(
-  { entries, noProgress },
+  { entries, noProgress, plugins },
   { logger, gluestickConfig },
 ) {
   const entrypoints = buildClientEntrypoints(
     gluestickConfig,
     logger,
     entries,
-    [],
+    plugins,
   );
 
   return {

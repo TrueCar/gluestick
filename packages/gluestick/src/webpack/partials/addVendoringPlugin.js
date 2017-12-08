@@ -3,7 +3,6 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const Config = require('webpack-config').default;
 const deepClone = require('clone');
 
 const ChunksPlugin = require('../plugins/ChunksPlugin');
@@ -11,7 +10,7 @@ const gluestickConfig = require('../../config/defaults/glueStickConfig');
 const { manifestFilename } = require('../../config/vendorDll');
 
 module.exports = (baseConfig, _, { logger }) =>
-  new Config().merge(config => {
+  baseConfig.merge(config => {
     // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
     const vendorDllManifestPath: string = path.join(
       process.cwd(),

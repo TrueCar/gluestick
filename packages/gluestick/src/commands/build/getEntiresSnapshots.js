@@ -8,7 +8,7 @@ const fs = require('fs');
 const mkdir = require('mkdirp');
 const { clearBuildDirectory } = require('../utils');
 const { promiseEach } = require('../../utils');
-const prepareEntries = require('../../config/webpack/prepareEntries');
+const prepareEntries = require('../../webpack/utils/prepareEntries');
 
 const spawnRenderer = (entryPointPath: string, args: string) => {
   const child: Object = spawn(
