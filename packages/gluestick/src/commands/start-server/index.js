@@ -1,6 +1,8 @@
 /* @flow */
 import type { CommandAPI, Logger } from '../../types';
 
+const path = require('path');
+
 const runWithWebpack = require('./runWithWebpack');
 const runWithPM2 = require('./runWithPM2');
 const runWithDebug = require('./runWithDebug');
@@ -25,7 +27,10 @@ type Settings = {
 
 const getServerEntry = (config: Object): Entry => {
   return {
-    path: config.webpackConfig.universalSettings.server.output,
+    path: path.join(
+      config.webpackConfig.server.output.path,
+      config.webpackConfig.server.output.filename,
+    ),
     args: [JSON.stringify(config)],
   };
 };

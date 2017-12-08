@@ -10,23 +10,22 @@ const Config = require('webpack-config').default;
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
 const getAliasesForApps = require('../../config/webpack/getAliasesForApps');
 
-const {
-  buildAssetsPath,
-  assetsPath,
-  sourcePath,
-  appsPath,
-  sharedPath,
-  configPath,
-  nodeModulesPath,
-  publicPath,
-} = gluestickConfig;
+module.exports = ({ entries }) => {
+  const {
+    buildAssetsPath,
+    assetsPath,
+    sourcePath,
+    appsPath,
+    sharedPath,
+    configPath,
+    nodeModulesPath,
+  } = gluestickConfig;
 
-const isProduction: boolean = process.env.NODE_ENV === 'production';
-const appRoot: string = process.cwd();
-const outputPath: string = path.resolve(appRoot, buildAssetsPath);
+  const isProduction: boolean = process.env.NODE_ENV === 'production';
+  const appRoot: string = process.cwd();
+  const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
-module.exports = ({ entries }) =>
-  new Config().merge({
+  return new Config().merge({
     context: appRoot,
     entry: entries,
     resolve: {
@@ -41,19 +40,6 @@ module.exports = ({ entries }) =>
         apps: path.join(process.cwd(), sourcePath, appsPath),
         compiled: path.join(process.cwd(), nodeModulesPath),
       },
-    },
-    output: {
-      // filesystem path for static files
-      path: outputPath,
-
-      // network path for static files
-      publicPath: `/${publicPath}/`.replace(/\/\//g, '/'),
-
-      // file name pattern for entry scripts
-      filename: '[name].[hash].js',
-
-      // file name pattern for chunk scripts
-      chunkFilename: '[name].[hash].js',
     },
     module: {
       rules: [
@@ -130,3 +116,4 @@ module.exports = ({ entries }) =>
       net: 'empty',
     },
   });
+};

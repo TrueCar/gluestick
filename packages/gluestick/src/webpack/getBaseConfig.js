@@ -1,8 +1,12 @@
 /* @flow */
 
+const path = require('path');
+
 const buildClientEntrypoints = require('./utils/buildClientEntrypoints');
+const buildServerEntrypoints = require('./utils/buildServerEntrypoints');
 
 const clientConfig = require('./config/client');
+const serverConfig = require('./config/server');
 
 /**
  * 
@@ -10,19 +14,32 @@ const clientConfig = require('./config/client');
  * @param {any} { entries } 
  */
 module.exports = function getBaseConfig(
-  { entries, noProgress, plugins },
+  {
+    entries,
+    noProgress,
+    clientPlugins,
+    serverPlugins,
+    skipClientEntryGeneration,
+    skipServerEntryGeneration,
+  },
   { logger, gluestickConfig },
 ) {
-  const entrypoints = buildClientEntrypoints(
-    gluestickConfig,
-    logger,
-    entries,
-    plugins,
-  );
+  const clientEntrypoints = skipClientEntryGeneration
+    ? {}
+    : buildClientEntrypoints(gluestickConfig, logger, entries, clientPlugins);
+
+  if (!skipServerEntryGeneration) {
+    buildServerEntrypoints(gluestickConfig, logger, entries, serverPlugins);
+  }
+
+  const serverEntry = path.join(__dirname, '../renderer/entry.js');
 
   return {
-    client: clientConfig({ entries: entrypoints, noProgress }, { logger }),
-    server: null,
+    client: clientConfig(
+      { entries: clientEntrypoints, noProgress },
+      { logger },
+    ),
+    server: serverConfig({ entries: serverEntry, noProgress }, { logger }),
     vendorDll: null,
   };
 };

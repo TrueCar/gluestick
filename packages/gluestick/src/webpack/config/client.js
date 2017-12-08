@@ -7,11 +7,25 @@ const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugi
 
 const progressHandler = require('../plugins/progressHandler');
 const addVendoringPlugin = require('../partials/addVendoringPlugin.js');
+const gluestickConfig = require('../../config/defaults/glueStickConfig');
 
 module.exports = (...args) => {
+  const { buildAssetsPath, publicPath } = gluestickConfig;
+  const outputPath: string = path.resolve(process.cwd(), buildAssetsPath);
+
   const clientConfig = new Config()
     .merge(require('./base.js')(...args))
     .merge({
+      output: {
+        // filesystem path for static files
+        path: outputPath,
+        // network path for static files
+        publicPath: `/${publicPath}/`.replace(/\/\//g, '/'),
+        // file name pattern for entry scripts
+        filename: '[name].[hash].js',
+        // file name pattern for chunk scripts
+        chunkFilename: '[name].[hash].js',
+      },
       plugins: [
         // Make it so *.server.js files return null in client
         new webpack.NormalModuleReplacementPlugin(
@@ -33,8 +47,8 @@ module.exports = (...args) => {
     });
 
   return (process.env.NODE_ENV === 'production'
-    ? require('../partials/applyClientProdTweaks.js')
-    : require('../partials/applyClientDevTweaks.js'))(
+    ? require('../partials/clientProdTweaks.js')
+    : require('../partials/clientDevTweaks.js'))(
     addVendoringPlugin(clientConfig, ...args),
     ...args,
   );

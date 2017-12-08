@@ -1,7 +1,7 @@
 /* @flow */
 import type { Logger } from '../../types';
 
-const progressHandler = require('../../config/webpack/progressHandler');
+const progressHandler = require('../../webpack/plugins/progressHandler');
 
 module.exports = (logger: Logger, childProcess: Object): void => {
   let firstMessage = true;

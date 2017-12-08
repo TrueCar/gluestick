@@ -17,6 +17,8 @@ const path = require('path');
 const getBaseConfig = require('./getBaseConfig');
 const prepareEntries = require('./utils/prepareEntries');
 const { requireModule } = require('../utils');
+const readRuntimePlugins = require('../plugins/readRuntimePlugins');
+const readServerPlugins = require('../plugins/readServerPlugins');
 
 type CompilationOptions = {
   skipClientEntryGeneration: boolean,
@@ -24,8 +26,6 @@ type CompilationOptions = {
   entryOrGroupToBuild?: string,
   noProgress: boolean,
 };
-
-const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 
 const passThrough = config => config;
 
@@ -71,6 +71,19 @@ module.exports = function getWebpackConfig(
       ? []
       : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
+  // Get runtime and server plugins, both runtime and server plugins in this case
+  // won't be included in client bundles but in server aka renderer bundle.
+  // `./webpack/buildServerEntries.js` will invoke generator that will output
+  // those plugins to `entires.js` (default) file.
+  // This step is important, since server code will go throught webpack
+  // which requires static imports/requires, so all plugins must
+  // be known in advance.
+  const runtimeAndServerPlugins: Plugin[] = runtimePlugins.concat(
+    skipClientEntryGeneration && skipServerEntryGeneration
+      ? []
+      : readServerPlugins(logger, gluestickConfig.pluginsConfigPath),
+  );
+
   let webpackConfigHooks = {};
 
   try {
@@ -82,7 +95,14 @@ module.exports = function getWebpackConfig(
   }
 
   const config = getBaseConfig(
-    { entries, noProgress, plugins: runtimePlugins },
+    {
+      entries,
+      noProgress,
+      clientPlugins: runtimePlugins,
+      serverPlugins: runtimeAndServerPlugins,
+      skipClientEntryGeneration,
+      skipServerEntryGeneration,
+    },
     { gluestickConfig, logger },
   );
 
@@ -100,7 +120,22 @@ module.exports = function getWebpackConfig(
     ),
   });
 
+  const serverConfig = applyConfigPlugins({
+    type: 'server',
+    phase: 'post',
+    plugins,
+    config: (webpackConfigHooks.server || passThrough)(
+      applyConfigPlugins({
+        type: 'server',
+        phase: 'pre',
+        config: config.server,
+        plugins,
+      }),
+    ),
+  });
+
   return {
     client: clientConfig.toObject(),
+    server: serverConfig.toObject(),
   };
 };
