@@ -32,7 +32,6 @@ const matchRouteAndRender = (
       const entry = (
         <AppContainer>
           <EntryWrapper
-            radiumConfig={{userAgent: window.navigator.userAgent}}
             store={store}
             getRoutes={getRoutes}
             httpClient={httpClient}
@@ -137,7 +136,6 @@ export default class EntryWrapper extends Component {
     const {
       routerContext,
       getRoutes,
-      radiumConfig,
       store,
       httpClient,
       rootWrappers,
