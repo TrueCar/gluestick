@@ -1,9 +1,17 @@
 /* @flow */
 
+import type { WebpackConfig } from '../types';
+
 const webpack = require('webpack');
 
-module.exports = (baseConfig, { devServerPort }) =>
-  baseConfig
+const gluestickConfig = require('../../config/defaults/glueStickConfig');
+
+module.exports = function tweakServerConfigForDev(
+  baseConfig: WebpackConfig,
+): WebpackConfig {
+  const { protocol, host, ports } = gluestickConfig;
+
+  return baseConfig
     .merge({
       plugins: [
         new webpack.BannerPlugin({
@@ -15,6 +23,7 @@ module.exports = (baseConfig, { devServerPort }) =>
     })
     .merge(config => {
       // eslint-disable-next-line no-param-reassign
-      config.output.publicPath = `http://localhost:${devServerPort}${config
+      config.output.publicPath = `${protocol}://${host}:${ports.client}${config
         .output.publicPath}`;
     });
+};

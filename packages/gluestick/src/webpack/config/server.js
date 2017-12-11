@@ -1,5 +1,7 @@
 /* @flow */
 
+import type { ServerConfigOptions, ConfigUtils, WebpackConfig } from '../types';
+
 const fs = require('fs');
 const path = require('path');
 const Config = require('webpack-config').default;
@@ -9,9 +11,14 @@ const gluestickConfig = require('../../config/defaults/glueStickConfig');
 const progressHandler = require('../plugins/progressHandler');
 const disableLoadersEmit = require('../utils/disableLoadersEmit');
 
-module.exports = (...args) => {
+module.exports = function createServerConfig(
+  { noProgress, ...options }: ServerConfigOptions,
+  { logger, ...utils }: ConfigUtils,
+): WebpackConfig {
   const serverConfig = new Config()
-    .merge(require('./base.js')(...args))
+    .merge(
+      require('./base.js')({ noProgress, ...options }, { logger, ...utils }),
+    )
     .merge({
       devtool: 'source-map',
       target: 'node',
@@ -69,9 +76,7 @@ module.exports = (...args) => {
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
-      ].concat(
-        args[0].noProgress ? [] : [progressHandler(args[1].logger, 'server')],
-      ),
+      ].concat(noProgress ? [] : [progressHandler(logger, 'server')]),
       externals: [
         ...fs.readdirSync(path.join(process.cwd(), 'node_modules')),
         ...fs.readdirSync(path.join(__dirname, '../../../node_modules')),
@@ -97,5 +102,9 @@ module.exports = (...args) => {
 
   return (process.env.NODE_ENV === 'production'
     ? require('../partials/serverProdTweaks.js')
-    : require('../partials/serverDevTweaks.js'))(serverConfig, ...args);
+    : require('../partials/serverDevTweaks.js'))(
+    serverConfig,
+    { noProgress, ...options },
+    { logger, ...utils },
+  );
 };

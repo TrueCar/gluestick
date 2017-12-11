@@ -1,5 +1,7 @@
 /* @flow */
 
+import type { ClientConfigOptions, ConfigUtils, WebpackConfig } from '../types';
+
 const path = require('path');
 const Config = require('webpack-config').default;
 const webpack = require('webpack');
@@ -9,12 +11,17 @@ const progressHandler = require('../plugins/progressHandler');
 const addVendoringPlugin = require('../partials/addVendoringPlugin.js');
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
 
-module.exports = (...args) => {
+module.exports = function createClientConfig(
+  { noProgress, ...options }: ClientConfigOptions,
+  { logger, ...utils }: ConfigUtils,
+): WebpackConfig {
   const { buildAssetsPath, publicPath } = gluestickConfig;
   const outputPath: string = path.resolve(process.cwd(), buildAssetsPath);
 
   const clientConfig = new Config()
-    .merge(require('./base.js')(...args))
+    .merge(
+      require('./base.js')({ noProgress, ...options }, { logger, ...utils }),
+    )
     .merge({
       output: {
         // filesystem path for static files
@@ -33,9 +40,7 @@ module.exports = (...args) => {
           path.join(__dirname, '../../config/webpack/mocks/serverFileMock.js'),
         ),
         new DuplicatePackageChecker(),
-      ].concat(
-        args[0].noProgress ? [] : [progressHandler(args[1].logger, 'client')],
-      ),
+      ].concat(noProgress ? [] : [progressHandler(logger, 'client')]),
     })
     .merge(config => {
       // eslint-disable-next-line no-param-reassign
@@ -49,7 +54,12 @@ module.exports = (...args) => {
   return (process.env.NODE_ENV === 'production'
     ? require('../partials/clientProdTweaks.js')
     : require('../partials/clientDevTweaks.js'))(
-    addVendoringPlugin(clientConfig, ...args),
-    ...args,
+    addVendoringPlugin(
+      clientConfig,
+      { noProgress, ...options },
+      { logger, ...utils },
+    ),
+    { noProgress, ...options },
+    { logger, ...utils },
   );
 };

@@ -10,7 +10,7 @@ const Config = require('webpack-config').default;
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
 const getAliasesForApps = require('../../config/webpack/getAliasesForApps');
 
-module.exports = ({ entries }) => {
+module.exports = ({ entries }: { [key: string]: string | string[] }) => {
   const {
     buildAssetsPath,
     assetsPath,

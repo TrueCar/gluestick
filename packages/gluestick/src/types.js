@@ -54,19 +54,6 @@ export type WebpackConfig = {
   [key: string]: WebpackConfigEntry,
 };
 
-export type UniversalSettings = {
-  server: {
-    input: string,
-    output: string,
-  },
-};
-
-export type CompiledConfig = {
-  universalSettings: UniversalSettings,
-  client: WebpackConfig,
-  server: WebpackConfig,
-  vendor?: WebpackConfig,
-};
 
 export type Config = {
   projectConfig?: ProjectConfig,
@@ -112,8 +99,6 @@ export type Context = {
   config: Config,
   logger: BaseLogger,
 };
-
-export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
 
 export type Question = {
   type: string,

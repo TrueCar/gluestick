@@ -1,16 +1,8 @@
 /* @flow */
 
-import type {
-  ConfigPlugin,
-  Plugin,
-  GSConfig,
-  // WebpackConfig,
-  // UniversalWebpackConfigurator,
-  Logger,
-  // UniversalSettings,
-  // CompiledConfig,
-  // WebpackHooks,
-} from '../types';
+import type { ConfigPlugin, Plugin, Logger } from '../types';
+
+import { WebpackOptions } from './types';
 
 const path = require('path');
 
@@ -19,13 +11,7 @@ const prepareEntries = require('./utils/prepareEntries');
 const { requireModule } = require('../utils');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
-
-type CompilationOptions = {
-  skipClientEntryGeneration: boolean,
-  skipServerEntryGeneration: boolean,
-  entryOrGroupToBuild?: string,
-  noProgress: boolean,
-};
+const gluestickConfig = require('../config/defaults/glueStickConfig');
 
 const passThrough = config => config;
 
@@ -41,17 +27,22 @@ function applyConfigPlugins({ type, phase, config, plugins }) {
     }, config);
 }
 
+type OutputConfig = {
+  client: Object,
+  server: Object,
+  vendorDll: ?Object,
+};
+
 module.exports = function getWebpackConfig(
   logger: Logger,
   plugins: ConfigPlugin[],
-  gluestickConfig: GSConfig,
   {
     skipClientEntryGeneration,
     skipServerEntryGeneration,
     entryOrGroupToBuild,
     noProgress,
-  }: CompilationOptions = {},
-) {
+  }: WebpackOptions = {},
+): OutputConfig {
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
   // code for client and serverEntries for server.
@@ -75,7 +66,7 @@ module.exports = function getWebpackConfig(
   // won't be included in client bundles but in server aka renderer bundle.
   // `./webpack/buildServerEntries.js` will invoke generator that will output
   // those plugins to `entires.js` (default) file.
-  // This step is important, since server code will go throught webpack
+  // This step is important, since server code will go through webpack
   // which requires static imports/requires, so all plugins must
   // be known in advance.
   const runtimeAndServerPlugins: Plugin[] = runtimePlugins.concat(

@@ -1,9 +1,17 @@
 /* @flow */
 
+import type { WebpackConfig } from '../types';
+
 const webpack = require('webpack');
 
-module.exports = (baseConfig, { devServerHost, devServerPort }) =>
-  baseConfig
+const gluestickConfig = require('../../config/defaults/glueStickConfig');
+
+module.exports = function tweakClientConfigForDev(
+  baseConfig: WebpackConfig,
+): WebpackConfig {
+  const { protocol, host, ports } = gluestickConfig;
+
+  return baseConfig
     .merge({
       devtool: 'cheap-module-eval-source-map',
       plugins: [
@@ -22,7 +30,7 @@ module.exports = (baseConfig, { devServerHost, devServerPort }) =>
     })
     .merge(config => {
       // eslint-disable-next-line no-param-reassign
-      config.output.publicPath = `http://${devServerHost}:${devServerPort}${config
+      config.output.publicPath = `${protocol}://${host}:${ports.client}${config
         .output.publicPath}`;
 
       // eslint-disable-next-line no-param-reassign
@@ -31,9 +39,10 @@ module.exports = (baseConfig, { devServerHost, devServerPort }) =>
           [curr]: [
             'eventsource-polyfill',
             'react-hot-loader/patch',
-            `webpack-hot-middleware/client?path=http://${devServerHost}:${devServerPort}/__webpack_hmr`,
+            `webpack-hot-middleware/client?path=${protocol}://${host}:${ports.client}/__webpack_hmr`,
             'webpack/hot/only-dev-server',
           ].concat(config.entry[curr]),
         });
       }, {});
     });
+};
