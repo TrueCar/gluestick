@@ -31,7 +31,7 @@ const getServerEntry = (config: Object): Entry => {
       config.webpackConfig.server.output.path,
       config.webpackConfig.server.output.filename,
     ),
-    args: [JSON.stringify(config)],
+    args: [JSON.stringify({ GSConfig: config.GSConfig })],
   };
 };
 
