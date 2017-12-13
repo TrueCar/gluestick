@@ -133,7 +133,6 @@ module.exports = (
     skipClientEntryGeneration: true,
     skipServerEntryGeneration: true,
   });
-  // $FlowFixMe
   const aliases: Object = config.webpackConfig.client.resolve.alias;
   const options: Object = getOptions(commandArguments);
   const rawOptions: string[] = options.parent.rawArgs.slice(3);

@@ -54,6 +54,11 @@ export type WebpackConfig = {
   [key: string]: WebpackConfigEntry,
 };
 
+export type CompiledConfig = {
+  client: Object,
+  server: Object,
+  vendor: ?Object,
+};
 
 export type Config = {
   projectConfig?: ProjectConfig,

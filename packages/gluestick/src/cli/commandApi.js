@@ -64,7 +64,7 @@ const getWebpackConfig = (
   gluestickConfig: GSConfig,
   options: Object,
 ): CompiledConfig => {
-  return _getWebpackConfig(logger, plugins, gluestickConfig, {
+  return _getWebpackConfig(logger, plugins, {
     skipClientEntryGeneration: false,
     skipServerEntryGeneration: false,
     ...options,

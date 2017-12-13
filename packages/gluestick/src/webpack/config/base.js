@@ -1,5 +1,7 @@
 /* @flow */
 
+import type { Entries } from '../types';
+
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
@@ -10,7 +12,7 @@ const Config = require('webpack-config').default;
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
 const getAliasesForApps = require('../utils/getAliasesForApps');
 
-module.exports = ({ entries }: { [key: string]: string | string[] }) => {
+module.exports = ({ entries }: { entries: string | Entries }) => {
   const {
     buildAssetsPath,
     assetsPath,

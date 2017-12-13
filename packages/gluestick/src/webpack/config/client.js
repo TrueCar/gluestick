@@ -19,9 +19,7 @@ module.exports = function createClientConfig(
   const outputPath: string = path.resolve(process.cwd(), buildAssetsPath);
 
   const clientConfig = new Config()
-    .merge(
-      require('./base.js')({ noProgress, ...options }, { logger, ...utils }),
-    )
+    .merge(require('./base.js')(options))
     .merge({
       output: {
         // filesystem path for static files
@@ -59,7 +57,5 @@ module.exports = function createClientConfig(
       { noProgress, ...options },
       { logger, ...utils },
     ),
-    { noProgress, ...options },
-    { logger, ...utils },
   );
 };

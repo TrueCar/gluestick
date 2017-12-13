@@ -6,16 +6,20 @@ export type WebpackConfig = {
   merge(
     configPartialOrFunction: Object | (WebpackConfig => void),
   ): WebpackConfig,
+  toObject(): Object,
 };
 
-type Entries = string | { [key: string]: string | string[] };
+export type Entries = { [key: string]: string | string[] };
 
 export type ClientConfigOptions = {
   entries: Entries,
   noProgress: boolean,
 };
 
-export type SeverConfigOptions = ClientConfigOptions;
+export type ServerConfigOptions = {
+  entries: string,
+  noProgress: boolean,
+};
 
 export type ConfigUtils = {
   logger: Logger,

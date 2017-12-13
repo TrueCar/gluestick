@@ -13,12 +13,10 @@ const disableLoadersEmit = require('../utils/disableLoadersEmit');
 
 module.exports = function createServerConfig(
   { noProgress, ...options }: ServerConfigOptions,
-  { logger, ...utils }: ConfigUtils,
+  { logger }: ConfigUtils,
 ): WebpackConfig {
   const serverConfig = new Config()
-    .merge(
-      require('./base.js')({ noProgress, ...options }, { logger, ...utils }),
-    )
+    .merge(require('./base.js')(options))
     .merge({
       devtool: 'source-map',
       target: 'node',
@@ -102,9 +100,5 @@ module.exports = function createServerConfig(
 
   return (process.env.NODE_ENV === 'production'
     ? require('../partials/serverProdTweaks.js')
-    : require('../partials/serverDevTweaks.js'))(
-    serverConfig,
-    { noProgress, ...options },
-    { logger, ...utils },
-  );
+    : require('../partials/serverDevTweaks.js'))(serverConfig);
 };

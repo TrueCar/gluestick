@@ -1,13 +1,13 @@
 /* @flow */
 
-import type { WebpackOptions, ConfigUtils, WebpackConfig } from '../types';
+import type { WebpackOptions, ConfigUtils, WebpackConfig } from './types';
 
 const path = require('path');
 
 const buildClientEntrypoints = require('./utils/buildClientEntrypoints');
 const buildServerEntrypoints = require('./utils/buildServerEntrypoints');
 
-const gluestickConfig = require('../../config/defaults/glueStickConfig');
+const gluestickConfig = require('../config/defaults/glueStickConfig');
 const clientConfig = require('./config/client');
 const serverConfig = require('./config/server');
 
@@ -30,7 +30,10 @@ module.exports = function getBaseConfig(
     serverPlugins,
     skipClientEntryGeneration,
     skipServerEntryGeneration,
-  }: WebpackOptions & { clientPlugins: any, serverPlugins: any },
+  }: WebpackOptions & {
+    clientPlugins: any,
+    serverPlugins: any,
+  },
   { logger }: ConfigUtils,
 ): BaseConfig {
   const clientEntrypoints = skipClientEntryGeneration

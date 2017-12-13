@@ -2,7 +2,7 @@
 
 import type { ConfigPlugin, Plugin, Logger } from '../types';
 
-import { WebpackOptions } from './types';
+import type { WebpackConfig } from './types';
 
 const path = require('path');
 
@@ -15,7 +15,17 @@ const gluestickConfig = require('../config/defaults/glueStickConfig');
 
 const passThrough = config => config;
 
-function applyConfigPlugins({ type, phase, config, plugins }) {
+function applyConfigPlugins({
+  type,
+  phase,
+  config,
+  plugins,
+}: {
+  type: string,
+  phase: string,
+  config: WebpackConfig,
+  plugins: any[],
+}): WebpackConfig {
   return plugins
     .filter(
       (plugin: ConfigPlugin): boolean =>
@@ -30,7 +40,14 @@ function applyConfigPlugins({ type, phase, config, plugins }) {
 type OutputConfig = {
   client: Object,
   server: Object,
-  vendorDll: ?Object,
+  vendor: ?Object,
+};
+
+type Options = {
+  skipClientEntryGeneration: boolean,
+  skipServerEntryGeneration: boolean,
+  entryOrGroupToBuild: string,
+  noProgress: boolean,
 };
 
 module.exports = function getWebpackConfig(
@@ -41,7 +58,7 @@ module.exports = function getWebpackConfig(
     skipServerEntryGeneration,
     entryOrGroupToBuild,
     noProgress,
-  }: WebpackOptions = {},
+  }: Options = {},
 ): OutputConfig {
   // Get entries to build from json file.
   // Those entries will be used to create clientEntryInit files, with initialization
@@ -128,5 +145,6 @@ module.exports = function getWebpackConfig(
   return {
     client: clientConfig.toObject(),
     server: serverConfig.toObject(),
+    vendor: null,
   };
 };
