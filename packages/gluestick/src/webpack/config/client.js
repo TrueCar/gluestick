@@ -37,7 +37,7 @@ module.exports = function createClientConfig(
         // Make it so *.server.js files return null in client
         new webpack.NormalModuleReplacementPlugin(
           /\.server(\.js)?$/,
-          path.join(__dirname, '../../config/webpack/mocks/serverFileMock.js'),
+          path.join(__dirname, '../mocks/serverFileMock.js'),
         ),
         new DuplicatePackageChecker(),
       ].concat(noProgress ? [] : [progressHandler(logger, 'client')]),

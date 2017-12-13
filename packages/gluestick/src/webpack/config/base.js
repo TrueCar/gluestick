@@ -8,7 +8,7 @@ const postcssCalc = require('postcss-calc');
 const Config = require('webpack-config').default;
 
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
-const getAliasesForApps = require('../../config/webpack/getAliasesForApps');
+const getAliasesForApps = require('../utils/getAliasesForApps');
 
 module.exports = ({ entries }: { [key: string]: string | string[] }) => {
   const {
