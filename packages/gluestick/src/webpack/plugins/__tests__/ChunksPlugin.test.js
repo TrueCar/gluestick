@@ -17,7 +17,7 @@ jest.mock(
 const fs = require('fs');
 const ChunksPlugin = require('../ChunksPlugin');
 
-describe('ChunksPlugin', () => {
+describe('webpack/plugins/ChunksPlugin', () => {
   it('should create chunks info file', () => {
     const plugin = new ChunksPlugin({ output: { path: 'path' } }, {});
     const doneTap = jest.fn();

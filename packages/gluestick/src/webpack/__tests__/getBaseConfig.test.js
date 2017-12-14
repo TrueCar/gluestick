@@ -1,3 +1,5 @@
+/* @flow */
+
 jest.mock('../utils/buildClientEntrypoints.js');
 jest.mock('../utils/buildServerEntrypoints.js');
 jest.mock('../utils/getAliasesForApps.js');

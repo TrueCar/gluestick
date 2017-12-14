@@ -49,7 +49,7 @@ const prepareEntries = require('../prepareEntries');
 
 const originalPathJoin = path.join.bind(path);
 
-describe('config/webpack/prepareEntries', () => {
+describe('webpack/utils/prepareEntries', () => {
   beforeEach(() => {
     path.join = jest.fn(() => 'entries.json');
   });
