@@ -129,8 +129,8 @@ describe('commands/start', () => {
 
       spawnEventHandlers[1].fn(new Error('test'));
 
-      return promise.then(msg => {
-        expect(msg.includes('Some tests have failed')).toBeTruthy();
+      return promise.then(error => {
+        expect(error.message).toMatch('test');
       });
     });
 

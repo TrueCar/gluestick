@@ -6,10 +6,9 @@ jest.mock('../../plugins/prepareConfigPlugins', () => () => [
 jest.mock('../../config/compileGlueStickConfig', () => () => ({
   protocol: 'http',
 }));
-jest.mock('../../config/compileWebpackConfig.js', () => () => ({
+jest.mock('../../webpack/getWebpackConfig.js', () => () => ({
   client: {},
   server: {},
-  universalSettings: {},
 }));
 jest.mock(
   'cwd/ok/package.json',
@@ -61,7 +60,6 @@ describe('cli/commandApi', () => {
     expect(commandApi.getWebpackConfig(loggerMock, [], {}, {})).toEqual({
       client: {},
       server: {},
-      universalSettings: {},
     });
   });
 
@@ -74,7 +72,6 @@ describe('cli/commandApi', () => {
       webpackConfig: {
         client: {},
         server: {},
-        universalSettings: {},
       },
     });
   });

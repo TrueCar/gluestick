@@ -7,7 +7,7 @@ jest.mock('webpack', () => ({
     UglifyJsPlugin: class {},
   },
 }));
-jest.mock('../webpack/progressHandler.js');
+jest.mock('../../webpack/plugins/progressHandler.js');
 jest.mock('fs');
 jest.mock('../../utils.js');
 jest.mock('./vendor-manifest.json', () => ({ name: 'vendor_1234' }), {

@@ -1,6 +1,6 @@
 /* @flow */
 
-jest.mock('../../../config/webpack/progressHandler');
+jest.mock('../../../webpack/plugins/progressHandler');
 jest.mock('../../utils.js');
 jest.mock('../getEntiresSnapshots');
 jest.mock('../../../config/vendorDll');

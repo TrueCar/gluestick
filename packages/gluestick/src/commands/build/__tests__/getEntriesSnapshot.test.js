@@ -2,7 +2,7 @@ jest.mock('../../utils.js');
 jest.mock('mkdirp');
 jest.mock('fs');
 jest.mock('cross-spawn');
-jest.mock('../../../config/webpack/prepareEntries', () => () => ({
+jest.mock('../../../webpack/utils/prepareEntries', () => () => ({
   '/': '',
   '/test-0': '',
   '/test-1': '',

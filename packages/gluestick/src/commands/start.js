@@ -109,9 +109,7 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
       }
     })
     .catch(error => {
-      logger.fatal(
-        error
-      );
+      logger.fatal(error);
     });
 
   if (isProduction && !options.skipBuild) {
