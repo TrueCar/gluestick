@@ -30,7 +30,7 @@ function applyConfigPlugins({
     .filter(
       (plugin: ConfigPlugin): boolean =>
         (typeof plugin[type] === 'function' && phase === 'post') ||
-        typeof plugin[type][phase] === 'function',
+        (plugin[type] && typeof plugin[type][phase] === 'function'),
     )
     .reduce((modifiedConfig: Object, plugin: ConfigPlugin) => {
       return (plugin[type][phase] || plugin[type])(modifiedConfig);
