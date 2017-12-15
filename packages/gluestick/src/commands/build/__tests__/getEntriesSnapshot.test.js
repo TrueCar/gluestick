@@ -25,7 +25,6 @@ const getMockedCliContext = (customLogger) => ({
 });
 
 describe('commands/build/getEntriesSnapshot', () => {
-
   it('should prepare static markups', () => {
     const callbacks = [];
     crossSpawn.spawn.mockImplementationOnce(() => {

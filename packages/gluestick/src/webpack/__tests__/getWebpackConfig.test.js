@@ -43,15 +43,19 @@ const processCwd = process.cwd.bind(process);
 
 describe('webpack/getWebpackConfig', () => {
   beforeEach(() => {
+    // $FlowIgnore
     process.cwd = () => '';
   });
 
   afterEach(() => {
+    // $FlowIgnore
     process.cwd = processCwd;
   });
 
   it('should return webpack config', () => {
+    // $FlowIgnore
     readRuntimePlugins.mockImplementationOnce(() => []);
+    // $FlowIgnore
     readServerPlugins.mockImplementationOnce(() => []);
 
     const { client, server } = getWebpackConfig(loggerMock, [], {
@@ -68,7 +72,9 @@ describe('webpack/getWebpackConfig', () => {
   });
 
   it('should skip entry generation and plugins reading', () => {
+    // $FlowIgnore
     readRuntimePlugins.mockClear();
+    // $FlowIgnore
     readServerPlugins.mockClear();
 
     getWebpackConfig(loggerMock, [], {
@@ -83,10 +89,13 @@ describe('webpack/getWebpackConfig', () => {
   });
 
   it('should log error and exit if prepareEntries fails', () => {
+    // $FlowIgnore
     prepareEntries.mockImplementationOnce(() => {
       throw new Error('test');
     });
+    // $FlowIgnore
     readRuntimePlugins.mockImplementationOnce(() => []);
+    // $FlowIgnore
     readServerPlugins.mockImplementationOnce(() => []);
     loggerMock.fatal.mockClear();
 
@@ -101,10 +110,13 @@ describe('webpack/getWebpackConfig', () => {
   });
 
   it('should log error and exit if requireing webpack config hooks fails', () => {
+    // $FlowIgnore
     requireModule.mockImplementationOnce(() => {
       throw new Error('tes');
     });
+    // $FlowIgnore
     readRuntimePlugins.mockImplementationOnce(() => []);
+    // $FlowIgnore
     readServerPlugins.mockImplementationOnce(() => []);
     loggerMock.fatal.mockClear();
 
@@ -119,14 +131,20 @@ describe('webpack/getWebpackConfig', () => {
   });
 
   it('should mutate configs', () => {
+    // $FlowIgnore
     readRuntimePlugins.mockClear();
+    // $FlowIgnore
     readServerPlugins.mockClear();
 
     const plugins = [
       {
+        name: 'test1',
+        meta: {},
         client: config => config.merge({ mutatedClientPost: true }),
       },
       {
+        name: 'test2',
+        meta: {},
         server: {
           pre: config => config.merge({ mutatedServerPre: true }),
           post: config => config.merge({ mutatedServerPost: true }),

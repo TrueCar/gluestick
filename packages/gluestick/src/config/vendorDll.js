@@ -213,20 +213,17 @@ const getConfig = (
   }
 
   const intermediateConfig: WebpackConfig = plugins
-    .filter(
-      (plugin: ConfigPlugin): boolean =>
-        !!plugin.postOverwrites.vendorDllWebpackConfig,
-    )
-    .reduce((modifiedConfig: Object, plugin: ConfigPlugin) => {
-      return plugin.postOverwrites.vendorDllWebpackConfig
-        ? // $FlowIgnore
-          plugin.postOverwrites.vendorDllWebpackConfig(clone(modifiedConfig))
-        : modifiedConfig;
-    }, baseConfig);
+    .map(plugin => plugin.vendor)
+    .filter(Boolean)
+    .reduce(
+      (modifiedConfig: Object, plugin: Function) =>
+        plugin(clone(modifiedConfig)),
+      baseConfig,
+    );
 
   const pathToWebpackConfigHooks: string = path.join(
     process.cwd(),
-    config.GSConfig.webpackHooksPath,
+    config.GSConfig.webpackConfigPath,
   );
 
   let webpackConfigHooks: WebpackHooks = {};
@@ -237,10 +234,7 @@ const getConfig = (
     logger.warn(e);
   }
 
-  return hookHelper.call(
-    webpackConfigHooks.webpackVendorDllConfig,
-    intermediateConfig,
-  );
+  return hookHelper.call(webpackConfigHooks.vendor, intermediateConfig);
 };
 
 module.exports = {

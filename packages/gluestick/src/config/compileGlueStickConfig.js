@@ -28,15 +28,8 @@ module.exports = (logger: Logger, plugins: ConfigPlugin[]): GSConfig => {
 
   const config = getConfigHook(logger)(
     plugins
-      .filter(
-        (plugin: ConfigPlugin): boolean =>
-          !!plugin.postOverwrites.gluestickConfig,
-      )
-      .map(
-        (plugin: ConfigPlugin): Function =>
-          // $FlowIgnore filter above ensures `gluestickConfig` won't be undefinfed/null
-          plugin.postOverwrites.gluestickConfig,
-      )
+      .map(plugin => plugin.gluestick)
+      .filter(Boolean)
       .reduce(
         (prev: GSConfig, curr: (config: GSConfig) => GSConfig): GSConfig => {
           return curr(clone(prev));

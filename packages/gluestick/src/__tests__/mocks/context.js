@@ -5,7 +5,6 @@ import type {
   CLIContext,
   Config,
   WebpackConfig,
-  UniversalSettings,
   CompiledConfig,
   CommandAPI,
   BaseLogger,
@@ -36,7 +35,7 @@ const gsConfig: GSConfig = {
   buildRendererPath: '',
   buildDllPath: '',
   vendorSourcePath: '',
-  webpackHooksPath: '',
+  webpackConfigPath: '',
   assetsPath: '',
   sourcePath: '',
   sharedPath: '',
@@ -64,17 +63,14 @@ const client: WebpackConfig = {
   resolve: {},
   module: {},
 };
-const server: WebpackConfig = {};
-
-const universalSettings: UniversalSettings = {
-  server: {
-    input: '',
-    output: '',
+const server: WebpackConfig = {
+  output: {
+    path: '',
+    filename: '',
   },
 };
 
 const webpackConfig: CompiledConfig = {
-  universalSettings,
   client,
   server,
 };
@@ -142,7 +138,6 @@ module.exports = {
   config,
   logger,
   webpackConfig,
-  universalSettings,
   gsConfig,
   request,
   entriesConfig,

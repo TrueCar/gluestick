@@ -12,9 +12,11 @@ const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger
 
 describe('webpack/getBaseConfig', () => {
   it('should create configs abd build entrypoints', () => {
+    // $FlowIgnore
     buildClientEntrypoints.mockImplementationOnce(() => ({
       main: 'main.js',
     }));
+    // $FlowIgnore
     buildServerEntrypoints.mockClear();
 
     const { client, server } = getBaseConfig(
@@ -36,7 +38,9 @@ describe('webpack/getBaseConfig', () => {
   });
 
   it('should create configs without building entrypoints', () => {
+    // $FlowIgnore
     buildClientEntrypoints.mockClear();
+    // $FlowIgnore
     buildServerEntrypoints.mockClear();
 
     const { client, server } = getBaseConfig(

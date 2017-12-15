@@ -30,8 +30,10 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
 module.exports = ({ config, logger }: CLIContext, app?: string, url: ?string) => {
   logger.info('Creating static markup snapshots...');
 
-  // $FlowFixMe
-  const entryPointPath = config.webpackConfig.universalSettings.server.output;
+  const entryPointPath = path.join(
+    config.webpackConfig.server.output.path,
+    config.webpackConfig.server.output.filename
+  );
   const args = JSON.stringify(config);
   let child: Object;
 
