@@ -14,30 +14,46 @@ jest.mock('webpack', () => ({
     }
   },
 }));
+
+class Config {
+  constructor(initialValue) {
+    this.merge(initialValue);
+  }
+
+  merge(partialOrFunction) {
+    if (typeof partialOrFunction === 'function') {
+      partialOrFunction(this);
+    } else {
+      Object.assign(this, partialOrFunction);
+    }
+    return this;
+  }
+}
+
 const expose = require('../config');
 
 describe('gluestick-env-expose-ast plugin', () => {
   describe('when exposing in compilation', () => {
     it('should not expose anything', () => {
       const results = expose({ parse: 'file2' }, {});
-      const clientPlugins = results.postOverwrites.clientWebpackConfig({
-        plugins: [],
-      }).plugins;
-      const serverPlugins = results.postOverwrites.serverWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const clientPlugins = results.client(new Config({ plugins: [] })).plugins;
+      const serverPlugins = results.server(new Config({ plugins: [] })).plugins;
       expect(clientPlugins.length).toBe(0);
       expect(serverPlugins.length).toBe(0);
     });
 
     it('should expose from default file', () => {
       const results = expose({}, {});
-      const clientPlugins = results.postOverwrites.clientWebpackConfig({
-        plugins: [],
-      }).plugins;
-      const serverPlugins = results.postOverwrites.serverWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const clientPlugins = results.client(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
+      const serverPlugins = results.server(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(clientPlugins.length).toBe(1);
       expect(serverPlugins.length).toBe(1);
     });
@@ -51,17 +67,21 @@ describe('gluestick-env-expose-ast plugin', () => {
         },
         {},
       );
-      const clientPlugins = results.postOverwrites.clientWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const clientPlugins = results.client(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(clientPlugins.length).toBe(1);
       expect(clientPlugins[0].spec).toEqual({
         'process.env.ENV_1': '"true"',
         'process.env.ENV_2': '"false"',
       });
-      const serverPlugins = results.postOverwrites.serverWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const serverPlugins = results.server(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(serverPlugins.length).toBe(1);
       expect(serverPlugins[0].spec).toEqual({
         'process.env.ENV_1': '"true"',
@@ -79,18 +99,22 @@ describe('gluestick-env-expose-ast plugin', () => {
         },
         {},
       );
-      const clientPlugins = results.postOverwrites.clientWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const clientPlugins = results.client(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(clientPlugins.length).toBe(1);
       expect(clientPlugins[0].spec).toEqual({
         'process.env.ENV_1': '"true"',
         'process.env.ENV_2': '"false"',
         'process.env.ENV_3': '"test"',
       });
-      const serverPlugins = results.postOverwrites.serverWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const serverPlugins = results.server(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(serverPlugins.length).toBe(1);
       expect(serverPlugins[0].spec).toEqual({
         'process.env.ENV_1': '"true"',
@@ -109,39 +133,39 @@ describe('gluestick-env-expose-ast plugin', () => {
         },
         {},
       );
-      const config = results.postOverwrites.clientWebpackConfig({
-        module: {
-          rules: [
-            {
-              test: /\.js$/,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: {
-                    plugins: [],
+      const config = results.client(
+        new Config({
+          module: {
+            rules: [
+              {
+                test: /\.js$/,
+                use: [
+                  {
+                    loader: 'babel-loader',
+                    options: {
+                      plugins: [],
+                    },
                   },
+                ],
+              },
+            ],
+          },
+        }),
+      );
+      expect(config.module).toEqual({
+        rules: [
+          {
+            test: /\.js$/,
+            use: [
+              {
+                loader: 'babel-loader',
+                options: {
+                  plugins: [require.resolve('babel-plugin-gluestick')],
                 },
-              ],
-            },
-          ],
-        },
-      });
-      expect(config).toEqual({
-        module: {
-          rules: [
-            {
-              test: /\.js$/,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: {
-                    plugins: [require.resolve('babel-plugin-gluestick')],
-                  },
-                },
-              ],
-            },
-          ],
-        },
+              },
+            ],
+          },
+        ],
       });
     });
 
@@ -153,9 +177,11 @@ describe('gluestick-env-expose-ast plugin', () => {
         },
         {},
       );
-      const serverPlugins = results.postOverwrites.serverWebpackConfig({
-        plugins: [],
-      }).plugins;
+      const serverPlugins = results.server(
+        new Config({
+          plugins: [],
+        }),
+      ).plugins;
       expect(serverPlugins.length).toBe(1);
       expect(serverPlugins[0].spec).toEqual({
         'process.env.ENV_VARIABLES': JSON.stringify(['ENV_1', 'ENV_2']),
