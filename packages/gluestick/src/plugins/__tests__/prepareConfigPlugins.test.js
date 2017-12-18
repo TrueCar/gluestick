@@ -1,34 +1,6 @@
 /* @flow */
 import type { ConfigPlugin } from '../../types';
 
-jest.mock(
-  'gluestick-plugins.js',
-  () => [
-    {
-      name: 'testPlugin0',
-      meta: {
-        type: 'config',
-      },
-      postOverwrites: {
-        gluestickConfig: () => 'gluestickConfig',
-        clientWebpackConfig: () => 'clientWebpackConfig',
-        serverWebpackConfig: () => 'serverWebpackConfig',
-      },
-    },
-    {
-      name: 'testPlugin1',
-      meta: {
-        type: 'config',
-      },
-      postOverwrites: {
-        gluestickConfig: () => 'gluestickConfig',
-        clientWebpackConfig: () => 'clientWebpackConfig',
-        serverWebpackConfig: () => 'serverWebpackConfig',
-      },
-    },
-  ],
-  { virtual: true },
-);
 jest.mock('gluestick.plugins.fail.js', () => ['testPlugin2'], {
   virtual: true,
 });
@@ -67,14 +39,9 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
           type: 'config',
         },
         body: () => ({
-          preOverwrites: {
-            sharedWebpackConfig: () => 'sharedWebpackConfig',
-          },
-          postOverwrites: {
-            gluestickConfig: () => 'gluestickConfig',
-            clientWebpackConfig: () => 'clientWebpackConfig',
-            serverWebpackConfig: () => 'serverWebpackConfig',
-          },
+          gluestick: () => 'gluestickConfig',
+          client: () => 'clientWebpackConfig',
+          server: () => 'serverWebpackConfig',
         }),
       },
       {
@@ -83,11 +50,9 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
           type: 'config',
         },
         body: () => ({
-          postOverwrites: {
-            gluestickConfig: () => 'gluestickConfig',
-            clientWebpackConfig: () => 'clientWebpackConfig',
-            serverWebpackConfig: () => 'serverWebpackConfig',
-          },
+          gluestick: () => 'gluestickConfig',
+          client: () => 'clientWebpackConfig',
+          server: () => 'serverWebpackConfig',
         }),
       },
     ];
@@ -139,34 +104,17 @@ describe('plugins/prepareConfigPlugins', () => {
     expect(plugins[0].name).toEqual('testPlugin0');
     expect(plugins[1].name).toEqual('testPlugin1');
     // $FlowIgnore
-    expect(plugins[0].preOverwrites.sharedWebpackConfig()).toEqual(
-      'sharedWebpackConfig',
-    );
+    expect(plugins[0].gluestick()).toEqual('gluestickConfig');
     // $FlowIgnore
-    expect(plugins[0].postOverwrites.gluestickConfig()).toEqual(
-      'gluestickConfig',
-    );
+    expect(plugins[0].client()).toEqual('clientWebpackConfig');
     // $FlowIgnore
-    expect(plugins[0].postOverwrites.clientWebpackConfig()).toEqual(
-      'clientWebpackConfig',
-    );
+    expect(plugins[0].server()).toEqual('serverWebpackConfig');
     // $FlowIgnore
-    expect(plugins[0].postOverwrites.serverWebpackConfig()).toEqual(
-      'serverWebpackConfig',
-    );
-    expect(plugins[1].preOverwrites).toEqual({});
+    expect(plugins[1].gluestick()).toEqual('gluestickConfig');
     // $FlowIgnore
-    expect(plugins[1].postOverwrites.gluestickConfig()).toEqual(
-      'gluestickConfig',
-    );
+    expect(plugins[1].client()).toEqual('clientWebpackConfig');
     // $FlowIgnore
-    expect(plugins[1].postOverwrites.clientWebpackConfig()).toEqual(
-      'clientWebpackConfig',
-    );
-    // $FlowIgnore
-    expect(plugins[1].postOverwrites.serverWebpackConfig()).toEqual(
-      'serverWebpackConfig',
-    );
+    expect(plugins[1].server()).toEqual('serverWebpackConfig');
   });
 
   it('should fail to compile plugin', () => {

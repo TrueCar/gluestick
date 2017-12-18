@@ -17,12 +17,11 @@ jest.mock(
 );
 jest.mock('cwd/invalid/package.json', () => ({}), { virtual: true });
 
-const path = require('path');
 const commandApi = require('../commandApi');
 
 const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
 
-describe('cli/commandApi', () => {
+fdescribe('cli/commandApi', () => {
   it('getOptions should return options object', () => {
     expect(commandApi.getOptions(['test', 'test', { client: true }])).toEqual({
       client: true,
@@ -42,17 +41,13 @@ describe('cli/commandApi', () => {
 
   it('getPlugins should return array of plugins', () => {
     const plugins = commandApi.getPlugins(loggerMock);
-    expect(plugins.pluginsConfigPath).toBeDefined();
-    expect(Array.from(plugins)).toEqual([{ name: 'testPlugin' }]);
+    expect(plugins).toEqual([{ name: 'testPlugin' }]);
   });
 
   it('getGluestickConfig should return gluestick config', () => {
     const plugins = [];
-    // $FlowIgnore pass additional data as a property
-    plugins.pluginsConfigPath = 'pluginsConfigPath';
     expect(commandApi.getGluestickConfig(loggerMock, plugins)).toEqual({
       protocol: 'http',
-      pluginsConfigPath: 'pluginsConfigPath',
     });
   });
 
@@ -67,7 +62,6 @@ describe('cli/commandApi', () => {
     expect(commandApi.getContextConfig(loggerMock, {})).toEqual({
       GSConfig: {
         protocol: 'http',
-        pluginsConfigPath: path.join(process.cwd(), 'src/gluestick.plugins.js'),
       },
       webpackConfig: {
         client: {},
