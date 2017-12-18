@@ -36,36 +36,31 @@ class ReorderLintWarningsPlugin {
 const clientWebpackConfig = ({
   loaderOptions,
   enableInProduction,
-}) => config => {
-  if (process.env.NODE_ENV !== 'production' || enableInProduction) {
-    return {
-      ...config,
-      module: {
-        ...config.module,
-        rules: [
-          {
-            enforce: 'pre',
-            test: /\.js$/,
-            exclude: /node_modules|gluestick/,
-            loader: 'eslint-loader',
-            options: {
-              ...loaderOptions,
-              configFile: path.join(process.cwd(), '.eslintrc'),
-            },
+}) => clientConfig =>
+  clientConfig.merge(
+    process.env.NODE_ENV !== 'production' || enableInProduction
+      ? {
+          module: {
+            rules: [
+              {
+                enforce: 'pre',
+                test: /\.js$/,
+                exclude: /node_modules|gluestick/,
+                loader: 'eslint-loader',
+                options: {
+                  configFile: path.join(process.cwd(), '.eslintrc'),
+                  ...loaderOptions,
+                },
+              },
+            ],
           },
-          ...config.module.rules,
-        ],
-      },
-      plugins: [...config.plugins, new ReorderLintWarningsPlugin()],
-    };
-  }
-  return config;
-};
+          plugins: [new ReorderLintWarningsPlugin()],
+        }
+      : {},
+  );
 
 const plugin = (options = {}) => ({
-  postOverwrites: {
-    clientWebpackConfig: clientWebpackConfig(options),
-  },
+  client: clientWebpackConfig(options),
 });
 
 plugin.ReorderLintWarningsPlugin = ReorderLintWarningsPlugin;
