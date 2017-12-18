@@ -12,6 +12,7 @@ const path = require('path');
 const loggerFactory = require('./logger');
 const prepareConfigPlugins = require('../plugins/prepareConfigPlugins');
 const compileGlueStickConfig = require('../config/compileGlueStickConfig');
+const { pluginsConfigPath } = require('../config/defaults/glueStickConfig');
 
 const _getWebpackConfig = require('../webpack/getWebpackConfig');
 
@@ -33,17 +34,11 @@ const isGluestickProject = (packagePath: string = process.cwd()): boolean => {
 };
 
 // Get pluging array
-const getPlugins = (
-  logger: Logger,
-  pluginsConfigPath = path.join(process.cwd(), 'src/gluestick.plugins.js'),
-): ConfigPlugin[] => {
-  const plugins: ConfigPlugin[] = prepareConfigPlugins(
+const getPlugins = (logger: Logger): ConfigPlugin[] => {
+  return prepareConfigPlugins(
     logger,
-    pluginsConfigPath,
+    path.join(process.cwd(), pluginsConfigPath),
   );
-  // $FlowIgnore pass additional data as a property
-  plugins.pluginsConfigPath = pluginsConfigPath;
-  return plugins;
 };
 
 // Compile gluestick config
@@ -51,10 +46,7 @@ const getGluestickConfig = (
   logger: Logger,
   plugins: ConfigPlugin[],
 ): GSConfig => {
-  const config: GSConfig = compileGlueStickConfig(logger, plugins);
-  // $FlowIgnore get additional data from a property
-  config.pluginsConfigPath = plugins.pluginsConfigPath;
-  return config;
+  return compileGlueStickConfig(logger, plugins);
 };
 
 // Compile webpack configs

@@ -11,22 +11,27 @@ const {
 const { createArrowList } = require('../cli/helpers');
 
 type CompilationResults = {
-  preOverwrites: {
-    [key: string]: Function,
-  },
-  postOverwrites: {
-    [key: string]: Function,
-  },
+  client?:
+    | Function
+    | {
+        [key: string]: Function,
+      },
+  server?:
+    | Function
+    | {
+        [key: string]: Function,
+      },
+  gluestick?: Function,
   error?: Error,
 };
 
 /**
  * Make necessary assertions and compile plugin.
  */
-const compilePlugin = (
+function compilePlugin(
   pluginData: Plugin,
   pluginOptions: Object,
-): CompilationResults => {
+): CompilationResults {
   try {
     if (typeof pluginData.body !== 'function') {
       throw new Error('plugin must export function');
@@ -36,20 +41,19 @@ const compilePlugin = (
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      preOverwrites: pluginBody.preOverwrites || {},
-      postOverwrites: pluginBody.postOverwrites || {},
+      client: pluginBody.client,
+      server: pluginBody.server,
+      gluestick: pluginBody.gluestick,
     };
   } catch (error) {
     // Proivde user-frinedly error message, so the user will know what plugin failed.
     const enchancedError = error;
     enchancedError.message = `${pluginData.name} compilation failed: ${enchancedError.message}`;
     return {
-      preOverwrites: {},
-      postOverwrites: {},
       error: enchancedError,
     };
   }
-};
+}
 
 let pluginsCache = [];
 
@@ -70,6 +74,7 @@ module.exports = (
     pluginsConfigPath,
     'config',
   );
+
   if (!pluginsConfig.length) {
     return [];
   }
@@ -93,8 +98,9 @@ module.exports = (
 
         return {
           name: value.name,
-          preOverwrites: compilationResults.preOverwrites,
-          postOverwrites: compilationResults.postOverwrites,
+          client: compilationResults.client,
+          server: compilationResults.server,
+          gluestick: compilationResults.gluestick,
           meta: value.meta,
         };
       },

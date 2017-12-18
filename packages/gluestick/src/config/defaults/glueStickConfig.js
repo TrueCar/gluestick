@@ -37,6 +37,7 @@ const config: GSConfig = {
   customErrorTemplatePath: path.join(process.cwd(), 'gluestick', '500.hbs'),
   defaultErrorTemplatePath: path.join(__dirname, '../../renderer/500.hbs'),
   gluestickConfigPath: 'src/gluestick.config.js',
+  pluginsConfigPath: 'src/gluestick.plugins.js',
   hooksPath: 'src/gluestick.hooks.js',
   webpackConfigPath: 'src/webpack.config.js',
   cachingConfigPath: 'src/config/caching.server',
