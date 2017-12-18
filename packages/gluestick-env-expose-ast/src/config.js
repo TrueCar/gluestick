@@ -28,10 +28,10 @@ module.exports = (options, { logger }) => {
   };
 
   return {
-    postOverwrites: {
-      clientWebpackConfig: config => {
+    client: clientConfig =>
+      clientConfig.merge(config => {
         if (!envToExpose.length) {
-          return config;
+          return;
         }
 
         if (options.exposeRuntime) {
@@ -57,12 +57,11 @@ module.exports = (options, { logger }) => {
         } else {
           pushVarsToDefinePlugin(config);
         }
-
-        return config;
-      },
-      serverWebpackConfig: config => {
+      }),
+    server: serverConfig =>
+      serverConfig.merge(config => {
         if (!envToExpose.length) {
-          return config;
+          return;
         }
 
         if (options.exposeRuntime) {
@@ -74,10 +73,7 @@ module.exports = (options, { logger }) => {
         } else {
           pushVarsToDefinePlugin(config);
         }
-
-        return config;
-      },
-    },
+      }),
   };
 };
 

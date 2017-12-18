@@ -11,25 +11,28 @@ const traverse = require('babel-traverse').default;
 module.exports = (pathToFile, logger) => {
   const ast = babel.transformFileSync(pathToFile).ast;
   const environmentVariables = new Set();
-  traverse(ast.program, {
-    enter(path) {
-      if (path.type === 'MemberExpression') {
-        const node = path.node;
-        try {
-          const target = node.object;
-          if (
-            !!target.object &&
-            target.object.name === 'process' &&
-            target.property.name === 'env'
-          ) {
-            environmentVariables.add(node.property.name);
+  traverse(
+    { type: 'File', program: ast.program },
+    {
+      enter(path) {
+        if (path.type === 'MemberExpression') {
+          const node = path.node;
+          try {
+            const target = node.object;
+            if (
+              !!target.object &&
+              target.object.name === 'process' &&
+              target.property.name === 'env'
+            ) {
+              environmentVariables.add(node.property.name);
+            }
+          } catch (e) {
+            logger.warn('Error detecting environment variables: ', e);
           }
-        } catch (e) {
-          logger.warn('Error detecting environment variables: ', e);
         }
-      }
+      },
     },
-  });
+  );
 
   return Array.from(environmentVariables);
 };
