@@ -2,6 +2,7 @@
 import type { CommandAPI, Logger } from '../../types';
 
 const autoUpgrade = require('./autoUpgrade');
+const appendPostinstallScript = require('./appendPostinstallScript');
 
 module.exports = async ({
   getLogger,
@@ -14,6 +15,8 @@ module.exports = async ({
   logger.printCommandInfo();
 
   try {
+    appendPostinstallScript();
+
     // $FlowIgnore no need for compiling webpack config
     await autoUpgrade({
       logger,
