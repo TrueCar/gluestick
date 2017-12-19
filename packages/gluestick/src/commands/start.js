@@ -108,8 +108,8 @@ module.exports = (commandApi: CommandAPI, commandArguments: any[]) => {
         });
       }
     })
-    .catch((error) => {
-      logger.error(error);
+    .catch(e => {
+      logger.error(e);
       logger.fatal(
         "Some tests have failed, client and server won't be compiled and executed",
       );
