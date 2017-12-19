@@ -15,6 +15,7 @@ export default function(
   hotCallback: (cb: Function) => void,
   devMode: Boolean,
   thunkMiddleware: Function,
+  enhancers: Array<Function> = [],
 ): Store {
   const reducers = Object.assign({}, { _gluestick }, customRequire());
   const reducer: Object = combineReducers(reducers);
@@ -41,6 +42,7 @@ export default function(
 
   const composeArgs: Function[] = [
     applyMiddleware.apply(this, middleware),
+    ...enhancers,
     typeof window === 'object' &&
     typeof window.devToolsExtension !== 'undefined' &&
     process.env.NODE_ENV !== 'production'

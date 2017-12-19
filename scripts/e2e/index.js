@@ -95,7 +95,7 @@ module.exports = () => {
   // Build in dev and prod bundles
   exec('gluestick build', CWD);
   exec('gluestick build', CWD, { NODE_ENV: 'production' });
-  // Destory component
+  // Destroy component
   exec('gluestick destroy component MyComponent', CWD);
   assertions.notExists(
     `${CWD}/src/apps/main/components`,
@@ -114,7 +114,7 @@ module.exports = () => {
     'MyComponent.js',
     '__tests__/MyComponent.test.js'
   );
-  // Destory container
+  // Destroy container
   exec('gluestick destroy container MyContainer', CWD);
   assertions.notExists(
     `${CWD}/src/apps/main/containers`,
