@@ -6,7 +6,12 @@ const template = createTemplate`
 import getRoutes from "${args => args.routes}";
 import EntryWrapper from "../EntryWrapper";
 import { createStore } from "compiled/gluestick";
-import globalMiddlewares, { thunkMiddleware as globalThunkMiddleware } from "config/redux-middleware";
+import globalMiddlewares,
+{
+  thunkMiddleware as globalThunkMiddleware,
+  enhancers as globalEnhancers,
+}
+from "config/redux-middleware";
 ${args =>
   args.config ? `import config from "${args.config}";` : 'const config = {};'}
 
@@ -33,6 +38,9 @@ export const getStore = (httpClient) => {
     config.reduxOptions && config.reduxOptions.thunk
       ? config.reduxOptions.thunk
       : globalThunkMiddleware,
+    config.reduxOptions && config.reduxOptions.enhancers
+      ? config.reduxOptions.enhancers
+      : globalEnhancers,
   );
 };
 

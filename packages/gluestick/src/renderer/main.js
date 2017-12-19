@@ -36,8 +36,9 @@ const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
-// $FlowIgnore
 const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
+// $FlowIgnore
+const reduxEnhancers = require('redux-middlewares').enhancers;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 // $FlowIgnore
@@ -153,6 +154,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
           {
             reduxMiddlewares,
             thunkMiddleware,
+            reduxEnhancers,
             envVariables,
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
