@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const mkdir = require('mkdirp');
 
 const polyfillContent = fs.readFileSync(
   path.join(process.cwd(), 'node_modules/babel-polyfill/dist/polyfill.min.js'),
@@ -19,6 +20,7 @@ module.exports = class CopyPolyfillPlugin {
   apply(compiler: { plugin: Function }) {
     compiler.plugin('done', stats => {
       const { publicPath } = stats.toJson();
+      mkdir.sync(this.outputPath);
       fs.writeFileSync(
         path.join(this.outputPath, 'polyfill.min.js'),
         polyfillContent,
