@@ -50,7 +50,7 @@ const getJestDefaultConfig = (aliases: Object): string[] => {
 
   // Handling Static Assets = mock them out
   moduleNameMapper[
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$'
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|ico)$'
   ] = `${TEST_MOCKS_PATH}/fileMock.js`;
   moduleNameMapper[
     '\\.(css|scss|sass|less)$'

@@ -207,7 +207,7 @@ describe('commands/test/test', () => {
       // Precedence before aliases
       const moduleMapperKeys = Object.keys(jestConfig.moduleNameMapper);
       expect(moduleMapperKeys[0]).toEqual(
-        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|ico)$',
       );
       expect(moduleMapperKeys[1]).toEqual('\\.(css|scss|sass|less)$');
       expect(moduleMapperKeys[2]).toEqual('html');
