@@ -8,7 +8,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
-import { Root, getHttpClient } from "compiled/gluestick";
+import { Root, getHttpClient, markInitialRenderAsDone } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
 import browserHistory from "react-router/lib/browserHistory";
 
@@ -50,7 +50,9 @@ const matchRouteAndRender = (
           if (typeof hook === "function") { hook(); }
         });
       }
-      render(entry, document.getElementById("main"));
+      render(entry, document.getElementById("main"), () => {
+        markInitialRenderAsDone();
+      });
     }
 
     if (process.env.NODE_ENV === 'production' || !enableErrorOverlay) {

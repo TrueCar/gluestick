@@ -17,18 +17,9 @@ type DataLoaderState = {
 };
 
 let isInitialRender = true;
-if (typeof window !== 'undefined') {
-  /**
-   * Unless navigation occurs we assume the page is rendered by the first time,
-   * thus wrapped components will have data already present in store.
-   */
-  ['pushState', 'replaceState', 'go', 'back', 'forward'].forEach(name => {
-    const target = window.history[name];
-    window.history[name] = (...args) => {
-      isInitialRender = false;
-      target.apply(window.history, args);
-    };
-  });
+
+export function markInitialRenderAsDone() {
+  isInitialRender = false;
 }
 
 export default function withDataLoader(config: DataLoaderConfig) {

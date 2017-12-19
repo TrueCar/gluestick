@@ -7,6 +7,9 @@ const getBeforeRoute: GetBeforeRoute = (component = {}) => {
   const c: Object = component.WrappedComponent || component;
 
   if (c.onEnter) {
+    // If we're rendering on server, return function itself, so it will block rendering
+    // until all data is fetched, but on client, we do not want to block navigation
+    // so we wrap `onEnter` into another function, which immediately resolves.
     return typeof window === 'undefined'
       ? c.onEnter
       : (...args) => {
@@ -23,7 +26,7 @@ const getBeforeRoute: GetBeforeRoute = (component = {}) => {
     );
   }
 
-  if (c.fetchData) {
+  if (c.gsBeforeRoute) {
     console.warn(
       '`gsBeforeRoute` is deprecated and will be removed in next versions.' +
         'Please use `withDataLoader` HOC instead.',
@@ -67,7 +70,7 @@ export function runBeforeRoutes(
 
   const promises: Promise<any>[] = getRouteComponents(renderProps.routes)
     .map(getBeforeRoute)
-    .filter(f => f) // only look at ones with a static gsBeforeRoute()
+    .filter(Boolean) // Filter out nulls and undefined, so we are only left with functions.
     .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps)); // call fetch data methods and save promises
 
   return Promise.all(promises);

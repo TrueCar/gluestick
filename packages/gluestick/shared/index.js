@@ -8,3 +8,4 @@ export getHttpClient from './lib/getHttpClient';
 export { set404StatusCode, setStatusCode } from './lib/actions';
 export * from './lib/errorUtils';
 export { default as withDataLoader } from './hocs/withDataLoader';
+export { markInitialRenderAsDone } from './hocs/withDataLoader';
