@@ -42,7 +42,7 @@ module.exports = (
     }),
     new webpack.NormalModuleReplacementPlugin(
       /gluestick\/shared\/lib\/errorUtils/,
-      path.join(__dirname, './mocks/serverFileMock.js'),
+      path.join(__dirname, './mocks/emptyObjMock.js'),
     ),
   );
   configuration.bail = true;
