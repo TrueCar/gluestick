@@ -6,6 +6,13 @@ import type { GetBeforeRoute } from '../types';
 const getBeforeRoute: GetBeforeRoute = (component = {}) => {
   const c: Object = component.WrappedComponent || component;
 
+  if (c.gsBeforeRoute) {
+    console.warn(
+      '`gsBeforeRoute` is deprecated and will be removed in next versions.' +
+        'Please use `withDataLoader` HOC instead.',
+    );
+  }
+
   if (c.onEnter) {
     // If we're rendering on server, return function itself, so it will block rendering
     // until all data is fetched, but on client, we do not want to block navigation
@@ -16,21 +23,6 @@ const getBeforeRoute: GetBeforeRoute = (component = {}) => {
           c.onEnter(...args);
           return Promise.resolve();
         };
-  }
-
-  // @deprecated since 0.0.1
-  // check for deprecated fetchData method
-  if (c.fetchData) {
-    console.warn(
-      '`fetchData` is deprecated. Please use `gsBeforeRoute` instead.',
-    );
-  }
-
-  if (c.gsBeforeRoute) {
-    console.warn(
-      '`gsBeforeRoute` is deprecated and will be removed in next versions.' +
-        'Please use `withDataLoader` HOC instead.',
-    );
   }
 
   return c.gsBeforeRoute || c.fetchData;
