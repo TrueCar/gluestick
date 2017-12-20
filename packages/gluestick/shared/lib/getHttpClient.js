@@ -65,7 +65,7 @@ export default function getHttpClient(
     // If the client sends a request during SSR to a domain other than the
     // hostname that was part of the original request. Don't forward cookies to
     // the destination
-    if (notSameHost(config)) {
+    if (!hostMatch(config)) {
       return config;
     }
 
@@ -92,7 +92,7 @@ export default function getHttpClient(
     // If the client gets a response during SSR from a domain other than the
     // hostname that was part of the original request. Don't forward cookies
     // back to the browser.
-    if (notSameHost(response.config)) {
+    if (!hostMatch(response.config)) {
       return response;
     }
 
@@ -131,12 +131,13 @@ export default function getHttpClient(
   return client;
 }
 
-function notSameHost(config) {
-  if (!config.baseURL || !config.url) {
+function hostMatch(config) {
+  if (!config || !config.baseURL || !config.url) {
+    console.log(config);
     return false;
   }
 
   const originalHostName = new URL(config.baseURL).hostname;
   const outgoingRequestHostName = new URL(config.url).hostname;
-  return originalHostName !== outgoingRequestHostName;
+  return originalHostName === outgoingRequestHostName;
 }
