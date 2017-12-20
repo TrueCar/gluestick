@@ -15,8 +15,6 @@ export type CookieOptions = {
   signed: () => boolean,
 };
 
-export type GetBeforeRoute = (component: Object) => Function;
-
 export type GetRouteComponents = (routes: Object[]) => Object[];
 
 type ReduxNextFunction = (obj: Object) => void;

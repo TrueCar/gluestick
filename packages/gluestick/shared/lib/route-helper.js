@@ -1,9 +1,8 @@
 /* @flow */
 
 import { match } from 'react-router';
-import type { GetBeforeRoute } from '../types';
 
-const getBeforeRoute: GetBeforeRoute = (component = {}) => {
+function getBeforeRoute(component: Object = {}): Function | Function[] {
   const c: Object = component.WrappedComponent || component;
 
   if (c.gsBeforeRoute) {
@@ -13,20 +12,27 @@ const getBeforeRoute: GetBeforeRoute = (component = {}) => {
     );
   }
 
+  let onEnter;
   if (c.onEnter) {
     // If we're rendering on server, return function itself, so it will block rendering
     // until all data is fetched, but on client, we do not want to block navigation
     // so we wrap `onEnter` into another function, which immediately resolves.
-    return typeof window === 'undefined'
-      ? c.onEnter
-      : (...args) => {
-          c.onEnter(...args);
-          return Promise.resolve();
-        };
+    onEnter =
+      typeof window === 'undefined'
+        ? c.onEnter
+        : (...args) => {
+            c.onEnter(...args);
+            return Promise.resolve();
+          };
   }
 
-  return c.gsBeforeRoute || c.fetchData;
-};
+  // Return both onEnter and gsBeforeRoute if defined.
+  if (onEnter && c.gsBeforeRoute) {
+    return [onEnter, c.gsBeforeRoute];
+  }
+
+  return onEnter || c.gsBeforeRoute || c.fetchData;
+}
 
 function getRouteComponents(routes) {
   const components: Object[] = [];
@@ -62,6 +68,10 @@ export function runBeforeRoutes(
 
   const promises: Promise<any>[] = getRouteComponents(renderProps.routes)
     .map(getBeforeRoute)
+    .reduce(
+      (acc, value) => acc.concat(...(Array.isArray(value) ? value : [value])),
+      [],
+    )
     .filter(Boolean) // Filter out nulls and undefined, so we are only left with functions.
     .map(beforeRoute => beforeRoute(store, params, query || {}, serverProps)); // call fetch data methods and save promises
 
