@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import type { Axios, AxiosExport } from 'axios';
-import { URL } from 'url';
+import { parse as parseURL } from 'url';
 import { merge, parse } from './cookies';
 
 /**
@@ -133,11 +133,8 @@ export default function getHttpClient(
 
 function hostMatch(config) {
   if (!config || !config.baseURL || !config.url) {
-    console.log(config);
     return false;
   }
 
-  const originalHostName = new URL(config.baseURL).hostname;
-  const outgoingRequestHostName = new URL(config.url).hostname;
-  return originalHostName === outgoingRequestHostName;
+  return parseURL(config.baseURL).host === parseURL(config.url).host;
 }
