@@ -49,7 +49,6 @@ export default function getHttpClient(
   client = httpClient.create({
     baseURL: protocol + req.headers.host,
     headers: {
-      ...req.headers,
       ...headers,
     },
     ...httpConfig,
@@ -74,13 +73,21 @@ export default function getHttpClient(
     const newCookies: string = parse(incomingCookies)
       .map(c => c.toString(false))
       .join('; ');
+
+    // since it is the same host, copy over headers that were sent in the
+    // original request
+    const modifiedHeaders = {
+      ...req.headers,
+      ...config.headers,
+    };
+
     const output: Object = {
       ...config,
       headers: {
-        ...config.headers,
+        ...modifiedHeaders,
         cookie: merge(
           outgoingCookies,
-          merge(config.headers.cookie, newCookies),
+          merge(modifiedHeaders.cookie, newCookies),
         ),
       },
     };

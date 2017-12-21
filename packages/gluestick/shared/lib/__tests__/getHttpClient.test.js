@@ -26,7 +26,9 @@ describe('lib/getHttpClient', () => {
           baseURL: 'http://hola.com',
         },
         get: (url, fakeResponse) => {
-          i.config.url = url;
+          i.config.url = /^https?:\/\//.test(url)
+            ? url
+            : `${i.config.baseURL}${url}`;
           const modifiedFakeResponse = {
             ...fakeResponse,
             config: {
@@ -98,7 +100,7 @@ describe('lib/getHttpClient', () => {
     expect(axiosMock.create.mock.calls[0][0]).toEqual(expectedResult);
   });
 
-  it('should merge request headers if request object is passed', () => {
+  it('should merge request headers if request object is passed and client request matches host', () => {
     const options = {
       headers: {
         'X-Todd': 'Hi',
@@ -109,21 +111,31 @@ describe('lib/getHttpClient', () => {
     const req = {
       headers: {
         cookie: 'name=Lincoln',
-        host: 'hola.com:332211',
+        host: 'hola.com',
       },
     };
-    getHttpClient(options, req, {}, axiosMock);
-    expect(axiosMock.create).not.toBeCalledWith(options);
+    const client = getHttpClient(options, req, {}, axiosMock);
+    const request = client.get('/api');
+    expect(request.request[0].headers).toEqual(req.headers);
+  });
 
-    const { headers, ...config } = options;
-    expect(axiosMock.create.mock.calls[0][0]).toEqual({
-      baseURL: `http://${req.headers.host}`,
+  it('should not merge request headers if request object is passed and client request does not matches host', () => {
+    const options = {
       headers: {
-        ...req.headers,
-        ...headers,
+        'X-Todd': 'Hi',
+        test: 'best',
       },
-      ...config,
-    });
+      test2: 'hi',
+    };
+    const req = {
+      headers: {
+        cookie: 'name=Lincoln',
+        host: 'hola.com',
+      },
+    };
+    const client = getHttpClient(options, req, {}, axiosMock);
+    const request = client.get('http://google.com/api');
+    expect(request.request[0].headers).toEqual({});
   });
 
   it('should set baseURL with https if req.secure is true', () => {
