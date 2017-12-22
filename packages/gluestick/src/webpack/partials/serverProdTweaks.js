@@ -7,10 +7,14 @@ module.exports = function tweakServerConfigForProd(
 ): WebpackConfig {
   return baseConfig.merge({
     bail: true,
-    alias: {
-      react: require.resolve('react/dist/react.js'),
-      'react-dom/server': require.resolve('react-dom/dist/react-dom-server.js'),
-      'react-dom': require.resolve('react-dom/dist/react-dom.js'),
+    resolve: {
+      alias: {
+        react: require.resolve('react/dist/react.js'),
+        'react-dom/server': require.resolve(
+          'react-dom/dist/react-dom-server.js',
+        ),
+        'react-dom': require.resolve('react-dom/dist/react-dom.js'),
+      },
     },
   });
 };

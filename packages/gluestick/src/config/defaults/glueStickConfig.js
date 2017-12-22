@@ -55,7 +55,7 @@ const config: GSConfig = {
       'src/entries.json',
       'src/gluestick.plugins.js',
       'src/gluestick.hooks.js',
-      'src/webpack.hooks.js',
+      'src/webpack.config.js',
       'src/config/caching.server.js',
       // 1.x
       'src/gluestick.config.js',
