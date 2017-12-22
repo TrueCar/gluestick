@@ -29,6 +29,7 @@ module.exports = function createServerConfig(
         filename: 'renderer.js',
         pathinfo: true,
         path: path.join(process.cwd(), gluestickConfig.buildRendererPath),
+        publicPath: `/${gluestickConfig.publicPath}/`.replace(/\/\//g, '/'),
       },
       module: {
         // Disable warning for `getVersion` function from `cli/helpers.js`, which has dynamic require,
@@ -81,12 +82,12 @@ module.exports = function createServerConfig(
       ]
         .filter(x => !/\.bin/.test(x))
         .reduce(
-          (externals, resource) => ({
-            ...externals,
-            [resource]: `commonjs ${resource}`,
-          }),
-          {},
-        ),
+        (externals, resource) => ({
+          ...externals,
+          [resource]: `commonjs ${resource}`,
+        }),
+        {},
+      ),
     })
     .merge(config => {
       config.module.rules

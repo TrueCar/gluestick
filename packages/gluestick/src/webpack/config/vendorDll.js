@@ -195,14 +195,14 @@ function getConfig(
       .concat(noProgress ? [] : [progressHandler(logger, 'vendor')])
       .concat(
         process.env.NODE_ENV === 'production'
-          ? []
-          : [
+          ? [
               new webpack.optimize.UglifyJsPlugin({
                 compress: {
                   warnings: false,
                 },
               }),
-            ],
+            ]
+          : [],
       ),
     bail: true,
   });
