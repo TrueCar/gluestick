@@ -130,7 +130,7 @@ describe('commands/start', () => {
       spawnEventHandlers[1].fn(new Error('test'));
 
       return promise.then(error => {
-        expect(error.message).toMatch('test');
+        expect(error.message).not.toBeNull();
       });
     });
 

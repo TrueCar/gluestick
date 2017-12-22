@@ -2,45 +2,21 @@
 
 import type { ConfigPlugin, Plugin, Logger } from '../types';
 
-import type { WebpackConfig } from './types';
-
 const path = require('path');
 
 const getBaseConfig = require('./getBaseConfig');
 const prepareEntries = require('./utils/prepareEntries');
 const { requireModule } = require('../utils');
+const applyConfigPlugins = require('./utils/applyConfigPlugins');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
 const gluestickConfig = require('../config/defaults/glueStickConfig');
 
 const passThrough = config => config;
 
-function applyConfigPlugins({
-  type,
-  phase,
-  config,
-  plugins,
-}: {
-  type: string,
-  phase: string,
-  config: WebpackConfig,
-  plugins: any[],
-}): WebpackConfig {
-  return plugins
-    .filter(
-      (plugin: ConfigPlugin): boolean =>
-        (typeof plugin[type] === 'function' && phase === 'post') ||
-        (plugin[type] && typeof plugin[type][phase] === 'function'),
-    )
-    .reduce((modifiedConfig: Object, plugin: ConfigPlugin) => {
-      return (plugin[type][phase] || plugin[type])(modifiedConfig);
-    }, config);
-}
-
 type OutputConfig = {
   client: Object,
   server: Object,
-  vendor: ?Object,
 };
 
 type Options = {
@@ -145,6 +121,5 @@ module.exports = function getWebpackConfig(
   return {
     client: clientConfig.toObject(),
     server: serverConfig.toObject(),
-    vendor: null,
   };
 };

@@ -14,7 +14,6 @@ const serverConfig = require('./config/server');
 type BaseConfig = {
   client: WebpackConfig,
   server: WebpackConfig,
-  vendorDll: ?WebpackConfig,
 };
 
 /**
@@ -52,6 +51,5 @@ module.exports = function getBaseConfig(
       { logger },
     ),
     server: serverConfig({ entries: serverEntry, noProgress }, { logger }),
-    vendorDll: null,
   };
 };

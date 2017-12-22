@@ -7,9 +7,9 @@ jest.mock('webpack', () => ({
     UglifyJsPlugin: class {},
   },
 }));
-jest.mock('../../webpack/plugins/progressHandler.js');
+jest.mock('../../plugins/progressHandler.js');
 jest.mock('fs');
-jest.mock('../../utils.js');
+jest.mock('../../../utils.js');
 jest.mock('./vendor-manifest.json', () => ({ name: 'vendor_1234' }), {
   virtual: true,
 });
@@ -46,8 +46,8 @@ const path = require('path');
 const fs = require('fs');
 const sha1 = require('sha1');
 const vendorDll = require('../vendorDll');
-const utils = require('../../utils');
-const commandApi = require('../../__tests__/mocks/context').commandApi;
+const utils = require('../../../utils');
+const commandApi = require('../../../__tests__/mocks/context').commandApi;
 
 const getMockedContext = (
   customLoggingFns = {},
@@ -101,20 +101,20 @@ describe('config/vendorDll', () => {
       expect(baseConfig).not.toBeNull();
     });
 
-    it('should return modifie base config', () => {
+    it('should return modified config', () => {
       // $FlowIgnore `utils.requireModule` is mocked
       utils.requireModule.mockReset();
       // $FlowIgnore `utils.requireModule` is mocked
       utils.requireModule.mockImplementationOnce(() => ({
-        vendor: config => ({ ...config, bail: false }),
+        vendor: config => config.merge({ bail: false }),
       }));
       // $FlowIgnore stripped version of plugins with the essentials only
       const modifiedConfig = vendorDll.getConfig(getMockedContext(), [
         {
-          vendor: config => ({
-            ...config,
-            addedProperty: true,
-          }),
+          vendor: config =>
+            config.merge({
+              addedProperty: true,
+            }),
         },
       ]);
       expect(modifiedConfig).toBeDefined();

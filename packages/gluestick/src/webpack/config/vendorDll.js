@@ -1,36 +1,30 @@
 /* @flow */
 
-import type {
-  CLIContext,
-  ConfigPlugin,
-  Config,
-  WebpackConfig,
-  WebpackHooks,
-} from '../types';
+import type { CLIContext, ConfigPlugin } from '../../types';
 
 const path = require('path');
 const fs = require('fs');
+const Config = require('webpack-config').default;
 const webpack = require('webpack');
 const sha1 = require('sha1');
-const clone = require('clone');
-const progressHandler = require('../webpack/plugins/progressHandler');
-const { requireModule } = require('../utils');
-const hookHelper = require('../renderer/helpers/hooks');
+const progressHandler = require('../plugins/progressHandler');
+const applyConfigPlugins = require('../utils/applyConfigPlugins');
+const { requireModule } = require('../../utils');
 
 const manifestFilename: string = 'vendor-manifest.json';
 // Need to set env variable, so that server can access it
 process.env.GS_VENDOR_MANIFEST_FILENAME = manifestFilename;
 
-const getVendorSource = (config: Config): string => {
+function getVendorSource(config: Config): string {
   return fs
     .readFileSync(path.join(process.cwd(), config.GSConfig.vendorSourcePath))
     .toString();
-};
+}
 
-const getDependenciesHash = (
+function getDependenciesHash(
   vendorEntryParts: string[],
   vendorSource: string,
-): string => {
+): string {
   const projectPackage = require(path.join(process.cwd(), 'package.json'));
   const projectDependencies = {
     ...projectPackage.devDependencies,
@@ -47,9 +41,9 @@ const getDependenciesHash = (
       .map(name => `${name}@${projectDependencies[name]}`)
       .join('|'),
   );
-};
+}
 
-const isValid = ({ logger, config }: CLIContext): boolean => {
+function isValid({ logger, config }: CLIContext): boolean {
   const { buildDllPath }: { buildDllPath: string } = config.GSConfig;
 
   // Check if manifest exists
@@ -121,9 +115,9 @@ const isValid = ({ logger, config }: CLIContext): boolean => {
 
   logger.success('Vendor DLL bundle is valid, skipping recompilation');
   return true;
-};
+}
 
-const injectValidationMetadata = ({ logger, config }: CLIContext): void => {
+function injectValidationMetadata({ logger, config }: CLIContext): void {
   const { buildDllPath }: { buildDllPath: string } = config.GSConfig;
 
   const manifestPath: string = path.join(
@@ -147,13 +141,13 @@ const injectValidationMetadata = ({ logger, config }: CLIContext): void => {
   logger.info('Updating vendor DLL validation metadata');
 
   fs.writeFileSync(manifestPath, JSON.stringify(manifestContent, null, '  '));
-};
+}
 
-const getConfig = (
+function getConfig(
   { logger, config }: CLIContext,
   plugins: ConfigPlugin[],
   noProgress: boolean,
-): WebpackConfig => {
+): Object {
   // TODO: check if loaders are necessary, bundle CSS/SASS
   const appRoot: string = process.cwd();
   const buildDllPath: string = path.join(
@@ -171,7 +165,7 @@ const getConfig = (
     );
   }
 
-  const baseConfig: WebpackConfig = {
+  const baseConfig = new Config().merge({
     devtool: 'cheap-source-map',
     context: appRoot,
     resolve: {
@@ -197,45 +191,45 @@ const getConfig = (
         ),
         name: '[name]_[hash]',
       }),
-    ].concat(noProgress ? [] : [progressHandler(logger, 'vendor')]),
+    ]
+      .concat(noProgress ? [] : [progressHandler(logger, 'vendor')])
+      .concat(
+        process.env.NODE_ENV === 'production'
+          ? []
+          : [
+              new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                  warnings: false,
+                },
+              }),
+            ],
+      ),
     bail: true,
-  };
+  });
 
-  if (process.env.NODE_ENV === 'production') {
-    // $FlowIgnore `plugins` is an Array
-    baseConfig.plugins.push(
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-        },
-      }),
-    );
-  }
-
-  const intermediateConfig: WebpackConfig = plugins
-    .map(plugin => plugin.vendor)
-    .filter(Boolean)
-    .reduce(
-      (modifiedConfig: Object, plugin: Function) =>
-        plugin(clone(modifiedConfig)),
-      baseConfig,
-    );
-
-  const pathToWebpackConfigHooks: string = path.join(
-    process.cwd(),
-    config.GSConfig.webpackConfigPath,
-  );
-
-  let webpackConfigHooks: WebpackHooks = {};
-
+  let webpackConfigHooks = {};
   try {
-    webpackConfigHooks = requireModule(pathToWebpackConfigHooks);
+    webpackConfigHooks = requireModule(
+      path.join(process.cwd(), config.GSConfig.webpackConfigPath),
+    );
   } catch (e) {
-    logger.warn(e);
+    logger.fatal(e);
   }
 
-  return hookHelper.call(webpackConfigHooks.vendor, intermediateConfig);
-};
+  return applyConfigPlugins({
+    type: 'vendor',
+    phase: 'post',
+    plugins,
+    config: (webpackConfigHooks.vendor || (v => v))(
+      applyConfigPlugins({
+        type: 'vendor',
+        phase: 'pre',
+        config: baseConfig,
+        plugins,
+      }),
+    ),
+  }).toObject();
+}
 
 module.exports = {
   isValid,

@@ -8,7 +8,7 @@ const webpack = require('webpack');
 
 const ChunksPlugin = require('../plugins/ChunksPlugin');
 const gluestickConfig = require('../../config/defaults/glueStickConfig');
-const { manifestFilename } = require('../../config/vendorDll');
+const { manifestFilename } = require('../config/vendorDll');
 
 module.exports = function addVendoringPlugin(
   baseConfig: WebpackConfig,

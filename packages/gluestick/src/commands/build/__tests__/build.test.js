@@ -3,14 +3,14 @@
 jest.mock('../../../webpack/plugins/progressHandler');
 jest.mock('../../utils.js');
 jest.mock('../getEntiresSnapshots');
-jest.mock('../../../config/vendorDll');
+jest.mock('../../../webpack/config/vendorDll');
 jest.mock('../compile.js', () => jest.fn(() => Promise.resolve()));
 
 const compile = require('../compile');
 const getEntiresSnapshots = require('../getEntiresSnapshots');
 const utils = require('../../utils');
 const build = require('../build');
-const vendorDll = require('../../../config/vendorDll');
+const vendorDll = require('../../../webpack/config/vendorDll');
 
 const mockedCommandApi = require('../../../__tests__/mocks/context').commandApi;
 
