@@ -6,5 +6,5 @@ import Config from "webpack-config";
 
 export const client = base => new Config().merge(base);
 export const server = base => new Config().merge(base);
-export const vendorDll = base => new Config().merge(base);
+export const vendor = base => new Config().merge(base);
 `;
