@@ -21,7 +21,7 @@ const commandApi = require('../commandApi');
 
 const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
 
-fdescribe('cli/commandApi', () => {
+describe('cli/commandApi', () => {
   it('getOptions should return options object', () => {
     expect(commandApi.getOptions(['test', 'test', { client: true }])).toEqual({
       client: true,

@@ -17,9 +17,7 @@ type BaseConfig = {
 };
 
 /**
- * 
- * 
- * @param {any} { entries } 
+ * Create base client/server config and build entries.
  */
 module.exports = function getBaseConfig(
   {
