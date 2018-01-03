@@ -6,7 +6,7 @@ There are few files which allows to configure GlueStick:
 * [`src/gluestick.hooks.js`](./configuration/CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
 * [`src/gluestick.plugins.js`](./configuration/Plugins.md) - specify which plugins to use
 * [`src/gluestick.config.js`](#gluestick-config) - overwrite gluestick config
-* [`src/webpack.hooks.js`](./configuration/CachingAndHooks.md#webpack-hooks) - overwrite webpack client and server configuation
+* [`src/webpack.config.js`](./configuration/WebpackConfig.md) - overwrite webpack client and server configuation
 * [`src/config/application.js`](#global-project-config) - global project configuration
 * [`src/config/caching.server.js`](./configuration/CachingAndHooks.md#caching) - setup component caching
 * `src/config/init.browser.js` - specify code which will run right before client bundle is run in browser

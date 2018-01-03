@@ -1,13 +1,13 @@
 # Plugins
-Plugins are shipped as separate packages and can extend or modify gluestick or webpack behaviour.
+Plugins are shipped as separate packages and can extend or modify gluestick or webpack behavior.
 
 ## How to use
 1. Install plugin:
-```
+```bash
 npm install --save gluestick-config-legacy
 ```
 2. Add plugin to `src/gluestick.plugins.js`:
-```
+```js
 export default [
   'gluestick-config-legacy'
 ];
@@ -17,7 +17,7 @@ export default [
 You can pass additional configuration options to plugin. To do so,
 in `src/gluestick.plugins.js` file, instead of providing just plugin name,
 provide object matching the following schema:
-```
+```js
 {
   plugin: string; // plugin name
   options: { // configuration for plugin
@@ -26,7 +26,7 @@ provide object matching the following schema:
 }
 ```
 for example:
-```
+```js
 {
   plugin: 'gluestick-env-expose-ast',
   options: {
@@ -63,55 +63,55 @@ it: `<type>.js` so it can be: `config.js`, `runtime.js`, `server.js`.
 __IMPORTANT__: GlueStick won't transpile your plugin, thus it's up to you to transpile it using for instance `babel` or `typescript`.
 
 ## Config plugin
-Must export function that returns object will overwriters.
-```
+Must export function that returns object with function to overwrite gluestick/client/server/vendor configs:
+
+```js
 module.exports = (options, { logger }) => {
   return {
-    preOverwrites: {
-      sharedWebpackConfig: config => config,
-    },
-    postOverwrites: {
-      gluestickConfig: config => config,
-      clientWebpackConfig: config => config,
-      serverWebpackConfig: config => config,
-    },
+    gluestick: config => config,
+    client: config => config,
+    server: config => config,
+    vendor: config => config,
   };
 };
 ```
-Exported function is a factory for two groups of overwrites: `preOverwrites` and `postOverwrites`.
-This factory function accepts options that are defined in plugins declaration file inside project,
-by default `src/gluestick.plugins.js`. Second argument is an object with utilities provided by
-gluestick:
+
+This factory function accepts options that are defined in plugins declaration file inside project, by default `src/gluestick.plugins.js`. Second argument is an object with utilities provided by gluestick:
 - `logger` - logger instance
   - `logger.debug(...args)`
   - `logger.info(...args)`
   - `logger.success(...args)`
   - `logger.warn(...args)`
   - `logger.error(...args)`
-- `requireModule` - safe require function, which will transform module with babel (`es2015`, `stage-0`, `transform-flow-strip-types`) then noralizes module with `getDefaultExport`
+- `requireModule` - safe require function, which will transform module with babel (`es2015`, `stage-0`, `transform-flow-strip-types`) then normalizes module with `getDefaultExport`
 - `requireWithInterop` - require and normalize module using `getDefaultExport`
 - `getDefaultExport` - normalize CJS and ESM exported value
 
-`preOverwrites` are executed before specific configs are prepared. This is the place for modification
-that should be considered by universal-webpack, for example aliases, which can define if file
-from import is external or not.
-- `sharedWebpackConfig: config => config` - accepts shared webpack config and
-must return valid webpack config which will be the base for both by client and server configs
+Client, server and vendor properties can be a function or an object with `pre` and `post` properties:
 
-`postOverwrites` are executed after every config is prepared, so modifications to configs will
-go directly to webpack compiler. Modification done here won't be taken into considiration by
-uniwersal-webpack. This is the place for isomorphic-like things.
-- `gluestickConfig: config => config` - accepts gluestick config and must return the same
-valid gluestick config with modified values
-- `clientWebpackConfig: config => config` - accepts client webpack config and
-must return valid webpack config for client bundle
-- `serverWebpackConfig: config => config` - accepts server webpack config and
-must return valid webpack config for renderer (server) bundle
+```js
+module.exports = (options, { logger }) => {
+  return {
+    gluestick: config => config,
+    client: {
+      pre: config => config,
+      post: config => config,
+    },
+    server: config => config,
+    vendor: config => config,
+  };
+};
+```
+
+`pre` functions are executed before applying mutations from project's `src/webpack.config.js`, whereas `post` are executed at the very end.
+
+For client, server and vendor first argument (`config`) is a instance of [webpack-config](https://github.com/Fitbit/webpack-config)'s `Config` class.
 
 ## Server plugin
 Server plugins similarly to config plugins, must export factory function, that
 accept options and gluestick utils.
-```
+
+```js
 module.exports = (options, { logger }) => ({
   renderMethod: (root) => ({
     body: '...',
@@ -133,22 +133,22 @@ calling `gluestick start` or `gluestick start-server` it will print your plugin 
 along with other compiled plugins. `name` property also will be used when there is an
 error in plugin implementation to create helpful, user friendly message.
 
-`renderMethod` is usefull for supplying custom function to use when rendering app on server.
+`renderMethod` is useful for supplying custom function to use when rendering app on server.
 It only accepts one argument with react root component to render and must return an object
 with `body` property with actual string that will be send to browser, `head` array with React
 elements that will be injected into `<head>` of document nad optionally `additionalScript`,
 which also is a array of React `<script>` elements to inject to document.
 
-## Runtime plugns
+## Runtime plugins
 Runtime plugins are a little bit different, since they don't export factory
 function but must return object with 2 properties:
-- `meta` - object with meta information, you must specifiy if plugin is a `rootWrapper` or a `hook`.
-You must provida exactly one flag in `meta` object:
-```
+- `meta` - object with meta information, you must specify if plugin is a `rootWrapper` or a `hook`.
+You must provide exactly one flag in `meta` object:
+```js
 const meta = { rootWrapper: true };
 ```
 or
-```
+```js
 const meta = { hook: true };
 ```
 - `plugin` - function with plugin implementation
@@ -166,7 +166,7 @@ React component. Typically `component` argument will be wrapped with some other 
 discard.
 
 Example:
-```
+```js
 import React from 'react';
 import SomeRoot from 'some-lib';
 
