@@ -80,14 +80,17 @@ module.exports = function createServerConfig(
         ...fs.readdirSync(path.join(process.cwd(), 'node_modules')),
         ...fs.readdirSync(path.join(__dirname, '../../../node_modules')),
       ]
-        .filter(x => !/\.bin/.test(x))
+        // Exclude react and react-dom so they have `process.env.NODE_ENV` checks removed
+        // by webpack. Having it as externals and aliasing them to `dist` versions
+        // will break both renderer bundle and electrode-react-ssr-caching.
+        .filter(x => !/\.bin|react/.test(x))
         .reduce(
-        (externals, resource) => ({
-          ...externals,
-          [resource]: `commonjs ${resource}`,
-        }),
-        {},
-      ),
+          (externals, resource) => ({
+            ...externals,
+            [resource]: `commonjs ${resource}`,
+          }),
+          {},
+        ),
     })
     .merge(config => {
       config.module.rules
