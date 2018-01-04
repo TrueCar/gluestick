@@ -6,7 +6,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
-const progressHandler = require('../config/webpack/progressHandler');
+const progressHandler = require('../webpack/plugins/progressHandler');
 const { printWebpackStats, debounce } = require('../utils');
 const build = require('./build');
 

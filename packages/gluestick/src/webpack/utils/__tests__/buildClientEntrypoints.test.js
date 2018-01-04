@@ -1,4 +1,5 @@
 /* @flow */
+
 require('./sharedMocks');
 
 jest.mock('glob', () => ({
@@ -8,18 +9,18 @@ jest.mock('fs-extra');
 
 // $FlowIgnore
 const entries = require('entries.json');
-const buildEntries = require('../buildEntries');
-const defaultGSConfig = require('../../defaults/glueStickConfig');
+const buildClientEntrypoints = require('../buildClientEntrypoints');
+const defaultGSConfig = require('../../../config/defaults/glueStickConfig');
 const generate = require('gluestick-generators').default;
 
-describe('config/webpack/buildEntries', () => {
+describe('webpack/utils/buildClientEntrypoints', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should build all client entries', () => {
     // $FlowIgnore
-    expect(buildEntries(defaultGSConfig, {}, entries, [])).toEqual({
+    expect(buildClientEntrypoints(defaultGSConfig, {}, entries, [])).toEqual({
       main: `./${defaultGSConfig.clientEntryInitPath}/main`,
       home: `./${defaultGSConfig.clientEntryInitPath}/home`,
     });
@@ -58,7 +59,7 @@ describe('config/webpack/buildEntries', () => {
       .filter(k => k === '/home')
       .reduce((acc, key) => ({ ...acc, [key]: entries[key] }), {});
     // $FlowIgnore
-    expect(buildEntries(defaultGSConfig, {}, homeEntry, [])).toEqual({
+    expect(buildClientEntrypoints(defaultGSConfig, {}, homeEntry, [])).toEqual({
       home: `./${defaultGSConfig.clientEntryInitPath}/home`,
     });
     // $FlowIgnore

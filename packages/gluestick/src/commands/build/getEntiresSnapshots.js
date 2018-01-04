@@ -8,7 +8,7 @@ const fs = require('fs');
 const mkdir = require('mkdirp');
 const { clearBuildDirectory } = require('../utils');
 const { promiseEach } = require('../../utils');
-const prepareEntries = require('../../config/webpack/prepareEntries');
+const prepareEntries = require('../../webpack/utils/prepareEntries');
 
 const spawnRenderer = (entryPointPath: string, args: string) => {
   const child: Object = spawn(
@@ -30,7 +30,10 @@ const spawnRenderer = (entryPointPath: string, args: string) => {
 module.exports = ({ config, logger }: CLIContext, app?: string, url: ?string) => {
   logger.info('Creating static markup snapshots...');
 
-  const entryPointPath = config.webpackConfig.universalSettings.server.output;
+  const entryPointPath = path.join(
+    config.webpackConfig.server.output.path,
+    config.webpackConfig.server.output.filename
+  );
   const args = JSON.stringify(config);
   let child: Object;
 

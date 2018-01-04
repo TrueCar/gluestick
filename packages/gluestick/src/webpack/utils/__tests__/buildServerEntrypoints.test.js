@@ -1,21 +1,22 @@
 /* @flow */
+
 require('./sharedMocks');
 
 // $FlowIgnore
 const entries = require('entries.json');
 const path = require('path');
-const buildServerEntries = require('../buildServerEntries');
-const defaultGSConfig = require('../../defaults/glueStickConfig');
+const buildServerEntrypoints = require('../buildServerEntrypoints');
+const defaultGSConfig = require('../../../config/defaults/glueStickConfig');
 const generate = require('gluestick-generators').default;
 
-describe('config/webpack/buildSeverEntries', () => {
+describe('webpack/utils/buildServerEntrypoints', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should build server entries definition file', () => {
     // $FlowIgnore
-    buildServerEntries(defaultGSConfig, {}, entries, []);
+    buildServerEntrypoints(defaultGSConfig, {}, entries, []);
     // $FlowIgnore
     expect(generate.mock.calls[0][0]).toEqual({
       generatorName: 'serverEntries',

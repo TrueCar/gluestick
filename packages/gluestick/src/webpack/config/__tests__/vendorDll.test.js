@@ -7,9 +7,9 @@ jest.mock('webpack', () => ({
     UglifyJsPlugin: class {},
   },
 }));
-jest.mock('../webpack/progressHandler.js');
+jest.mock('../../plugins/progressHandler.js');
 jest.mock('fs');
-jest.mock('../../utils.js');
+jest.mock('../../../utils.js');
 jest.mock('./vendor-manifest.json', () => ({ name: 'vendor_1234' }), {
   virtual: true,
 });
@@ -46,10 +46,10 @@ const path = require('path');
 const fs = require('fs');
 const sha1 = require('sha1');
 const vendorDll = require('../vendorDll');
-const utils = require('../../utils');
-const commandApi = require('../../__tests__/mocks/context').commandApi;
+const utils = require('../../../utils');
+const commandApi = require('../../../__tests__/mocks/context').commandApi;
 
-const getMockedConext = (
+const getMockedContext = (
   customLoggingFns = {},
   customGsConfig = {},
   customWebpackConfig = {},
@@ -85,7 +85,7 @@ describe('config/vendorDll', () => {
     it('should throw an error if vendor entry file does not exist', () => {
       const fatalLogFn = jest.fn();
       vendorDll.getConfig(
-        getMockedConext(
+        getMockedContext(
           { fatal: fatalLogFn },
           { vendorSourcePath: 'non-existent' },
         ),
@@ -96,27 +96,25 @@ describe('config/vendorDll', () => {
     });
 
     it('should return base config', () => {
-      const baseConfig = vendorDll.getConfig(getMockedConext(), [], true);
+      const baseConfig = vendorDll.getConfig(getMockedContext(), [], true);
       expect(baseConfig).toBeDefined();
       expect(baseConfig).not.toBeNull();
     });
 
-    it('should return modifie base config', () => {
+    it('should return modified config', () => {
       // $FlowIgnore `utils.requireModule` is mocked
       utils.requireModule.mockReset();
       // $FlowIgnore `utils.requireModule` is mocked
       utils.requireModule.mockImplementationOnce(() => ({
-        webpackVendorDllConfig: config => ({ ...config, bail: false }),
+        vendor: config => config.merge({ bail: false }),
       }));
       // $FlowIgnore stripped version of plugins with the essentials only
-      const modifiedConfig = vendorDll.getConfig(getMockedConext(), [
+      const modifiedConfig = vendorDll.getConfig(getMockedContext(), [
         {
-          postOverwrites: {
-            vendorDllWebpackConfig: config => ({
-              ...config,
+          vendor: config =>
+            config.merge({
               addedProperty: true,
             }),
-          },
         },
       ]);
       expect(modifiedConfig).toBeDefined();
@@ -146,7 +144,7 @@ describe('config/vendorDll', () => {
       );
 
       vendorDll.injectValidationMetadata(
-        getMockedConext(
+        getMockedContext(
           {},
           {
             buildDllPath: 'build/assets/dlls',
@@ -183,7 +181,7 @@ describe('config/vendorDll', () => {
       const infoLogger = jest.fn();
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             { buildDllPath: 'non-exstent' },
           ),
@@ -198,7 +196,7 @@ describe('config/vendorDll', () => {
       const infoLogger = jest.fn();
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             { buildDllPath: path.relative(process.cwd(), __dirname) },
           ),
@@ -214,7 +212,7 @@ describe('config/vendorDll', () => {
       fs.writeFileSync(path.join(__dirname, 'vendor-1234.dll.js'), '//');
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             { buildDllPath: path.relative(process.cwd(), __dirname) },
           ),
@@ -233,7 +231,7 @@ describe('config/vendorDll', () => {
       );
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             {
               buildDllPath: path.join(
@@ -265,7 +263,7 @@ describe('config/vendorDll', () => {
       );
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             {
               vendorSourcePath,
@@ -298,7 +296,7 @@ describe('config/vendorDll', () => {
       );
       expect(
         vendorDll.isValid(
-          getMockedConext(
+          getMockedContext(
             { info: infoLogger },
             {
               vendorSourcePath,

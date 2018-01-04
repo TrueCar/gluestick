@@ -54,18 +54,9 @@ export type WebpackConfig = {
   [key: string]: WebpackConfigEntry,
 };
 
-export type UniversalSettings = {
-  server: {
-    input: string,
-    output: string,
-  },
-};
-
 export type CompiledConfig = {
-  universalSettings: UniversalSettings,
-  client: WebpackConfig,
-  server: WebpackConfig,
-  vendor?: WebpackConfig,
+  client: Object,
+  server: Object,
 };
 
 export type Config = {
@@ -112,8 +103,6 @@ export type Context = {
   config: Config,
   logger: BaseLogger,
 };
-
-export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
 
 export type Question = {
   type: string,
@@ -267,9 +256,9 @@ export type GSHooks = {
 };
 
 export type WebpackHooks = {
-  webpackClientConfig?: Hook,
-  webpackServerConfig?: Hook,
-  webpackVendorDllConfig?: Hook,
+  client?: Hook,
+  server?: Hook,
+  vendor?: Hook,
 };
 
 export type Plugin = {
@@ -281,20 +270,20 @@ export type Plugin = {
   options: Object,
 };
 
+type ConfigPluginBody = {
+  pre: Function,
+  post: Function,
+};
+
 export type ConfigPlugin = {
   name: string,
   meta: {
     [key: string]: any,
   },
-  preOverwrites: {
-    sharedWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-  },
-  postOverwrites: {
-    gluestickConfig?: (config: GSConfig) => void,
-    clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-    serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-    vendorDllWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-  },
+  client?: Function | ConfigPluginBody,
+  server?: Function | ConfigPluginBody,
+  vendor?: Function | ConfigPluginBody,
+  gluestick?: Function,
 };
 
 export type RuntimePlugin = {

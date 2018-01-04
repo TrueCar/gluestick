@@ -1,18 +1,18 @@
 /* @flow */
 
-import type { WebpackConfig, GSConfig } from '../../types';
+import type { Entries } from '../types';
 
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const cssCustomProperties = require('postcss-custom-properties');
 const postcssCalc = require('postcss-calc');
-const getAliasesForApps = require('./getAliasesForApps');
+const Config = require('webpack-config').default;
 
-const isProduction: boolean = process.env.NODE_ENV === 'production';
+const gluestickConfig = require('../../config/defaults/glueStickConfig');
+const getAliasesForApps = require('../utils/getAliasesForApps');
 
-module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
-  const appRoot: string = process.cwd();
+module.exports = ({ entries }: { entries: string | Entries }) => {
   const {
     buildAssetsPath,
     assetsPath,
@@ -21,12 +21,15 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     sharedPath,
     configPath,
     nodeModulesPath,
-    publicPath,
   } = gluestickConfig;
+
+  const isProduction: boolean = process.env.NODE_ENV === 'production';
+  const appRoot: string = process.cwd();
   const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
-  const configuration: WebpackConfig = {
+  return new Config().merge({
     context: appRoot,
+    entry: entries,
     resolve: {
       extensions: ['.js', '.css', '.json'],
       alias: {
@@ -40,21 +43,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         compiled: path.join(process.cwd(), nodeModulesPath),
       },
     },
-
-    output: {
-      // filesystem path for static files
-      path: outputPath,
-
-      // network path for static files
-      publicPath: `/${publicPath}/`.replace(/\/\//g, '/'),
-
-      // file name pattern for entry scripts
-      filename: '[name].[hash].js',
-
-      // file name pattern for chunk scripts
-      chunkFilename: '[name].[hash].js',
-    },
-
     module: {
       rules: [
         {
@@ -65,11 +53,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           use: [
             {
               loader: 'babel-loader',
-              options: {
-                plugins: ['transform-flow-strip-types'],
-                presets: ['es2015', 'react', 'stage-0'],
-                babelrc: false,
-              },
             },
           ],
         },
@@ -109,7 +92,6 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         },
       ],
     },
-
     plugins: [
       new webpack.LoaderOptionsPlugin({
         test: /\.(scss|css)$/,
@@ -135,7 +117,5 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
     node: {
       net: 'empty',
     },
-  };
-
-  return configuration;
+  });
 };

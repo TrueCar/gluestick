@@ -56,7 +56,7 @@ const templateGluestickHooks = require('../templates/gluestick.hooks')(
 const templateGluestickConfig = require('../templates/gluestick.config')(
   createTemplate,
 );
-const templateWebpackHooks = require('../templates/webpack.hooks')(
+const templateWebpackConfig = require('../templates/webpack.config')(
   createTemplate,
 );
 const templateCachingServer = require('../templates/caching.server')(
@@ -127,8 +127,8 @@ module.exports = (options: GeneratorOptions) => {
     },
     {
       path: 'src',
-      filename: 'webpack.hooks.js',
-      template: templateWebpackHooks,
+      filename: 'webpack.config.js',
+      template: templateWebpackConfig,
     },
     {
       path: 'src',

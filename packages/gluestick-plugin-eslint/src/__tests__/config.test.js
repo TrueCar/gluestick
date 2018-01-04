@@ -6,6 +6,21 @@ const eslintPlugin = require('../config');
 
 const nodeEnv = 'test';
 
+class Config {
+  constructor(initialValue) {
+    this.merge(initialValue);
+  }
+
+  merge(partialOrFunction) {
+    if (typeof partialOrFunction === 'function') {
+      partialOrFunction(this);
+    } else {
+      Object.assign(this, partialOrFunction);
+    }
+    return this;
+  }
+}
+
 describe('gluestick eslint plugin', () => {
   it('ReorderLintWarningsPlugin should sort warnings and errors from newest to oldest', done => {
     fs.statSync.mockImplementation(resource => {
@@ -78,29 +93,27 @@ describe('gluestick eslint plugin', () => {
     });
 
     it('should do nothing', () => {
-      const webpackClientConfig = {
+      const webpackClientConfig = new Config({
         plugins: [],
         module: {
           rules: [],
         },
-      };
-      const { postOverwrites } = eslintPlugin();
-      expect(postOverwrites.clientWebpackConfig(webpackClientConfig)).toEqual(
-        webpackClientConfig,
-      );
+      });
+      const { client } = eslintPlugin();
+      const { plugins, module: { rules } } = client(webpackClientConfig);
+      expect(plugins.length).toBe(0);
+      expect(rules.length).toBe(0);
     });
 
     it('should add loader if `enableInProduction` is set to `true`', () => {
-      const webpackClientConfig = {
+      const webpackClientConfig = new Config({
         plugins: [],
         module: {
           rules: [],
         },
-      };
-      const { postOverwrites } = eslintPlugin({ enableInProduction: true });
-      const modifiedConfig = postOverwrites.clientWebpackConfig(
-        webpackClientConfig,
-      );
+      });
+      const { client } = eslintPlugin({ enableInProduction: true });
+      const modifiedConfig = client(webpackClientConfig);
       expect(modifiedConfig.module.rules.length).toBe(1);
       expect(modifiedConfig.plugins.length).toBe(1);
     });
@@ -112,16 +125,14 @@ describe('gluestick eslint plugin', () => {
     });
 
     it('should add loader and reorder plugin', () => {
-      const webpackClientConfig = {
+      const webpackClientConfig = new Config({
         plugins: [],
         module: {
           rules: [],
         },
-      };
-      const { postOverwrites } = eslintPlugin();
-      const modifiedConfig = postOverwrites.clientWebpackConfig(
-        webpackClientConfig,
-      );
+      });
+      const { client } = eslintPlugin();
+      const modifiedConfig = client(webpackClientConfig);
       expect(modifiedConfig.plugins[0].constructor.name).toEqual(
         'ReorderLintWarningsPlugin',
       );

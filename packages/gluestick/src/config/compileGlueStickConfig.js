@@ -26,17 +26,10 @@ module.exports = (logger: Logger, plugins: ConfigPlugin[]): GSConfig => {
     throw new Error('Invalid plugins argument');
   }
 
-  return getConfigHook(logger)(
+  const config = getConfigHook(logger)(
     plugins
-      .filter(
-        (plugin: ConfigPlugin): boolean =>
-          !!plugin.postOverwrites.gluestickConfig,
-      )
-      .map(
-        (plugin: ConfigPlugin): Function =>
-          // $FlowIgnore filter above ensures `gluestickConfig` won't be undefinfed/null
-          plugin.postOverwrites.gluestickConfig,
-      )
+      .map(plugin => plugin.gluestick)
+      .filter(Boolean)
       .reduce(
         (prev: GSConfig, curr: (config: GSConfig) => GSConfig): GSConfig => {
           return curr(clone(prev));
@@ -44,4 +37,11 @@ module.exports = (logger: Logger, plugins: ConfigPlugin[]): GSConfig => {
         defaultConfig,
       ),
   );
+
+  // Overwrite config so it doesn't have to passed down as param.
+  Object.keys(config).forEach(key => {
+    defaultConfig[key] = config[key];
+  });
+
+  return config;
 };

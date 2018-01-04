@@ -4,7 +4,7 @@ import type { Logger, CommandAPI } from '../../types.js';
 const { clearBuildDirectory } = require('../utils');
 const getEntiresSnapshots = require('./getEntiresSnapshots');
 const compile = require('./compile');
-const vendorDll = require('../../config/vendorDll');
+const vendorDll = require('../../webpack/config/vendorDll');
 
 type CommandOptions = {
   stats: boolean;
@@ -102,10 +102,10 @@ module.exports = (
       ]).then(() => {
         return options.static
           ? getEntiresSnapshots(
-              { config, logger },
-              options.app,
-              typeof options.static === 'string' ? options.static : null,
-            )
+            { config, logger },
+            options.app,
+            typeof options.static === 'string' ? options.static : null,
+          )
           : Promise.resolve();
       });
     }

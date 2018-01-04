@@ -48,19 +48,15 @@ describe('config/compileGluestickConfig', () => {
         // $FlowIgnore
         {
           name: 'testPlugin',
-          postOverwrites: {
-            gluestickConfig: config => {
-              return { ...config, protocol: 'https' };
-            },
+          gluestick: config => {
+            return { ...config, protocol: 'https' };
           },
         },
         // $FlowIgnore
         {
           name: 'testPlugin',
-          postOverwrites: {
-            gluestickConfig: config => {
-              return { ...config, host: 'test' };
-            },
+          gluestick: config => {
+            return { ...config, host: 'test' };
           },
         },
       ]),

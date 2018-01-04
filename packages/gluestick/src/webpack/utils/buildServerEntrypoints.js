@@ -5,12 +5,12 @@ import type { GSConfig, Logger } from '../../types';
 const path = require('path');
 const generator = require('gluestick-generators').default;
 
-const buildServerEntries = (
+module.exports = function buildServerEntrypoints(
   gluestickConfig: GSConfig,
   logger: Logger,
   entries: Object,
   plugins: Object[],
-): void => {
+) {
   const successMessageHandler = () => {
     logger.info('Server entries created');
   };
@@ -40,5 +40,3 @@ const buildServerEntries = (
     { successMessageHandler },
   );
 };
-
-module.exports = buildServerEntries;

@@ -6,8 +6,6 @@ import type {
   Context,
   Request,
   GSConfig,
-  UniversalSettings,
-  WebpackConfig,
   CompiledConfig,
   RenderMethod,
 } from '../../types';
@@ -51,20 +49,9 @@ describe('renderer/render', () => {
   const gsConfig: GSConfig = require('../../__tests__/mocks/context').config
     .GSConfig;
 
-  const universalSettings: UniversalSettings = {
-    server: {
-      input: '',
-      output: '',
-    },
-  };
-
-  const client: WebpackConfig = {};
-  const server: WebpackConfig = {};
-
   const webpackConfig: CompiledConfig = {
-    universalSettings,
-    client,
-    server,
+    client: {},
+    server: {},
   };
 
   const config: Config = {

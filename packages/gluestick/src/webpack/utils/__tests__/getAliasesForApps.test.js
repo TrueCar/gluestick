@@ -55,7 +55,7 @@ jest.mock('fs', () => ({
 
 const orignalProcessCwd = process.cwd.bind(process);
 
-const defaultGluesticConfig = require('../../defaults/glueStickConfig');
+const defaultGluesticConfig = require('../../../config/defaults/glueStickConfig');
 const getAliasesForApps = require('../getAliasesForApps');
 
 const mockGSConfig = mockedConfig => {
@@ -65,7 +65,7 @@ const mockGSConfig = mockedConfig => {
   };
 };
 
-describe('config/webpack/getAliasesForApps', () => {
+describe('webpack/utils/getAliasesForApps', () => {
   beforeEach(() => {
     // $FlowIgnore flow does not like this
     process.cwd = () => 'cwd';

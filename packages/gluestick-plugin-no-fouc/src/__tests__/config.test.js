@@ -16,11 +16,26 @@ const noFoucPlugin = require('../config');
 
 const nodeEnv = 'test';
 
+class Config {
+  constructor(initialValue) {
+    this.merge(initialValue);
+  }
+
+  merge(partialOrFunction) {
+    if (typeof partialOrFunction === 'function') {
+      partialOrFunction(this);
+    } else {
+      Object.assign(this, partialOrFunction);
+    }
+    return this;
+  }
+}
+
 describe('gluestick no-fouc plugin', () => {
   describe('in production', () => {
     it('should do nothing', () => {
       process.env.NODE_ENV = 'production';
-      const webpackClientConfig = {
+      const webpackClientConfig = new Config({
         plugins: [],
         module: {
           rules: [
@@ -30,11 +45,11 @@ describe('gluestick no-fouc plugin', () => {
             },
           ],
         },
-      };
-      const { postOverwrites } = noFoucPlugin();
-      expect(postOverwrites.clientWebpackConfig(webpackClientConfig)).toEqual(
-        webpackClientConfig,
-      );
+      });
+      const { client } = noFoucPlugin();
+      const { plugins, module: { rules } } = client(webpackClientConfig);
+      expect(plugins.length).toBe(0);
+      expect(rules.length).toBe(1);
       expect(ExtractTextWebpackPlugin.calledTimes()).toBe(0);
       process.env.NODE_ENV = nodeEnv;
     });
@@ -46,7 +61,7 @@ describe('gluestick no-fouc plugin', () => {
     });
 
     it('should modify scss/css rules and add a plugin', () => {
-      const webpackClientConfig = {
+      const webpackClientConfig = new Config({
         plugins: [],
         module: {
           rules: [
@@ -60,11 +75,9 @@ describe('gluestick no-fouc plugin', () => {
             },
           ],
         },
-      };
-      const { postOverwrites } = noFoucPlugin();
-      const modifiedConfig = postOverwrites.clientWebpackConfig(
-        webpackClientConfig,
-      );
+      });
+      const { client } = noFoucPlugin();
+      const modifiedConfig = client(webpackClientConfig);
       expect(modifiedConfig.plugins.length).toBe(1);
       expect(modifiedConfig.plugins[0].opts.filename).toBeDefined();
       expect(modifiedConfig.plugins[0].opts.allChunks).toBeTruthy();
@@ -86,14 +99,16 @@ describe('gluestick no-fouc plugin', () => {
       ]);
     });
 
-    it('shuld use provided filename from options', () => {
+    it('should use provided filename from options', () => {
       const filename = 'my-filename.css';
-      const { postOverwrites } = noFoucPlugin({ filename });
+      const { client } = noFoucPlugin({ filename });
       expect(
-        postOverwrites.clientWebpackConfig({
-          plugins: [],
-          module: { rules: [] },
-        }).plugins[0].opts.filename,
+        client(
+          new Config({
+            plugins: [],
+            module: { rules: [] },
+          }),
+        ).plugins[0].opts.filename,
       ).toEqual(filename);
     });
   });

@@ -87,22 +87,3 @@ export default {
 | postGetCurrentRoute    |        true        | after we get current route               |
 | postRender             |        true        | after render                             |
 | error                  |        false       | before we render error template          |
-
-## Webpack Hooks
-GlueStick allows you to mutate it's default Webpack configs client and server.
-
-You can specify hooks in `src/webpack.hooks.js` - they work just like regular GlueStick hooks so you can pass function or array of them.
-
-```js
-const webpackClientConfig = (config) => {
-  // Mutate client config here
-  return config;
-}
-
-const webpackServerConfig = (config) => {
-  // Mutate server config here
-  return config;
-}
-```
-
-__IMPORTANT:__ If you're upgrading to newer GlueStick version, run `gluestick auto-upgrade` command to ensure `src/webpack.hooks.js` file exists, otherwise some commands might fail.

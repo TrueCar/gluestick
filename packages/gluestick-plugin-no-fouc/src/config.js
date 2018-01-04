@@ -18,22 +18,21 @@ const modifyLoader = ({ rules }, test) => {
 
 const clientWebpackConfig = (
   filename = '[name]-[contenthash].init-no-fouc.css',
-) => config => {
-  if (process.env.NODE_ENV !== 'production') {
-    modifyLoader(config.module, /\.(scss)$/);
-    modifyLoader(config.module, /\.(css)$/);
-    config.plugins.push(
-      new ExtractTextPlugin({
-        filename,
-        allChunks: true,
-      }),
-    );
-  }
-  return config;
-};
+) => clientConfig =>
+  clientConfig.merge(config => {
+    if (process.env.NODE_ENV !== 'production') {
+      modifyLoader(config.module, /\.(scss)$/);
+      modifyLoader(config.module, /\.(css)$/);
+      config.plugins.push(
+        new ExtractTextPlugin({
+          filename,
+          allChunks: true,
+        }),
+      );
+    }
+    return config;
+  });
 
 module.exports = (options = {}) => ({
-  postOverwrites: {
-    clientWebpackConfig: clientWebpackConfig(options.filename),
-  },
+  client: clientWebpackConfig(options.filename),
 });
