@@ -53,8 +53,7 @@
     "redux-thunk": "2.x",
     "sass-loader": "6.x",
     "style-loader": "^0.16.1",
-    "url-loader": "0.5.x",
-    "webpack-config": "7.x"
+    "url-loader": "0.5.x"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
@@ -70,8 +69,7 @@
     "react-router": "^3.0.2",
     "react-router-scroll": "0.4.2",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0",
-    "webpack-config": "7.5.0"
+    "redux-thunk": "^2.2.0"
   },
   "dependencies": {
     "axios": "0.15.3",
@@ -119,6 +117,7 @@
     "source-map-support": "^0.5.0",
     "universal-webpack": "0.3.9",
     "webpack": "^3.3.0",
+    "webpack-config": "7.5.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-hot-middleware": "^2.18.2"
   },
