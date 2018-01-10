@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-aphrodite",
-  "version": "1.15.2",
+  "version": "1.15.2-test.0",
   "description": "Plugin for supporting Aphrodite in GlueStick project",
   "main": "src/index.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -12,7 +12,7 @@
     "url": "git@github.com:TrueCar/gluestick.git"
   },
   "peerDependencies": {
-    "gluestick": "1.15.2",
+    "gluestick": "1.15.2-test.0",
     "react": "15.x",
     "react-dom": "15.x"
   },
@@ -20,7 +20,7 @@
     "aphrodite": "^1.1.0"
   },
   "devDependencies": {
-    "gluestick": "1.15.2",
+    "gluestick": "1.15.2-test.0",
     "react": "15.4.2",
     "react-dom": "15.4.2"
   }
