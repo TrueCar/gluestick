@@ -204,11 +204,11 @@ Generators documentation is available [here](Generators.md).
 
 ## Caching & Hooks
 
-Caching & Hooks documentation is available [here](CachingAndHooks.md).
+Caching & Hooks documentation is available [here](./configuration/CachingAndHooks.md).
 
 ## Styles
 
-Styles documentation is available [here](Styles.md).
+Styles documentation is available [here](./configuration/Styles.md).
 
 ## CLI message logging
 
