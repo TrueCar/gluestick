@@ -30,6 +30,17 @@ boilerplate code as new improvements are discovered.
 
 Gluestick is actively worked on, supported and used in production by TrueCar.
 
+## What about Create React App?
+Create React App is an excellent command line interface for creating React applications.
+Gluestick is a much more opinionated tool, which offers several features out-of-the-box
+(pre-configured) that Create React App does not (and in some cases would require ejection
+from Create React App), such as:
+
+* Code splitting
+* Server rendering
+* React Router and Redux implementation
+* Generators for standard development needs
+
 ## Requirements
 Node 6.3.0+
 
