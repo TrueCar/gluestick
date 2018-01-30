@@ -50,7 +50,7 @@ defaults:
   - &job-defaults
       working_directory: ~/gluestick
       docker:
-        - image: circleci/node:6.11.3
+        - image: circleci/node:8
 
 version: 2
 jobs:
@@ -212,4 +212,3 @@ workflows:
               only: /v\d+\.\d+\.\d+.*/
             branches:
               only: staging
-  
