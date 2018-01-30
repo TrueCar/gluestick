@@ -37,6 +37,7 @@ export type GSConfig = {
     added: string[],
     changed: string[],
   },
+  enableErrorOverlay: boolean,
   [key: string]: any,
 };
 

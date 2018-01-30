@@ -24,14 +24,14 @@ const hotReloadCache: Object = {
 const matchRouteAndRender = (
   { match, history },
   { getRoutes, store, httpClient },
-  { rootWrappers, rootWrappersOptions, preRenderHooks }
+  { rootWrappers, rootWrappersOptions, preRenderHooks },
+  { enableErrorOverlay }
 ) => {
   match({ history, routes: getRoutes(store, httpClient) }, (error, redirectLocation, renderProps) => {
     function start() {
       const entry = (
         <AppContainer>
           <EntryWrapper
-            radiumConfig={{userAgent: window.navigator.userAgent}}
             store={store}
             getRoutes={getRoutes}
             httpClient={httpClient}
@@ -53,7 +53,7 @@ const matchRouteAndRender = (
       render(entry, document.getElementById("main"));
     }
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || !enableErrorOverlay) {
       start();
     } else {
       const { runWithErrorUtils } = require('compiled/gluestick/shared/lib/errorUtils');
@@ -65,7 +65,7 @@ const matchRouteAndRender = (
 
 // Rerender whole app (for HMR purpose).
 const rerender = (updatedGetRoutes) => {
-  const { httpClient, store, rootWrappers, rootWrappersOptions, preRenderHooks } = hotReloadCache;
+  const { httpClient, store, rootWrappers, rootWrappersOptions, preRenderHooks, enableErrorOverlay } = hotReloadCache;
 
   matchRouteAndRender({
     match: originalMatch,
@@ -78,6 +78,8 @@ const rerender = (updatedGetRoutes) => {
     rootWrappers,
     rootWrappersOptions,
     preRenderHooks,
+  }, {
+    enableErrorOverlay
   });
 };
 
@@ -87,6 +89,7 @@ const start = (
   getRoutes,
   getStore,
   { rootWrappers, rootWrappersOptions, preRenderHooks } = {},
+  { enableErrorOverlay } = {},
   match = originalMatch,
   history = browserHistory
 ) => {
@@ -103,6 +106,7 @@ const start = (
     hotReloadCache.rootWrappers = rootWrappers;
     hotReloadCache.rootWrappersOption = rootWrappersOptions;
     hotReloadCache.preRenderHooks = preRenderHooks;
+    hotReloadCache.enableErrorOverlay = enableErrorOverlay;
   }
 
   matchRouteAndRender({
@@ -116,6 +120,8 @@ const start = (
     rootWrappers,
     rootWrappersOptions,
     preRenderHooks,
+  }, {
+    enableErrorOverlay
   });
 };
 
@@ -130,7 +136,6 @@ export default class EntryWrapper extends Component {
     const {
       routerContext,
       getRoutes,
-      radiumConfig,
       store,
       httpClient,
       rootWrappers,

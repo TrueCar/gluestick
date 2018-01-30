@@ -89,6 +89,7 @@ const options = {
   entryWrapperConfig: {},
   reduxMiddlewares: [],
   thunkMiddleware: null,
+  reduxEnhancers: [],
 };
 
 const getEntries = (routes): Entries => ({

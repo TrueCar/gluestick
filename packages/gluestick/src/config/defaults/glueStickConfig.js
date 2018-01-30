@@ -64,6 +64,7 @@ const config: GSConfig = {
       'gluestick/EntryWrapper.js',
     ],
   },
+  enableErrorOverlay: true,
 };
 
 module.exports = config;

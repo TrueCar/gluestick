@@ -286,6 +286,20 @@ module.exports = (options: GeneratorOptions) => {
     },
   ];
   return {
+    modify: {
+      file: 'package.json',
+      modifier(content: string) {
+        const packageJson = JSON.parse(content);
+        if (!packageJson.scripts.postinstall) {
+          packageJson.scripts.postinstall = 'gluestick auto-upgrade';
+        } else if (
+          !packageJson.scripts.postinstall.includes('gluestick auto-upgrade')
+        ) {
+          packageJson.scripts.postinstall += ' && gluestick auto-upgrade';
+        }
+        return JSON.stringify(packageJson, null, '  ');
+      },
+    },
     entries: options.skipMain
       ? entries.filter(o => !o.path.includes('apps/main'))
       : entries,

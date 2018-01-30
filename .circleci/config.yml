@@ -58,6 +58,9 @@ jobs:
     <<: *job-defaults
     steps:
       - checkout
+
+      - attach_workspace:
+          at: ~/gluestick
     
       - run:
           command: cat packages/gluestick-*/package.json > packages_checksum
@@ -74,25 +77,32 @@ jobs:
       - save_cache: *save-gluestick-cache
 
       - save_cache: *save-repo-cache
+
+      - persist_to_workspace:
+          root: .
+          paths: .
   
   lint:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run lint
   
   flow:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run flow
 
   test:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run test --coverage
 
@@ -104,7 +114,8 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run build
       - run: yarn run e2e
@@ -112,7 +123,8 @@ jobs:
   deploy:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 
@@ -131,7 +143,8 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: |
           git diff --name-only HEAD~1 HEAD
