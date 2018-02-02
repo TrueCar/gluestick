@@ -1,5 +1,5 @@
 # `gluestick-plugin-bunyan`
-This plugin allows to use [bunyan](https://github.com/trentm/node-bunyan "bunyan") as a logger.
+This plugin allows you to use [bunyan](https://github.com/trentm/node-bunyan "bunyan") as a logger.
 
 ## How to use
 * Install plugin

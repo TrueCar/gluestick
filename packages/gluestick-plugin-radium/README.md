@@ -1,5 +1,5 @@
 # `gluestick-plugin-radium`
-This plugin allows to specify set of tools to manage inline styles on React elements.
+This plugin allows you to specify a set of tools to manage inline styles on React elements.
 
 ## How to use
 * Install plugin
