@@ -54,7 +54,7 @@ module.exports = (
   // configuration.module.rules[0].use[0].options.presets.push('react-hmre');
   configuration.output.publicPath = `http://${devServerHost}:${devServerPort}${configuration
     .output.publicPath}`;
-  configuration.output.crossOriginLoading = "anonymous";
+  configuration.output.crossOriginLoading = 'anonymous';
   // https://github.com/webpack/webpack/issues/3486
   configuration.performance = { hints: false };
   return configuration;
