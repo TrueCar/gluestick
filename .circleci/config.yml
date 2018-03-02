@@ -126,6 +126,8 @@ jobs:
       - attach_workspace:
           at: ~/gluestick
 
+      - checkout
+
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 
       - setup_remote_docker

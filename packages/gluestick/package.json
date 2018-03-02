@@ -1,6 +1,6 @@
 {
   "name": "gluestick",
-  "version": "1.14.0",
+  "version": "1.15.2-test.0",
   "description": "GlueStick is a command line interface for quickly developing universal web applications using React",
   "main": "shared/index.js",
   "bin": "bin/gluestick.js",
@@ -88,7 +88,7 @@
     "eventsource-polyfill": "0.9.6",
     "express": "4.15.3",
     "fs-extra": "4.0.0",
-    "gluestick-generators": "1.14.0",
+    "gluestick-generators": "1.15.2-test.0",
     "handlebars": "4.0.10",
     "http-proxy-middleware": "0.17.4",
     "ignore-loader": "0.1.2",
