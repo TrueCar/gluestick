@@ -41,8 +41,6 @@ const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
 const reduxEnhancers = require('redux-middlewares').enhancers;
 // $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
-// $FlowIgnore
-const cachingConfig = require('caching-config').default;
 
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
@@ -161,7 +159,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
           },
           { hooks, hooksHelper: hooksHelper.call },
           serverPlugins,
-          cachingConfig,
         );
       })
       .catch((error: Error) => {

@@ -13,13 +13,13 @@
   },
   "peerDependencies": {
     "gluestick": "1.14.0",
-    "react": "15.x"
+    "react": "16.x"
   },
   "dependencies": {
-    "radium": "0.18.1"
+    "radium": "0.19.5"
   },
   "devDependencies": {
     "gluestick": "1.14.0",
-    "react": "15.4.2"
+    "react": "16.2.0"
   }
 }
