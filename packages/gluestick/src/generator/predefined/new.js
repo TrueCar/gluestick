@@ -13,6 +13,9 @@ const templateDockerignore = require('../templates/dockerignore')(
   createTemplate,
 );
 const templateBabelrc = require('../templates/babelrc')(createTemplate);
+const templateConfigureEnzyme = require('../templates/configureEnzyme')(
+  createTemplate,
+);
 const templateHomeTest = require('../templates/HomeTest')(createTemplate);
 const templateMasterLayoutTest = require('../templates/MasterLayoutTest')(
   createTemplate,
@@ -57,9 +60,6 @@ const templateGluestickConfig = require('../templates/gluestick.config')(
   createTemplate,
 );
 const templateWebpackHooks = require('../templates/webpack.hooks')(
-  createTemplate,
-);
-const templateCachingServer = require('../templates/caching.server')(
   createTemplate,
 );
 const templateVendor = require('../templates/vendor')(createTemplate);
@@ -155,11 +155,6 @@ module.exports = (options: GeneratorOptions) => {
       filename: 'redux-middleware.js',
       template: templateReduxMiddleware,
     },
-    {
-      path: 'src/config',
-      filename: 'caching.server.js',
-      template: templateCachingServer,
-    },
     // Shared
     {
       path: 'src/shared/actions',
@@ -241,6 +236,11 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src/shared/reducers',
       filename: 'index.js',
       template: templateReducer,
+    },
+    {
+      path: 'src/__tests__',
+      filename: 'configureEnzyme.js',
+      template: templateConfigureEnzyme,
     },
     {
       path: 'src/apps/main/components/__tests__',

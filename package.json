@@ -65,5 +65,11 @@
       "\\.js$": "<rootDir>/jestTransform.js"
     },
     "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$"
-  }
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true
 }

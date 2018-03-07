@@ -45,12 +45,12 @@ const templatePackage = createTemplate`
     "postcss-calc": "5.3.1",
     "postcss-custom-properties": "5.0.2",
     "postcss-loader": "1.3.3",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
-    "react-helmet": "4.0.0",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-helmet": "5.2.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "5.0.4",
-    "react-router": "3.0.2",
+    "react-router": "3.2.0",
     "react-router-scroll": "0.4.2",
     "redux": "3.6.0",
     "redux-thunk": "2.2.0",
@@ -64,13 +64,17 @@ const templatePackage = createTemplate`
     "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
     "babel-plugin-react-transform": "2.0.2",
-    "enzyme": "2.7.1",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-16": "1.1.1",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
     "flow-bin": "0.45.0",
     "flow-typed": "^2.0.0",
     "react-addons-test-utils": "15.4.2",
     "redbox-react": "1.3.3"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./src/__tests__/configureEnzyme.js"
   }
 }
 `;
