@@ -59,6 +59,7 @@ const PROJECT_COMMANDS = [
   'destroy',
   'dockerize',
   'generate',
+  'print-help',
   'start',
   'start-client',
   'start-server',
