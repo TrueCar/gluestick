@@ -150,7 +150,6 @@ describe('renderer/middleware', () => {
       options,
       { hooks, hooksHelper },
       [],
-      {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
