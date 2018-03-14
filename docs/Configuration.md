@@ -1,6 +1,6 @@
 # Configuration
 
-There are few files which allows to configure GlueStick:
+There are few files which allow configuration of Gluestick:
 * [`src/entires.json`](./configuration/Apps.md) - define entries (apps)
 * [`src/vendor.js`](#vendoring) - Define vendored modules/packages
 * [`src/gluestick.hooks.js`](./configuration/CachingAndHooks.md#hooks) - define hooks which will run on specific lifecycle events
@@ -13,32 +13,34 @@ There are few files which allows to configure GlueStick:
 * [`src/config/redux-middleware.js`](#redux-config) - specify additional redux middleware and overwrite thunk middleware
 
 ## Redux config
-All redux configuration can be specified in `src/config/redux-middleware.js` file.
+All redux configuration can be specified in the `src/config/redux-middleware.js` file.
 
-The `default` export should return array of additional middlewares.
-To specify custom thunk middleware export it using named `thunkMiddleware` export:
+The `default` export should return an array of additional middlewares.
+To specify custom thunk middleware, export it using named `thunkMiddleware` export:
 ```
 export default []; // additional middlewares
 export const thunkMiddleware = thunk.withExtraArgument({ api: /* ... */ });
 ```
-This allows you to [inject custom argument](https://github.com/gaearon/redux-thunk#injecting-a-custom-argument).
+This allows you to [inject a custom argument](https://github.com/gaearon/redux-thunk#injecting-a-custom-argument).
 
 **IMPORTANT**: This configuration is project wide, meaning it will be used for every app/entrypoint.
-If you need to overwrite it for specific app/entrypoint, you must create configuration file for this
-app/entrypoint, update `src/entries.json` to use that file (more on this [here](./configuration/Apps.md)) and write additional property `reduxOptions: { middlewares: Function[], thunk: ?Function }`.
+If you need to overwrite it for a specific app/entrypoint, you must create a configuration file for this
+app/entrypoint, update `src/entries.json` to use that file (more on this [here](./configuration/Apps.md))
+and write an additional property `reduxOptions: { middlewares: Function[], thunk: ?Function }`.
 
 ## Global project config
 All project-wide configuration lives here in `src/config/application.js`.
 
-GlueStick itself will look only for those properties:
+GlueStick itself will look only for these properties:
 * `proxies` - setup additional proxies
 * `httpClient` - configure http client
 * `headContent` - configure page `<title>` element
 * `logger` - configure logger
 
-However, you can put your own properties here and read them by importing this files via alias `config/application`.
+However, you can put your own properties here and read them by importing this files via the alias
+`config/application`.
 
-In a nutshell, this configuration file have the following structure:
+This configuration file should have the following structure:
 ```typescript
 type HeadContent = {
   title: string;
@@ -82,14 +84,14 @@ export default config;
 
 
 ## Gluestick config
-To modify GlueStick config use `src/gluestick.config.js` file. It must return function or array of functions
+To modify the GlueStick config use `src/gluestick.config.js`. It must return a function or array of functions
 as a `default` export:
 ```
 export default config => config;
 // or
 export default [config => config];
 ```
-This function accepts gluestick config (`object`) as a first argument and must return modified
+This function accepts the gluestick config (`object`) as a first argument and must return the modified
 config.
 
 For example, this code snippet overwrites the default ports:
@@ -102,7 +104,7 @@ export default config => ({
   }
 })
 ```
-To modofy path to asset files (previously known as `assetPath`), define `publicPath` and assign a value in Gluestick config, for example:
+To modify the path to asset files (previously known as `assetPath`), define `publicPath` and assign a value in the Gluestick config, for example:
 ```
 export default config => ({
   ...config,
@@ -110,7 +112,7 @@ export default config => ({
 });
 ```
 
-To see how the default GlueStick config looks like navigate [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
+To see what the default GlueStick config looks like, see [here](https://github.com/TrueCar/gluestick/blob/staging/packages/gluestick/src/config/defaults/glueStickConfig.js).
 
 # Vendoring
 
@@ -120,7 +122,7 @@ used by either:
 * `CommonsChunkPlugin`:
   * build vendor as a normal bundle
   * rebuild automatically when changed
-  * preferd for code that changes _kind of_ frequently at a cost of increased build time
+  * preferred for code that changes _kind of_ frequently at a cost of increased build time
   * automatic common modules extraction to vendor bundle
   * great for smaller and medium sized projects
 
@@ -129,22 +131,22 @@ or
 * `DllPlugin`:
   * create Dynamicaly Linked Library with vendored modules
   * no automatic rebuilds
-  * prefered for code that change rerely
+  * prefered for code that changes rarely
   * shared between parallel builds
   * great for bigger projects
 
-`CommonsChunkPlugin` is the default used plugin, since it doesn't require any changes to be made or commands
+`CommonsChunkPlugin` is used by default, since it doesn't require any changes to be made or commands
 to be run.
 
 > Please note, that `CommonsChunkPlugin` and `DllPlugin` are __not interoperable__, so it's up to you to decide
 which one suits your project better.
 
 If you want to use `DllPlugin`, you firstly need to execute `gluestick build --vendor` (for production add `NODE_ENV=production` when running the command), before building any other app.
-This command will create files (including your vendor DLL bundle) under `build/assets/dlls`. Now if you `build` or `start` an app or whole project, it will use vendor DLL bundle.
+This command will create files (including your vendor DLL bundle) under `build/assets/dlls`. Now if you `build` or `start` an app or the whole project, it will use the vendor DLL bundle.
 
-`DllPlugin` is the essential part that allows for app builds parallelisation.
-In order to split app builds you, firstly need to have vendor DLL bundle compiled and available for each
-build thread/process, then to build a single app use `gluestick build --client -A /<appName>` command.
+`DllPlugin` is the essential part that allows for app build parallelisation.
+In order to split app builds you, firstly you need to have the vendor DLL bundle compiled and available for each
+build thread/process, then to build a single app use `gluestick build --client -A /<appName>`.
 
-Also remember to build server/renderer bundle as well - `gluestick build --server`.
+Also remember to build the server/renderer bundle as well - `gluestick build --server`.
 
