@@ -50,7 +50,7 @@ defaults:
   - &job-defaults
       working_directory: ~/gluestick
       docker:
-        - image: circleci/node:6.11.3
+        - image: circleci/node:8
 
 version: 2
 jobs:
@@ -58,6 +58,9 @@ jobs:
     <<: *job-defaults
     steps:
       - checkout
+
+      - attach_workspace:
+          at: ~/gluestick
     
       - run:
           command: cat packages/gluestick-*/package.json > packages_checksum
@@ -74,25 +77,32 @@ jobs:
       - save_cache: *save-gluestick-cache
 
       - save_cache: *save-repo-cache
+
+      - persist_to_workspace:
+          root: .
+          paths: .
   
   lint:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run lint
   
   flow:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run flow
 
   test:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run test --coverage
 
@@ -104,7 +114,8 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: yarn run build
       - run: yarn run e2e
@@ -112,7 +123,10 @@ jobs:
   deploy:
     <<: *job-defaults
     steps:
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
+
+      - checkout
 
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
 
@@ -122,7 +136,7 @@ jobs:
       - run: git config --global user.name "CircleCI"
       - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - run: docker pull node:6.10-slim
+      - run: docker pull node:8-slim
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run: BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG  
 
@@ -131,7 +145,8 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache: *restore-repo-cache
+      - attach_workspace:
+          at: ~/gluestick
 
       - run: |
           git diff --name-only HEAD~1 HEAD
@@ -199,4 +214,3 @@ workflows:
               only: /v\d+\.\d+\.\d+.*/
             branches:
               only: staging
-  

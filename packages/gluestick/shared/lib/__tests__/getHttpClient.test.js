@@ -23,12 +23,23 @@ describe('lib/getHttpClient', () => {
         },
         config: {
           headers: {},
+          baseURL: 'http://hola.com',
         },
-        get: fakeResponse => {
+        get: (url, fakeResponse) => {
+          i.config.url = /^https?:\/\//.test(url)
+            ? url
+            : `${i.config.baseURL}${url}`;
+          const modifiedFakeResponse = {
+            ...fakeResponse,
+            config: {
+              url,
+              baseURL: i.config.baseURL,
+            },
+          };
           return {
             request: i.interceptors.request.middleware.map(m => m(i.config)),
             response: i.interceptors.response.middleware.map(m =>
-              m(fakeResponse),
+              m(modifiedFakeResponse),
             ),
           };
         },
@@ -89,7 +100,7 @@ describe('lib/getHttpClient', () => {
     expect(axiosMock.create.mock.calls[0][0]).toEqual(expectedResult);
   });
 
-  it('should merge request headers if request object is passed', () => {
+  it('should merge request headers if request object is passed and client request matches host', () => {
     const options = {
       headers: {
         'X-Todd': 'Hi',
@@ -100,21 +111,31 @@ describe('lib/getHttpClient', () => {
     const req = {
       headers: {
         cookie: 'name=Lincoln',
-        host: 'hola.com:332211',
+        host: 'hola.com',
       },
     };
-    getHttpClient(options, req, {}, axiosMock);
-    expect(axiosMock.create).not.toBeCalledWith(options);
+    const client = getHttpClient(options, req, {}, axiosMock);
+    const request = client.get('/api');
+    expect(request.request[0].headers).toEqual(req.headers);
+  });
 
-    const { headers, ...config } = options;
-    expect(axiosMock.create.mock.calls[0][0]).toEqual({
-      baseURL: `http://${req.headers.host}`,
+  it('should not merge request headers if request object is passed and client request does not matches host', () => {
+    const options = {
       headers: {
-        ...req.headers,
-        ...headers,
+        'X-Todd': 'Hi',
+        test: 'best',
       },
-      ...config,
-    });
+      test2: 'hi',
+    };
+    const req = {
+      headers: {
+        cookie: 'name=Lincoln',
+        host: 'hola.com',
+      },
+    };
+    const client = getHttpClient(options, req, {}, axiosMock);
+    const request = client.get('http://google.com/api');
+    expect(request.request[0].headers).toEqual({});
   });
 
   it('should set baseURL with https if req.secure is true', () => {
@@ -149,7 +170,7 @@ describe('lib/getHttpClient', () => {
     const req = {
       headers: {
         cookie: 'name=Lincoln',
-        host: 'hola.com:332211',
+        host: 'hola.com',
       },
       secure: false,
     };
@@ -161,7 +182,7 @@ describe('lib/getHttpClient', () => {
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
-    client.get({
+    client.get('http://hola.com', {
       headers: {
         'set-cookie': ['oh=hai'],
       },
@@ -171,6 +192,31 @@ describe('lib/getHttpClient', () => {
       'Set-Cookie',
       'oh=hai',
     ]);
+  });
+
+  it('should not forward along cookies back to the browser if it is a different host', () => {
+    const req = {
+      headers: {
+        cookie: 'name=Lincoln',
+        host: 'hola.com',
+      },
+      secure: false,
+    };
+
+    const mockServerResponse = {
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
+    };
+
+    const client = getHttpClient({}, req, mockServerResponse, axiosMock);
+    client.get('http://audios.com', {
+      headers: {
+        'set-cookie': ['oh=hai'],
+      },
+    });
+
+    expect(mockServerResponse.append.mock.calls[0]).toEqual(undefined);
   });
 
   it('should send received cookies in subsequent requests with the same instance', () => {
@@ -192,18 +238,49 @@ describe('lib/getHttpClient', () => {
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
-    client.get({
+    client.get('http://hola.com/api/1', {
       headers: {
         'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
       },
     });
-    const { request } = client.get({
+    const { request } = client.get('http://hola.com/api/1', {
       headers: {},
     });
 
     expect(request[0].headers.cookie).toEqual(
       'name=Lincoln; _some_cookie=abc; another_cookie=something',
     );
+  });
+
+  it('should not send received cookies in subsequent requests with the same instance if host is different', () => {
+    const req = {
+      headers: {
+        cookie: 'name=Lincoln',
+        host: 'hola.com',
+      },
+      secure: false,
+    };
+
+    const mockServerResponse = {
+      removeHeader: jest.fn(),
+      cookie: jest.fn(),
+      append: jest.fn(),
+      headers: {
+        'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
+      },
+    };
+
+    const client = getHttpClient({}, req, mockServerResponse, axiosMock);
+    client.get('http://audios.com/api/1', {
+      headers: {
+        'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
+      },
+    });
+    const { request } = client.get('http://hola.com/api/1', {
+      headers: {},
+    });
+
+    expect(request[0].headers.cookie).toEqual('name=Lincoln');
   });
 
   it('should not send received cookies in subsequent requests with a new instance', () => {
@@ -225,14 +302,14 @@ describe('lib/getHttpClient', () => {
     };
 
     const client = getHttpClient({}, req, mockServerResponse, axiosMock);
-    client.get({
+    client.get('http://hola.com/api/1', {
       headers: {
         'set-cookie': ['_some_cookie=abc', 'another_cookie=something'],
       },
     });
 
     const newClient = getHttpClient({}, req, mockServerResponse, axiosMock);
-    const { request } = newClient.get({
+    const { request } = newClient.get('http://hola.com/api/1', {
       headers: {},
     });
 

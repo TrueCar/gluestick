@@ -12,7 +12,6 @@ import type {
   GSHooks,
   ServerPlugin,
   RenderMethod,
-  ComponentsCachingConfig,
 } from '../types';
 
 const render = require('./render');
@@ -34,6 +33,7 @@ type Options = {
   entryWrapperConfig: Object,
   reduxMiddlewares: any[],
   thunkMiddleware: ?Function,
+  reduxEnhancers: any[],
 };
 
 type EntriesArgs = {
@@ -55,18 +55,16 @@ module.exports = async function gluestickMiddleware(
     entryWrapperConfig: {},
     reduxMiddlewares: [],
     thunkMiddleware: null,
+    reduxEnhancers: [],
   },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
-  cachingConfig: ?ComponentsCachingConfig,
 ) {
   /**
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
-    // If we have cached item then render it.
-    cacheManager.enableComponentCaching(cachingConfig);
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
@@ -91,13 +89,18 @@ module.exports = async function gluestickMiddleware(
     const httpClient: Function = getHttpClient(httpClientOptions, req, res);
 
     // Allow to specify different redux config
-    const reduxOptions =
+    const globalOptions = {
+      middlewares: options.reduxMiddlewares,
+      thunk: options.thunkMiddleware,
+      enhancers: options.reduxEnhancers,
+    };
+
+    const appOptions =
       requirements.config && requirements.config.reduxOptions
         ? requirements.config.reduxOptions
-        : {
-            middlewares: options.reduxMiddlewares,
-            thunk: options.thunkMiddleware,
-          };
+        : {};
+
+    const reduxOptions = { ...globalOptions, ...appOptions };
 
     const store: Object = createStore(
       httpClient,

@@ -36,12 +36,11 @@ const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
-// $FlowIgnore
 const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
 // $FlowIgnore
-const entriesPlugins = require('project-entries').plugins;
+const reduxEnhancers = require('redux-middlewares').enhancers;
 // $FlowIgnore
-const cachingConfig = require('caching-config').default;
+const entriesPlugins = require('project-entries').plugins;
 
 const hooksHelper = require('./helpers/hooks');
 const prepareServerPlugins = require('../plugins/prepareServerPlugins');
@@ -153,13 +152,13 @@ module.exports = function startRenderer({ config, logger }: Context) {
           {
             reduxMiddlewares,
             thunkMiddleware,
+            reduxEnhancers,
             envVariables,
             httpClient: applicationConfig.httpClient || {},
             entryWrapperConfig: {},
           },
           { hooks, hooksHelper: hooksHelper.call },
           serverPlugins,
-          cachingConfig,
         );
       })
       .catch((error: Error) => {

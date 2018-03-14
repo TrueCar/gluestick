@@ -2,9 +2,11 @@
   "name": "gluestick-packages",
   "scripts": {
     "lerna": "lerna",
-    "yarn:install": "lerna exec --concurrency=1 -- yarn",
+    "yarn:install": "lerna exec --concurrency=1 -- yarn install",
+    "yarn:install:ci": "lerna exec --concurrency=1 -- yarn install --frozen-lockfile",
     "install:npm": "npm install && npm run build && lerna bootstrap",
-    "install:yarn": "yarn && yarn run build && yarn run yarn:install && lerna bootstrap --concurrency=1",
+    "install:yarn": "yarn install && yarn run build && yarn run yarn:install && lerna bootstrap --concurrency=1",
+    "install:yarn:ci": "yarn install --frozen-lockfile && yarn run build && yarn run yarn:install:ci && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "jest --bail --no-cache -i",
     "test-coverage": "npm run test -- --coverage",
@@ -63,5 +65,11 @@
       "\\.js$": "<rootDir>/jestTransform.js"
     },
     "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$"
-  }
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true
 }

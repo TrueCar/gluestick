@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import type { Axios, AxiosExport } from 'axios';
+import { parse as parseURL } from 'url';
 import { merge, parse } from './cookies';
 
 /**
@@ -48,7 +49,6 @@ export default function getHttpClient(
   client = httpClient.create({
     baseURL: protocol + req.headers.host,
     headers: {
-      ...req.headers,
       ...headers,
     },
     ...httpConfig,
@@ -61,18 +61,33 @@ export default function getHttpClient(
   // along with any new cookies that we have received in API calls to fullfill
   // this request.
   client.interceptors.request.use((config: Object) => {
+    // If the client sends a request during SSR to a domain other than the
+    // hostname that was part of the original request. Don't forward cookies to
+    // the destination
+    if (!hostMatch(config)) {
+      return config;
+    }
+
     // convert incoming cookies to outgoing cookies, strip off the options with
     // `toString(false)`
     const newCookies: string = parse(incomingCookies)
       .map(c => c.toString(false))
       .join('; ');
+
+    // since it is the same host, copy over headers that were sent in the
+    // original request
+    const modifiedHeaders = {
+      ...req.headers,
+      ...config.headers,
+    };
+
     const output: Object = {
       ...config,
       headers: {
-        ...config.headers,
+        ...modifiedHeaders,
         cookie: merge(
           outgoingCookies,
-          merge(config.headers.cookie, newCookies),
+          merge(modifiedHeaders.cookie, newCookies),
         ),
       },
     };
@@ -81,18 +96,18 @@ export default function getHttpClient(
   });
 
   client.interceptors.response.use(response => {
+    // If the client gets a response during SSR from a domain other than the
+    // hostname that was part of the original request. Don't forward cookies
+    // back to the browser.
+    if (!hostMatch(response.config)) {
+      return response;
+    }
+
     const cookiejar: ?(string[]) = response.headers['set-cookie'];
 
     if (Array.isArray(cookiejar)) {
       const cookieString: string = cookiejar.join('; ');
 
-      // @TODO: This will append all of the cookies sent back from server side
-      // requests in the initial page load. There is a potential issue if you are
-      // hitting 3rd party APIs. If site A sets a cookie and site B sets a cookie
-      // with the same key, then it will overwrite A's cookie and possibly create
-      // undesired effects. Currently, the suggested solution for dealing with
-      // this problem is to make the API requests to A or B in the browser and
-      // not in gsBeforeRoute for apps where that is an issue.
       const mergedCookieString: string = merge(incomingCookies, cookieString);
       const cookies: Object[] = parse(mergedCookieString);
       try {
@@ -129,4 +144,12 @@ export default function getHttpClient(
   }
 
   return client;
+}
+
+function hostMatch(config) {
+  if (!config || !config.baseURL || !config.url) {
+    return false;
+  }
+
+  return parseURL(config.baseURL).host === parseURL(config.url).host;
 }

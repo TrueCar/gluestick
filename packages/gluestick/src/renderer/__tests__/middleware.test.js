@@ -89,6 +89,7 @@ const options = {
   entryWrapperConfig: {},
   reduxMiddlewares: [],
   thunkMiddleware: null,
+  reduxEnhancers: [],
 };
 
 const getEntries = (routes): Entries => ({
@@ -149,7 +150,6 @@ describe('renderer/middleware', () => {
       options,
       { hooks, hooksHelper },
       [],
-      {},
     );
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);

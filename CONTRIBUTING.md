@@ -11,7 +11,7 @@ To minimize problems with symlinks, please use [Yarn](https://yarnpkg.com/lang/e
 1. `git clone https://github.com/TrueCar/gluestick.git`
 1. `cd gluestick`
 1. `yarn run install:yarn`
-1. `yarn global add file:./packages/gluestick-cli` (If you haven't done it already)
+1. `yarn global add file:$PWD/packages/gluestick-cli` (If you haven't done it already)
 
 Now, you're ready to go.
 

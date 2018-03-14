@@ -34,6 +34,7 @@ const buildEntries = (
             entries[entry].config ||
             `${gluestickConfig.configPath}/${gluestickConfig.applicationConfigPath}`,
           plugins,
+          enableErrorOverlay: gluestickConfig.enableErrorOverlay,
         },
       },
       logger,

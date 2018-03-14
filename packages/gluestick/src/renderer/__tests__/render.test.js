@@ -130,14 +130,14 @@ describe('renderer/render', () => {
     if (email) {
       expect(results.rootElement.props.head).toBeNull();
       expect(results.rootElement.props.body.props.html).not.toContain(
-        'data-reactid',
+        'data-reactroot',
       );
       expect(results.rootElement.props.body.props.html).toBeDefined();
     } else {
       expect(results.rootElement.props.head).not.toBeNull();
       if (!renderMethod) {
         expect(results.rootElement.props.body.props.html).toContain(
-          'data-reactid',
+          'data-reactroot',
         );
       }
     }

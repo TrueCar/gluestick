@@ -37,6 +37,7 @@ export type GSConfig = {
     added: string[],
     changed: string[],
   },
+  enableErrorOverlay: boolean,
   [key: string]: any,
 };
 
@@ -210,11 +211,7 @@ export type ComponentCachingConfig = {
   ignoreKeys?: string[],
   whiteListNonStringKeys?: string[],
 };
-export type ComponentsCachingConfig = {
-  compontens?: {
-    [key: string]: ComponentCachingConfig,
-  },
-};
+
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
 export type SetCacheIfProd = (
   req: Request,
@@ -222,11 +219,10 @@ export type SetCacheIfProd = (
   maxAge?: number,
   cache?: Object,
 ) => void;
-export type EnableComponentCaching = (config: ?ComponentsCachingConfig) => void;
+
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd,
   setCacheIfProd: SetCacheIfProd,
-  enableComponentCaching: EnableComponentCaching,
 };
 
 export type MismatchedModules = {

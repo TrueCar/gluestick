@@ -63,10 +63,6 @@ module.exports = (
     gluestickConfig.configPath,
     gluestickConfig.applicationConfigPath,
   );
-  config.resolve.alias['caching-config'] = path.join(
-    process.cwd(),
-    gluestickConfig.cachingConfigPath,
-  );
   if (!noProgress) {
     config.plugins.push(progressHandler(logger, 'server'));
   }
