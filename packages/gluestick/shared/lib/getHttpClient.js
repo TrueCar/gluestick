@@ -110,9 +110,17 @@ export default function getHttpClient(
 
       const mergedCookieString: string = merge(incomingCookies, cookieString);
       const cookies: Object[] = parse(mergedCookieString);
-      res.removeHeader('Set-Cookie');
+      try {
+        res.removeHeader('Set-Cookie');
+      } catch (e) {
+        console.error(e.message ? e.message : e);
+      }
       cookies.forEach((cookie: Object) => {
-        res.append('Set-Cookie', cookie.toString());
+        try {
+          res.append('Set-Cookie', cookie.toString());
+        } catch (e) {
+          console.error(e.message ? e.message : e, cookie.name);
+        }
       });
 
       // Ensure that any subsequent requests are passing the cookies.
