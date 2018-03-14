@@ -3,7 +3,7 @@
 Removes Flash of Unstyled Content (FOUC) in development.
 
 ## How it works
-All styles will be extracted to css file using `ExtractTextWebpackPlugin` then, the file will be linked by server/renderer and added to `<head>` element. It sits side-by-side with `style-loader`, so you can still use HMR.
+All styles will be extracted to a css file using `ExtractTextWebpackPlugin` then, the file will be linked by server/renderer and added to `<head>` element. It sits side-by-side with `style-loader`, so you can still use HMR.
 
 __In production this plugin does nothing.__
 
