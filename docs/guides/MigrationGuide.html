@@ -1,0 +1,803 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>1.x Migration Guide · Gluestick</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../Commands.html" />
+    
+    
+    <link rel="prev" href="../gettingStarted/PrefetchingWithFetchData.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="ProfilingRenderer.html">
+            
+                <a href="ProfilingRenderer.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    Profiling renderer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    Getting started
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../gettingStarted/CreatingNewApp.html">
+            
+                <a href="../gettingStarted/CreatingNewApp.html">
+            
+                    
+                        <b>1.2.2.1.</b>
+                    
+                    Creating a new application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../gettingStarted/RunningApp.html">
+            
+                <a href="../gettingStarted/RunningApp.html">
+            
+                    
+                        <b>1.2.2.2.</b>
+                    
+                    Running your application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../gettingStarted/HotModuleReplacement.html">
+            
+                <a href="../gettingStarted/HotModuleReplacement.html">
+            
+                    
+                        <b>1.2.2.3.</b>
+                    
+                    Hot Module Replacement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../gettingStarted/GeneratingContainer.html">
+            
+                <a href="../gettingStarted/GeneratingContainer.html">
+            
+                    
+                        <b>1.2.2.4.</b>
+                    
+                    Generating a Container
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../gettingStarted/GeneratingComponent.html">
+            
+                <a href="../gettingStarted/GeneratingComponent.html">
+            
+                    
+                        <b>1.2.2.5.</b>
+                    
+                    Generating a Component
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../gettingStarted/GeneratingReducer.html">
+            
+                <a href="../gettingStarted/GeneratingReducer.html">
+            
+                    
+                        <b>1.2.2.6.</b>
+                    
+                    Generating a Reducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.7" data-path="../gettingStarted/HookingUpData.html">
+            
+                <a href="../gettingStarted/HookingUpData.html">
+            
+                    
+                        <b>1.2.2.7.</b>
+                    
+                    Hooking up your data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.8" data-path="../gettingStarted/TurnOffJavaScript.html">
+            
+                <a href="../gettingStarted/TurnOffJavaScript.html">
+            
+                    
+                        <b>1.2.2.8.</b>
+                    
+                    Turn off JavaScript
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.9" data-path="../gettingStarted/GenerateСomponentTodos.html">
+            
+                <a href="../gettingStarted/GenerateСomponentTodos.html">
+            
+                    
+                        <b>1.2.2.9.</b>
+                    
+                    Generate a component for adding todos
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.10" data-path="../gettingStarted/MakeActionCreator.html">
+            
+                <a href="../gettingStarted/MakeActionCreator.html">
+            
+                    
+                        <b>1.2.2.10.</b>
+                    
+                    Make an action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.11" data-path="../gettingStarted/HookUpActionCreator.html">
+            
+                <a href="../gettingStarted/HookUpActionCreator.html">
+            
+                    
+                        <b>1.2.2.11.</b>
+                    
+                    Hook up your action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.12" data-path="../gettingStarted/AsynchronousActionCreators.html">
+            
+                <a href="../gettingStarted/AsynchronousActionCreators.html">
+            
+                    
+                        <b>1.2.2.12.</b>
+                    
+                    Asynchronous action creators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.13" data-path="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                <a href="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                    
+                        <b>1.2.2.13.</b>
+                    
+                    Prefetching data with fetchData
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3" data-path="MigrationGuide.html">
+            
+                <a href="MigrationGuide.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    1.x Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Commands.html">
+            
+                <a href="../Commands.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    Commands
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../Configuration.html">
+            
+                <a href="../Configuration.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../configuration/Apps.html">
+            
+                <a href="../configuration/Apps.html">
+            
+                    
+                        <b>1.4.1.</b>
+                    
+                    Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../configuration/CachingAndHooks.html">
+            
+                <a href="../configuration/CachingAndHooks.html">
+            
+                    
+                        <b>1.4.2.</b>
+                    
+                    Caching & hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../configuration/EnvDetails.html">
+            
+                <a href="../configuration/EnvDetails.html">
+            
+                    
+                        <b>1.4.3.</b>
+                    
+                    Environment details
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../configuration/Plugins.html">
+            
+                <a href="../configuration/Plugins.html">
+            
+                    
+                        <b>1.4.4.</b>
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../configuration/Styles.html">
+            
+                <a href="../configuration/Styles.html">
+            
+                    
+                        <b>1.4.5.</b>
+                    
+                    Styles
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Generators.html">
+            
+                <a href="../Generators.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    Generators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../Development.html">
+            
+                <a href="../Development.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    Development
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../CONTRIBUTING.html">
+            
+                <a href="../../CONTRIBUTING.html">
+            
+                    
+                        <b>1.7.</b>
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >1.x Migration Guide</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="1x-migration-guide">1.x Migration Guide</h1>
+<p>This migration guide is divided into 4 parts:</p>
+<ul>
+<li><a href="#project-overview">Project overview</a></li>
+<li><a href="#apps-and-shared-code">Apps and shared code</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#other-breaking-changes">Other breaking changes</a></li>
+</ul>
+<h2 id="project-overview">Project overview</h2>
+<p>Before diving deeper, it&apos;s essential to familiarize yourself with the new project structure.</p>
+<p>Here is project <code>src</code> directory tree generated by the <code>gluestick new</code> command:</p>
+<pre class="language-"><code>src
+&#x251C;&#x2500;&#x2500; apps
+&#x2502;   &#x2514;&#x2500;&#x2500; main
+&#x2502;       &#x251C;&#x2500;&#x2500; Index.js
+&#x2502;       &#x251C;&#x2500;&#x2500; actions
+&#x2502;       &#x251C;&#x2500;&#x2500; components
+&#x2502;       &#x2502;   &#x251C;&#x2500;&#x2500; Home.css
+&#x2502;       &#x2502;   &#x251C;&#x2500;&#x2500; Home.js
+&#x2502;       &#x2502;   &#x251C;&#x2500;&#x2500; MasterLayout.js
+&#x2502;       &#x2502;   &#x2514;&#x2500;&#x2500; __tests__
+&#x2502;       &#x2502;       &#x251C;&#x2500;&#x2500; Home.test.js
+&#x2502;       &#x2502;       &#x2514;&#x2500;&#x2500; MasterLayout.test.js
+&#x2502;       &#x251C;&#x2500;&#x2500; containers
+&#x2502;       &#x2502;   &#x251C;&#x2500;&#x2500; HomeApp.js
+&#x2502;       &#x2502;   &#x251C;&#x2500;&#x2500; NoMatchApp.js
+&#x2502;       &#x2502;   &#x2514;&#x2500;&#x2500; __tests__
+&#x2502;       &#x2502;       &#x251C;&#x2500;&#x2500; HomeApp.test.js
+&#x2502;       &#x2502;       &#x2514;&#x2500;&#x2500; NoMatchApp.test.js
+&#x2502;       &#x251C;&#x2500;&#x2500; reducers
+&#x2502;       &#x2502;   &#x2514;&#x2500;&#x2500; index.js
+&#x2502;       &#x2514;&#x2500;&#x2500; routes.js
+&#x251C;&#x2500;&#x2500; config
+&#x2502;   &#x251C;&#x2500;&#x2500; .Dockerfile
+&#x2502;   &#x251C;&#x2500;&#x2500; application.js
+&#x2502;   &#x251C;&#x2500;&#x2500; application.server.js
+&#x2502;   &#x251C;&#x2500;&#x2500; caching.server.js
+&#x2502;   &#x251C;&#x2500;&#x2500; init.browser.js
+&#x2502;   &#x251C;&#x2500;&#x2500; redux-middleware.js
+&#x2502;   &#x2514;&#x2500;&#x2500; webpack-additions.js
+&#x251C;&#x2500;&#x2500; entries.json
+&#x251C;&#x2500;&#x2500; gluestick.hooks.js
+&#x251C;&#x2500;&#x2500; gluestick.plugins.js
+&#x251C;&#x2500;&#x2500; shared
+&#x2502;   &#x251C;&#x2500;&#x2500; actions
+&#x2502;   &#x251C;&#x2500;&#x2500; components
+&#x2502;   &#x251C;&#x2500;&#x2500; containers
+&#x2502;   &#x2514;&#x2500;&#x2500; reducers
+&#x2502;       &#x2514;&#x2500;&#x2500; index.js
+&#x2514;&#x2500;&#x2500; webpack.hooks.js
+</code></pre><blockquote>
+<p>Apart from the <code>src</code> directory, the <code>new</code> command will also create other files in the root folder, outside of <code>src</code>, such as <code>.eslintrc</code>, <code>.flowconfig</code>, <code>package.json</code> etc. However, they do not need any special treatment.</p>
+</blockquote>
+<p>The <code>src</code> directory consists of 3 essential parts:</p>
+<ul>
+<li><code>apps</code> - contains apps</li>
+<li><code>config</code> - project-wide configurations</li>
+<li><code>shared</code> - shared actions, components, containers, etc between apps</li>
+</ul>
+<h1 id="apps-and-shared-code">Apps and shared code</h1>
+<p>As described in the previous section all apps reside inside the <code>src/apps</code> directory. Each app has its own folder and each one must have at least one root component (by default it&apos;s <code>Index.js</code>), routes (<code>routes.js</code>) and a reducers object (<code>reducers/index.js</code>).</p>
+<p>As you can see, it is similar to the GlueStick 0.x project structure, so you will only need to update the paths in <code>import</code> statements and the reducers index.</p>
+<p>For example, if previously there was:</p>
+<pre class="language-"><code>import SomeComponent from &apos;components/SomeComponent&apos;;
+</code></pre><p>now you must specify <em>who owns this component</em> - whether it&apos;s <code>shared</code> or inside some app:</p>
+<pre class="language-"><code>import SomeComponent from &apos;shared/components/SomeComponent&apos;;
+// or
+import SomeComponent from &apos;myApp/components/SomeComponent&apos;;
+</code></pre><p>The same goes for <code>actions</code>, <code>containers</code> etc.</p>
+<p>Here is the list of all available aliases:</p>
+<ul>
+<li><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>appName</span><span class="token punctuation">&gt;</span></span></code> - path to <code>appName</code> app</li>
+<li><code>root</code> - path to project root directory</li>
+<li><code>src</code> - path to project source directory</li>
+<li><code>assets</code> - path to assets directory (<code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>root</span><span class="token punctuation">&gt;</span></span>/assets</code>)</li>
+<li><code>shared</code> - path to shared code (<code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>src</span><span class="token punctuation">&gt;</span></span>/shared</code>)</li>
+<li><code>config</code> - path to configurations (<code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>src</span><span class="token punctuation">&gt;</span></span>/config</code>)</li>
+<li><code>apps</code> - path to apps (<code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>src</span><span class="token punctuation">&gt;</span></span>/apps</code>)</li>
+<li><code>compiled</code> - path to <code>node_modules</code> module which needs to be parsed by webpack loaders (by default all modules from <code>node_modules</code> will be marked as external in server bundle, which means they won&apos;t be parsed by loaders, so in case you need the module to be transpiled or if it&apos;s a css/scss file you need to prefix it with this alias eg: <code>import &apos;compiled/normalize.css&apos;</code>)</li>
+</ul>
+<p>Previously the <code>reducers/index.js</code> file was re-exporting reducers:</p>
+<pre class="language-"><code>export { default as myReducer } from &apos;./myReducer&apos;;
+</code></pre><p>but now it needs to export a single object with <code>key</code>: <code>reducer</code> pairs:</p>
+<pre class="language-"><code>import myReducer from &apos;./myReducer&apos;;
+
+export default {
+  myReducer,
+}
+</code></pre><h2 id="configuration">Configuration</h2>
+<p>The most important file is <code>entries.json</code>, since it defines every entrypoint for webpack:</p>
+<pre class="language-"><code class="lang-json"><span class="token punctuation">{</span>
+  <span class="token property">&quot;/&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">&quot;component&quot;</span><span class="token operator">:</span> <span class="token string">&quot;src/apps/main/Index.js&quot;</span><span class="token punctuation">,</span>
+    <span class="token property">&quot;routes&quot;</span><span class="token operator">:</span> <span class="token string">&quot;src/apps/main/routes.js&quot;</span><span class="token punctuation">,</span>
+    <span class="token property">&quot;reducers&quot;</span><span class="token operator">:</span> <span class="token string">&quot;src/apps/main/reducers&quot;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>An app is also referred to as an <code>entrypoint</code>, since every app will later become a single webpack entrypoint.</p>
+</blockquote>
+<p><code>entries.json</code> must be an object with <code>key</code>: <code>object</code> pairs. Each entry defines single entrypoint for webpack.</p>
+<ul>
+<li><code>key</code> (in this example it&apos;s <code>&quot;/&quot;</code>) is a url-like path to where entrypoint is mounted</li>
+<li><code>component</code> is a path to root app component</li>
+<li><code>routes</code> is a path to app routes</li>
+<li><code>reducers</code> is a path to reducers object (reducers index)`</li>
+</ul>
+<blockquote>
+<p><strong>IMPORTANT</strong>: entrypoint <code>key</code> must be the same as <code>path</code> prop in top-level <code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Route</span><span class="token punctuation">&gt;</span></span></code> component in <code>routes</code> file.</p>
+</blockquote>
+<p>If the entrypoint <code>key</code> is too verbose you can specify an alternative alias using the <code>name</code> field:</p>
+<pre class="language-"><code>{
+  &quot;/very-long-entry-key&quot;: {
+    &quot;name&quot;: &quot;shortName&quot;,
+    ...
+  }
+}
+</code></pre><p>More about <code>entries.json</code> can be found <a href="Apps.md">here</a></p>
+<p>There are also other files:</p>
+<ul>
+<li><a href="CachingAndHooks.md#hooks"><code>gluestick.hooks.js</code></a> - <code>init.server.js</code> is no longer supported and the code should be moved to <code>preInitServer</code> hook</li>
+<li><a href="Plugins.md"><code>gluestick.plugins.js</code></a> - specify plugins to use</li>
+<li><a href="CachingAndHooks.md#webpack-hooks"><code>webpack.hooks.js</code></a> - overwrite webpack config</li>
+<li><a href="CachingAndHooks.md#caching"><code>caching.server.js</code></a></li>
+</ul>
+<p>To use <code>config/webpack-additions.js</code> and/or <code>config/application.server.js</code> you must need <code>gluestick-config-legacy</code> plugin installed and enabled, however the recommended approach is to use <code>webpack.hooks.js</code>, since at some point in the future <code>gluestick-config-legacy</code> will be deprecated.</p>
+<p><code>config/redux-middleware.js</code> and <code>config/application.js</code> works as before.</p>
+<h1 id="other-breaking-changes">Other breaking changes</h1>
+<ul>
+<li><code>promiseMiddleware</code> returns <code>payload</code> instead of <code>value</code> in <code>action</code> object used by reducers</li>
+<li><code>axios</code> (update to <code>0.15.3</code>) in <code>catch</code> handler passes instance of <code>Error</code> with <code>response</code> property instead of just <code>response</code>, see associated PR <a href="https://github.com/mzabriskie/axios/pull/345/files#diff-b19c56bc1192e2f4840a79ffebfe1d7bR18" target="_blank">here</a>.</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../gettingStarted/PrefetchingWithFetchData.html" class="navigation navigation-prev " aria-label="Previous page: Prefetching data with fetchData">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../Commands.html" class="navigation navigation-next " aria-label="Next page: Commands">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"1.x Migration Guide","level":"1.2.3","depth":2,"next":{"title":"Commands","level":"1.3","depth":1,"path":"docs/Commands.md","ref":"docs/Commands.md","articles":[]},"previous":{"title":"Prefetching data with fetchData","level":"1.2.2.13","depth":3,"path":"docs/gettingStarted/PrefetchingWithFetchData.md","ref":"docs/gettingStarted/PrefetchingWithFetchData.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/TrueCar/gluestick/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/TrueCar/gluestick/tree/next"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Gluestick","gitbook":">=3.2.3"},"file":{"path":"docs/guides/MigrationGuide.md","mtime":"2018-03-14T16:24:59.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-14T16:30:59.461Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

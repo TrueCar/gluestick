@@ -25,7 +25,7 @@
     "flow-typed": "2.1.5",
     "gitbook": "^3.2.3",
     "gitbook-cli": "^2.3.2",
-    "gitbook-plugin-anchorjs": "^1.1.1",
+    "gitbook-plugin-anchorjs": "2.0.0",
     "gitbook-plugin-edit-link": "^2.0.2",
     "gitbook-plugin-github": "2.0.0",
     "gitbook-plugin-prism": "^2.3.0",

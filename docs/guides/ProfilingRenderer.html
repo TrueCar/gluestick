@@ -1,0 +1,693 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Profiling renderer · Gluestick</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="ProfilingRenderer.html">
+            
+                <a href="ProfilingRenderer.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    Profiling renderer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    Getting started
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../gettingStarted/CreatingNewApp.html">
+            
+                <a href="../gettingStarted/CreatingNewApp.html">
+            
+                    
+                        <b>1.2.2.1.</b>
+                    
+                    Creating a new application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../gettingStarted/RunningApp.html">
+            
+                <a href="../gettingStarted/RunningApp.html">
+            
+                    
+                        <b>1.2.2.2.</b>
+                    
+                    Running your application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../gettingStarted/HotModuleReplacement.html">
+            
+                <a href="../gettingStarted/HotModuleReplacement.html">
+            
+                    
+                        <b>1.2.2.3.</b>
+                    
+                    Hot Module Replacement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../gettingStarted/GeneratingContainer.html">
+            
+                <a href="../gettingStarted/GeneratingContainer.html">
+            
+                    
+                        <b>1.2.2.4.</b>
+                    
+                    Generating a Container
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../gettingStarted/GeneratingComponent.html">
+            
+                <a href="../gettingStarted/GeneratingComponent.html">
+            
+                    
+                        <b>1.2.2.5.</b>
+                    
+                    Generating a Component
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../gettingStarted/GeneratingReducer.html">
+            
+                <a href="../gettingStarted/GeneratingReducer.html">
+            
+                    
+                        <b>1.2.2.6.</b>
+                    
+                    Generating a Reducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.7" data-path="../gettingStarted/HookingUpData.html">
+            
+                <a href="../gettingStarted/HookingUpData.html">
+            
+                    
+                        <b>1.2.2.7.</b>
+                    
+                    Hooking up your data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.8" data-path="../gettingStarted/TurnOffJavaScript.html">
+            
+                <a href="../gettingStarted/TurnOffJavaScript.html">
+            
+                    
+                        <b>1.2.2.8.</b>
+                    
+                    Turn off JavaScript
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.9" data-path="../gettingStarted/GenerateСomponentTodos.html">
+            
+                <a href="../gettingStarted/GenerateСomponentTodos.html">
+            
+                    
+                        <b>1.2.2.9.</b>
+                    
+                    Generate a component for adding todos
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.10" data-path="../gettingStarted/MakeActionCreator.html">
+            
+                <a href="../gettingStarted/MakeActionCreator.html">
+            
+                    
+                        <b>1.2.2.10.</b>
+                    
+                    Make an action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.11" data-path="../gettingStarted/HookUpActionCreator.html">
+            
+                <a href="../gettingStarted/HookUpActionCreator.html">
+            
+                    
+                        <b>1.2.2.11.</b>
+                    
+                    Hook up your action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.12" data-path="../gettingStarted/AsynchronousActionCreators.html">
+            
+                <a href="../gettingStarted/AsynchronousActionCreators.html">
+            
+                    
+                        <b>1.2.2.12.</b>
+                    
+                    Asynchronous action creators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.13" data-path="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                <a href="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                    
+                        <b>1.2.2.13.</b>
+                    
+                    Prefetching data with fetchData
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="MigrationGuide.html">
+            
+                <a href="MigrationGuide.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    1.x Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Commands.html">
+            
+                <a href="../Commands.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    Commands
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../Configuration.html">
+            
+                <a href="../Configuration.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../configuration/Apps.html">
+            
+                <a href="../configuration/Apps.html">
+            
+                    
+                        <b>1.4.1.</b>
+                    
+                    Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../configuration/CachingAndHooks.html">
+            
+                <a href="../configuration/CachingAndHooks.html">
+            
+                    
+                        <b>1.4.2.</b>
+                    
+                    Caching & hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../configuration/EnvDetails.html">
+            
+                <a href="../configuration/EnvDetails.html">
+            
+                    
+                        <b>1.4.3.</b>
+                    
+                    Environment details
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../configuration/Plugins.html">
+            
+                <a href="../configuration/Plugins.html">
+            
+                    
+                        <b>1.4.4.</b>
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../configuration/Styles.html">
+            
+                <a href="../configuration/Styles.html">
+            
+                    
+                        <b>1.4.5.</b>
+                    
+                    Styles
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Generators.html">
+            
+                <a href="../Generators.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    Generators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../Development.html">
+            
+                <a href="../Development.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    Development
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../CONTRIBUTING.html">
+            
+                <a href="../../CONTRIBUTING.html">
+            
+                    
+                        <b>1.7.</b>
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Profiling renderer</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="profiling-gluestick-renderer">Profiling GlueStick renderer</h1>
+<p><strong>Requirements: node 8.4.0+</strong></p>
+<p>In order to start profiling gluestick renderer (aka server), the first thing you need to do is to capture the profile information. Just follow these steps:</p>
+<ol>
+<li><p>Run <code>gluestick start-client</code> command.</p>
+</li>
+<li><p>Run <code>gluestick start-server -D</code> command in a separate terminal/tab.</p>
+<blockquote>
+<p><code>-D</code> flag is used to run the server in debug mode.</p>
+</blockquote>
+</li>
+<li><p>Open <strong>Chrome Dev Tools</strong> (<code>cmd + alt + i</code> on MacOS)</p>
+</li>
+<li><p>Click <strong>Node.js</strong> logo in top-left corner</p>
+<p> <img src="img/open-nodejs-devtools.png" alt="Open Node.js DevTools"></p>
+</li>
+<li><p>Navigate to <strong>Profiler tab</strong> and click <strong>record button</strong></p>
+<p> <img src="img/record-profile.png" alt="Record profile"></p>
+</li>
+<li><p>Open the desired page served by GlueStick in a browser, for instance <code>http://localhost:8880</code>.</p>
+</li>
+<li><p>Stop recording after the page is loaded.</p>
+<p> <img src="img/stop-profiling.png" alt="Stop recording the profile"></p>
+</li>
+</ol>
+<p>You should see the profile chart now.</p>
+<p><img src="img/profile-chart.png" alt="Profile chart"></p>
+<p>Now you can see the trace and the time spent on each function call, so you can analyse, pinpoint the expensive functions and optimise them.</p>
+<p><strong>Tip:</strong> By clicking on the function call in the chart, you will be redirected to its source.</p>
+<h2 id="other-resources">Other resources</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/1911015/how-do-i-debug-node-js-applications/16512303#16512303" target="_blank">https://stackoverflow.com/questions/1911015/how-do-i-debug-node-js-applications/16512303#16512303</a></li>
+<li><a href="http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art037" target="_blank">http://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art037</a></li>
+<li><a href="http://blog.librato.com/posts/chrome-devtools" target="_blank">http://blog.librato.com/posts/chrome-devtools</a></li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Profiling renderer","level":"1.2.1","depth":2,"next":{"title":"Getting started","level":"1.2.2","depth":2,"ref":"","articles":[{"title":"Creating a new application","level":"1.2.2.1","depth":3,"path":"docs/gettingStarted/CreatingNewApp.md","ref":"docs/gettingStarted/CreatingNewApp.md","articles":[]},{"title":"Running your application","level":"1.2.2.2","depth":3,"path":"docs/gettingStarted/RunningApp.md","ref":"docs/gettingStarted/RunningApp.md","articles":[]},{"title":"Hot Module Replacement","level":"1.2.2.3","depth":3,"path":"docs/gettingStarted/HotModuleReplacement.md","ref":"docs/gettingStarted/HotModuleReplacement.md","articles":[]},{"title":"Generating a Container","level":"1.2.2.4","depth":3,"path":"docs/gettingStarted/GeneratingContainer.md","ref":"docs/gettingStarted/GeneratingContainer.md","articles":[]},{"title":"Generating a Component","level":"1.2.2.5","depth":3,"path":"docs/gettingStarted/GeneratingComponent.md","ref":"docs/gettingStarted/GeneratingComponent.md","articles":[]},{"title":"Generating a Reducer","level":"1.2.2.6","depth":3,"path":"docs/gettingStarted/GeneratingReducer.md","ref":"docs/gettingStarted/GeneratingReducer.md","articles":[]},{"title":"Hooking up your data","level":"1.2.2.7","depth":3,"path":"docs/gettingStarted/HookingUpData.md","ref":"docs/gettingStarted/HookingUpData.md","articles":[]},{"title":"Turn off JavaScript","level":"1.2.2.8","depth":3,"path":"docs/gettingStarted/TurnOffJavaScript.md","ref":"docs/gettingStarted/TurnOffJavaScript.md","articles":[]},{"title":"Generate a component for adding todos","level":"1.2.2.9","depth":3,"path":"docs/gettingStarted/GenerateСomponentTodos.md","ref":"docs/gettingStarted/GenerateСomponentTodos.md","articles":[]},{"title":"Make an action creator","level":"1.2.2.10","depth":3,"path":"docs/gettingStarted/MakeActionCreator.md","ref":"docs/gettingStarted/MakeActionCreator.md","articles":[]},{"title":"Hook up your action creator","level":"1.2.2.11","depth":3,"path":"docs/gettingStarted/HookUpActionCreator.md","ref":"docs/gettingStarted/HookUpActionCreator.md","articles":[]},{"title":"Asynchronous action creators","level":"1.2.2.12","depth":3,"path":"docs/gettingStarted/AsynchronousActionCreators.md","ref":"docs/gettingStarted/AsynchronousActionCreators.md","articles":[]},{"title":"Prefetching data with fetchData","level":"1.2.2.13","depth":3,"path":"docs/gettingStarted/PrefetchingWithFetchData.md","ref":"docs/gettingStarted/PrefetchingWithFetchData.md","articles":[]}]},"previous":{"title":"Guides","level":"1.2","depth":1,"ref":"","articles":[{"title":"Profiling renderer","level":"1.2.1","depth":2,"path":"docs/guides/ProfilingRenderer.md","ref":"docs/guides/ProfilingRenderer.md","articles":[]},{"title":"Getting started","level":"1.2.2","depth":2,"ref":"","articles":[{"title":"Creating a new application","level":"1.2.2.1","depth":3,"path":"docs/gettingStarted/CreatingNewApp.md","ref":"docs/gettingStarted/CreatingNewApp.md","articles":[]},{"title":"Running your application","level":"1.2.2.2","depth":3,"path":"docs/gettingStarted/RunningApp.md","ref":"docs/gettingStarted/RunningApp.md","articles":[]},{"title":"Hot Module Replacement","level":"1.2.2.3","depth":3,"path":"docs/gettingStarted/HotModuleReplacement.md","ref":"docs/gettingStarted/HotModuleReplacement.md","articles":[]},{"title":"Generating a Container","level":"1.2.2.4","depth":3,"path":"docs/gettingStarted/GeneratingContainer.md","ref":"docs/gettingStarted/GeneratingContainer.md","articles":[]},{"title":"Generating a Component","level":"1.2.2.5","depth":3,"path":"docs/gettingStarted/GeneratingComponent.md","ref":"docs/gettingStarted/GeneratingComponent.md","articles":[]},{"title":"Generating a Reducer","level":"1.2.2.6","depth":3,"path":"docs/gettingStarted/GeneratingReducer.md","ref":"docs/gettingStarted/GeneratingReducer.md","articles":[]},{"title":"Hooking up your data","level":"1.2.2.7","depth":3,"path":"docs/gettingStarted/HookingUpData.md","ref":"docs/gettingStarted/HookingUpData.md","articles":[]},{"title":"Turn off JavaScript","level":"1.2.2.8","depth":3,"path":"docs/gettingStarted/TurnOffJavaScript.md","ref":"docs/gettingStarted/TurnOffJavaScript.md","articles":[]},{"title":"Generate a component for adding todos","level":"1.2.2.9","depth":3,"path":"docs/gettingStarted/GenerateСomponentTodos.md","ref":"docs/gettingStarted/GenerateСomponentTodos.md","articles":[]},{"title":"Make an action creator","level":"1.2.2.10","depth":3,"path":"docs/gettingStarted/MakeActionCreator.md","ref":"docs/gettingStarted/MakeActionCreator.md","articles":[]},{"title":"Hook up your action creator","level":"1.2.2.11","depth":3,"path":"docs/gettingStarted/HookUpActionCreator.md","ref":"docs/gettingStarted/HookUpActionCreator.md","articles":[]},{"title":"Asynchronous action creators","level":"1.2.2.12","depth":3,"path":"docs/gettingStarted/AsynchronousActionCreators.md","ref":"docs/gettingStarted/AsynchronousActionCreators.md","articles":[]},{"title":"Prefetching data with fetchData","level":"1.2.2.13","depth":3,"path":"docs/gettingStarted/PrefetchingWithFetchData.md","ref":"docs/gettingStarted/PrefetchingWithFetchData.md","articles":[]}]},{"title":"1.x Migration Guide","level":"1.2.3","depth":2,"path":"docs/guides/MigrationGuide.md","ref":"docs/guides/MigrationGuide.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/TrueCar/gluestick/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/TrueCar/gluestick/tree/next"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Gluestick","gitbook":">=3.2.3"},"file":{"path":"docs/guides/ProfilingRenderer.md","mtime":"2018-03-14T16:24:59.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-14T16:30:59.461Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

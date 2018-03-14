@@ -1,0 +1,805 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Caching & hooks · Gluestick</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="EnvDetails.html" />
+    
+    
+    <link rel="prev" href="Apps.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../guides/ProfilingRenderer.html">
+            
+                <a href="../guides/ProfilingRenderer.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    Profiling renderer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" >
+            
+                <span>
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    Getting started
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../gettingStarted/CreatingNewApp.html">
+            
+                <a href="../gettingStarted/CreatingNewApp.html">
+            
+                    
+                        <b>1.2.2.1.</b>
+                    
+                    Creating a new application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.2" data-path="../gettingStarted/RunningApp.html">
+            
+                <a href="../gettingStarted/RunningApp.html">
+            
+                    
+                        <b>1.2.2.2.</b>
+                    
+                    Running your application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.3" data-path="../gettingStarted/HotModuleReplacement.html">
+            
+                <a href="../gettingStarted/HotModuleReplacement.html">
+            
+                    
+                        <b>1.2.2.3.</b>
+                    
+                    Hot Module Replacement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.4" data-path="../gettingStarted/GeneratingContainer.html">
+            
+                <a href="../gettingStarted/GeneratingContainer.html">
+            
+                    
+                        <b>1.2.2.4.</b>
+                    
+                    Generating a Container
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.5" data-path="../gettingStarted/GeneratingComponent.html">
+            
+                <a href="../gettingStarted/GeneratingComponent.html">
+            
+                    
+                        <b>1.2.2.5.</b>
+                    
+                    Generating a Component
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.6" data-path="../gettingStarted/GeneratingReducer.html">
+            
+                <a href="../gettingStarted/GeneratingReducer.html">
+            
+                    
+                        <b>1.2.2.6.</b>
+                    
+                    Generating a Reducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.7" data-path="../gettingStarted/HookingUpData.html">
+            
+                <a href="../gettingStarted/HookingUpData.html">
+            
+                    
+                        <b>1.2.2.7.</b>
+                    
+                    Hooking up your data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.8" data-path="../gettingStarted/TurnOffJavaScript.html">
+            
+                <a href="../gettingStarted/TurnOffJavaScript.html">
+            
+                    
+                        <b>1.2.2.8.</b>
+                    
+                    Turn off JavaScript
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.9" data-path="../gettingStarted/GenerateСomponentTodos.html">
+            
+                <a href="../gettingStarted/GenerateСomponentTodos.html">
+            
+                    
+                        <b>1.2.2.9.</b>
+                    
+                    Generate a component for adding todos
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.10" data-path="../gettingStarted/MakeActionCreator.html">
+            
+                <a href="../gettingStarted/MakeActionCreator.html">
+            
+                    
+                        <b>1.2.2.10.</b>
+                    
+                    Make an action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.11" data-path="../gettingStarted/HookUpActionCreator.html">
+            
+                <a href="../gettingStarted/HookUpActionCreator.html">
+            
+                    
+                        <b>1.2.2.11.</b>
+                    
+                    Hook up your action creator
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.12" data-path="../gettingStarted/AsynchronousActionCreators.html">
+            
+                <a href="../gettingStarted/AsynchronousActionCreators.html">
+            
+                    
+                        <b>1.2.2.12.</b>
+                    
+                    Asynchronous action creators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2.13" data-path="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                <a href="../gettingStarted/PrefetchingWithFetchData.html">
+            
+                    
+                        <b>1.2.2.13.</b>
+                    
+                    Prefetching data with fetchData
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../guides/MigrationGuide.html">
+            
+                <a href="../guides/MigrationGuide.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    1.x Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Commands.html">
+            
+                <a href="../Commands.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    Commands
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../Configuration.html">
+            
+                <a href="../Configuration.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="Apps.html">
+            
+                <a href="Apps.html">
+            
+                    
+                        <b>1.4.1.</b>
+                    
+                    Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2" data-path="CachingAndHooks.html">
+            
+                <a href="CachingAndHooks.html">
+            
+                    
+                        <b>1.4.2.</b>
+                    
+                    Caching & hooks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="EnvDetails.html">
+            
+                <a href="EnvDetails.html">
+            
+                    
+                        <b>1.4.3.</b>
+                    
+                    Environment details
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="Plugins.html">
+            
+                <a href="Plugins.html">
+            
+                    
+                        <b>1.4.4.</b>
+                    
+                    Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="Styles.html">
+            
+                <a href="Styles.html">
+            
+                    
+                        <b>1.4.5.</b>
+                    
+                    Styles
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Generators.html">
+            
+                <a href="../Generators.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    Generators
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../Development.html">
+            
+                <a href="../Development.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    Development
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../CONTRIBUTING.html">
+            
+                <a href="../../CONTRIBUTING.html">
+            
+                    
+                        <b>1.7.</b>
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Caching & hooks</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="caching--hooks">Caching &amp; Hooks</h1>
+<h2 id="caching">Caching</h2>
+<p>Caching support has been added for server side rendering. This lets you cache
+entire page responses on pages where it makes sense like a home or landing
+page.</p>
+<p>Example:</p>
+<pre class="language-"><code class="lang-javascript"><span class="token operator">&lt;</span>Route path<span class="token operator">=</span><span class="token string">&quot;/&quot;</span> component<span class="token operator">=</span><span class="token punctuation">{</span>HomeApp<span class="token punctuation">}</span> cache<span class="token operator">=</span><span class="token punctuation">{</span><span class="token boolean">true</span><span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+</code></pre>
+<p><em>Route property:</em>
+<code>cache</code> - boolean</p>
+<p><em>Additional optional cache properties:</em>
+<code>cacheTTL</code> - number of seconds to store the cache for a particular route</p>
+<p>Gluestick allows SSR component caching by using <a href="https://github.com/electrode-io/electrode-react-ssr-caching" target="_blank"><code>electrode-react-ssr-caching</code></a>.
+For using it you need to determine <code>cacheConfig</code> in <code>src/config/caching.server.js</code></p>
+<p>Example:</p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  components<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token string">&quot;Component1&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        strategy<span class="token punctuation">:</span> <span class="token string">&quot;simple&quot;</span><span class="token punctuation">,</span>
+        enable<span class="token punctuation">:</span> <span class="token boolean">true</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token string">&quot;Component2&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        strategy<span class="token punctuation">:</span> <span class="token string">&quot;template&quot;</span><span class="token punctuation">,</span>
+        enable<span class="token punctuation">:</span> <span class="token boolean">true</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p><a href="https://github.com/electrode-io/electrode-react-ssr-caching" target="_blank"><code>Here</code></a> you can find more information about <code>cacheConfig</code>.</p>
+<h2 id="hooks">Hooks</h2>
+<p>Gluestick also provide hooks which can be defined in <code>src/gluestick.hooks.js</code>.
+You can use single hook or array of hooks like in example below. Usually you have to return modified value at the end of hook.</p>
+<pre class="language-"><code class="lang-js"><span class="token comment" spellcheck="true">/* src/gluestick.hooks.js */</span>
+
+<span class="token keyword">const</span> preRenderFromCache <span class="token operator">=</span> <span class="token punctuation">(</span>cachedOutput<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Do something with output and return it.</span>
+  <span class="token comment" spellcheck="true">// Gluestick will render output with changes.</span>
+  <span class="token keyword">return</span> cachedOutput<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> postRenderRequirementsOne <span class="token operator">=</span> <span class="token punctuation">(</span>requirements<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Do something with requirements and return it.</span>
+  <span class="token keyword">return</span> requirements<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> postRenderRequirementsTwo <span class="token operator">=</span> <span class="token punctuation">(</span>requirements<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Here we have requirements with changes from postRenderRequirementsOne.</span>
+  <span class="token keyword">return</span> requirements<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> errorHook <span class="token operator">=</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// In this hook we don&apos;t need to return value.</span>
+  <span class="token comment" spellcheck="true">// Unless you have another error hook which will be called after this one.</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;Custom hook for error&apos;</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  preRenderFromCache<span class="token punctuation">,</span>
+  postRenderRequirements<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    postRenderRequirementsOne<span class="token punctuation">,</span>
+    postRenderRequirementsTwo<span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  error<span class="token punctuation">:</span> errorHook<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th style="text-align:center">need return value?</th>
+<th style="text-align:center">when it is called?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>preInitServer</td>
+<td style="text-align:center">false</td>
+<td style="text-align:center">before server is started</td>
+</tr>
+<tr>
+<td>postServerRun</td>
+<td style="text-align:center">false</td>
+<td style="text-align:center">after server is run</td>
+</tr>
+<tr>
+<td>preRenderFromCache</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">before we render output from cache</td>
+</tr>
+<tr>
+<td>postRenderRequirements</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">after we get requirements for entrypoint</td>
+</tr>
+<tr>
+<td>preRedirect</td>
+<td style="text-align:center">false</td>
+<td style="text-align:center">before redirect</td>
+</tr>
+<tr>
+<td>postRenderProps</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">after we get render props</td>
+</tr>
+<tr>
+<td>postGetCurrentRoute</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">after we get current route</td>
+</tr>
+<tr>
+<td>postRender</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">after render</td>
+</tr>
+<tr>
+<td>error</td>
+<td style="text-align:center">false</td>
+<td style="text-align:center">before we render error template</td>
+</tr>
+</tbody>
+</table>
+<h2 id="webpack-hooks">Webpack Hooks</h2>
+<p>GlueStick allows you to mutate it&apos;s default Webpack configs client and server.</p>
+<p>You can specify hooks in <code>src/webpack.hooks.js</code> - they work just like regular GlueStick hooks so you can pass function or array of them.</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">const</span> webpackClientConfig <span class="token operator">=</span> <span class="token punctuation">(</span>config<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Mutate client config here</span>
+  <span class="token keyword">return</span> config<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> webpackServerConfig <span class="token operator">=</span> <span class="token punctuation">(</span>config<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Mutate server config here</span>
+  <span class="token keyword">return</span> config<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>IMPORTANT:</strong> If you&apos;re upgrading to newer GlueStick version, run <code>gluestick auto-upgrade</code> command to ensure <code>src/webpack.hooks.js</code> file exists, otherwise some commands might fail.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="Apps.html" class="navigation navigation-prev " aria-label="Previous page: Apps">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="EnvDetails.html" class="navigation navigation-next " aria-label="Next page: Environment details">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Caching & hooks","level":"1.4.2","depth":2,"next":{"title":"Environment details","level":"1.4.3","depth":2,"path":"docs/configuration/EnvDetails.md","ref":"docs/configuration/EnvDetails.md","articles":[]},"previous":{"title":"Apps","level":"1.4.1","depth":2,"path":"docs/configuration/Apps.md","ref":"docs/configuration/Apps.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/TrueCar/gluestick/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/TrueCar/gluestick/tree/next"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Gluestick","gitbook":">=3.2.3"},"file":{"path":"docs/configuration/CachingAndHooks.md","mtime":"2018-03-14T16:24:59.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-14T16:30:59.461Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
