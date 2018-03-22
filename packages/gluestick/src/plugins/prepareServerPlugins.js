@@ -3,6 +3,7 @@
 import type { ServerPlugin, Plugin, BaseLogger } from '../types';
 
 const { createArrowList } = require('../cli/helpers');
+const { requireModule } = require('../utils');
 
 type CopilationResults = {
   [key: string]: Function | Object,
@@ -84,6 +85,7 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
         // will be available for plugins to use.
         const compilationResults: Object = compilePlugin(normalizedPlugin, {
           logger,
+          requireModule,
         });
         if (compilationResults.error) {
           throw compilationResults.error;
