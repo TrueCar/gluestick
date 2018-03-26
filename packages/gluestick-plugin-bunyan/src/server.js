@@ -22,6 +22,7 @@ export type Logger = {
 
 type PluginUtilities = {
   requireModule: Function,
+  defaultLogger: Logger,
 };
 
 const defaultSettings: Options = {
@@ -30,7 +31,7 @@ const defaultSettings: Options = {
 
 const bunyanPlugin = (
   opts: Object,
-  { requireModule }: PluginUtilities,
+  { requireModule, defaultLogger }: PluginUtilities,
 ): { logger?: Logger } => {
   let options: Options = { ...defaultSettings };
   try {
@@ -44,11 +45,16 @@ const bunyanPlugin = (
   if (Object.keys(options).length <= Object.keys(defaultSettings).length) {
     return {};
   }
-  const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
-  loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
-  return {
-    logger: loggerWithSuccessMethod,
-  };
+  try {
+    const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
+    loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
+    return {
+      logger: loggerWithSuccessMethod,
+    };
+  } catch (error) {
+    defaultLogger.error({ error }, 'The Bunyan config file contains errors.');
+    return {};
+  }
 };
 
 bunyanPlugin.meta = { name: 'gluestick-plugin-bunyan' };
