@@ -29,7 +29,6 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-// $FlowIgnore
 const entriesConfig = require('project-entries-config');
 // $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;

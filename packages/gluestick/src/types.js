@@ -1,5 +1,9 @@
 /* @flow */
+import type { GSConfig } from 'application-config';
+
 export type { GSConfig } from 'application-config';
+export type { Entries } from 'project-entries';
+export type { EntriesConfig } from 'project-entries-config';
 
 export type ProjectConfig = {
   [key: string]: any,
@@ -131,25 +135,6 @@ export type Request = {
   hostname: string,
   headers: Object,
   method: string,
-};
-
-export type Entries = {
-  [key: string]: {
-    component: Function,
-    routes: Function,
-    reducers: Object,
-    name?: string,
-    config?: Object,
-  },
-};
-
-export type EntriesConfig = {
-  [key: string]: {
-    component: string,
-    routes: string,
-    reducers: string,
-    name?: string,
-  },
 };
 
 export type RenderRequirements = {
