@@ -1,0 +1,5 @@
+declare module 'gluestick-hooks' {
+  declare module.exports: {
+    default: Object,
+  };
+}
