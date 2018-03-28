@@ -30,7 +30,6 @@ const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
-// $FlowIgnore
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
