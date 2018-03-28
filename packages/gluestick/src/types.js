@@ -151,16 +151,6 @@ export type RenderOutput = {
   rootElement: Object,
 };
 
-export type ComponentCachingConfig = {
-  strategy: string,
-  enable: boolean,
-  genCacheKey: (*) => string,
-  preserveKeys?: string[],
-  preserveEmptyKeys?: string[],
-  ignoreKeys?: string[],
-  whiteListNonStringKeys?: string[],
-};
-
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
 export type SetCacheIfProd = (
   req: Request,
