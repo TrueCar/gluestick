@@ -1,0 +1,12 @@
+declare module 'project-entries-config' {
+  declare type EntriesConfig = {
+    [key: string]: {
+      component: string,
+      routes: string,
+      reducers: string,
+      name?: string,
+    },
+  };
+
+  declare module.exports: EntriesConfig;
+}
