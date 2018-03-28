@@ -27,7 +27,6 @@ const compression = require('compression');
 const middleware = require('./middleware');
 const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
-// $FlowIgnore
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
 // $FlowIgnore

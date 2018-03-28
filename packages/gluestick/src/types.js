@@ -1,43 +1,7 @@
 /* @flow */
+export type { GSConfig } from 'application-config';
 
 export type ProjectConfig = {
-  [key: string]: any,
-};
-
-export type GSConfig = {
-  protocol: string,
-  host: string,
-  ports: {
-    client: number,
-    server: number,
-  },
-  publicPath: string,
-  buildStaticPath: string,
-  buildAssetsPath: string,
-  buildRendererPath: string,
-  buildDllPath: string,
-  assetsPath: string,
-  sourcePath: string,
-  sharedPath: string,
-  appsPath: string,
-  configPath: string,
-  entryWrapperPath: string,
-  clientEntryInitPath: string,
-  serverEntriesPath: string,
-  entriesPath: string,
-  reduxMiddlewares: string,
-  webpackChunks: string,
-  webpackStats: string,
-  proxyLogLevel: string,
-  debugWatchDirectories: string[],
-  defaultErrorTemplatePath: string,
-  customErrorTemplatePath: string,
-  vendorSourcePath: string,
-  autoUpgrade: {
-    added: string[],
-    changed: string[],
-  },
-  enableErrorOverlay: boolean,
   [key: string]: any,
 };
 
