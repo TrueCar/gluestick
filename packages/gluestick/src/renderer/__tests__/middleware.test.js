@@ -1,5 +1,4 @@
 /* @flow */
-
 import type {
   Context,
   Request,
@@ -108,8 +107,6 @@ const getEntries = (routes): { default: Entries, plugins: Plugin[] } => ({
 
 const assets = {};
 const loadjsConfig = {};
-const EntryWrapper = {};
-const BodyWrapper = {};
 
 const clearHookMock = (key: string) => {
   if (hooks[key]) {
@@ -147,7 +144,6 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -177,7 +173,6 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -205,7 +200,6 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -220,7 +214,7 @@ describe('renderer/middleware', () => {
     expect(response.sendStatus.mock.calls[0]).toEqual([404]);
   });
 
-  it.only('should call errorHandler', async () => {
+  it('should call errorHandler', async () => {
     jest.doMock('project-entries', () => ({ default: {}, plugins: [] }));
     const errorHandler = require('../helpers/errorHandler');
     const middleware = require('../middleware');
@@ -228,7 +222,6 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { EntryWrapper, BodyWrapper },
       { assets, loadjsConfig },
       options,
       { hooks, hooksHelper },
@@ -253,7 +246,6 @@ describe('renderer/middleware', () => {
         context,
         Object.assign(request, { url: '/cached' }),
         response,
-        { EntryWrapper, BodyWrapper },
         { assets, loadjsConfig },
         options,
         { hooks, hooksHelper },

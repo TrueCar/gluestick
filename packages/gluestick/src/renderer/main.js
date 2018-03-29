@@ -28,8 +28,6 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-const EntryWrapper = require('entry-wrapper').default;
-const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
 const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
 const reduxEnhancers = require('redux-middlewares').enhancers;
@@ -134,7 +132,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
           { config, logger },
           req,
           res,
-          { EntryWrapper, BodyWrapper },
           { assets, loadjsConfig: applicationConfig.loadjs || {} },
           {
             reduxMiddlewares,
