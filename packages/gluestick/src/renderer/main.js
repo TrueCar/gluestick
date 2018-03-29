@@ -28,9 +28,6 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-const reduxMiddlewares = require('redux-middlewares').default;
-const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
-const reduxEnhancers = require('redux-middlewares').enhancers;
 const entriesPlugins = require('project-entries').plugins;
 
 const hooksHelper = require('./helpers/hooks');
@@ -38,11 +35,6 @@ const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
-
-const envVariables: string[] =
-  process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
-    ? process.env.ENV_VARIABLES
-    : [];
 
 module.exports = function startRenderer({ config, logger }: Context) {
   const assetsFilename = path.join(
@@ -132,15 +124,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
           { config, logger },
           req,
           res,
-          { assets, loadjsConfig: applicationConfig.loadjs || {} },
-          {
-            reduxMiddlewares,
-            thunkMiddleware,
-            reduxEnhancers,
-            envVariables,
-            httpClient: applicationConfig.httpClient || {},
-            entryWrapperConfig: {},
-          },
+          { assets },
           { hooks, hooksHelper: hooksHelper.call },
           serverPlugins,
         );

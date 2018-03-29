@@ -29,31 +29,22 @@ const entriesPlugins = require('project-entries').plugins;
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const applicationConfig = require('application-config').default;
+const reduxMiddlewares = require('redux-middlewares').default;
+const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
+const reduxEnhancers = require('redux-middlewares').enhancers;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-type Options = {
-  envVariables: string[],
-  httpClient: Object,
-  entryWrapperConfig: Object,
-  reduxMiddlewares: any[],
-  thunkMiddleware: ?Function,
-  reduxEnhancers: any[],
-};
+const envVariables: string[] =
+  process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
+    ? process.env.ENV_VARIABLES
+    : [];
 
 module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
   { assets }: { assets: Object },
-  options: Options = {
-    envVariables: [],
-    httpClient: {},
-    entryWrapperConfig: {},
-    reduxMiddlewares: [],
-    thunkMiddleware: null,
-    reduxEnhancers: [],
-  },
   { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
   serverPlugins: ?(ServerPlugin[]),
 ) {
@@ -87,14 +78,14 @@ module.exports = async function gluestickMiddleware(
     const httpClientOptions =
       requirements.config && requirements.config.httpClient
         ? requirements.config.httpClient
-        : options.httpClient;
+        : applicationConfig.httpClient;
     const httpClient: Function = getHttpClient(httpClientOptions, req, res);
 
     // Allow to specify different redux config
     const globalOptions = {
-      middlewares: options.reduxMiddlewares,
-      thunk: options.thunkMiddleware,
-      enhancers: options.reduxEnhancers,
+      middlewares: reduxMiddlewares,
+      thunk: thunkMiddleware,
+      enhancers: reduxEnhancers,
     };
 
     const appOptions =
@@ -186,10 +177,14 @@ module.exports = async function gluestickMiddleware(
         EntryWrapper,
         BodyWrapper,
         entriesPlugins: runtimePlugins,
-        entryWrapperConfig: options.entryWrapperConfig,
-        envVariables: options.envVariables,
+        entryWrapperConfig: {},
+        envVariables,
       },
-      { assets, loadjsConfig: applicationConfig.loadjsConfig, cacheManager },
+      {
+        assets,
+        loadjsConfig: applicationConfig.loadjsConfig || {},
+        cacheManager,
+      },
       { renderMethod },
     );
     const output: RenderOutput = hooksHelper(
