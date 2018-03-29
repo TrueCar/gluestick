@@ -1,6 +1,6 @@
 {
   "name": "gluestick-plugin-no-fouc",
-  "version": "2.0.0",
+  "version": "2.1.0-prerelease.1",
   "description": "Remove FOUC by extracting css into file and linking them to renderer page in development",
   "main": "build/config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -13,10 +13,10 @@
   },
   "peerDependencies": {
     "extract-text-webpack-plugin": "2.x",
-    "gluestick": "2.0.0"
+    "gluestick": "2.1.0-prerelease.1"
   },
   "devDependencies": {
     "extract-text-webpack-plugin": "2.1.2",
-    "gluestick": "2.0.0"
+    "gluestick": "2.1.0-prerelease.1"
   }
 }
