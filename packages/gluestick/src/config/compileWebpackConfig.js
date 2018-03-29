@@ -198,11 +198,11 @@ module.exports = (
       external => typeof external === 'function',
     );
     const originalHandler: Function =
-      // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+      // $FlowIgnore
       serverEnvConfigFinal.externals[handlerIndex];
-    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    // $FlowIgnore
     serverEnvConfigFinal.externals.splice(handlerIndex, 1);
-    // $FlowIgnore flow is $hit, and doesn't know that `externals` was check for not being undefied
+    // $FlowIgnore
     serverEnvConfigFinal.externals.push((ctx, req, cb) => {
       const packageName = extract_package_name(req);
       return Object.keys(

@@ -1,43 +1,11 @@
 /* @flow */
+import type { GSConfig } from 'application-config';
+
+export type { GSConfig } from 'application-config';
+export type { Entries } from 'project-entries';
+export type { EntriesConfig } from 'project-entries-config';
 
 export type ProjectConfig = {
-  [key: string]: any,
-};
-
-export type GSConfig = {
-  protocol: string,
-  host: string,
-  ports: {
-    client: number,
-    server: number,
-  },
-  publicPath: string,
-  buildStaticPath: string,
-  buildAssetsPath: string,
-  buildRendererPath: string,
-  buildDllPath: string,
-  assetsPath: string,
-  sourcePath: string,
-  sharedPath: string,
-  appsPath: string,
-  configPath: string,
-  entryWrapperPath: string,
-  clientEntryInitPath: string,
-  serverEntriesPath: string,
-  entriesPath: string,
-  reduxMiddlewares: string,
-  webpackChunks: string,
-  webpackStats: string,
-  proxyLogLevel: string,
-  debugWatchDirectories: string[],
-  defaultErrorTemplatePath: string,
-  customErrorTemplatePath: string,
-  vendorSourcePath: string,
-  autoUpgrade: {
-    added: string[],
-    changed: string[],
-  },
-  enableErrorOverlay: boolean,
   [key: string]: any,
 };
 
@@ -169,25 +137,6 @@ export type Request = {
   method: string,
 };
 
-export type Entries = {
-  [key: string]: {
-    component: Function,
-    routes: Function,
-    reducers: Object,
-    name?: string,
-    config?: Object,
-  },
-};
-
-export type EntriesConfig = {
-  [key: string]: {
-    component: string,
-    routes: string,
-    reducers: string,
-    name?: string,
-  },
-};
-
 export type RenderRequirements = {
   Component: Function,
   routes: Function,
@@ -200,16 +149,6 @@ export type RenderRequirements = {
 export type RenderOutput = {
   responseString: string,
   rootElement: Object,
-};
-
-export type ComponentCachingConfig = {
-  strategy: string,
-  enable: boolean,
-  genCacheKey: (*) => string,
-  preserveKeys?: string[],
-  preserveEmptyKeys?: string[],
-  ignoreKeys?: string[],
-  whiteListNonStringKeys?: string[],
 };
 
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
