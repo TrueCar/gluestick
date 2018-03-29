@@ -28,6 +28,7 @@ const entriesConfig = require('project-entries-config');
 const entriesPlugins = require('project-entries').plugins;
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
+const applicationConfig = require('application-config').default;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -44,7 +45,7 @@ module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
-  { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
+  { assets }: { assets: Object },
   options: Options = {
     envVariables: [],
     httpClient: {},
@@ -188,7 +189,7 @@ module.exports = async function gluestickMiddleware(
         entryWrapperConfig: options.entryWrapperConfig,
         envVariables: options.envVariables,
       },
-      { assets, loadjsConfig, cacheManager },
+      { assets, loadjsConfig: applicationConfig.loadjsConfig, cacheManager },
       { renderMethod },
     );
     const output: RenderOutput = hooksHelper(

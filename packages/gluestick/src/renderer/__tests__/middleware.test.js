@@ -106,7 +106,6 @@ const getEntries = (routes): { default: Entries, plugins: Plugin[] } => ({
 });
 
 const assets = {};
-const loadjsConfig = {};
 
 const clearHookMock = (key: string) => {
   if (hooks[key]) {
@@ -144,7 +143,7 @@ describe('renderer/middleware', () => {
       context,
       request,
       response,
-      { assets, loadjsConfig },
+      { assets },
       options,
       { hooks, hooksHelper },
       [],
@@ -169,14 +168,10 @@ describe('renderer/middleware', () => {
       }),
     );
     const middleware = require('../middleware');
-    await middleware(
-      context,
-      request,
-      response,
-      { assets, loadjsConfig },
-      options,
-      { hooks, hooksHelper },
-    );
+    await middleware(context, request, response, { assets }, options, {
+      hooks,
+      hooksHelper,
+    });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(1);
@@ -196,14 +191,10 @@ describe('renderer/middleware', () => {
       }),
     );
     const middleware = require('../middleware');
-    await middleware(
-      context,
-      request,
-      response,
-      { assets, loadjsConfig },
-      options,
-      { hooks, hooksHelper },
-    );
+    await middleware(context, request, response, { assets }, options, {
+      hooks,
+      hooksHelper,
+    });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
     expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
@@ -218,14 +209,10 @@ describe('renderer/middleware', () => {
     jest.doMock('project-entries', () => ({ default: {}, plugins: [] }));
     const errorHandler = require('../helpers/errorHandler');
     const middleware = require('../middleware');
-    await middleware(
-      context,
-      request,
-      response,
-      { assets, loadjsConfig },
-      options,
-      { hooks, hooksHelper },
-    );
+    await middleware(context, request, response, { assets }, options, {
+      hooks,
+      hooksHelper,
+    });
     expect(hooks.error).toHaveBeenCalledTimes(1);
     expect(errorHandler).toHaveBeenCalledTimes(1);
   });
@@ -246,7 +233,7 @@ describe('renderer/middleware', () => {
         context,
         Object.assign(request, { url: '/cached' }),
         response,
-        { assets, loadjsConfig },
+        { assets },
         options,
         { hooks, hooksHelper },
       );
