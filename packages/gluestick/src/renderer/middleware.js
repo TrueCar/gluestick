@@ -4,8 +4,6 @@ import type {
   Context,
   Request,
   Response,
-  Entries,
-  EntriesConfig,
   RenderRequirements,
   RenderOutput,
   CacheManager,
@@ -25,6 +23,10 @@ const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
 
+const entries = require('project-entries').default;
+const entriesConfig = require('project-entries-config');
+const entriesPlugins = require('project-entries').plugins;
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 type Options = {
@@ -36,17 +38,10 @@ type Options = {
   reduxEnhancers: any[],
 };
 
-type EntriesArgs = {
-  entries: Entries,
-  entriesConfig: EntriesConfig,
-  entriesPlugins: Object[],
-};
-
 module.exports = async function gluestickMiddleware(
   { config, logger }: Context,
   req: Request,
   res: Response,
-  { entries, entriesConfig, entriesPlugins }: EntriesArgs,
   { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
   { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
   options: Options = {
@@ -64,7 +59,13 @@ module.exports = async function gluestickMiddleware(
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
+  console.log(entries);
   try {
+    // Get runtime plugins that will be passed to EntryWrapper.
+    const runtimePlugins: Object[] = entriesPlugins
+      .filter((plugin: Object) => plugin.type === 'runtime')
+      .map((plugin: Object) => plugin.ref);
+
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
       const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
@@ -183,7 +184,7 @@ module.exports = async function gluestickMiddleware(
       {
         EntryWrapper,
         BodyWrapper,
-        entriesPlugins,
+        entriesPlugins: runtimePlugins,
         entryWrapperConfig: options.entryWrapperConfig,
         envVariables: options.envVariables,
       },

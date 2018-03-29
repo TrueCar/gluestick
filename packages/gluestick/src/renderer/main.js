@@ -28,7 +28,6 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-const entriesConfig = require('project-entries-config');
 const EntryWrapper = require('entry-wrapper').default;
 const BodyWrapper = require('./components/Body').default;
 const reduxMiddlewares = require('redux-middlewares').default;
@@ -78,11 +77,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
   if (hooks.preInitServer) {
     hooksHelper.call(hooks.preInitServer);
   }
-
-  // Get runtime plugins that will be passed to EntryWrapper.
-  const runtimePlugins: Object[] = entriesPlugins
-    .filter((plugin: Object) => plugin.type === 'runtime')
-    .map((plugin: Object) => plugin.ref);
 
   const app: Object = express();
   app.use(compression());
@@ -140,7 +134,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
           { config, logger },
           req,
           res,
-          { entries, entriesConfig, entriesPlugins: runtimePlugins },
           { EntryWrapper, BodyWrapper },
           { assets, loadjsConfig: applicationConfig.loadjs || {} },
           {
