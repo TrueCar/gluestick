@@ -7,13 +7,7 @@
  */
 /* eslint-disable prefer-arrow-callback */
 
-import type {
-  Context,
-  Request,
-  Response,
-  ServerPlugin,
-  BaseLogger,
-} from '../types';
+import type { Request, Response, BaseLogger } from '../types';
 
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
@@ -28,15 +22,17 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-const entriesPlugins = require('project-entries').plugins;
 
 const hooksHelper = require('./helpers/hooks');
-const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+const serverPlugins = require('../plugins/serverPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
 
-module.exports = function startRenderer({ config, logger }: Context) {
+const config = require('../config').default;
+const logger = require('../logger').default;
+
+module.exports = function startRenderer() {
   const assetsFilename = path.join(
     process.cwd(),
     config.GSConfig.buildAssetsPath,
@@ -51,10 +47,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
   }
 
   const pluginUtils = createPluginUtils(logger);
-  const serverPlugins: ServerPlugin[] = prepareServerPlugins(
-    logger,
-    entriesPlugins,
-  );
 
   // Use custom logger from plugins or default logger.
   const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);

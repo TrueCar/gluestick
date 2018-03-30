@@ -1,15 +1,11 @@
 /* @flow */
-import type { ServerPlugin } from '../../types';
-
-const prepareServerPlugins = require('../prepareServerPlugins');
-
-const logger = {
+const mockLogger = () => ({
   warn: jest.fn(),
   info: jest.fn(),
   success: jest.fn(),
   debug: jest.fn(),
   error: jest.fn(),
-};
+});
 
 const plugin0Ref = () => ({
   renderMethod: () => {},
@@ -39,13 +35,30 @@ const validPlugins = [
   },
 ];
 
-describe('plugins/prepareServerPlugins', () => {
-  afterEach(() => {
-    jest.resetAllMocks();
+describe('plugins/serverPlugins', () => {
+  beforeEach(() => {
+    jest.resetModules();
   });
 
   it('should return plugins array', () => {
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, validPlugins);
+    jest.doMock('project-entries', () => ({
+      plugins: [
+        {
+          ref: plugin0Ref,
+          type: 'server',
+        },
+        {
+          ref: plugin1Ref,
+          options: { prop: true },
+          type: 'server',
+        },
+        {
+          ref: plugin2Ref,
+          type: 'runtime',
+        },
+      ],
+    }));
+    const plugins = require('../serverPlugins');
     expect(plugins[0].name).toEqual('testPlugin0');
     expect(plugins[0].meta).toEqual(plugin0Ref.meta);
     expect(typeof plugins[0].renderMethod).toEqual('function');
@@ -58,17 +71,21 @@ describe('plugins/prepareServerPlugins', () => {
   });
 
   it('should fail to compile plugin - fn export', () => {
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [
-      // $FlowIgnore
-      {
-        ref: 'abc',
-      },
-    ]);
-    expect(plugins.length).toBe(0);
-    expect(logger.warn.mock.calls.length).toBe(1);
+    jest.doMock('project-entries', () => ({
+      plugins: [
+        {
+          ref: 'abc',
+        },
+      ],
+    }));
+    const logger = mockLogger();
+    jest.doMock('../../logger', () => logger);
+    const plugins = require('../serverPlugins');
     expect(logger.warn.mock.calls[0][0].message).toEqual(
       'Plugin at position 0 must export a function',
     );
+    expect(plugins.length).toBe(0);
+    expect(logger.warn.mock.calls.length).toBe(1);
   });
 
   it('should catch error being throw from inside plugin', () => {
@@ -76,12 +93,17 @@ describe('plugins/prepareServerPlugins', () => {
       throw new Error('test');
     };
     invalidPlugin.meta = { type: 'server', name: 'invalidPlugin' };
-    const plugins: ServerPlugin[] = prepareServerPlugins(logger, [
-      {
-        ref: invalidPlugin,
-        type: 'server',
-      },
-    ]);
+    jest.doMock('project-entries', () => ({
+      plugins: [
+        {
+          ref: invalidPlugin,
+          type: 'server',
+        },
+      ],
+    }));
+    const logger = mockLogger();
+    jest.doMock('../../logger', () => logger);
+    const plugins = require('../serverPlugins');
     expect(plugins.length).toBe(0);
     expect(logger.warn.mock.calls.length).toBe(1);
     expect(logger.warn.mock.calls[0][0].message).toEqual(
