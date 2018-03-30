@@ -1,13 +1,7 @@
 /* @flow */
-import type {
-  Context,
-  Request,
-  Response,
-  BaseLogger,
-  Entries,
-} from '../../types';
+import type { Request, Response, Entries } from '../../types';
 
-const mocks = require('../../__tests__/mocks/context');
+const contextMock = require('../../__tests__/mocks/context');
 
 /* eslint-disable react/no-multi-comp */
 jest.mock('../../../shared', () => ({
@@ -40,20 +34,14 @@ jest.mock('../helpers/cacheManager.js', () =>
   })),
 );
 jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
-jest.mock('project-entries-config', () => ({ default: mocks.entriesConfig }));
-jest.mock('../../config', () => mocks.config);
+jest.mock('project-entries-config', () => ({
+  default: contextMock.entriesConfig,
+}));
+jest.mock('../../config', () => contextMock.config);
 
 const React = require('react');
 
-const getLogger = (): BaseLogger => ({
-  info: jest.fn(),
-  debug: jest.fn(),
-  success: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-});
-
-const request: Request = mocks.request;
+const request: Request = contextMock.request;
 
 const response: Response = {
   send: jest.fn(),
@@ -113,7 +101,6 @@ describe('renderer/middleware', () => {
     await middleware(request, response, {
       assets,
       hooks,
-      serverPlugins: [],
     });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -139,7 +126,6 @@ describe('renderer/middleware', () => {
     await middleware(request, response, {
       assets,
       hooks,
-      serverPlugins: [],
     });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -164,7 +150,6 @@ describe('renderer/middleware', () => {
     await middleware(request, response, {
       assets,
       hooks,
-      serverPlugins: [],
     });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -184,7 +169,6 @@ describe('renderer/middleware', () => {
     await middleware(request, response, {
       assets,
       hooks,
-      serverPlugins: [],
     });
     expect(hooks.error).toHaveBeenCalledTimes(1);
     expect(errorHandler).toHaveBeenCalledTimes(1);
@@ -206,7 +190,6 @@ describe('renderer/middleware', () => {
       await middleware(Object.assign(request, { url: '/cached' }), response, {
         assets,
         hooks,
-        serverPlugins: [],
       });
       expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
       expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);

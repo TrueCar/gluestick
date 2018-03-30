@@ -6,7 +6,6 @@ import type {
   Response,
   RenderRequirements,
   RenderOutput,
-  ServerPlugin,
   CacheManager,
   RenderMethod,
 } from '../types';
@@ -25,6 +24,7 @@ const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
 const hooksHelper = require('./helpers/hooks');
+const serverPlugins = require('../plugins/serverPlugins');
 
 const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
@@ -48,16 +48,11 @@ type Middleware = (
   res: Response,
   additional: {
     hooks: GSHooks,
-    serverPlugins: ?(ServerPlugin[]),
     assets: Object,
   },
 ) => any;
 
-const middleware: Middleware = async (
-  req,
-  res,
-  { hooks, serverPlugins, assets },
-) => {
+const middleware: Middleware = async (req, res, { hooks, assets }) => {
   /**
    * TODO: better logging
    */

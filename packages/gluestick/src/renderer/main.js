@@ -1,12 +1,4 @@
 /* @flow */
-
-/**
- * To import/require file from project use aliases:
- *   root, src, actions, assets, components, containers, reducers, config
- * To import/require renderer server file use relative paths.
- */
-/* eslint-disable prefer-arrow-callback */
-
 import type { Request, Response, BaseLogger } from '../types';
 
 // Intentionally first require so things like require("newrelic") in
@@ -84,11 +76,7 @@ module.exports = function startRenderer() {
   // Call express App Hook which accept app as param.
   hooksHelper.call(hooks.postServerRun, app);
 
-  app.use(function gluestickRequestHandler(
-    req: Request,
-    res: Response,
-    next: Function,
-  ) {
+  app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
     if (
       !Object.keys(entries).find((key: string): boolean =>
@@ -115,7 +103,6 @@ module.exports = function startRenderer() {
         return middleware(req, res, {
           assets,
           hooks,
-          serverPlugins,
         });
       })
       .catch((error: Error) => {
