@@ -112,7 +112,7 @@ module.exports = function startRenderer() {
 
     readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
-        return middleware({ config, logger }, req, res, {
+        return middleware(req, res, {
           assets,
           hooks,
           serverPlugins,

@@ -41,21 +41,17 @@ jest.mock('../helpers/cacheManager.js', () =>
 );
 jest.mock('../response/getStatusCode.js', () => jest.fn(() => 200));
 jest.mock('project-entries-config', () => ({ default: mocks.entriesConfig }));
+jest.mock('../../config', () => mocks.config);
 
 const React = require('react');
 
-const logger: BaseLogger = {
+const getLogger = (): BaseLogger => ({
   info: jest.fn(),
   debug: jest.fn(),
   success: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
-};
-
-const context: Context = {
-  config: mocks.config,
-  logger,
-};
+});
 
 const request: Request = mocks.request;
 
@@ -114,7 +110,7 @@ describe('renderer/middleware', () => {
     );
     const hooks = getHooks();
     const middleware = require('../middleware');
-    await middleware(context, request, response, {
+    await middleware(request, response, {
       assets,
       hooks,
       serverPlugins: [],
@@ -140,7 +136,7 @@ describe('renderer/middleware', () => {
     );
     const hooks = getHooks();
     const middleware = require('../middleware');
-    await middleware(context, request, response, {
+    await middleware(request, response, {
       assets,
       hooks,
       serverPlugins: [],
@@ -165,7 +161,7 @@ describe('renderer/middleware', () => {
     );
     const hooks = getHooks();
     const middleware = require('../middleware');
-    await middleware(context, request, response, {
+    await middleware(request, response, {
       assets,
       hooks,
       serverPlugins: [],
@@ -185,7 +181,7 @@ describe('renderer/middleware', () => {
     const hooks = getHooks();
     const errorHandler = require('../helpers/errorHandler');
     const middleware = require('../middleware');
-    await middleware(context, request, response, {
+    await middleware(request, response, {
       assets,
       hooks,
       serverPlugins: [],
@@ -207,16 +203,11 @@ describe('renderer/middleware', () => {
       );
       const hooks = getHooks();
       const middleware = require('../middleware');
-      await middleware(
-        context,
-        Object.assign(request, { url: '/cached' }),
-        response,
-        {
-          assets,
-          hooks,
-          serverPlugins: [],
-        },
-      );
+      await middleware(Object.assign(request, { url: '/cached' }), response, {
+        assets,
+        hooks,
+        serverPlugins: [],
+      });
       expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(1);
       expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(0);
       expect(hooks.preRedirect).toHaveBeenCalledTimes(0);
