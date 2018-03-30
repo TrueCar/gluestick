@@ -2,13 +2,13 @@
 
 import type {
   Context,
+  GSHooks,
   Request,
   Response,
   RenderRequirements,
   RenderOutput,
-  CacheManager,
-  GSHooks,
   ServerPlugin,
+  CacheManager,
   RenderMethod,
 } from '../types';
 
@@ -22,6 +22,7 @@ const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
+const hooksHelper = require('./helpers/hooks');
 
 const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
@@ -40,14 +41,23 @@ const envVariables: string[] =
     ? process.env.ENV_VARIABLES
     : [];
 
-module.exports = async function gluestickMiddleware(
-  { config, logger }: Context,
+type Middleware = (
+  context: Context,
   req: Request,
   res: Response,
-  { assets }: { assets: Object },
-  { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
-  serverPlugins: ?(ServerPlugin[]),
-) {
+  additional: {
+    hooks: GSHooks,
+    serverPlugins: ?(ServerPlugin[]),
+    assets: Object,
+  },
+) => any;
+
+const middleware: Middleware = async (
+  { config, logger },
+  req,
+  res,
+  { hooks, serverPlugins, assets },
+) => {
   /**
    * TODO: better logging
    */
@@ -60,9 +70,12 @@ module.exports = async function gluestickMiddleware(
 
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
-      const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
+      const cached = hooksHelper.call(
+        hooks.preRenderFromCache,
+        cachedBeforeHooks,
+      );
       res.send(cached);
-      return Promise.resolve();
+      return;
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
@@ -70,7 +83,7 @@ module.exports = async function gluestickMiddleware(
       req,
       entries,
     );
-    const requirements = hooksHelper(
+    const requirements = hooksHelper.call(
       hooks.postRenderRequirements,
       requirementsBeforeHooks,
     );
@@ -118,17 +131,17 @@ module.exports = async function gluestickMiddleware(
       store,
       httpClient,
     );
-    const renderPropsAfterHooks: Object = hooksHelper(
+    const renderPropsAfterHooks: Object = hooksHelper.call(
       hooks.postRenderProps,
       renderProps,
     );
     if (redirectLocation) {
-      hooksHelper(hooks.preRedirect, redirectLocation);
+      hooksHelper.call(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return Promise.resolve();
+      return;
     }
 
     if (!renderPropsAfterHooks) {
@@ -136,7 +149,7 @@ module.exports = async function gluestickMiddleware(
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return Promise.resolve();
+      return;
     }
 
     await runBeforeRoutes(store, renderPropsAfterHooks, {
@@ -146,7 +159,7 @@ module.exports = async function gluestickMiddleware(
 
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
-    const currentRoute: Object = hooksHelper(
+    const currentRoute: Object = hooksHelper.call(
       hooks.postGetCurrentRoute,
       currentRouteBeforeHooks,
     );
@@ -187,16 +200,16 @@ module.exports = async function gluestickMiddleware(
       },
       { renderMethod },
     );
-    const output: RenderOutput = hooksHelper(
+    const output: RenderOutput = hooksHelper.call(
       hooks.postRender,
       outputBeforeHooks,
     );
     res.status(statusCode).send(output.responseString);
-    return Promise.resolve();
   } catch (error) {
-    hooksHelper(hooks.error, error);
+    hooksHelper.call(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler({ config, logger }, req, res, error);
   }
-  return Promise.resolve();
 };
+
+module.exports = middleware;

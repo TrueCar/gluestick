@@ -69,6 +69,7 @@
     "moduleNameMapper": {
       "^application-config$": "<rootDir>/packages/gluestick/src/__tests__/mocks/applicationConfig.js",
       "^entry-wrapper$": "<rootDir>/packages/gluestick/src/__tests__/mocks/EntryWrapper.js",
+      "^gluestick-hooks$": "<rootDir>/packages/gluestick/src/__tests__/mocks/gluestickHooks.js",
       "^redux-middlewares$": "<rootDir>/packages/gluestick/src/__tests__/mocks/reduxMiddlewares.js",
       "^project-entries$": "<rootDir>/packages/gluestick/src/__tests__/mocks/projectEntries.js",
       "^project-entries-config$": "<rootDir>/packages/gluestick/src/__tests__/mocks/projectEntriesConfig.js"

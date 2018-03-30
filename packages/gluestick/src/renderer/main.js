@@ -120,14 +120,11 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
     readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
-        return middleware(
-          { config, logger },
-          req,
-          res,
-          { assets },
-          { hooks, hooksHelper: hooksHelper.call },
+        return middleware({ config, logger }, req, res, {
+          assets,
+          hooks,
           serverPlugins,
-        );
+        });
       })
       .catch((error: Error) => {
         logger.error(error);
