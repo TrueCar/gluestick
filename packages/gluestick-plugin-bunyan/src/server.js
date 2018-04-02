@@ -22,39 +22,32 @@ export type Logger = {
 
 type PluginUtilities = {
   requireModule: Function,
-  defaultLogger: Logger,
 };
 
 const defaultSettings: Options = {
   name: 'default name',
 };
 
-const bunyanPlugin = (
+type BunyanPlugin = (
   opts: Object,
-  { requireModule, defaultLogger }: PluginUtilities,
-): { logger?: Logger } => {
-  let options: Options = { ...defaultSettings };
+  pluginUtilities: PluginUtilities,
+) => { logger?: Logger };
+
+const bunyanPlugin: BunyanPlugin = (opts, { requireModule }) => {
+  let userSettings: Options;
   try {
-    const userSettings: Options = requireModule(
+    userSettings = requireModule(
       path.join(process.cwd(), 'src/bunyan.config.js'),
     );
-    options = Object.assign(options, userSettings);
   } catch (error) {
     // NOOP if we haven't settings from user we use default.
   }
-  if (Object.keys(options).length <= Object.keys(defaultSettings).length) {
-    return {};
-  }
-  try {
-    const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
-    loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
-    return {
-      logger: loggerWithSuccessMethod,
-    };
-  } catch (error) {
-    defaultLogger.error({ error }, 'The Bunyan config file contains errors.');
-    return {};
-  }
+  const options: Options = { ...defaultSettings, userSettings };
+  const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
+  loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
+  return {
+    logger: loggerWithSuccessMethod,
+  };
 };
 
 bunyanPlugin.meta = { name: 'gluestick-plugin-bunyan' };

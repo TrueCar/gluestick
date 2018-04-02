@@ -29,8 +29,8 @@ describe('Bunyan plugin', () => {
         defaultLogger: mockLogger,
       },
     );
+    // Force a failure for Flow: https://github.com/facebook/jest/issues/3764
     if (!logger) {
-      // Force a failure for Flow: https://github.com/facebook/jest/issues/3764
       expect(false).toBeTruthy();
       return;
     }
@@ -42,7 +42,7 @@ describe('Bunyan plugin', () => {
     expect(logger.error).toBeDefined();
   });
 
-  it('should return logger with all methods when given an empty config', () => {
+  it('should return the default logger if the config is empty', () => {
     const mockRequireModule = jest.fn();
     mockRequireModule.mockReturnValue({});
     const { logger }: { logger?: Logger } = gluestickPluginBunyan(
@@ -52,25 +52,15 @@ describe('Bunyan plugin', () => {
         defaultLogger: mockLogger,
       },
     );
-    expect(logger).not.toBeDefined();
-  });
-
-  it('should fail with a useful message if the config contains errors', () => {
-    const mockRequireModule = jest.fn();
-    mockRequireModule.mockReturnValue({
-      name: 'test',
-      serializers: 1,
-    });
-    const { logger }: { logger?: Logger } = gluestickPluginBunyan(
-      {},
-      {
-        requireModule: mockRequireModule,
-        defaultLogger: mockLogger,
-      },
-    );
-    expect(mockLogger.error.mock.calls[0][1]).toContain(
-      'config file contains errors',
-    );
-    expect(logger).not.toBeDefined();
+    // Force a failure for Flow: https://github.com/facebook/jest/issues/3764
+    if (!logger) {
+      expect(false).toBeTruthy();
+      return;
+    }
+    expect(logger).toBeDefined();
+    expect(logger).toHaveProperty('fields');
+    if (logger.fields && logger.fields.name) {
+      expect(logger.fields.name).toEqual('default name');
+    }
   });
 });
