@@ -2,6 +2,7 @@ const path = require('path');
 const commander = require('commander');
 const spawn = require('cross-spawn');
 const chalk = require('chalk');
+const semver = require('semver');
 
 const newApp = require('./new');
 const reinstallDev = require('./reinstallDev');
@@ -106,6 +107,28 @@ commander.command('*', null, { noHelp: true }).action(() => {
     if (code !== 0) {
       process.exit(code);
     }
+  });
+});
+
+// Add the list of commands from the local project `gluestick` package CLI to
+// the help message for this global `gluestick-cli` package CLI.
+commander.on('--help', () => {
+  let localInstalledVersion = '';
+  try {
+    localInstalledVersion = require(path.join(
+      process.cwd(),
+      'node_modules/gluestick',
+      'package.json',
+    )).version;
+  } catch (e) {
+    // noop
+  }
+  // the 'print-help' command is not available in version <=2.0.0
+  if (!localInstalledVersion || semver.lte(localInstalledVersion, '2.0.0')) {
+    return;
+  }
+  spawn.sync('./node_modules/.bin/gluestick', ['print-help'], {
+    stdio: 'inherit',
   });
 });
 

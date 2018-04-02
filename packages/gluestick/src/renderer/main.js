@@ -17,7 +17,6 @@ import type {
 
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
-// $FlowIgnore
 const projectHooks = require('gluestick-hooks').default;
 
 const path = require('path');
@@ -27,19 +26,8 @@ const compression = require('compression');
 const middleware = require('./middleware');
 const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
-// $FlowIgnore
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-// $FlowIgnore
-const entriesConfig = require('project-entries-config');
-// $FlowIgnore
-const EntryWrapper = require('entry-wrapper').default;
-const BodyWrapper = require('./components/Body').default;
-const reduxMiddlewares = require('redux-middlewares').default;
-const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
-// $FlowIgnore
-const reduxEnhancers = require('redux-middlewares').enhancers;
-// $FlowIgnore
 const entriesPlugins = require('project-entries').plugins;
 
 const hooksHelper = require('./helpers/hooks');
@@ -47,11 +35,6 @@ const prepareServerPlugins = require('../plugins/prepareServerPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
-
-const envVariables: string[] =
-  process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
-    ? process.env.ENV_VARIABLES
-    : [];
 
 module.exports = function startRenderer({ config, logger }: Context) {
   const assetsFilename = path.join(
@@ -84,11 +67,6 @@ module.exports = function startRenderer({ config, logger }: Context) {
   if (hooks.preInitServer) {
     hooksHelper.call(hooks.preInitServer);
   }
-
-  // Get runtime plugins that will be passed to EntryWrapper.
-  const runtimePlugins: Object[] = entriesPlugins
-    .filter((plugin: Object) => plugin.type === 'runtime')
-    .map((plugin: Object) => plugin.ref);
 
   const app: Object = express();
   app.use(compression());
@@ -142,24 +120,11 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
     readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
-        return middleware(
-          { config, logger },
-          req,
-          res,
-          { entries, entriesConfig, entriesPlugins: runtimePlugins },
-          { EntryWrapper, BodyWrapper },
-          { assets, loadjsConfig: applicationConfig.loadjs || {} },
-          {
-            reduxMiddlewares,
-            thunkMiddleware,
-            reduxEnhancers,
-            envVariables,
-            httpClient: applicationConfig.httpClient || {},
-            entryWrapperConfig: {},
-          },
-          { hooks, hooksHelper: hooksHelper.call },
+        return middleware({ config, logger }, req, res, {
+          assets,
+          hooks,
           serverPlugins,
-        );
+        });
       })
       .catch((error: Error) => {
         logger.error(error);

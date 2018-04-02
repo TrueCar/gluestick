@@ -4,10 +4,21 @@
 
 GlueStick sets up a testing environment using [Jest](https://facebook.github.io/jest/) and [Enzyme](https://github.com/airbnb/enzyme).
 
-You simply need to create files in any `__tests__` directory with the extension `.test.js` and they
+To add tests, create a file in any `__tests__` directory with the extension `.test.js` and its tests
 will be executed through the test runner using:
 ```
 npm test
+```
+
+The convention is colocate your `__tests__` folder with the file it’s testing, and use the same
+naming for tests as the files that they test.
+
+```
+- src
+  - components
+    - MyComponent.js
+    - __tests__
+      - MyComponent.test.js
 ```
 
 Tests can also be typed using `Flow` (see below). We use [flow-typed](https://github.com/flowtype/flow-typed) for Jest under the hood.
@@ -20,9 +31,9 @@ If you're using node 8.4.0+ you can also debug you test - just add `-D`:
 gluestick test -D
 ```
 
-Then you can use for instance **Node.js V8 --inspector Manager (NiM)** to debug them in Chrome.
+Then you can use, for instance, **Node.js V8 --inspector Manager (NiM)** to debug them in Chrome.
 
-We recommend to add `"sourceMaps": "inline"` to your `.babelrc` for better developer experience.
+We recommend adding `"sourceMaps": "inline"` to your `.babelrc` for better developer experience.
 
 ### Types
 
@@ -49,4 +60,4 @@ npm run ci
 
 ### Environment details
 
-You can read more about environment details [here](EnvDetails.md).
+You can read more about environment details [here](./configuration/EnvDetails.md).

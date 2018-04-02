@@ -1,0 +1,16 @@
+declare module 'project-entries' {
+  declare type Entries = {
+    [key: string]: {
+      component: Function,
+      routes: Function,
+      reducers: Object,
+      name?: string,
+      config?: Object,
+    },
+  };
+
+  declare module.exports: {
+    default: Entries,
+    plugins: Object[],
+  };
+}

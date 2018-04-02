@@ -9,6 +9,7 @@
     "install:yarn:ci": "yarn install --frozen-lockfile && yarn run build && yarn run yarn:install:ci && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
     "test": "jest --bail --no-cache -i",
+    "test:watch": "jest --watch",
     "test-coverage": "npm run test -- --coverage",
     "lint": "eslint ./packages",
     "flow": "flow",
@@ -64,7 +65,15 @@
     "transform": {
       "\\.js$": "<rootDir>/jestTransform.js"
     },
-    "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$"
+    "testRegex": "(src|shared)/(.*/)?__tests__/.*\\.test\\.js$",
+    "moduleNameMapper": {
+      "^application-config$": "<rootDir>/packages/gluestick/src/__tests__/mocks/applicationConfig.js",
+      "^entry-wrapper$": "<rootDir>/packages/gluestick/src/__tests__/mocks/EntryWrapper.js",
+      "^gluestick-hooks$": "<rootDir>/packages/gluestick/src/__tests__/mocks/gluestickHooks.js",
+      "^redux-middlewares$": "<rootDir>/packages/gluestick/src/__tests__/mocks/reduxMiddlewares.js",
+      "^project-entries$": "<rootDir>/packages/gluestick/src/__tests__/mocks/projectEntries.js",
+      "^project-entries-config$": "<rootDir>/packages/gluestick/src/__tests__/mocks/projectEntriesConfig.js"
+    }
   },
   "private": true,
   "workspaces": [

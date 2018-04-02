@@ -205,6 +205,23 @@ commander
     }),
   );
 
+// This command is used by the global `gluestick-cli` package CLI to append
+// the commands listed in this file to its help message.
+commander.command('print-help', null, { noHelp: true }).action(() => {
+  commander.help(txt => {
+    // Remove the first 11 lines because the global `gluestick-cli` package CLI
+    // prints similar information. Note: `txt` passed to `.help()` uses '\n' to
+    // separate lines.
+    // https://github.com/tj/commander.js/blob/d8404f8de45c9ba780606878f4d35d0a45743d32/index.js#L1130
+    return txt
+      .split('\n')
+      .slice(11)
+      .map(line => line.replace('Commands:', 'Project commands:'))
+      .concat('')
+      .join('\n');
+  });
+});
+
 // This is a catch all command. DO NOT PLACE ANY COMMANDS BELOW THIS
 commander.command('*', null, { noHelp: true }).action(cmd => {
   const logger = commandApi.getLogger();

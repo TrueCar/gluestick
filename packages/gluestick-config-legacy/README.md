@@ -1,5 +1,5 @@
 # `gluestick-config-legacy`
-This plugin allows to specify additional webpack loaders, plugins, aliases and redux middlewares.
+This plugin allows you to specify additional webpack loaders, plugins, aliases and redux middlewares.
 
 Webpack additions can be defined in `src/config/webpack-additions.js`.
 

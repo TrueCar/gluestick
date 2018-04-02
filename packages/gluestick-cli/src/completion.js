@@ -43,6 +43,7 @@ function loadCommanderProject(cwd) {
       'destroy',
       'dockerize',
       'generate',
+      'print-help',
       'start',
       'start-client',
       'start-server',

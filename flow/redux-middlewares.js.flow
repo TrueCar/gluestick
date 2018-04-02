@@ -1,0 +1,11 @@
+declare module 'redux-middlewares' {
+  declare type ReduxMiddlewares = any[];
+  declare type ThunkMiddleware = ?Function;
+  declare type ReduxEnhancers = any[];
+
+  declare module.exports: {
+    default: ReduxMiddlewares,
+    thunkMiddleware: ThunkMiddleware,
+    enhancers: ReduxEnhancers,
+  };
+}

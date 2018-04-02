@@ -5,14 +5,14 @@
 GlueStick is a command line interface for quickly developing universal web
 applications using React and Redux.
 
-## Why your project or boilerplate isn't enough?
+## Why is your project or boilerplate not enough?
 1. **You need integrated updates.** Without integrated updates, you are forced to manually merge in new features/fixes.
-2. **Isomorphic rendering.** Server-side and client-side rendering are identical. No more worries about SEO, pesky “loading” spinners, or users with javascript disabled
-3. **Integrated dockerization.** Go from development to production as simple as `gluestick dockerize MyApp`
-4. **Automatic babel and webpack loader support.** Cause writing ES5 is so boring
+2. **Isomorphic rendering.** Server-side and client-side rendering are identical. No more worries about SEO, loading spinners, or users with javascript disabled
+3. **Integrated dockerization.** Go from development to production as simply as `gluestick dockerize MyApp`
+4. **Automatic babel and webpack loader support.** Use the latest JavaScript features
 5. **Automatic test framework setup.** Preloaded with `Jest` and `Enzyme` right out of the box
-6. **Built in common practices.** Things like code splitting, hot module replacement, react-router, etc
-7. **Rails like generators** for common needs like components/reducers/containers/etc, with all necessary hooks and tests
+6. **Built in best practices.** Things like code splitting, hot module replacement, react-router, etc
+7. **Rails-like generators** for common needs like components/reducers/containers/etc, with all necessary hooks and tests
 
 
 ## Why GlueStick?
@@ -28,7 +28,18 @@ one location that the developer doesn't have to worry about. Not only does this
 make your application code cleaner but it makes it easier to update the
 boilerplate code as new improvements are discovered.
 
-Is actively being worked on and supported by TrueCar.
+Gluestick is actively worked on, supported and used in production by TrueCar.
+
+## What about Create React App?
+Create React App is an excellent command line interface for creating React applications.
+Gluestick is a much more opinionated tool, which offers several features out-of-the-box
+(pre-configured) that Create React App does not (and in some cases would require ejection
+from Create React App), such as:
+
+* Code splitting
+* Server rendering
+* React Router and Redux implementation
+* Generators for standard development needs
 
 ## Requirements
 Node 6.3.0+
