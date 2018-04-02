@@ -25,6 +25,7 @@ const config = require('../config').default;
 const logger = require('../logger').default;
 
 module.exports = function startRenderer() {
+  // refactor: can move this check into static asset import (synchronous), as this is only ever read once)
   const assetsFilename = path.join(
     process.cwd(),
     config.GSConfig.buildAssetsPath,
@@ -38,6 +39,7 @@ module.exports = function startRenderer() {
     );
   }
 
+  // refactor: once logger is a singleton, this is static
   const pluginUtils = createPluginUtils(logger);
 
   // Use custom logger from plugins or default logger.
@@ -48,6 +50,7 @@ module.exports = function startRenderer() {
 
   // Developers can add an optional hook that
   // includes script with initialization stuff.
+  // refactor: remove need for null checks on hooks
   if (hooks.preInitServer) {
     hooksHelper.call(hooks.preInitServer);
   }
@@ -59,8 +62,10 @@ module.exports = function startRenderer() {
     express.static(path.join(process.cwd(), config.GSConfig.buildAssetsPath)),
   );
 
+  // refactor: can remove this if we use webpackHotServerMiddleware
   setProxies(app, applicationConfig.proxies, logger);
 
+  // refactor: can remove this if we use webpackHotServerMiddleware
   if (process.env.NODE_ENV !== 'production') {
     app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
       // allow requests from our client side loading page
