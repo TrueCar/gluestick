@@ -2,15 +2,13 @@
 
 import type {
   Context,
+  GSHooks,
   Request,
   Response,
-  Entries,
-  EntriesConfig,
   RenderRequirements,
   RenderOutput,
-  CacheManager,
-  GSHooks,
   ServerPlugin,
+  CacheManager,
   RenderMethod,
 } from '../types';
 
@@ -24,52 +22,60 @@ const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
+const hooksHelper = require('./helpers/hooks');
+
+const entries = require('project-entries').default;
+const entriesConfig = require('project-entries-config');
+const entriesPlugins = require('project-entries').plugins;
+const EntryWrapper = require('entry-wrapper').default;
+const BodyWrapper = require('./components/Body').default;
+const applicationConfig = require('application-config').default;
+const reduxMiddlewares = require('redux-middlewares').default;
+const thunkMiddleware = require('redux-middlewares').thunkMiddleware;
+const reduxEnhancers = require('redux-middlewares').enhancers;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-type Options = {
-  envVariables: string[],
-  httpClient: Object,
-  entryWrapperConfig: Object,
-  reduxMiddlewares: any[],
-  thunkMiddleware: ?Function,
-  reduxEnhancers: any[],
-};
+const envVariables: string[] =
+  process.env.ENV_VARIABLES && Array.isArray(process.env.ENV_VARIABLES)
+    ? process.env.ENV_VARIABLES
+    : [];
 
-type EntriesArgs = {
-  entries: Entries,
-  entriesConfig: EntriesConfig,
-  entriesPlugins: Object[],
-};
-
-module.exports = async function gluestickMiddleware(
-  { config, logger }: Context,
+type Middleware = (
+  context: Context,
   req: Request,
   res: Response,
-  { entries, entriesConfig, entriesPlugins }: EntriesArgs,
-  { EntryWrapper, BodyWrapper }: { EntryWrapper: Object, BodyWrapper: Object },
-  { assets, loadjsConfig }: { assets: Object, loadjsConfig: Object },
-  options: Options = {
-    envVariables: [],
-    httpClient: {},
-    entryWrapperConfig: {},
-    reduxMiddlewares: [],
-    thunkMiddleware: null,
-    reduxEnhancers: [],
+  additional: {
+    hooks: GSHooks,
+    serverPlugins: ?(ServerPlugin[]),
+    assets: Object,
   },
-  { hooks, hooksHelper }: { hooks: GSHooks, hooksHelper: Function },
-  serverPlugins: ?(ServerPlugin[]),
-) {
+) => any;
+
+const middleware: Middleware = async (
+  { config, logger },
+  req,
+  res,
+  { hooks, serverPlugins, assets },
+) => {
   /**
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
+    // Get runtime plugins that will be passed to EntryWrapper.
+    const runtimePlugins: Object[] = entriesPlugins
+      .filter((plugin: Object) => plugin.type === 'runtime')
+      .map((plugin: Object) => plugin.ref);
+
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
-      const cached = hooksHelper(hooks.preRenderFromCache, cachedBeforeHooks);
+      const cached = hooksHelper.call(
+        hooks.preRenderFromCache,
+        cachedBeforeHooks,
+      );
       res.send(cached);
-      return Promise.resolve();
+      return;
     }
 
     const requirementsBeforeHooks: RenderRequirements = getRequirementsFromEntry(
@@ -77,7 +83,7 @@ module.exports = async function gluestickMiddleware(
       req,
       entries,
     );
-    const requirements = hooksHelper(
+    const requirements = hooksHelper.call(
       hooks.postRenderRequirements,
       requirementsBeforeHooks,
     );
@@ -85,14 +91,14 @@ module.exports = async function gluestickMiddleware(
     const httpClientOptions =
       requirements.config && requirements.config.httpClient
         ? requirements.config.httpClient
-        : options.httpClient;
+        : applicationConfig.httpClient;
     const httpClient: Function = getHttpClient(httpClientOptions, req, res);
 
     // Allow to specify different redux config
     const globalOptions = {
-      middlewares: options.reduxMiddlewares,
-      thunk: options.thunkMiddleware,
-      enhancers: options.reduxEnhancers,
+      middlewares: reduxMiddlewares,
+      thunk: thunkMiddleware,
+      enhancers: reduxEnhancers,
     };
 
     const appOptions =
@@ -125,17 +131,17 @@ module.exports = async function gluestickMiddleware(
       store,
       httpClient,
     );
-    const renderPropsAfterHooks: Object = hooksHelper(
+    const renderPropsAfterHooks: Object = hooksHelper.call(
       hooks.postRenderProps,
       renderProps,
     );
     if (redirectLocation) {
-      hooksHelper(hooks.preRedirect, redirectLocation);
+      hooksHelper.call(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
-      return Promise.resolve();
+      return;
     }
 
     if (!renderPropsAfterHooks) {
@@ -143,7 +149,7 @@ module.exports = async function gluestickMiddleware(
       // not found handler is included by default in new projects.
       showHelpText(MISSING_404_TEXT, logger);
       res.sendStatus(404);
-      return Promise.resolve();
+      return;
     }
 
     await runBeforeRoutes(store, renderPropsAfterHooks, {
@@ -153,7 +159,7 @@ module.exports = async function gluestickMiddleware(
 
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
-    const currentRoute: Object = hooksHelper(
+    const currentRoute: Object = hooksHelper.call(
       hooks.postGetCurrentRoute,
       currentRouteBeforeHooks,
     );
@@ -183,23 +189,27 @@ module.exports = async function gluestickMiddleware(
       {
         EntryWrapper,
         BodyWrapper,
-        entriesPlugins,
-        entryWrapperConfig: options.entryWrapperConfig,
-        envVariables: options.envVariables,
+        entriesPlugins: runtimePlugins,
+        entryWrapperConfig: {},
+        envVariables,
       },
-      { assets, loadjsConfig, cacheManager },
+      {
+        assets,
+        loadjsConfig: applicationConfig.loadjsConfig || {},
+        cacheManager,
+      },
       { renderMethod },
     );
-    const output: RenderOutput = hooksHelper(
+    const output: RenderOutput = hooksHelper.call(
       hooks.postRender,
       outputBeforeHooks,
     );
     res.status(statusCode).send(output.responseString);
-    return Promise.resolve();
   } catch (error) {
-    hooksHelper(hooks.error, error);
+    hooksHelper.call(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler({ config, logger }, req, res, error);
   }
-  return Promise.resolve();
 };
+
+module.exports = middleware;
