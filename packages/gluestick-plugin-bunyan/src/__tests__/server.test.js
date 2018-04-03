@@ -40,6 +40,9 @@ describe('Bunyan plugin', () => {
     expect(logger.warn).toBeDefined();
     expect(logger.debug).toBeDefined();
     expect(logger.error).toBeDefined();
+    if (logger.fields && logger.fields.name) {
+      expect(logger.fields.name).toEqual('test');
+    }
   });
 
   it('should return the default logger if the config is empty', () => {
