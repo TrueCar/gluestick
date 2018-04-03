@@ -1,6 +1,4 @@
 // @flow
-import invariant from 'invariant';
-
 describe('logger', () => {
   let originalEnv;
   let logger;
@@ -72,7 +70,10 @@ describe('logger', () => {
 
     it('stringifies functions', () => {
       logger.info({ hello: true, func: () => {} });
-      expect(process.send).toMatchSnapshot();
+      expect(process.send).toHaveBeenCalledWith({
+        type: 'info',
+        value: '[{"hello":true,"func":"[Function: func]"}]',
+      });
     });
   });
 });
