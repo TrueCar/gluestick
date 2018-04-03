@@ -1,8 +1,8 @@
 /* @flow */
 
+import invariant from 'invariant';
 import gluestickPluginBunyan from '../server.js';
 import type { Logger } from '../server.js';
-import invariant from 'invariant';
 
 describe('Bunyan plugin', () => {
   let mockLogger;
@@ -39,7 +39,10 @@ describe('Bunyan plugin', () => {
     expect(logger.debug).toBeDefined();
     expect(logger.error).toBeDefined();
     invariant(logger.fields, 'logger.fields is an object in this test');
-    invariant(logger.fields.name, 'logger.fields.name is a string for this test');
+    invariant(
+      logger.fields.name,
+      'logger.fields.name is a string for this test',
+    );
     expect(logger.fields.name).toEqual('test');
   });
 
@@ -57,7 +60,10 @@ describe('Bunyan plugin', () => {
     invariant(logger, 'logger is not optional in this test');
     expect(logger).toBeDefined();
     invariant(logger.fields, 'logger.fields is an object in this test');
-    invariant(logger.fields.name, 'logger.fields.name is a string for this test');
+    invariant(
+      logger.fields.name,
+      'logger.fields.name is a string for this test',
+    );
     expect(logger.fields.name).toEqual('default name');
   });
 });
