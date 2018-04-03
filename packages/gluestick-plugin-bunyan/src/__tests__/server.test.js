@@ -2,6 +2,7 @@
 
 import gluestickPluginBunyan from '../server.js';
 import type { Logger } from '../server.js';
+import invariant from 'invariant';
 
 describe('Bunyan plugin', () => {
   let mockLogger;
@@ -29,20 +30,17 @@ describe('Bunyan plugin', () => {
         defaultLogger: mockLogger,
       },
     );
-    // Force a failure for Flow: https://github.com/facebook/jest/issues/3764
-    if (!logger) {
-      expect(false).toBeTruthy();
-      return;
-    }
+    // https://github.com/facebook/jest/issues/3764
+    invariant(logger, 'logger is not optional in this test');
     expect(logger).toBeDefined();
     expect(logger.success).toBeDefined();
     expect(logger.info).toBeDefined();
     expect(logger.warn).toBeDefined();
     expect(logger.debug).toBeDefined();
     expect(logger.error).toBeDefined();
-    if (logger.fields && logger.fields.name) {
-      expect(logger.fields.name).toEqual('test');
-    }
+    invariant(logger.fields, 'logger.fields is an object in this test');
+    invariant(logger.fields.name, 'logger.fields.name is a string for this test');
+    expect(logger.fields.name).toEqual('test');
   });
 
   it('should return the default logger if the config is empty', () => {
@@ -55,15 +53,11 @@ describe('Bunyan plugin', () => {
         defaultLogger: mockLogger,
       },
     );
-    // Force a failure for Flow: https://github.com/facebook/jest/issues/3764
-    if (!logger) {
-      expect(false).toBeTruthy();
-      return;
-    }
+    // https://github.com/facebook/jest/issues/3764
+    invariant(logger, 'logger is not optional in this test');
     expect(logger).toBeDefined();
-    expect(logger).toHaveProperty('fields');
-    if (logger.fields && logger.fields.name) {
-      expect(logger.fields.name).toEqual('default name');
-    }
+    invariant(logger.fields, 'logger.fields is an object in this test');
+    invariant(logger.fields.name, 'logger.fields.name is a string for this test');
+    expect(logger.fields.name).toEqual('default name');
   });
 });
