@@ -42,7 +42,7 @@ const bunyanPlugin: BunyanPlugin = (opts, { requireModule }) => {
   } catch (error) {
     // NOOP if we haven't settings from user we use default.
   }
-  const options: Options = { ...defaultSettings, userSettings };
+  const options: Options = { ...defaultSettings, ...userSettings };
   const loggerWithSuccessMethod: Logger = bunyan.createLogger(options);
   loggerWithSuccessMethod.success = loggerWithSuccessMethod.info;
   return {

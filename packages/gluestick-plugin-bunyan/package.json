@@ -18,6 +18,7 @@
     "bunyan": "^1.8.8"
   },
   "devDependencies": {
-    "gluestick": "2.0.0"
+    "gluestick": "2.0.0",
+    "invariant": "2.2.4"
   }
 }
