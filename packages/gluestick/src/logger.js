@@ -23,6 +23,8 @@ const loggerFactory = (type: string): ((values: Array<*>) => void) => {
           : value;
       },
     );
+    // check needed for Flow, but this also assumes we're in a subprocess, which may not be
+    // true in the near future
     if (process.send) {
       process.send({ type, value: stringfiedValues });
     }
