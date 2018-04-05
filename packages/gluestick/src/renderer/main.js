@@ -1,6 +1,9 @@
 /* @flow */
 import type { Request, Response, BaseLogger } from '../types';
 
+import config from '../config';
+import logger from '../logger';
+
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
 const projectHooks = require('gluestick-hooks').default;
@@ -21,10 +24,7 @@ const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
 
-const config = require('../config').default;
-const logger = require('../logger').default;
-
-module.exports = function startRenderer() {
+module.exports = function main() {
   // refactor: can move this check into static asset import (synchronous), as this is only ever read once)
   const assetsFilename = path.join(
     process.cwd(),

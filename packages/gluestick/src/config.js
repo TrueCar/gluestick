@@ -1,4 +1,5 @@
-import type { GSConfig } from './types';
+// @flow
+import type { Config } from './types';
 
-const config: GSConfig = JSON.parse(process.argv[2] || '{}');
-module.exports = config;
+const config: Config = JSON.parse(process.argv[2] || '{}');
+export default config;
