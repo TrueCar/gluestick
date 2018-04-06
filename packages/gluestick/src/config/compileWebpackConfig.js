@@ -12,8 +12,6 @@ import type {
   WebpackHooks,
 } from '../types';
 
-import { callHook } from '../renderer/helpers/hooks';
-
 const path = require('path');
 const clone = require('clone');
 const getSharedConfig = require('./webpack/webpack.config');
@@ -22,6 +20,7 @@ const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
+const callHook = require('../renderer/helpers/callHook');
 const { requireModule } = require('../utils');
 const {
   extract_package_name,

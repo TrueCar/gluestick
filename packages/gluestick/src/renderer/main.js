@@ -3,7 +3,8 @@ import type { Request, Response, BaseLogger } from '../types';
 
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
-import hooks, { callHook } from './helpers/hooks';
+import hooks from './helpers/hooks';
+import callHook from './helpers/callHook';
 
 import config from '../config';
 import logger from '../logger';

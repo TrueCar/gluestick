@@ -4,15 +4,6 @@ import type { GSHooks, ServerPlugin } from '../../types';
 const projectHooks = require('gluestick-hooks').default;
 const serverPlugins = require('../../plugins/serverPlugins');
 
-export const callHook = (hooks: ?(Function | Function[]), arg?: any): any => {
-  if (hooks) {
-    return Array.isArray(hooks)
-      ? hooks.reduce((val, hook) => hook(val), arg)
-      : hooks(arg);
-  }
-  return arg;
-};
-
 const merge = (): GSHooks => {
   const mergedHooks = serverPlugins
     .filter((plugin: ServerPlugin): boolean => {

@@ -8,7 +8,9 @@ import type {
   RenderMethod,
 } from '../types';
 
-import hooks, { callHook } from './helpers/hooks';
+import hooks from './helpers/hooks';
+import callHook from './helpers/callHook';
+
 import config from '../config';
 import logger from '../logger';
 

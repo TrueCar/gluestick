@@ -1,7 +1,7 @@
 /* @flow */
 import type { ConfigPlugin, GSConfig, Logger } from '../types';
-import { callHook } from '../renderer/helpers/hooks';
 
+const callHook = require('../renderer/helpers/callHook');
 const clone = require('clone');
 const path = require('path');
 const defaultConfig = require('./defaults/glueStickConfig');
