@@ -12,6 +12,8 @@ import type {
   WebpackHooks,
 } from '../types';
 
+import { callHook } from '../renderer/helpers/hooks';
+
 const path = require('path');
 const clone = require('clone');
 const getSharedConfig = require('./webpack/webpack.config');
@@ -20,7 +22,6 @@ const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
 const readRuntimePlugins = require('../plugins/readRuntimePlugins');
 const readServerPlugins = require('../plugins/readServerPlugins');
-const hookHelper = require('../renderer/helpers/hooks');
 const { requireModule } = require('../utils');
 const {
   extract_package_name,
@@ -180,13 +181,13 @@ module.exports = (
   }
 
   // Applies client hooks provided by user
-  const clientEnvConfigFinal: WebpackConfig = hookHelper.call(
+  const clientEnvConfigFinal: WebpackConfig = callHook(
     webpackConfigHooks.webpackClientConfig,
     clientEnvConfigOverwriten,
   );
 
   // Applies server hooks provided by user
-  const serverEnvConfigFinal: WebpackConfig = hookHelper.call(
+  const serverEnvConfigFinal: WebpackConfig = callHook(
     webpackConfigHooks.webpackServerConfig,
     serverEnvConfigOverwriten,
   );

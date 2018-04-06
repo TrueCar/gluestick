@@ -7,6 +7,7 @@ import type {
   WebpackConfig,
   WebpackHooks,
 } from '../types';
+import { callHook } from '../renderer/helpers/hooks';
 
 const path = require('path');
 const fs = require('fs');
@@ -15,7 +16,6 @@ const sha1 = require('sha1');
 const clone = require('clone');
 const progressHandler = require('./webpack/progressHandler');
 const { requireModule } = require('../utils');
-const hookHelper = require('../renderer/helpers/hooks');
 
 const manifestFilename: string = 'vendor-manifest.json';
 // Need to set env variable, so that server can access it
@@ -237,7 +237,7 @@ const getConfig = (
     logger.warn(e);
   }
 
-  return hookHelper.call(
+  return callHook(
     webpackConfigHooks.webpackVendorDllConfig,
     intermediateConfig,
   );

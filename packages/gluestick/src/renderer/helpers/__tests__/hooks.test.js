@@ -1,36 +1,56 @@
-const hooks = require('../hooks');
+// @flow
+describe('hooks', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
 
-test('renderer/helpers/hooks should call hooks', () => {
-  const fn = jest.fn(() => 'return');
-  expect(hooks.call(null, 'arg')).toEqual('arg');
-  expect(hooks.call(fn, 'arg')).toEqual('return');
-  expect(hooks.call([fn], 'arg-1')).toEqual('return');
-  expect(fn.mock.calls[0]).toEqual(['arg']);
-  expect(fn.mock.calls[1]).toEqual(['arg-1']);
-});
+  describe('merging', () => {
+    it('merges plugin hooks with project hooks', () => {
+      jest.mock('gluestick-hooks', () => ({
+        default: {
+          hook1: ['hook1'],
+          hook2: 'hook2',
+        },
+      }));
+      jest.mock('../../../plugins/serverPlugins', () => [
+        {
+          hooks: {
+            hook1: ['hook3'],
+            hook3: 'hook4',
+          },
+        },
+        {
+          hooks: {
+            hook3: ['hook5'],
+          },
+        },
+      ]);
+      const hooks = require('../hooks').default;
+      expect(hooks).toEqual({
+        hook1: ['hook3', 'hook1'],
+        hook2: ['hook2'],
+        hook3: ['hook4', 'hook5'],
+      });
+    });
 
-test('renderer/helpers/hooks should merge hooks', () => {
-  const fn = jest.fn();
-  const projectHooks = {
-    hook1: [fn],
-    hook2: [fn],
-  };
-  const plugins = [
-    {
-      hooks: {
-        hook1: fn,
-        hook3: fn,
-      },
-    },
-    {
-      hooks: {
-        hook3: fn,
-      },
-    },
-  ];
-  expect(hooks.merge(projectHooks, plugins)).toEqual({
-    hook1: [fn, fn],
-    hook2: [fn],
-    hook3: [fn, fn],
+    it('skips plugins with no hooks or empty hooks', () => {
+      jest.mock('gluestick-hooks', () => ({
+        default: {
+          hook1: ['hook1'],
+          hook2: ['hook2'],
+        },
+      }));
+      jest.mock('../../../plugins/serverPlugins', () => [
+        {
+          hooks: {},
+        },
+        {},
+      ]);
+      const hooks = require('../hooks').default;
+      expect(hooks).toEqual({
+        hook1: ['hook1'],
+        hook2: ['hook2'],
+      });
+    });
   });
 });
