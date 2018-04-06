@@ -1,19 +1,8 @@
 /* @flow */
+import type { Request, Response, BaseLogger } from '../types';
 
-/**
- * To import/require file from project use aliases:
- *   root, src, actions, assets, components, containers, reducers, config
- * To import/require renderer server file use relative paths.
- */
-/* eslint-disable prefer-arrow-callback */
-
-import type {
-  Context,
-  Request,
-  Response,
-  ServerPlugin,
-  BaseLogger,
-} from '../types';
+import config from '../config';
+import logger from '../logger';
 
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
@@ -28,15 +17,15 @@ const readAssets = require('./helpers/readAssets');
 const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
-const entriesPlugins = require('project-entries').plugins;
 
 const hooksHelper = require('./helpers/hooks');
-const prepareServerPlugins = require('../plugins/prepareServerPlugins');
+const serverPlugins = require('../plugins/serverPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
 const parseRoutePath = require('./helpers/parseRoutePath');
 
-module.exports = function startRenderer({ config, logger }: Context) {
+module.exports = function main() {
+  // refactor: can move this check into static asset import (synchronous), as this is only ever read once)
   const assetsFilename = path.join(
     process.cwd(),
     config.GSConfig.buildAssetsPath,
@@ -50,11 +39,8 @@ module.exports = function startRenderer({ config, logger }: Context) {
     );
   }
 
+  // refactor: once logger is a singleton, this is static
   const pluginUtils = createPluginUtils(logger);
-  const serverPlugins: ServerPlugin[] = prepareServerPlugins(
-    logger,
-    entriesPlugins,
-  );
 
   // Use custom logger from plugins or default logger.
   const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);
@@ -64,6 +50,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
   // Developers can add an optional hook that
   // includes script with initialization stuff.
+  // refactor: remove need for null checks on hooks
   if (hooks.preInitServer) {
     hooksHelper.call(hooks.preInitServer);
   }
@@ -75,8 +62,10 @@ module.exports = function startRenderer({ config, logger }: Context) {
     express.static(path.join(process.cwd(), config.GSConfig.buildAssetsPath)),
   );
 
+  // refactor: can remove this if we use webpackHotServerMiddleware
   setProxies(app, applicationConfig.proxies, logger);
 
+  // refactor: can remove this if we use webpackHotServerMiddleware
   if (process.env.NODE_ENV !== 'production') {
     app.get('/gluestick-proxy-poll', (req: Request, res: Response) => {
       // allow requests from our client side loading page
@@ -92,11 +81,7 @@ module.exports = function startRenderer({ config, logger }: Context) {
   // Call express App Hook which accept app as param.
   hooksHelper.call(hooks.postServerRun, app);
 
-  app.use(function gluestickRequestHandler(
-    req: Request,
-    res: Response,
-    next: Function,
-  ) {
+  app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
     if (
       !Object.keys(entries).find((key: string): boolean =>
@@ -120,10 +105,9 @@ module.exports = function startRenderer({ config, logger }: Context) {
 
     readAssets(assetsFilename)
       .then((assets: Object): Promise<void> => {
-        return middleware({ config, logger }, req, res, {
+        return middleware(req, res, {
           assets,
           hooks,
-          serverPlugins,
         });
       })
       .catch((error: Error) => {

@@ -1,16 +1,16 @@
 /* @flow */
-
 import type {
-  Context,
   GSHooks,
   Request,
   Response,
   RenderRequirements,
   RenderOutput,
-  ServerPlugin,
   CacheManager,
   RenderMethod,
 } from '../types';
+
+import config from '../config';
+import logger from '../logger';
 
 const render = require('./render');
 const getRequirementsFromEntry = require('./helpers/getRequirementsFromEntry');
@@ -23,6 +23,7 @@ const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
 const hooksHelper = require('./helpers/hooks');
+const serverPlugins = require('../plugins/serverPlugins');
 
 const entries = require('project-entries').default;
 const entriesConfig = require('project-entries-config');
@@ -42,32 +43,20 @@ const envVariables: string[] =
     : [];
 
 type Middleware = (
-  context: Context,
   req: Request,
   res: Response,
   additional: {
     hooks: GSHooks,
-    serverPlugins: ?(ServerPlugin[]),
     assets: Object,
   },
 ) => any;
 
-const middleware: Middleware = async (
-  { config, logger },
-  req,
-  res,
-  { hooks, serverPlugins, assets },
-) => {
+const middleware: Middleware = async (req, res, { hooks, assets }) => {
   /**
    * TODO: better logging
    */
   const cacheManager: CacheManager = getCacheManager(logger, isProduction);
   try {
-    // Get runtime plugins that will be passed to EntryWrapper.
-    const runtimePlugins: Object[] = entriesPlugins
-      .filter((plugin: Object) => plugin.type === 'runtime')
-      .map((plugin: Object) => plugin.ref);
-
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
       const cached = hooksHelper.call(
@@ -174,6 +163,11 @@ const middleware: Middleware = async (
     }
 
     const statusCode: number = getStatusCode(store, currentRoute);
+
+    // Get runtime plugins that will be passed to EntryWrapper.
+    const runtimePlugins: Object[] = entriesPlugins
+      .filter((plugin: Object) => plugin.type === 'runtime')
+      .map((plugin: Object) => plugin.ref);
 
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },

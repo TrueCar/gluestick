@@ -1,11 +1,13 @@
 /* @flow */
+import type { ServerPlugin, Plugin } from '../types';
+import logger from '../logger';
 
-import type { ServerPlugin, Plugin, BaseLogger } from '../types';
+const plugins = require('project-entries').plugins;
 
 const { createArrowList } = require('../cli/helpers');
 const { requireModule } = require('../utils');
 
-type CopilationResults = {
+type CompilationResults = {
   [key: string]: Function | Object,
   error?: Error,
 };
@@ -22,7 +24,7 @@ type PluginRef = {
 const compilePlugin = (
   pluginSpec: Plugin,
   pluginOptions: Object,
-): CopilationResults => {
+): CompilationResults => {
   try {
     const pluginBody = pluginSpec.body
       ? pluginSpec.body(pluginSpec.options, pluginOptions)
@@ -51,7 +53,7 @@ const compilePlugin = (
  * Compile server plugins from given array. Those plugins are compiled with provided by user
  * `options` object from plugin declaration file, and utilities from gluestick like logger.
  */
-module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
+const prepareServerPlugins = (): ServerPlugin[] => {
   try {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(
@@ -110,3 +112,5 @@ module.exports = (logger: BaseLogger, plugins: PluginRef[]): ServerPlugin[] => {
     return [];
   }
 };
+
+module.exports = prepareServerPlugins();

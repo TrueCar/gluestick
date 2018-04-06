@@ -2,6 +2,8 @@
 import type { ServerPlugin } from '../../types';
 
 module.exports = {
+  // by making hooks static, we don't need to do any null checks on call
+  // this can be refactored out
   call: (hooks: ?(Function | Function[]), arg?: any): any => {
     if (hooks) {
       return Array.isArray(hooks)
@@ -10,6 +12,8 @@ module.exports = {
     }
     return arg;
   },
+  // should be done once on import of hooks! this way we won't even
+  // interact with raw gluestick-hooks import directly
   merge: (projectHooks: Object, plugins: ServerPlugin[]): Object => {
     const mergedHooks = plugins
       .filter((plugin: ServerPlugin): boolean => {
