@@ -28,8 +28,8 @@ module.exports = function main() {
   // refactor: can move this check into static asset import (synchronous), as this is only ever read once)
   const assetsFilename = path.join(
     process.cwd(),
-    config.GSConfig.buildAssetsPath,
-    config.GSConfig.webpackChunks,
+    'build',
+    'webpack-stats-client.json',
   );
   if (!fs.existsSync(assetsFilename)) {
     console.log('\n');

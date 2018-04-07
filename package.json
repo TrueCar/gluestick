@@ -23,6 +23,8 @@
     "docs:build": "npm run docs:prepare && gitbook build -g TrueCar/gluestick"
   },
   "dependencies": {
+    "babel-plugin-universal-import": "1.4.0",
+    "extract-css-chunks-webpack-plugin": "2.0.18",
     "flow-typed": "2.1.5",
     "gitbook": "^3.2.3",
     "gitbook-cli": "^2.3.2",

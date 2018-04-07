@@ -1,12 +1,13 @@
 /* @flow */
+import { flushChunkNames, clearChunks } from 'react-universal-component/server';
+import flushChunks from 'webpack-flush-chunks';
+
 import type { Context, Request, RenderOutput, RenderMethod } from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
 const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
-const linkAssets = require('./helpers/linkAssets');
-
 const getRenderer = (
   isEmail: boolean,
   renderMethod?: RenderMethod,
@@ -38,9 +39,9 @@ type AssetsCacheOpts = {
 };
 
 module.exports = function render(
-  context: Context,
+  { logger }: Context,
   req: Request,
-  { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
+  { EntryPoint, store, routes, httpClient }: EntryRequirements,
   { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
   {
     EntryWrapper,
@@ -49,15 +50,11 @@ module.exports = function render(
     envVariables,
     entriesPlugins,
   }: WrappersRequirements,
-  { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
+  { assets, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput {
-  const { styleTags, scriptTags } = linkAssets(
-    context,
-    entryName,
-    assets,
-    loadjsConfig,
-  );
+  clearChunks();
+
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const rootWrappers = entriesPlugins
@@ -83,8 +80,20 @@ module.exports = function render(
 
   const renderResults: Object = getRenderer(isEmail, renderMethod)(
     entryWrapper,
-    styleTags,
   );
+
+  logger.info(entryWrapper);
+  logger.info(renderResults);
+
+  const chunkNames = flushChunkNames();
+  const { Js, Styles, CssHash, scripts, stylesheets } = flushChunks(assets, {
+    chunkNames,
+  });
+
+  logger.info('DYNAMIC CHUNK NAMES RENDERED', chunkNames);
+  logger.info('SCRIPTS SERVED', scripts);
+  logger.info('STYLESHEETS SERVED', stylesheets);
+
   const bodyWrapperContent: String = renderMethod
     ? renderResults.body
     : renderResults;
@@ -94,7 +103,8 @@ module.exports = function render(
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
-      scriptTags={scriptTags}
+      ScriptTags={Js}
+      CssHash={CssHash}
     />
   );
 
@@ -107,7 +117,7 @@ module.exports = function render(
   const rootElement = (
     <EntryPoint
       body={bodyWrapper}
-      head={isEmail ? null : renderResults.head || styleTags}
+      head={isEmail ? null : renderResults.head || <Styles />}
       req={req}
     />
   );

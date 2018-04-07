@@ -9,7 +9,8 @@ export default class Body extends Component {
     isEmail: PropTypes.bool.isRequired,
     initialState: PropTypes.any.isRequired,
     envVariables: PropTypes.array.isRequired,
-    scriptTags: PropTypes.array.isRequired,
+    ScriptTags: PropTypes.array.isRequired,
+
   };
 
   render() {
@@ -31,13 +32,14 @@ export default class Body extends Component {
 
   _renderWithScriptTags() {
     const windowVariables = this._getGlobalVariables();
-    const { scriptTags } = this.props;
+    const { ScriptTags, CssHash } = this.props;
     return (
       <div>
         <div>
           {this._renderMainContent()}
         </div>
-        {scriptTags.map(tag => tag)}
+        <CssHash />
+        <ScriptTags />
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{ __html: windowVariables }}

@@ -4,8 +4,7 @@ import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
 module.exports = (
   clientConfig: UniversalWebpackConfigurator,
@@ -13,20 +12,28 @@ module.exports = (
   const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'hidden-source-map';
   const scssLoaders = configuration.module.rules[1].use;
-  configuration.module.rules[1].use = ExtractTextPlugin.extract({
-    fallback: scssLoaders[0],
+  configuration.module.rules[1].use = ExtractCssChunks.extract({
     use: scssLoaders.slice(1),
   });
-  const cssLoaders = configuration.module.rules[2].use;
-  configuration.module.rules[2].use = ExtractTextPlugin.extract({
-    fallback: cssLoaders[0],
-    use: cssLoaders.slice(1),
+  configuration.module.rules[2].use = ExtractCssChunks.extract({
+    use: [
+      {
+        loader: 'css-loader',
+        options: {
+          localIdentName: '[name]__[local]--[hash:base64:5]',
+        },
+      },
+    ],
   });
   configuration.plugins.push(
-    // Bug: some chunks are not ouptputted
-    // new webpack.optimize.ModuleConcatenationPlugin(),
-    new ExtractTextPlugin('[name]-[chunkhash].css'),
-    new OptimizeCSSAssetsPlugin({ canPrint: false }),
+    new ExtractCssChunks(),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
+      filename: '[name].[chunkhash].js',
+      children: true,
+      deepChildren: true,
+      // minChunks: Infinity,
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),

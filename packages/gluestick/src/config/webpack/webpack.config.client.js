@@ -11,13 +11,10 @@ import type {
 const webpack = require('webpack');
 const path = require('path');
 const deepClone = require('clone');
-const fs = require('fs');
 const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
-const ChunksPlugin = require('./ChunksPlugin');
 const { updateBabelLoaderConfig } = require('./utils');
-const { manifestFilename } = require('../vendorDll');
 
 module.exports = (
   logger: Logger,
@@ -62,36 +59,6 @@ module.exports = (
 
   if (!noProgress) {
     config.plugins.push(progressHandler(logger, 'client'));
-  }
-
-  // If vendor Dll bundle exists, use it otherwise fallback to CommonsChunkPlugin.
-  const vendorDllManifestPath: string = path.join(
-    process.cwd(),
-    gluestickConfig.buildDllPath,
-    manifestFilename,
-  );
-  if (fs.existsSync(vendorDllManifestPath)) {
-    logger.info('Vendor DLL bundle found, using DllReferencePlugin');
-    config.plugins.unshift(
-      new webpack.DllReferencePlugin({
-        context: configuration.context,
-        manifest: require(vendorDllManifestPath),
-      }),
-    );
-    config.plugins.push(
-      new ChunksPlugin(deepClone(configuration), { appendChunkInfo: true }),
-    );
-  } else {
-    logger.info('Vendor DLL bundle not found, using CommonsChunkPlugin');
-    config.plugins.push(
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: `vendor${process.env.NODE_ENV === 'production'
-          ? '-[hash]'
-          : ''}.bundle.js`,
-      }),
-      new ChunksPlugin(deepClone(configuration)),
-    );
   }
 
   return () => config;
