@@ -1,12 +1,13 @@
 /* @flow */
 import type { Request, Response, BaseLogger } from '../types';
 
-import config from '../config';
-import logger from '../logger';
-
 // Intentionally first require so things like require("newrelic") in
 // preInitHook get instantiated before anything else. This improves profiling
-const projectHooks = require('gluestick-hooks').default;
+import hooks from './helpers/hooks';
+import callHook from './helpers/callHook';
+
+import config from '../config';
+import logger from '../logger';
 
 const path = require('path');
 const fs = require('fs');
@@ -18,7 +19,6 @@ const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
 
-const hooksHelper = require('./helpers/hooks');
 const serverPlugins = require('../plugins/serverPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
@@ -45,14 +45,11 @@ module.exports = function main() {
   // Use custom logger from plugins or default logger.
   const customLogger: ?BaseLogger = pluginUtils.getCustomLogger(serverPlugins);
 
-  // Merge hooks from project and plugins' hooks.
-  const hooks = hooksHelper.merge(projectHooks, serverPlugins);
-
   // Developers can add an optional hook that
   // includes script with initialization stuff.
   // refactor: remove need for null checks on hooks
   if (hooks.preInitServer) {
-    hooksHelper.call(hooks.preInitServer);
+    callHook(hooks.preInitServer);
   }
 
   const app: Object = express();
@@ -79,7 +76,7 @@ module.exports = function main() {
   }
 
   // Call express App Hook which accept app as param.
-  hooksHelper.call(hooks.postServerRun, app);
+  callHook(hooks.postServerRun, app);
 
   app.use((req: Request, res: Response, next: Function) => {
     // Use SSR middleware only for entries/app routes
@@ -107,7 +104,6 @@ module.exports = function main() {
       .then((assets: Object): Promise<void> => {
         return middleware(req, res, {
           assets,
-          hooks,
         });
       })
       .catch((error: Error) => {

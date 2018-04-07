@@ -87,7 +87,7 @@ describe('renderer/middleware', () => {
   });
 
   it('should render output', async () => {
-    jest.doMock('project-entries', () =>
+    jest.mock('project-entries', () =>
       getEntries({
         mockBehaviour: {
           renderProps: {
@@ -97,10 +97,10 @@ describe('renderer/middleware', () => {
       }),
     );
     const hooks = getHooks();
+    jest.mock('gluestick-hooks', () => ({ default: hooks }));
     const middleware = require('../middleware');
     await middleware(request, response, {
       assets,
-      hooks,
     });
     expect(hooks.preRenderFromCache).toHaveBeenCalledTimes(0);
     expect(hooks.postRenderRequirements).toHaveBeenCalledTimes(1);
@@ -114,7 +114,7 @@ describe('renderer/middleware', () => {
   });
 
   it('should redirect', async () => {
-    jest.doMock('project-entries', () =>
+    jest.mock('project-entries', () =>
       getEntries({
         mockBehaviour: {
           redirect: true,
@@ -122,6 +122,7 @@ describe('renderer/middleware', () => {
       }),
     );
     const hooks = getHooks();
+    jest.mock('gluestick-hooks', () => ({ default: hooks }));
     const middleware = require('../middleware');
     await middleware(request, response, {
       assets,
@@ -138,7 +139,7 @@ describe('renderer/middleware', () => {
   });
 
   it('should send 404 status', async () => {
-    jest.doMock('project-entries', () =>
+    jest.mock('project-entries', () =>
       getEntries({
         mockBehaviour: {
           renderProps: null,
@@ -146,6 +147,7 @@ describe('renderer/middleware', () => {
       }),
     );
     const hooks = getHooks();
+    jest.mock('gluestick-hooks', () => ({ default: hooks }));
     const middleware = require('../middleware');
     await middleware(request, response, {
       assets,
@@ -162,8 +164,9 @@ describe('renderer/middleware', () => {
   });
 
   it('should call errorHandler', async () => {
-    jest.doMock('project-entries', () => ({ default: {}, plugins: [] }));
+    jest.mock('project-entries', () => ({ default: {}, plugins: [] }));
     const hooks = getHooks();
+    jest.mock('gluestick-hooks', () => ({ default: hooks }));
     const errorHandler = require('../helpers/errorHandler');
     const middleware = require('../middleware');
     await middleware(request, response, {
@@ -176,7 +179,7 @@ describe('renderer/middleware', () => {
 
   describe('in production', () => {
     it('should send cached output', async () => {
-      jest.doMock('project-entries', () =>
+      jest.mock('project-entries', () =>
         getEntries({
           mockBehaviour: {
             renderProps: {
@@ -186,6 +189,7 @@ describe('renderer/middleware', () => {
         }),
       );
       const hooks = getHooks();
+      jest.mock('gluestick-hooks', () => ({ default: hooks }));
       const middleware = require('../middleware');
       await middleware(Object.assign(request, { url: '/cached' }), response, {
         assets,

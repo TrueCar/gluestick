@@ -1,6 +1,5 @@
 /* @flow */
 import type {
-  GSHooks,
   Request,
   Response,
   RenderRequirements,
@@ -8,6 +7,9 @@ import type {
   CacheManager,
   RenderMethod,
 } from '../types';
+
+import hooks from './helpers/hooks';
+import callHook from './helpers/callHook';
 
 import config from '../config';
 import logger from '../logger';
@@ -22,7 +24,6 @@ const errorHandler = require('./helpers/errorHandler');
 const getCacheManager = require('./helpers/cacheManager');
 const getStatusCode = require('./response/getStatusCode');
 const createPluginUtils = require('../plugins/utils');
-const hooksHelper = require('./helpers/hooks');
 const serverPlugins = require('../plugins/serverPlugins');
 
 const entries = require('project-entries').default;
@@ -46,12 +47,11 @@ type Middleware = (
   req: Request,
   res: Response,
   additional: {
-    hooks: GSHooks,
     assets: Object,
   },
 ) => any;
 
-const middleware: Middleware = async (req, res, { hooks, assets }) => {
+const middleware: Middleware = async (req, res, { assets }) => {
   /**
    * TODO: better logging
    */
@@ -59,10 +59,7 @@ const middleware: Middleware = async (req, res, { hooks, assets }) => {
   try {
     const cachedBeforeHooks: string | null = cacheManager.getCachedIfProd(req);
     if (cachedBeforeHooks) {
-      const cached = hooksHelper.call(
-        hooks.preRenderFromCache,
-        cachedBeforeHooks,
-      );
+      const cached = callHook(hooks.preRenderFromCache, cachedBeforeHooks);
       res.send(cached);
       return;
     }
@@ -72,7 +69,7 @@ const middleware: Middleware = async (req, res, { hooks, assets }) => {
       req,
       entries,
     );
-    const requirements = hooksHelper.call(
+    const requirements = callHook(
       hooks.postRenderRequirements,
       requirementsBeforeHooks,
     );
@@ -120,12 +117,12 @@ const middleware: Middleware = async (req, res, { hooks, assets }) => {
       store,
       httpClient,
     );
-    const renderPropsAfterHooks: Object = hooksHelper.call(
+    const renderPropsAfterHooks: Object = callHook(
       hooks.postRenderProps,
       renderProps,
     );
     if (redirectLocation) {
-      hooksHelper.call(hooks.preRedirect, redirectLocation);
+      callHook(hooks.preRedirect, redirectLocation);
       res.redirect(
         301,
         `${redirectLocation.pathname}${redirectLocation.search}`,
@@ -148,7 +145,7 @@ const middleware: Middleware = async (req, res, { hooks, assets }) => {
 
     const currentRouteBeforeHooks: Object =
       renderPropsAfterHooks.routes[renderPropsAfterHooks.routes.length - 1];
-    const currentRoute: Object = hooksHelper.call(
+    const currentRoute: Object = callHook(
       hooks.postGetCurrentRoute,
       currentRouteBeforeHooks,
     );
@@ -194,13 +191,10 @@ const middleware: Middleware = async (req, res, { hooks, assets }) => {
       },
       { renderMethod },
     );
-    const output: RenderOutput = hooksHelper.call(
-      hooks.postRender,
-      outputBeforeHooks,
-    );
+    const output: RenderOutput = callHook(hooks.postRender, outputBeforeHooks);
     res.status(statusCode).send(output.responseString);
   } catch (error) {
-    hooksHelper.call(hooks.error, error);
+    callHook(hooks.error, error);
     logger.error(error instanceof Error ? error.stack : error);
     errorHandler({ config, logger }, req, res, error);
   }
