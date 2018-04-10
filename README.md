@@ -59,6 +59,7 @@ gluestick start
 * [Plugins](docs/configuration/Plugins.md)
 * [Configuration](docs/Configuration.md)
 * [Styles](docs/configuration/Styles.md)
+* [Webpack Bundle Analyzer Guide](docs/guides/WebpackBundleAnalyzerGuide.md)
 
 ## Guides
 
