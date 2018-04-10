@@ -70,27 +70,13 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           ],
         },
         {
-          test: /\.(scss)$/,
+          test: /\.(s?css)$/,
           use: ExtractCssChunks.extract({
             use: [
               `css-loader${isProduction ? '' : '?sourceMap'}`,
               `sass-loader${isProduction
                 ? ''
                 : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
-            ],
-          }),
-        },
-        {
-          test: /\.(css)$/,
-          use: ExtractCssChunks.extract({
-            use: [
-              {
-                loader: 'css-loader',
-                options: {
-                  localIdentName: '[name]__[local]--[hash:base64:5]',
-                  sourceMap: !!isProduction,
-                },
-              },
             ],
           }),
         },

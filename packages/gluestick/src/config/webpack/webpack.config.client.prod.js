@@ -11,13 +11,6 @@ module.exports = (
   const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'hidden-source-map';
   configuration.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
-      filenameTemplate: '[name].js',
-      children: true,
-      deepChildren: true,
-      // minChunks: Infinity,
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),

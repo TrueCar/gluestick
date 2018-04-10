@@ -51,6 +51,15 @@ module.exports = (
     };
   });
   config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'bootstrap', // needed to put webpack bootstrap code before chunks
+      minChunks: Infinity,
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      filenameTemplate: '[name].js',
+      children: true,
+      deepChildren: true,
+    }),
     // Make it so *.server.js files return null in client
     new webpack.NormalModuleReplacementPlugin(
       /\.server(\.js)?$/,
