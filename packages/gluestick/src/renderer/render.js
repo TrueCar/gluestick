@@ -79,24 +79,10 @@ module.exports = function render(
   );
 
   const chunkNames = flushChunkNames();
-  const {
-    Js,
-    Styles,
-    CssHash,
-    js,
-    styles,
-    cssHash,
-    scripts,
-    stylesheets,
-  } = flushChunks(assets, {
+  const { CssHash, Styles, js } = flushChunks(assets, {
     chunkNames,
-    before: ['main'],
-    after: [],
+    before: ['bootstrap'],
   });
-
-  logger.info('DYNAMIC CHUNK NAMES RENDERED', chunkNames);
-  logger.info('SCRIPTS SERVED', scripts);
-  logger.info('STYLESHEETS SERVED', stylesheets);
 
   const bodyWrapperContent: String = renderMethod
     ? renderResults.body
@@ -107,7 +93,7 @@ module.exports = function render(
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
-      ScriptTags={Js}
+      scriptTags={js}
       CssHash={CssHash}
     />
   );
