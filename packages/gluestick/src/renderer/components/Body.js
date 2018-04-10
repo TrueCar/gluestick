@@ -9,47 +9,29 @@ export default class Body extends Component {
     isEmail: PropTypes.bool.isRequired,
     initialState: PropTypes.any.isRequired,
     envVariables: PropTypes.array.isRequired,
-    ScriptTags: PropTypes.array.isRequired,
+    scriptTags: PropTypes.string.isRequired,
   };
 
   render() {
-    const { isEmail } = this.props;
-
-    if (isEmail) {
-      return this._renderWithoutScriptTags();
-    }
-    return this._renderWithScriptTags();
-  }
-
-  _renderWithoutScriptTags() {
-    return (
-      <div>
-        {this._renderMainContent()}
-      </div>
-    );
-  }
-
-  _renderWithScriptTags() {
+    const { isEmail, scriptTags, CssHash } = this.props;
     const windowVariables = this._getGlobalVariables();
-    const { ScriptTags, CssHash } = this.props;
-    return (
-      <div>
-        <div>
-          {this._renderMainContent()}
-        </div>
-        <CssHash />
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{ __html: windowVariables }}
-        />
-        <ScriptTags />
-      </div>
-    );
-  }
 
-  _renderMainContent() {
     return (
-      <div id="main" dangerouslySetInnerHTML={{ __html: this.props.html }} />
+      <React.Fragment>
+        <CssHash />
+        {!isEmail &&
+          <React.Fragment>
+            <script
+              type="text/javascript"
+              dangerouslySetInnerHTML={{ __html: windowVariables }}
+            />
+            <div dangerouslySetInnerHTML={{ __html: scriptTags }} />
+            <div
+              id="main"
+              dangerouslySetInnerHTML={{ __html: this.props.html }}
+            />
+          </React.Fragment>}
+      </React.Fragment>
     );
   }
 
