@@ -1,5 +1,4 @@
 /* @flow */
-import { flushChunkNames, clearChunks } from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
 
 import type { Context, Request, RenderOutput, RenderMethod } from '../types';
@@ -8,6 +7,11 @@ const React = require('react');
 const { RouterContext } = require('react-router');
 const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
+const {
+  flushChunkNames,
+  clearChunks,
+} = require('react-universal-component/server');
+
 const getRenderer = (
   isEmail: boolean,
   renderMethod?: RenderMethod,
@@ -48,7 +52,6 @@ module.exports = function render(
     BodyWrapper,
     entryWrapperConfig,
     envVariables,
-    entriesPlugins,
   }: WrappersRequirements,
   { assets, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
@@ -57,9 +60,6 @@ module.exports = function render(
 
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins
-    .filter(plugin => plugin.meta.wrapper)
-    .map(({ plugin }) => plugin);
   const entryWrapper = (
     <EntryWrapper
       store={store}
@@ -67,10 +67,6 @@ module.exports = function render(
       config={entryWrapperConfig}
       getRoutes={routes}
       httpClient={httpClient}
-      rootWrappers={rootWrappers}
-      rootWrappersOptions={{
-        userAgent: req.headers['user-agent'],
-      }}
     />
   );
 
@@ -82,12 +78,20 @@ module.exports = function render(
     entryWrapper,
   );
 
-  logger.info(entryWrapper);
-  logger.info(renderResults);
-
   const chunkNames = flushChunkNames();
-  const { Js, Styles, CssHash, scripts, stylesheets } = flushChunks(assets, {
+  const {
+    Js,
+    Styles,
+    CssHash,
+    js,
+    styles,
+    cssHash,
+    scripts,
+    stylesheets,
+  } = flushChunks(assets, {
     chunkNames,
+    before: ['main'],
+    after: [],
   });
 
   logger.info('DYNAMIC CHUNK NAMES RENDERED', chunkNames);

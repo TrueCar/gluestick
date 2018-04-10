@@ -4,32 +4,16 @@ import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
 module.exports = (
   clientConfig: UniversalWebpackConfigurator,
 ): WebpackConfig => {
   const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'hidden-source-map';
-  const scssLoaders = configuration.module.rules[1].use;
-  configuration.module.rules[1].use = ExtractCssChunks.extract({
-    use: scssLoaders.slice(1),
-  });
-  configuration.module.rules[2].use = ExtractCssChunks.extract({
-    use: [
-      {
-        loader: 'css-loader',
-        options: {
-          localIdentName: '[name]__[local]--[hash:base64:5]',
-        },
-      },
-    ],
-  });
   configuration.plugins.push(
-    new ExtractCssChunks(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
-      filename: '[name].[chunkhash].js',
+      filenameTemplate: '[name].js',
       children: true,
       deepChildren: true,
       // minChunks: Infinity,

@@ -10,7 +10,6 @@ export default class Body extends Component {
     initialState: PropTypes.any.isRequired,
     envVariables: PropTypes.array.isRequired,
     ScriptTags: PropTypes.array.isRequired,
-
   };
 
   render() {
@@ -39,20 +38,18 @@ export default class Body extends Component {
           {this._renderMainContent()}
         </div>
         <CssHash />
-        <ScriptTags />
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{ __html: windowVariables }}
         />
+        <ScriptTags />
       </div>
     );
   }
 
   _renderMainContent() {
     return (
-      <div id="main">
-        <div dangerouslySetInnerHTML={{ __html: this.props.html }} />
-      </div>
+      <div id="main" dangerouslySetInnerHTML={{ __html: this.props.html }} />
     );
   }
 

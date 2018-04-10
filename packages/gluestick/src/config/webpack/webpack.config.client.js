@@ -29,6 +29,7 @@ module.exports = (
   }: { skipEntryGeneration: boolean, noProgress: boolean } = {},
 ): UniversalWebpackConfigurator => {
   const config = deepClone(configuration);
+  config.name = 'client';
   // https://webpack.github.io/docs/multiple-entry-points.html
   config.entry = skipEntryGeneration
     ? {}
@@ -39,6 +40,7 @@ module.exports = (
     });
   }, {});
   // Modify 'es2015' preset in babel-loader plugins.
+
   updateBabelLoaderConfig(config, (options: BabelOptions): BabelOptions => {
     return {
       ...options,
