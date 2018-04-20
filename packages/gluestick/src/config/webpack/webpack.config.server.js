@@ -2,10 +2,12 @@
 
 import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
+const { serverConfiguration } = require('universal-webpack');
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const deepClone = require('clone');
+
 const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
 
@@ -30,7 +32,6 @@ module.exports = (
     );
   }
   const config = deepClone(configuration);
-  config.name = 'server';
   // Disable warning for `getVersion` function from `cli/helpers.js`, which has dynamic require,
   // but it's not used by server.
   config.module.noParse = [/cli\/helpers/];
@@ -58,12 +59,6 @@ module.exports = (
   );
   config.resolve.alias['plugins-config-path'] =
     gluestickConfig.pluginsConfigPath;
-  config.resolve.alias['react-universal-component/server'] = path.join(
-    process.cwd(),
-    'node_modules',
-    'react-universal-component',
-    'server',
-  );
   config.resolve.alias['application-config'] = path.join(
     config.resolve.alias.root,
     gluestickConfig.sourcePath,
@@ -78,24 +73,11 @@ module.exports = (
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
   );
-  config.plugins.push(
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
-  );
-  config.output = {
-    path: '/Users/dedmondson/src/tc/universal-gluestick/build/server',
-    publicPath: '/assets/',
-    filename: '[name].js',
-    libraryTarget: 'commonjs2',
-    pathinfo: true,
-  };
-  config.entry = {
-    renderer:
-      '/Users/dedmondson/src/tc/universal-gluestick/node_modules/gluestick/build/renderer/entry.js',
-  };
-  config.target = 'node';
-  config.externals = fs
+  const universal = serverConfiguration(config, settings);
+
+  // overwrite universal-webpack's way of doing externals as it
+  // doesn't account for aliases, and breaks react-universal-component
+  universal.externals = fs
     .readdirSync(path.join(process.cwd(), 'node_modules'))
     .filter(
       x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
@@ -105,5 +87,5 @@ module.exports = (
       return externals;
     }, {});
 
-  return config;
+  return universal;
 };
