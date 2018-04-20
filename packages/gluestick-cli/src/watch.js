@@ -75,10 +75,6 @@ module.exports = exitWithError => {
     const convertFilePath = filePath => {
       // strip off path outside CWD so we're not replacing stuff on there!
       const relativePath = /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath)[1];
-      console.log({ filePath });
-      console.log({ __dirname });
-      console.log({ relativePath });
-      console.log({ cwd: process.cwd() });
       return path.join(
         process.cwd(),
         'node_modules',
