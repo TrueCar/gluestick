@@ -1,6 +1,7 @@
 /* @flow */
-
 import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const webpack = require('webpack');
 const path = require('path');
@@ -11,6 +12,7 @@ module.exports = (
   const configuration: Object = clientConfig({ development: false });
   configuration.devtool = 'hidden-source-map';
   configuration.plugins.push(
+    new OptimizeCSSAssetsPlugin({ canPrint: false }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),

@@ -4,6 +4,9 @@ import type { WebpackConfig, GSConfig } from '../../types';
 const path = require('path');
 const getAliasesForApps = require('./getAliasesForApps');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const autoprefixer = require('autoprefixer');
+const cssCustomProperties = require('postcss-custom-properties');
+const postcssCalc = require('postcss-calc');
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
 
@@ -73,10 +76,31 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           test: /\.(s?css)$/,
           use: ExtractCssChunks.extract({
             use: [
-              `css-loader${isProduction ? '' : '?sourceMap'}`,
-              `sass-loader${isProduction
-                ? ''
-                : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
+              {
+                loader: `css-loader`,
+                options: {
+                  sourceMap: !!isProduction,
+                },
+              },
+              {
+                loader: 'postcss-loader',
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    autoprefixer({ browsers: 'last 2 version' }),
+                    cssCustomProperties(),
+                    postcssCalc(),
+                  ],
+                },
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  outputStyle: 'expanded',
+                  sourceMap: !!isProduction,
+                  sourceMapContents: true,
+                },
+              },
             ],
           }),
         },

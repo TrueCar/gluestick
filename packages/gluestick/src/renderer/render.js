@@ -43,7 +43,7 @@ type AssetsCacheOpts = {
 };
 
 module.exports = function render(
-  { logger }: Context,
+  context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
   { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
@@ -78,15 +78,11 @@ module.exports = function render(
   );
 
   const chunkNames = flushChunkNames();
-  const { CssHash, Styles, styles, stylesheets, js } = flushChunks(assets, {
+  const { CssHash, Styles, js } = flushChunks(assets, {
     chunkNames,
     before: ['bootstrap', entryName],
     after: [],
   });
-
-  logger.info(entryName);
-  logger.info('STYLES', stylesheets);
-  logger.info('JS', js.toString());
 
   let head;
   if (isEmail) {

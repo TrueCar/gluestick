@@ -130,10 +130,18 @@ module.exports = (
         next();
         return;
       }
-      const assetsFilename = path.join(process.cwd(), 'build', 'webpack-stats-client.json');
-      fs.writeFile(assetsFilename, JSON.stringify(res.locals.webpackStats.toJson()), (err) => {
-        next();
-      });
+      const assetsFilename = path.join(
+        process.cwd(),
+        'build',
+        'webpack-stats-client.json',
+      );
+      fs.writeFile(
+        assetsFilename,
+        JSON.stringify(res.locals.webpackStats.toJson()),
+        err => {
+          next();
+        },
+      );
     });
     app.use(
       require('webpack-hot-middleware')(compiler, {
@@ -162,7 +170,7 @@ module.exports = (
       if (error) {
         logger.error(error);
         reject(error);
-      return; // eslint-disable-line
+        return; // eslint-disable-line
       }
       logger.success(
         `Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`,
