@@ -45,7 +45,7 @@ type AssetsCacheOpts = {
 module.exports = function render(
   { logger }: Context,
   req: Request,
-  { EntryPoint, store, routes, httpClient }: EntryRequirements,
+  { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
   { renderProps, currentRoute }: { renderProps: Object, currentRoute: Object },
   {
     EntryWrapper,
@@ -56,8 +56,6 @@ module.exports = function render(
   { assets, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput {
-  clearChunks();
-
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const entryWrapper = (
@@ -74,15 +72,36 @@ module.exports = function render(
   // script tag that hooks up the client side react code.
   const currentState: Object = store.getState();
 
+  clearChunks();
   const renderResults: Object = getRenderer(isEmail, renderMethod)(
     entryWrapper,
   );
 
   const chunkNames = flushChunkNames();
-  const { CssHash, Styles, js } = flushChunks(assets, {
+  const { CssHash, Styles, styles, stylesheets, js } = flushChunks(assets, {
     chunkNames,
-    before: ['bootstrap'],
+    before: ['bootstrap', entryName],
+    after: [],
   });
+
+  logger.info(entryName);
+  logger.info('STYLES', stylesheets);
+  logger.info('JS', js.toString());
+
+  let head;
+  if (isEmail) {
+    head = null;
+  } else if (renderResults.styles) {
+    const AphroditeStyles = renderResults.styles;
+    head = (
+      <React.Fragment>
+        <AphroditeStyles />
+        <Styles />
+      </React.Fragment>
+    );
+  } else {
+    head = <Styles />;
+  }
 
   const bodyWrapperContent: String = renderMethod
     ? renderResults.body
@@ -93,7 +112,7 @@ module.exports = function render(
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
-      scriptTags={js}
+      scriptTags={js.toString()}
       CssHash={CssHash}
     />
   );
@@ -104,13 +123,7 @@ module.exports = function render(
   // always add inside the <head> tag.
   //
   // Bundle it all up into a string, add the doctype and deliver
-  const rootElement = (
-    <EntryPoint
-      body={bodyWrapper}
-      head={isEmail ? null : renderResults.head || <Styles />}
-      req={req}
-    />
-  );
+  const rootElement = <EntryPoint body={bodyWrapper} head={head} req={req} />;
 
   const docType: string = currentRoute.docType || '<!doctype html>';
 
