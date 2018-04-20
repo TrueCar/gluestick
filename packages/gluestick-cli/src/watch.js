@@ -73,11 +73,17 @@ module.exports = exitWithError => {
       fs.readFileSync(path.join(e, '.babelrc')).toString(),
     );
     const convertFilePath = filePath => {
+      // strip off path outside CWD so we're not replacing stuff on there!
+      const relativePath = /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath)[1];
+      console.log({ filePath });
+      console.log({ __dirname });
+      console.log({ relativePath });
+      console.log({ cwd: process.cwd() });
       return path.join(
         process.cwd(),
         'node_modules',
         packageName,
-        /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath.replace('src', 'build'))[1],
+        relativePath.replace('src', 'build'),
       );
     };
     const watcher = chokidar.watch(`${e}/**/*`, {
