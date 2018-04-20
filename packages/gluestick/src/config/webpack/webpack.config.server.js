@@ -5,7 +5,9 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 const { serverConfiguration } = require('universal-webpack');
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 const deepClone = require('clone');
+
 const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
 
@@ -71,5 +73,19 @@ module.exports = (
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
   );
-  return serverConfiguration(config, settings);
+  const universal = serverConfiguration(config, settings);
+
+  // overwrite universal-webpack's way of doing externals as it
+  // doesn't account for aliases, and breaks react-universal-component
+  universal.externals = fs
+    .readdirSync(path.join(process.cwd(), 'node_modules'))
+    .filter(
+      x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
+    )
+    .reduce((externals, mod) => {
+      externals[mod] = `commonjs ${mod}`; // eslint-disable-line
+      return externals;
+    }, {});
+
+  return universal;
 };
