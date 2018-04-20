@@ -11,8 +11,8 @@ aliases:
 
   - &restore-gluestick-cache
     keys:
-      - dependencies-gluestick-{{ checksum "packages_checksum" }}
-      - dependencies-gluestick-
+      - dependencies-gluestick-v1-{{ checksum "packages_checksum" }}
+      - dependencies-gluestick-v1-
 
   - &restore-repo-cache
     keys:
