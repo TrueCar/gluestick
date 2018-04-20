@@ -23,7 +23,6 @@ const templatePackage = createTemplate`
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
     "css-loader": "0.28.1",
-    "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
     ${args =>
       Object.keys(args.gluestickDependencies)
