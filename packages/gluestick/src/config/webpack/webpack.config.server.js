@@ -83,7 +83,7 @@ module.exports = (
       x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
     )
     .reduce((externals, mod) => {
-      externals[mod] = `commonjs ${mod}`; // eslint-disable-line
+      externals[mod] = `commonjs ${mod}`; // eslint-disable-line no-param-reassign
       return externals;
     }, {});
 

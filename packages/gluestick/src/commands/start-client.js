@@ -146,7 +146,7 @@ module.exports = (
       if (error) {
         logger.error(error);
         reject(error);
-      return; // eslint-disable-line
+        return;
       }
       logger.success(
         `Client server running on ${GSConfig.host}:${GSConfig.ports.client}.`,
