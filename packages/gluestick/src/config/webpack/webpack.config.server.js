@@ -75,8 +75,8 @@ module.exports = (
   );
   const universal = serverConfiguration(config, settings);
 
-  // overwrite universal-webpack's way of doing externals as it
-  // doesn't account for aliases, and breaks react-universal-component
+  // universal-webpack's way of doing externals doesn't account for aliases and breaks react-universal-component.
+  // This instead builds the list of externals ahead of time by looking through the node_modules folder.
   universal.externals = fs
     .readdirSync(path.join(process.cwd(), 'node_modules'))
     .filter(
