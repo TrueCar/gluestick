@@ -11,8 +11,8 @@ aliases:
 
   - &restore-gluestick-cache
     keys:
-      - dependencies-gluestick-{{ checksum "packages_checksum" }}
-      - dependencies-gluestick-
+      - dependencies-gluestick-v1-{{ checksum "packages_checksum" }}
+      - dependencies-gluestick-v1-
 
   - &restore-repo-cache
     keys:
@@ -31,7 +31,6 @@ aliases:
   - &save-gluestick-cache
     paths:
       - packages/gluestick-cli/node_modules
-      - packages/gluestick-config-legacy/node_modules
       - packages/gluestick-env-expose-ast/node_modules
       - packages/gluestick-generators/node_modules
       - packages/gluestick-plugin-aphrodite/node_modules
@@ -39,7 +38,7 @@ aliases:
       - packages/gluestick-plugin-eslint/node_modules
       - packages/gluestick-plugin-no-fouc/node_modules
       - packages/gluestick-plugin-radium/node_modules
-    key: dependencies-gluestick-{{ checksum "packages_checksum" }}
+    key: dependencies-gluestick-v1-{{ checksum "packages_checksum" }}
 
   - &save-repo-cache
     paths:

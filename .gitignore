@@ -9,3 +9,6 @@ lerna-debug.log
 build
 packages_checksum
 _book/
+
+# Gluestick uses yarn at the moment
+package-lock.json
