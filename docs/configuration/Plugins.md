@@ -4,12 +4,12 @@ Plugins are shipped as separate packages and can extend or modify gluestick or w
 ## How to use
 1. Install plugin:
 ```
-npm install --save gluestick-config-legacy
+npm install --save gluestick-plugin-aphrodite
 ```
 2. Add plugin to `src/gluestick.plugins.js`:
 ```
 export default [
-  'gluestick-config-legacy'
+  'gluestick-plugin-aphrodite'
 ];
 ```
 
@@ -44,7 +44,6 @@ continue.
 
 ## Avaiable plugins
 - [`gluestick-env-expose-ast`](../../packages/gluestick-env-expose-ast/README.md)
-- [`gluestick-config-legacy`](../../packages/gluestick-config-legacy/README.md)
 - [`gluestick-plugin-aphrodite`](../../packages/gluestick-plugin-aphrodite/README.md)
 - [`gluestick-plugin-radium`](../../packages/gluestick-plugin-radium/README.md)
 - [`gluestick-plugin-bunyan`](../../packages/gluestick-plugin-bunyan/README.md)
