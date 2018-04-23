@@ -68,11 +68,11 @@ You can run development GitBook server by running `yarn run docs:watch`, then op
 
 ### Pull Requests
 
-**You can submit your pull request to the `next` branch**.
+**You can submit your pull request to the `develop` branch**.
 
 Before submitting a pull request, please make sure the following is done…
 
-1. Fork the repo and create your branch from `next`.
+1. Fork the repo and create your branch from `develop`.
 2. **Describe your test plan in your commit.** If you've added code that should be tested, add tests!
 3. If you've changed APIs, update the documentation (`docs` folder).
 4. Ensure tests, lints and flow-check pass on *Circle CI*.
@@ -108,9 +108,9 @@ We are using GitHub Issues for our public bugs. We keep a close eye on this and 
 
 # Git flow
 
-`next` -> `staging`
+`develop` -> `staging`
 
-* All new features, enhancements and contributions go to `next`
+* All new features, enhancements and contributions go to `develop`
 * We cut release candidates using git tags from `staging`
   * QA and testing are done on `staging`  
-  * High priority bugs are worked on `staging`. Once the PR is reviewed and merged, then we open another PR that `cherry-pick` those changes into `next`
+  * High priority bugs are worked on `staging`. Once the PR is reviewed and merged, then we open another PR that `cherry-pick` those changes into `develop`
