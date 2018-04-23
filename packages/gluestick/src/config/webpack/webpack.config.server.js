@@ -2,7 +2,6 @@
 
 import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
-const { serverConfiguration } = require('universal-webpack');
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
@@ -32,11 +31,25 @@ module.exports = (
     );
   }
   const config = deepClone(configuration);
+  config.entry = {
+    renderer: settings.server.input,
+    target: 'node',
+    devtool: 'source-map',
+  };
+  config.output = {
+    path: `${settings.server.output}/renderer.js`,
+    filename: '[name].js',
+    chunkFilename: '[name].js',
+    libraryTarget: 'commonjs2',
+    pathinfo: true,
+  };
   // Disable warning for `getVersion` function from `cli/helpers.js`, which has dynamic require,
   // but it's not used by server.
   config.module.noParse = [/cli\/helpers/];
   config.module.rules[1].use = 'ignore-loader';
   config.module.rules[2].use = 'ignore-loader';
+  config.module.rules[3].use[0].options.emitFile = false;
+  config.module.rules[4].use[0].options.emitFile = false;
   config.resolve.alias['project-entries'] = path.join(
     process.cwd(),
     gluestickConfig.serverEntriesPath,
@@ -72,12 +85,16 @@ module.exports = (
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
   );
-  const universal = serverConfiguration(config, settings);
+  config.node.__dirname = false;
+  config.node.__filename = false;
 
-  // universal-webpack's way of doing externals doesn't account for aliases and breaks react-universal-component.
-  // This instead builds the list of externals ahead of time by looking through the node_modules folder.
-  universal.externals = fs
+  // "externals" speeds up server builds by not bundling modules that could be imported,
+  // but certain server/client packages with global caches need to be bundled.
+  config.externals = fs
     .readdirSync(path.join(process.cwd(), 'node_modules'))
     .filter(
       x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
@@ -87,5 +104,5 @@ module.exports = (
       return externals;
     }, {});
 
-  return universal;
+  return config;
 };
