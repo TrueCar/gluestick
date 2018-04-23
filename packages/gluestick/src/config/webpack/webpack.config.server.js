@@ -4,9 +4,8 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
-const fs = require('fs');
 const deepClone = require('clone');
-
+const nodeExternals = require('webpack-node-externals');
 const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
 
@@ -31,13 +30,16 @@ module.exports = (
     );
   }
   const config = deepClone(configuration);
+  const ouputFileName = path.basename(
+    settings.server.output,
+    path.extname(settings.server.output),
+  );
+
   config.entry = {
-    renderer: settings.server.input,
-    target: 'node',
-    devtool: 'source-map',
+    [ouputFileName]: settings.server.input,
   };
   config.output = {
-    path: `${settings.server.output}/renderer.js`,
+    path: path.dirname(settings.server.output),
     filename: '[name].js',
     chunkFilename: '[name].js',
     libraryTarget: 'commonjs2',
@@ -46,8 +48,8 @@ module.exports = (
   // Disable warning for `getVersion` function from `cli/helpers.js`, which has dynamic require,
   // but it's not used by server.
   config.module.noParse = [/cli\/helpers/];
-  config.module.rules[1].use = 'ignore-loader';
-  config.module.rules[2].use = 'ignore-loader';
+  config.module.rules[1].use = ['ignore-loader'];
+  config.module.rules[2].use = ['ignore-loader'];
   config.module.rules[3].use[0].options.emitFile = false;
   config.module.rules[4].use[0].options.emitFile = false;
   config.resolve.alias['project-entries'] = path.join(
@@ -91,18 +93,20 @@ module.exports = (
   );
   config.node.__dirname = false;
   config.node.__filename = false;
+  config.target = 'node';
+  config.devtool = 'source-map';
 
   // "externals" speeds up server builds by not bundling modules that could be imported,
   // but certain server/client packages with global caches need to be bundled.
-  config.externals = fs
-    .readdirSync(path.join(process.cwd(), 'node_modules'))
-    .filter(
-      x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
-    )
-    .reduce((externals, mod) => {
-      externals[mod] = `commonjs ${mod}`; // eslint-disable-line no-param-reassign
-      return externals;
-    }, {});
+  config.externals = [
+    nodeExternals({
+      whitelist: [
+        /react-universal-component/,
+        /webpack-flush-chunks/,
+        /universal-import/,
+      ],
+    }),
+  ];
 
   return config;
 };
