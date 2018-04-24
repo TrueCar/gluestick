@@ -107,23 +107,16 @@ module.exports = (
 
   // "externals" speeds up server builds by not bundling modules that could be imported,
   // but certain server/client packages with global caches need to be bundled.
-  // config.externals = [
-  //   nodeExternals({
-  //     whitelist: [
-  //       /react-universal-component/,
-  //       /webpack-flush-chunks/,
-  //       /universal-import/,
-  //     ],
-  //   }),
-  // ];
-  config.externals = fs
-    .readdirSync(path.join(process.cwd(), 'node_modules'))
-    .filter(
-      x => !/\.bin|react-universal-component|webpack-flush-chunks/.test(x),
-    )
-    .reduce((externals, mod) => {
-    externals[mod] = `commonjs ${mod}`; // eslint-disable-line
-      return externals;
-    }, {});
+  config.externals = [
+    nodeExternals({
+      whitelist: [
+        /react-universal-component/,
+        /webpack-flush-chunks/,
+        /universal-import/,
+        /gluestick/,
+      ],
+    }),
+  ];
+
   return config;
 };
