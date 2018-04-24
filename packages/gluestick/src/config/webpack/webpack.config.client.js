@@ -51,10 +51,16 @@ module.exports = (
     };
   });
   config.plugins.push(
+    // This copy separates the bootstrap (manifest) file from the rest of the chunks for better caching.
+    // react-universal-component also really wants you to use a manifest file.
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'bootstrap', // needed to put webpack bootstrap code before chunks
+      // bootstrap refers to the manifest file needed to bootstrap Webpack
+      // because the name doesn't exist in the entries object, Webpack uses this name for the manifest file
+      // this is super confusing and has been changed in Webpack 4
+      name: 'bootstrap',
       minChunks: Infinity,
     }),
+    // This takes care of dynamic chunks.
     new webpack.optimize.CommonsChunkPlugin({
       filenameTemplate: '[name].js',
       children: true,

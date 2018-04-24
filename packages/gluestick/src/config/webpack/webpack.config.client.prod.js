@@ -1,10 +1,9 @@
 /* @flow */
 import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
 
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-
 const webpack = require('webpack');
 const path = require('path');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = (
   clientConfig: UniversalWebpackConfigurator,

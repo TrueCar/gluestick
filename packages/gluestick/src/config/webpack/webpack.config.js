@@ -107,7 +107,12 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         {
           test: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
           use: [
-            'file-loader?name=[name]-[hash].[ext]',
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[name]-[hash].[ext]',
+              },
+            },
             {
               loader: 'image-webpack-loader',
               // Workaround https://github.com/tcoopman/image-webpack-loader/issues/88#issuecomment-289454242
@@ -117,7 +122,14 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
         },
         {
           test: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-          use: ['file-loader?name=[name]-[hash].[ext]'],
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[name]-[hash].[ext]',
+              },
+            },
+          ],
         },
       ],
     },
