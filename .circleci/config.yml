@@ -197,13 +197,13 @@ workflows:
             - build
           filters:
             branches:
-              only: next
+              only: develop
       - docs:
           requires:
             - build
           filters:
             branches:
-              only: next
+              only: develop
       - deploy:
           requires:
             - build
