@@ -3819,16 +3819,6 @@ fs-extra@4.0.0:
     jsonfile "^3.0.0"
     universalify "^0.1.0"
 
-fs-extra@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-0.30.0.tgz#f233ffcc08d4da7d432daa449776989db1df93f0"
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^2.1.0"
-    klaw "^1.0.0"
-    path-is-absolute "^1.0.0"
-    rimraf "^2.2.8"
-
 fs-extra@^2.0.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-2.1.2.tgz#046c70163cef9aad46b0e4a7fa467fb22d71de35"
@@ -4390,7 +4380,7 @@ graceful-fs@4.1.4:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.4.tgz#ef089d2880f033b011823ce5c8fae798da775dbd"
 
-graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@~4.1.11, graceful-fs@~4.1.2, graceful-fs@~4.1.4, graceful-fs@~4.1.6, graceful-fs@~4.1.9:
+graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@~4.1.11, graceful-fs@~4.1.2, graceful-fs@~4.1.4, graceful-fs@~4.1.6, graceful-fs@~4.1.9:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
@@ -5619,12 +5609,6 @@ kind-of@^4.0.0:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-4.0.0.tgz#20813df3d712928b207378691a45066fae72dd57"
   dependencies:
     is-buffer "^1.1.5"
-
-klaw@^1.0.0:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/klaw/-/klaw-1.3.1.tgz#4088433b46b3b1ba259d78785d8e96f73ba02439"
-  optionalDependencies:
-    graceful-fs "^4.1.9"
 
 kramed-text-renderer@0.2.1:
   version "0.2.1"
@@ -9628,15 +9612,6 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
-universal-webpack@0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/universal-webpack/-/universal-webpack-0.3.9.tgz#a78de3a112affeba8c50bbbf412b7b6c8f37cea6"
-  dependencies:
-    colors "^1.1.2"
-    fs-extra "^0.30.0"
-    minimist "^1.2.0"
-    validate-npm-package-name "^2.2.2"
-
 universalify@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.0.tgz#9eb1c4651debcc670cc94f1a75762332bb967778"
@@ -9733,17 +9708,17 @@ validate-npm-package-license@^3.0.1, validate-npm-package-license@~3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-validate-npm-package-name@^2.2.2, validate-npm-package-name@~2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/validate-npm-package-name/-/validate-npm-package-name-2.2.2.tgz#f65695b22f7324442019a3c7fa39a6e7fd299085"
-  dependencies:
-    builtins "0.0.7"
-
 validate-npm-package-name@^3.0.0, validate-npm-package-name@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/validate-npm-package-name/-/validate-npm-package-name-3.0.0.tgz#5fa912d81eb7d0c74afc140de7317f0ca7df437e"
   dependencies:
     builtins "^1.0.3"
+
+validate-npm-package-name@~2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/validate-npm-package-name/-/validate-npm-package-name-2.2.2.tgz#f65695b22f7324442019a3c7fa39a6e7fd299085"
+  dependencies:
+    builtins "0.0.7"
 
 vary@~1.1.1:
   version "1.1.2"
@@ -9861,6 +9836,10 @@ webpack-hot-middleware@^2.18.2:
     html-entities "^1.2.0"
     querystring "^0.2.0"
     strip-ansi "^3.0.0"
+
+webpack-node-externals@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/webpack-node-externals/-/webpack-node-externals-1.7.2.tgz#6e1ee79ac67c070402ba700ef033a9b8d52ac4e3"
 
 webpack-sources@^0.1.0:
   version "0.1.5"

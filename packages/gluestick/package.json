@@ -115,10 +115,10 @@
     "shelljs": "^0.7.8",
     "sorted-object": "2.0.1",
     "source-map-support": "^0.5.0",
-    "universal-webpack": "0.3.9",
     "webpack": "^3.6.0",
     "webpack-dev-middleware": "^1.11.0",
-    "webpack-hot-middleware": "^2.18.2"
+    "webpack-hot-middleware": "^2.18.2",
+    "webpack-node-externals": "1.7.2"
   },
   "jest": {
     "roots": [

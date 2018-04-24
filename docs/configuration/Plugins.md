@@ -91,9 +91,8 @@ gluestick:
 - `requireWithInterop` - require and normalize module using `getDefaultExport`
 - `getDefaultExport` - normalize CJS and ESM exported value
 
-`preOverwrites` are executed before specific configs are prepared. This is the place for modification
-that should be considered by universal-webpack, for example aliases, which can define if file
-from import is external or not.
+`preOverwrites` are executed before specific configs are prepared. This is the place for modification,
+for example aliases, which can define if file from import is external or not.
 - `sharedWebpackConfig: config => config` - accepts a shared webpack config and
 must return a valid webpack config which will be the base for both the client and server configs
 
