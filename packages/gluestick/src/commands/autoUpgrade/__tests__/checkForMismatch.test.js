@@ -1,7 +1,7 @@
 /* @flow */
 jest.mock('../getSingleEntryFromGenerator.js', () => jest.fn());
 jest.mock('gluestick-generators', () => ({
-  parseConfig: jest.fn(() => ({
+  parseConfig: () => ({
     entry: {
       template: JSON.stringify({
         dependencies: {
@@ -13,7 +13,7 @@ jest.mock('gluestick-generators', () => ({
         },
       }),
     },
-  })),
+  }),
 }));
 
 const utils = require('../utils');
@@ -24,7 +24,7 @@ const orignialPromptModulesUpdate = utils.promptModulesUpdate;
 describe('autoUpgrade/checkForMismatch', () => {
   beforeEach(() => {
     utils.promptModulesUpdate = jest.fn(() =>
-      Promise.resolve({ shouldFix: true, mismatchedModules: {} }),
+      Promise.resolve({ shouldFix: false, mismatchedModules: {} }),
     );
   });
 
@@ -33,17 +33,19 @@ describe('autoUpgrade/checkForMismatch', () => {
     utils.promptModulesUpdate = orignialPromptModulesUpdate;
   });
 
-  it('should detect mismatched modules', done => {
-    // $FlowIgnore
-    checkForMismatch({
-      dependencies: {
-        depA: '1.0.0',
-        depB: '1.0.0',
+  it('detects mismatched modules', () => {
+    return checkForMismatch(
+      {
+        dependencies: {
+          depA: '1.0.0',
+          depB: '1.0.0',
+        },
+        devDependencies: {},
       },
-    }).then(result => {
+      false,
+    ).then(result => {
       expect(result).toBeTruthy();
-      // $FlowIgnore
-      expect(utils.promptModulesUpdate.mock.calls[0][0]).toEqual({
+      expect(utils.promptModulesUpdate).toHaveBeenCalledWith({
         depA: {
           required: '2.0.0',
           project: '1.0.0',
@@ -55,7 +57,24 @@ describe('autoUpgrade/checkForMismatch', () => {
           type: 'devDependencies',
         },
       });
-      done();
+    });
+  });
+
+  it('ignores local file dependencies', () => {
+    return checkForMismatch(
+      {
+        dependencies: {
+          depA: 'file:../gluestick/packages/gluestick',
+          depB: '1.0.0',
+        },
+        devDependencies: {
+          depC: '1.0.0',
+        },
+      },
+      false,
+    ).then(result => {
+      expect(result).toBeTruthy();
+      expect(utils.promptModulesUpdate).not.toHaveBeenCalled();
     });
   });
 });

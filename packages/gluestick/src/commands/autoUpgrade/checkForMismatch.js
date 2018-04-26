@@ -12,6 +12,10 @@ type ProjectPackage = {
   devDependencies: Object,
 };
 
+const isFileDependency = (name: string) => {
+  return name.startsWith('file');
+};
+
 /**
  * Open the package.json file in both the project as well as the one used by
  * this command line interface, then compare the versions for shared modules.
@@ -74,19 +78,21 @@ const checkForMismatch = (
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
+    const projectDependency = projectPackage.dependencies[dep];
     if (
       dev &&
       dep === 'gluestick' &&
-      !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])
+      !/\d+\.\d+\.\d+.*/.test(projectDependency)
     ) {
       return;
     }
     if (
-      !projectPackage.dependencies[dep] ||
-      !isValidVersion(
-        projectPackage.dependencies[dep],
-        templatePackage.dependencies[dep],
-      )
+      (!projectDependency ||
+        !isValidVersion(
+          projectDependency,
+          templatePackage.dependencies[dep],
+        )) &&
+      !isFileDependency(projectDependency)
     ) {
       markMissing(dep, 'dependencies');
     }
