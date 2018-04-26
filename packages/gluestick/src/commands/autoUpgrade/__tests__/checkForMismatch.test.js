@@ -17,20 +17,22 @@ jest.mock('gluestick-generators', () => ({
 }));
 
 const utils = require('../utils');
-const checkForMismatch = require('../checkForMismatch');
 
-const orignialPromptModulesUpdate = utils.promptModulesUpdate;
+const originalPromptModulesUpdate = utils.promptModulesUpdate;
 
 describe('autoUpgrade/checkForMismatch', () => {
+  let checkForMismatch;
   beforeEach(() => {
     utils.promptModulesUpdate = jest.fn(() =>
       Promise.resolve({ shouldFix: false, mismatchedModules: {} }),
     );
+    checkForMismatch = require('../checkForMismatch');
   });
 
   afterEach(() => {
     jest.resetAllMocks();
-    utils.promptModulesUpdate = orignialPromptModulesUpdate;
+    jest.resetModules();
+    utils.promptModulesUpdate = originalPromptModulesUpdate;
   });
 
   it('detects mismatched modules', () => {

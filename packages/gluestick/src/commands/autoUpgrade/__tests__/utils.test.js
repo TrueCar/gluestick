@@ -5,13 +5,7 @@ jest.mock('fs', () => ({
 jest.mock('inquirer', () => ({
   prompt: () => Promise.resolve({ confirm: true }),
 }));
-const {
-  isValidVersion,
-  replaceFile,
-  promptModulesUpdate,
-} = require('../utils');
-const fs = require('fs');
-const path = require('path');
+const { isValidVersion, promptModulesUpdate } = require('../utils');
 
 describe('autoUpgrade/utils.isValidVersion', () => {
   it('should return true when version is greater than or equal requiredVersion', () => {
@@ -49,23 +43,6 @@ describe('autoUpgrade/utils.isValidVersion', () => {
 
   it('should return false if version is invalid', () => {
     expect(isValidVersion('a.b.c', '')).toBeFalsy();
-  });
-});
-
-describe('autoUpgrade/utils.replaceFile', () => {
-  it('should replace file', () => {
-    // $FlowIgnore only info from logger is used
-    replaceFile(
-      {
-        info: jest.fn(),
-      },
-      'test',
-      'data',
-    );
-    expect(fs.writeFileSync.mock.calls[0]).toEqual([
-      path.join(process.cwd(), 'test'),
-      'data',
-    ]);
   });
 });
 
