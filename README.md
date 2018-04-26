@@ -60,6 +60,7 @@ gluestick start
 * [Configuration](docs/Configuration.md)
 * [Styles](docs/configuration/Styles.md)
 * [Webpack Bundle Analyzer Guide](docs/guides/WebpackBundleAnalyzerGuide.md)
+* [Contribution Guidelines](CONTRIBUTING.md)
 
 ## Guides
 
@@ -77,8 +78,3 @@ gluestick start
 Q: *The main project is called "Gluestick", but the binary is called "gluestick-cli", but there's a package in the main project called "gluestick". What's up with that?*
 
 A: Gluestick is a monorepo. `gluestick-cli` is a sub-package in that repo that is deployed to `npm` and is used to manage Gluestick apps. `gluestick` (little 'g') is also a sub-package and contains the guts of Gluestick applications.
-
-
-## Contributing
-
-For contributing instructions please see [contributon guide](CONTRIBUTING.md).
