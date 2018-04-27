@@ -189,6 +189,7 @@ module.exports = (
   );
 
   return {
+    // this is used in one place, refactor it out
     universalSettings: universalWebpackSettings,
     client: clientEnvConfigFinal,
     server: serverEnvConfigFinal,
