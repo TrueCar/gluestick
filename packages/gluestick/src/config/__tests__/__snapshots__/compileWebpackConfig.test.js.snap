@@ -1,0 +1,937 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`config/compileWebpackConfig in dev environment returns the correct client config 1`] = `
+Object {
+  "context": "/Users/dedmondson/src/tc/gluestick",
+  "devtool": "cheap-module-source-map",
+  "entry": Object {},
+  "module": Object {
+    "rules": Array [
+      Object {
+        "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+        "test": /\\\\\\.js\\$/,
+        "use": Array [
+          Object {
+            "loader": "babel-loader",
+            "options": Object {
+              "babelrc": false,
+              "plugins": Array [
+                "transform-flow-strip-types",
+                "react-hot-loader/babel",
+              ],
+              "presets": Array [
+                Array [
+                  "es2015",
+                  Object {
+                    "modules": false,
+                  },
+                ],
+                "react",
+                "stage-0",
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(scss\\)\\$/,
+        "use": Array [
+          "style-loader",
+          "css-loader?importLoaders=2&sourceMap",
+          "postcss-loader",
+          "sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(css\\)\\$/,
+        "use": Array [
+          "style-loader",
+          "css-loader?importLoaders=1&sourceMap",
+          "postcss-loader",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+          Object {
+            "loader": "image-webpack-loader",
+            "options": Object {},
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  "node": Object {
+    "net": "empty",
+  },
+  "output": Object {
+    "chunkFilename": "[name].[hash].js",
+    "crossOriginLoading": "anonymous",
+    "filename": "[name].[hash].js",
+    "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+    "publicPath": "http://0.0.0.0:8888/assets/",
+  },
+  "performance": Object {
+    "hints": false,
+  },
+  "plugins": Array [
+    LoaderOptionsPlugin {
+      "options": Object {
+        "options": Object {
+          "context": "/Users/dedmondson/src/tc/gluestick",
+          "output": Object {
+            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          },
+          "postcss": Array [
+            [Function],
+            [Function],
+            [Function],
+          ],
+        },
+        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+      },
+    },
+    NormalModuleReplacementPlugin {
+      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+      "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
+    },
+    DuplicatePackageCheckerPlugin {
+      "options": Object {
+        "emitError": false,
+        "exclude": null,
+        "verbose": false,
+      },
+    },
+    ProgressPlugin {
+      "handler": undefined,
+      "profile": undefined,
+    },
+    CommonsChunkPlugin {
+      "async": undefined,
+      "children": undefined,
+      "chunkNames": Array [
+        "vendor",
+      ],
+      "deepChildren": undefined,
+      "filenameTemplate": "vendor.bundle.js",
+      "ident": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js0",
+      "minChunks": undefined,
+      "minSize": undefined,
+      "selectedChunks": undefined,
+    },
+    ChunksPlugin {
+      "configuration": Object {
+        "context": "/Users/dedmondson/src/tc/gluestick",
+        "module": Object {
+          "rules": Array [
+            Object {
+              "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+              "test": /\\\\\\.js\\$/,
+              "use": Array [
+                Object {
+                  "loader": "babel-loader",
+                  "options": Object {
+                    "babelrc": false,
+                    "plugins": Array [
+                      "transform-flow-strip-types",
+                    ],
+                    "presets": Array [
+                      "es2015",
+                      "react",
+                      "stage-0",
+                    ],
+                  },
+                },
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(scss\\)\\$/,
+              "use": Array [
+                "style-loader",
+                "css-loader?importLoaders=2&sourceMap",
+                "postcss-loader",
+                "sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true",
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(css\\)\\$/,
+              "use": Array [
+                "style-loader",
+                "css-loader?importLoaders=1&sourceMap",
+                "postcss-loader",
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+              "use": Array [
+                Object {
+                  "loader": "file-loader",
+                  "options": Object {
+                    "name": "[name]-[hash].[ext]",
+                  },
+                },
+                Object {
+                  "loader": "image-webpack-loader",
+                  "options": Object {},
+                },
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+              "use": Array [
+                Object {
+                  "loader": "file-loader",
+                  "options": Object {
+                    "name": "[name]-[hash].[ext]",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        "node": Object {
+          "net": "empty",
+        },
+        "output": Object {
+          "chunkFilename": "[name].[hash].js",
+          "filename": "[name].[hash].js",
+          "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          "publicPath": "/assets/",
+        },
+        "plugins": Array [
+          LoaderOptionsPlugin {
+            "options": Object {
+              "options": Object {
+                "context": "/Users/dedmondson/src/tc/gluestick",
+                "output": Object {
+                  "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+                },
+                "postcss": Array [
+                  [Function],
+                  [Function],
+                  [Function],
+                ],
+              },
+              "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+            },
+          },
+        ],
+        "resolve": Object {
+          "alias": Object {
+            "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+            "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+            "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+            "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+            "root": "/Users/dedmondson/src/tc/gluestick",
+            "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+            "src": "/Users/dedmondson/src/tc/gluestick/src",
+          },
+          "extensions": Array [
+            ".js",
+            ".css",
+            ".json",
+          ],
+        },
+      },
+      "options": Object {},
+    },
+    DefinePlugin {
+      "definitions": Object {
+        "process.env.NODE_ENV": "\\"development\\"",
+      },
+    },
+    HotModuleReplacementPlugin {
+      "fullBuildTimeout": 200,
+      "multiStep": undefined,
+      "options": Object {},
+      "requestTimeout": 10000,
+    },
+    NamedModulesPlugin {
+      "options": Object {},
+    },
+    LoaderOptionsPlugin {
+      "options": Object {
+        "debug": true,
+        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+      },
+    },
+  ],
+  "resolve": Object {
+    "alias": Object {
+      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+      "root": "/Users/dedmondson/src/tc/gluestick",
+      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+      "src": "/Users/dedmondson/src/tc/gluestick/src",
+    },
+    "extensions": Array [
+      ".js",
+      ".css",
+      ".json",
+    ],
+  },
+}
+`;
+
+exports[`config/compileWebpackConfig in dev environment returns the correct client config 2`] = `
+Object {
+  "context": "/Users/dedmondson/src/tc/gluestick",
+  "devtool": "source-map",
+  "entry": Object {
+    "renderer": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/renderer/entry.js",
+  },
+  "externals": Array [
+    [Function],
+  ],
+  "module": Object {
+    "noParse": Array [
+      /cli\\\\/helpers/,
+    ],
+    "rules": Array [
+      Object {
+        "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+        "test": /\\\\\\.js\\$/,
+        "use": Array [
+          Object {
+            "loader": "babel-loader",
+            "options": Object {
+              "babelrc": false,
+              "plugins": Array [
+                "transform-flow-strip-types",
+              ],
+              "presets": Array [
+                "es2015",
+                "react",
+                "stage-0",
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(scss\\)\\$/,
+        "use": Array [
+          "ignore-loader",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(css\\)\\$/,
+        "use": Array [
+          "ignore-loader",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "emitFile": false,
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+          Object {
+            "loader": "image-webpack-loader",
+            "options": Object {},
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "emitFile": false,
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  "node": Object {
+    "__dirname": false,
+    "__filename": false,
+    "net": "empty",
+  },
+  "output": Object {
+    "chunkFilename": "[name].js",
+    "filename": "[name].js",
+    "libraryTarget": "commonjs2",
+    "path": "/Users/dedmondson/src/tc/gluestick/build/server",
+    "pathinfo": true,
+    "publicPath": "http://localhost:8888undefined",
+  },
+  "plugins": Array [
+    LoaderOptionsPlugin {
+      "options": Object {
+        "options": Object {
+          "context": "/Users/dedmondson/src/tc/gluestick",
+          "output": Object {
+            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          },
+          "postcss": Array [
+            [Function],
+            [Function],
+            [Function],
+          ],
+        },
+        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+      },
+    },
+    ProgressPlugin {
+      "handler": undefined,
+      "profile": undefined,
+    },
+    DefinePlugin {
+      "definitions": Object {
+        "process.env.NODE_ENV": "\\"development\\"",
+      },
+    },
+    LimitChunkCountPlugin {
+      "options": Object {
+        "maxChunks": 1,
+      },
+    },
+    BannerPlugin {
+      "banner": "require(\\"source-map-support\\").install();",
+      "options": Object {
+        "banner": "require(\\"source-map-support\\").install();",
+        "entryOnly": false,
+        "raw": true,
+      },
+    },
+  ],
+  "resolve": Object {
+    "alias": Object {
+      "application-config": "/Users/dedmondson/src/tc/gluestick/src/config/application",
+      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+      "entry-wrapper": "/Users/dedmondson/src/tc/gluestick/gluestick/EntryWrapper",
+      "gluestick-hooks": "/Users/dedmondson/src/tc/gluestick/src/gluestick.hooks.js",
+      "plugins-config-path": undefined,
+      "project-entries": "/Users/dedmondson/src/tc/gluestick/gluestick/entries",
+      "project-entries-config": "/Users/dedmondson/src/tc/gluestick/src/entries.json",
+      "redux-middlewares": "/Users/dedmondson/src/tc/gluestick/src/config/redux-middleware",
+      "root": "/Users/dedmondson/src/tc/gluestick",
+      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+      "src": "/Users/dedmondson/src/tc/gluestick/src",
+    },
+    "extensions": Array [
+      ".js",
+      ".css",
+      ".json",
+    ],
+  },
+  "target": "node",
+}
+`;
+
+exports[`config/compileWebpackConfig in production environment returns the correct client config 1`] = `
+Object {
+  "bail": true,
+  "context": "/Users/dedmondson/src/tc/gluestick",
+  "devtool": "hidden-source-map",
+  "entry": Object {},
+  "module": Object {
+    "rules": Array [
+      Object {
+        "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+        "test": /\\\\\\.js\\$/,
+        "use": Array [
+          Object {
+            "loader": "babel-loader",
+            "options": Object {
+              "babelrc": false,
+              "plugins": Array [
+                "transform-flow-strip-types",
+              ],
+              "presets": Array [
+                Array [
+                  "es2015",
+                  Object {
+                    "modules": false,
+                  },
+                ],
+                "react",
+                "stage-0",
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(scss\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
+            "options": Object {
+              "omit": 1,
+              "remove": true,
+            },
+          },
+          Object {
+            "loader": "style-loader",
+          },
+          Object {
+            "loader": "css-loader?importLoaders=2&sourceMap",
+          },
+          Object {
+            "loader": "postcss-loader",
+          },
+          Object {
+            "loader": "sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true",
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(css\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
+            "options": Object {
+              "omit": 1,
+              "remove": true,
+            },
+          },
+          Object {
+            "loader": "style-loader",
+          },
+          Object {
+            "loader": "css-loader?importLoaders=1&sourceMap",
+          },
+          Object {
+            "loader": "postcss-loader",
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+          Object {
+            "loader": "image-webpack-loader",
+            "options": Object {},
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  "node": Object {
+    "net": "empty",
+  },
+  "output": Object {
+    "chunkFilename": "[name].[hash].js",
+    "filename": "[name].[hash].js",
+    "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+    "publicPath": "/assets/",
+  },
+  "plugins": Array [
+    LoaderOptionsPlugin {
+      "options": Object {
+        "options": Object {
+          "context": "/Users/dedmondson/src/tc/gluestick",
+          "output": Object {
+            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          },
+          "postcss": Array [
+            [Function],
+            [Function],
+            [Function],
+          ],
+        },
+        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+      },
+    },
+    NormalModuleReplacementPlugin {
+      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+      "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
+    },
+    DuplicatePackageCheckerPlugin {
+      "options": Object {
+        "emitError": false,
+        "exclude": null,
+        "verbose": false,
+      },
+    },
+    ProgressPlugin {
+      "handler": undefined,
+      "profile": undefined,
+    },
+    CommonsChunkPlugin {
+      "async": undefined,
+      "children": undefined,
+      "chunkNames": Array [
+        "vendor",
+      ],
+      "deepChildren": undefined,
+      "filenameTemplate": "vendor-[hash].bundle.js",
+      "ident": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
+      "minChunks": undefined,
+      "minSize": undefined,
+      "selectedChunks": undefined,
+    },
+    ChunksPlugin {
+      "configuration": Object {
+        "context": "/Users/dedmondson/src/tc/gluestick",
+        "module": Object {
+          "rules": Array [
+            Object {
+              "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+              "test": /\\\\\\.js\\$/,
+              "use": Array [
+                Object {
+                  "loader": "babel-loader",
+                  "options": Object {
+                    "babelrc": false,
+                    "plugins": Array [
+                      "transform-flow-strip-types",
+                    ],
+                    "presets": Array [
+                      "es2015",
+                      "react",
+                      "stage-0",
+                    ],
+                  },
+                },
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(scss\\)\\$/,
+              "use": Array [
+                "style-loader",
+                "css-loader?importLoaders=2&sourceMap",
+                "postcss-loader",
+                "sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true",
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(css\\)\\$/,
+              "use": Array [
+                "style-loader",
+                "css-loader?importLoaders=1&sourceMap",
+                "postcss-loader",
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+              "use": Array [
+                Object {
+                  "loader": "file-loader",
+                  "options": Object {
+                    "name": "[name]-[hash].[ext]",
+                  },
+                },
+                Object {
+                  "loader": "image-webpack-loader",
+                  "options": Object {},
+                },
+              ],
+            },
+            Object {
+              "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+              "use": Array [
+                Object {
+                  "loader": "file-loader",
+                  "options": Object {
+                    "name": "[name]-[hash].[ext]",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        "node": Object {
+          "net": "empty",
+        },
+        "output": Object {
+          "chunkFilename": "[name].[hash].js",
+          "filename": "[name].[hash].js",
+          "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          "publicPath": "/assets/",
+        },
+        "plugins": Array [
+          LoaderOptionsPlugin {
+            "options": Object {
+              "options": Object {
+                "context": "/Users/dedmondson/src/tc/gluestick",
+                "output": Object {
+                  "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+                },
+                "postcss": Array [
+                  [Function],
+                  [Function],
+                  [Function],
+                ],
+              },
+              "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+            },
+          },
+        ],
+        "resolve": Object {
+          "alias": Object {
+            "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+            "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+            "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+            "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+            "root": "/Users/dedmondson/src/tc/gluestick",
+            "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+            "src": "/Users/dedmondson/src/tc/gluestick/src",
+          },
+          "extensions": Array [
+            ".js",
+            ".css",
+            ".json",
+          ],
+        },
+      },
+      "options": Object {},
+    },
+    ExtractTextPlugin {
+      "filename": "[name]-[chunkhash].css",
+      "id": 1,
+      "options": Object {},
+    },
+    OptimizeCssAssetsPlugin {
+      "options": Object {
+        "assetNameRegExp": /\\\\\\.css\\$/g,
+        "canPrint": false,
+        "cssProcessor": [Function],
+        "cssProcessorOptions": Object {},
+      },
+    },
+    DefinePlugin {
+      "definitions": Object {
+        "process.env.NODE_ENV": "\\"production\\"",
+      },
+    },
+    LoaderOptionsPlugin {
+      "options": Object {
+        "debug": false,
+        "minimize": true,
+        "test": Object {
+          "test": [Function],
+        },
+      },
+    },
+    UglifyJsPlugin {
+      "options": Object {
+        "compress": Object {
+          "warnings": false,
+        },
+        "sourceMap": true,
+      },
+    },
+    NormalModuleReplacementPlugin {
+      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/emptyObjMock.js",
+      "resourceRegExp": /gluestick\\\\/shared\\\\/lib\\\\/errorUtils/,
+    },
+  ],
+  "resolve": Object {
+    "alias": Object {
+      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+      "root": "/Users/dedmondson/src/tc/gluestick",
+      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+      "src": "/Users/dedmondson/src/tc/gluestick/src",
+    },
+    "extensions": Array [
+      ".js",
+      ".css",
+      ".json",
+    ],
+  },
+}
+`;
+
+exports[`config/compileWebpackConfig in production environment returns the correct client config 2`] = `
+Object {
+  "bail": true,
+  "context": "/Users/dedmondson/src/tc/gluestick",
+  "devtool": "source-map",
+  "entry": Object {
+    "renderer": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/renderer/entry.js",
+  },
+  "externals": Array [
+    [Function],
+  ],
+  "module": Object {
+    "noParse": Array [
+      /cli\\\\/helpers/,
+    ],
+    "rules": Array [
+      Object {
+        "exclude": /\\(node_modules\\\\/\\(\\?!gluestick\\)\\)\\|\\(build\\\\/assets\\)/,
+        "test": /\\\\\\.js\\$/,
+        "use": Array [
+          Object {
+            "loader": "babel-loader",
+            "options": Object {
+              "babelrc": false,
+              "plugins": Array [
+                "transform-flow-strip-types",
+              ],
+              "presets": Array [
+                "es2015",
+                "react",
+                "stage-0",
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(scss\\)\\$/,
+        "use": Array [
+          "ignore-loader",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(css\\)\\$/,
+        "use": Array [
+          "ignore-loader",
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "emitFile": false,
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+          Object {
+            "loader": "image-webpack-loader",
+            "options": Object {},
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(woff\\|woff2\\|ttf\\|eot\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
+        "use": Array [
+          Object {
+            "loader": "file-loader",
+            "options": Object {
+              "emitFile": false,
+              "name": "[name]-[hash].[ext]",
+            },
+          },
+        ],
+      },
+    ],
+  },
+  "node": Object {
+    "__dirname": false,
+    "__filename": false,
+    "net": "empty",
+  },
+  "output": Object {
+    "chunkFilename": "[name].js",
+    "filename": "[name].js",
+    "libraryTarget": "commonjs2",
+    "path": "/Users/dedmondson/src/tc/gluestick/build/server",
+    "pathinfo": true,
+  },
+  "plugins": Array [
+    LoaderOptionsPlugin {
+      "options": Object {
+        "options": Object {
+          "context": "/Users/dedmondson/src/tc/gluestick",
+          "output": Object {
+            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          },
+          "postcss": Array [
+            [Function],
+            [Function],
+            [Function],
+          ],
+        },
+        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
+      },
+    },
+    ProgressPlugin {
+      "handler": undefined,
+      "profile": undefined,
+    },
+    DefinePlugin {
+      "definitions": Object {
+        "process.env.NODE_ENV": "\\"production\\"",
+      },
+    },
+    LimitChunkCountPlugin {
+      "options": Object {
+        "maxChunks": 1,
+      },
+    },
+  ],
+  "resolve": Object {
+    "alias": Object {
+      "application-config": "/Users/dedmondson/src/tc/gluestick/src/config/application",
+      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
+      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
+      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
+      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
+      "entry-wrapper": "/Users/dedmondson/src/tc/gluestick/gluestick/EntryWrapper",
+      "gluestick-hooks": "/Users/dedmondson/src/tc/gluestick/src/gluestick.hooks.js",
+      "plugins-config-path": undefined,
+      "project-entries": "/Users/dedmondson/src/tc/gluestick/gluestick/entries",
+      "project-entries-config": "/Users/dedmondson/src/tc/gluestick/src/entries.json",
+      "react": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react/cjs/react.production.min.js",
+      "react-dom": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react-dom/cjs/react-dom.production.min.js",
+      "react-dom/server": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react-dom/cjs/react-dom-server.node.production.min.js",
+      "redux-middlewares": "/Users/dedmondson/src/tc/gluestick/src/config/redux-middleware",
+      "root": "/Users/dedmondson/src/tc/gluestick",
+      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
+      "src": "/Users/dedmondson/src/tc/gluestick/src",
+    },
+    "extensions": Array [
+      ".js",
+      ".css",
+      ".json",
+    ],
+  },
+  "target": "node",
+}
+`;
