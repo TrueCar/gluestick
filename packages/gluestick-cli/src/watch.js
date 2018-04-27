@@ -4,12 +4,12 @@ const chokidar = require('chokidar');
 const fs = require('fs-extra');
 
 module.exports = exitWithError => {
-  const packagePath = path.join(process.cwd(), 'package.json');
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
   let packageContent = null;
   try {
-    packageContent = require(packagePath);
+    packageContent = require(packageJsonPath);
   } catch (error) {
-    exitWithError(`Cannot find package.json in ${packagePath}`);
+    exitWithError(`Cannot find package.json in ${packageJsonPath}`);
   }
   try {
     if (/\d\.\d\.\d.*/.test(packageContent.dependencies.gluestick)) {
@@ -22,12 +22,12 @@ module.exports = exitWithError => {
   let gsDeps = null;
   let gsPackages = [];
   gsDeps = require(path.join(process.cwd(), 'package.json')).dependencies;
-  gsPackages = Object.keys(gsDeps).filter(
-    e => /^gluestick/.test(e) && !/\d+\.\d+\.\d+.*/.test(gsDeps[e]),
-  );
+  gsPackages = Object.keys(gsDeps).filter(name => {
+    return /^gluestick/.test(name) && !/\d+\.\d+\.\d+.*/.test(gsDeps[name]);
+  });
 
-  const gsDependenciesPath = gsPackages.map(e => {
-    const newPath = gsDeps[e].replace('file://', '').replace('file:', '');
+  const gsDependenciesPath = gsPackages.map(name => {
+    const newPath = gsDeps[name].replace('file://', '').replace('file:', '');
     return newPath[0] !== '/' ? path.join(process.cwd(), newPath) : newPath;
   });
 
@@ -67,63 +67,79 @@ module.exports = exitWithError => {
     );
   };
 
-  gsDependenciesPath.forEach((e, i) => {
-    const packageName = gsPackages[i];
+  gsDependenciesPath.forEach((packagePath, index) => {
+    const packageName = gsPackages[index];
     const packageBabelRc = JSON.parse(
-      fs.readFileSync(path.join(e, '.babelrc')).toString(),
+      fs.readFileSync(path.join(packagePath, '.babelrc')).toString(),
     );
-    const convertFilePath = filePath => {
+    const fileList = filePath => {
+      if (/[\\/]build[\\/]/.test(filePath)) {
+        return [];
+      }
+
       // strip off path outside CWD so we're not replacing stuff on there!
       const relativePath = /packages\/[a-zA-Z-_]*\/(.*)/.exec(filePath)[1];
-      return path.join(
+
+      const projectFile = path.resolve(
         process.cwd(),
         'node_modules',
         packageName,
         relativePath.replace('src', 'build'),
       );
+
+      const localFile = path.resolve(
+        packagePath,
+        relativePath.replace('src', 'build'),
+      );
+
+      return [localFile, projectFile];
     };
-    const watcher = chokidar.watch(`${e}/**/*`, {
+
+    const watcher = chokidar.watch(`${packagePath}/**/*`, {
       ignored: [/(^|[/\\])\../, /.*node_modules.*/],
       persistent: true,
     });
+
     watcher.on('ready', () => {
       const copy = (filePath, type, typeColorFactory) => {
-        const destPath = convertFilePath(filePath);
-        console.log(
-          `${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(
-            `[${type}]`,
-          )}`,
-        );
-        if (path.extname(filePath) !== '.js') {
-          fs.copySync(filePath, destPath);
-        } else {
-          babel.transformFile(
-            filePath,
-            {
-              babelrc: false,
-              presets: getPresets(packageBabelRc.presets),
-              plugins: getPlugins(packageBabelRc.plugins),
-            },
-            (err, results) => {
-              if (err) {
-                console.error(chalk.red(err));
-              } else {
-                fs.writeFileSync(destPath, results.code);
-              }
-            },
+        fileList(filePath).forEach(destPath => {
+          console.log(
+            `${chalk.gray(`${filePath} -> ${destPath}`)} ${typeColorFactory(
+              `[${type}]`,
+            )}`,
           );
-        }
-      };
-      const remove = (filePath, type, typeColorFactory) => {
-        const destPath = convertFilePath(filePath);
-        fs.remove(destPath, err => {
-          if (err) {
-            console.error(chalk.red(err));
+          if (path.extname(filePath) !== '.js') {
+            fs.copySync(filePath, destPath);
           } else {
-            console.log(
-              `${chalk.gray(destPath)} ${typeColorFactory(`[${type}]`)}`,
+            babel.transformFile(
+              filePath,
+              {
+                babelrc: false,
+                presets: getPresets(packageBabelRc.presets),
+                plugins: getPlugins(packageBabelRc.plugins),
+              },
+              (err, results) => {
+                if (err) {
+                  console.error(chalk.red(err));
+                } else {
+                  fs.writeFileSync(destPath, results.code);
+                }
+              },
             );
           }
+        });
+      };
+      const remove = (filePath, type, typeColorFactory) => {
+        fileList(filePath).forEach(destPath => {
+          fs.remove(destPath, err => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(
+                `${chalk.gray(destPath)} ${typeColorFactory(`[${type}]`)}`,
+              );
+            }
+          });
         });
       };
       console.log(chalk.blue(`Watching for changes in ${packageName}...`));
@@ -134,13 +150,16 @@ module.exports = exitWithError => {
         remove(filePath, 'removed dir', chalk.magenta),
       );
       watcher.on('addDir', filePath => {
-        const destPath = convertFilePath(filePath);
-        fs.ensureDir(destPath, err => {
-          if (err) {
-            console.error(chalk.red(err));
-          } else {
-            console.log(`${chalk.gray(destPath)} ${chalk.cyan('[added dir]')}`);
-          }
+        fileList(filePath).forEach(destPath => {
+          fs.ensureDir(destPath, err => {
+            if (err) {
+              console.error(chalk.red(err));
+            } else {
+              console.log(
+                `${chalk.gray(destPath)} ${chalk.cyan('[added dir]')}`,
+              );
+            }
+          });
         });
       });
     });
