@@ -20,8 +20,9 @@ import "${args => args.component}";
 ${args =>
   args.plugins.reduce((prev, curr) => {
     return prev.concat(
-      `import ${convertToCamelCase(curr.name)} from "${curr.name}/build/${curr
-        .meta.type}";\n`,
+      `import ${convertToCamelCase(curr.name)} from "${curr.name}/build/${
+        curr.meta.type
+      }";\n`,
     );
   }, '')}
 
@@ -51,9 +52,12 @@ if (typeof window === "object") {
         .filter(plugin => plugin.meta.wrapper)
         .reduce((prev, curr, index) => {
           return prev.concat(
-            `${index > 0 ? '    ' : ''}${convertToCamelCase(
+            `{
+              ref: ${index > 0 ? '    ' : ''}${convertToCamelCase(
               curr.name,
-            )}.plugin,\n`,
+            )}.plugin,
+              options: ${JSON.stringify(curr.options)}
+            },\n`,
           );
         }, '')}
   ];

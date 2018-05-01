@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import { StyleSheetServer } from 'aphrodite';
 import { renderToString } from 'react-dom/server';
 import React from 'react';
@@ -15,7 +16,6 @@ const aphroditePlugin = () => ({
       css.renderedClassNames,
     )};`;
     const additionalScript = [
-      // eslint-disable-next-line react/no-danger
       <script
         key="aphrodite-rehydrate"
         dangerouslySetInnerHTML={{ __html: rehydrate }}

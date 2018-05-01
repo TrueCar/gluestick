@@ -29,7 +29,7 @@ type WrappersRequirements = {
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
-  entriesPlugins: { plugin: Function, meta: Object }[],
+  entriesPlugins: { ref: { plugin: Function, meta: Object }, options?: Object }[],
 };
 type AssetsCacheOpts = {
   assets: Object,
@@ -37,7 +37,7 @@ type AssetsCacheOpts = {
   cacheManager: Object,
 };
 
-module.exports = function render(
+module.exports = async function render(
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
@@ -51,7 +51,7 @@ module.exports = function render(
   }: WrappersRequirements,
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
-): RenderOutput {
+): Promise<RenderOutput> {
   const { styleTags, scriptTags } = linkAssets(
     context,
     entryName,
@@ -60,9 +60,7 @@ module.exports = function render(
   );
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins
-    .filter(plugin => plugin.meta.wrapper)
-    .map(({ plugin }) => plugin);
+const rootWrappers = entriesPlugins.filter(plugin => plugin.ref.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}
@@ -80,8 +78,7 @@ module.exports = function render(
   // grab the react generated body stuff. This includes the
   // script tag that hooks up the client side react code.
   const currentState: Object = store.getState();
-
-  const renderResults: Object = getRenderer(isEmail, renderMethod)(
+  const renderResults: Object = await getRenderer(isEmail, renderMethod)(
     entryWrapper,
     styleTags,
   );
