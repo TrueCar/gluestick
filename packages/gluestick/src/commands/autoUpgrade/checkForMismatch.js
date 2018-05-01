@@ -4,12 +4,23 @@ import type { MismatchedModules, UpdateDepsPromptResults } from '../../types';
 const path = require('path');
 const getSingleEntryFromGenerator = require('./getSingleEntryFromGenerator');
 const parseConfig = require('gluestick-generators').parseConfig;
-const utils = require('./utils');
+const { isValidVersion, promptModulesUpdate } = require('./utils');
 const version = require('../../../package.json').version;
 
 type ProjectPackage = {
   dependencies: Object,
   devDependencies: Object,
+};
+
+const isFileDependency = (name: string) => {
+  return name.startsWith('file');
+};
+
+const isMismatched = (project, template) => {
+  return (
+    !project ||
+    (!isValidVersion(project, template) && !isFileDependency(project))
+  );
 };
 
 /**
@@ -40,7 +51,6 @@ const checkForMismatch = (
   dev: boolean,
 ): Promise<UpdateDepsPromptResults> => {
   // This is done to keep live reference to mock single function in testing
-  const { isValidVersion, promptModulesUpdate } = utils;
   const projectPackage: ProjectPackage = {
     dependencies: {},
     devDependencies: {},
@@ -74,31 +84,20 @@ const checkForMismatch = (
     };
   };
   Object.keys(templatePackage.dependencies).forEach((dep: string): void => {
-    if (
-      dev &&
-      dep === 'gluestick' &&
-      !/\d+\.\d+\.\d+.*/.test(projectPackage.dependencies[dep])
-    ) {
+    const project = projectPackage.dependencies[dep];
+    const template = templatePackage.dependencies[dep];
+    if (dev && dep === 'gluestick' && !/\d+\.\d+\.\d+.*/.test(project)) {
       return;
     }
-    if (
-      !projectPackage.dependencies[dep] ||
-      !isValidVersion(
-        projectPackage.dependencies[dep],
-        templatePackage.dependencies[dep],
-      )
-    ) {
+    if (isMismatched(project, template)) {
       markMissing(dep, 'dependencies');
     }
   });
   Object.keys(templatePackage.devDependencies).forEach((dep: string): void => {
-    if (
-      !projectPackage.devDependencies[dep] ||
-      !isValidVersion(
-        projectPackage.devDependencies[dep],
-        templatePackage.devDependencies[dep],
-      )
-    ) {
+    const project = projectPackage.devDependencies[dep];
+    const template = templatePackage.devDependencies[dep];
+
+    if (isMismatched(project, template)) {
       markMissing(dep, 'devDependencies');
     }
   });

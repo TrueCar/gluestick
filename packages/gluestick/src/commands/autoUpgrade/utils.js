@@ -1,30 +1,13 @@
 /* @flow */
 import type {
-  Logger,
   Question,
   MismatchedModules,
   UpdateDepsPromptResults,
 } from '../../types';
 
-const path = require('path');
-const fs = require('fs');
 const semver = require('semver');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
-
-/**
- * Let the user know that we are updating the file and copy the contents over.
- *
- * @param {String} name the name of the file
- * @param {String} data the data for the new file
- */
-const replaceFile = (logger: Logger, name: string, data: string): void => {
-  const filePath: string = path.join(process.cwd(), name);
-
-  logger.info(`${name} file is out of date.`);
-  logger.info(`Updating ${filePath}`);
-  fs.writeFileSync(filePath, data);
-};
 
 /**
  * Determine a version meets or exceeds a requirement.
@@ -90,6 +73,5 @@ const promptModulesUpdate = (
 
 module.exports = {
   isValidVersion,
-  replaceFile,
   promptModulesUpdate,
 };
