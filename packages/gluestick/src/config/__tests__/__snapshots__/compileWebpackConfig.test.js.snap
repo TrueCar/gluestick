@@ -292,7 +292,7 @@ Object {
 }
 `;
 
-exports[`config/compileWebpackConfig in dev environment returns the correct client config 2`] = `
+exports[`config/compileWebpackConfig in dev environment returns the correct server config 1`] = `
 Object {
   "context": "/Users/dedmondson/src/tc/gluestick",
   "devtool": "source-map",
@@ -784,7 +784,7 @@ Object {
 }
 `;
 
-exports[`config/compileWebpackConfig in production environment returns the correct client config 2`] = `
+exports[`config/compileWebpackConfig in production environment returns the correct server config 1`] = `
 Object {
   "bail": true,
   "context": "/Users/dedmondson/src/tc/gluestick",
