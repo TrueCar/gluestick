@@ -6,7 +6,7 @@ module.exports = (createTemplate: CreateTemplate) => createTemplate`
 
 /** DO NOT MODIFY **/
 import React, { Component } from "react";
-import { render } from "react-dom";
+import { hydrate } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { Root, getHttpClient } from "compiled/gluestick";
 import originalMatch from "react-router/lib/match";
@@ -35,11 +35,6 @@ const matchRouteAndRender = (
             store={store}
             getRoutes={getRoutes}
             httpClient={httpClient}
-            rootWrappers={rootWrappers}
-            rootWrappersOptions={{
-              userAgent: window.navigator.userAgent,
-              ...rootWrappersOptions
-            }}
             {...renderProps}
           />
         </AppContainer>
@@ -50,7 +45,7 @@ const matchRouteAndRender = (
           if (typeof hook === "function") { hook(); }
         });
       }
-      render(entry, document.getElementById("main"));
+      hydrate(entry, document.getElementById("main"));
     }
 
     if (process.env.NODE_ENV === 'production' || !enableErrorOverlay) {

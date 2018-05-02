@@ -4,6 +4,7 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 const deepClone = require('clone');
 const nodeExternals = require('webpack-node-externals');
 const progressHandler = require('./progressHandler');
@@ -30,6 +31,8 @@ module.exports = (
     );
   }
   const config = deepClone(configuration);
+
+  config.name = 'server';
   const ouputFileName = path.basename(
     settings.server.output,
     path.extname(settings.server.output),
@@ -40,8 +43,9 @@ module.exports = (
   };
   config.output = {
     path: path.dirname(settings.server.output),
+    publicPath: '/assets/',
     filename: '[name].js',
-    chunkFilename: '[name].js',
+    // chunkFilename: '[name].js',
     libraryTarget: 'commonjs2',
     pathinfo: true,
   };
@@ -49,9 +53,8 @@ module.exports = (
   // but it's not used by server.
   config.module.noParse = [/cli\/helpers/];
   config.module.rules[1].use = ['ignore-loader'];
-  config.module.rules[2].use = ['ignore-loader'];
+  config.module.rules[2].use[0].options.emitFile = false;
   config.module.rules[3].use[0].options.emitFile = false;
-  config.module.rules[4].use[0].options.emitFile = false;
   config.resolve.alias['project-entries'] = path.join(
     process.cwd(),
     gluestickConfig.serverEntriesPath,
@@ -80,6 +83,12 @@ module.exports = (
     gluestickConfig.configPath,
     gluestickConfig.applicationConfigPath,
   );
+  config.resolve.alias['react-universal-component/server'] = path.join(
+    process.cwd(),
+    'node_modules',
+    'react-universal-component',
+    'server',
+  );
   if (!noProgress) {
     config.plugins.push(progressHandler(logger, 'server'));
   }
@@ -104,6 +113,7 @@ module.exports = (
         /react-universal-component/,
         /webpack-flush-chunks/,
         /universal-import/,
+        /gluestick/,
       ],
     }),
   ];

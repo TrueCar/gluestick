@@ -3,14 +3,16 @@ import { renderToString } from 'react-dom/server';
 import React from 'react';
 
 const aphroditePlugin = () => ({
-  renderMethod: (root, styleTags) => {
+  renderMethod: root => {
     const { css, html } = StyleSheetServer.renderStatic(() => {
       return renderToString(root);
     });
-    const head = [
-      ...styleTags,
-      <style key="aphrodite-styles" data-aphrodite>{`${css.content}`}</style>,
-    ];
+    const styles = () =>
+      <style
+        key="aphrodite-styles"
+        data-aphrodite
+        dangerouslySetInnerHTML={{ __html: css.content }}
+      />;
     const rehydrate = `window.renderedClassNames = ${JSON.stringify(
       css.renderedClassNames,
     )};`;
@@ -21,7 +23,7 @@ const aphroditePlugin = () => ({
         dangerouslySetInnerHTML={{ __html: rehydrate }}
       />,
     ];
-    return { body: html, head, additionalScript };
+    return { body: html, styles, additionalScript };
   },
 });
 

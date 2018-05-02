@@ -80,6 +80,7 @@ module.exports = (
       publicPath,
       headers: { 'Access-Control-Allow-Origin': '*' },
       stats: { colors: true },
+      serverSideRender: true,
     };
 
     const compiler: Compiler = webpack(configuration);
@@ -123,7 +124,30 @@ module.exports = (
       progressHandler.markValid('client');
     });
     app.use(devMiddleware);
-    app.use(require('webpack-hot-middleware')(compiler, { log: () => {} }));
+    app.use((req, res, next) => {
+      // write stats file for use in local development
+      if (!res.locals.webpackStats) {
+        next();
+        return;
+      }
+      const assetsFilename = path.join(
+        process.cwd(),
+        'build',
+        'webpack-stats-client.json',
+      );
+      fs.writeFile(
+        assetsFilename,
+        JSON.stringify(res.locals.webpackStats.toJson()),
+        err => {
+          next();
+        },
+      );
+    });
+    app.use(
+      require('webpack-hot-middleware')(compiler, {
+        log: () => {},
+      }),
+    );
     // Proxy http requests from client to renderer server in development mode.
     app.use(
       proxy({

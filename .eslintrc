@@ -48,6 +48,7 @@
     "no-console": 0,
     "no-constant-condition": 0,
     "no-duplicate-imports": 0,
+    "no-param-reassign": ["error", { "props": false }],
     "no-plusplus": 0,
     "no-restricted-syntax": 0,
     "no-underscore-dangle": 0,

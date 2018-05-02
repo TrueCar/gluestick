@@ -58,7 +58,6 @@ module.exports = (
   }
 
   const config = getContextConfig(logger, {
-    skipClientEntryGeneration: true,
     // Performance tweak: if NODE_ENV is production start-server will only run server bundle
     // without creating bundle
     skipServerEntryGeneration: process.env.NODE_ENV === 'production',

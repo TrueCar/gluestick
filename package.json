@@ -59,9 +59,7 @@
   },
   "jest": {
     "notify": true,
-    "roots": [
-      "packages"
-    ],
+    "roots": ["packages"],
     "transform": {
       "\\.js$": "<rootDir>/jestTransform.js"
     },
@@ -76,9 +74,7 @@
     }
   },
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "npmClient": "yarn",
   "useWorkspaces": true
 }

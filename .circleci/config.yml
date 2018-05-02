@@ -36,7 +36,6 @@ aliases:
       - packages/gluestick-plugin-aphrodite/node_modules
       - packages/gluestick-plugin-bunyan/node_modules
       - packages/gluestick-plugin-eslint/node_modules
-      - packages/gluestick-plugin-no-fouc/node_modules
       - packages/gluestick-plugin-radium/node_modules
     key: dependencies-gluestick-v1-{{ checksum "packages_checksum" }}
 

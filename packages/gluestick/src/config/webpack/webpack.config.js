@@ -1,13 +1,12 @@
 /* @flow */
-
 import type { WebpackConfig, GSConfig } from '../../types';
 
 const path = require('path');
-const webpack = require('webpack');
+const getAliasesForApps = require('./getAliasesForApps');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const cssCustomProperties = require('postcss-custom-properties');
 const postcssCalc = require('postcss-calc');
-const getAliasesForApps = require('./getAliasesForApps');
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
 
@@ -66,7 +65,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
             {
               loader: 'babel-loader',
               options: {
-                plugins: ['transform-flow-strip-types'],
+                plugins: ['universal-import', 'transform-flow-strip-types'],
                 presets: ['es2015', 'react', 'stage-0'],
                 babelrc: false,
               },
@@ -74,23 +73,36 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
           ],
         },
         {
-          test: /\.(scss)$/,
-          use: [
-            'style-loader',
-            `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
-            'postcss-loader',
-            `sass-loader${isProduction
-              ? ''
-              : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
-          ],
-        },
-        {
-          test: /\.(css)$/,
-          use: [
-            'style-loader',
-            `css-loader?importLoaders=1${isProduction ? '' : '&sourceMap'}`,
-            'postcss-loader',
-          ],
+          test: /\.(s?css)$/,
+          use: ExtractCssChunks.extract({
+            use: [
+              {
+                loader: `css-loader`,
+                options: {
+                  sourceMap: !!isProduction,
+                },
+              },
+              {
+                loader: 'postcss-loader',
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    autoprefixer({ browsers: 'last 2 version' }),
+                    cssCustomProperties(),
+                    postcssCalc(),
+                  ],
+                },
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  outputStyle: 'expanded',
+                  sourceMap: !!isProduction,
+                  sourceMapContents: true,
+                },
+              },
+            ],
+          }),
         },
         {
           test: /\.(png|jpg|gif|ico|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -122,28 +134,7 @@ module.exports = (gluestickConfig: GSConfig): WebpackConfig => {
       ],
     },
 
-    plugins: [
-      new webpack.LoaderOptionsPlugin({
-        test: /\.(scss|css)$/,
-        options: {
-          // A temporary workaround for `scss-loader`
-          // https://github.com/jtangelder/sass-loader/issues/298
-          output: {
-            path: outputPath,
-          },
-
-          postcss: [
-            autoprefixer({ browsers: 'last 2 version' }),
-            cssCustomProperties(),
-            postcssCalc(),
-          ],
-
-          // A temporary workaround for `css-loader`.
-          // Can also supply `query.context` parameter.
-          context: appRoot,
-        },
-      }),
-    ],
+    plugins: [new ExtractCssChunks()],
     node: {
       net: 'empty',
     },

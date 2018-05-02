@@ -1,11 +1,16 @@
 /* @flow */
+import flushChunks from 'webpack-flush-chunks';
+
 import type { Context, Request, RenderOutput, RenderMethod } from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
 const Oy = require('oy-vey').default;
 const { renderToString, renderToStaticMarkup } = require('react-dom/server');
-const linkAssets = require('./helpers/linkAssets');
+const {
+  flushChunkNames,
+  clearChunks,
+} = require('react-universal-component/server');
 
 const getRenderer = (
   isEmail: boolean,
@@ -47,22 +52,12 @@ module.exports = function render(
     BodyWrapper,
     entryWrapperConfig,
     envVariables,
-    entriesPlugins,
   }: WrappersRequirements,
-  { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
+  { assets, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): RenderOutput {
-  const { styleTags, scriptTags } = linkAssets(
-    context,
-    entryName,
-    assets,
-    loadjsConfig,
-  );
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins
-    .filter(plugin => plugin.meta.wrapper)
-    .map(({ plugin }) => plugin);
   const entryWrapper = (
     <EntryWrapper
       store={store}
@@ -70,10 +65,6 @@ module.exports = function render(
       config={entryWrapperConfig}
       getRoutes={routes}
       httpClient={httpClient}
-      rootWrappers={rootWrappers}
-      rootWrappersOptions={{
-        userAgent: req.headers['user-agent'],
-      }}
     />
   );
 
@@ -81,10 +72,33 @@ module.exports = function render(
   // script tag that hooks up the client side react code.
   const currentState: Object = store.getState();
 
+  clearChunks();
   const renderResults: Object = getRenderer(isEmail, renderMethod)(
     entryWrapper,
-    styleTags,
   );
+
+  const chunkNames = flushChunkNames();
+  const { CssHash, Styles, js } = flushChunks(assets, {
+    chunkNames,
+    before: ['bootstrap', entryName],
+    after: [],
+  });
+
+  let head;
+  if (isEmail) {
+    head = null;
+  } else if (renderResults.styles) {
+    const AphroditeStyles = renderResults.styles;
+    head = (
+      <React.Fragment>
+        <AphroditeStyles />
+        <Styles />
+      </React.Fragment>
+    );
+  } else {
+    head = <Styles />;
+  }
+
   const bodyWrapperContent: String = renderMethod
     ? renderResults.body
     : renderResults;
@@ -94,7 +108,8 @@ module.exports = function render(
       initialState={currentState}
       isEmail={isEmail}
       envVariables={envVariables}
-      scriptTags={scriptTags}
+      scriptTags={js.toString()}
+      CssHash={CssHash}
     />
   );
 
@@ -104,13 +119,7 @@ module.exports = function render(
   // always add inside the <head> tag.
   //
   // Bundle it all up into a string, add the doctype and deliver
-  const rootElement = (
-    <EntryPoint
-      body={bodyWrapper}
-      head={isEmail ? null : renderResults.head || styleTags}
-      req={req}
-    />
-  );
+  const rootElement = <EntryPoint body={bodyWrapper} head={head} req={req} />;
 
   const docType: string = currentRoute.docType || '<!doctype html>';
 

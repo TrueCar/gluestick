@@ -23,7 +23,6 @@
   "devDependencies": {
     "babel-core": "^6.22.1",
     "babel-traverse": "^6.22.1",
-    "gluestick": "2.0.0",
-    "webpack": "^3.0.0"
+    "gluestick": "2.0.0"
   }
 }

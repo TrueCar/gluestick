@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "eslint-loader": "1.7.1",
-    "extract-text-webpack-plugin": "2.1.2",
     "gluestick": "2.0.0"
   }
 }
