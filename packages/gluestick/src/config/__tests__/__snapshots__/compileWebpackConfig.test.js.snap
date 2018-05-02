@@ -139,6 +139,7 @@ Object {
     ChunksPlugin {
       "configuration": Object {
         "context": "/project",
+        "entry": Object {},
         "module": Object {
           "rules": Array [
             Object {
@@ -153,7 +154,12 @@ Object {
                       "transform-flow-strip-types",
                     ],
                     "presets": Array [
-                      "es2015",
+                      Array [
+                        "es2015",
+                        Object {
+                          "modules": false,
+                        },
+                      ],
                       "react",
                       "stage-0",
                     ],
@@ -231,6 +237,34 @@ Object {
               },
               "test": /\\\\\\.\\(scss\\|css\\)\\$/,
             },
+          },
+          NormalModuleReplacementPlugin {
+            "newResource": "/project/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+            "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
+          },
+          DuplicatePackageCheckerPlugin {
+            "options": Object {
+              "emitError": false,
+              "exclude": null,
+              "verbose": false,
+            },
+          },
+          ProgressPlugin {
+            "handler": undefined,
+            "profile": undefined,
+          },
+          CommonsChunkPlugin {
+            "async": undefined,
+            "children": undefined,
+            "chunkNames": Array [
+              "vendor",
+            ],
+            "deepChildren": undefined,
+            "filenameTemplate": "vendor.bundle.js",
+            "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js0",
+            "minChunks": undefined,
+            "minSize": undefined,
+            "selectedChunks": undefined,
           },
         ],
         "resolve": Object {
@@ -612,6 +646,7 @@ Object {
     ChunksPlugin {
       "configuration": Object {
         "context": "/project",
+        "entry": Object {},
         "module": Object {
           "rules": Array [
             Object {
@@ -626,7 +661,12 @@ Object {
                       "transform-flow-strip-types",
                     ],
                     "presets": Array [
-                      "es2015",
+                      Array [
+                        "es2015",
+                        Object {
+                          "modules": false,
+                        },
+                      ],
                       "react",
                       "stage-0",
                     ],
@@ -704,6 +744,34 @@ Object {
               },
               "test": /\\\\\\.\\(scss\\|css\\)\\$/,
             },
+          },
+          NormalModuleReplacementPlugin {
+            "newResource": "/project/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+            "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
+          },
+          DuplicatePackageCheckerPlugin {
+            "options": Object {
+              "emitError": false,
+              "exclude": null,
+              "verbose": false,
+            },
+          },
+          ProgressPlugin {
+            "handler": undefined,
+            "profile": undefined,
+          },
+          CommonsChunkPlugin {
+            "async": undefined,
+            "children": undefined,
+            "chunkNames": Array [
+              "vendor",
+            ],
+            "deepChildren": undefined,
+            "filenameTemplate": "vendor-[hash].bundle.js",
+            "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
+            "minChunks": undefined,
+            "minSize": undefined,
+            "selectedChunks": undefined,
           },
         ],
         "resolve": Object {

@@ -93,7 +93,7 @@ module.exports = (
     }, sharedConfig);
 
   // Get client non-env specific webpack config.
-  const clientConfig: UniversalWebpackConfigurator = getClientConfig(
+  const clientConfig = getClientConfig(
     logger,
     sharedConfigFinal,
     universalWebpackSettings,
