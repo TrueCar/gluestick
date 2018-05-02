@@ -8,8 +8,6 @@
   "bugs": "https://github.com/TrueCar/gluestick/issues",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src",
-    "debug": "node --inspect --debug-brk ./node_modules/.bin/jest -i --env ./test/jestEnvironmentNodeDebug.js"
   },
   "keywords": [
     "react",
@@ -93,7 +91,6 @@
     "http-proxy-middleware": "0.17.4",
     "ignore-loader": "0.1.2",
     "inquirer": "3.2.0",
-    "jest": "20.0.4",
     "lru-cache": "4.1.1",
     "mkdirp": "0.5.1",
     "node-fetch": "^1.7.1",
@@ -119,16 +116,5 @@
     "webpack-dev-middleware": "^1.11.0",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-node-externals": "1.7.2"
-  },
-  "jest": {
-    "roots": [
-      "src"
-    ],
-    "setupFiles": [
-      "./jest.js"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!gluestick*)"
-    ]
   }
 }

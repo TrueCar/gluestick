@@ -1,4 +1,6 @@
 /* @flow */
+import traverse from 'traverse';
+
 jest.mock('../../utils', () => ({ requireModule: v => require(v) }));
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
@@ -13,72 +15,80 @@ jest.mock(
   { virtual: true },
 );
 jest.mock('src/config/application.js', () => ({}), { virtual: true });
-
 const compileWebpackConfig = require('../compileWebpackConfig');
-const defaultGSConfig = require('../defaults/glueStickConfig');
+const gluestickConfig = require('../defaults/glueStickConfig');
 
-const loggerMock = require('../../__tests__/mocks/context').commandApi.getLogger();
+// may want to move this to a central place
+const mockLogger = () => ({
+  warn: jest.fn(),
+  info: jest.fn(),
+  success: jest.fn(),
+  debug: jest.fn(),
+  error: jest.fn(),
+  pretty: false,
+  clear: jest.fn(),
+  log: jest.fn(),
+  print: jest.fn(),
+  printCommandInfo: jest.fn(),
+  fatal: jest.fn(),
+  resetLine: jest.fn(),
+});
 
-const originalProcessCwd = process.cwd.bind(process);
-const compileMockedWebpackConfig = () =>
-  compileWebpackConfig(
-    loggerMock,
-    [
-      {
-        name: 'test',
-        meta: {},
-        preOverwrites: {},
-        postOverwrites: {
-          clientWebpackConfig: config =>
-            Object.assign(config, { testProp: true }),
-          serverWebpackConfig: config =>
-            Object.assign(config, { testProp: true }),
-        },
-      },
-      {
-        name: 'test',
-        meta: {},
-        preOverwrites: {
-          sharedWebpackConfig: config =>
-            Object.assign(config, { preTestProp: true }),
-        },
-        postOverwrites: {
-          clientWebpackConfig: config =>
-            Object.assign(config, { testPropNew: true }),
-        },
-      },
-    ],
-    defaultGSConfig,
-  );
+const replacePaths = obj => {
+  traverse(obj).forEach(function search(value) {
+    if (typeof value === 'string') {
+      this.update(value.replace(process.cwd(), '/project'));
+    }
+  });
+  return obj;
+};
 
 describe('config/compileWebpackConfig', () => {
-  beforeAll(() => {
-    // $FlowIgnore
-    process.cwd = () => '.';
+  let logger;
+  let originalNodeEnv;
+
+  beforeEach(() => {
+    originalNodeEnv = process.env.NODE_ENV;
+    logger = mockLogger();
   });
 
-  afterAll(() => {
-    // $FlowIgnore
-    process.cwd = originalProcessCwd;
+  afterEach(() => {
+    process.env.NODE_ENV = originalNodeEnv;
   });
 
-  it('should return webpack config', () => {
-    const webpackConfig = compileMockedWebpackConfig();
+  describe('in dev environment', () => {
+    beforeEach(() => {
+      process.env.NODE_ENV = 'development';
+    });
 
-    expect(webpackConfig.universalSettings).not.toBeNull();
-    expect(webpackConfig.client).not.toBeNull();
-    expect(webpackConfig.server).not.toBeNull();
-    expect(webpackConfig.client.testProp).toBeTruthy();
-    expect(webpackConfig.server.testProp).toBeTruthy();
-    expect(webpackConfig.client.preTestProp).toBeTruthy();
-    expect(webpackConfig.server.preTestProp).toBeTruthy();
-    expect(webpackConfig.client.testPropNew).toBeTruthy();
+    it('returns the correct client config', () => {
+      expect(
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).client),
+      ).toMatchSnapshot();
+    });
+
+    it('returns the correct server config', () => {
+      expect(
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).server),
+      ).toMatchSnapshot();
+    });
   });
 
-  it('should mutate webpack config when hooks are present', () => {
-    const webpackConfig = compileMockedWebpackConfig();
+  describe('in production environment', () => {
+    beforeEach(() => {
+      process.env.NODE_ENV = 'production';
+    });
 
-    expect(webpackConfig.client.mutated).toBeTruthy();
-    expect(webpackConfig.server.mutated).toBeTruthy();
+    it('returns the correct client config', () => {
+      expect(
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).client),
+      ).toMatchSnapshot();
+    });
+
+    it('returns the correct server config', () => {
+      expect(
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).server),
+      ).toMatchSnapshot();
+    });
   });
 });
