@@ -5,9 +5,6 @@ import type { WebpackConfig, GSConfig, Logger } from '../../types';
 const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const autoprefixer = require('autoprefixer');
-const cssCustomProperties = require('postcss-custom-properties');
-const postcssCalc = require('postcss-calc');
 
 const progressHandler = require('./progressHandler');
 const buildServerEntries = require('./buildServerEntries');
@@ -34,8 +31,6 @@ module.exports = (
     nodeModulesPath,
   } = gluestickConfig;
   const appRoot: string = process.cwd();
-
-  const outputPath: string = path.resolve(appRoot, buildAssetsPath);
 
   const ouputFileName = path.basename(
     settings.server.output,
@@ -158,26 +153,6 @@ module.exports = (
     },
 
     plugins: [
-      new webpack.LoaderOptionsPlugin({
-        test: /\.(scss|css)$/,
-        options: {
-          // A temporary workaround for `scss-loader`
-          // https://github.com/jtangelder/sass-loader/issues/298
-          output: {
-            path: outputPath,
-          },
-
-          postcss: [
-            autoprefixer({ browsers: 'last 2 version' }),
-            cssCustomProperties(),
-            postcssCalc(),
-          ],
-
-          // A temporary workaround for `css-loader`.
-          // Can also supply `query.context` parameter.
-          context: appRoot,
-        },
-      }),
       !noProgress && progressHandler(logger, 'server'),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
