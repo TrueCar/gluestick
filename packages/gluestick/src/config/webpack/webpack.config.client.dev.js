@@ -18,10 +18,6 @@ module.exports = (
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      test: /\.(scss|css)$/,
-      debug: true,
-    }),
   );
   config.entry = Object.keys(config.entry).reduce((prev, curr) => {
     return Object.assign(prev, {

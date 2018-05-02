@@ -113,11 +113,7 @@ module.exports = (
           ],
         },
         {
-          test: /\.(scss)$/,
-          use: ['ignore-loader'],
-        },
-        {
-          test: /\.(css)$/,
+          test: /\.(s?css)$/,
           use: ['ignore-loader'],
         },
         {

@@ -6,13 +6,11 @@ const webpack = require('webpack');
 const path = require('path');
 const clone = require('clone');
 const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugin');
+
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const ChunksPlugin = require('./ChunksPlugin');
 const getAliasesForApps = require('./getAliasesForApps');
-const autoprefixer = require('autoprefixer');
-const cssCustomProperties = require('postcss-custom-properties');
-const postcssCalc = require('postcss-calc');
 
 const isProduction: boolean = process.env.NODE_ENV === 'production';
 
@@ -91,22 +89,27 @@ module.exports = (
           ],
         },
         {
-          test: /\.(scss)$/,
+          test: /\.(s?css)$/,
           use: [
             'style-loader',
-            `css-loader?importLoaders=2${isProduction ? '' : '&sourceMap'}`,
-            'postcss-loader',
-            `sass-loader${isProduction
-              ? ''
-              : '?outputStyle=expanded&sourceMap=true&sourceMapContents=true'}`,
-          ],
-        },
-        {
-          test: /\.(css)$/,
-          use: [
-            'style-loader',
-            `css-loader?importLoaders=1${isProduction ? '' : '&sourceMap'}`,
-            'postcss-loader',
+            {
+              loader: `css-loader`,
+              options: {
+                sourceMap: !!isProduction,
+                minimize: !!isProduction,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                outputStyle: 'expanded',
+                sourceMap: !!isProduction,
+                sourceMapContents: true,
+              },
+            },
           ],
         },
         {
@@ -139,26 +142,6 @@ module.exports = (
       ],
     },
     plugins: [
-      new webpack.LoaderOptionsPlugin({
-        test: /\.(scss|css)$/,
-        options: {
-          // A temporary workaround for `scss-loader`
-          // https://github.com/jtangelder/sass-loader/issues/298
-          output: {
-            path: outputPath,
-          },
-
-          postcss: [
-            autoprefixer({ browsers: 'last 2 version' }),
-            cssCustomProperties(),
-            postcssCalc(),
-          ],
-
-          // A temporary workaround for `css-loader`.
-          // Can also supply `query.context` parameter.
-          context: appRoot,
-        },
-      }),
       // Make it so *.server.js files return null in client
       new webpack.NormalModuleReplacementPlugin(
         /\.server(\.js)?$/,

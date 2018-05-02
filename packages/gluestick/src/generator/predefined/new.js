@@ -59,6 +59,9 @@ const templateGluestickHooks = require('../templates/gluestick.hooks')(
 const templateGluestickConfig = require('../templates/gluestick.config')(
   createTemplate,
 );
+const templatePostcssConfig = require('../templates/postcss.config')(
+  createTemplate,
+);
 const templateWebpackHooks = require('../templates/webpack.hooks')(
   createTemplate,
 );
@@ -134,6 +137,11 @@ module.exports = (options: GeneratorOptions) => {
       path: 'src',
       filename: 'vendor.js',
       template: templateVendor,
+    },
+    {
+      path: '/',
+      filename: 'postcss.config.js',
+      template: templatePostcssConfig,
     },
     {
       path: 'src/config',
