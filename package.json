@@ -55,7 +55,8 @@
     "mkdirp": "0.5.1",
     "node-fetch": "^1.7.1",
     "prettier": "^1.5.3",
-    "rimraf": "2.6.1"
+    "rimraf": "2.6.1",
+    "traverse": "0.6.6"
   },
   "jest": {
     "notify": true,

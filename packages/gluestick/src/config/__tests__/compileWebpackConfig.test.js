@@ -1,4 +1,6 @@
 /* @flow */
+import traverse from 'traverse';
+
 jest.mock('../../utils', () => ({ requireModule: v => require(v) }));
 jest.mock('../webpack/buildEntries.js', () => () => ({}));
 jest.mock('../webpack/buildServerEntries.js', () => jest.fn());
@@ -32,6 +34,15 @@ const mockLogger = () => ({
   resetLine: jest.fn(),
 });
 
+const replacePaths = obj => {
+  traverse(obj).forEach(function search(value) {
+    if (typeof value === 'string') {
+      this.update(value.replace(process.cwd(), '/project'));
+    }
+  });
+  return obj;
+};
+
 describe('config/compileWebpackConfig', () => {
   let logger;
   let originalNodeEnv;
@@ -52,13 +63,13 @@ describe('config/compileWebpackConfig', () => {
 
     it('returns the correct client config', () => {
       expect(
-        compileWebpackConfig(logger, [], gluestickConfig).client,
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).client),
       ).toMatchSnapshot();
     });
 
     it('returns the correct server config', () => {
       expect(
-        compileWebpackConfig(logger, [], gluestickConfig).server,
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).server),
       ).toMatchSnapshot();
     });
   });
@@ -70,13 +81,13 @@ describe('config/compileWebpackConfig', () => {
 
     it('returns the correct client config', () => {
       expect(
-        compileWebpackConfig(logger, [], gluestickConfig).client,
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).client),
       ).toMatchSnapshot();
     });
 
     it('returns the correct server config', () => {
       expect(
-        compileWebpackConfig(logger, [], gluestickConfig).server,
+        replacePaths(compileWebpackConfig(logger, [], gluestickConfig).server),
       ).toMatchSnapshot();
     });
   });

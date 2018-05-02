@@ -2,7 +2,7 @@
 
 exports[`config/compileWebpackConfig in dev environment returns the correct client config 1`] = `
 Object {
-  "context": "/Users/dedmondson/src/tc/gluestick",
+  "context": "/project",
   "devtool": "cheap-module-source-map",
   "entry": Object {},
   "module": Object {
@@ -85,7 +85,7 @@ Object {
     "chunkFilename": "[name].[hash].js",
     "crossOriginLoading": "anonymous",
     "filename": "[name].[hash].js",
-    "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+    "path": "/project/build/assets",
     "publicPath": "http://0.0.0.0:8888/assets/",
   },
   "performance": Object {
@@ -95,9 +95,9 @@ Object {
     LoaderOptionsPlugin {
       "options": Object {
         "options": Object {
-          "context": "/Users/dedmondson/src/tc/gluestick",
+          "context": "/project",
           "output": Object {
-            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+            "path": "/project/build/assets",
           },
           "postcss": Array [
             [Function],
@@ -109,7 +109,7 @@ Object {
       },
     },
     NormalModuleReplacementPlugin {
-      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+      "newResource": "/project/packages/gluestick/src/config/webpack/mocks/nullMock.js",
       "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
     },
     DuplicatePackageCheckerPlugin {
@@ -131,14 +131,14 @@ Object {
       ],
       "deepChildren": undefined,
       "filenameTemplate": "vendor.bundle.js",
-      "ident": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js0",
+      "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js0",
       "minChunks": undefined,
       "minSize": undefined,
       "selectedChunks": undefined,
     },
     ChunksPlugin {
       "configuration": Object {
-        "context": "/Users/dedmondson/src/tc/gluestick",
+        "context": "/project",
         "module": Object {
           "rules": Array [
             Object {
@@ -212,16 +212,16 @@ Object {
         "output": Object {
           "chunkFilename": "[name].[hash].js",
           "filename": "[name].[hash].js",
-          "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          "path": "/project/build/assets",
           "publicPath": "/assets/",
         },
         "plugins": Array [
           LoaderOptionsPlugin {
             "options": Object {
               "options": Object {
-                "context": "/Users/dedmondson/src/tc/gluestick",
+                "context": "/project",
                 "output": Object {
-                  "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+                  "path": "/project/build/assets",
                 },
                 "postcss": Array [
                   [Function],
@@ -235,13 +235,13 @@ Object {
         ],
         "resolve": Object {
           "alias": Object {
-            "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-            "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-            "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-            "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-            "root": "/Users/dedmondson/src/tc/gluestick",
-            "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-            "src": "/Users/dedmondson/src/tc/gluestick/src",
+            "apps": "/project/src/apps",
+            "assets": "/project/assets",
+            "compiled": "/project/node_modules",
+            "config": "/project/src/config",
+            "root": "/project",
+            "shared": "/project/src/shared",
+            "src": "/project/src",
           },
           "extensions": Array [
             ".js",
@@ -275,13 +275,13 @@ Object {
   ],
   "resolve": Object {
     "alias": Object {
-      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-      "root": "/Users/dedmondson/src/tc/gluestick",
-      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-      "src": "/Users/dedmondson/src/tc/gluestick/src",
+      "apps": "/project/src/apps",
+      "assets": "/project/assets",
+      "compiled": "/project/node_modules",
+      "config": "/project/src/config",
+      "root": "/project",
+      "shared": "/project/src/shared",
+      "src": "/project/src",
     },
     "extensions": Array [
       ".js",
@@ -294,10 +294,10 @@ Object {
 
 exports[`config/compileWebpackConfig in dev environment returns the correct server config 1`] = `
 Object {
-  "context": "/Users/dedmondson/src/tc/gluestick",
+  "context": "/project",
   "devtool": "source-map",
   "entry": Object {
-    "renderer": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/renderer/entry.js",
+    "renderer": "/project/packages/gluestick/src/renderer/entry.js",
   },
   "externals": Array [
     [Function],
@@ -378,7 +378,7 @@ Object {
     "chunkFilename": "[name].js",
     "filename": "[name].js",
     "libraryTarget": "commonjs2",
-    "path": "/Users/dedmondson/src/tc/gluestick/build/server",
+    "path": "/project/build/server",
     "pathinfo": true,
     "publicPath": "http://localhost:8888undefined",
   },
@@ -386,9 +386,9 @@ Object {
     LoaderOptionsPlugin {
       "options": Object {
         "options": Object {
-          "context": "/Users/dedmondson/src/tc/gluestick",
+          "context": "/project",
           "output": Object {
-            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+            "path": "/project/build/assets",
           },
           "postcss": Array [
             [Function],
@@ -424,20 +424,20 @@ Object {
   ],
   "resolve": Object {
     "alias": Object {
-      "application-config": "/Users/dedmondson/src/tc/gluestick/src/config/application",
-      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-      "entry-wrapper": "/Users/dedmondson/src/tc/gluestick/gluestick/EntryWrapper",
-      "gluestick-hooks": "/Users/dedmondson/src/tc/gluestick/src/gluestick.hooks.js",
+      "application-config": "/project/src/config/application",
+      "apps": "/project/src/apps",
+      "assets": "/project/assets",
+      "compiled": "/project/node_modules",
+      "config": "/project/src/config",
+      "entry-wrapper": "/project/gluestick/EntryWrapper",
+      "gluestick-hooks": "/project/src/gluestick.hooks.js",
       "plugins-config-path": undefined,
-      "project-entries": "/Users/dedmondson/src/tc/gluestick/gluestick/entries",
-      "project-entries-config": "/Users/dedmondson/src/tc/gluestick/src/entries.json",
-      "redux-middlewares": "/Users/dedmondson/src/tc/gluestick/src/config/redux-middleware",
-      "root": "/Users/dedmondson/src/tc/gluestick",
-      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-      "src": "/Users/dedmondson/src/tc/gluestick/src",
+      "project-entries": "/project/gluestick/entries",
+      "project-entries-config": "/project/src/entries.json",
+      "redux-middlewares": "/project/src/config/redux-middleware",
+      "root": "/project",
+      "shared": "/project/src/shared",
+      "src": "/project/src",
     },
     "extensions": Array [
       ".js",
@@ -452,7 +452,7 @@ Object {
 exports[`config/compileWebpackConfig in production environment returns the correct client config 1`] = `
 Object {
   "bail": true,
-  "context": "/Users/dedmondson/src/tc/gluestick",
+  "context": "/project",
   "devtool": "hidden-source-map",
   "entry": Object {},
   "module": Object {
@@ -486,7 +486,7 @@ Object {
         "test": /\\\\\\.\\(scss\\)\\$/,
         "use": Array [
           Object {
-            "loader": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
+            "loader": "/project/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
             "options": Object {
               "omit": 1,
               "remove": true,
@@ -510,7 +510,7 @@ Object {
         "test": /\\\\\\.\\(css\\)\\$/,
         "use": Array [
           Object {
-            "loader": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
+            "loader": "/project/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
             "options": Object {
               "omit": 1,
               "remove": true,
@@ -561,16 +561,16 @@ Object {
   "output": Object {
     "chunkFilename": "[name].[hash].js",
     "filename": "[name].[hash].js",
-    "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+    "path": "/project/build/assets",
     "publicPath": "/assets/",
   },
   "plugins": Array [
     LoaderOptionsPlugin {
       "options": Object {
         "options": Object {
-          "context": "/Users/dedmondson/src/tc/gluestick",
+          "context": "/project",
           "output": Object {
-            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+            "path": "/project/build/assets",
           },
           "postcss": Array [
             [Function],
@@ -582,7 +582,7 @@ Object {
       },
     },
     NormalModuleReplacementPlugin {
-      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/nullMock.js",
+      "newResource": "/project/packages/gluestick/src/config/webpack/mocks/nullMock.js",
       "resourceRegExp": /\\\\\\.server\\(\\\\\\.js\\)\\?\\$/,
     },
     DuplicatePackageCheckerPlugin {
@@ -604,14 +604,14 @@ Object {
       ],
       "deepChildren": undefined,
       "filenameTemplate": "vendor-[hash].bundle.js",
-      "ident": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
+      "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
       "minChunks": undefined,
       "minSize": undefined,
       "selectedChunks": undefined,
     },
     ChunksPlugin {
       "configuration": Object {
-        "context": "/Users/dedmondson/src/tc/gluestick",
+        "context": "/project",
         "module": Object {
           "rules": Array [
             Object {
@@ -685,16 +685,16 @@ Object {
         "output": Object {
           "chunkFilename": "[name].[hash].js",
           "filename": "[name].[hash].js",
-          "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+          "path": "/project/build/assets",
           "publicPath": "/assets/",
         },
         "plugins": Array [
           LoaderOptionsPlugin {
             "options": Object {
               "options": Object {
-                "context": "/Users/dedmondson/src/tc/gluestick",
+                "context": "/project",
                 "output": Object {
-                  "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+                  "path": "/project/build/assets",
                 },
                 "postcss": Array [
                   [Function],
@@ -708,13 +708,13 @@ Object {
         ],
         "resolve": Object {
           "alias": Object {
-            "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-            "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-            "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-            "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-            "root": "/Users/dedmondson/src/tc/gluestick",
-            "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-            "src": "/Users/dedmondson/src/tc/gluestick/src",
+            "apps": "/project/src/apps",
+            "assets": "/project/assets",
+            "compiled": "/project/node_modules",
+            "config": "/project/src/config",
+            "root": "/project",
+            "shared": "/project/src/shared",
+            "src": "/project/src",
           },
           "extensions": Array [
             ".js",
@@ -761,19 +761,19 @@ Object {
       },
     },
     NormalModuleReplacementPlugin {
-      "newResource": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/config/webpack/mocks/emptyObjMock.js",
+      "newResource": "/project/packages/gluestick/src/config/webpack/mocks/emptyObjMock.js",
       "resourceRegExp": /gluestick\\\\/shared\\\\/lib\\\\/errorUtils/,
     },
   ],
   "resolve": Object {
     "alias": Object {
-      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-      "root": "/Users/dedmondson/src/tc/gluestick",
-      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-      "src": "/Users/dedmondson/src/tc/gluestick/src",
+      "apps": "/project/src/apps",
+      "assets": "/project/assets",
+      "compiled": "/project/node_modules",
+      "config": "/project/src/config",
+      "root": "/project",
+      "shared": "/project/src/shared",
+      "src": "/project/src",
     },
     "extensions": Array [
       ".js",
@@ -787,10 +787,10 @@ Object {
 exports[`config/compileWebpackConfig in production environment returns the correct server config 1`] = `
 Object {
   "bail": true,
-  "context": "/Users/dedmondson/src/tc/gluestick",
+  "context": "/project",
   "devtool": "source-map",
   "entry": Object {
-    "renderer": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/src/renderer/entry.js",
+    "renderer": "/project/packages/gluestick/src/renderer/entry.js",
   },
   "externals": Array [
     [Function],
@@ -871,16 +871,16 @@ Object {
     "chunkFilename": "[name].js",
     "filename": "[name].js",
     "libraryTarget": "commonjs2",
-    "path": "/Users/dedmondson/src/tc/gluestick/build/server",
+    "path": "/project/build/server",
     "pathinfo": true,
   },
   "plugins": Array [
     LoaderOptionsPlugin {
       "options": Object {
         "options": Object {
-          "context": "/Users/dedmondson/src/tc/gluestick",
+          "context": "/project",
           "output": Object {
-            "path": "/Users/dedmondson/src/tc/gluestick/build/assets",
+            "path": "/project/build/assets",
           },
           "postcss": Array [
             [Function],
@@ -908,23 +908,23 @@ Object {
   ],
   "resolve": Object {
     "alias": Object {
-      "application-config": "/Users/dedmondson/src/tc/gluestick/src/config/application",
-      "apps": "/Users/dedmondson/src/tc/gluestick/src/apps",
-      "assets": "/Users/dedmondson/src/tc/gluestick/assets",
-      "compiled": "/Users/dedmondson/src/tc/gluestick/node_modules",
-      "config": "/Users/dedmondson/src/tc/gluestick/src/config",
-      "entry-wrapper": "/Users/dedmondson/src/tc/gluestick/gluestick/EntryWrapper",
-      "gluestick-hooks": "/Users/dedmondson/src/tc/gluestick/src/gluestick.hooks.js",
+      "application-config": "/project/src/config/application",
+      "apps": "/project/src/apps",
+      "assets": "/project/assets",
+      "compiled": "/project/node_modules",
+      "config": "/project/src/config",
+      "entry-wrapper": "/project/gluestick/EntryWrapper",
+      "gluestick-hooks": "/project/src/gluestick.hooks.js",
       "plugins-config-path": undefined,
-      "project-entries": "/Users/dedmondson/src/tc/gluestick/gluestick/entries",
-      "project-entries-config": "/Users/dedmondson/src/tc/gluestick/src/entries.json",
-      "react": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react/cjs/react.production.min.js",
-      "react-dom": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react-dom/cjs/react-dom.production.min.js",
-      "react-dom/server": "/Users/dedmondson/src/tc/gluestick/packages/gluestick/node_modules/react-dom/cjs/react-dom-server.node.production.min.js",
-      "redux-middlewares": "/Users/dedmondson/src/tc/gluestick/src/config/redux-middleware",
-      "root": "/Users/dedmondson/src/tc/gluestick",
-      "shared": "/Users/dedmondson/src/tc/gluestick/src/shared",
-      "src": "/Users/dedmondson/src/tc/gluestick/src",
+      "project-entries": "/project/gluestick/entries",
+      "project-entries-config": "/project/src/entries.json",
+      "react": "/project/packages/gluestick/node_modules/react/cjs/react.production.min.js",
+      "react-dom": "/project/packages/gluestick/node_modules/react-dom/cjs/react-dom.production.min.js",
+      "react-dom/server": "/project/packages/gluestick/node_modules/react-dom/cjs/react-dom-server.node.production.min.js",
+      "redux-middlewares": "/project/src/config/redux-middleware",
+      "root": "/project",
+      "shared": "/project/src/shared",
+      "src": "/project/src",
     },
     "extensions": Array [
       ".js",
