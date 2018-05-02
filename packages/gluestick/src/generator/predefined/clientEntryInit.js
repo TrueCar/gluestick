@@ -1,4 +1,4 @@
-const { convertToCamelCase } = require('../../utils');
+const {convertToCamelCase} = require('../../utils');
 
 const createTemplate = module.parent.createTemplate;
 
@@ -51,14 +51,14 @@ if (typeof window === "object") {
       args.plugins
         .filter(plugin => plugin.meta.wrapper)
         .reduce((prev, curr, index) => {
-          return prev.concat(
-            `{
-              ref: ${index > 0 ? '    ' : ''}${convertToCamelCase(
-              curr.name,
-            )}.plugin,
-              options: ${JSON.stringify(curr.options)}
-            },\n`,
-          );
+          return prev.concat(`
+    {
+      ref: {
+        plugin: ${index > 0 ? '    ' : ''}${convertToCamelCase(curr.name)}.plugin
+      },
+      options: ${JSON.stringify(curr.options)}
+    },\n
+          `);
         }, '')}
   ];
 
