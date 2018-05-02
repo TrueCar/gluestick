@@ -29,7 +29,7 @@ type WrappersRequirements = {
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
-  entriesPlugins: { plugin: Function, meta: Object }[],
+  entriesPlugins: { ref: { plugin: Function, meta: Object }, options?: Object }[],
 };
 type AssetsCacheOpts = {
   assets: Object,
@@ -60,9 +60,7 @@ module.exports = function render(
   );
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins
-    .filter(plugin => plugin.meta.wrapper)
-    .map(({ plugin }) => plugin);
+  const rootWrappers = entriesPlugins.filter(plugin => plugin.ref.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}

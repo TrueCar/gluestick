@@ -163,8 +163,7 @@ const middleware: Middleware = async (req, res, { assets }) => {
 
     // Get runtime plugins that will be passed to EntryWrapper.
     const runtimePlugins: Object[] = entriesPlugins
-      .filter((plugin: Object) => plugin.type === 'runtime')
-      .map((plugin: Object) => plugin.ref);
+      .filter((plugin: Object) => plugin.type === 'runtime');
 
     const outputBeforeHooks: RenderOutput = render(
       { config, logger },
