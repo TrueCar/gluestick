@@ -15,7 +15,6 @@ const getAliasesForApps = require('./getAliasesForApps');
 
 module.exports = (
   logger: Logger,
-  configuration: WebpackConfig,
   settings: Object,
   gluestickConfig: GSConfig,
   entries: Object,

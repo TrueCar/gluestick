@@ -18,7 +18,6 @@ const isProduction: boolean = process.env.NODE_ENV === 'production';
 
 module.exports = (
   logger: Logger,
-  configuration: WebpackConfig,
   settings: Object,
   gluestickConfig: GSConfig,
   entries: Object,
