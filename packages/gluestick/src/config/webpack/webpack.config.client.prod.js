@@ -1,6 +1,5 @@
 /* @flow */
-
-import type { WebpackConfig, UniversalWebpackConfigurator } from '../../types';
+import type { WebpackConfig } from '../../types';
 
 const webpack = require('webpack');
 const path = require('path');
@@ -8,9 +7,7 @@ const clone = require('clone');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = (
-  clientConfig: UniversalWebpackConfigurator,
-): WebpackConfig => {
+module.exports = (clientConfig: WebpackConfig): WebpackConfig => {
   const config: Object = clone(clientConfig);
   config.devtool = 'hidden-source-map';
   const scssLoaders = config.module.rules[1].use;

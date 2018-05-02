@@ -1,16 +1,12 @@
 /* @flow */
-import type {
-  WebpackConfig,
-  UniversalWebpackConfigurator,
-  BabelOptions,
-} from '../../types';
+import type { WebpackConfig, BabelOptions } from '../../types';
 
 const webpack = require('webpack');
 const { updateBabelLoaderConfig } = require('./utils');
 const clone = require('clone');
 
 module.exports = (
-  clientConfig: UniversalWebpackConfigurator,
+  clientConfig: WebpackConfig,
   devServerPort: number,
   devServerHost: string,
 ): WebpackConfig => {

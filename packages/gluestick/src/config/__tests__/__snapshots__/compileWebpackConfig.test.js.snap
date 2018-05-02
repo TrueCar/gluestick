@@ -417,22 +417,6 @@ Object {
     "publicPath": "http://localhost:8888undefined",
   },
   "plugins": Array [
-    LoaderOptionsPlugin {
-      "options": Object {
-        "options": Object {
-          "context": "/project",
-          "output": Object {
-            "path": "/project/build/assets",
-          },
-          "postcss": Array [
-            [Function],
-            [Function],
-            [Function],
-          ],
-        },
-        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
-      },
-    },
     ProgressPlugin {
       "handler": undefined,
       "profile": undefined,
@@ -943,22 +927,6 @@ Object {
     "pathinfo": true,
   },
   "plugins": Array [
-    LoaderOptionsPlugin {
-      "options": Object {
-        "options": Object {
-          "context": "/project",
-          "output": Object {
-            "path": "/project/build/assets",
-          },
-          "postcss": Array [
-            [Function],
-            [Function],
-            [Function],
-          ],
-        },
-        "test": /\\\\\\.\\(scss\\|css\\)\\$/,
-      },
-    },
     ProgressPlugin {
       "handler": undefined,
       "profile": undefined,

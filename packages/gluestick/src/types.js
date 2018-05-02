@@ -81,8 +81,6 @@ export type Context = {
   logger: BaseLogger,
 };
 
-export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
-
 export type Question = {
   type: string,
   name: string,
