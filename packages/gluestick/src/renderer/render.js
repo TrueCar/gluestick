@@ -37,7 +37,7 @@ type AssetsCacheOpts = {
   cacheManager: Object,
 };
 
-module.exports = function render(
+module.exports = async function render(
   context: Context,
   req: Request,
   { EntryPoint, entryName, store, routes, httpClient }: EntryRequirements,
@@ -51,7 +51,7 @@ module.exports = function render(
   }: WrappersRequirements,
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
-): RenderOutput {
+): Promise<RenderOutput> {
   const { styleTags, scriptTags } = linkAssets(
     context,
     entryName,
@@ -81,7 +81,7 @@ module.exports = function render(
   // script tag that hooks up the client side react code.
   const currentState: Object = store.getState();
 
-  const renderResults: Object = getRenderer(isEmail, renderMethod)(
+  const renderResults: Object = await getRenderer(isEmail, renderMethod)(
     entryWrapper,
     styleTags,
   );
