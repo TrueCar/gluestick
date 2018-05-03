@@ -166,7 +166,7 @@ const middleware: Middleware = async (req, res, { assets }) => {
       .filter((plugin: Object) => plugin.type === 'runtime')
       .map((plugin: Object) => plugin.ref);
 
-    const outputBeforeHooks: RenderOutput = render(
+    const outputBeforeHooks: RenderOutput = await render(
       { config, logger },
       req,
       {
