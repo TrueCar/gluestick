@@ -221,7 +221,7 @@ describe('renderer/render', () => {
         {},
       );
       expect(MockEntryWrapper.plugins).toEqual([
-        entriesRuntimePlugins[0].plugin,
+        entriesRuntimePlugins[0],
       ]);
     });
 

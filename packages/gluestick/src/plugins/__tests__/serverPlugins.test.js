@@ -21,17 +21,14 @@ const plugin2Ref = () => {};
 plugin2Ref.meta = { type: 'runtime' };
 const validPlugins = [
   {
-    ref: plugin0Ref,
-    type: 'server',
+    body: plugin0Ref,
   },
   {
-    ref: plugin1Ref,
+    body: plugin1Ref,
     options: { prop: true },
-    type: 'server',
   },
   {
-    ref: plugin2Ref,
-    type: 'runtime',
+    body: plugin2Ref,
   },
 ];
 
@@ -42,21 +39,7 @@ describe('plugins/serverPlugins', () => {
 
   it('should return plugins array', () => {
     jest.doMock('project-entries', () => ({
-      plugins: [
-        {
-          ref: plugin0Ref,
-          type: 'server',
-        },
-        {
-          ref: plugin1Ref,
-          options: { prop: true },
-          type: 'server',
-        },
-        {
-          ref: plugin2Ref,
-          type: 'runtime',
-        },
-      ],
+      plugins: [plugin0Ref(), plugin1Ref(), plugin2Ref()],
     }));
     const plugins = require('../serverPlugins');
     expect(plugins[0].name).toEqual('testPlugin0');
