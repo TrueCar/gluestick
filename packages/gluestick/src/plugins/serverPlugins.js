@@ -12,12 +12,6 @@ type CompilationResults = {
   error?: Error,
 };
 
-type PluginRef = {
-  ref: Function,
-  type: string,
-  options?: Object,
-};
-
 /**
  * Compile plugin.
  */
@@ -57,14 +51,14 @@ const prepareServerPlugins = (): ServerPlugin[] => {
   try {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(
-      (plugin: PluginRef, index: number): boolean => {
+      (plugin: Plugin, index: number): boolean => {
         if (
-          typeof plugin.ref !== 'function' &&
-          typeof plugin.ref.plugin !== 'function'
+          typeof plugin !== 'function' &&
+          typeof plugin.body !== 'function'
         ) {
           throw new Error(`Plugin at position ${index} must export a function`);
         }
-        return plugin.type === 'server';
+        return plugin.meta.type === 'server';
       },
     );
     if (!filteredPlugins.length) {
@@ -74,13 +68,13 @@ const prepareServerPlugins = (): ServerPlugin[] => {
     let logMessage: string = 'Compiling server plugins:\n';
     // Compile plugin, if compilation fails, further compilation is prevented.
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
-      (value: PluginRef): ServerPlugin => {
+      (value: Plugin): ServerPlugin => {
         const normalizedPlugin: Plugin = {
-          name: value.ref.meta
-            ? value.ref.meta.name
-            : value.ref.name || 'unknown',
-          meta: value.ref.meta || {},
-          body: value.ref,
+          name: value.meta
+            ? value.meta.name
+            : value.name || 'unknown',
+          meta: value.meta || {},
+          body: value.body,
           options: value.options || {},
         };
         // Second `compilePlugin` argument is an object with gluestick utilities that

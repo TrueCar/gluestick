@@ -212,7 +212,7 @@ export type Plugin = {
     [key: string]: any,
   },
   body: Function | null,
-  options: Object,
+  options?: Object,
 };
 
 export type ConfigPlugin = {

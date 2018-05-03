@@ -1,5 +1,11 @@
 /* @flow */
-import type { Context, Request, RenderOutput, RenderMethod } from '../types';
+import type {
+  Context,
+  Request,
+  RenderOutput,
+  RenderMethod,
+  Plugin,
+} from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
@@ -29,7 +35,7 @@ type WrappersRequirements = {
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
-  entriesPlugins: { ref: { plugin: Function, meta: Object }, options?: Object }[],
+  entriesPlugins: Plugin[],
 };
 type AssetsCacheOpts = {
   assets: Object,
@@ -60,7 +66,7 @@ module.exports = function render(
   );
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins.filter(plugin => plugin.ref.meta.wrapper);
+  const rootWrappers = entriesPlugins.filter(plugin => plugin.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}

@@ -31,15 +31,21 @@ ${args =>
 
 export const plugins = [
   ${args =>
-    args.plugins.reduce((prev, curr, index, arr) => {
+    args.plugins.reduce((prev, curr, index) => {
       return prev.concat(
         `${index > 0 ? '  ' : ''}` +
-          `{ ref: ${getPluginName(curr.name, curr.meta.type)}, type: "${curr
-            .meta.type}"` +
-          `${curr.options
-            ? `, options: ${JSON.stringify(curr.options)} },`
-            : ' },'}` +
-          `${arr.length - 1 !== index ? '\n' : ''}`,
+          `{
+          body: typeof ${getPluginName(
+            curr.name,
+            curr.meta.type,
+          )} === "function" ? ${getPluginName(
+            curr.name,
+            curr.meta.type,
+          )} : ${getPluginName(curr.name, curr.meta.type)}.plugin,
+          meta: ${JSON.stringify(curr.meta)},
+          options: ${JSON.stringify(curr.options)}
+          },
+          `,
       );
     }, '')}
 ];
