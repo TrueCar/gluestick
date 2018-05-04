@@ -1,11 +1,9 @@
 /* @flow */
-
 import type {
   ConfigPlugin,
   Plugin,
   GSConfig,
   WebpackConfig,
-  UniversalWebpackConfigurator,
   Logger,
   UniversalSettings,
   CompiledConfig,
@@ -14,7 +12,6 @@ import type {
 
 const path = require('path');
 const clone = require('clone');
-const getSharedConfig = require('./webpack/webpack.config');
 const getClientConfig = require('./webpack/webpack.config.client');
 const getServerConfig = require('./webpack/webpack.config.server');
 const prepareEntries = require('./webpack/prepareEntries');
@@ -76,26 +73,9 @@ module.exports = (
       ? []
       : readRuntimePlugins(logger, gluestickConfig.pluginsConfigPath);
 
-  // Get shared config between client and server.
-  const sharedConfig: WebpackConfig = getSharedConfig(gluestickConfig);
-
-  // Apply pre overwriters from config plugins to shared webpack config.
-  const sharedConfigFinal: WebpackConfig = plugins
-    .filter(
-      (plugin: ConfigPlugin): boolean =>
-        !!plugin.preOverwrites.sharedWebpackConfig,
-    )
-    .reduce((prev: Object, plugin: ConfigPlugin) => {
-      return plugin.preOverwrites.sharedWebpackConfig
-        ? // $FlowIgnore
-          plugin.preOverwrites.sharedWebpackConfig(clone(prev))
-        : prev;
-    }, sharedConfig);
-
   // Get client non-env specific webpack config.
-  const clientConfig: UniversalWebpackConfigurator = getClientConfig(
+  const clientConfig = getClientConfig(
     logger,
-    sharedConfigFinal,
     universalWebpackSettings,
     gluestickConfig,
     entries,
@@ -124,7 +104,6 @@ module.exports = (
   // Get server non-env specific webpack config.
   const serverConfig: WebpackConfig = getServerConfig(
     logger,
-    sharedConfigFinal,
     universalWebpackSettings,
     gluestickConfig,
     entries,
