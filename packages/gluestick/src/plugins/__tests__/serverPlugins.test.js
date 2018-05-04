@@ -39,7 +39,16 @@ describe('plugins/serverPlugins', () => {
 
   it('should return plugins array', () => {
     jest.doMock('project-entries', () => ({
-      plugins: [plugin0Ref(), plugin1Ref(), plugin2Ref()],
+      plugins: [
+        { body: plugin0Ref, meta: plugin0Ref.meta, name: plugin0Ref.meta.name },
+        {
+          body: plugin1Ref,
+          meta: plugin1Ref.meta,
+          name: plugin1Ref.meta.name,
+          options: { prop: true },
+        },
+        { body: plugin2Ref, meta: plugin2Ref.meta },
+      ],
     }));
     const plugins = require('../serverPlugins');
     expect(plugins[0].name).toEqual('testPlugin0');
@@ -57,7 +66,7 @@ describe('plugins/serverPlugins', () => {
     jest.doMock('project-entries', () => ({
       plugins: [
         {
-          ref: 'abc',
+          body: 'abc',
         },
       ],
     }));
@@ -79,8 +88,8 @@ describe('plugins/serverPlugins', () => {
     jest.doMock('project-entries', () => ({
       plugins: [
         {
-          ref: invalidPlugin,
-          type: 'server',
+          body: invalidPlugin,
+          meta: invalidPlugin.meta,
         },
       ],
     }));

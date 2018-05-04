@@ -52,7 +52,7 @@ if (typeof window === "object") {
         .reduce((prev, curr) => {
           return prev.concat(`
     {
-      name: "${curr.name}",
+      name: "${curr.meta ? curr.meta.name : curr.name || 'unknown'}",
       meta: ${JSON.stringify(curr.meta)},
       body: ${convertToCamelCase(curr.name)}.plugin,
       options: ${JSON.stringify(curr.options)}

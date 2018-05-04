@@ -182,8 +182,8 @@ describe('renderer/render', () => {
 
     it('should prepare plugins and pass it to EntryWrapper', () => {
       const entriesRuntimePlugins = [
-        { plugin: v => v, meta: { wrapper: true } },
-        { plugin: () => {}, meta: {} },
+        { name: 'plugin1', body: v => v, meta: { wrapper: true } },
+        { name: 'plugin2', body: () => {}, meta: {} },
       ];
       // eslint-disable-next-line react/no-multi-comp
       class MockEntryWrapper extends React.Component {
