@@ -52,10 +52,7 @@ const prepareServerPlugins = (): ServerPlugin[] => {
     // Get server plugins only and perform necessry checks.
     const filteredPlugins = plugins.filter(
       (plugin: Plugin, index: number): boolean => {
-        if (
-          typeof plugin !== 'function' &&
-          typeof plugin.body !== 'function'
-        ) {
+        if (typeof plugin !== 'function' && typeof plugin.body !== 'function') {
           throw new Error(`Plugin at position ${index} must export a function`);
         }
         return plugin.meta.type === 'server';
@@ -70,9 +67,7 @@ const prepareServerPlugins = (): ServerPlugin[] => {
     const compiledPlugins: ServerPlugin[] = filteredPlugins.map(
       (value: Plugin): ServerPlugin => {
         const normalizedPlugin: Plugin = {
-          name: value.meta
-            ? value.meta.name
-            : value.name || 'unknown',
+          name: value.meta ? value.meta.name : value.name || 'unknown',
           meta: value.meta || {},
           body: value.body,
           options: value.options || {},

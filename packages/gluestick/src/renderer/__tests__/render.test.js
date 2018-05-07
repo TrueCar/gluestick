@@ -220,9 +220,7 @@ describe('renderer/render', () => {
         { assets, loadjsConfig, cacheManager },
         {},
       );
-      expect(MockEntryWrapper.plugins).toEqual([
-        entriesRuntimePlugins[0],
-      ]);
+      expect(MockEntryWrapper.plugins).toEqual([entriesRuntimePlugins[0]]);
     });
 
     describe('when the route is an email route', () => {
