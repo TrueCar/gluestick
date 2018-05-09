@@ -167,7 +167,7 @@ const middleware: Middleware = async (req, res, { assets }) => {
       (plugin: Object) => plugin.meta.type === 'runtime',
     );
 
-    const outputBeforeHooks: RenderOutput = render(
+    const outputBeforeHooks: RenderOutput = await render(
       { config, logger },
       req,
       {
