@@ -49,12 +49,15 @@ if (typeof window === "object") {
     ${args =>
       args.plugins
         .filter(plugin => plugin.meta.wrapper)
-        .reduce((prev, curr, index) => {
-          return prev.concat(
-            `${index > 0 ? '    ' : ''}${convertToCamelCase(
-              curr.name,
-            )}.plugin,\n`,
-          );
+        .reduce((prev, curr) => {
+          return prev.concat(`
+    {
+      name: "${curr.meta ? curr.meta.name : curr.name || 'unknown'}",
+      meta: ${JSON.stringify(curr.meta)},
+      body: ${convertToCamelCase(curr.name)}.plugin,
+      options: ${JSON.stringify(curr.options)}
+    },\n
+          `);
         }, '')}
   ];
 
