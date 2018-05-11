@@ -61,7 +61,21 @@ jobs:
       - attach_workspace:
           at: ~/gluestick
     
+      - run:
+          command: cat packages/gluestick-*/package.json > packages_checksum
+          name: Creating checksum file for gluesick-* packages
+
+      - restore_cache: *restore-monorepo-cache
+      - restore_cache: *restore-gluestick-main-cache
+      - restore_cache: *restore-gluestick-cache
+
       - run: yarn run install:yarn
+
+      - save_cache: *save-monorepo-cache
+      - save_cache: *save-gluestick-main-cache
+      - save_cache: *save-gluestick-cache
+
+      - save_cache: *save-repo-cache
 
       - persist_to_workspace:
           root: .
@@ -89,7 +103,9 @@ jobs:
       - attach_workspace:
           at: ~/gluestick
 
-      - run: yarn run test --runInBand --coverage
+      - checkout
+      - run: yarn install:yarn
+      - run: yarn run test --coverage
 
       - store_artifacts:
           path: coverage
@@ -174,8 +190,6 @@ workflows:
             branches:
               ignore: staging
       - test:
-          requires:
-            - build
           filters:
             branches:
               ignore: staging
