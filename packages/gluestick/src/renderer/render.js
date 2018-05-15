@@ -58,12 +58,13 @@ module.exports = async function render(
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): Promise<RenderOutput> {
-  const { styleTags, scriptTags } = linkAssets(
+  const { scriptTags, styleTags } = await linkAssets(
     context,
     entryName,
     assets,
     loadjsConfig,
   );
+
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
   const rootWrappers = entriesPlugins.filter(plugin => plugin.meta.wrapper);

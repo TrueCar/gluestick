@@ -1,5 +1,8 @@
 /* @flow */
-jest.mock('fs');
+jest.mock('fs', () => ({
+  readFile: jest.fn(),
+  readFileSync: jest.fn(),
+}));
 jest.mock('path');
 
 const path = require('path');
@@ -19,8 +22,13 @@ const assets = {
 };
 
 describe('renderer/helpers/linkAssets', () => {
-  it('should return scripts and style tags', () => {
-    const { styleTags, scriptTags } = linkAssets(context, 'main', assets, {});
+  it('should return scripts and style tags', async () => {
+    const { styleTags, scriptTags } = await linkAssets(
+      context,
+      'main',
+      assets,
+      {},
+    );
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -33,10 +41,15 @@ describe('renderer/helpers/linkAssets', () => {
     expect(styleTags[0].type).toEqual('link');
   });
 
-  it('should resolve / entry name', () => {
+  it('should resolve / entry name', async () => {
     const originalENV = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
-    const { styleTags, scriptTags } = linkAssets(context, '/', assets, {});
+    const { styleTags, scriptTags } = await linkAssets(
+      context,
+      '/',
+      assets,
+      {},
+    );
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -50,10 +63,15 @@ describe('renderer/helpers/linkAssets', () => {
     process.env.NODE_ENV = originalENV;
   });
 
-  it('should resolve /<name> entry name', () => {
+  it('should resolve /<name> entry name', async () => {
     const originalENV = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
-    const { styleTags, scriptTags } = linkAssets(context, '/main', assets, {});
+    const { styleTags, scriptTags } = await linkAssets(
+      context,
+      '/main',
+      assets,
+      {},
+    );
     expect(styleTags.length).toBe(2);
     expect(scriptTags.length).toBe(1);
     expect(scriptTags[0].type).toEqual('script');
@@ -67,8 +85,8 @@ describe('renderer/helpers/linkAssets', () => {
     process.env.NODE_ENV = originalENV;
   });
 
-  it('should pass loadjs config', () => {
-    const { scriptTags } = linkAssets(context, 'main', assets, {
+  it('should pass loadjs config', async () => {
+    const { scriptTags } = await linkAssets(context, 'main', assets, {
       before: () => {
         console.log('LoadJSBefore');
       },
@@ -79,14 +97,14 @@ describe('renderer/helpers/linkAssets', () => {
     );
   });
 
-  it('should link vendor DLL bundle', () => {
+  it('should link vendor DLL bundle', async () => {
     global.__webpack_public_path__ = null;
     path.join.mockImplementationOnce(() => 'vendor-manifest.json');
     fs.writeFileSync(
       'vendor-manifest.json',
       JSON.stringify({ name: 'vendor_hash' }),
     );
-    const { scriptTags } = linkAssets(
+    const { scriptTags } = await linkAssets(
       context,
       '/main',
       {

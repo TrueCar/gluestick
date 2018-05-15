@@ -5,7 +5,11 @@ import type { Context } from '../../types';
 const React = require('react');
 const path = require('path');
 const fs = require('fs');
+// $FlowIgnore promisify is not available in this version of Flow
+const { promisify } = require('util');
 const getAssetsLoader = require('./getAssetsLoader');
+
+const readFileAsync = promisify(fs.readFile); // (A)
 
 const getAssetPathForFile = (
   filename: string,
@@ -41,12 +45,25 @@ const getBundleName = ({ config }): string => {
   return `${publicPath}dlls/${name.replace('_', '-')}.dll.js`;
 };
 
-module.exports = function linkAssets(
+// Cache contents of CSS files to avoid hitting the filesystem
+const cache = {};
+
+const memoizedRead = async (filePath: string) => {
+  if (cache[filePath]) {
+    return cache[filePath];
+  }
+
+  const contents = await readFileAsync(filePath);
+  cache[filePath] = contents.toString();
+  return cache[filePath];
+};
+
+module.exports = async function linkAssets(
   { config }: Context,
   entryPoint: string,
   assets: Object,
   loadjsConfig: Object,
-): { styleTags: Object[], scriptTags: Object[] } {
+) {
   const styleTags: Object[] = [];
   const scriptTags: Object[] = [];
   let key: number = 0;
@@ -58,9 +75,18 @@ module.exports = function linkAssets(
     assets,
   );
   if (stylesHref) {
-    styleTags.push(
-      <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
-    );
+    if (config.GSConfig.inlineAllCss) {
+      const contents = await memoizedRead(
+        path.join(process.cwd(), 'build', stylesHref),
+      );
+      styleTags.push(
+        <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
+      );
+    } else {
+      styleTags.push(
+        <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
+      );
+    }
   }
   const vendorStylesHref: ?string = getAssetPathForFile(
     'vendor',
@@ -68,14 +94,24 @@ module.exports = function linkAssets(
     assets,
   );
   if (vendorStylesHref) {
-    styleTags.push(
-      <link
-        key={key++}
-        rel="stylesheet"
-        type="text/css"
-        href={vendorStylesHref}
-      />,
-    );
+    if (config.GSConfig.inlineAllCss) {
+      const contents = await memoizedRead(
+        path.join(process.cwd(), 'build', vendorStylesHref),
+      );
+
+      styleTags.push(
+        <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
+      );
+    } else {
+      styleTags.push(
+        <link
+          key={key++}
+          rel="stylesheet"
+          type="text/css"
+          href={vendorStylesHref}
+        />,
+      );
+    }
   }
 
   const vendorBundleHref: string =
