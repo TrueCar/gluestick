@@ -11,6 +11,9 @@ const getAssetsLoader = require('./getAssetsLoader');
 
 const readFileAsync = promisify(fs.readFile); // (A)
 
+// available in webpack-compiled code
+declare var __webpack_public_path__: string; // eslint-disable-line camelcase
+
 const getAssetPathForFile = (
   filename: string,
   section: string,
@@ -40,8 +43,7 @@ const getBundleName = ({ config }): string => {
   );
   // Can't require it, because it will throw an error on server
   const { name } = JSON.parse(fs.readFileSync(manifestPath).toString());
-  // $FlowIgnore Server is compiled by webpack, so then we have access to webpack's public path
-  const publicPath: string = __webpack_public_path__ || '/assets/'; // eslint-disable-line camelcase,no-undef
+  const publicPath: string = __webpack_public_path__ || '/assets/'; // eslint-disable-line camelcase
   return `${publicPath}dlls/${name.replace('_', '-')}.dll.js`;
 };
 
