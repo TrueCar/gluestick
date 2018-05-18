@@ -85,8 +85,11 @@ module.exports = async function linkAssets(
   );
   if (stylesHref) {
     if (config.GSConfig.inlineAllCss) {
+      console.log(config.webpackConfig.client.publicPath);
+      console.log(config.GSConfig.publicPath);
+      // console.log(process.env.ASSET_URL);
       const contents = await memoizedRead(
-        config.webpackConfig.client.publicPath,
+        config.webpackConfig.client.output.publicPath,
         stylesHref,
       );
       styleTags.push(
@@ -104,7 +107,7 @@ module.exports = async function linkAssets(
     assets,
   );
   if (vendorStylesHref) {
-    if (config.GSConfig.inlineAllCss) {
+    if (config.webpackConfig.client.output.publicPath) {
       const contents = await memoizedRead(
         config.GSConfig.publicPath,
         vendorStylesHref,
