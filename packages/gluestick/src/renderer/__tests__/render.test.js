@@ -180,7 +180,7 @@ describe('renderer/render', () => {
       };
     };
 
-    it('should prepare plugins and pass it to EntryWrapper', () => {
+    it('should prepare plugins and pass it to EntryWrapper', async () => {
       const entriesRuntimePlugins = [
         { name: 'plugin1', body: v => v, meta: { wrapper: true } },
         { name: 'plugin2', body: () => {}, meta: {} },
@@ -199,7 +199,7 @@ describe('renderer/render', () => {
       const currentRoute = clone(renderProps);
       currentRoute.email = false;
       currentRoute.cache = false;
-      render(
+      await render(
         context,
         request,
         {

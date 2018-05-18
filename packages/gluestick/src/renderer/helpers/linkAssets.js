@@ -50,14 +50,21 @@ const getBundleName = ({ config }): string => {
 // Cache contents of CSS files to avoid hitting the filesystem
 const cache = {};
 
-const memoizedRead = async (filePath: string) => {
-  if (cache[filePath]) {
-    return cache[filePath];
+const memoizedRead = async (publicPath: string, filePath: string) => {
+  const localPath = path.join(
+    process.cwd(),
+    'build',
+    'assets',
+    filePath.replace(publicPath, ''),
+  );
+
+  if (cache[localPath]) {
+    return cache[localPath];
   }
 
-  const contents = await readFileAsync(filePath);
-  cache[filePath] = contents.toString();
-  return cache[filePath];
+  const contents = await readFileAsync(localPath);
+  cache[localPath] = contents.toString();
+  return cache[localPath];
 };
 
 module.exports = async function linkAssets(
@@ -79,7 +86,8 @@ module.exports = async function linkAssets(
   if (stylesHref) {
     if (config.GSConfig.inlineAllCss) {
       const contents = await memoizedRead(
-        path.join(process.cwd(), 'build', stylesHref),
+        config.webpackConfig.client.publicPath,
+        stylesHref,
       );
       styleTags.push(
         <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
@@ -98,7 +106,8 @@ module.exports = async function linkAssets(
   if (vendorStylesHref) {
     if (config.GSConfig.inlineAllCss) {
       const contents = await memoizedRead(
-        path.join(process.cwd(), 'build', vendorStylesHref),
+        config.GSConfig.publicPath,
+        vendorStylesHref,
       );
 
       styleTags.push(
