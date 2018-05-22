@@ -260,3 +260,17 @@ export type BabelOptions = {
   plugins: Array<string | mixed[]>,
   presets: Array<string | mixed[]>,
 };
+
+export type ChunkInfo = {
+  url: string,
+  name: string,
+};
+
+export type ChunksInfo = {
+  javascript: {
+    [key: ?string]: ChunkInfo,
+  },
+  styles: {
+    [key: ?string]: ChunkInfo,
+  },
+};

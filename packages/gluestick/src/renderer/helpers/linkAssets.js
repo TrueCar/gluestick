@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Context } from '../../types';
+import type { ChunksInfo, Context } from '../../types';
 
 const React = require('react');
 const path = require('path');
@@ -14,14 +14,12 @@ const readFileAsync = promisify(fs.readFile); // (A)
 // available in webpack-compiled code
 declare var __webpack_public_path__: string; // eslint-disable-line camelcase
 
-const getAssetPathForFile = (
+const getAssetsForFile = (
   filename: string,
   section: string,
-  webpackAssets: Object,
-): string => {
-  const assets: Object = webpackAssets[section] || {};
-  const webpackPath: string = assets[filename];
-  return webpackPath;
+  webpackAssets: ChunksInfo,
+) => {
+  return webpackAssets[section] && webpackAssets[section][filename];
 };
 
 const filterEntryName = (name: string): string => {
@@ -33,14 +31,9 @@ const filterEntryName = (name: string): string => {
 };
 
 const getBundleName = ({ config }): string => {
-  const manifestFilename: string =
-    process.env.GS_VENDOR_MANIFEST_FILENAME || '';
+  const manifestFilename = process.env.GS_VENDOR_MANIFEST_FILENAME || '';
   const { buildDllPath } = config.GSConfig;
-  const manifestPath: string = path.join(
-    process.cwd(),
-    buildDllPath,
-    manifestFilename,
-  );
+  const manifestPath = path.join(process.cwd(), buildDllPath, manifestFilename);
   // Can't require it, because it will throw an error on server
   const { name } = JSON.parse(fs.readFileSync(manifestPath).toString());
   const publicPath: string = __webpack_public_path__ || '/assets/'; // eslint-disable-line camelcase
@@ -50,21 +43,16 @@ const getBundleName = ({ config }): string => {
 // Cache contents of CSS files to avoid hitting the filesystem
 const cache = {};
 
-const memoizedRead = async (publicPath: string, filePath: string) => {
-  const localPath = path.join(
-    process.cwd(),
-    'build',
-    'assets',
-    filePath.replace(publicPath, ''),
-  );
-
-  if (cache[localPath]) {
-    return cache[localPath];
+const memoizedRead = async (publicPath: string, name: string) => {
+  if (cache[name]) {
+    return cache[name];
   }
 
+  const localPath = path.join(process.cwd(), 'build', 'assets', name);
   const contents = await readFileAsync(localPath);
-  cache[localPath] = contents.toString();
-  return cache[localPath];
+
+  cache[name] = contents.toString();
+  return cache[name];
 };
 
 module.exports = async function linkAssets(
@@ -73,44 +61,34 @@ module.exports = async function linkAssets(
   assets: Object,
   loadjsConfig: Object,
 ) {
-  const styleTags: Object[] = [];
-  const scriptTags: Object[] = [];
-  let key: number = 0;
-  const entryPointName: string = filterEntryName(entryPoint);
+  const styleTags = [];
+  const scriptTags = [];
+  let key = 0;
+  const entryPointName = filterEntryName(entryPoint);
 
-  const stylesHref: ?string = getAssetPathForFile(
-    entryPointName,
-    'styles',
-    assets,
-  );
-  if (stylesHref) {
+  const styles = getAssetsForFile(entryPointName, 'styles', assets);
+  if (styles) {
     if (config.GSConfig.inlineAllCss) {
-      console.log(config.webpackConfig.client.publicPath);
-      console.log(config.GSConfig.publicPath);
-      // console.log(process.env.ASSET_URL);
       const contents = await memoizedRead(
+        // $FlowIgnore
         config.webpackConfig.client.output.publicPath,
-        stylesHref,
+        styles.name,
       );
       styleTags.push(
         <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
       );
     } else {
       styleTags.push(
-        <link key={key++} rel="stylesheet" type="text/css" href={stylesHref} />,
+        <link key={key++} rel="stylesheet" type="text/css" href={styles.url} />,
       );
     }
   }
-  const vendorStylesHref: ?string = getAssetPathForFile(
-    'vendor',
-    'styles',
-    assets,
-  );
-  if (vendorStylesHref) {
+  const vendorStyles = getAssetsForFile('vendor', 'styles', assets);
+  if (vendorStyles) {
     if (config.webpackConfig.client.output.publicPath) {
       const contents = await memoizedRead(
         config.GSConfig.publicPath,
-        vendorStylesHref,
+        vendorStyles.name,
       );
 
       styleTags.push(
@@ -122,21 +100,21 @@ module.exports = async function linkAssets(
           key={key++}
           rel="stylesheet"
           type="text/css"
-          href={vendorStylesHref}
+          href={vendorStyles.url}
         />,
       );
     }
   }
 
-  const vendorBundleHref: string =
-    getAssetPathForFile('vendor', 'javascript', assets) ||
+  const vendorBundleHref =
+    getAssetsForFile('vendor', 'javascript', assets).url ||
     getBundleName({ config });
-  const entryPointBundleHref: string = getAssetPathForFile(
+  const entryPointBundleHref = getAssetsForFile(
     entryPointName,
     'javascript',
     assets,
   );
-  const assetsLoader: string = getAssetsLoader(
+  const assetsLoader = getAssetsLoader(
     { before: () => {}, ...loadjsConfig },
     entryPointBundleHref,
     vendorBundleHref,
