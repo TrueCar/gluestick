@@ -109,14 +109,14 @@ module.exports = async function linkAssets(
   const vendorBundleHref =
     getAssetsForFile('vendor', 'javascript', assets).url ||
     getBundleName({ config });
-  const entryPointBundleHref = getAssetsForFile(
+  const entryPointBundle = getAssetsForFile(
     entryPointName,
     'javascript',
     assets,
   );
   const assetsLoader = getAssetsLoader(
     { before: () => {}, ...loadjsConfig },
-    entryPointBundleHref,
+    entryPointBundle.url,
     vendorBundleHref,
   );
   scriptTags.push(

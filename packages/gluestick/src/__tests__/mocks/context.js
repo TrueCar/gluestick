@@ -64,6 +64,9 @@ const gsConfig: GSConfig = {
 const client: WebpackConfig = {
   resolve: {},
   module: {},
+  output: {
+    publicPath: '/assets',
+  },
 };
 const server: WebpackConfig = {};
 

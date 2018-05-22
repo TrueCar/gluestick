@@ -4,11 +4,11 @@ jest.mock(
   'path/webpack-chunks',
   () => ({
     javascript: {
-      main: 'publicPath/main.js',
-      profile: 'publicPath/profile.js',
+      main: { name: 'main.js', url: 'publicPath/main.js' },
+      profile: { name: 'profile.js', url: 'publicPath/profile.js' },
     },
     styles: {
-      main: 'publicPath/main.css',
+      main: { name: 'main.css', url: 'publicPath/main.css' },
     },
   }),
   { virtual: true },
@@ -34,11 +34,11 @@ describe('ChunksPlugin', () => {
     });
     expect(JSON.parse(fs.readFileSync('path/webpack-chunks.json'))).toEqual({
       javascript: {
-        main: 'publicPath/main.js',
-        profile: 'publicPath/profile.js',
+        main: { name: 'main.js', url: 'publicPath/main.js' },
+        profile: { name: 'profile.js', url: 'publicPath/profile.js' },
       },
       styles: {
-        main: 'publicPath/main.css',
+        main: { name: 'main.css', url: 'publicPath/main.css' },
       },
     });
     fs.unlinkSync('path/webpack-chunks.json');
@@ -63,13 +63,13 @@ describe('ChunksPlugin', () => {
     });
     expect(JSON.parse(fs.readFileSync('path/webpack-chunks'))).toEqual({
       javascript: {
-        main: 'publicPath/main.js',
-        profile: 'publicPath/profile.js',
-        home: 'publicPath/home.js',
+        main: { name: 'main.js', url: 'publicPath/main.js' },
+        profile: { name: 'profile.js', url: 'publicPath/profile.js' },
+        home: { name: 'home.js', url: 'publicPath/home.js' },
       },
       styles: {
-        main: 'publicPath/main.css',
-        home: 'publicPath/home.css',
+        main: { name: 'main.css', url: 'publicPath/main.css' },
+        home: { name: 'home.css', url: 'publicPath/home.css' },
       },
     });
     fs.unlinkSync('path/webpack-chunks.json');

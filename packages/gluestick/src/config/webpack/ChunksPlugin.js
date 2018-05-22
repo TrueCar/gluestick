@@ -9,12 +9,12 @@ const chunkInfoFilePath = (
   webpackConfiguration: WebpackConfig,
   chunkInfoFilename?: string = 'webpack-chunks.json',
 ): string => {
+  // $FlowIgnore `output` is a Object
   return path.join(webpackConfiguration.output.path, chunkInfoFilename);
 };
 
 const getChunksInfoBody = (stats: Object, publicPath: string): ChunksInfo => {
   const assetsByChunk = stats.assetsByChunkName;
-  console.log(assetsByChunk);
 
   const assetsChunks: ChunksInfo = {
     javascript: {},
