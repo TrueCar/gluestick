@@ -43,7 +43,7 @@ const getBundleName = ({ config }): string => {
 // Cache contents of CSS files to avoid hitting the filesystem
 const cache = {};
 
-const memoizedRead = async (publicPath: string, name: string) => {
+const memoizedRead = async (name: string) => {
   if (cache[name]) {
     return cache[name];
   }
@@ -69,11 +69,7 @@ module.exports = async function linkAssets(
   const styles = getAssetsForFile(entryPointName, 'styles', assets);
   if (styles) {
     if (config.GSConfig.inlineAllCss) {
-      const contents = await memoizedRead(
-        // $FlowIgnore
-        config.webpackConfig.client.output.publicPath,
-        styles.name,
-      );
+      const contents = await memoizedRead(styles.name);
       styleTags.push(
         <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
       );
@@ -85,12 +81,8 @@ module.exports = async function linkAssets(
   }
   const vendorStyles = getAssetsForFile('vendor', 'styles', assets);
   if (vendorStyles) {
-    if (config.webpackConfig.client.output.publicPath) {
-      const contents = await memoizedRead(
-        config.GSConfig.publicPath,
-        vendorStyles.name,
-      );
-
+    if (config.GSConfig.inlineAllCss) {
+      const contents = await memoizedRead(vendorStyles.name);
       styleTags.push(
         <style dangerouslySetInnerHTML={{ __html: contents.toString() }} />,
       );
@@ -106,9 +98,10 @@ module.exports = async function linkAssets(
     }
   }
 
-  const vendorBundleHref =
-    getAssetsForFile('vendor', 'javascript', assets).url ||
-    getBundleName({ config });
+  const vendorBundle = getAssetsForFile('vendor', 'javascript', assets);
+  const vendorBundleHref = vendorBundle
+    ? vendorBundle.url
+    : getBundleName({ config });
   const entryPointBundle = getAssetsForFile(
     entryPointName,
     'javascript',
