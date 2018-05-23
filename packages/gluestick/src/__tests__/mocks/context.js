@@ -58,11 +58,15 @@ const gsConfig: GSConfig = {
     changed: [],
   },
   enableErrorOverlay: true,
+  inlineAllCss: false,
 };
 
 const client: WebpackConfig = {
   resolve: {},
   module: {},
+  output: {
+    publicPath: '/assets',
+  },
 };
 const server: WebpackConfig = {};
 
