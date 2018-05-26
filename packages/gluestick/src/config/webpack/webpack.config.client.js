@@ -16,6 +16,7 @@ const DuplicatePackageChecker = require('duplicate-package-checker-webpack-plugi
 const buildEntries = require('./buildEntries');
 const progressHandler = require('./progressHandler');
 const ChunksPlugin = require('./ChunksPlugin');
+const CopyPolyfillPlugin = require('./CopyPolyfillPlugin');
 const { updateBabelLoaderConfig } = require('./utils');
 const { manifestFilename } = require('../vendorDll');
 
@@ -38,7 +39,7 @@ module.exports = (
     : buildEntries(gluestickConfig, logger, entries, runtimePlugins);
   config.entry = Object.keys(config.entry).reduce((prev, curr) => {
     return Object.assign(prev, {
-      [curr]: ['babel-polyfill', config.entry[curr]],
+      [curr]: ['regenerator-runtime/runtime', config.entry[curr]],
     });
   }, {});
   // Modify 'es2015' preset in babel-loader plugins.
@@ -58,6 +59,9 @@ module.exports = (
       path.join(__dirname, './mocks/nullMock.js'),
     ),
     new DuplicatePackageChecker(),
+    new CopyPolyfillPlugin({
+      outputPath: config.output.path,
+    }),
   );
 
   if (!noProgress) {

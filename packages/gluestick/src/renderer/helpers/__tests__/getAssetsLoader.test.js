@@ -5,7 +5,7 @@ describe('renderer/helpers/getAssetsLoader', () => {
     const snippet = getAssetsLoader({}, 'entryBundle.js', 'vendorBundle.js');
     expect(snippet.length).toBeGreaterThan(0);
     expect(snippet).toContain(
-      "document.addEventListener('DOMContentLoaded', function",
+      "document.addEventListener('DOMContentLoaded', loadVendorThenEntry)",
     );
   });
 
@@ -21,10 +21,10 @@ describe('renderer/helpers/getAssetsLoader', () => {
     );
     expect(snippet.length).toBeGreaterThan(0);
     expect(snippet).toContain(
-      "document.addEventListener('DOMContentLoaded', function",
+      "document.addEventListener('DOMContentLoaded', loadVendorThenEntry)",
     );
     expect(snippet).toContain(
-      "document.addEventListener('DOMContentLoaded', function",
+      "document.addEventListener('DOMContentLoaded', loadVendorThenEntry)",
     );
     expect(snippet).toContain("console.log('before')");
   });

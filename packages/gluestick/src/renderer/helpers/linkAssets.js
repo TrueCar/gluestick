@@ -111,6 +111,7 @@ module.exports = async function linkAssets(
     { before: () => {}, ...loadjsConfig },
     entryPointBundle.url,
     vendorBundleHref,
+    getAssetPathForFile('polyfill', 'javascript', assets),
   );
   scriptTags.push(
     <script
