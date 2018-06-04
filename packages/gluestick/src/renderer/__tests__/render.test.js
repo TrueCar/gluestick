@@ -180,10 +180,10 @@ describe('renderer/render', () => {
       };
     };
 
-    it('should prepare plugins and pass it to EntryWrapper', () => {
+    it('should prepare plugins and pass it to EntryWrapper', async () => {
       const entriesRuntimePlugins = [
-        { plugin: v => v, meta: { wrapper: true } },
-        { plugin: () => {}, meta: {} },
+        { name: 'plugin1', body: v => v, meta: { wrapper: true } },
+        { name: 'plugin2', body: () => {}, meta: {} },
       ];
       // eslint-disable-next-line react/no-multi-comp
       class MockEntryWrapper extends React.Component {
@@ -199,7 +199,7 @@ describe('renderer/render', () => {
       const currentRoute = clone(renderProps);
       currentRoute.email = false;
       currentRoute.cache = false;
-      render(
+      await render(
         context,
         request,
         {
@@ -220,9 +220,7 @@ describe('renderer/render', () => {
         { assets, loadjsConfig, cacheManager },
         {},
       );
-      expect(MockEntryWrapper.plugins).toEqual([
-        entriesRuntimePlugins[0].plugin,
-      ]);
+      expect(MockEntryWrapper.plugins).toEqual([entriesRuntimePlugins[0]]);
     });
 
     describe('when the route is an email route', () => {

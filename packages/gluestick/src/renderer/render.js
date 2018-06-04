@@ -1,5 +1,11 @@
 /* @flow */
-import type { Context, Request, RenderOutput, RenderMethod } from '../types';
+import type {
+  Context,
+  Request,
+  RenderOutput,
+  RenderMethod,
+  Plugin,
+} from '../types';
 
 const React = require('react');
 const { RouterContext } = require('react-router');
@@ -29,7 +35,7 @@ type WrappersRequirements = {
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
-  entriesPlugins: { plugin: Function, meta: Object }[],
+  entriesPlugins: Plugin[],
 };
 type AssetsCacheOpts = {
   assets: Object,
@@ -52,17 +58,16 @@ module.exports = async function render(
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
   { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): Promise<RenderOutput> {
-  const { styleTags, scriptTags } = linkAssets(
+  const { scriptTags, styleTags } = await linkAssets(
     context,
     entryName,
     assets,
     loadjsConfig,
   );
+
   const isEmail = !!currentRoute.email;
   const routerContext = <RouterContext {...renderProps} />;
-  const rootWrappers = entriesPlugins
-    .filter(plugin => plugin.meta.wrapper)
-    .map(({ plugin }) => plugin);
+  const rootWrappers = entriesPlugins.filter(plugin => plugin.meta.wrapper);
   const entryWrapper = (
     <EntryWrapper
       store={store}

@@ -6,6 +6,7 @@ import type {
   RenderOutput,
   CacheManager,
   RenderMethod,
+  Plugin,
 } from '../types';
 
 import hooks from './helpers/hooks';
@@ -162,9 +163,9 @@ const middleware: Middleware = async (req, res, { assets }) => {
     const statusCode: number = getStatusCode(store, currentRoute);
 
     // Get runtime plugins that will be passed to EntryWrapper.
-    const runtimePlugins: Object[] = entriesPlugins
-      .filter((plugin: Object) => plugin.type === 'runtime')
-      .map((plugin: Object) => plugin.ref);
+    const runtimePlugins: Plugin[] = entriesPlugins.filter(
+      (plugin: Object) => plugin.meta.type === 'runtime',
+    );
 
     const outputBeforeHooks: RenderOutput = await render(
       { config, logger },

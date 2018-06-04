@@ -210,7 +210,7 @@ export type Plugin = {
     [key: string]: any,
   },
   body: Function | null,
-  options: Object,
+  options?: Object,
 };
 
 export type ConfigPlugin = {
@@ -254,4 +254,18 @@ export type RenderMethod = (
 export type BabelOptions = {
   plugins: Array<string | mixed[]>,
   presets: Array<string | mixed[]>,
+};
+
+export type ChunkInfo = {
+  url: string,
+  name: string,
+};
+
+export type ChunksInfo = {
+  javascript: {
+    [key: ?string]: ChunkInfo,
+  },
+  styles: {
+    [key: ?string]: ChunkInfo,
+  },
 };

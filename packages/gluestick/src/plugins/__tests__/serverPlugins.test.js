@@ -21,17 +21,14 @@ const plugin2Ref = () => {};
 plugin2Ref.meta = { type: 'runtime' };
 const validPlugins = [
   {
-    ref: plugin0Ref,
-    type: 'server',
+    body: plugin0Ref,
   },
   {
-    ref: plugin1Ref,
+    body: plugin1Ref,
     options: { prop: true },
-    type: 'server',
   },
   {
-    ref: plugin2Ref,
-    type: 'runtime',
+    body: plugin2Ref,
   },
 ];
 
@@ -43,19 +40,14 @@ describe('plugins/serverPlugins', () => {
   it('should return plugins array', () => {
     jest.doMock('project-entries', () => ({
       plugins: [
+        { body: plugin0Ref, meta: plugin0Ref.meta, name: plugin0Ref.meta.name },
         {
-          ref: plugin0Ref,
-          type: 'server',
-        },
-        {
-          ref: plugin1Ref,
+          body: plugin1Ref,
+          meta: plugin1Ref.meta,
+          name: plugin1Ref.meta.name,
           options: { prop: true },
-          type: 'server',
         },
-        {
-          ref: plugin2Ref,
-          type: 'runtime',
-        },
+        { body: plugin2Ref, meta: plugin2Ref.meta },
       ],
     }));
     const plugins = require('../serverPlugins');
@@ -74,7 +66,7 @@ describe('plugins/serverPlugins', () => {
     jest.doMock('project-entries', () => ({
       plugins: [
         {
-          ref: 'abc',
+          body: 'abc',
         },
       ],
     }));
@@ -96,8 +88,8 @@ describe('plugins/serverPlugins', () => {
     jest.doMock('project-entries', () => ({
       plugins: [
         {
-          ref: invalidPlugin,
-          type: 'server',
+          body: invalidPlugin,
+          meta: invalidPlugin.meta,
         },
       ],
     }));

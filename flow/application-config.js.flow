@@ -33,6 +33,7 @@ declare module 'application-config' {
       changed: string[],
     },
     enableErrorOverlay: boolean,
+    inlineAllCss: boolean,
     [key: string]: any,
   };
 

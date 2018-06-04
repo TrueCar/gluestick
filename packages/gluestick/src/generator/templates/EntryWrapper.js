@@ -143,7 +143,9 @@ export default class EntryWrapper extends Component {
     } = this.props;
 
     return rootWrappers.reduce((prev, curr) => {
-      return curr(prev, rootWrappersOptions);
+      const plugin = curr.body;
+      const options = curr.options || {};
+      return plugin(prev, {...rootWrappersOptions, ...options});
     }, (
       <Root
         routerContext={routerContext}

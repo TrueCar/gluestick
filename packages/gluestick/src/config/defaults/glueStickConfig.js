@@ -66,6 +66,7 @@ const config: GSConfig = {
     ],
   },
   enableErrorOverlay: true,
+  inlineAllCss: false,
 };
 
 module.exports = config;
