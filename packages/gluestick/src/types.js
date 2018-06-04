@@ -81,8 +81,6 @@ export type Context = {
   logger: BaseLogger,
 };
 
-export type UniversalWebpackConfigurator = (options: any) => WebpackConfig;
-
 export type Question = {
   type: string,
   name: string,
@@ -219,9 +217,6 @@ export type ConfigPlugin = {
   name: string,
   meta: {
     [key: string]: any,
-  },
-  preOverwrites: {
-    sharedWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
   },
   postOverwrites: {
     gluestickConfig?: (config: GSConfig) => void,

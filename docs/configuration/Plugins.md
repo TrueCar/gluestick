@@ -62,13 +62,10 @@ it: `<type>.js` so it can be: `config.js`, `runtime.js`, `server.js`.
 __IMPORTANT__: GlueStick won't transpile your plugin, thus it's up to you to transpile it using, for instance, `babel` or `typescript`.
 
 ## Config plugin
-Must export a function that returns an object with `preOverwrites` and/or `postOverwrites`.
+Must export a function that returns an object with `postOverwrites`.
 ```
 module.exports = (options, { logger }) => {
   return {
-    preOverwrites: {
-      sharedWebpackConfig: config => config,
-    },
     postOverwrites: {
       gluestickConfig: config => config,
       clientWebpackConfig: config => config,
@@ -77,8 +74,7 @@ module.exports = (options, { logger }) => {
   };
 };
 ```
-The exported function is a factory for two groups of overwrites: `preOverwrites` and `postOverwrites`.
-This factory function accepts options that are defined in the plugins declaration file inside the project,
+The `postOverwrites` factory function accepts options that are defined in the plugins declaration file inside the project,
 by default `src/gluestick.plugins.js`. The second argument is an object with utilities provided by
 gluestick:
 - `logger` - logger instance
@@ -90,11 +86,6 @@ gluestick:
 - `requireModule` - safe require function, which will transform the module with babel (`es2015`, `stage-0`, `transform-flow-strip-types`) then noralizes module with `getDefaultExport`
 - `requireWithInterop` - require and normalize module using `getDefaultExport`
 - `getDefaultExport` - normalize CJS and ESM exported value
-
-`preOverwrites` are executed before specific configs are prepared. This is the place for modification,
-for example aliases, which can define if file from import is external or not.
-- `sharedWebpackConfig: config => config` - accepts a shared webpack config and
-must return a valid webpack config which will be the base for both the client and server configs
 
 `postOverwrites` are executed after every config is prepared, so modifications to configs will
 go directly to webpack compiler. Modification done here won't be taken into considiration by

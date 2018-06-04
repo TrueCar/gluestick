@@ -57,6 +57,8 @@ const config: GSConfig = {
       // 1.x
       'src/gluestick.config.js',
       'src/vendor.js',
+      // 3.0.1
+      'postcss.config.js',
     ],
     changed: [
       'src/config/.Dockerfile', // -> last updated in 0.2.0

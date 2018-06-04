@@ -8,7 +8,7 @@
     "install:yarn": "yarn install && yarn run build && yarn run yarn:install && lerna bootstrap --concurrency=1",
     "install:yarn:ci": "yarn install --frozen-lockfile && yarn run build && yarn run yarn:install:ci && lerna bootstrap --concurrency=1",
     "clean": "lerna clean --yes",
-    "test": "jest --bail --no-cache -i",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test-coverage": "npm run test -- --coverage",
     "lint": "eslint ./packages",
@@ -55,7 +55,8 @@
     "mkdirp": "0.5.1",
     "node-fetch": "^1.7.1",
     "prettier": "^1.5.3",
-    "rimraf": "2.6.1"
+    "rimraf": "2.6.1",
+    "traverse": "0.6.6"
   },
   "jest": {
     "notify": true,

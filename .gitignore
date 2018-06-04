@@ -12,3 +12,4 @@ _book/
 
 # Gluestick uses yarn at the moment
 package-lock.json
+yarn-error.log

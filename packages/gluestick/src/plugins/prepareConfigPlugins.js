@@ -11,9 +11,6 @@ const {
 const { createArrowList } = require('../cli/helpers');
 
 type CompilationResults = {
-  preOverwrites: {
-    [key: string]: Function,
-  },
   postOverwrites: {
     [key: string]: Function,
   },
@@ -36,7 +33,6 @@ const compilePlugin = (
     // Currently config plugin can overwrite only gluestick config, client weback config
     // and server webpack config.
     return {
-      preOverwrites: pluginBody.preOverwrites || {},
       postOverwrites: pluginBody.postOverwrites || {},
     };
   } catch (error) {
@@ -44,7 +40,6 @@ const compilePlugin = (
     const enchancedError = error;
     enchancedError.message = `${pluginData.name} compilation failed: ${enchancedError.message}`;
     return {
-      preOverwrites: {},
       postOverwrites: {},
       error: enchancedError,
     };
@@ -93,7 +88,6 @@ module.exports = (
 
         return {
           name: value.name,
-          preOverwrites: compilationResults.preOverwrites,
           postOverwrites: compilationResults.postOverwrites,
           meta: value.meta,
         };

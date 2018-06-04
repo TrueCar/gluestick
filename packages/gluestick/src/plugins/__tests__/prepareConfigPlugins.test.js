@@ -67,9 +67,6 @@ jest.mock('../readPlugins.js', () => (logger, value) => {
           type: 'config',
         },
         body: () => ({
-          preOverwrites: {
-            sharedWebpackConfig: () => 'sharedWebpackConfig',
-          },
           postOverwrites: {
             gluestickConfig: () => 'gluestickConfig',
             clientWebpackConfig: () => 'clientWebpackConfig',
@@ -139,10 +136,6 @@ describe('plugins/prepareConfigPlugins', () => {
     expect(plugins[0].name).toEqual('testPlugin0');
     expect(plugins[1].name).toEqual('testPlugin1');
     // $FlowIgnore
-    expect(plugins[0].preOverwrites.sharedWebpackConfig()).toEqual(
-      'sharedWebpackConfig',
-    );
-    // $FlowIgnore
     expect(plugins[0].postOverwrites.gluestickConfig()).toEqual(
       'gluestickConfig',
     );
@@ -153,11 +146,6 @@ describe('plugins/prepareConfigPlugins', () => {
     // $FlowIgnore
     expect(plugins[0].postOverwrites.serverWebpackConfig()).toEqual(
       'serverWebpackConfig',
-    );
-    expect(plugins[1].preOverwrites).toEqual({});
-    // $FlowIgnore
-    expect(plugins[1].postOverwrites.gluestickConfig()).toEqual(
-      'gluestickConfig',
     );
     // $FlowIgnore
     expect(plugins[1].postOverwrites.clientWebpackConfig()).toEqual(
