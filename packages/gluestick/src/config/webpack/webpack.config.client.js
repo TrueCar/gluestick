@@ -12,8 +12,6 @@ const progressHandler = require('./progressHandler');
 const ChunksPlugin = require('./ChunksPlugin');
 const getAliasesForApps = require('./getAliasesForApps');
 
-const isProduction: boolean = process.env.NODE_ENV === 'production';
-
 module.exports = (
   logger: Logger,
   settings: Object,
