@@ -94,10 +94,6 @@ module.exports = (
             'style-loader',
             {
               loader: `css-loader`,
-              options: {
-                sourceMap: !!isProduction,
-                minimize: !!isProduction,
-              },
             },
             {
               loader: 'postcss-loader',
@@ -106,8 +102,6 @@ module.exports = (
               loader: 'sass-loader',
               options: {
                 outputStyle: 'expanded',
-                sourceMap: !!isProduction,
-                sourceMapContents: true,
               },
             },
           ],
