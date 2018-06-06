@@ -39,10 +39,6 @@ Object {
           "style-loader",
           Object {
             "loader": "css-loader",
-            "options": Object {
-              "minimize": false,
-              "sourceMap": false,
-            },
           },
           Object {
             "loader": "postcss-loader",
@@ -51,8 +47,6 @@ Object {
             "loader": "sass-loader",
             "options": Object {
               "outputStyle": "expanded",
-              "sourceMap": false,
-              "sourceMapContents": true,
             },
           },
         ],
@@ -164,10 +158,6 @@ Object {
                 "style-loader",
                 Object {
                   "loader": "css-loader",
-                  "options": Object {
-                    "minimize": false,
-                    "sourceMap": false,
-                  },
                 },
                 Object {
                   "loader": "postcss-loader",
@@ -176,8 +166,6 @@ Object {
                   "loader": "sass-loader",
                   "options": Object {
                     "outputStyle": "expanded",
-                    "sourceMap": false,
-                    "sourceMapContents": true,
                   },
                 },
               ],
@@ -485,10 +473,6 @@ Object {
           },
           Object {
             "loader": "css-loader",
-            "options": Object {
-              "minimize": false,
-              "sourceMap": false,
-            },
           },
           Object {
             "loader": "postcss-loader",
@@ -497,8 +481,6 @@ Object {
             "loader": "sass-loader",
             "options": Object {
               "outputStyle": "expanded",
-              "sourceMap": false,
-              "sourceMapContents": true,
             },
           },
         ],
@@ -613,10 +595,6 @@ Object {
                 "style-loader",
                 Object {
                   "loader": "css-loader",
-                  "options": Object {
-                    "minimize": false,
-                    "sourceMap": false,
-                  },
                 },
                 Object {
                   "loader": "postcss-loader",
@@ -625,8 +603,6 @@ Object {
                   "loader": "sass-loader",
                   "options": Object {
                     "outputStyle": "expanded",
-                    "sourceMap": false,
-                    "sourceMapContents": true,
                   },
                 },
               ],
