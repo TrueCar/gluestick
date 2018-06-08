@@ -10,13 +10,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = (clientConfig: WebpackConfig): WebpackConfig => {
   const config: Object = clone(clientConfig);
   config.devtool = 'hidden-source-map';
-  const scssLoaders = config.module.rules[1].use;
+  const cssLoaders = config.module.rules[1].use;
   config.module.rules[1].use = ExtractTextPlugin.extract({
-    fallback: scssLoaders[0],
-    use: scssLoaders.slice(1),
-  });
-  const cssLoaders = config.module.rules[2].use;
-  config.module.rules[2].use = ExtractTextPlugin.extract({
     fallback: cssLoaders[0],
     use: cssLoaders.slice(1),
   });
