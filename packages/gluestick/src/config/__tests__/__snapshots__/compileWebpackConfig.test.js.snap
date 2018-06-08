@@ -489,13 +489,6 @@ Object {
         "test": /\\\\\\.\\(png\\|jpg\\|gif\\|ico\\|svg\\)\\(\\\\\\?v=\\\\d\\+\\\\\\.\\\\d\\+\\\\\\.\\\\d\\+\\)\\?\\$/,
         "use": Array [
           Object {
-            "loader": "/project/packages/gluestick/node_modules/extract-text-webpack-plugin/loader.js",
-            "options": Object {
-              "omit": 1,
-              "remove": true,
-            },
-          },
-          Object {
             "loader": "file-loader",
             "options": Object {
               "name": "[name]-[hash].[ext]",
