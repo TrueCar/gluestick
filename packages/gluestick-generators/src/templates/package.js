@@ -82,13 +82,13 @@ const templatePackage = createTemplate`
 module.exports = ({ gluestickDependencies, appName }) => ({
   entries: [
     {
-      path: "/",
-      filename: "package.json",
+      path: '/',
+      filename: 'package.json',
       template: templatePackage,
       args: {
         gluestickDependencies,
-        appName
-      }
-    }
-  ]
+        appName,
+      },
+    },
+  ],
 });
