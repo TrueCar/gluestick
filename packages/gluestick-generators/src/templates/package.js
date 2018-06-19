@@ -45,8 +45,8 @@ const templatePackage = createTemplate`
     "postcss-calc": "5.3.1",
     "postcss-custom-properties": "5.0.2",
     "postcss-loader": "1.3.3",
-    "react": "16.2.0",
-    "react-dom": "16.2.0",
+    "react": "16.4.1",
+    "react-dom": "16.4.1",
     "react-helmet": "5.2.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "5.0.4",
@@ -82,13 +82,13 @@ const templatePackage = createTemplate`
 module.exports = ({ gluestickDependencies, appName }) => ({
   entries: [
     {
-      path: '/',
-      filename: 'package.json',
+      path: "/",
+      filename: "package.json",
       template: templatePackage,
       args: {
         gluestickDependencies,
-        appName,
-      },
-    },
-  ],
+        appName
+      }
+    }
+  ]
 });
