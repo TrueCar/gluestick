@@ -124,8 +124,10 @@ const middleware: Middleware = async (req, res, { assets }) => {
     );
     if (redirectLocation) {
       callHook(hooks.preRedirect, redirectLocation);
+      const status =
+        (redirectLocation.state && redirectLocation.state.status) || 301;
       res.redirect(
-        301,
+        status,
         `${redirectLocation.pathname}${redirectLocation.search}`,
       );
       return;
