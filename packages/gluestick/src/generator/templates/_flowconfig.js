@@ -4,10 +4,10 @@ import type { CreateTemplate } from '../../types';
 
 module.exports = (createTemplate: CreateTemplate) => createTemplate`
 [ignore]
-# fbjs lib problems
-.*/node_modules/fbjs/.*
-# radium lib problems
-.*/node_modules/radium/.*
+# ignore problematic dependencies
+.*/node_modules/config-chain/.*
+.*/node_modules/**/chalk/.*
+.*/node_modules/**/radium/.*
 
 [include]
 
