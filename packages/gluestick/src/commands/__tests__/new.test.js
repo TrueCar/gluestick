@@ -72,7 +72,7 @@ describe('cli: gluestick new', () => {
 
     expect(spawn.sync).toBeCalledWith(
       './node_modules/.bin/flow-typed',
-      ['install', `jest@${packageJSON.dependencies.jest}`],
+      ['install', `jest@${packageJSON.dependencies.jest}`, `chalk@${packageJSON.dependencies.chalk}`],
       { stdio: 'inherit' },
     );
   });

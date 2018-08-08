@@ -40,7 +40,7 @@ module.exports = (
     // Install necessary flow-typed definitions
     spawn.sync(
       './node_modules/.bin/flow-typed',
-      ['install', `jest@${packageJSON.dependencies.jest}`],
+      ['install', `jest@${packageJSON.dependencies.jest}`, `chalk@${packageJSON.dependencies.chalk}`],
       { stdio: 'inherit' },
     );
 
