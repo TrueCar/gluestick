@@ -74,6 +74,7 @@ const templatePackage = createTemplate`
     "redbox-react": "1.3.3"
   },
   "jest": {
+    "testURL": "http://localhost/",
     "setupTestFrameworkScriptFile": "./src/__tests__/configureEnzyme.js"
   }
 }

@@ -59,7 +59,9 @@
     "traverse": "0.6.6"
   },
   "jest": {
+    "verbose": true,
     "notify": true,
+    "testURL": "http://localhost/",
     "roots": [
       "packages"
     ],
