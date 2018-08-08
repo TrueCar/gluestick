@@ -200,7 +200,7 @@ workflows:
             branches:
               only: 
                 - develop
-                - /christinebrass/fix-e2e-flow-issues
+                - christinebrass/fix-e2e-flow-issues
       - docs:
           requires:
             - build
