@@ -198,7 +198,9 @@ workflows:
             - build
           filters:
             branches:
-              only: develop
+              only: 
+                - develop
+                - /christinebrass/fix-e2e-flow-issues
       - docs:
           requires:
             - build
