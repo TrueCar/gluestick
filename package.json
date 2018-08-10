@@ -30,7 +30,7 @@
     "gitbook-plugin-edit-link": "^2.0.2",
     "gitbook-plugin-github": "2.0.0",
     "gitbook-plugin-prism": "^2.3.0",
-    "jest": "23.4.2",
+    "jest": "23.5.0",
     "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
@@ -59,9 +59,7 @@
     "traverse": "0.6.6"
   },
   "jest": {
-    "verbose": true,
     "notify": true,
-    "testURL": "http://localhost/",
     "roots": [
       "packages"
     ],
