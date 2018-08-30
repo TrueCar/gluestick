@@ -1,6 +1,6 @@
 {
   "name": "gluestick-env-expose-ast",
-  "version": "4.1.2",
+  "version": "4.2.0",
   "description": "Expose strategy for environment variables from AST for Gluestick",
   "main": "build/config.js",
   "homepage": "https://github.com/TrueCar/gluestick",
@@ -14,7 +14,7 @@
   "peerDependencies": {
     "babel-core": "6.x",
     "babel-traverse": "6.x",
-    "gluestick": "4.1.2",
+    "gluestick": "4.2.0",
     "webpack": "3.x"
   },
   "dependencies": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "babel-core": "^6.22.1",
     "babel-traverse": "^6.22.1",
-    "gluestick": "4.1.2",
+    "gluestick": "4.2.0",
     "webpack": "^3.0.0"
   }
 }
