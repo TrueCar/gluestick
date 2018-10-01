@@ -64,7 +64,7 @@ const templatePackage = createTemplate`
     "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
     "babel-plugin-react-transform": "2.0.2",
-    "enzyme": "3.3.0",
+    "enzyme": "3.6.0",
     "enzyme-adapter-react-16": "1.5.0",
     "eslint": "3.14.1",
     "eslint-plugin-react": "6.9.0",
