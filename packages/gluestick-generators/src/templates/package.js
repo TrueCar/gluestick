@@ -48,7 +48,7 @@ const templatePackage = createTemplate`
     "react": "16.4.1",
     "react-dom": "16.4.1",
     "react-helmet": "5.2.0",
-    "react-hot-loader": "^3.0.0-beta.6",
+    "react-hot-loader": "^4.3.11",
     "react-redux": "5.0.4",
     "react-router": "3.2.0",
     "react-router-scroll": "0.4.2",
