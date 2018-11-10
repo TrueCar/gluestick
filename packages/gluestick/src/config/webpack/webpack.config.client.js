@@ -65,8 +65,8 @@ module.exports = (
     output: {
       path: outputPath, // filesystem path for static files
       publicPath: `/${publicPath}/`.replace(/\/\//g, '/'), // network path for static files
-      filename: '[name].[hash].js', // file name pattern for entry scripts
-      chunkFilename: '[name].[hash].js', // file name pattern for chunk scripts
+      filename: '[name].[contenthash].js', // file name pattern for entry scripts
+      chunkFilename: '[name].[contenthash].js', // file name pattern for chunk scripts
     },
     module: {
       rules: [
@@ -110,7 +110,7 @@ module.exports = (
             {
               loader: 'file-loader',
               options: {
-                name: '[name]-[hash].[ext]',
+                name: '[name]-[contenthash].[ext]',
               },
             },
             {
@@ -126,7 +126,7 @@ module.exports = (
             {
               loader: 'file-loader',
               options: {
-                name: '[name]-[hash].[ext]',
+                name: '[name]-[contenthash].[ext]',
               },
             },
           ],
@@ -144,7 +144,7 @@ module.exports = (
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         filename: `vendor${process.env.NODE_ENV === 'production'
-          ? '-[hash]'
+          ? '-[contenthash]'
           : ''}.bundle.js`,
       }),
     ].filter(Boolean),

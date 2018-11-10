@@ -182,8 +182,8 @@ const getConfig = (
     },
     output: {
       path: buildDllPath,
-      filename: '[name]-[hash].dll.js',
-      library: '[name]_[hash]', // or libraryTarget
+      filename: '[name]-[contenthash].dll.js',
+      library: '[name]_[contenthash]', // or libraryTarget
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -195,7 +195,7 @@ const getConfig = (
           buildDllPath,
           manifestFilename.replace('vendor', '[name]'),
         ),
-        name: '[name]_[hash]',
+        name: '[name]_[contenthash]',
       }),
     ].concat(noProgress ? [] : [progressHandler(logger, 'vendor')]),
     bail: true,

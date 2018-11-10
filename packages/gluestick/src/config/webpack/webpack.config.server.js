@@ -122,7 +122,7 @@ module.exports = (
             {
               loader: 'file-loader',
               options: {
-                name: '[name]-[hash].[ext]',
+                name: '[name]-[contenthash].[ext]',
                 emitFile: false,
               },
             },
@@ -139,7 +139,7 @@ module.exports = (
             {
               loader: 'file-loader',
               options: {
-                name: '[name]-[hash].[ext]',
+                name: '[name]-[contenthash].[ext]',
                 emitFile: false,
               },
             },
