@@ -80,7 +80,6 @@
     "compression": "1.7.0",
     "cross-spawn": "^5.1.0",
     "duplicate-package-checker-webpack-plugin": "^1.2.5",
-    "electrode-react-ssr-caching": "^0.1.5",
     "enzyme": "2.9.1",
     "eventsource-polyfill": "0.9.6",
     "express": "4.15.3",
