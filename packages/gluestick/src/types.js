@@ -1,12 +1,12 @@
 /* @flow */
-import type { GSConfig } from 'application-config';
+import type { GSConfig } from "application-config";
 
-export type { GSConfig } from 'application-config';
-export type { Entries } from 'project-entries';
-export type { EntriesConfig } from 'project-entries-config';
+export type { GSConfig } from "application-config";
+export type { Entries } from "project-entries";
+export type { EntriesConfig } from "project-entries-config";
 
 export type ProjectConfig = {
-  [key: string]: any,
+  [key: string]: any
 };
 
 export type WebpackConfigEntry = string | boolean | Object | any[];
@@ -16,30 +16,30 @@ export type WebpackConfig = {
   resolve?: {
     extensions?: string[],
     alias?: {
-      [key: string]: string,
-    },
+      [key: string]: string
+    }
   },
-  [key: string]: WebpackConfigEntry,
+  [key: string]: WebpackConfigEntry
 };
 
 export type UniversalSettings = {
   server: {
     input: string,
-    output: string,
-  },
+    output: string
+  }
 };
 
 export type CompiledConfig = {
   universalSettings: UniversalSettings,
   client: WebpackConfig,
   server: WebpackConfig,
-  vendor?: WebpackConfig,
+  vendor?: WebpackConfig
 };
 
 export type Config = {
   projectConfig?: ProjectConfig,
   GSConfig: GSConfig,
-  webpackConfig: CompiledConfig,
+  webpackConfig: CompiledConfig
 };
 
 export type Logger = BaseLogger & {
@@ -49,7 +49,7 @@ export type Logger = BaseLogger & {
   print: (...args: any[]) => void,
   printCommandInfo: () => void,
   fatal: (...args: any[]) => void,
-  resetLine: () => void,
+  resetLine: () => void
 };
 
 export type BaseLogger = {
@@ -58,7 +58,7 @@ export type BaseLogger = {
   info: (...args: any[]) => void,
   warn: (...args: any[]) => void,
   debug: (...args: any[]) => void,
-  error: (...args: any[]) => void,
+  error: (...args: any[]) => void
 };
 
 export type CommandAPI = {
@@ -68,53 +68,53 @@ export type CommandAPI = {
   getPlugins: Function,
   getGluestickConfig: Function,
   getWebpackConfig: Function,
-  getContextConfig: Function,
+  getContextConfig: Function
 };
 
 export type CLIContext = {
   config: Config,
-  logger: Logger,
+  logger: Logger
 };
 
 export type Context = {
   config: Config,
-  logger: BaseLogger,
+  logger: BaseLogger
 };
 
 export type Question = {
   type: string,
   name: string,
-  message: string,
+  message: string
 };
 
 export type CreateTemplate = (
   interpolations: Array<*>,
-  strings: Array<string>,
+  strings: Array<string>
 ) => (args: Object) => string;
 
 export type Generator = {
   name: string,
-  config: any,
+  config: any
 };
 
 export type WrittenTemplate = {
   written: string[],
-  modified: string[],
+  modified: string[]
 };
 
 export type GeneratorOptions = {
-  [key: string]: any,
+  [key: string]: any
 };
 
 export type PredefinedGeneratorOptions = {
   name: string,
   dir?: string,
-  entryPoint: string,
+  entryPoint: string
 };
 
 export type Compiler = {
   run: (error: any) => void,
-  plugin: (event: string, callback: Function) => void,
+  plugin: (event: string, callback: Function) => void
 };
 
 export type Response = {
@@ -125,14 +125,14 @@ export type Response = {
   redirect: (code: number, location: string) => void,
   header: (header: string, value: string) => void,
   status: (code: number) => Response,
-  json: (json: Object) => void,
+  json: (json: Object) => void
 };
 
 export type Request = {
   url: string,
   hostname: string,
   headers: Object,
-  method: string,
+  method: string
 };
 
 export type RenderRequirements = {
@@ -141,12 +141,12 @@ export type RenderRequirements = {
   reducers: Object,
   config: ?Object,
   name: string,
-  key: string,
+  key: string
 };
 
 export type RenderOutput = {
   responseString: string,
-  rootElement: Object,
+  rootElement: Object
 };
 
 export type GetCachedIfProd = (req: Request, cache?: Object) => string | null;
@@ -155,33 +155,34 @@ export type SetCacheIfProd = (
   value: string,
   maxAge?: number,
   cache?: Object,
+  cacheKeyStrategy?: (req: Request) => string
 ) => void;
 
 export type CacheManager = {
   getCachedIfProd: GetCachedIfProd,
-  setCacheIfProd: SetCacheIfProd,
+  setCacheIfProd: SetCacheIfProd
 };
 
 export type MismatchedModules = {
   [key: string]: {
     required: string,
     project: string,
-    type: string,
-  },
+    type: string
+  }
 };
 
 export type ProjectPackage = {
   dependencies: {
-    [key: string]: string,
+    [key: string]: string
   },
   devDependencies: {
-    [key: string]: string,
-  },
+    [key: string]: string
+  }
 };
 
 export type UpdateDepsPromptResults = {
   shouldFix: boolean,
-  mismatchedModules: MismatchedModules,
+  mismatchedModules: MismatchedModules
 };
 
 export type Hook = Function | Function[];
@@ -195,77 +196,77 @@ export type GSHooks = {
   postRenderProps?: Hook,
   postGetCurrentRoute?: Hook,
   postRender?: Hook,
-  error?: Hook,
+  error?: Hook
 };
 
 export type WebpackHooks = {
   webpackClientConfig?: Hook,
   webpackServerConfig?: Hook,
-  webpackVendorDllConfig?: Hook,
+  webpackVendorDllConfig?: Hook
 };
 
 export type Plugin = {
   name: string,
   meta: {
-    [key: string]: any,
+    [key: string]: any
   },
   body: Function | null,
-  options?: Object,
+  options?: Object
 };
 
 export type ConfigPlugin = {
   name: string,
   meta: {
-    [key: string]: any,
+    [key: string]: any
   },
   postOverwrites: {
     gluestickConfig?: (config: GSConfig) => void,
     clientWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
     serverWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-    vendorDllWebpackConfig?: (config: WebpackConfig) => WebpackConfig,
-  },
+    vendorDllWebpackConfig?: (config: WebpackConfig) => WebpackConfig
+  }
 };
 
 export type RuntimePlugin = {
   name: string,
   meta: {
-    [key: string]: any,
+    [key: string]: any
   },
   body: {
-    rootWrapper?: (component: Object) => Object,
-  },
+    rootWrapper?: (component: Object) => Object
+  }
 };
 
 export type ServerPlugin = {
   name: string,
   meta: {
-    [key: string]: any,
+    [key: string]: any
   },
   renderMethod: Function,
   hooks: GSHooks,
-  logger: Logger,
+  logger: Logger
 };
 
 export type RenderMethod = (
   root: Object,
-  styleTags: Object[],
+  styleTags: Object[]
 ) => { body: string, head: Object[], additionalScripts?: Object[] };
 
 export type BabelOptions = {
   plugins: Array<string | mixed[]>,
-  presets: Array<string | mixed[]>,
+  presets: Array<string | mixed[]>
 };
 
 export type ChunkInfo = {
   url: string,
-  name: string,
+  name: string
 };
 
 export type ChunksInfo = {
   javascript: {
-    [key: ?string]: ChunkInfo,
+    [key: ?string]: ChunkInfo
   },
   styles: {
-    [key: ?string]: ChunkInfo,
-  },
+    [key: ?string]: ChunkInfo
+  }
 };
