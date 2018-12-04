@@ -4,18 +4,18 @@ import type {
   Request,
   RenderOutput,
   RenderMethod,
-  Plugin
-} from "../types";
+  Plugin,
+} from '../types';
 
-const React = require("react");
-const { RouterContext } = require("react-router");
-const Oy = require("oy-vey").default;
-const { renderToString, renderToStaticMarkup } = require("react-dom/server");
-const linkAssets = require("./helpers/linkAssets");
+const React = require('react');
+const { RouterContext } = require('react-router');
+const Oy = require('oy-vey').default;
+const { renderToString, renderToStaticMarkup } = require('react-dom/server');
+const linkAssets = require('./helpers/linkAssets');
 
 const getRenderer = (
   isEmail: boolean,
-  renderMethod?: RenderMethod
+  renderMethod?: RenderMethod,
 ): Function => {
   if (renderMethod) {
     return renderMethod;
@@ -28,19 +28,19 @@ type EntryRequirements = {
   entryName: string,
   store: Object,
   routes: Function,
-  httpClient: Object
+  httpClient: Object,
 };
 type WrappersRequirements = {
   EntryWrapper: Object,
   BodyWrapper: Object,
   entryWrapperConfig: Object,
   envVariables: any[],
-  entriesPlugins: Plugin[]
+  entriesPlugins: Plugin[],
 };
 type AssetsCacheOpts = {
   assets: Object,
   loadjsConfig: Object,
-  cacheManager: Object
+  cacheManager: Object,
 };
 
 module.exports = async function render(
@@ -53,16 +53,16 @@ module.exports = async function render(
     BodyWrapper,
     entryWrapperConfig,
     envVariables,
-    entriesPlugins
+    entriesPlugins,
   }: WrappersRequirements,
   { assets, loadjsConfig, cacheManager }: AssetsCacheOpts,
-  { renderMethod }: { renderMethod?: RenderMethod } = {}
+  { renderMethod }: { renderMethod?: RenderMethod } = {},
 ): Promise<RenderOutput> {
   const { scriptTags, styleTags } = await linkAssets(
     context,
     entryName,
     assets,
-    loadjsConfig
+    loadjsConfig,
   );
 
   const isEmail = !!currentRoute.email;
@@ -77,7 +77,7 @@ module.exports = async function render(
       httpClient={httpClient}
       rootWrappers={rootWrappers}
       rootWrappersOptions={{
-        userAgent: req.headers["user-agent"]
+        userAgent: req.headers['user-agent'],
       }}
     />
   );
@@ -88,7 +88,7 @@ module.exports = async function render(
 
   const renderResults: Object = await getRenderer(isEmail, renderMethod)(
     entryWrapper,
-    styleTags
+    styleTags,
   );
   const bodyWrapperContent: String = renderMethod
     ? renderResults.body
@@ -117,7 +117,7 @@ module.exports = async function render(
     />
   );
 
-  const docType: string = currentRoute.docType || "<!doctype html>";
+  const docType: string = currentRoute.docType || '<!doctype html>';
 
   let responseString: string;
   if (isEmail) {
@@ -134,11 +134,11 @@ module.exports = async function render(
       responseString,
       currentRoute.cacheTTL,
       undefined, // Do not override the default cache
-      currentRoute.cacheKey
+      currentRoute.cacheKey,
     );
   }
   return {
     responseString,
-    rootElement // only for testing
+    rootElement, // only for testing
   };
 };

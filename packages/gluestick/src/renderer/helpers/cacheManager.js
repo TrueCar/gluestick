@@ -4,32 +4,32 @@ import type {
   BaseLogger,
   CacheManager,
   GetCachedIfProd,
-  SetCacheIfProd
-} from "../../types";
+  SetCacheIfProd,
+} from '../../types';
 
-const LRU = require("lru-cache");
+const LRU = require('lru-cache');
 
 // Creating cache
 const DEFAULT_TTL: number = 60 * 60;
 const lruOptions: { maxAge: number, max: number } = {
   maxAge: DEFAULT_TTL * 1000,
-  max: 50
+  max: 50,
 };
 const _cache: Object = LRU(lruOptions);
 
 const getCacheKey = ({
   hostname,
-  url
+  url,
 }: {
   hostname: string,
-  url: string
+  url: string,
 }): string => {
   return `${hostname}${url}`;
 };
 
 module.exports = function createCacheManager(
   logger: BaseLogger,
-  isProduction: boolean
+  isProduction: boolean,
 ): CacheManager {
   const customCacheKeyStrategies = {};
 
@@ -54,7 +54,7 @@ module.exports = function createCacheManager(
     value,
     maxAge = DEFAULT_TTL,
     cache = _cache,
-    cacheKeyStrategy
+    cacheKeyStrategy,
   ) => {
     if (isProduction) {
       const defaultKey: string = getCacheKey(req);
@@ -69,6 +69,6 @@ module.exports = function createCacheManager(
   };
   return {
     getCachedIfProd,
-    setCacheIfProd
+    setCacheIfProd,
   };
 };
