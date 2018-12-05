@@ -133,6 +133,7 @@ export type Request = {
   hostname: string,
   headers: Object,
   method: string,
+  query: Object,
 };
 
 export type RenderRequirements = {
