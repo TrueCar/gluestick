@@ -96,6 +96,7 @@ const request: Request = {
   url: '/',
   headers: { 'user-agent': '' },
   method: 'GET',
+  query: {},
 };
 
 const entriesConfig: EntriesConfig = {
