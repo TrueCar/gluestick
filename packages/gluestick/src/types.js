@@ -156,7 +156,7 @@ export type SetCacheIfProd = (
   value: string,
   maxAge?: number,
   cache?: Object,
-  cacheKeyStrategy?: (req: Request) => string,
+  cacheKeyStrategy?: (req: Request, state?: Object) => string,
   state?: Object,
 ) => void;
 
