@@ -55,16 +55,20 @@ module.exports = function createCacheManager(
     maxAge = DEFAULT_TTL,
     cache = _cache,
     cacheKeyStrategy,
+    state,
   ) => {
     if (isProduction) {
       const defaultKey: string = getCacheKey(req);
       let key = defaultKey;
       if (cacheKeyStrategy) {
-        key = cacheKeyStrategy(req);
+        key = cacheKeyStrategy(req, state);
         customCacheKeyStrategies[defaultKey] = cacheKeyStrategy;
       }
-      cache.set(key, value, maxAge * 1000);
-      logger.debug(`Set cache: ${key}`);
+
+      if (key) {
+        cache.set(key, value, maxAge * 1000);
+        logger.debug(`Set cache: ${key}`);
+      }
     }
   };
   return {

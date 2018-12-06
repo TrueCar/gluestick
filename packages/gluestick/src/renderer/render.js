@@ -135,6 +135,7 @@ module.exports = async function render(
       currentRoute.cacheTTL,
       undefined, // Do not override the default cache
       currentRoute.cacheKey,
+      currentState,
     );
   }
   return {

@@ -119,6 +119,28 @@ describe('renderer/helpers/cacheManager', () => {
           cache,
           ({ hostname, url, query }) => `${hostname}-${url}-${query.styleId}`,
         );
+
+        const currentState = { currentUser: { loaded: true } };
+        cacheManager.setCacheIfProd(
+          {
+            hostname: 'localhost',
+            url: '/login',
+            query: {
+              styleId: '124',
+              unused: 'hello',
+            },
+          },
+          'cache',
+          1000,
+          cache,
+          ({ hostname, url }, state) => {
+            if (state.currentUser.loaded) {
+              return null;
+            }
+            return `${hostname}-${url}`;
+          },
+          currentState,
+        );
       });
 
       it('should set cache using the custom cache key', () => {
@@ -166,6 +188,12 @@ describe('renderer/helpers/cacheManager', () => {
         expect(cached1).toEqual('cache');
         expect(cached2).toEqual('cache');
         expect(cached3).toEqual('cache2');
+      });
+
+      describe('when a falsy value is returned from the custom cache key', () => {
+        it('should not set the cache', () => {
+          expect(cache.set.mock.calls[2]).toBeUndefined();
+        });
       });
     });
   });
