@@ -32,7 +32,6 @@ module.exports = function createCacheManager(
   logger: BaseLogger,
   isProduction: boolean,
 ): CacheManager {
-
   const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
     if (isProduction) {
       const defaultKey: string = getCacheKey(req);
