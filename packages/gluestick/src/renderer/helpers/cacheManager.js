@@ -27,11 +27,11 @@ const getCacheKey = ({
   return `${hostname}${url}`;
 };
 
+const customCacheKeyStrategies = {};
 module.exports = function createCacheManager(
   logger: BaseLogger,
   isProduction: boolean,
 ): CacheManager {
-  const customCacheKeyStrategies = {};
 
   const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
     if (isProduction) {
