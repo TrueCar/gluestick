@@ -129,7 +129,14 @@ module.exports = async function render(
     responseString = `${docType}${renderToStaticMarkup(rootElement)}`;
   }
   if (currentRoute.cache) {
-    cacheManager.setCacheIfProd(req, responseString, currentRoute.cacheTTL);
+    cacheManager.setCacheIfProd(
+      req,
+      responseString,
+      currentRoute.cacheTTL,
+      undefined, // Do not override the default cache
+      currentRoute.cacheKey,
+      currentState,
+    );
   }
   return {
     responseString,

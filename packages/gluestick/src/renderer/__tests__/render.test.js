@@ -82,6 +82,7 @@ describe('renderer/render', () => {
     url: '',
     hostname: '',
     method: 'GET',
+    query: {},
   };
 
   const store = {

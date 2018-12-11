@@ -133,6 +133,7 @@ export type Request = {
   hostname: string,
   headers: Object,
   method: string,
+  query: Object,
 };
 
 export type RenderRequirements = {
@@ -155,6 +156,8 @@ export type SetCacheIfProd = (
   value: string,
   maxAge?: number,
   cache?: Object,
+  cacheKeyStrategy?: (req: Request, state?: Object) => string | null,
+  state?: Object,
 ) => void;
 
 export type CacheManager = {

@@ -27,13 +27,19 @@ const getCacheKey = ({
   return `${hostname}${url}`;
 };
 
+const customCacheKeyStrategies = {};
 module.exports = function createCacheManager(
   logger: BaseLogger,
   isProduction: boolean,
 ): CacheManager {
   const getCachedIfProd: GetCachedIfProd = (req, cache = _cache) => {
     if (isProduction) {
-      const key: string = getCacheKey(req);
+      const defaultKey: string = getCacheKey(req);
+      let key = defaultKey;
+      if (customCacheKeyStrategies[defaultKey]) {
+        const cacheKeyStrategy = customCacheKeyStrategies[defaultKey];
+        key = cacheKeyStrategy(req);
+      }
       const value: string = cache.get(key);
       if (value) {
         logger.debug(`Get cached: ${key}`);
@@ -47,11 +53,21 @@ module.exports = function createCacheManager(
     value,
     maxAge = DEFAULT_TTL,
     cache = _cache,
+    cacheKeyStrategy,
+    state,
   ) => {
     if (isProduction) {
-      const key: string = getCacheKey(req);
-      logger.debug(`Set cache: ${key}`);
-      cache.set(key, value, maxAge * 1000);
+      const defaultKey: string = getCacheKey(req);
+      let key = defaultKey;
+      if (cacheKeyStrategy) {
+        key = cacheKeyStrategy(req, state);
+        customCacheKeyStrategies[defaultKey] = cacheKeyStrategy;
+      }
+
+      if (key) {
+        cache.set(key, value, maxAge * 1000);
+        logger.debug(`Set cache: ${key}`);
+      }
     }
   };
   return {
