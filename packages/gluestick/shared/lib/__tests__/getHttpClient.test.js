@@ -144,7 +144,7 @@ describe('lib/getHttpClient', () => {
       hostname: host,
       headers: {
         cookie: 'name=Lincoln',
-        host
+        host,
       },
       secure: true,
     };
@@ -160,7 +160,7 @@ describe('lib/getHttpClient', () => {
       hostname: host,
       headers: {
         cookie: 'name=Lincoln',
-        host: host,
+        host,
       },
       secure: false,
     };
