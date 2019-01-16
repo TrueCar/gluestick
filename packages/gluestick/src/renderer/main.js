@@ -19,6 +19,7 @@ const onFinished = require('on-finished');
 const applicationConfig = require('application-config').default;
 const entries = require('project-entries').default;
 
+const patchRequestHost = require('../lib/patchRequestHost');
 const serverPlugins = require('../plugins/serverPlugins');
 const createPluginUtils = require('../plugins/utils');
 const setProxies = require('./helpers/setProxies');
