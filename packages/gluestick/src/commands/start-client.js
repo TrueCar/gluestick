@@ -6,6 +6,8 @@ const fs = require('fs');
 const webpack = require('webpack');
 const express = require('express');
 const proxy = require('http-proxy-middleware');
+
+const patchRequestHost = require('../lib/patchRequestHost');
 const progressHandler = require('../config/webpack/progressHandler');
 const { printWebpackStats, debounce } = require('../utils');
 const build = require('./build');
@@ -115,6 +117,7 @@ module.exports = (
       },
     );
     app.set('view engine', 'html');
+    app.use(patchRequestHost());
     const devMiddleware = require('webpack-dev-middleware')(
       compiler,
       developmentServerOptions,

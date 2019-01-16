@@ -115,7 +115,7 @@ describe('commands/start-client', () => {
   it('should start express with webpack dev and hot middlewares', () => {
     startClientCommand(commandApi, [{}]);
     waitUntilValidCallback();
-    expect(middlewares.length).toBe(3);
+    expect(middlewares.length).toBe(4);
     const res = { render: jest.fn() };
     proxyOnErrorCallback(null, {}, res);
     expect(res.render.mock.calls[0][0].includes('poll.html')).toBeTruthy();
