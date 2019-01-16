@@ -47,7 +47,7 @@ export default function getHttpClient(
   // If a request object is provided, then we want to merge the custom headers
   // with the headers that we sent from the browser in the request.
   client = httpClient.create({
-    baseURL: protocol + req.hostname,
+    baseURL: protocol + req.host,
     headers: {
       ...headers,
     },

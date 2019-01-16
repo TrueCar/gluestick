@@ -141,7 +141,7 @@ describe('lib/getHttpClient', () => {
   it('should set baseURL with https if req.secure is true', () => {
     const host = 'hola.com:332211';
     const req = {
-      hostname: host,
+      host,
       headers: {
         cookie: 'name=Lincoln',
         host,
@@ -157,7 +157,7 @@ describe('lib/getHttpClient', () => {
   it('should set baseURL with http if req.secure is false', () => {
     const host = 'hola.com:332211';
     const req = {
-      hostname: host,
+      host,
       headers: {
         cookie: 'name=Lincoln',
         host,
