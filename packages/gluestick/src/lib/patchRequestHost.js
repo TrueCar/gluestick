@@ -12,11 +12,11 @@
  * https://github.com/expressjs/express/blob/4.16.4/lib/request.js#L448-L452
  * https://github.com/expressjs/express/blob/5.0.0-alpha.7/lib/request.js#L395-L415
  */
-function patchRequestHost () {
-  return function patchRequestHost (req, res, next) {
-    defineGetter(req, 'host', function host (){
-      var trust = this.app.get('trust proxy fn');
-      var val = this.get('X-Forwarded-Host');
+function patchRequestHost() {
+  return function(req, res, next) {
+    defineGetter(req, 'host', function host() {
+      const trust = this.app.get('trust proxy fn');
+      let val = this.get('X-Forwarded-Host');
 
       if (!val || !trust(this.connection.remoteAddress, 0)) {
         val = this.get('Host');
@@ -33,7 +33,7 @@ function defineGetter(obj, name, getter) {
   Object.defineProperty(obj, name, {
     configurable: true,
     enumerable: true,
-    get: getter
+    get: getter,
   });
 }
 
