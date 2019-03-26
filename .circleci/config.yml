@@ -49,7 +49,7 @@ defaults:
   - &job-defaults
       working_directory: ~/gluestick
       docker:
-        - image: circleci/node:8
+        - image: circleci/node:10.15
 
 version: 2
 jobs:
@@ -137,7 +137,7 @@ jobs:
       - run: git config --global user.name "CircleCI"
       - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - run: docker pull node:8-jessie-slim
+      - run: docker pull node:10.15-jessie-slim
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run: BRANCH=$CIRCLE_BRANCH npm run publish -- $CIRCLE_TAG  
 
