@@ -1,4 +1,4 @@
-FROM node:10.15-jessie-slim
+FROM node:10.15-stretch-slim
 
 ARG GLUESTICK_VERSION
 
