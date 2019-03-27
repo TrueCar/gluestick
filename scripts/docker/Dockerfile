@@ -13,6 +13,7 @@ ENV BUILD_PACKAGES "autoconf \
   build-essential \
   bzip2 \
   bzr \
+  default-libmysqlclient-dev \
   file \
   g++ \
   gcc \
@@ -31,7 +32,6 @@ ENV BUILD_PACKAGES "autoconf \
   liblzma-dev \
   libmagickcore-dev \
   libmagickwand-dev \
-  libmysqlclient-dev \
   libncurses-dev \
   libpango1.0-dev \
   libpng-dev \
