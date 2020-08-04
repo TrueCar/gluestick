@@ -1,6 +1,6 @@
 # Deprecation Notice
 
-GlueStick is now archived. It was one of the first React-in-a-box projects and helped TrueCar quickly migrate to React. With the React community growing and changing so quickly, it became difficult for TrueCar to keep GlueStick up to dat. Thank you to all the contributors that helped along the way! 
+GlueStick is now archived. It was one of the first React-in-a-box projects and helped TrueCar quickly migrate to React. With the React community growing and changing so quickly, it became difficult for TrueCar to keep GlueStick up to date. Thank you to all the contributors that helped along the way! 
 
 If you're interested in this type of project, we recommend [NextJS](https://nextjs.org/), which provides server rendering along with many other features GlueStick offered.
 
