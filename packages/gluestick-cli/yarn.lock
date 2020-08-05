@@ -385,9 +385,9 @@ glob@7.1.1, glob@^7.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-gluestick-generators@1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-1.14.0.tgz#8a2f8cb2f4c8bf6e2bcce67b80887c967058de85"
+gluestick-generators@4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/gluestick-generators/-/gluestick-generators-4.6.2.tgz#933ed48ab2616a16b1bbd5787b45a385aff95547"
   dependencies:
     mkdirp "^0.5.1"
 
@@ -865,6 +865,10 @@ safe-buffer@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
 
+semver@5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
+
 semver@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
@@ -964,8 +968,8 @@ tar@^2.2.1:
     inherits "2"
 
 tough-cookie@~2.3.0:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.2.tgz#f081f76e4c85720e6c37a5faced737150d84072a"
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.4.tgz#ec60cee38ac675063ffc97a5c18970578ee83655"
   dependencies:
     punycode "^1.4.1"
 
