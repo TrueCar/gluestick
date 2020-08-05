@@ -86,6 +86,7 @@
     "fs-extra": "4.0.0",
     "gluestick-generators": "4.6.2",
     "handlebars": "4.0.10",
+    "hoist-non-react-statics": "^2.3.1",
     "http-proxy-middleware": "0.17.4",
     "ignore-loader": "0.1.2",
     "inquirer": "3.2.0",
