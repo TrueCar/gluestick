@@ -57,7 +57,7 @@ Object {
           Object {
             "loader": "file-loader",
             "options": Object {
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
           Object {
@@ -72,7 +72,7 @@ Object {
           Object {
             "loader": "file-loader",
             "options": Object {
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
         ],
@@ -83,9 +83,9 @@ Object {
     "net": "empty",
   },
   "output": Object {
-    "chunkFilename": "[name].[hash].js",
+    "chunkFilename": "[name].[contenthash].js",
     "crossOriginLoading": "anonymous",
-    "filename": "[name].[hash].js",
+    "filename": "[name].[contenthash].js",
     "path": "/project/build/assets",
     "publicPath": "http://0.0.0.0:8888/assets/",
   },
@@ -176,7 +176,7 @@ Object {
                 Object {
                   "loader": "file-loader",
                   "options": Object {
-                    "name": "[name]-[hash].[ext]",
+                    "name": "[name]-[contenthash].[ext]",
                   },
                 },
                 Object {
@@ -191,7 +191,7 @@ Object {
                 Object {
                   "loader": "file-loader",
                   "options": Object {
-                    "name": "[name]-[hash].[ext]",
+                    "name": "[name]-[contenthash].[ext]",
                   },
                 },
               ],
@@ -202,8 +202,8 @@ Object {
           "net": "empty",
         },
         "output": Object {
-          "chunkFilename": "[name].[hash].js",
-          "filename": "[name].[hash].js",
+          "chunkFilename": "[name].[contenthash].js",
+          "filename": "[name].[contenthash].js",
           "path": "/project/build/assets",
           "publicPath": "/assets/",
         },
@@ -338,7 +338,7 @@ Object {
             "loader": "file-loader",
             "options": Object {
               "emitFile": false,
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
           Object {
@@ -354,7 +354,7 @@ Object {
             "loader": "file-loader",
             "options": Object {
               "emitFile": false,
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
         ],
@@ -491,7 +491,7 @@ Object {
           Object {
             "loader": "file-loader",
             "options": Object {
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
           Object {
@@ -506,7 +506,7 @@ Object {
           Object {
             "loader": "file-loader",
             "options": Object {
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
         ],
@@ -517,8 +517,8 @@ Object {
     "net": "empty",
   },
   "output": Object {
-    "chunkFilename": "[name].[hash].js",
-    "filename": "[name].[hash].js",
+    "chunkFilename": "[name].[contenthash].js",
+    "filename": "[name].[contenthash].js",
     "path": "/project/build/assets",
     "publicPath": "/assets/",
   },
@@ -545,7 +545,7 @@ Object {
         "vendor",
       ],
       "deepChildren": undefined,
-      "filenameTemplate": "vendor-[hash].bundle.js",
+      "filenameTemplate": "vendor-[contenthash].bundle.js",
       "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
       "minChunks": undefined,
       "minSize": undefined,
@@ -606,7 +606,7 @@ Object {
                 Object {
                   "loader": "file-loader",
                   "options": Object {
-                    "name": "[name]-[hash].[ext]",
+                    "name": "[name]-[contenthash].[ext]",
                   },
                 },
                 Object {
@@ -621,7 +621,7 @@ Object {
                 Object {
                   "loader": "file-loader",
                   "options": Object {
-                    "name": "[name]-[hash].[ext]",
+                    "name": "[name]-[contenthash].[ext]",
                   },
                 },
               ],
@@ -632,8 +632,8 @@ Object {
           "net": "empty",
         },
         "output": Object {
-          "chunkFilename": "[name].[hash].js",
-          "filename": "[name].[hash].js",
+          "chunkFilename": "[name].[contenthash].js",
+          "filename": "[name].[contenthash].js",
           "path": "/project/build/assets",
           "publicPath": "/assets/",
         },
@@ -660,7 +660,7 @@ Object {
               "vendor",
             ],
             "deepChildren": undefined,
-            "filenameTemplate": "vendor-[hash].bundle.js",
+            "filenameTemplate": "vendor-[contenthash].bundle.js",
             "ident": "/project/packages/gluestick/node_modules/webpack/lib/optimize/CommonsChunkPlugin.js2",
             "minChunks": undefined,
             "minSize": undefined,
@@ -785,7 +785,7 @@ Object {
             "loader": "file-loader",
             "options": Object {
               "emitFile": false,
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
           Object {
@@ -801,7 +801,7 @@ Object {
             "loader": "file-loader",
             "options": Object {
               "emitFile": false,
-              "name": "[name]-[hash].[ext]",
+              "name": "[name]-[contenthash].[ext]",
             },
           },
         ],
